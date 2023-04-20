@@ -1,0 +1,35 @@
+<div>
+  <div class="progress bg-white border border-secondary" style="height: 20px;">
+    <div
+      class="progress-bar"
+      role="progressbar"
+      [ngClass]="classMeta()"
+      [ngStyle]="{width: metaAtual + '%'}"
+      [attr.aria-valuenow]="metaAtual"
+      aria-valuemin="0"
+      aria-valuemax="100">
+    </div>
+    <div
+      class="progress-bar avanco"
+      role="progressbar"
+      [ngClass]="classMeta()"
+      [ngStyle]="{width: somaCotacao + '%'}"
+      *ngIf="somaCotacao > 0"
+      [attr.aria-valuenow]="somaCotacao"
+      aria-valuemin="0"
+      aria-valuemax="100">
+    </div>
+  </div>
+  <div class="text-center">
+    <div
+      class="mtc-title mb-0"
+      counto
+      [step]="30"
+      [countTo]="somaCotacao"
+      [countFrom]="0"
+      [duration]="3"
+      (countoChange)="countoSomaCotacao = $event">
+      +{{ countoSomaCotacao | number:'1.2-2' }}%
+    </div>
+  </div>
+</div>

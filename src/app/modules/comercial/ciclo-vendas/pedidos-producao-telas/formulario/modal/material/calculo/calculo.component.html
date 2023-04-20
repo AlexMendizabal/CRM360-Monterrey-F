@@ -1,0 +1,223 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-auto">#{{ material.codMaterial }} - {{ material.nomeMaterial | uppercase }}</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true" *ngIf="!loaderModal">&times;</span>
+      <div class="spinner-border spinner-border-sm text-dark ml-auto" *ngIf="loaderModal"></div>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row" >
+      <!-- *ngIf="material && tipoCalculo" -->
+      <div class="col">
+        <form [formGroup]="form" autocomplete="off">
+          <div class="row">
+            <div class="col-6">
+              <div class="row">
+                <div class="col-7">
+                  <div class="form-row">
+                    <div class="form-group col">
+                      <p class="mb-1"><label>Unidade para cálculo</label></p>
+                      <p> {{ form.value.unidadeCalculo }} </p>
+                      <!-- <div class="custom-control custom-radio">
+                        <input
+                          type="radio"
+                          id="unidadeCalculo_TON"
+                          name="unidadeCalculo"
+                          class="custom-control-input"
+                          formControlName="unidadeCalculo"
+                          value="toneladas"
+                          (click)="onChangeUnidadeCalculo('toneladas', true)"
+                          [attr.disabled]="disabledUnidadeCalculo()">
+                        <label class="custom-control-label" for="unidadeCalculo_TON">Toneladas</label>
+                      </div>
+                      <div class="custom-control custom-radio">
+                        <input
+                          type="radio"
+                          id="unidadeCalculo_BARRA"
+                          name="unidadeCalculo"
+                          class="custom-control-input"
+                          formControlName="unidadeCalculo"
+                          value="barrasPecas"
+                          (click)="onChangeUnidadeCalculo('barrasPecas', true)"
+                          [attr.disabled]="disabledUnidadeCalculo()">
+                        <label class="custom-control-label" for="unidadeCalculo_BARRA">Barras/Peças</label>
+                      </div> -->
+                      <!-- <div class="custom-control custom-radio">
+                        <input
+                          type="radio"
+                          id="unidadeCalculo_BARRA"
+                          name="unidadeCalculo"
+                          class="custom-control-input"
+                          formControlName="unidadeCalculo"
+                          value="m2"
+                          (click)="onChangeUnidadeCalculo('m2', true)"
+                          [attr.disabled]="disabledUnidadeCalculo()">
+                        <label class="custom-control-label" for="unidadeCalculo_BARRA">M2</label>
+                      </div> -->
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col">
+                      <!-- {{ descQtde }} -->
+                      <label for="quantidade">(QTDE M²)</label>
+                      <input
+                        type="text"
+                        id="quantidade"
+                        class="form-control"
+                        formControlName="quantidade"
+                        currencyMask [options]="currencyMaskOptions"
+                        [ngClass]="onFieldError('quantidade') + ' ' + onFieldRequired(form.controls.quantidade)">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col">
+                      <label for="preco">{{ descPreco }}</label>
+                      <input
+                        type="text"
+                        id="preco"
+                        class="form-control"
+                        formControlName="preco"
+                        currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',', precision: 2 }"
+                        [ngClass]="onFieldError('preco') + ' ' + onFieldRequired(form.controls.preco)"
+                        aria-describedby="preco-help">
+                      <small id="preco-help" class="form-text text-muted" style="font-size: 11px">
+                        Preço ideal acima de <strong>{{ material.valorUnit | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                      </small>
+                    </div>
+                  </div>
+                  <div class="form-row" *ngIf="showInputMedida()">
+                    <div class="form-group col">
+                      <label for="medida">Medida (metros)</label>
+                      <input
+                        type="text"
+                        id="medida"
+                        class="form-control"
+                        formControlName="medida"
+                        currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }"
+                        [ngClass]="onFieldError('medida') + ' ' + onFieldRequired(form.controls.medida)">
+                    </div>
+                  </div>
+                  <div class="form-row mt-1">
+                    <div class="form-group col mb-0">
+                      <button
+                        type="button"
+                        class="btn btn-block btn-secondary mt-auto"
+                        (click)="onCalcular()"
+                        [disabled]="loaderModal">
+                        <div *ngIf="!loaderModal">
+                          <i class="fas fa-calculator"></i>
+                          <span>Calcular</span>
+                        </div>
+                        <div *ngIf="loaderModal">
+                          <i class="fas fa-cog fa-spin"></i>
+                          <span>Aguarde</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div *ngIf="showInfoMetragem()">
+                    <div class="form-row">
+                      <div class="col"><hr></div>
+                    </div>
+                    <div class="form-row" *ngIf="!showInputMedida()">
+                      <div class="form-group col mb-0">
+                        <label class="mr-1">Medida 01:</label>
+                        <span>{{ material.medida1 | number:'1.2-2' }} metro(s)</span>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col mb-0">
+                        <label class="mr-1">Medida 02:</label>
+                        <span>{{ material.medida2 | number:'1.2-2' }} metro(s)</span>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col mb-0">
+                        <label class="mb-0 mr-1">Peso específico:</label>
+                        <span>{{ material.pesoEspecifico | number:'1.2-2' }} kg(s)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="showInfoFatorMultiplo()">
+                    <div class="form-row">
+                      <div class="col"><hr></div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col mb-0">
+                        <label class="mr-1">Fator múltiplo:</label>
+                        <span>10</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="resultCaculo.length > 0">
+                    <div class="form-row">
+                      <div class="col"><hr></div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col">
+                        <label>Selecione uma opção</label>
+                      </div>
+                    </div>
+                    <div class="form-row" *ngFor="let opcaoVenda of resultCaculo; let i = index">
+                      <div class="form-group col mb-0">
+                        <div class="custom-control custom-radio">
+                          <input
+                            type="radio"
+                            id="opcaoVenda_{{ i }}"
+                            name="opcaoVenda"
+                            class="custom-control-input"
+                            (click)="calcularTotais(opcaoVenda)">
+                          <label class="custom-control-label" for="opcaoVenda_{{ i }}">
+                            {{ opcaoVenda.tonelada | number:'1.3-3' }} Toneladas ({{ opcaoVenda.qtde }} Barras/Peças)
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 pl-0 my-auto">
+              <div class="text-right text-uppercase mr-1 mb-2" style="font-size: 11px">
+                <a class="text-primary" href="javascript:void(0)" (click)="onShowImpostos()">
+                  <i class="fas mr-2" [ngClass]="{'fa-chevron-up': showImpostos, 'fa-chevron-down': !showImpostos}"></i>
+                  <strong>Detalhes</strong>
+                </a>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="my-auto">
+                      <strong>Peso item</strong>
+                    </div>
+                    <strong class="text-secondary">{{ calculo.tonelada | number:'1.3-3' }} Ton</strong>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="onClose()">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="onSubmit()"
+      >
+      Confirmar
+    </button>
+  </div>
+</div>

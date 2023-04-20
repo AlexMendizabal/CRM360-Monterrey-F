@@ -1,0 +1,150 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Setor de atividade">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+     <div class="row" #scrollToFilter>
+      <div class="col">
+        <advanced-filter>
+          <form [formGroup]="form" autocomplete="off">
+            <div class="form-row">
+              <div class="form-group col-lg-7">
+                <label for="setorAtividade">Descrição</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="setorAtividade"
+                  (keydown.enter)="onFilter()">
+              </div>
+              <div class="form-group col-lg-3">
+                <label for="codSituacao">Situação</label>
+                <select
+                  class="form-control custom-select"
+                  id="codSituacao"
+                  formControlName="codSituacao">
+                  <option value="0">Todos</option>
+                  <option value="1">Ativos</option>
+                  <option value="2">Inativos</option>
+                </select>
+              </div>
+              <div class="form-group col-lg-2">
+                <label for="registros">Registros</label>
+                <select
+                  class="form-control"
+                  id="registros"
+                  formControlName="registros">
+                  <option>25</option>
+                  <option>50</option>
+                  <option>100</option>
+                  <option>200</option>
+                  <option>300</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </advanced-filter>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <subtitles
+          [data]="subtitles"
+          [show]="dadosPagination.length > 0 && !dadosEmpty">
+        </subtitles>
+      </div>
+    </div>
+    <div class="row">
+      <div [ngClass]="{'col': !showDetailPanel, 'col-5 pr-0': showDetailPanel}">
+        <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+          <ng-template #thead let-thead>
+            <tr>
+              <th class="text-center" scope="col">Descrição TID</th>
+              <th scope="col">Descricão</th>
+              <th scope="col" [hidden]="showDetailPanel"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let setorAtividade of dadosPagination; let i = index" [class.table-active]="setorAtividade.codSetorAtividade == setorAtividadeSelecionado.codSetorAtividade">
+              <td
+                class="text-center hover"
+                [ngClass]="classStatusBorder(setorAtividade)"
+                (click)="onDetails(setorAtividade)">
+                {{ setorAtividade.codParametroSetorAtividade }}
+              </td>
+              <td
+                class="hover"
+                (click)="onDetails(setorAtividade)">
+                {{ setorAtividade.setorAtividade | uppercase }}
+              </td>
+              <td class="text-right" [hidden]="showDetailPanel">
+                <span *ngIf="setorAtividade.codSituacao == 1" class="mr-3" tooltip="Inativar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="onInactivate(i, setorAtividade)">
+                    <i class="fas fa-toggle-on"></i>
+                  </button>
+                </span>
+                <span *ngIf="setorAtividade.codSituacao == 2" class="mr-3" tooltip="Ativar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="onActivate(i, setorAtividade)">
+                    <i class="fas fa-toggle-off"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="onEdit(setorAtividade)">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+        <empty-result
+          message="Nenhuma informação encontrada"
+          class="my-3"
+          *ngIf="dadosEmpty">
+        </empty-result>
+        <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && dadosLoaded">
+          <pagination
+            [maxSize]="maxSize"
+            [(totalItems)]="totalItems"
+            (pageChanged)="onPageChanged($event)"
+            [(itemsPerPage)]="itemsPerPage"
+            [boundaryLinks]="true"
+            [(ngModel)]="currentPage"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;">
+          </pagination>
+        </div>
+      </div>
+      <div class="col-7" [hidden]="!showDetailPanel">
+        <detail-panel panelTitle="Histórico de alterações">
+          <custom-table *ngIf="alteracoes.length > 0">
+            <ng-template #thead let-thead>
+              <tr>
+                <th scope="col" class="text-center">Data</th>
+                <th scope="col">Usuário</th>
+                <th scope="col">Alteração</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let alteracao of alteracoes">
+                <td class="text-center">{{ alteracao.dataLog | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td>{{ alteracao.nomeUsuario | uppercase }}</td>
+                <td>{{ alteracao.mensagem | uppercase }}</td>
+              </tr>
+            </ng-template>
+          </custom-table>
+        </detail-panel>
+      </div>
+    </div>
+  </app-body>

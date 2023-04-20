@@ -1,0 +1,1110 @@
+<div class="row mb-2 mt-2">
+  <div class="col-3">
+    <p style="font-size: 14px;">
+      <strong> CÓD. MATERIAL: </strong> {{ modal.codMaterial }}
+    </p>
+  </div>
+  <div class="col-4">
+    <p style="font-size: 14px;">
+      <strong> DESCRIÇÃO: </strong> {{ modal.descMaterial }}
+    </p>
+  </div>
+  <div class="col-2">
+    <p style="font-size: 14px;">
+      <strong> UN. MEDIDA: </strong> {{ modal.unidadeMedida }}
+    </p>
+  </div>
+  <div class="col-3 text-right">
+    <button
+      type="button"
+      (click)="onFilter()"
+      class="btn mr-2"
+    >
+      Filtrar
+    </button>
+    <button
+      type="button"
+      (click)="excelExport()"
+      class="btn"
+    >
+      Exportar Excel
+    </button>
+  </div>
+</div>
+<advanced-filter>
+  <form [formGroup]="form" autocomplete="off">   
+    <div class="form-row">
+      <div class="form-group col-lg-2">
+        <label for="empresas">Empresa</label>
+        <input
+          class="form-control"
+          id="empresas"
+          type="text"
+          formControlName="empresas"
+        >
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="depositos">Deposito</label>
+        <input
+          class="form-control"
+          id="depositos"
+          type="text"
+          formControlName="depositos"
+        >
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="pedidoPai">Pedido/ Pedido Pai</label>
+        <input
+          class="form-control"
+          id="pedidoPai"
+          type="text"
+          formControlName="pedidoPai"
+        >
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="dataPedido">Data Pedido</label>
+        <input
+          class="form-control"
+          id="dataPedido"
+          type="text"
+          bsDatepicker
+          [bsConfig]="bsConfig"
+          formControlName="dataPedido"
+        >
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="pedidoRemessa">Pedido Remessa</label>
+        <input
+          class="form-control"
+          id="pedidoRemessa"
+          type="text"
+          formControlName="pedidoRemessa"
+        >
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="previsaoEntrega">Previsão Entrega</label>
+        <input
+          class="form-control"
+          id="previsaoEntrega"
+          type="text"
+          bsDatepicker
+          [bsConfig]="bsConfig"
+          formControlName="previsaoEntrega"
+        >
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-lg-2">
+        <label for="fornecedor">Fornecedor</label>
+        <input
+          class="form-control"
+          id="fornecedor"
+          type="text"
+          formControlName="fornecedor"
+        >
+      </div>
+    </div>
+  </form>
+</advanced-filter>
+<tabset *ngIf="loadingDetalhesModal">
+  <tab heading="Geral" *ngIf="this.enableTabAbastInterno && this.enableTabAbastFornecedor">
+    <div class="table-responsive mt-2">
+      <custom-table subtitleBorder="true">
+        <ng-template #thead let-thead>
+          <tr>
+            <th
+              nowrap
+              (click)="sortC('NM_EMPR_DEST')"
+              class="hover text-center sticky"
+              style="background-color: #fff; left: 0px;"
+              width="190px"
+            >
+              Empresa
+              <span *ngIf="keyC == 'NM_EMPR_DEST'"
+                ><i
+                  [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyC != 'NM_EMPR_DEST'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortC('NM_DEPO_DEST')"
+              class="hover text-center sticky"
+              style="background-color: #fff; left: 190px;"
+            >
+              Depósito
+              <span *ngIf="keyC == 'NM_DEPO_DEST'"
+                ><i
+                  [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyC != 'NM_DEPO_DEST'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortC('NR_PEDI_ORIG')"
+              class="hover text-center"
+            >
+              Pedido
+              <span *ngIf="keyC == 'NR_PEDI_ORIG'"
+                ><i
+                  [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyC != 'NR_PEDI_ORIG'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortC('DT_PEDI_ORIG')"
+              class="hover text-center"
+            >
+              Data pedido
+              <span *ngIf="keyC == 'DT_PEDI_ORIG'"
+                ><i
+                  [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyC != 'DT_PEDI_ORIG'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortC('DT_PREV_ENTR')"
+              class="hover text-center"
+            >
+              Previsão entrega
+              <span *ngIf="keyC == 'DT_PREV_ENTR'"
+                ><i
+                  [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyC != 'DT_PREV_ENTR'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortC('NM_FORN')"
+              class="hover text-center"
+            >
+              Fornecedor
+              <span *ngIf="keyC == 'NM_FORN'"
+                ><i
+                  [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyC != 'NM_FORN'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortC('TT_ITEM_PEDI_SOLI_TONE')"
+              class="hover text-center"
+              *ngIf="this.modal.unidadeMedida != 'TON'"
+            >
+              Volume demanda (TON)
+              <span *ngIf="keyC == 'TT_ITEM_PEDI_SOLI_TONE'"
+                ><i
+                  [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyC != 'TT_ITEM_PEDI_SOLI_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortC('TT_ITEM_PEDI_RECE_TONE')"
+              class="hover text-center"
+              *ngIf="this.modal.unidadeMedida != 'TON'"
+            >
+              Volume recebido (TON)
+              <span *ngIf="keyC == 'TT_ITEM_PEDI_RECE_TONE'"
+                ><i
+                  [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyC != 'TT_ITEM_PEDI_RECE_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortC('TT_ITEM_PEDI_SALD_TONE')"
+              class="hover text-center"
+              *ngIf="this.modal.unidadeMedida != 'TON'"
+            >
+              Volume saldo (TON)
+              <span *ngIf="keyC == 'TT_ITEM_PEDI_SALD_TONE'"
+                ><i
+                  [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyC != 'TT_ITEM_PEDI_SALD_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortC('TT_ITEM_PEDI_SOLI')"
+              class="hover text-center"
+            >
+              Volume demanda
+              <span *ngIf="keyC == 'TT_ITEM_PEDI_SOLI'"
+                ><i
+                  [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyC != 'TT_ITEM_PEDI_SOLI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortC('TT_ITEM_PEDI_RECE')"
+              class="hover text-center"
+            >
+              Volume recebido
+              <span *ngIf="keyC == 'TT_ITEM_PEDI_RECE'"
+                ><i
+                  [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyC != 'TT_ITEM_PEDI_RECE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortC('TT_ITEM_PEDI_SALD')"
+              class="hover text-center"
+            >
+              Volume saldo
+              <span *ngIf="keyC == 'TT_ITEM_PEDI_SALD'"
+                ><i
+                  [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyC != 'TT_ITEM_PEDI_SALD'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dadosCarteiraDetalhesAbastGeral | orderBy: keyC:reverseC | slice: beginC:endC;">
+            <td 
+              nowrap
+              class="sticky"
+              style="left: 0px;"
+              width="190px"
+            >
+              {{item.NM_EMPR_DEST}}
+            </td>
+            <td 
+              nowrap 
+              class="sticky" 
+              style="left: 190px;"
+            >
+              {{item.NM_DEPO_DEST}}
+            </td>
+            <td nowrap>{{item.NR_PEDI_ORIG | number: '0.0' }}</td>
+            <td nowrap>{{item.DT_PEDI_ORIG | date: 'dd/MM/yyyy' }}</td>
+            <td nowrap>{{item.DT_PREV_ENTR | date: 'dd/MM/yyyy' }}</td>
+            <td nowrap>{{item.NM_FORN}}</td>
+            <td nowrap class="text-right" *ngIf="this.modal.unidadeMedida != 'TON'">{{item.TT_ITEM_PEDI_SOLI_TONE | number: '0.3' }}</td>
+            <td nowrap class="text-right" *ngIf="this.modal.unidadeMedida != 'TON'">{{item.TT_ITEM_PEDI_RECE_TONE | number: '0.3' }}</td>
+            <td nowrap class="text-right" *ngIf="this.modal.unidadeMedida != 'TON'">{{item.TT_ITEM_PEDI_SALD_TONE | number: '0.3' }}</td>
+            <td nowrap class="text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_SOLI | number: '0.0') : (item.TT_ITEM_PEDI_SOLI | number: '0.3')}}
+            </td>
+            <td nowrap class="text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_RECE | number: '0.0') : (item.TT_ITEM_PEDI_RECE | number: '0.3')}}
+            </td>
+            <td nowrap class="text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_SALD | number: '0.0') : (item.TT_ITEM_PEDI_SALD | number: '0.3')}}
+            </td>
+          </tr>
+          <tr>
+            <td 
+              nowrap
+              style="left: 0px;"
+              width="190px" class="bg-dark text-white sticky">
+              TOTAL
+            </td>
+            <td 
+              nowrap 
+              style="left: 190px;" 
+              class="bg-dark text-white text-center sticky">
+            </td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-right" *ngIf="this.modal.unidadeMedida != 'TON'">{{dadosCarteiraDetalhesAbastGeralTT.TT_ITEM_PEDI_SOLI_TONE | number: '0.' }}</td>
+            <td nowrap class="bg-dark text-white text-right" *ngIf="this.modal.unidadeMedida != 'TON'">{{dadosCarteiraDetalhesAbastGeralTT.TT_ITEM_PEDI_RECE_TONE | number: '0.' }}</td>
+            <td nowrap class="bg-dark text-white text-right" *ngIf="this.modal.unidadeMedida != 'TON'">{{dadosCarteiraDetalhesAbastGeralTT.TT_ITEM_PEDI_SALD_TONE | number: '0.' }}</td>
+            <td nowrap class="bg-dark text-white text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (dadosCarteiraDetalhesAbastGeralTT.TT_ITEM_PEDI_SOLI | number: '0.0') : (dadosCarteiraDetalhesAbastGeralTT.TT_ITEM_PEDI_SOLI | number: '0.3')}}
+            </td>
+            <td nowrap class="bg-dark text-white text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (dadosCarteiraDetalhesAbastGeralTT.TT_ITEM_PEDI_RECE | number: '0.0') : (dadosCarteiraDetalhesAbastGeralTT.TT_ITEM_PEDI_RECE | number: '0.3')}}
+            </td>
+            <td nowrap class="bg-dark text-white text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (dadosCarteiraDetalhesAbastGeralTT.TT_ITEM_PEDI_SALD | number: '0.0') : (dadosCarteiraDetalhesAbastGeralTT.TT_ITEM_PEDI_SALD | number: '0.3')}}
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div
+      class="mt-2 mb-2"
+      *ngIf="dadosCarteiraDetalhesAbastGeral?.length > itemsPerPage"
+    >
+      Exibindo {{ beginC + 1 }} a {{ endC }} de
+      {{ dadosCarteiraDetalhesAbastGeral?.length }}
+      <div class="d-flex">
+        <pagination
+          [maxSize]="10"
+          [totalItems]="dadosCarteiraDetalhesAbastGeral?.length"
+          (pageChanged)="onPageChangedC($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPageC"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
+      </div>
+    </div>
+  </tab>
+  <tab heading="Abastecimento Interno" *ngIf="enableTabAbastInterno">
+    <div class="table-responsive mt-2">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr>
+            <th
+              nowrap
+              (click)="sortA('NM_EMPR_DEST')"
+              class="hover text-center sticky"
+              style="background-color: #fff; left: 0px;"
+              width="190px"
+            >
+              Empresa
+              <span *ngIf="keyA == 'NM_EMPR_DEST'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'NM_EMPR_DEST'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortA('NM_DEPO_DEST')"
+              class="hover text-center sticky"
+              style="background-color: #fff; left: 190px;"
+            >
+              Depósito
+              <span *ngIf="keyA == 'NM_DEPO_DEST'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'NM_DEPO_DEST'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortA('NR_PEDI_ORIG')"
+              class="hover text-center"
+            >
+              Pedido PAI
+              <span *ngIf="keyA == 'NR_PEDI_ORIG'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'NR_PEDI_ORIG'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortA('DT_PEDI_ORIG')"
+              class="hover text-center"
+            >
+              Data pedido
+              <span *ngIf="keyA == 'DT_PEDI_ORIG'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'DT_PEDI_ORIG'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortA('NR_PEDI_REME')"
+              class="hover text-center"
+            >
+              Pedido remessa
+              <span *ngIf="keyA == 'NR_PEDI_REME'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'NR_PEDI_REME'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortA('DT_PREV_ENTR')"
+              class="hover text-center"
+            >
+              Previsão entrega
+              <span *ngIf="keyA == 'DT_PREV_ENTR'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'DT_PREV_ENTR'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortA('NM_FORN')"
+              class="hover text-center"
+            >
+              Fornecedor
+              <span *ngIf="keyA == 'NM_FORN'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'NM_FORN'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortA('TT_ITEM_PEDI_SOLI_DEPO_TONE')"
+              class="hover text-center"
+              *ngIf="this.modal.unidadeMedida != 'TON'"
+            >
+              Volume demanda (TON)
+              <span *ngIf="keyA == 'TT_ITEM_PEDI_SOLI_DEPO_TONE'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'TT_ITEM_PEDI_SOLI_DEPO_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortA('TT_ITEM_PEDI_RECE_DEPO_TONE')"
+              class="hover text-center"
+              *ngIf="this.modal.unidadeMedida != 'TON'"
+            >
+              Volume recebido (TON)
+              <span *ngIf="keyA == 'TT_ITEM_PEDI_RECE_DEPO_TONE'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'TT_ITEM_PEDI_RECE_DEPO_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortA('TT_ITEM_PEDI_SALD_DEPO_TONE')"
+              class="hover text-center"
+              *ngIf="this.modal.unidadeMedida != 'TON'"
+            >
+              Volume saldo (TON)
+              <span *ngIf="keyA == 'TT_ITEM_PEDI_SALD_DEPO_TONE'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'TT_ITEM_PEDI_SALD_DEPO_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortA('TT_ITEM_PEDI_SOLI_DEPO')"
+              class="hover text-center"
+            >
+              Volume demanda
+              <span *ngIf="keyA == 'TT_ITEM_PEDI_SOLI_DEPO'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'TT_ITEM_PEDI_SOLI_DEPO'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortA('TT_ITEM_PEDI_RECE_DEPO')"
+              class="hover text-center"
+            >
+              Volume recebido
+              <span *ngIf="keyA == 'TT_ITEM_PEDI_RECE_DEPO'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'TT_ITEM_PEDI_RECE_DEPO'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortA('TT_ITEM_PEDI_SALD_DEPO')"
+              class="hover text-center"
+            >
+              Volume saldo
+              <span *ngIf="keyA == 'TT_ITEM_PEDI_SALD_DEPO'"
+                ><i
+                  [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyA != 'TT_ITEM_PEDI_SALD_DEPO'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr
+            *ngFor="
+              let item of dadosCarteiraDetalhesAbastInterno
+                | orderBy: keyA:reverseA
+                | slice: beginA:endA;
+              let i = index
+            "
+          >
+            <td
+              nowrap
+              class="sticky"
+              style="left: 0px;"
+              width="190px"
+            >
+              {{ item.NM_EMPR_DEST }}
+            </td>
+            <td nowrap class="sticky" style="left: 190px;">
+              {{ item.NM_DEPO_DEST }}
+            </td>
+            <td nowrap class="text-center">
+              {{ item.NR_PEDI_ORIG | number: '0.0' }}
+            </td>
+            <td nowrap class="text-center">
+              {{ item.DT_PEDI_ORIG | date: 'dd/MM/yyyy' }}
+            </td>
+            <td nowrap class="text-center">
+              {{ item.NR_PEDI_REME | number: '0.0' }}
+            </td>
+            <td nowrap class="text-center">
+              {{ item.DT_PREV_ENTR | date: 'dd/MM/yyyy' }}
+            </td>
+            <td nowrap>{{ item.NM_FORN }}</td>
+            <td nowrap class="text-right"  *ngIf="this.modal.unidadeMedida != 'TON'">
+              {{ item.TT_ITEM_PEDI_SOLI_DEPO_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="text-right"  *ngIf="this.modal.unidadeMedida != 'TON'">
+              {{ item.TT_ITEM_PEDI_RECE_DEPO_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="text-right"  *ngIf="this.modal.unidadeMedida != 'TON'">
+              {{ item.TT_ITEM_PEDI_SALD_DEPO_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_SOLI_DEPO | number: '0.0') : (item.TT_ITEM_PEDI_SOLI_DEPO | number: '0.3')}}
+            </td>
+            <td nowrap class="text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_RECE_DEPO | number: '0.0') : (item.TT_ITEM_PEDI_RECE_DEPO | number: '0.3')}}
+            </td>
+            <td nowrap class="text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_SALD_DEPO | number: '0.0') : (item.TT_ITEM_PEDI_SALD_DEPO | number: '0.3')}}
+            </td>
+          </tr>
+          <tr *ngFor="let item of dadosCarteiraDetalhesAbastTotal">
+            <td
+              nowrap
+              class="bg-dark text-white sticky"
+              style="left: 0px;"
+              width="190px"
+            >
+              TOTAL
+            </td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center sticky"
+              style="left: 190px;"
+            ></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-right" *ngIf="this.modal.unidadeMedida != 'TON'">
+              {{ item.TT_ITEM_PEDI_SOLI_DEPO_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-right" *ngIf="this.modal.unidadeMedida != 'TON'">
+              {{ item.TT_ITEM_PEDI_RECE_DEPO_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-right" *ngIf="this.modal.unidadeMedida != 'TON'">
+              {{ item.TT_ITEM_PEDI_SALD_DEPO_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_SOLI_DEPO | number: '0.0') : (item.TT_ITEM_PEDI_SOLI_DEPO | number: '0.3')}}
+            </td>
+            <td nowrap class="bg-dark text-white text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_RECE_DEPO | number: '0.0') : (item.TT_ITEM_PEDI_RECE_DEPO | number: '0.3')}}
+            </td>
+            <td nowrap class="bg-dark text-white text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_SALD_DEPO | number: '0.0') : (item.TT_ITEM_PEDI_SALD_DEPO | number: '0.3')}}
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div
+      class="mt-2 mb-2"
+      *ngIf="dadosCarteiraDetalhesAbastInterno?.length > itemsPerPage"
+    >
+      Exibindo {{ beginA + 1 }} a {{ endA }} de
+      {{ dadosCarteiraDetalhesAbastInterno?.length }}
+      <div class="d-flex">
+        <pagination
+          [maxSize]="10"
+          [totalItems]="dadosCarteiraDetalhesAbastInterno?.length"
+          (pageChanged)="onPageChangedA($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPageA"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
+      </div>
+    </div>
+  </tab>
+  <tab
+    heading="Abastecimento Fornecedor"
+    *ngIf="enableTabAbastFornecedor"
+  >
+    <div class="table-responsive mt-4">
+      <custom-table subtitleBorder="true">
+        <ng-template #thead let-thead>
+          <tr>
+            <th
+              nowrap
+              (click)="sortB('NM_EMPR_DEST')"
+              class="hover text-center sticky"
+              style="background-color: #fff; left: 0px;"
+              width="190px"
+            >
+              Empresa
+              <span *ngIf="keyB == 'NM_EMPR_DEST'"
+                ><i
+                  [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyB != 'NM_EMPR_DEST'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortB('NM_DEPO_DEST')"
+              class="hover text-center sticky"
+              style="background-color: #fff; left: 190px;"
+            >
+              Depósito
+              <span *ngIf="keyB == 'NM_DEPO_DEST'"
+                ><i
+                  [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyB != 'NM_DEPO_DEST'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortB('NR_PEDI_ORIG')"
+              class="hover text-center"
+            >
+              Pedido
+              <span *ngIf="keyB == 'NR_PEDI_ORIG'"
+                ><i
+                  [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyB != 'NR_PEDI_ORIG'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortB('DT_PEDI_ORIG')"
+              class="hover text-center"
+            >
+              Data pedido
+              <span *ngIf="keyB == 'DT_PEDI_ORIG'"
+                ><i
+                  [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyB != 'DT_PEDI_ORIG'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortB('DT_PREV_ENTR')"
+              class="hover text-center"
+            >
+              Previsão entrega
+              <span *ngIf="keyB == 'DT_PREV_ENTR'"
+                ><i
+                  [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyB != 'DT_PREV_ENTR'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortB('NM_FORN')"
+              class="hover text-center"
+            >
+              Fornecedor
+              <span *ngIf="keyB == 'NM_FORN'"
+                ><i
+                  [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyB != 'NM_FORN'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortB('TT_ITEM_PEDI_SOLI_EMPR_TONE')"
+              class="hover text-center"
+              *ngIf="this.modal.unidadeMedida != 'TON'"
+            >
+              Volume demanda (TON)
+              <span *ngIf="keyB == 'TT_ITEM_PEDI_SOLI_EMPR_TONE'"
+                ><i
+                  [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyB != 'TT_ITEM_PEDI_SOLI_EMPR_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortB('TT_ITEM_PEDI_RECE_EMPR_TONE')"
+              class="hover text-center"
+              *ngIf="this.modal.unidadeMedida != 'TON'"
+            >
+              Volume recebido (TON)
+              <span *ngIf="keyB == 'TT_ITEM_PEDI_RECE_EMPR_TONE'"
+                ><i
+                  [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyB != 'TT_ITEM_PEDI_RECE_EMPR_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortB('TT_ITEM_PEDI_SALD_EMPR_TONE')"
+              class="hover text-center"
+              *ngIf="this.modal.unidadeMedida != 'TON'"
+            >
+              Volume saldo (TON)
+              <span *ngIf="keyB == 'TT_ITEM_PEDI_SALD_EMPR_TONE'"
+                ><i
+                  [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyB != 'TT_ITEM_PEDI_SALD_EMPR_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortB('TT_ITEM_PEDI_SOLI_EMPR')"
+              class="hover text-center"
+            >
+              Volume demanda
+              <span *ngIf="keyB == 'TT_ITEM_PEDI_SOLI_EMPR'"
+                ><i
+                  [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyB != 'TT_ITEM_PEDI_SOLI_EMPR'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortB('TT_ITEM_PEDI_RECE_EMPR')"
+              class="hover text-center"
+            >
+              Volume recebido
+              <span *ngIf="keyB == 'TT_ITEM_PEDI_RECE_EMPR'"
+                ><i
+                  [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyB != 'TT_ITEM_PEDI_RECE_EMPR'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              (click)="sortB('TT_ITEM_PEDI_SALD_EMPR')"
+              class="hover text-center"
+            >
+              Volume saldo
+              <span *ngIf="keyB == 'TT_ITEM_PEDI_SALD_EMPR'"
+                ><i
+                  [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="keyB != 'TT_ITEM_PEDI_SALD_EMPR'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr
+            *ngFor="
+              let item of dadosCarteiraDetalhesAbastFornecedor
+                | orderBy: keyB:reverseB
+                | slice: beginB:endB;
+              let i = index
+            "
+          >
+            <td
+              nowrap
+              class="sticky"
+              style="left: 0px;"
+              width="190px"
+            >
+              {{ item.NM_EMPR_DEST }}
+            </td>
+            <td nowrap class="sticky" style="left: 190px;">
+              {{ item.NM_DEPO_DEST }}
+            </td>
+            <td nowrap>{{ item.NR_PEDI_ORIG | number: '0.0' }}</td>
+            <td nowrap>
+              {{ item.DT_PEDI_ORIG | date: 'dd/MM/yyyy' }}
+            </td>
+            <td nowrap>
+              {{ item.DT_PREV_ENTR | date: 'dd/MM/yyyy' }}
+            </td>
+            <td nowrap>{{ item.NM_FORN }}</td>
+            <td nowrap class="text-right" *ngIf="this.modal.unidadeMedida != 'TON'">
+              {{ item.TT_ITEM_PEDI_SOLI_EMPR_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="text-right" *ngIf="this.modal.unidadeMedida != 'TON'">
+              {{ item.TT_ITEM_PEDI_RECE_EMPR_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="text-right" *ngIf="this.modal.unidadeMedida != 'TON'">
+              {{ item.TT_ITEM_PEDI_SALD_EMPR_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_SOLI_EMPR | number: '0.0') : (item.TT_ITEM_PEDI_SOLI_EMPR | number: '0.3')}}
+            </td>
+            <td nowrap class="text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_RECE_EMPR | number: '0.0') : (item.TT_ITEM_PEDI_RECE_EMPR | number: '0.3')}}
+            </td>
+            <td nowrap class="text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_SALD_EMPR | number: '0.0') : (item.TT_ITEM_PEDI_SALD_EMPR | number: '0.3')}}
+            </td>
+          </tr>
+          <tr *ngFor="let item of dadosCarteiraDetalhesAbastTotal">
+            <td
+              nowrap
+              class="bg-dark text-white sticky"
+              style="left: 0px;"
+              width="190px"
+            >
+              TOTAL
+            </td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center sticky"
+              style="left: 190px;"
+            ></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-right" *ngIf="this.modal.unidadeMedida != 'TON'">
+              {{ item.TT_ITEM_PEDI_SOLI_EMPR_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-right" *ngIf="this.modal.unidadeMedida != 'TON'">
+              {{ item.TT_ITEM_PEDI_RECE_EMPR_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-right" *ngIf="this.modal.unidadeMedida != 'TON'">
+              {{ item.TT_ITEM_PEDI_SALD_EMPR_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_SOLI_EMPR | number: '0.0') : (item.TT_ITEM_PEDI_SOLI_EMPR | number: '0.3')}}
+            </td>
+            <td nowrap class="bg-dark text-white text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_RECE_EMPR | number: '0.0') : (item.TT_ITEM_PEDI_RECE_EMPR | number: '0.3')}}
+            </td>
+            <td nowrap class="bg-dark text-white text-right">
+              {{this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI_SALD_EMPR | number: '0.0') : (item.TT_ITEM_PEDI_SALD_EMPR | number: '0.3')}}
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div
+      class="mt-2 mb-2"
+      *ngIf="
+        dadosCarteiraDetalhesAbastFornecedor?.length > itemsPerPage
+      "
+    >
+      Exibindo {{ beginB + 1 }} a {{ endB }} de
+      {{ dadosCarteiraDetalhesAbastFornecedor?.length }}
+      <div class="d-flex">
+        <pagination
+          [maxSize]="10"
+          [totalItems]="dadosCarteiraDetalhesAbastFornecedor?.length"
+          (pageChanged)="onPageChangedB($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPageB"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
+      </div>
+    </div>
+  </tab>
+</tabset>
+<div class="text-center d-flex justify-content-center align-items-center p-5" *ngIf="loaderBody">
+  <div class="spinner-border">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<div
+  *ngIf="noResultModal && !loadingDetalhesModal"
+  class="text-center d-flex justify-content-center align-items-center p-5"
+  style="height: 80%;"
+  >
+  <empty-result message="Nenhuma informação encontrada"></empty-result>
+</div>

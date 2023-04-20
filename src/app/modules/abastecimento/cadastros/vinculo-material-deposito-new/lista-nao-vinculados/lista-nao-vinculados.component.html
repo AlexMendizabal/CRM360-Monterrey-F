@@ -1,0 +1,128 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Não Vinculados">
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div *ngIf="loading">
+    <custom-table>
+      <ng-template #thead let-thead>
+        <tr class="text-center">
+          <th scope="col" class="hover" (click)="sort('NM_APOI_TIPO_MATE')">
+            Tipo Material
+            <span *ngIf="key == 'NM_APOI_TIPO_MATE'"
+              ><i
+                [ngClass]="
+                  reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                "
+              ></i
+            ></span>
+            <span *ngIf="key != 'NM_APOI_TIPO_MATE'"
+              ><i [ngClass]="'fas fa-sort'"></i
+            ></span>
+          </th>
+          <th scope="col" class="hover" (click)="sort('NM_LINH')">
+            Linha
+            <span *ngIf="key == 'NM_LINH'"
+              ><i
+                [ngClass]="
+                  reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                "
+              ></i
+            ></span>
+            <span *ngIf="key != 'NM_LINH'"
+              ><i [ngClass]="'fas fa-sort'"></i
+            ></span>
+          </th>
+          <th scope="col" class="hover" (click)="sort('NM_SUB_LINH')">
+            Sublinha
+            <span *ngIf="key == 'NM_SUB_LINH'"
+              ><i
+                [ngClass]="
+                  reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                "
+              ></i
+            ></span>
+            <span *ngIf="key != 'NM_SUB_LINH'"
+              ><i [ngClass]="'fas fa-sort'"></i
+            ></span>
+          </th>
+          <th scope="col" class="hover" (click)="sort('NM_CLAS')">
+            Classe
+            <span *ngIf="key == 'NM_CLAS'"
+              ><i
+                [ngClass]="
+                  reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                "
+              ></i
+            ></span>
+            <span *ngIf="key != 'NM_CLAS'"
+              ><i [ngClass]="'fas fa-sort'"></i
+            ></span>
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr
+          *ngFor="
+            let item of dadosMateDispAssociacao
+              | orderBy: key:reverse
+              | slice: begin:end;
+            let i = index
+          "
+        >
+          <td class="text-center">{{ item.NM_APOI_TIPO_MATE }}</td>
+          <td class="text-center">{{ item.NM_LINH }}</td>
+          <td class="text-center">
+            {{ item.NM_SUB_LINH ? item.NM_SUB_LINH : '-' }}
+          </td>
+          <td class="text-center">{{ item.NM_CLAS }}</td>
+          <td class="text-center">
+            <div>
+              <button
+                type="button"
+                class="btn-icon-sm"
+                tooltip="Incluir"
+                placement="left"
+                container="body"
+              >
+                <i
+                  class="fas fa-edit"
+                  (click)="onAdd(item)" 
+                  >
+                </i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </custom-table>
+  </div>
+  <div class="mt-2" *ngIf="dadosMateDispAssociacao?.length > itemsPerPage">
+    Exibindo {{ begin + 1 }} a {{ end }} de {{ dadosMateDispAssociacao?.length }}
+    <div class="d-flex">
+      <pagination
+        [maxSize]="10"
+        [totalItems]="dadosMateDispAssociacao?.length"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;"
+      >
+      </pagination>
+    </div>
+  </div>
+  <div
+    *ngIf="noResult"
+    class="text-center d-flex justify-content-center align-items-center p-5"
+    style="height: 80%;"
+  >
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

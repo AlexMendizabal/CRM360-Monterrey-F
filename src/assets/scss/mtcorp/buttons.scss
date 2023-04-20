@@ -1,0 +1,135 @@
+@import '../colors.scss';
+
+.btn {
+  i {
+    margin-right: 4px;
+    min-width: 16px;
+  }
+}
+
+.btn-icon,
+.modal .close {
+  align-items: center;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: $black;
+  display: inline-flex;
+  font-size: 16px;
+  height: 20px;
+  justify-content: center;
+  outline: none;
+  opacity: 0.7;
+  position: relative;
+  width: 20px;
+  z-index: 0;
+  &::before {
+    background: $dark-gray;
+    border-radius: 50%;
+    bottom: 0;
+    content: '';
+    display: block;
+    height: 40px;
+    left: -9px;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: -9px;
+    transform: scale(0);
+    transition-property: transform, opacity;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    width: 40px;
+    z-index: -1;
+  }
+  &:hover {
+    background: none;
+    border: none;
+    box-shadow: none;
+    color: $black !important;
+    opacity: 1;
+    text-decoration: none;
+    &::before {
+      opacity: 0.06;
+      transform: scale(1);
+    }
+  }
+  &:focus {
+    outline: unset;
+  }
+  &.disabled,
+  &[disabled] {
+    color: $medium-gray;
+    &:hover {
+      cursor: no-drop;
+      &::before {
+        background-color: transparent;
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+.btn-icon-sm {
+  align-items: center;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: $black;
+  display: inline-flex;
+  font-size: 13px;
+  height: 14px;
+  justify-content: center;
+  outline: none;
+  opacity: 0.7;
+  position: relative;
+  width: 14px;
+  z-index: 0;
+  &::before {
+    background: $dark-gray;
+    border-radius: 50%;
+    bottom: 0;
+    content: '';
+    display: block;
+    height: 25px;
+    left: -6px;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: -5px;
+    transform: scale(0);
+    transition-property: transform, opacity;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    width: 25px;
+    z-index: -1;
+  }
+  &:hover {
+    background: none;
+    border: none;
+    box-shadow: none;
+    color: $black !important;
+    opacity: 1;
+    text-decoration: none;
+    &::before {
+      opacity: 0.06;
+      transform: scale(1);
+    }
+  }
+  &:focus {
+    outline: unset;
+  }
+  &.disabled,
+  &[disabled] {
+    color: $medium-gray;
+    &:hover {
+      cursor: no-drop;
+      &::before {
+        background-color: transparent;
+        opacity: 0.5;
+      }
+    }
+  }
+}

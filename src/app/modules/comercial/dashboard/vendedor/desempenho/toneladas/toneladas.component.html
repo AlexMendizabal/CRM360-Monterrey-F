@@ -1,0 +1,47 @@
+<div class="border rounded bg-white shadow-sm p-3 h-100">
+  <div class="d-flex justify-content-between">
+    <div class="mtc-title mb-0">
+      <i
+        class="far fa-question-circle p-2"
+        tooltip="Evolução do faturamento diário em toneladas do mês atual e do mesmo mês do ano anterior. O ritmo mostra a tendência de faturamento até o final do mês."
+        placement="right">
+      </i>
+      Desempenho em toneladas
+    </div>
+    <div class="btn-group btn-group-sm" *ngIf="currMonth && pastMonth">
+      <button
+        type="button"
+        class="btn btn-light"
+        (click)="setMonth(pastMonth)"
+        [ngClass]="{'active': activeMonth == pastMonth}"
+        [disabled]="!chartLoaded">
+        <strong>{{ pastMonth }}</strong>
+      </button>
+      <button
+        type="button"
+        class="btn btn-light active"
+        (click)="setMonth(currMonth)"
+        [ngClass]="{'active': activeMonth == currMonth}"
+        [disabled]="!chartLoaded">
+        <strong>{{ currMonth }}</strong>
+      </button>
+    </div>
+  </div>
+  <div class="row align-items-center h-100">
+    <div class="col">
+      <div [hidden]="!chartLoaded">
+        <div [hidden]="activeMonth == pastMonth">
+          <div id="current-line-chart" class="amcharts" [hidden]="currEmpty"></div>
+          <empty-result message="Nenhuma informação encontrada" [hidden]="!currEmpty"></empty-result>
+        </div>
+        <div [hidden]="activeMonth == currMonth">
+          <div id="past-line-chart" class="amcharts" [hidden]="pastEmpty"></div>
+          <empty-result message="Nenhuma informação encontrada" [hidden]="!pastEmpty"></empty-result>
+        </div>
+      </div>
+      <div *ngIf="!chartLoaded" class="text-center">
+        <div class="spinner-border text-dark"></div>
+      </div>
+    </div>
+  </div>
+</div>

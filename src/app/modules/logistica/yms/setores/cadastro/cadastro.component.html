@@ -1,0 +1,206 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Setores">
+  <button 
+    [disabled]="form.valid === false || loadingNavBar === true"
+    (click)="postSetores()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-8 pt-2 mx-auto">
+        <legend>Dados da Setor</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-4 pl-0">
+            <label for="classe">Icone</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="icones"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              labelForId="classe"
+              [loading]="loadingIcones"
+              bindLabel="classe"
+              bindValue="classe"
+              id="classe"
+              (change)="onIconSelected($event)"
+              formControlName="DS_ICON"
+              [ngClass]="onFieldError('DS_ICON') + ' ' + onFieldRequired('DS_ICON')"
+
+              >
+              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                <div class="d-flex align-items-center">
+                    <div [class]="item.classe" style="min-width: 25px;"></div>
+                    <div>{{item.classe}}</div>
+                  </div>
+                </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-index="index">
+                <div class="d-flex align-items-center">
+                  <div [class]="item.classe" style="min-width: 25px;"></div>
+                  <div>{{item.classe}}</div>
+                </div>
+              </ng-template>
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('DS_ICON')" message="Icone é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-8 pl-0">
+            <label for="NM_SETO">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_SETO"
+              formControlName="NM_SETO"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_SETO') + ' ' + onFieldRequired('NM_SETO')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_SETO')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="tiposSetor">Tipo de Setor</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tiposSetor"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              [loading]="loadingTiposSetor"
+              labelForId="tiposSetor"
+              bindLabel="NM_SETO_TIPO"
+              bindValue="UUID_LOGI_YMS_SETO_TIPO"
+              id="tiposSetor"
+              formControlName="UUID_LOGI_YMS_SETO_TIPO"
+              [ngClass]="onFieldError('UUID_LOGI_YMS_SETO_TIPO') + ' ' + onFieldRequired('UUID_LOGI_YMS_SETO_TIPO')"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('UUID_LOGI_YMS_SETO_TIPO')" message="Tipo de Setor é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pl-0">
+            <label for="filiais">Filial</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="filiais"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              [loading]="loadingFiliais"
+              labelForId="filiais"
+              bindLabel="NM_FILI"
+              bindValue="UUID_LOGI_FILI"
+              id="filiais"
+              formControlName="UUID_LOGI_FILI"
+              [ngClass]="onFieldError('UUID_LOGI_FILI') + ' ' + onFieldRequired('UUID_LOGI_FILI')"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('UUID_LOGI_FILI')" message="Filial é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <fieldset class="border rounded shadow-sm col-8 pt-2 mx-auto">
+        <legend>Intervalos</legend>
+        <div formArrayName="intervalos" *ngIf="loadingTiposCircuitoSetor != true">
+          <div class="form-row">
+            <div class="form-group col mb-0 d-flex justify-content-between">
+              <div class="mtc-title"></div>
+              <div>
+                <a
+                  class="text-secondary"
+                  (click)="onAddIntervalos()"
+                  href="javascript:void(0)">
+                  <b>Adicionar</b>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="form-row"  *ngFor="let item of formIntervalos.controls; let i = index" [formGroupName]="i">
+            <div class="form-group col mb-0">
+              <div class="form-row">
+                <div class="form-group col-md-5 pl-0">
+                  <label for="tiposCircuito">Tipo de Circuito</label>
+                  <ng-select
+                    [searchable]="true"
+                    [clearable]="true"
+                    [items]="tiposCircuito"
+                    [virtualScroll]="true"
+                    placeholder="Selecione..."
+                    [loading]="loadingTiposCircuito"
+                    labelForId="tiposCircuito"
+                    bindLabel="NM_CIRC_TIPO"
+                    bindValue="UUID_LOGI_YMS_CIRC_TIPO"
+                    id="tiposCircuito"
+                    formControlName="UUID_LOGI_YMS_CIRC_TIPO"
+                    [ngClass]="onNestedFieldError('intervalos', i, 'UUID_LOGI_YMS_CIRC_TIPO') + ' ' + onNestedFieldRequired('intervalos', i, 'UUID_LOGI_YMS_CIRC_TIPO')"
+
+                    >
+                  </ng-select>
+                </div>
+                <div class="form-group col-md-4 pl-0">
+                  <label for="TP_INTV">tipo de tempo médio de Permanência</label>
+                  <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="tipos"
+                  [virtualScroll]="true"
+                  labelForId="tipo"
+                  bindLabel="nome"
+                  bindValue="cod"
+                  id="tipo"
+                  formControlName="TP_INTV"
+                  [ngClass]="onNestedFieldError('intervalos', i, 'TP_INTV') + ' ' + onNestedFieldRequired('intervalos', i, 'TP_INTV')"
+                  placeholder="Selecione..."
+                  >
+                  </ng-select>
+                </div>
+                <div class="form-group col-md-2 pl-0">
+                  <label for="HR_INTV" style="margin-bottom: 2px;">Tempo Médio</label>
+                  <timepicker
+                  [showMeridian]="false"
+                  [showSpinners]="false"
+                  [mousewheel]="false"
+                  formControlName="HR_INTV"
+                  [ngClass]="onNestedFieldError('intervalos', i, 'HR_INTV') + ' ' + onNestedFieldRequired('intervalos', i, 'HR_INTV')"
+                  >
+                </timepicker>
+                </div>
+                <div class="col-1 pt-4 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon"
+                    (click)="onDeleteTipoCircuito(i)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="loadingTiposCircuitoSetor == true">
+          <div class="col">
+            <message
+              icon="fas fa-cog fa-spin"
+              text="Estamos pesquisando os intervalos para você...">
+            </message>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+      <br>
+      <fieldset class="border rounded shadow-sm col-8 pt-2 mx-auto">
+        <legend>Observação</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observação:</label>
+            <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

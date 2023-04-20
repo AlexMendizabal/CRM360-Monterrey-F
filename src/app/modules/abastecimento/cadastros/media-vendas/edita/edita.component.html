@@ -1,0 +1,95 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavBar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro">
+  <button 
+  (click)="onEdit()"
+  [disabled]="form.status=='INVALID' || comparaData()"
+  >
+  Salvar
+</button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="container-fluid">
+    <div class="col-12 p-0">
+      <form id="form-abastecimento-painel-decisao-abastecimento" [formGroup]="form" autocomplete="off">
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-3">
+            <label for="linha">Linha</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="linhas"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="false"
+              placeholder="Selecione linha"
+              bindLabel="linha"
+              bindValue="linha"
+              formControlName="linha"
+              (change) = "getClasses(linha)"
+              [ngClass]="onFieldError('linha') + ' ' + onFieldRequired('linha')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('linha')"
+              message="Linha é obrigatório.">
+            </invalid-form-control>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="classe">Classe</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="classes"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="false"
+              labelForId="classe"
+              bindLabel="classeDescricao"
+              bindValue="classeId"
+              placeholder="TODOS"
+              formControlName="classe"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-3">
+            <label for="peridoInicial">Data Inicial</label>
+            <input
+              class="form-control"
+              id="dataInicial"
+              type="text"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              formControlName="dataInicial"
+              [ngClass]="onFieldError('dataInicial') + ' ' + onFieldRequired('dataInicial')">
+            <invalid-form-control
+              [show]="onFieldInvalid('dataInicial')"
+              message="Data inicial é obrigatório.">
+            </invalid-form-control>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="peridoFinal">Data Final</label>
+            <input
+              class="form-control"
+              id="dataFinal"
+              type="text"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              formControlName="dataFinal"
+              [ngClass]="onFieldError('dataFinal') + ' ' + onFieldRequired('dataFinal')">
+            <invalid-form-control
+              [show]="onFieldInvalid('dataFinal')"
+              message="Data final é obrigatório.">
+            </invalid-form-control>
+            <invalid-form-control
+              [show]="comparaData()"
+              message="Data final deve ser maior que data inicial">
+            </invalid-form-control>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

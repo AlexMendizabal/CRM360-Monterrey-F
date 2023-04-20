@@ -1,0 +1,149 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro">
+  <button
+    type="button"
+    [disabled]="form.status == 'INVALID'"
+    (click)="onSave()"
+  >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="container">
+    <div class="col-md-12">
+      <div class="row justify-content-md-center mt-3">
+        <div class="col-md-7">
+          <div class="row">
+            <div class="col-md-6">
+              <p class="pFont">
+                <strong>TIPO DE MATERIAL</strong><br />
+                {{ tipoMaterial }}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p class="pFont">
+                <strong>LINHA</strong><br />
+                {{ linha }}
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <p class="pFont">
+                <strong>SUB LINHA</strong><br />
+                {{ subLinha ? subLinha : '-' }}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p class="pFont">
+                <strong>CLASSE</strong><br />
+                {{ classe }}
+              </p>
+            </div>
+          </div>
+          <form [formGroup]="form" autocomplete="off">
+            <div class="form-row">
+              <div class="form-group col-lg-6 mb-lg-0">
+                <label for="deposito">Empresas</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="true"
+                  [multiple]="true"
+                  [items]="empresas"
+                  [virtualScroll]="true"
+                  [hideSelected]="true"
+                  [closeOnSelect]="false"
+                  placeholder="Selecione..."
+                  bindLabel="NM_FANT"
+                  bindValue="ID"
+                  formControlName="empresas"
+                  (change)="getDepositos()"
+                >
+                </ng-select>
+              </div>
+              <div class="form-group col-lg-6 mb-lg-0">
+                <label for="deposito">Depósitos</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="true"
+                  [multiple]="true"
+                  [items]="depositos"
+                  [virtualScroll]="true"
+                  [hideSelected]="true"
+                  [closeOnSelect]="false"
+                  placeholder="Selecione..."
+                  bindLabel="NM_DEPO"
+                  bindValue="ID"
+                  formControlName="depositos"
+                  [ngClass]="
+                  onFieldError('depositos') +
+                  ' ' +
+                  onFieldRequired('depositos')
+                "
+                >
+                </ng-select>
+                <invalid-form-control
+                  [show]="onFieldInvalid('depositos')"
+                  message="Depósito é obrigatório."
+                >
+                </invalid-form-control>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div
+        class="row justify-content-md-center mt-3"
+        *ngIf="!noResultDepositos"
+      >
+        <div class="form-group col-md-7">
+          <label for="depositosVinculados">Depósitos Vinculados</label>
+          <div class="table-reponsive">
+            <custom-table>
+              <ng-template #thead let-thead>
+                <tr class="text-center">
+                  <th scope="col">Empresa</th>
+                  <th scope="col">Depósito</th>
+                  <th scope="col" class="hover"></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of dadosDepositosAssociados">
+                  <td class="text-left">{{ item.NM_EMPR }}</td>
+                  <td class="text-left">{{ item.NM_DEPO }}</td>
+                  <td class="text-center" style="width: 40px;">
+                    <div>
+                      <button
+                        type="button"
+                        class="btn-icon-sm"
+                        placement="left"
+                        tooltip="Ativar/Desativar"
+                        container="body"
+                       (click)="onUpdate(item)"
+                      >
+                        <i [ngClass]="item.IN_STAT == 1 ? 'fas fa-toggle-on text-success' : 'fas fa-toggle-off'"></i>
+                      </button>
+                    </div>
+                  </td>
+                  <!-- <td style="width: 40px;">
+                    <button
+                      class="btn-icon-sm text-center"
+                      style="color: red;"
+                      tooltip="Excluir"
+                      (click)="onDelete(item)"
+                    >
+                      <i class="far fa-trash-alt"></i>
+                    </button>
+                  </td> -->
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>

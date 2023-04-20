@@ -1,0 +1,325 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Comissões de Representantes">
+  <!-- <button
+    type="button"
+    (click)= 'onRefresh();'>
+    Atualizar
+  </button> -->
+  <button
+    [disabled]="!form.valid"
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+  <button
+  type="button"
+  (click)="onDownload()"
+  [disabled]="disabledDownload">
+  Download
+</button>
+</app-header>
+
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+
+            <div class="form-group col-md-2 pl-0">
+              <label for="periodo">Periodo</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                  class="form-control"
+                  id="periodo"
+                  type="text"
+                  bsDatepicker
+                  placeholder="Selecione..."
+                  [bsConfig]="{dateInputFormat: 'MM/YYYY', minMode:'month'}"
+                  formControlName="periodo"
+                  [ngClass]="onFieldError('periodo') + ' ' + onFieldRequired('periodo')">
+                <invalid-form-control [show]="onFieldInvalid('periodo')" message="Período é obrigatório"></invalid-form-control>
+              </div>
+            </div>
+
+            <div class="form-group col-md-4 pl-0">
+              <label for="codRepresentante">Representante</label>
+                <ng-select
+                  [virtualScroll]="true"
+                  [hideSelected]="true"
+                  [closeOnSelect]="true"
+                  [searchable]="true"
+                  [clearable]="false"
+                  type='text'
+                  [items]="representantes"
+                  placeholder="Selecione..."
+                  bindLabel="nomeRepresentante"
+                  bindValue="codRepresentante"
+                  formControlName="codRepresentante"
+                  [ngClass]="onFieldError('codRepresentante') + ' ' + onFieldRequired('codRepresentante')">
+                  <invalid-form-control
+                  [show]="onFieldInvalid('codRepresentante')"
+                  message="Representante é obrigatório.">
+                  </invalid-form-control>
+                </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+
+  <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty"></empty-result>
+
+
+  <div class="row mt-30" id="comissoes-representantes" *ngIf="dados.length > 0 && !dadosEmpty">
+    <div class="container bg-white">
+        <div class="row mb-3">
+          <div class="col-md-2">
+            <img src="../../../../../../assets/images/logo/logo-manetoni.png">
+          </div>
+
+          <div class="col-md-1 mb-3 mt-3"></div>
+
+          <div class="col-md-8 mb-3 mt-3 colorBlack">
+            <h2>Relatório de Comissões de Representantes</h2>
+          </div>
+        </div>
+
+        <div class="row text-right small">
+
+            <div class="col-12 colorGray">
+              {{ dateToday | date: 'dd/MM/yyyy' }}
+            </div>
+
+            <div class="col-12 colorGray">
+              Período de {{ dados[0].representante[0].periodo }}
+            </div>
+          </div>
+
+
+        <div class="row mt-1 justify-content-center">
+            <div class="col-md-4 mb-3">
+              <div class="rounded shadow-sm justify-content-between w-100 h-100 pl-3 hover colorLowGray mb-3">
+
+                <div class="row">
+                  <div class="col-12 text-muted large font-weight-bold mt-2 ">
+                  <i class="material-icons colorBlack mid">people</i>
+                  <p class="colorBlack bigCards">Vendedor: {{ dados[0].representante[0].nomeRepresentante }}</p>
+                  <div></div>
+                  <p class="colorBlack bigCards">Comissionamento: {{ dados[0].representante[0].comissionamento }}</p>
+                  <p class="colorBlack bigCards"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-1 justify-content-center">
+            <div class="col-md-4 mb-3" *ngFor="let item of dados[0].ros">
+              <div class="rounded shadow-sm justify-content-between w-100 h-100 pl-3 hover colorLowGray ">
+
+                <div class="row" >
+                  <div class="col-12 text-muted large font-weight-bold mt-2">
+                    <i class="material-icons colorRed mid">report_problem</i>
+                    <p class="colorRed bigCards">Número RO: {{ item.nrRo }}</p>
+                    <p class="colorRed bigCards">Cliente: {{ item.nomeCliente }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="row mt-1 justify-content-center">
+          <!-- <div class="col-md-2"></div> -->
+
+          <div class="col-md-4 mb-3" *ngFor="let data of dados[0].faixa" >
+            <div class="rounded shadow-sm justify-content-between w-100 h-100 pl-0 hover colorLowGray " >
+              <i class="material-icons colorBlack mid pl-3">moving</i>
+              <!-- <div class="mtc-title mb-2 pl-2">Comissionamento: {{ tipoComissionamento['dsTipoComissionamento'] }}</div> -->
+              <div class="row">
+                <div class="col text-muted large font-weight-bold mt-2">
+
+                  <div class="col-12 mb-3" >
+                    <custom-table>
+                      <ng-template #thead let-thead  >
+                        <tr>
+                          <th scope="col" class="border text-center" style="width: 50%">Linha</th>
+                          <th scope="col" class="border text-center" style="width: 50%">Classe</th>
+                        </tr>
+                      </ng-template>
+                      <ng-template #tbody let-tbody>
+                        <tr>
+                          <td class="text-center">{{ data.nomeLinha }}</td>
+                          <td class="text-center" *ngIf="data.codClasse === 0" >TODOS</td>
+                          <td class="text-center" *ngIf="data.codClasse != 0">{{ data.nomeClasse }}</td>
+                        </tr>
+                      </ng-template>
+                    </custom-table>
+                    <custom-table>
+                      <ng-template #thead let-thead>
+                        <tr>
+                          <th scope="col" class="border text-center" style="width: 55%">Percentual de desconto da tabela de vendas de materiais (%) </th>
+                          <th scope="col" class="border text-center" style="width: 45%">Percentual a ser pago de comissão sobre o título (%) </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template #tbody let-tbody>
+                        <tr *ngFor="let item of data.percentual">
+                          <td class="text-center">{{ item.percDescontoDe }} a {{ item.percDescontoAte }} %</td>
+                          <td class="text-center">{{ item.percPago }} %</td>
+                        </tr>
+                      </ng-template>
+                    </custom-table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <div class="row mt-3">
+        <div class="col text-muted large font-weight-bold mt-1 p-2 marginNegative">
+          <p class="colorBlack">Nota Fiscal</p>
+        </div>
+
+        <table class="table table-striped table-hover bdTopLeft ">
+          <thead class="colorHighGray colorBlack ">
+            <tr>
+              <th scope="col" class="bdTopLeft pl-2 pb-3 borderNone">Razão Social</th>
+              <th scope="col" class="borderNone pb-3">NF</th>
+              <th scope="col" class="borderNone pb-3">Valor NF</th>
+              <th scope="col" class="borderNone pb-3">Data Faturamento</th>
+              <th scope="col" class="borderNone pb-3" *ngIf="dados[0].representante[0].codComissionamento === 1">
+                Duplicada Baixada
+              </th>
+              <th scope="col" class="borderNone pb-3" *ngIf="dados[0].representante[0].codComissionamento === 1">
+                Data Baixa
+              </th>
+              <th scope="col" class="borderNone pb-3" *ngIf="dados[0].representante[0].codComissionamento === 1">
+                Valor Duplicata
+              </th>
+              <th scope="col" class="borderNone bdTopRight pb-2">
+                <div class="row d-flex align-items-end">
+
+                  <div class="col " >
+                    <label>Itens</label>
+                  </div>
+                  <div class="col" >
+                    <label>Valor Item</label>
+                  </div>
+                  <div class="col" >
+                    <label>Valor Base</label>
+                  </div>
+                  <div class="col" >
+                    <label>Percentual</label>
+                  </div>
+                  <div class="col" >
+                    <label >Valor Comissão</label>
+                  </div>
+                </div>
+              </th>
+
+
+
+            </tr>
+          </thead>
+          <tbody class="font-weight-bold fontGray">
+
+            <tr *ngFor="let data of dados[0].detalhes">
+              <!-- bdBottomLeft -->
+              <td class="smallFont  pl-2 ">{{ data.codCliente }} - {{ data.nomeCliente }}</td>
+              <td class="smallFont">{{ data.nrNota }}</td>
+              <td class="smallFont">{{ data.valorNota | currency:'BRL':'symbol':'1.2-2' }}</td>
+              <td class="smallFont">{{ data.dataFaturamento | date: 'dd/MM/yyyy' }}</td>
+              <td class="smallFont" *ngIf="dados[0].representante[0].codComissionamento === 1">
+                {{ data.duplicataBaixada }}
+              </td>
+              <td class="smallFont" *ngIf="dados[0].representante[0].codComissionamento === 1">
+                {{ data.dataBaixa | date: 'dd/MM/yyyy' }}
+              </td>
+              <td class="smallFont" *ngIf="dados[0].representante[0].codComissionamento === 1">
+                {{ data.valorDuplicata | currency:'BRL':'symbol':'1.2-2'}}
+              </td>
+              <td class="microFont " >
+                <div class="row d-flex align-items-center" *ngFor="let itens of data.item">
+
+                  <div class="col" >
+                    <label>{{ itens.nomeMaterial }}</label>
+                  </div>
+                  <div class="col pl-1" >
+                    <label>{{ itens.valorItem | currency:'BRL':'symbol':'1.2-2' }}</label>
+                  </div>
+                  <div class="col pl-1" >
+                    <label>{{ itens.valorBase | currency:'BRL':'symbol':'1.2-2' }}</label>
+                  </div>
+                  <div class="col" >
+                    <label>{{ itens.percItem }} %</label>
+                  </div>
+                  <div class="col " >
+                    <label>{{ itens.totalComissao | currency:'BRL':'symbol':'1.2-2' }}</label>
+                  </div>
+                </div>
+
+              </td>
+              <!-- bdBottomRight -->
+
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+        <div class="row" *ngFor="let item of dados[0].representante">
+          <div class="col text-muted large font-weight-bold mt-1 p-2 marginNegative">
+            <p class="colorBlack">TOTAIS de {{ item.dataInicial | date: 'dd/MM/yyyy' }} a
+              {{ item.dataFinal | date: 'dd/MM/yyyy' }}</p>
+          </div>
+
+        <table class="table table-striped table-hover bdTopLeft ">
+          <thead class="colorHighGray colorBlack ">
+            <tr>
+              <th scope="col"
+              class="bdTopLeft p-2 pl-2 borderNone"
+              *ngIf="dados[0].representante[0].codComissionamento === 1">
+                Total Baixado
+              </th>
+              <th scope="col" class="bdTopLeft borderNone p-2" *ngIf="dados[0].representante[0].codComissionamento != 1">
+                Ros descontadas
+              </th>
+              <th scope="col" class="borderNone p-2" *ngIf="dados[0].representante[0].codComissionamento === 1">
+                Ros descontadas</th>
+              <th scope="col" class="p-2 borderNone">Descontos
+
+              </th>
+              <th scope="col" class="p-2 borderNone">Ajuda de custo</th>
+              <th scope="col" class="p-2 borderNone">Valor Comissão</th>
+              <th scope="col" class="bdTopRight p-2  text-center borderNone">Total a ser pago</th>
+            </tr>
+          </thead>
+          <tbody class="font-weight-bold fontGray">
+
+            <tr>
+              <td class="smallFont p-1 pl-2 bdBottomLeft" *ngIf="dados[0].representante[0].codComissionamento === 1">
+                {{ item.totalBaixado | currency:'BRL':'symbol':'1.2-2' }}
+              </td>
+              <td class="smallFont p-1 bdBottomLeft" *ngIf="dados[0].representante[0].codComissionamento != 1">
+                {{ item.rosDescontadas | currency:'BRL':'symbol':'1.2-2' }}
+              </td>
+              <td class="smallFont p-1" *ngIf="dados[0].representante[0].codComissionamento === 1">
+                {{ item.rosDescontadas | currency:'BRL':'symbol':'1.2-2' }}
+              </td>
+              <td class="smallFont p-1">{{ item.descontos | currency:'BRL':'symbol':'1.2-2' }}</td>
+              <td class="smallFont p-1">{{ item.ajudaCusto | currency:'BRL':'symbol':'1.2-2' }}</td>
+              <td class="smallFont p-1">{{ item.valorComissao | currency:'BRL':'symbol':'1.2-2' }}</td>
+              <td class="smallFont text-center p-1 bdBottomRight">{{ item.totalPago | currency:'BRL':'symbol':'1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</app-body>

@@ -1,0 +1,34 @@
+
+@media print {
+  #pedido-pdf {
+      background-color: white;
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      margin: 0;
+      padding: 15px;
+      font-size: 14px;
+      line-height: 18px;
+  }
+}
+
+button[disabled]{
+  cursor: no-drop;
+}
+
+
+ul{
+  list-style: none;
+  padding: 0;
+}
+  
+.card-indication:hover {
+  box-shadow: 10px 10px 8px 0px rgb(0 0 0 / 15%);
+  transition: 0.2s;
+}
+
+.button_action{
+  width: 110px;
+}

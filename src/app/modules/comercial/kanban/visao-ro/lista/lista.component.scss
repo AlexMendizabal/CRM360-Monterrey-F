@@ -1,0 +1,33 @@
+::ng-deep {
+  .dropdown-item:hover {
+    cursor: pointer;
+  }
+  .card-title {
+    font-size: 1.05rem;
+  }
+
+
+  .abertas {
+    background-color: #F5B7B1;
+    border: solid 1.5px #b60707;
+    border-radius: 7px;
+  }
+  .cartao-abertas:hover {
+    background-color: #F1948A;
+    border-radius: 7px;
+  }
+
+  .fechadas {
+    background-color: #A9DFBF;
+    border: solid 1.5px #067504;
+    border-radius: 7px;
+  }
+  .cartao-fechadas:hover {
+    background-color: #7DCEA0;
+    border-radius: 7px;
+  }
+
+  
+
+}
+

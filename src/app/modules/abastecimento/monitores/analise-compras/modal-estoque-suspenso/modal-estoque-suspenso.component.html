@@ -1,0 +1,311 @@
+<div class="row mb-2 mt-2" id="header-modal-estoque-suspenso">
+  <div class="col-3">
+    <p style="font-size: 14px;">
+      <strong> CÓD. MATERIAL: </strong>
+      {{ modal.codMaterial }}
+    </p>
+  </div>
+  <div class="col-6">
+    <p style="font-size: 14px;">
+      <strong> DESCRIÇÃO: </strong>
+      {{ modal.descMaterial }}
+    </p>
+  </div>
+  <div class="col-3 text-right">
+    <button type="button" (click)="onFilter()" class="btn mr-2">
+      Filtrar
+    </button>
+    <button type="button" (click)="excelExport()" class="btn">
+      Exportar Excel
+    </button>
+  </div>
+</div>
+<advanced-filter>
+  <form [formGroup]="form" autocomplete="off">
+    <div class="form-row">
+      <div class="form-group col-lg-2">
+        <label for="empresas">Empresas</label>
+        <input class="form-control" id="empresas" type="text" formControlName="empresas">
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="depositos">Depósito</label>
+        <input class="form-control" id="depositos" type="text" formControlName="depositos">
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="dataEntrada">Data entrada/lançamento</label>
+        <input class="form-control" id="dataEntrada" type="text" bsDatepicker [bsConfig]="bsConfig"
+          formControlName="dataEntrada">
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="notaFiscal">Nota Fiscal</label>
+        <input class="form-control" id="notaFiscal" type="text" formControlName="notaFiscal">
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="motivo">Motivo</label>
+        <input class="form-control" id="motivo" type="text" formControlName="motivo">
+      </div>
+    </div>
+  </form>
+</advanced-filter>
+<tabset *ngIf="(!estoqueSupensoEntradaMaterialEmpty || !estoqueSupensoGeralEmpty)  && !loaderBody">
+  <tab heading="Inventário" *ngIf="!estoqueSupensoGeralEmpty">
+    <div class="table-responsive mt-2">
+      <custom-table subtitleBorder="true">
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th nowrap (click)="sortA('NM_EMPR')" class="hover text-center">
+              Empresa
+              <span *ngIf="keyA == 'NM_EMPR'"><i [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyA != 'NM_EMPR'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortA('NM_DEPO')" class="hover text-center">
+              Depósito
+              <span *ngIf="keyA == 'NM_DEPO'"><i [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyA != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <!-- <th nowrap (click)="sortA('NR_PEDI_ORIG')" class="hover text-center">
+              Data Lançamento
+              <span *ngIf="keyA == 'NR_PEDI_ORIG'"><i [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyA != 'NR_PEDI_ORIG'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th> -->
+            <th nowrap (click)="sortA('DS_MOTI')" class="hover text-center">
+              Motivo
+              <span *ngIf="keyA == 'DS_MOTI'"><i [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyA != 'DS_MOTI'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortA('TT_ITEM')" class="hover text-center">
+              Volume
+              <span *ngIf="keyA == 'TT_ITEM'"><i [ngClass]="
+                    reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyA != 'TT_ITEM'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dadosEstoqueSuspensoInventario | orderBy: keyA:reverseA | slice: beginA:endA;">
+            <td nowrap class="text-center">{{item.NM_EMPR}}</td>
+            <td nowrap class="text-center">{{item.NM_DEPO}}</td>
+<!--             <td nowrap class="text-center">sem data lançamento</td> -->
+            <td nowrap class="text-center">{{item.DS_MOTI}}</td>
+            <td nowrap class="text-center">{{item.TT_ITEM | number: '0.3'}}</td>
+          </tr>
+          <tr>
+            <td nowrap class="text-center text-white bg-dark">Total</td>
+            <td nowrap class="text-center text-white bg-dark"></td>
+            <!-- <td nowrap class="text-center text-white bg-dark"></td> -->
+            <td nowrap class="text-center text-white bg-dark"></td>
+            <td nowrap class="text-center text-white bg-dark">{{dadosEstoqueSuspensoInventarioTotal.TT_ITEM | number: '0.3'}}</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="mt-2 mb-2" *ngIf="dadosEstoqueSuspensoInventario?.length > itemsPerPage">
+      Exibindo {{ beginA + 1 }} a {{ endA }} de
+      {{ dadosEstoqueSuspensoInventario?.length }}
+      <div class="d-flex">
+        <pagination [maxSize]="10" [totalItems]="dadosEstoqueSuspensoInventario?.length"
+          (pageChanged)="onPageChangedA($event)" [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true"
+          [(ngModel)]="currentPageA" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </tab>
+  <tab heading="Entrada de materias" *ngIf="!estoqueSupensoEntradaMaterialEmpty">
+    <div class="table-responsive mt-2">
+      <custom-table subtitleBorder="true">
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th nowrap (click)="sortB('NM_EMPR')" class="hover text-center">
+              Empresa
+              <span *ngIf="keyB == 'NM_EMPR'"><i [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyB != 'NM_EMPR'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortB('NM_DEPO')" class="hover text-center">
+              Depósito
+              <span *ngIf="keyB == 'NM_DEPO'"><i [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyB != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortB('NR_RELA')" class="hover text-center">
+              Relatório
+              <span *ngIf="keyB == 'NR_RELA'"><i [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyB != 'NR_RELA'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortB('DT_ENTR')" class="hover text-center">
+              Data Entrada
+              <span *ngIf="keyB == 'DT_ENTR'"><i [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyB != 'DT_ENTR'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortB('NR_NOTA_FISC')" class="hover text-center">
+              Nota Fiscal
+              <span *ngIf="keyB == 'NR_NOTA_FISC'"><i [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyB != 'NR_NOTA_FISC'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortB('NM_FORN')" class="hover text-center">
+              Fornecedor
+              <span *ngIf="keyB == 'NM_FORN'"><i [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyB != 'NM_FORN'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortB('NR_LOTE')" class="hover text-center">
+              Lote
+              <span *ngIf="keyB == 'NR_LOTE'"><i [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyB != 'NR_LOTE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortB('TT_ITEM')" class="hover text-center">
+              Volume
+              <span *ngIf="keyB == 'TT_ITEM'"><i [ngClass]="
+                    reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyB != 'TT_ITEM'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dadosEstoqueSuspensoEntradaMaterial | orderBy: keyB:reverseB | slice: beginB:endB;">
+            <td nowrap class="text-center">{{item.NM_EMPR}}</td>
+            <td nowrap class="text-center">{{item.NM_DEPO}}</td>
+            <td nowrap class="text-center">{{item.NR_RELA | number: '0.0'}}</td>
+            <td nowrap class="text-center">{{item.DT_ENTR | date: 'dd/MM/yyyy'}}</td>
+            <td nowrap class="text-center">{{item.NR_NOTA_FISC | number: '0.0'}}</td>
+            <td nowrap class="text-center">{{item.NM_FORN}}</td>
+            <td nowrap class="text-center">{{item.NR_LOTE | number: '0.0'}}</td>
+            <td nowrap class="text-center">{{item.TT_ITEM | number: '0.3'}}</td>
+          </tr>
+          <tr>
+            <td nowrap class="text-center text-white bg-dark">Total</td>
+            <td nowrap class="text-center text-white bg-dark"></td>
+            <td nowrap class="text-center text-white bg-dark"></td>
+            <td nowrap class="text-center text-white bg-dark"></td>
+            <td nowrap class="text-center text-white bg-dark"></td>
+            <td nowrap class="text-center text-white bg-dark"></td>
+            <td nowrap class="text-center text-white bg-dark"></td>
+            <td nowrap class="text-center text-white bg-dark">{{dadosEstoqueSuspensoEntradaMaterialTotal.TT_ITEM | number: '0.3'}}</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="mt-2 mb-2" *ngIf="
+        dadosEstoqueSuspensoEntradaMaterial?.length > itemsPerPage
+      ">
+      Exibindo {{ beginB + 1 }} a {{ endB }} de
+      {{ dadosEstoqueSuspensoEntradaMaterial?.length }}
+      <div class="d-flex">
+        <pagination [maxSize]="10" [totalItems]="dadosEstoqueSuspensoEntradaMaterial?.length"
+          (pageChanged)="onPageChangedB($event)" [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true"
+          [(ngModel)]="currentPageB" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </tab>
+  <!-- <tab heading="Inventário">
+    <div class="table-responsive mt-2">
+      <custom-table subtitleBorder="true">
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th nowrap (click)="sortC('NR_PEDI_ORIG')" class="hover text-center">
+              Empresa
+              <span *ngIf="keyC == 'NR_PEDI_ORIG'"><i [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyC != 'NR_PEDI_ORIG'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortC('NR_PEDI_ORIG')" class="hover text-center">
+              Depósito
+              <span *ngIf="keyC == 'NR_PEDI_ORIG'"><i [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyC != 'NR_PEDI_ORIG'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortC('NR_PEDI_ORIG')" class="hover text-center">
+              Relatório
+              <span *ngIf="keyC == 'NR_PEDI_ORIG'"><i [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyC != 'NR_PEDI_ORIG'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortC('NR_PEDI_ORIG')" class="hover text-center">
+              Data lançamento
+              <span *ngIf="keyC == 'NR_PEDI_ORIG'"><i [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyC != 'NR_PEDI_ORIG'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortC('NR_PEDI_ORIG')" class="hover text-center">
+              Usuário
+              <span *ngIf="keyC == 'NR_PEDI_ORIG'"><i [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyC != 'NR_PEDI_ORIG'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortC('NR_PEDI_ORIG')" class="hover text-center">
+              Motivo
+              <span *ngIf="keyC == 'NR_PEDI_ORIG'"><i [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyC != 'NR_PEDI_ORIG'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sortC('NR_PEDI_ORIG')" class="hover text-center">
+              Volume
+              <span *ngIf="keyC == 'NR_PEDI_ORIG'"><i [ngClass]="
+                    reverseC ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="keyC != 'NR_PEDI_ORIG'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dadosEstoqueSuspensoInventario | orderBy: keyC:reverseC | slice: beginC:endC;">
+            <td nowrap class="text-center">asdasdas</td>
+            <td nowrap class="text-center">asdasdas</td>
+            <td nowrap class="text-center">asdasdas</td>
+            <td nowrap class="text-center">asdasdas</td>
+            <td nowrap class="text-center">asdasdas</td>
+            <td nowrap class="text-center">asdasdas</td>
+            <td nowrap class="text-center">asdasdas</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="mt-2 mb-2" *ngIf="dadosEstoqueSuspensoInventario?.length > itemsPerPage">
+      Exibindo {{ beginC + 1 }} a {{ endC }} de
+      {{ dadosEstoqueSuspensoInventario?.length }}
+      <div class="d-flex">
+        <pagination [maxSize]="10" [totalItems]="dadosEstoqueSuspensoInventario?.length"
+          (pageChanged)="onPageChangedC($event)" [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true"
+          [(ngModel)]="currentPageC" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </tab> -->
+</tabset>
+<div class="text-center d-flex justify-content-center align-items-center p-5" *ngIf="loaderBody">
+  <div class="spinner-border">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<div *ngIf="estoqueSupensoEntradaMaterialEmpty && estoqueSupensoGeralEmpty && !loaderBody"
+  class="text-center d-flex justify-content-center align-items-center p-5" style="height: 80%;">
+  <empty-result message="Nenhuma informação encontrada"></empty-result>
+</div>

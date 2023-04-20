@@ -1,0 +1,169 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row">
+    <div class="col-lg-6">
+      <div [hidden]="form.getRawValue().codMaterial != null">
+        <comercial-cadastros-materiais-templates-material-principal
+          [linhas]="linhas"
+          [classes]="classes"
+          [limparMaterialSelecionado]="limparMaterialPrincipal"
+          (loaderNavbar)="onLoaderNavbar($event)"
+          (materialPrincipal)="materialPrincipal($event)">
+        </comercial-cadastros-materiais-templates-material-principal>
+
+        <div class="row">
+          <div class="col">
+            <hr>
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="form">
+        <div [hidden]="form.getRawValue().codMaterial === null">
+          <div class="row mb-3">
+            <div class="col mt-auto">
+              <div class="mtc-title mb-0">Principal material do combo</div>
+            </div>
+            <div class="col" *ngIf="form.getRawValue().codMaterial != null">
+              <div class="d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="onLimparMaterialPrincipal()">
+                  <i class="fas fa-trash"></i>
+                  <span>Limpar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-2">
+              <label for="codMaterial">Cód. material</label>
+              <input
+                type="text"
+                class="form-control"
+                id="codMaterial"
+                formControlName="codMaterial"
+                (input)="onInput()"
+                autocomplete="new-password">
+              <invalid-form-control [show]="onFieldInvalid('codMaterial')" message="Código é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-10">
+              <label for="nomeMaterial">Nome material</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nomeMaterial"
+                formControlName="nomeMaterial"
+                autocomplete="new-password">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label for="quantidade">Qtde.</label>
+              <input
+                type="text"
+                class="form-control"
+                id="quantidade"
+                formControlName="quantidade"
+                (input)="onInput()"
+                autocomplete="new-password"
+                currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 3 }"
+                [ngClass]="onFieldError('quantidade') + ' ' + onFieldRequired(form.controls.quantidade)">
+              <invalid-form-control [show]="onFieldInvalid('quantidade')" message="Quantidade é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-6">
+              <label for="codSituacao">Situação</label>
+              <select
+                class="form-control custom-select"
+                id="codSituacao"
+                formControlName="codSituacao"
+                [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
+                <option value="0">Inativo</option>
+                <option value="1">Ativo</option>
+              </select>
+              <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <hr>
+            </div>
+          </div>
+        </div>
+
+        <div formArrayName="assocMateriais">
+          <div class="row" *ngIf="showMateriais && form.value.assocMateriais.length > 0">
+            <div class="col">
+              <div class="mtc-title">Materiais associados ao combo</div>
+              <custom-table [config]="tableConfigAssocMateriais">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th scope="col" style="width: 75%">Material</th>
+                    <th scope="col" class="text-center" style="width: 20%">Qtde.</th>
+                    <th scope="col" style="width: 5%"></th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let material of assocMateriais.controls; let i = index" [formGroupName]="i">
+                    <td style="width: 75%">
+                      {{ form.value.assocMateriais[i].codMaterial }} - {{ form.value.assocMateriais[i].nomeMaterial | uppercase }}
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        id="quantidade"
+                        class="form-control text-center"
+                        formControlName="quantidade"
+                        currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 3 }">
+                    </td>
+                    <td class="text-center" style="width: 5%">
+                      <btn-icon
+                        icon="fas fa-trash"
+                        size="small"
+                        (click)="onDeleteMaterial(i)">
+                      </btn-icon>
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+            </div>
+          </div>
+          <div class="row" *ngIf="showMateriais && form.value.assocMateriais.length === 0">
+            <div class="col">
+              <message
+                icon="fas fa-exchange-alt"
+                text="Nenhuma associação encontrada">
+              </message>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-6 border-left">
+      <comercial-cadastros-materiais-templates-associacoes
+        [linhas]="linhas"
+        [classes]="classes"
+        [linhaSelecionada]="form.value.codLinha"
+        [classeSelecionada]="form.value.codClasse"
+        (loaderNavbar)="onLoaderNavbar($event)"
+        (materialAssociado)="materialAssociado($event)">
+      </comercial-cadastros-materiais-templates-associacoes>
+    </div>
+  </div>
+</app-body>

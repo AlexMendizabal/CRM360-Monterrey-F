@@ -1,0 +1,189 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="STATUS DE RECEBIMENTO">
+  <button
+  type="button"
+  (click)="onExport()"
+  [disabled]="loadingNavBar || noResult">
+  Exportar
+</button>
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="ID_LOGI_ENMA_NOFI_STAT">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_LOGI_ENMA_NOFI_STAT"
+                formControlName="ID_LOGI_ENMA_NOFI_STAT"
+                placeholder="Digite..."
+                (keydown.enter)="onFilter()"
+              />
+            </div>
+            <div class="form-group col-md-4 pl-0">
+              <label for="NM_STAT">Descrição</label>
+              <input
+                type="text"
+                class="form-control"
+                id="NM_STAT"
+                formControlName="NM_STAT"
+                placeholder="Digite..."
+                (keydown.enter)="onFilter()"
+              />
+            </div>
+            <div class="form-group col-lg-2 pl-0">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="tipos"
+                [virtualScroll]="true"
+                labelForId="tipo"
+                bindLabel="nome"
+                bindValue="cod"
+                id="tipo"
+                (change)="onFilter()"
+                formControlName="IN_STAT"
+                (keydown.enter)="onFilter()"
+                placeholder="Selecione..."
+              >
+            </ng-select>
+            </div>
+            <div class="form-group col-lg-1 pl-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (keydown.enter)="onFilter()"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0" [ngClass]="{'col': !showDetailPanel, 'col-5': showDetailPanel}">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('ID_LOGI_ENMA_NOFI_STAT')">
+                <thead-sorter value="ID" [active]="ORDE_BY == 'ID_LOGI_ENMA_NOFI_STAT'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('NM_STAT')">
+                <thead-sorter value="Descrição" [active]="ORDE_BY == 'NM_STAT'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th scope="col" style="width:120px"[hidden]="showDetailPanel"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let status of statusRecebimento"  [class.table-active]="status?.ID_LOGI_ENMA_NOFI_STAT == statusSelecionado?.ID_LOGI_ENMA_NOFI_STAT && showDetailPanel">
+              <td  [ngClass]="status.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+                {{status.ID_LOGI_ENMA_NOFI_STAT }}
+              </td>
+              <td >{{ status.NM_STAT | uppercase}}</td>
+              <td class="align-middle" [hidden]="showDetailPanel">
+                <span class="mr-3" [tooltip]="status.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="changeType(status)">
+                    <i [ngClass]="status.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', status.ID_LOGI_ENMA_NOFI_STAT]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+                <span class="mr-3"  tooltip="Detalhes" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm" (click)="onDetails(status)">
+                    <i class="fas fa-search"></i>                  
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div *ngIf="totalItems > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-7 pr-0" [hidden]="!showDetailPanel">
+      <detail-panel panelTitle="Histórico de alteração">
+        <custom-table>
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col">Data</th>
+              <th scope="col">Usuário</th>
+              <th scope="col">Ação</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let historico of historicos; let i = index">
+              <td>{{ historico?.DT_INCL | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td>({{historico?.NR_MATR}})&nbsp;{{ historico?.NM_USUA | uppercase }}</td>
+              <td>{{ getDescricaoAtualizaco(historico, i) }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

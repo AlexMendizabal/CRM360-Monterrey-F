@@ -1,0 +1,42 @@
+<div class="row mb-3" *ngIf="atividades.length > 0">
+  <div class="col">
+    <div class="border shadow-sm">
+      <div class="row">
+        <div class="col">
+          <div id="header" class="bg-light shadow-sm border-bottom w-100 d-flex justify-content-between">
+            <div class="mtc-title my-auto">{{ text }}</div>
+            <btn-icon
+              [icon]="view.icon"
+              class="mr-1"
+              (click)="onChangeView()">
+            </btn-icon>
+          </div>
+        </div>
+      </div>
+      <div id="body">
+        <div class="row justify-content-center">
+          <div class="col">
+            <div class="row">
+              <div [ngClass]="viewGridClass()" *ngFor="let atividade of atividades">
+                <card-button
+                  *ngIf="atividade.versao != 2"
+                  [icon]="atividade.iconeAtividade"
+                  [text]="atividade.nomeAtividade"
+                  [view]="view.type"
+                  [routerLink]="[atividade.rotaAtividade]">
+                </card-button>
+                <card-button
+                  *ngIf="atividade.versao == 2"
+                  [icon]="atividade.icone"
+                  [text]="atividade.nome"
+                  [view]="view.type"
+                  [routerLink]="[atividade.rota]">
+                </card-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

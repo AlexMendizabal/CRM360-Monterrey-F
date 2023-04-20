@@ -1,0 +1,457 @@
+<div class="row mb-4">
+  <div class="col mb-4">
+    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+      <div class="bg-orange rounded-circle text-white icon-40 my-auto"><i class="fas fa-hand-holding-usd"></i></div>
+      <div class="text-right" [hidden]="!sinteticoPendenciasLoaded">
+        <h5
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="sintetico.atrasoPagamento"
+          [countFrom]="0"
+          [duration]="3"
+          (countoChange)="countoAtrasoPagamento = $event">
+          {{ handleCounter(countoAtrasoPagamento) }} dias
+        </h5>
+        <div class="text-muted small font-weight-bold">MÉDIA ATRASO PAGTO</div>
+      </div>
+      <div class="text-right my-auto" *ngIf="!sinteticoPendenciasLoaded">
+        <div class="spinner-border text-dark"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+      <div class="bg-gray rounded-circle text-white icon-40 my-auto"><i class="fas fa-truck-moving"></i></div>
+      <div class="text-right" [hidden]="!sinteticoPendenciasLoaded">
+        <h5
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="sintetico.tempoEntrega"
+          [countFrom]="0"
+          [duration]="3"
+          (countoChange)="countoTempoEntrega = $event">
+          {{ handleCounter(countoTempoEntrega) }} dias
+        </h5>
+        <div class="text-muted small font-weight-bold">MÉDIA TEMPO ENTREGA</div>
+      </div>
+      <div class="text-right my-auto" *ngIf="!sinteticoPendenciasLoaded">
+        <div class="spinner-border text-dark"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+      <div class="bg-red rounded-circle text-white icon-40 my-auto"><i class="fas fa-dollar-sign"></i></div>
+      <div class="text-right" [hidden]="!sinteticoPendenciasLoaded || sintetico.totalAtraso == 0">
+        <h5
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="sintetico.totalAtraso"
+          [countFrom]="0"
+          [duration]="3"
+          (countoChange)="countoTotalAtraso = $event">
+          {{ countoTotalAtraso | currency:'BRL':'symbol':'1.2-2' }}
+        </h5>
+        <div class="text-muted small font-weight-bold">TOTAL EM ATRASO</div>
+      </div>
+      <div class="text-right my-auto" *ngIf="sinteticoPendenciasLoaded && sintetico.totalAtraso == 0">
+        <h5 class="font-weight-bolder mb-1">R$ 0,00</h5>
+        <div class="text-muted small font-weight-bold">TOTAL EM ATRASO</div>
+      </div>
+      <div class="text-right my-auto" *ngIf="!sinteticoPendenciasLoaded">
+        <div class="spinner-border text-dark"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+      <div class="bg-green rounded-circle text-white icon-40 my-auto"><i class="fas fa-file-invoice-dollar"></i></div>
+      <div class="text-right" [hidden]="!sinteticoPendenciasLoaded || sintetico.pagtoAntecipado == 0">
+        <h5
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="sintetico.pagtoAntecipado"
+          [countFrom]="0"
+          [duration]="3"
+          (countoChange)="countoPagtoAntecipado = $event">
+          {{ countoPagtoAntecipado | currency:'BRL':'symbol':'1.2-2' }}
+        </h5>
+        <div class="text-muted small font-weight-bold">ANTECIPADO DISPONÍVEL</div>
+      </div>
+      <div class="text-right my-auto" *ngIf="sinteticoPendenciasLoaded && sintetico.pagtoAntecipado == 0">
+        <h5 class="font-weight-bolder mb-1">R$ 0,00</h5>
+        <div class="text-muted small font-weight-bold">ANTECIPADO DISPONÍVEL</div>
+      </div>
+      <div class="text-right my-auto" *ngIf="!sinteticoPendenciasLoaded">
+        <div class="spinner-border text-dark"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+      <div class="bg-blue rounded-circle text-white icon-40 my-auto"><i class="fas fa-building"></i></div>
+      <div class="text-right" [hidden]="!sinteticoPendenciasLoaded || sintetico.creditoSeguradora == 0">
+        <h5
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="sintetico.creditoSeguradora"
+          [countFrom]="0"
+          [duration]="3"
+          (countoChange)="countoCreditoSeguradora = $event">
+          {{ countoCreditoSeguradora | currency:'BRL':'symbol':'1.2-2' }}
+        </h5>
+        <div class="text-muted small font-weight-bold">CRÉDITO SEGURADORA</div>
+      </div>
+      <div class="text-right my-auto" *ngIf="sinteticoPendenciasLoaded && sintetico.creditoSeguradora == 0">
+        <h5 class="font-weight-bolder mb-1">R$ 0,00</h5>
+        <div class="text-muted small font-weight-bold">CRÉDITO SEGURADORA</div>
+      </div>
+      <div class="text-right my-auto" *ngIf="!sinteticoPendenciasLoaded">
+        <div class="spinner-border text-dark"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8">
+    <div class="d-flex w-100" *ngIf="!pedidosLoaded">
+      <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+      <strong>Carregando duplicatas...</strong>
+    </div>
+    <div *ngIf="pedidos.length > 0 && pedidosLoaded">
+      <div class="row justify-content-between">
+        <div class="col-6 d-flex">
+          <div class="d-flex my-auto">
+            <div class="legend green">
+              <div class="square"></div>
+              <div class="text">EM ABERTO</div>
+            </div>
+            <div class="legend blue">
+              <div class="square"></div>
+              <div class="text">QUITADA</div>
+            </div>
+            <div class="legend yellow">
+              <div class="square"></div>
+              <div class="text">VENCIDA</div>
+            </div>
+            <div class="legend red">
+              <div class="square"></div>
+              <div class="text">PROTESTO</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-5">
+          <div class="form-group row">
+            <label for="filtro" class="col-3 text-right pb-0 pt-1 pr-2">Filtrar</label>
+            <div class="col-9 pl-0">
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="filtro"
+                placeholder="Número da duplicata"
+                #filtro
+                (input)="onFilter(filtro.value)">
+            </div>
+          </div>
+        </div>
+      </div>
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center">Empresa</th>
+            <th scope="col" class="text-center">Faturamento</th>
+            <th scope="col" class="text-center">Núm. pedido</th>
+            <th scope="col" class="text-center">Duplicata</th>
+            <th scope="col" class="text-center">Vencto</th>
+            <th scope="col" class="text-center">Baixa</th>
+            <th scope="col" class="text-center">Valor</th>
+            <th scope="col" class="text-center"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let pedido of pedidosPagination">
+            <td class="text-center" [ngClass]="classStatusBorder(pedido.situacao)">{{ pedido.empresa }}</td>
+            <td class="text-center">{{ pedido.dataFaturamento }}</td>
+            <td class="text-center">{{ pedido.numPedido }}</td>
+            <td class="text-center">{{ pedido.numDuplicata }}</td>
+            <td class="text-center">{{ pedido.dataVencimento }}</td>
+            <td class="text-center">{{ pedido.dataBaixa }}</td>
+            <td class="text-center">{{ pedido.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
+            <td class="text-center">
+              <a
+                class="btn-icon-sm"
+                tooltip="Materiais da duplicata"
+                container="body"
+                [routerLink]="['../materiais-duplicata']"
+                [queryParams]="{
+                  codEmpresa: pedido.idEmpresa,
+                  numPedido: pedido.numPedido,
+                  sequencia: pedido.sequencia
+                }">
+                <i class="fas fa-search"></i>
+              </a>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="row mt-3" *ngIf="pedidosLoaded">
+        <div class="col">
+          <div class="d-flex justify-content-center mt-3" *ngIf="pedidosFiltered.length > itemsPerPage">
+            <pagination
+              [maxSize]="maxSize"
+              [totalItems]="pedidosFiltered.length"
+              (pageChanged)="onPageChanged($event)"
+              [(itemsPerPage)]="itemsPerPage"
+              [boundaryLinks]="true"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;">
+            </pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+    <empty-result message="Nenhuma informação encontrada nos últimos 12 meses. Para períodos anteriores veja em Detalhes." *ngIf="pedidos.length == 0 && pedidosLoaded"></empty-result>
+  </div>
+  <div class="col-md-4">
+    <div class="d-flex justify-content-between w-100 mb-2">
+      <div>
+        <h6>
+          <span class="mr-2">Grupo econômico</span>
+          <a
+            href="javascript:void(0)"
+            *ngIf="grupoEconomicoLoaded && grupoEconomico.length > 1"
+            (click)="onGrupoEconomico(modalGrupoEconomico)">(ver detalhes)
+          </a>
+        </h6>
+        <small class="form-text text-muted">VISÃO DO GRUPO ECONÔMICO NO HISTÓRICO FINANCEIRO</small>
+      </div>
+      <div class="custom-control custom-switch my-auto" *ngIf="grupoEconomicoLoaded && grupoEconomico.length > 1">
+        <input
+        type="checkbox"
+        class="custom-control-input"
+        id="grupoEconomico"
+        [checked]="visaoGrupoEconomico"
+        (change)="onChangeGrupoEconomico()"
+        [disabled]="!sinteticoPendenciasLoaded">
+        <label class="custom-control-label" for="grupoEconomico"></label>
+      </div>
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item bg-green">
+        <div class="d-flex justify-content-between w-100">
+          <div class="my-auto">
+            <strong class="text-white">Saldo para faturar</strong>
+          </div>
+          <strong
+            class="text-white"
+            counto
+            [step]="30"
+            [countTo]="pendencias.saldo"
+            [countFrom]="0"
+            [duration]="3"
+            (countoChange)="countoSaldo = $event"
+            [hidden]="pendencias.saldo == 0 || !sinteticoPendenciasLoaded">
+            {{ countoSaldo | currency:'BRL':'symbol':'1.2-2' }}
+          </strong>
+          <strong class="text-white" *ngIf="pendencias.saldo == 0 && sinteticoPendenciasLoaded">R$ 0,00</strong>
+          <div class="spinner-border spinner-border-sm text-white" *ngIf="!sinteticoPendenciasLoaded"></div>
+        </div>
+      </li>
+    </ul>
+    <h6 class="my-2">
+      <a
+        href="javascript:void(0)"
+        (click)="showPendenciasDetalhes = !showPendenciasDetalhes">
+        <span *ngIf="!showPendenciasDetalhes"><i class="fas fa-chevron-up"></i> ver detalhes</span>
+        <span *ngIf="showPendenciasDetalhes"><i class="fas fa-chevron-down"></i> esconder detalhes</span>
+      </a>
+    </h6>
+    <ul class="list-group" *ngIf="showPendenciasDetalhes">
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between w-100">
+          <div class="my-auto">
+            <strong>Títulos em aberto</strong>
+          </div>
+          <strong
+            class="text-secondary"
+            counto
+            [step]="30"
+            [countTo]="pendencias.titulos"
+            [countFrom]="0"
+            [duration]="3"
+            (countoChange)="countoTitulos = $event"
+            [hidden]="pendencias.titulos == 0 || !sinteticoPendenciasLoaded">
+            {{ countoTitulos | currency:'BRL':'symbol':'1.2-2' }}
+          </strong>
+          <strong class="text-secondary" *ngIf="pendencias.titulos == 0 && sinteticoPendenciasLoaded">R$ 0,00</strong>
+          <div class="spinner-border spinner-border-sm text-dark" *ngIf="!sinteticoPendenciasLoaded"></div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between w-100">
+          <div class="my-auto">
+            <strong>Notas de débitos em aberto</strong>
+          </div>
+          <strong
+            class="text-secondary"
+            counto
+            [step]="30"
+            [countTo]="pendencias.notasDebito"
+            [countFrom]="0"
+            [duration]="3"
+            (countoChange)="countoNotasDebito = $event"
+            [hidden]="pendencias.notasDebito == 0 || !sinteticoPendenciasLoaded">
+            {{ countoNotasDebito | currency:'BRL':'symbol':'1.2-2' }}
+          </strong>
+          <strong class="text-secondary" *ngIf="pendencias.notasDebito == 0 && sinteticoPendenciasLoaded">R$ 0,00</strong>
+          <div class="spinner-border spinner-border-sm text-dark" *ngIf="!sinteticoPendenciasLoaded"></div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between w-100">
+          <div class="my-auto">
+            <strong>Notas promissórias em aberto</strong>
+          </div>
+          <strong
+            class="text-secondary"
+            counto
+            [step]="30"
+            [countTo]="pendencias.notasPromissorias"
+            [countFrom]="0"
+            [duration]="3"
+            (countoChange)="countoNotasPromissorias = $event"
+            [hidden]="pendencias.notasPromissorias == 0 || !sinteticoPendenciasLoaded">
+            {{ countoNotasPromissorias | currency:'BRL':'symbol':'1.2-2' }}
+          </strong>
+          <strong class="text-secondary" *ngIf="pendencias.notasPromissorias == 0 && sinteticoPendenciasLoaded">R$ 0,00</strong>
+          <div class="spinner-border spinner-border-sm text-dark" *ngIf="!sinteticoPendenciasLoaded"></div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between w-100">
+          <div class="my-auto">
+            <strong>Cheques devolvidos</strong>
+          </div>
+          <strong
+            class="text-secondary"
+            counto
+            [step]="30"
+            [countTo]="pendencias.chequesDevolvidos"
+            [countFrom]="0"
+            [duration]="3"
+            (countoChange)="countoChequesDevolvidos = $event"
+            [hidden]="pendencias.chequesDevolvidos == 0 || !sinteticoPendenciasLoaded">
+            {{ countoChequesDevolvidos | currency:'BRL':'symbol':'1.2-2' }}
+          </strong>
+          <strong class="text-secondary" *ngIf="pendencias.chequesDevolvidos == 0 && sinteticoPendenciasLoaded">R$ 0,00</strong>
+          <div class="spinner-border spinner-border-sm text-dark" *ngIf="!sinteticoPendenciasLoaded"></div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between w-100">
+          <div class="my-auto">
+            <strong>Corte dobra liberado p/ produção</strong>
+          </div>
+          <strong
+            class="text-secondary"
+            counto
+            [step]="30"
+            [countTo]="pendencias.corteDobra"
+            [countFrom]="0"
+            [duration]="3"
+            (countoChange)="countoCorteDobra = $event"
+            [hidden]="pendencias.corteDobra == 0 || !sinteticoPendenciasLoaded">
+            {{ countoCorteDobra | currency:'BRL':'symbol':'1.2-2' }}
+          </strong>
+          <strong class="text-secondary" *ngIf="pendencias.corteDobra == 0 && sinteticoPendenciasLoaded">R$ 0,00</strong>
+          <div class="spinner-border spinner-border-sm text-dark" *ngIf="!sinteticoPendenciasLoaded"></div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between w-100">
+          <div class="my-auto">
+            <strong>Reserva de bobinas em aberto</strong>
+          </div>
+          <strong
+            class="text-secondary"
+            counto
+            [step]="30"
+            [countTo]="pendencias.reservaBobinas"
+            [countFrom]="0"
+            [duration]="3"
+            (countoChange)="countoReservaBobinas = $event"
+            [hidden]="pendencias.reservaBobinas == 0 || !sinteticoPendenciasLoaded">
+            {{ countoReservaBobinas | currency:'BRL':'symbol':'1.2-2' }}
+          </strong>
+          <strong class="text-secondary" *ngIf="pendencias.reservaBobinas == 0 && sinteticoPendenciasLoaded">R$ 0,00</strong>
+          <div class="spinner-border spinner-border-sm text-dark" *ngIf="!sinteticoPendenciasLoaded"></div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between w-100">
+          <div class="my-auto">
+            <strong>Limite de crédito</strong>
+          </div>
+          <strong
+            class="text-secondary"
+            counto
+            [step]="30"
+            [countTo]="pendencias.limiteCredito"
+            [countFrom]="0"
+            [duration]="3"
+            (countoChange)="countoLimiteCredito = $event"
+            [hidden]="pendencias.limiteCredito == 0 || !sinteticoPendenciasLoaded">
+            {{ countoLimiteCredito | currency:'BRL':'symbol':'1.2-2' }}
+          </strong>
+          <strong class="text-secondary" *ngIf="pendencias.limiteCredito == 0 && sinteticoPendenciasLoaded">R$ 0,00</strong>
+          <div class="spinner-border spinner-border-sm text-dark" *ngIf="!sinteticoPendenciasLoaded"></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<ng-template #modalGrupoEconomico>
+  <div class="modal-header">
+    <h5 class="modal-title">Grupo econômico</h5>
+    <button type="button" class="close" aria-label="Close" (click)="onCloseModalGrupoEconomico()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <custom-table>
+      <ng-template #thead let-thead>
+        <tr>
+          <th scope="col" class="text-center">Tipo</th>
+          <th scope="col" class="text-center">Cód. cliente</th>
+          <th scope="col" class="text-center">Razão social</th>
+          <th scope="col" class="text-center"></th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let item of grupoEconomico">
+          <td class="text-center">{{ item.tipo }}</td>
+          <td class="text-center">{{ item.codCliente }}</td>
+          <td class="text-center">{{ item.razaoSocial }}</td>
+          <td class="text-center">
+            <a
+              class="btn-icon-sm"
+              tooltip="Visualizar histórico financeiro"
+              container="body"
+              [routerLink]="['../../../historico-financeiro', item.codCliente, 'resumo']"
+              (click)="onCloseModalGrupoEconomico()">
+              <i class="fas fa-search"></i>
+            </a>
+          </td>
+        </tr>
+      </ng-template>
+    </custom-table>
+  </div>
+</ng-template>

@@ -1,0 +1,26 @@
+.dHeight{
+    min-height: 50vh;
+  }
+
+  td {
+    font-weight: normal;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    table-layout: fixed;
+   // height: 100px;
+    transition: height 0.4s;
+    /*propriedade desejada*/
+/*         max-width: 100px; */
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      transition: all ease 0.7s;
+    }
+
+    td:hover {
+        height: 200px;
+        max-width: 100px;
+        overflow: auto;
+        text-overflow: ellipsis;
+        white-space: initial;
+    }

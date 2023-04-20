@@ -1,0 +1,251 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Nfe sem Pedido Pai">
+  <button 
+    (click)="exportarExcel()"
+    [disabled]="!carregouNf"
+    >
+    Exportar
+  </button>
+  <button 
+    (click)="onFilter()"
+    [disabled] = "form.status == 'INVALID' || comparaData()"
+    >
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <form id="form-abastecimento-nfe-sem-pedido-pai" [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <label for="dataInicial">Data Inicial</label>
+          <input
+            class="form-control"
+            id="dataInicial"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="dataInicial"
+            [ngClass]="onFieldError('dataInicial') + ' ' + onFieldRequired('dataInicial')"
+          >
+          <invalid-form-control
+            [show]="onFieldInvalid('dataInicial')"
+            message="Data inicial é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="dataFinal">Data Final</label>
+          <input
+            class="form-control"
+            id="dataFinal"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="dataFinal"
+            [ngClass]="onFieldError('dataFinal') + ' ' + onFieldRequired('dataInicial')"
+          >
+          <invalid-form-control
+            [show]="onFieldInvalid('dataFinal')"
+            message="Data final é obrigatório.">
+          </invalid-form-control>
+          <invalid-form-control
+            [show]="comparaData()"
+            message="Data final deve ser maior que data inicial">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="numeroPedido"> Número do pedido </label>
+          <input
+            id="numeroPedido"
+            type="text"
+            class="form-control"
+            placeholder="DIGITE..."
+            formControlName="pedido"
+            currencyMask [options]="numerico"
+            (keyup.enter)="onFilter()">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="numeroNota"> Número de nota fiscal </label>
+          <input
+            id="numeroNota"
+            type="number"
+            class="form-control"
+            placeholder="DIGITE..."
+            formControlName="notaFiscal"
+            currencyMask [options]="numerico"
+            (keyup.enter)="onFilter()">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="usuario">Usuario</label>
+          <input
+            class="form-control"
+            id="usuario"
+            type="text"
+            formControlName="usuario"
+            placeholder="Digite o nome do usuário..."
+            (keyup.enter)="onFilter()"
+          >
+        </div>
+        <div class="form-group col-md-3">
+          <label for="linha">Linha</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="linhas"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="true"
+              placeholder="Selecione linha"
+              bindLabel="NM_LINH"
+              bindValue="ID"
+              placeholder="Selecione..."
+              formControlName="linhas"
+              (change) = "getClasses(); validaCampo()"
+              [ngClass]="onFieldError('linhas') + ' ' + onFieldRequired('linhas')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('linhas')"
+              message="Linha é obrigatório.">
+            </invalid-form-control>
+          </div>
+        <div class="form-group col-md-3">
+          <label for="classe">Classe</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="classes"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            labelForId="classe"
+            bindLabel="NM_CLAS"
+            bindValue="ID"
+            placeholder="Selecione classe"
+            formControlName="classes"
+            (change) = "getMateriais(); validaCampo()"
+            [ngClass]="onFieldError('classes') + ' ' + onFieldRequired('classes')"
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('classes')"
+            message="Classes é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="material">Material</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="materiais"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="true"
+              labelForId="material"
+              bindLabel="NM_MATE"
+              bindValue="ID"
+              placeholder="Selecione material"
+              formControlName="materiais"
+              [ngClass]="onFieldError('materiais') + ' ' + onFieldRequired('materiais')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('materiais')"
+              message="Materiais é obrigatório.">
+            </invalid-form-control>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="mt-3" *ngIf="carregouNf && !loading">
+    <div class="table-responsive">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr>
+            <th class="text-center hover" (click)="sort('PEDIDO')">Pedido 
+              <span *ngIf="key =='PEDIDO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key !='PEDIDO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="text-center text-nowrap hover" (click)="sort('NOTA_FISCAL')">Nota Fiscal
+                <span *ngIf="key =='NOTA_FISCAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                <span *ngIf="key !='NOTA_FISCAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="text-center hover" (click)="sort('NF_EMISSAO_CLARION')">Emissão
+                <span *ngIf="key =='NF_EMISSAO_CLARION'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                <span *ngIf="key !='NF_EMISSAO_CLARION'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="text-center hover" (click)="sort('USUARIO')">Usuário
+                <span *ngIf="key =='USUARIO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                <span *ngIf="key !='USUARIO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="text-center text-nowrap hover" (click)="sort('NF_ITEM')">Item
+              <span *ngIf="key =='NF_ITEM'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key !='NF_ITEM'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="text-center text-nowrap hover" (click)="sort('MATERIAL_LINHA')">Linha
+                <span *ngIf="key =='MATERIAL_LINHA'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                <span *ngIf="key !='MATERIAL_LINHA'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="text-center hover" (click)="sort('MATERIAL_CLASSE')">Classe
+                <span *ngIf="key =='MATERIAL_CLASSE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                <span *ngIf="key !='MATERIAL_CLASSE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="text-center text-nowrap hover" (click)="sort('MATERIAL_ID')">Código
+                <span *ngIf="key =='MATERIAL_ID'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                <span *ngIf="key !='MATERIAL_ID'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="text-center hover" (click)="sort('MATERIAL_DESCRICAO')">Descrição
+                <span *ngIf="key =='MATERIAL_DESCRICAO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                <span *ngIf="key !='MATERIAL_DESCRICAO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="text-center text-nowrap hover" (click)="sort('MATERIAL_VOLUME')">Volume
+                <span *ngIf="key =='MATERIAL_VOLUME'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                <span *ngIf="key !='MATERIAL_VOLUME'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="text-center hover" (click)="sort('MATERIAL_VOLUME')">Justificativa
+                <span *ngIf="key =='MATERIAL_VOLUME'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                <span *ngIf="key !='MATERIAL_VOLUME'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor = "let item of nfRelatorio | orderBy: key : reverse | slice: begin : end">
+            <td class="text-center">{{item.PEDIDO | number: '0.0-0'}}</td>
+            <td class="text-center">{{item.NOTA_FISCAL | number: '0.0-0'}}</td>
+            <td class="text-center">{{item.NF_EMISSAO}}</td>
+            <td class="text-center text-nowrap">{{item.USUARIO}}</td>
+            <td class="text-center">{{item.NF_ITEM | number: '0.0-0'}}</td>
+            <td class="text-center">{{item.MATERIAL_LINHA}}</td>
+            <td class="text-center text-nowrap">{{item.MATERIAL_CLASSE}}</td>
+            <td class="text-center">{{item.MATERIAL_ID | number: '0.0-0'}}</td>
+            <td class="text-center text-nowrap">{{item.MATERIAL_DESCRICAO}}</td>
+            <td class="text-right">{{item.MATERIAL_VOLUME | number: '0.3-3'}}</td>
+            <td class="text-center text-nowrap">{{ item.JUSTIFICATIVA }}</td>
+          </tr>
+
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="mt-2" *ngIf="onPaginacao && !loading">
+      Exibindo {{ begin + 1 }} a {{ end }} de {{ nfRelatorio?.length }}
+      <div class="d-flex">
+        <pagination
+          [maxSize]="10"
+          [totalItems]="nfRelatorio?.length"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="onEmpy && !loading"class="text-center d-flex justify-content-center align-items-center p-5" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>
+

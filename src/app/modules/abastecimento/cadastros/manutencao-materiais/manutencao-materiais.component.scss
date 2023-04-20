@@ -1,0 +1,8 @@
+.bg-row-selected {
+  background-color: #91b8f0!important;
+}
+
+.custom-control-input:checked~.custom-control-label::before {
+  background-color: #4dcc71;
+  border-color: #4dcc71;
+}

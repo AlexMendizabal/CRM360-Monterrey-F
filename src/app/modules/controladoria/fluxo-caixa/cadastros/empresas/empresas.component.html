@@ -1,0 +1,37 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    (click)="putEmpresas()"
+    [disabled]="form.status == 'INVALID'"
+    >
+    Cadastrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col">
+      <form autocomplete="off" [formGroup]="form">
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-4">
+            <div class="form-group col-md-12 p-0">
+              <label for="lancamento"> Nome Empresa </label>
+              <input
+                id="empresa"
+                type="text"
+                class="form-control"
+                placeholder="DIGITE..."
+                formControlName="DESC_EMPR"
+                [ngClass]="onFieldError('DESC_EMPR') + ' ' + onFieldRequired('DESC_EMPR')">
+            </div>
+            <invalid-form-control
+              [show]="onFieldInvalid('DESC_EMPR')"
+              message="Informar empresa é obrigatório.">
+            </invalid-form-control>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>
+

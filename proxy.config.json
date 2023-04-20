@@ -1,0 +1,20 @@
+{
+  "/api/*": {
+    "target": "https://crm360.monterrey.com.bo/api/",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/": ""
+    }
+  },
+  "/app/*": {
+    "target": "https://monterreydev.mtcorp.com.br/app/",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/app/": ""
+    }
+  }
+}

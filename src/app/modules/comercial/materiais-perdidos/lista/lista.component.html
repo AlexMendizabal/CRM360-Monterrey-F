@@ -1,0 +1,184 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Materiais perdidos">
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2 mb-lg-0">
+              <label for="dataCadastroInicio">Data inicial</label>
+              <input
+                class="form-control"
+                id="dataCadastroInicio"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="dataCadastroInicio"
+                [ngClass]="onFieldError('dataCadastroInicio') + ' ' + onFieldRequired('dataCadastroInicio')"
+                (bsValueChange)="onInput()">
+            </div>
+            <div class="form-group col-lg-2 mb-lg-0">
+              <label for="dataCadastroFinal">Data final</label>
+              <input
+                class="form-control"
+                id="dataCadastroFinal"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="dataCadastroFinal"
+                [ngClass]="onFieldError('dataCadastroFinal') + ' ' + onFieldRequired('dataCadastroFinal')"
+                (bsValueChange)="onInput()">
+            </div>
+            <div class="form-group col-lg-2 mb-lg-0">
+              <label for="nomeConcorrente">Nome do concorrente</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="nomeConcorrente"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-2 mb-lg-0">
+              <label for="codMaterialManetoni">Código do material</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="codMaterialManetoni"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-1 mb-lg-0">
+              <label for="nrProposta">Núm. proposta</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="nrProposta"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-2 mb-lg-0">
+              <label for="codEmpresa">Empresa</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="empresas"
+                formControlName="codEmpresa"
+                [virtualScroll]="true"
+                labelForId="codEmpresa"
+                bindLabel="nomeEmpresa"
+                bindValue="idEmpresa">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-1 mb-lg-0">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="hover">
+              <thead-sorter
+                value="Nome concorrente"
+                [active]="orderBy == 'nomeConcorrente'"
+                [sort]="orderType"
+                (click)="setOrderBy('nomeConcorrente')">
+              </thead-sorter>
+            </th>
+            <th scope="col" class="hover">
+              <thead-sorter
+                value="Cód. material"
+                [active]="orderBy == 'codMaterialManetoni'"
+                [sort]="orderType"
+                (click)="setOrderBy('codMaterialManetoni')">
+              </thead-sorter>
+            </th>
+            <th scope="col">Material</th>
+            <th scope="col">(R$) Manetoni</th>
+            <th scope="col">(R$) Concorrente</th>
+            <th scope="col">(%) Diferença</th>
+            <th scope="col" class="text-center">Data</th>
+            <th scope="col" class="hover">
+              <thead-sorter
+                value="Núm. proposta"
+                [active]="orderBy == 'nrProposta'"
+                [sort]="orderType"
+                (click)="setOrderBy('nrProposta')">
+              </thead-sorter>
+            </th>
+            <th scope="col">Empresa</th>
+            <th scope="col" class="text-center">Cliente</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let materiaisPerdidos of dadosPagination">
+            <td>{{ materiaisPerdidos.nomeConcorrente | uppercase }}</td>
+            <td class="text-center">{{ materiaisPerdidos.codMaterialManetoni }}</td>
+            <td>{{ materiaisPerdidos.desMaterialManetoni | uppercase }}</td>
+            <td class="text-center">
+              <span *ngIf="materiaisPerdidos.vrManetoni == 0">R$ 0,00</span>
+              <span *ngIf="materiaisPerdidos.vrManetoni > 0">
+                {{ materiaisPerdidos.vrManetoni | currency:'BRL' }}
+              </span>
+            </td>
+            <td class="text-center">
+              <span *ngIf="materiaisPerdidos.vrConcorrente == 0">R$ 0,00</span>
+              <span *ngIf="materiaisPerdidos.vrConcorrente > 0">
+                {{ materiaisPerdidos.vrConcorrente | currency:'BRL' }}
+              </span>
+            </td>
+            <td class="text-center">
+              <span *ngIf="materiaisPerdidos.percentualDiferenca == 0">0%</span>
+              <span *ngIf="materiaisPerdidos.percentualDiferenca > 0">
+                {{ materiaisPerdidos.percentualDiferenca | number:'1.2-2' }}%
+              </span>
+            </td>
+            <td class="text-center">{{ materiaisPerdidos.dataCadastro | date: 'dd/MM/yyyy' }}</td>
+            <td class="text-center">{{ materiaisPerdidos.nrProposta }}</td>
+            <td>{{ materiaisPerdidos.nomeEmpresa }}</td>
+            <td class="text-center">{{ materiaisPerdidos.codCliente }}</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty">
+      </empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+</app-body>

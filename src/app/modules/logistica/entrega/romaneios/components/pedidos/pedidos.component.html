@@ -1,0 +1,277 @@
+<div
+  class="px-2 py-1 mb-4 border rounded shadow-sm"
+  style="background-color: #CCCCCC10;"
+  [ngClass]="{'border-danger text-muted': entrega?.IN_STAT == 0}"
+  >
+  <!-- 
+  *ngIf="(entrega.IN_STAT_ROMA_PEDI_FATU == 1 && inSomenteEntregaFaturamento) || !inSomenteEntregaFaturamento" -->
+  <div>
+    <div class="mb-1 d-flex align-items-center">
+      <div
+        class="d-flex justify-content-center align-items-center rounded-circle mr-2"
+        style="width: 2rem; height: 2rem; font-size: 1.5rem;"
+      >
+        <span>{{ entrega?.ENTR_NR_SQNC }}</span>
+      </div>
+      <div class="w-100">
+        <div class="d-flex justify-content-between">
+          <div>
+            <div class="mb-1 d-flex justify-content-between">
+              <span class="d-block text-uppercase font-weight-bolder" *ngIf="entrega?.CD_CLIE">({{ entrega?.CD_CLIE }}) &nbsp; {{ entrega?.NM_CLIE }}</span>
+            </div>
+            <div class="d-block text-uppercase">
+              <span *ngIf="entrega?.DS_LOCA_ENTR">{{ entrega?.DS_LOCA_ENTR }}</span> 
+              <span *ngIf="entrega?.DS_BAIRR">, {{ entrega?.DS_BAIR }}</span>
+              <span *ngIf="entrega?.DS_CIDA">, {{ entrega?.DS_CIDA }}</span>
+              <span *ngIf="entrega?.DS_ESTA">-{{ entrega.DS_ESTA }}</span>
+            </div>
+          </div>
+          <div>
+            <!-- <i
+              class="fas fa-file-invoice-dollar ml-2"
+              [tooltip]="notificacoes.entrega.faturamento.tooltips[entrega?.IN_STAT_ROMA_PEDI_FATU]"
+              container="body"
+              placement="left"
+              [ngClass]="notificacoes.entrega.faturamento.cor[entrega?.IN_STAT_ROMA_PEDI_FATU]"
+              style="font-size: 1rem;"
+            ></i> -->
+            <i
+              class="fas fa-receipt ml-2"
+              [tooltip]="notificacoes.entrega.cte.tooltips[entrega?.CTRC_IN_STAT]"
+              container="body"
+              placement="left"
+              [ngClass]="notificacoes.entrega.cte.cor[entrega?.CTRC_IN_STAT]"
+              style="font-size: 1rem;"
+            ></i>
+            <i
+              class="fas fa-truck-moving ml-2"
+              [tooltip]="notificacoes.entrega.entrega.tooltips[entrega?.IN_ENTR]"
+              container="body"
+              placement="left"
+              [ngClass]="notificacoes.entrega.entrega.cor[entrega?.IN_ENTR]"
+              style="font-size: 1rem;"  
+            ></i>
+            <i
+              class="fas fa-power-off ml-2"
+              [tooltip]="notificacoes.entrega.situacao.tooltips[entrega?.IN_STAT]"
+              container="body"
+              placement="left"
+              [ngClass]="notificacoes.entrega.situacao.cor[entrega?.IN_STAT]"
+              style="font-size: 1rem;"  
+            ></i>
+            <btn-arrow (onStatus)="onToggleArrow($event, 'entrega')" ></btn-arrow>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between mt-1">
+          <div class="col-3 p-0">
+            <div class="border-bottom rounded py-1 mr-1 d-flex flex-column align-items-center">
+              <div class="font-weight-bolder">{{ entrega?.ENTR_VL_FRET || 0 | currency:'Bs'}}</div>
+              <div>Flete Estimado</div>
+            </div>
+          </div>
+          <div class="col-3 p-0">
+            <div class="border-bottom rounded py-1 mr-1 d-flex flex-column align-items-center">
+              <div class="font-weight-bolder">{{ entrega?.CTRC_VL_LIQD || 0 | currency:'Bs'}}</div>
+              <div>Flete Sin Impuesto</div>
+            </div>
+          </div>
+          <div class="col-3 p-0">
+            <div class="border-bottom rounded py-1 mr-1 d-flex flex-column align-items-center">
+              <div class="font-weight-bolder">{{ entrega?.CTRC_VL_BRUT || 0 | currency:'Bs'}}</div>
+              <div>Flete Con Impuesto</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="arrow?.entrega">
+      <!-- <hr>
+      <div>
+        <div style="height: 1.5rem;" class="d-flex justify-content-between">
+          <span class="float-left" style="font-size: 11px; font-weight: 700;">CTE' s</span>
+          <btn-arrow (onStatus)="onToggleArrow($event, 'ctes')" (click)="getCtes()"></btn-arrow>
+        </div>
+        <div *ngIf="arrow?.ctes">
+          <div 
+            class="spinner-border text-primary"
+            role="status"
+            *ngIf="loadingCtes"  
+          >
+            <span class="sr-only">Loading...</span>
+          </div>
+          <custom-table *ngIf="ctes?.length > 0 && !loadingCtes">
+            <ng-template let-thead #thead>
+              <tr>
+                <th scope="col" class="text-left">CTE</th>
+                <th scope="col" class="text-center">Data de emissão</th>
+                <th scope="col">Chave de acesso</th>
+                <th scope="col" class="text-center">Valor</th>
+                <th scope="col" class="text-center">Tipo</th>
+              </tr>
+            </ng-template>
+            <ng-template let-tbody #tbody>
+              <tr *ngFor="let cte of ctes">
+                <td class="text-left">{{cte?.NR_CTRC }}</td>
+                <td class="text-center">{{ cte?.DT_EMIS  | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td>{{ cte?.DS_CTRC_CHAV_ACES }}</td>
+                <td class="text-center">
+                  <span *ngIf="cte?.VL_BRUT">{{ cte?.VL_BRUT | currency:'Bs'}}</span>
+                  <span *ngIf="!cte?.VL_BRUT">-</span>
+                </td>
+                <td class="text-center">{{ cte?.DS_TP_CTRC }}</td>
+              </tr>
+            </ng-template>
+          </custom-table>
+          <div *ngIf="ctes?.length == 0 && !loadingCtes">
+            <empty-result message="No se encontró información"></empty-result>
+          </div>
+        </div>
+      </div> -->
+      <hr>
+      <div style="height: 1.5rem;" class="d-flex justify-content-between">
+        <span class="float-left" style="font-size: 11px; font-weight: 700;">ORDEN DE VIENDA</span>
+        <btn-arrow (onStatus)="onToggleArrow($event, 'pedidos')" (click)="getPedidos()" ></btn-arrow>
+      </div>
+      <div 
+        class="spinner-border text-primary"
+        role="status"
+        *ngIf="loadingPedidos"  
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div *ngIf="arrow?.pedidos && !loadingPedidos">
+        <div *ngFor="let pedido of pedidos; let index = index" class="bg-white">
+          <div
+            [class]="'shadow-sm border rounded p-2 mb-2 d-flex ' + 'pedido__' + index"
+            [ngClass]="{'border-danger text-muted': pedido.ROMA_PEDI_IN_STAT == 0}"
+            >
+            <!-- 
+            *ngIf="(item.IN_STAT_ROMA_PEDI_FATU == 1 && inSomenteEntregaFaturamento) || !inSomenteEntregaFaturamento" -->
+            <div class="col p-0">
+              <custom-table>
+                <ng-template let-thead #thead>
+                  <tr>
+                    <th>ORDEN DE VIENDA</th>
+                    <th>FACTURA</th>
+                    <th>PESO</th>
+                    <th>
+                      <div class="d-flex justify-content-between">
+                        <span>LLAVE DE ACCESO</span>
+                        <div>
+                          <!-- <i
+                            class="fas fa-file-invoice-dollar ml-2"
+                            [tooltip]="notificacoes.pedido.faturamento.tooltips[pedido?.IN_STAT_ROMA_PEDI_FATU]"
+                            container="body"
+                            placement="left"
+                            [ngClass]="notificacoes.pedido.faturamento.cor[pedido?.IN_STAT_ROMA_PEDI_FATU]"
+                            style="font-size: 1rem;"
+                          ></i> -->
+                          <i
+                            class="fas fa-receipt ml-2"
+                            [tooltip]="notificacoes.pedido.cte.tooltips[pedido?.CTRC_IN_STAT]"
+                            container="body"
+                            placement="left"
+                            [ngClass]="notificacoes.pedido.cte.cor[pedido?.CTRC_IN_STAT]"
+                            style="font-size: 1rem;"
+                          ></i>
+                          <i
+                            class="fas fa-truck-moving ml-2"
+                            [tooltip]="notificacoes.pedido.entrega.tooltips[pedido?.IN_ENTR]"
+                            container="body"
+                            placement="left"
+                            [ngClass]="notificacoes.pedido.entrega.cor[pedido?.IN_ENTR]"
+                            style="font-size: 1rem;"  
+                          ></i>
+                          <i
+                            class="fas fa-power-off ml-2"
+                            [tooltip]="notificacoes.pedido.situacao.tooltips[pedido?.IN_STAT]"
+                            container="body"
+                            placement="left"
+                            [ngClass]="notificacoes.pedido.situacao.cor[pedido?.IN_STAT]"
+                            style="font-size: 1rem;"  
+                          ></i>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template let-tbody #tbody>
+                  <tr>
+                    <td>{{ pedido.CD_PEDI }}</td>
+                    <td>{{ pedido.NOTA_FISC }}</td>
+                    <td>{{ pedido.TT_PESO | number : '0.3-3' }}</td>
+                    <td>
+                      <div class="d-flex justify-content-between">
+                        <span>{{ pedido.DS_NOFI_CHAV_ACES }}</span>
+                        <button
+                          class="btn-icon-sm"
+                          tooltip="copiar"
+                          container="body"
+                          placement="left"
+                          (click)="copyToClipboard(pedido.DS_NOFI_CHAV_ACES)"
+                          [disabled]="!pedido.DS_NOFI_CHAV_ACES">
+                          <i class="far fa-copy"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+              <hr>
+              <div>
+                <div style="height: 1.5rem;" class="d-flex justify-content-between">
+                  <span class="float-left" style="font-size: 11px; font-weight: 700;">PRODUCTOS</span>
+                  <btn-arrow (onStatus)="onToggleArrow($event, 'materiais')" (click)="getMateriais(pedido)" ></btn-arrow>
+                </div>
+                <div 
+                  class="spinner-border text-primary"
+                  role="status"
+                  *ngIf="pedido?.loadingMateriais"  
+                >
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div *ngIf="pedido?.materiais && !pedido?.loadingMateriais">
+                  <custom-table *ngIf="pedido?.materiais?.length != 0 && !pedido?.loadingMateriais">
+                    <ng-template let-thead #thead>
+                      <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">CODIGO</th>
+                        <th>DESCRIPCIÓN</th>
+                        <th class="text-center">UNIDAD</th>
+                        <th class="text-center">MONTO</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template let-tbody #tbody>
+                      <tr *ngFor="let material of pedido?.materiais">
+                        <td class="text-center">{{ material?.NR_SQNC }}</td>
+                        <td class="text-center">{{ material?.CD_PROD }}</td>
+                        <td>{{ material?.NM_PROD }}</td>
+                        <td class="text-center">
+                          <span *ngIf="material?.DS_UNID_MEDI">{{ material?.DS_UNID_MEDI }}</span>
+                          <span *ngIf="!material?.DS_UNID_MEDI">-</span>
+                        </td>
+                        <td class="text-center">{{ material?.TT_PROD_PESO | number: '1.3-3' }}</td>
+                      </tr>
+                    </ng-template>
+                  </custom-table>
+                  <div *ngIf="pedido?.materiais?.length == 0 && !pedido?.loadingMateriais" style="height: 5rem;">
+                    <empty-result message="No se encontró información"></empty-result>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-1">
+                <span *ngIf="pedido?.ROMA_PEDI_IN_STAT == 0">** Esta orden de vienda está inactiva en esta entrega</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div *ngIf="pedidos.length === 0" style="height: 5rem;">
+    <empty-result message="No se encontró información"></empty-result>
+  </div> -->
+  <div class="mt-1">
+    <span *ngIf="entrega.IN_STAT == 0">** Esta entrega está inactiva en esta carga</span>
+  </div> 
+</div>

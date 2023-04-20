@@ -1,0 +1,14 @@
+
+
+message{
+  ::ng-deep{
+    #message #text, i{
+      font-size: 11px !important;
+      text-transform: uppercase;
+    }
+  };
+  padding: 0 !important;
+  position:absolute;
+  right: 5px;
+  top: 0;
+}

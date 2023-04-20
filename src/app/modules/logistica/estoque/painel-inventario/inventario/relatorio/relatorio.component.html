@@ -1,0 +1,164 @@
+<loader-spinner-full-screen *ngIf="spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<div class="row" id="application-header">
+  <div class="col-6">
+    <div id="title">
+      <back-button></back-button>
+      <h1>Realtório de inventário</h1>
+    </div>
+  </div>
+  <div class="col-6 d-flex justify-content-end">
+    <div id="actions">
+      <button 
+        (click)="onDownload()"
+        >
+        Imprimir relatório
+    </button>
+    </div>
+  </div>
+</div>
+<div class="row" id="application-body">
+  <div class="container-fluid">
+    <breadcrumb [tree]="breadCrumbTree"></breadcrumb>
+    <div class="row">
+      <div class="col">
+        <div id="download">
+          <div class="row justify-content-center">
+            <div class="d-flex justify-content-between col-6 pl-5">
+              <img class="" src="../../../../../../../assets/images/logo/logo-manetoni.png" height="100" width="150">
+            </div>
+            
+            <div class="d-flex justify-content-end col-6 mt-2 pr-5">
+              <img class="" src="../../../../../../../assets/images/logo/Logo-MTcorp.png" height="65" width="220">
+            </div>
+          </div>
+          <div class="espacamento250">&nbsp;</div>
+          <div class="row justify-content-center">
+            <div class="my-5">
+              <div class="d-flex justify-content-center">
+                <h1>RELATÓRIO DE RESULTADOS DO INVENTÁRIO</h1>
+              </div>
+            </div>
+          </div>
+        <!-- INICIA ESPAÇAMENTO -->
+          <div class="espacamento150">&nbsp;</div>
+          <div style="height: 170px">&nbsp;</div>
+        <!-- FINALIZA ESPAÇAMENTO --> 
+          <ul class="p-0">
+            <li class="mx-3">
+              <h6 class="card-header border"> 
+                Empresa: {{ listaInfo.dsEmpresa | uppercase }} / Depósito: {{ listaInfo.dsDeposito | uppercase }} / Linha: {{ infoLinha| uppercase }} / Classe: {{ infoClasse | uppercase }}
+              </h6>
+            </li>
+          </ul> 
+          <ul class="d-flex p-0 col-12  my-5">
+            <li class="col-6">
+              <div class="card justify-content-center align-items-center">
+                <h5 class="card-header text-center w-100"> Estoque total ton.(Anterior) </h5>
+                <div class="card-body font-weight-bold w-100 bgdValueList">
+                  <div class="espacamento50">&nbsp;</div>
+                  <div class="d-flex text-center col-12 large">
+                    <div class="col"><h1> {{ listaInfo.qtPesoEstoque | number:'1.3-3' }} </h1></div>
+                  </div>
+                  <div class="espacamento50">&nbsp;</div>
+                </div>
+              </div>
+            </li>
+            <li class="col-6">
+              <div class="card justify-content-center align-items-center">
+                <h5 class="card-header text-center w-100"> Estoque total ton.(Atual) </h5>
+                <div class="card-body font-weight-bold w-100 bgdValueList">
+                  <div class="espacamento50">&nbsp;</div>
+                  <div class="d-flex text-center col-12 large">
+                    <div class="col"><h1> {{ listaInfo.saldoEstoque | number:'1.3-3' }} </h1></div>
+                  </div>
+                  <div class="espacamento50">&nbsp;</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <div class="espacamento20">&nbsp;</div>
+          <ul class="d-flex p-0 col-12  mt-5">
+            <li class="col-6">
+              <div class="card justify-content-center align-items-center">
+                <h5 class="card-header text-center w-100"> Total geral da contagem </h5>
+                <div class="card-body font-weight-bold w-100 bgdValueList">
+                  <div class="espacamento50">&nbsp;</div>
+                  <div class="d-flex text-center col-12 large">
+                    <div class="col"><h1> {{ listaInfo.saldoEstoqueLancamento | number:'1.3-3' }} </h1></div>
+                  </div>
+                  <div class="espacamento50">&nbsp;</div>
+                </div>
+              </div>
+            </li>
+            <li class="col-6">
+              <div class="card justify-content-center align-items-center">
+                <h5 class="card-header text-center w-100"> Diferença total ajustada </h5>
+                <div class="card-body font-weight-bold w-100 bgdValueList">
+                  <div class="espacamento50">&nbsp;</div>  
+                  <div class="d-flex text-center col-12 large">
+                    <div class="col"><h1> {{ resultadoDiferenca | number:'1.3-3' }} </h1></div>
+                  </div>
+                  <div class="espacamento50">&nbsp;</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <div class="espacamento20">&nbsp;</div>
+          <ul class="d-flex p-0 col-12  mt-5">
+            <li class="col-6">
+              <div class="card justify-content-center align-items-center">
+                  <h5 class="card-header text-center w-100"> Resultado total do inventário </h5>
+                <div class="card-body font-weight-bold w-100 bgdValueList">
+                  <div class="espacamento50">&nbsp;</div>
+                  <div class="d-flex text-center col-12 large">
+                    <div class="col"><h1> {{ resultTotalInventario | number:'1.3-3' }} </h1></div>
+                  </div>
+                  <div class="espacamento50">&nbsp;</div>
+                </div>
+              </div> 
+            </li>
+            <li class="col-6">
+                <div class="card justify-content-center align-items-center">
+                  <h5 class="card-header text-center w-100"> Resultado monetário total </h5>
+                  <div class="card-body font-weight-bold w-100 bgdValueList">
+                    <div class="espacamento50">&nbsp;</div>
+                    <div class="d-flex text-center col-12 large">
+                      <div class="col"><h1> {{ listaInfo.saldoFinanceiro | currency:'BRL':'symbol':'1.2-2'}} </h1></div>
+                    </div>
+                    <div class="espacamento50">&nbsp;</div>
+                  </div>
+                </div>
+              </li>
+          </ul>
+          <div class="espacamento25">&nbsp;</div>
+          <ul class="p-0">
+            <li class="px-1 pb-1 " *ngFor="let lista of listas" style="list-style: none;">
+              <div class="card">
+                <h6 class="card-header"> {{ lista.cdMaterial }} - {{ lista.dsMaterial }} </h6>
+                <div class="row card-body">
+                  <div class="list-group list-group-flush col-4">
+                    <div class="list-group-item border-0"> Estoque ton.: {{ lista.qtPesoEstoque | number : '1.3-3' }} </div>
+                    <div class="list-group-item border-0"> Qtd. peça físico: {{ lista.qtPecaContagem }} </div>
+                    <div class="list-group-item border-0"> Peso físico ton.: {{ lista.qtPesoContagem | number : '1.3-3' }} </div>
+                  </div>
+                  <div class="list-group list-group-flush col-4">
+                    <div class="list-group-item border-0"> Total da contagem: {{ lista.totalContagem | number : '1.3-3' }} </div>
+                    <div class="list-group-item border-0"> Diferença ajustada: {{ lista.saldoEstoque | number : '1.3-3' }} </div>
+                    <div class="list-group-item border-0"> Soma inventário rotativo: {{ lista.somaInventarioRotativo | number : '1.3-3' }} </div>
+                  </div>
+                  <div class="list-group list-group-flush col-4">
+                    <div class="list-group-item border-0"> Resultado inventário: {{ lista.resultadoInventario | number : '1.3-3' }} </div>
+                    <div class="list-group-item border-0"> Custo médio: {{ lista.precoMinimo | currency:'BRL':'symbol':'1.2-2' }} </div>
+                    <div class="list-group-item border-0"> Resultado monetário: {{ lista.saldoFinanceiro | currency:'BRL':'symbol':'1.2-2' }} </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>  
+

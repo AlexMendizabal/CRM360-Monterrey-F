@@ -1,0 +1,178 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="Nivel de Estoque">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-1 pl-0">
+              <label for="ID_TEIN_ESTO_NIVL">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_TEIN_ESTO_NIVL"
+                placeholder="Digite..."
+                formControlName="ID_TEIN_ESTO_NIVL"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-md pl-0">
+              <label for="produtos">Produto</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="produtos"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                [loading]="loadingProdutos"
+                placeholder="Selecione..."
+                labelForId="ID_TEIN_ESTO_PROD"
+                bindLabel="NM_PROD"
+                bindValue="ID_TEIN_ESTO_PROD"
+                id="ID_TEIN_ESTO_PROD"
+                formControlName="ID_TEIN_ESTO_PROD"
+                >
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-3 pl-0">
+              <label for="empresas">Empresa</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="empresas"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="loadingEmpresas"
+                labelForId="ID"
+                bindLabel="NM_FANT"
+                bindValue="ID"
+                id="ID"
+                formControlName="UUID_EMPR"
+                >
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-2 pl-0">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              placeholder="Selecione..."
+            >
+              <ng-template ng-option-tmp let-item="item" let-index="index"> {{item.nome}}
+              </ng-template>
+            </ng-select>
+            </div>
+            <div class="form-group col-lg-1 pl-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0 col-12">
+    <div>
+      <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Produto</th>
+            <th scope="col">Empresa</th>
+            <th scope="col">Unidade de Medida</th>
+            <th scope="col">Estoque Máximo</th>
+            <th scope="col">Estoque Mínimo</th>
+            <th scope="col">Estoque Atual</th>
+            <th scope="col" style="width:80px" [hidden]="showDetailPanel"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of niveisEstoque">
+            <td [ngClass]="item.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+            {{item.ID_TEIN_ESTO_NIVL }}
+            </td>
+            <td> {{ item.NM_PROD | uppercase }}</td>
+            <td> {{ item.NM_EMPR | uppercase }}</td>
+            <td> {{ item.DS_UNID_MEDI | uppercase }}</td>
+            <td> {{ item.TT_ESTO_MXMO | numberInt:item.DS_UNID_MEDI}}</td>
+            <td> {{ item.TT_ESTO_MNMO | numberInt:item.DS_UNID_MEDI}}</td>
+            <td *ngIf="item.TT_ESTO_ATUA != null"> {{ item.TT_ESTO_ATUA | numberInt:item.DS_UNID_MEDI}}</td>
+            <td *ngIf="item.TT_ESTO_ATUA == null"> 0 </td>
+            <td class="align-middle" style="width:70px" [hidden]="showDetailPanel">
+              <span class="mr-3" [tooltip]="item.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="changeType(item)">
+                  <i [ngClass]="item.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                </button>
+              </span>
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" [routerLink]="['./', item.ID_TEIN_ESTO_NIVL]">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table><br>
+    </div>
+    <div>
+      Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

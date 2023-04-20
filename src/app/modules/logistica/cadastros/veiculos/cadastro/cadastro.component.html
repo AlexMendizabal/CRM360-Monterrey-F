@@ -1,0 +1,143 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Prontuário de Vehículos">
+  <button 
+    [disabled]="form.valid === false"
+    (click)="postVeiculo()"
+  >
+    Ahorrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="DS_VEIC">Descripción</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DS_VEIC"
+              formControlName="DS_VEIC"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('DS_VEIC') + ' ' + onFieldRequired('DS_VEIC')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('DS_VEIC')" message="El vehículo es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="placa">Matricula</label>
+            <input
+              type="text"
+              class="form-control"
+              id="placa"
+              formControlName="PLAC"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('PLAC') + ' ' + onFieldRequired('PLAC')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('PLAC')" message="La matricula del vehículo es obligatoria."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="IN_STAT">Status</label>
+            <select
+              class="form-control custom-select"
+              id="IN_STAT"
+              formControlName="IN_STAT"
+              [ngClass]="onFieldRequired('IN_STAT')">
+              <option value="1">Activo</option>
+              <option value="0">Inactivo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('IN_STAT')" message="El status es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <div class="d-flex justify-content-between">
+              <label for="motorista">Conductor</label>
+              <label>
+                <a
+                  href="javascript:void(0)"
+                  (click)="openModal(modalMotoristas)">
+                  SELECCIONAR
+                </a>
+              </label>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              id="motorista"
+              formControlName="NM_MOTO"
+              placeholder="Digite..."
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <div class="d-flex justify-content-between">
+              <label for="nomeTransportadora">Transportadora</label>
+              <label>
+                <a
+                  href="javascript:void(0)"
+                  (click)="openModal(modalTransportadoras)">
+                  SELECCIONAR
+                </a>
+              </label>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              id="nomeTransportadora"
+              formControlName="NM_TRAN"
+              placeholder="Digite..."
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="tipoVeiculo">Tipo de Vehículo</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="tipoVeiculo"
+                [virtualScroll]="true"
+                placeholder="Seleccione..."
+                [loading]="loadingTipoVeiculo"
+                labelForId="ID_LOGI_VEIC_TIPO"
+                bindLabel="NM_VEIC_TIPO"
+                bindValue="ID_LOGI_VEIC_TIPO"
+                id="ID_LOGI_VEIC_TIPO"
+                formControlName="ID_LOGI_VEIC_TIPO"
+                [ngClass]="onFieldRequired('ID_LOGI_VEIC_TIPO')"
+              >
+              </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('ID_LOGI_VEIC_TIPO')" message="El Tipo de vehículo es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observacion:</label>
+            <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>
+
+<ng-template #modalMotoristas>
+  <logistica-veiculos-modais-motoristas
+    (select)="onMotorista($event)"
+    (close)="modalRef.hide()"
+  >
+  </logistica-veiculos-modais-motoristas>
+</ng-template>
+<ng-template #modalTransportadoras>
+  <logistica-veiculos-modais-transportadoras
+    (select)="onTransportadora($event)"
+    (close)="modalRef.hide()"
+  >
+  </logistica-veiculos-modais-transportadoras>
+</ng-template>
+

@@ -1,0 +1,72 @@
+<div class="row" id="application-header">
+  <div class="col-6">
+    <div id="title">
+      <back-button></back-button>
+      <h1>Dashboard</h1>
+    </div>
+  </div>
+  <div class="col-6 d-flex justify-content-end">
+    <div id="actions">
+      <button type="button" (click)="onFilter()">
+        Filtrar
+      </button>
+      <button type="button" (click)="onReload()">
+        Recarregar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="row" id="application-body">
+    <div class="col">
+      <breadcrumb [tree]="breadCrumbTree"></breadcrumb>
+      <div class="row">
+        <div class="col">
+          <div class="mtc-title">{{unidade}} - {{periodo}}</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <corte-dobra-dashboard-entrada-pedidos>
+          </corte-dobra-dashboard-entrada-pedidos>
+        </div>
+        <div class="col-md-6 mb-4">
+          <corte-dobra-dashboard-pedidos>
+          </corte-dobra-dashboard-pedidos>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <corte-dobra-dashboard-planilhado>
+          </corte-dobra-dashboard-planilhado>
+        </div>
+        <div class="col-md-6 mb-4">
+          <corte-dobra-dashboard-producao>
+          </corte-dobra-dashboard-producao>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <corte-dobra-dashboard-faturamento>
+          </corte-dobra-dashboard-faturamento>
+        </div>
+        <div class="col-md-6 mb-4">  
+            <corte-dobra-dashboard-registro-ocorrencia>
+            </corte-dobra-dashboard-registro-ocorrencia>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 mb-4">
+            <corte-dobra-dashboard-transporte>
+              </corte-dobra-dashboard-transporte>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-4">
+          <corte-dobra-dasboard-analitico>
+          </corte-dobra-dasboard-analitico>
+        </div>
+      </div>
+    </div>
+
+</div>

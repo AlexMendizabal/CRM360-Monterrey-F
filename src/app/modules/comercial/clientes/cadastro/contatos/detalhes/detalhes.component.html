@@ -1,0 +1,140 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row" *ngIf="contatosLoaded">
+  <div class="col">
+    <div class="mtc-title">Contatos</div>
+    <accordion *ngIf="contatos.length > 0">
+      <accordion-group class="mb-2" [heading]="tipoContato(contato)" *ngFor="let contato of contatos">
+        <div class="d-flex justify-content-between w-100 mb-3">
+          <div class="mtc-title mb-0">Principal</div>
+          <div>
+            <a
+              class="text-secondary mr-3"
+              [routerLink]="['editar', contato.idSeqTid]">
+              <b>Editar</b>
+            </a>
+            <a
+              class="text-danger"
+              (click)="onDelete(contato)"
+              href="javascript:void(0)">
+              <b>Excluir</b>
+            </a>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Nome completo</label>
+            <div *ngIf="contato.nomeCompleto == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.nomeCompleto != null">{{ contato.nomeCompleto }}</div>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Sexo</label>
+            <div *ngIf="contato.descGenero == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.descGenero != null">{{ contato.descGenero }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6 mb-0">
+            <label>Função</label>
+            <div *ngIf="contato.descFuncao == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.descFuncao != null">{{ contato.descFuncao }}</div>
+          </div>
+          <div class="form-group col-md-6 mb-0">
+            <label>Setor</label>
+            <div *ngIf="contato.descSetor == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.descSetor != null">{{ contato.descSetor }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col"><hr></div>
+        </div>
+        <div class="mtc-title">Meios de contato</div>
+        <div class="form-row" *ngIf="contato.contatos != null">
+          <div class="form-group col-md-6" *ngFor="let item of contato.contatos">
+            <label>{{ item.tipo }}</label>
+            <div *ngIf="(item.tipo == 'Telefone') || (item.tipo == 'Celular')">
+              <div *ngIf="item.contato == null">NÃO INFORMADO</div>
+              <div *ngIf="item.contato != null">{{ item.contato | telefone }}</div>
+            </div>
+            <div *ngIf="(item.tipo == 'Email NFe') || (item.tipo == 'E-mail NFe') || (item.tipo == 'E-Mail') || (item.tipo == 'Email') || (item.tipo == 'MalaDireta')">
+              <div *ngIf="item.contato == null">NÃO INFORMADO</div>
+              <div *ngIf="item.contato != null">
+                <a [href]="'mailto:' + item.contato">{{ item.contato | lowercase }}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <empty-result message="Nenhuma informação encontrada" *ngIf="contato.contatos == null"></empty-result>
+        <!-- <div class="form-row">
+          <div class="col"><hr class="mt-0"></div>
+        </div>
+        <div class="mtc-title">Detalhes</div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Aniversário</label>
+            <div *ngIf="contato.dataAniversario == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.dataAniversario != null">{{ contato.dataAniversario }}</div>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Time de futebol</label>
+            <div *ngIf="contato.descTimeFutebol == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.descTimeFutebol != null">{{ contato.descTimeFutebol }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Estado civil</label>
+            <div *ngIf="contato.descEstadoCivil == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.descEstadoCivil != null">{{ contato.descEstadoCivil }}</div>
+          </div>
+          <div class="form-group col-md-6">
+            <label>LinkedIn</label>
+            <div *ngIf="contato.linkedin == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.linkedin != null">
+              <a [href]="contato.linkedin" target="_blank">{{ contato.linkedin }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Facebook</label>
+            <div *ngIf="contato.facebook == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.facebook != null">
+              <a [href]="contato.facebook" target="_blank">{{ contato.facebook }}</a>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Instagram</label>
+            <div *ngIf="contato.instagram == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.instagram != null">
+              <a [href]="contato.instagram" target="_blank">{{ contato.instagram }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Hobbies</label>
+            <div *ngIf="contato.hobbies == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.hobbies != null">{{ contato.hobbies }}</div>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Qtde. filhos</label>
+            <div *ngIf="contato.qtdeFilhos == ''">NÃO INFORMADO</div>
+            <div *ngIf="contato.qtdeFilhos != ''">{{ contato.qtdeFilhos }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col mb-0">
+            <label>Observações</label>
+            <div *ngIf="contato.observacoes == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.observacoes != null">{{ contato.observacoes }}</div>
+          </div>
+        </div> -->
+      </accordion-group>
+    </accordion>
+    <div class="row py-5 my-5" *ngIf="contatos.length == 0">
+      <div class="col">
+        <empty-result message="Nenhuma informação encontrada"></empty-result>
+      </div>
+    </div>
+  </div>
+</div>

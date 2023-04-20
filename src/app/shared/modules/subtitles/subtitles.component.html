@@ -1,0 +1,16 @@
+<div class="row mb-2" *ngIf="show && data.length > 0">
+  <div class="col">
+    <ul class="list-unstyled d-flex mb-0">
+      <li *ngFor="let item of data; let i = index" (click)="setActive(i)">
+        <div
+          class="subtitle"
+          [ngClass]="subtitleClass(i, item)"
+          [ngStyle]="subtitleStyle(i, item)"
+        >
+          <div class="square" [ngStyle]="squareStyle(item)"></div>
+          <div class="text" [ngStyle]="textStyle(item)">{{ item.text }}</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

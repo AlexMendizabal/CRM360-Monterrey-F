@@ -1,0 +1,52 @@
+<!-- <loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen> -->
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro de Contatos">
+  <button 
+    [disabled]="form.valid === false"
+    (click)="postContatos()"
+    >
+    Salvar
+  </button>
+  <button
+  type="button"
+  (click)="onFilter()">
+  Filtrar
+</button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" >
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-12 pt-2 mx-auto">
+        <legend>Dados da Lista de Contatos</legend>
+        <div class="form-row">
+          <div class="form-group col-md-6 pl-0">
+            <label for="DESCRICAO">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DESCRICAO"
+              formControlName="DESCRICAO"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('DESCRICAO') + ' ' + onFieldRequired('DESCRICAO')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('DESCRICAO')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </fieldset>
+    </fieldset>
+  </form><br><br>
+  <blockquote class="blockquote  text-center" *ngIf="!idLista">
+    <p class="mb-0 text-danger">Associação de Clientes</p>
+    <footer class="blockquote-footer">Associação de clientes é realizada somente com registros já existentes!</footer>
+  </blockquote>
+  <div  >
+    <hr>
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-12 pt-2 mx-auto">
+        <legend>Pesquisar Clientes</legend>
+        <comercial-akna-contatos-clientes></comercial-akna-contatos-clientes>
+        <br>
+      </fieldset>
+    </fieldset>
+  </div>
+</app-body>

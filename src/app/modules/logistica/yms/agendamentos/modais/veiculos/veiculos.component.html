@@ -1,0 +1,114 @@
+<div class="modal-header">
+  <h4>Pesquisa de Veículos</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="IN_STAT">Situação</label>
+          <select
+            class="form-control custom-select"
+            formControlName="IN_STAT"
+          >
+            <option value="1">Ativo</option>
+            <option value="0">Inativo</option>
+            <option value="">Exibir Todos</option>
+          </select>
+        </div>
+        <div class="form-group col-3">
+          <label for="cdItem">BUSCAR POR</label>
+          <select
+            class="form-control custom-select"
+            formControlName="buscarPor"
+          >
+            <option value="ID_LOGI_VEIC">ID</option>
+            <option value="PLAC" selected>Placa</option>
+            <option value="NM_MOTO">Motorista</option>
+            <option value="NM_TRAN">Transportadora</option>
+            <option value="NM_VEIC_TIPO">Tipo de Veículo</option>
+          </select>
+        </div>
+
+        <div class="form-group col-6">
+          <label>TERMO DE PESQUISA</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="pesquisa"
+              >
+              <div class="input-group-append">
+                <span 
+                  [tooltip]="form.valid == false ? 'Digite um termo de pesquisa':''"
+                  container="body"
+                  placement ="left"
+                >
+                  <button
+                  style="height: 25px;"
+                    [disabled]="form.valid == false"
+                    class="input-group-text hover"
+                    (click)="getVeiculos()"
+                    >
+                    <i class="fas fa-search"></i>
+                  </button>
+                </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="spinner-border" role="status" *ngIf="loading">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <custom-table *ngIf="!noVeiculos" class="text-center">
+    <ng-template #thead let-thead>
+      <tr>
+        <th>ID </th>
+        <th>Placa</th>
+        <th>Tipo de Veículo</th>
+        <th>Nome Motorista</th>
+        <th>Transportadora</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template #tbody let-tbody>
+      <tr *ngFor="let veiculo of veiculos">
+        <td >{{ veiculo.ID_LOGI_VEIC }}</td>
+        <td>{{ veiculo.PLAC }}</td>
+        <td>{{ veiculo.NM_VEIC_TIPO }}</td>
+        <td>{{ veiculo.NM_MOTO }}</td>
+        <td>{{ veiculo.NM_TRAN }}</td>
+        <td>
+          <button
+            class="btn-icon-sm"
+            tooltip="Salvar Informações"
+            container="body"
+            (click)="onSelect(veiculo)"
+          >
+            <i class="far fa-save"></i>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </custom-table>
+  <div *ngIf="totalItems > itemsPerPage" >
+    Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+    <pagination
+      [maxSize]="10"
+      [totalItems]="totalItems"
+      (pageChanged)="onPageChanged($event)"
+      [(itemsPerPage)]="itemsPerPage"
+      [boundaryLinks]="true"
+      [(ngModel)]="currentPage"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;">
+    </pagination>
+  </div>
+</div>

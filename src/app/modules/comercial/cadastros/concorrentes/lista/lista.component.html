@@ -1,0 +1,183 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Concorrentes">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2 mb-lg-0">
+              <label for="codConcorrenteTid">Código do concorrente</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="codConcorrenteTid"
+                (input)="onInput('codConcorrenteTid')"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4 mb-lg-0">
+              <label for="nomeConcorrente">Nome do concorrente</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="nomeConcorrente"
+                (input)="onInput('nomeConcorrente')"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4 mb-lg-0">
+              <label for="nomeMarcaAco">Nome da marca de aço</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="nomeMarcaAco"
+                (input)="onInput('nomeMarcaAco')"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-2 mb-lg-0">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-5 pr-0': showDetailPanel}">
+      <ng-template #tooltipUltimaAlteracaoTemplate>
+        <p class="text-nowrap mb-0">Última alteração</p>
+      </ng-template>
+      <custom-table *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center hover">
+              <thead-sorter
+                value="Código"
+                [active]="orderBy == 'codConcorrente'"
+                [sort]="orderType"
+                (click)="setOrderBy('codConcorrenteTid')">
+              </thead-sorter>
+            </th>
+            <th scope="col" class="hover">
+              <thead-sorter
+                value="Nome concorrente"
+                [active]="orderBy == 'nomeConcorrente'"
+                [sort]="orderType"
+                (click)="setOrderBy('nomeConcorrente')">
+              </thead-sorter>
+            </th>
+            <th scope="col" [hidden]="showDetailPanel">Marca de aço</th>
+            <th scope="col" [hidden]="showDetailPanel">
+              <span class="mr-1">Usuário</span>
+              <i class="far fa-question-circle" [tooltip]="tooltipUltimaAlteracaoTemplate"></i>
+            </th>
+            <th scope="col" class="text-center" [hidden]="showDetailPanel">
+              <span class="mr-1">data última atualização</span>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let concorrente of dadosPagination; let i = index" [class.table-active]="concorrente.codConcorrenteTid == concorrenteSelecionado.codConcorrenteTid">
+            <td class="text-center hover" (click)="onDetails(concorrente)">{{ concorrente.codConcorrenteTid }}</td>
+            <td class="hover" (click)="onDetails(concorrente)">{{ concorrente.nomeConcorrente | uppercase }}</td>
+            <td class="hover" (click)="onDetails(concorrente)" [hidden]="showDetailPanel">
+              <span *ngIf="concorrente.nomeMarcaAco == null || concorrente.nomeMarcaAco ==''">NÃO INFORMADO</span>
+              <span *ngIf="concorrente.nomeMarcaAco != null">{{ concorrente.nomeMarcaAco | uppercase }}</span>
+            </td>
+            <td class="hover" (click)="onDetails(concorrente)" [hidden]="showDetailPanel">
+              <span *ngIf="concorrente.nomeUsuarioCadastro == null || concorrente.nomeUsuarioCadastro ==''">NÃO INFORMADO</span>
+              <span *ngIf="concorrente.nomeUsuarioCadastro != null">{{ concorrente.nomeUsuarioCadastro | uppercase }}</span>
+            </td>
+            <td class="text-center hover" (click)="onDetails(concorrente)" [hidden]="showDetailPanel">
+              <span *ngIf="concorrente.dataCadastro == null || concorrente.dataCadastro == ''">NÃO INFORMADO</span>
+              <span *ngIf="concorrente.dataCadastro != null">{{ concorrente.dataCadastro | date: 'dd/MM/yyyy' }}</span>
+            </td>
+            <td class="text-right">
+              <span *ngIf="concorrente.codSituacao == 1" class="mr-3" tooltip="Inativar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onInactivate(i, concorrente)">
+                  <i class="fas fa-toggle-on"></i>
+                </button>
+              </span>
+              <span *ngIf="concorrente.codSituacao == 0" class="mr-3" tooltip="Ativar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onActivate(i, concorrente)">
+                  <i class="fas fa-toggle-off"></i>
+                </button>
+              </span>
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="viewRegister(concorrente)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty">
+      </empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-7" [hidden]="!showDetailPanel">
+      <detail-panel panelTitle="Histórico de alterações">
+        <custom-table *ngIf="alteracoes.length > 0">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">Data</th>
+              <th scope="col">Usuário</th>
+              <th scope="col">Tipo</th>
+              <th scope="col">Campo</th>
+              <th scope="col">de</th>
+              <th scope="col">para</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let alteracao of alteracoes">
+              <td class="text-center">{{ alteracao.dataCadastro | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ alteracao.nomeUsuario | uppercase }}</td>
+              <td>{{ alteracao.nomeTipoOperacao | uppercase }}</td>
+              <td>{{ alteracao.nomeCampo | uppercase }}</td>
+              <td>{{ alteracao.de | uppercase }}</td>
+              <td>{{ alteracao.para | uppercase }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+</app-body>

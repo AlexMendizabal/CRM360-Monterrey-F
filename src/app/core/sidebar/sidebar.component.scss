@@ -1,0 +1,151 @@
+::ng-deep {
+  @import '../../../assets/scss/colors';
+  @import '../../../assets/scss/variables';
+
+  $h-icon-sidebar: 48px;
+  $w-icon-sidebar: 48px;
+
+  core-sidebar {
+    min-height: 100vh;
+    position: fixed;
+    top: 0px;
+    z-index: 1091;
+    nav {
+      #toggle-menu {
+        height: $navbar-size;
+        width: $w-icon-sidebar;
+        button {
+          align-items: center;
+          background-color: transparent;
+          border: unset;
+          border-radius: 50%;
+          color: rgba($orangeMtCorp, 0.75) !important;
+
+          display: flex;
+          font-size: 16px;
+          justify-content: center;
+          height: 35px;
+          padding: 0px;
+          position: relative;
+          width: 35px;
+          &:hover {
+            background-color: rgba($white, 0.1);
+            color: $white !important;
+          }
+          &:focus {
+            outline: unset;
+          }
+          i {
+            min-width: 20px;
+            text-align: center;
+          }
+        }
+      }
+      #sidebar {
+        background-color: $dark-gray;
+        max-height: calc(100vh - 48px);
+        width: $sidebar-size;
+        -webkit-transition-duration: 0.15s;
+        transition-duration: 0.15s;
+        -webkit-transition-property: width;
+        transition-property: width;
+        -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        &.open {
+          width: $sidebar-open-size;
+          #content {
+            max-width: $sidebar-open-size;
+            .sidebar-navbar {
+              li {
+                width: $sidebar-open-size;
+                a,
+                button {
+                  justify-content: start;
+                  padding: 0px 14px;
+                  width: $sidebar-open-size;
+                  span {
+                    display: flex;
+                    font-size: 11px;
+                    font-weight: 500;
+                    margin-top: auto;
+                    margin-left: 10px;
+                    margin-bottom: auto;
+                    text-transform: uppercase;
+                  }
+                }
+              }
+            }
+          }
+        }
+        #content {
+          max-height: 100vh;
+          max-width: $sidebar-size;
+          .sidebar-navbar {
+            list-style: unset;
+            margin: 0px;
+            min-height: 100vh;
+            padding: 0px 0px $h-icon-sidebar 0px;
+            text-align: center;
+            li {
+              display: flex;
+              height: $header-size;
+              width: $w-icon-sidebar;
+              a,
+              button {
+                align-items: center;
+                background-color: transparent;
+                border: unset;
+                color: $orangeMtCorp;
+                display: flex;
+                font-size: 15px;
+                height: $header-size;
+                justify-content: center;
+                letter-spacing: 0.5px;
+                padding: 0px 14px;
+                position: relative;
+                width: $w-icon-sidebar;
+                &:hover {
+                  background-color: rgba($white, 0.05);
+                  color: $white;
+                  text-decoration: unset;
+                  span{
+                    color: $white;
+                  }
+                }
+                &:focus {
+                  outline: unset;
+                }
+                i {
+                  min-width: 20px;
+                  text-align: center;
+                }
+                span {
+                  display: none;
+                }
+                .spinner-border {
+                  border-width: 0.2em;
+                  height: 20px;
+                  width: 20px;
+                }
+              }
+              .active {
+                background-color: rgba($white, 0.1);
+                color: $orangeMtCorp;
+                text-decoration: unset;
+                // span{
+                //   color: $orangeMtCorp;
+                // }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @supports (-ms-ime-align: auto) {
+    .sidebar-navbar-tooltip {
+      display: none !important;
+    }
+  }
+}

@@ -1,0 +1,115 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="CONTATOS">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2">
+              <label for="ID">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID"
+                formControlName="ID"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="DESCRICAO">Descrição</label>
+              <input
+                type="text"
+                class="form-control"
+                id="DESCRICAO"
+                formControlName="DESCRICAO"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="ARQUIVADA">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="ARQUIVADA"
+              placeholder="Selecione..."
+            >
+              <ng-template ng-option-tmp let-item="item" let-index="index"> {{item.nome}}
+              </ng-template>
+            </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <custom-table [config]="tableConfig" *ngIf="!noResult">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center">ID </th>
+            <th scope="col" class="text-center">Descrição</th>
+            <th scope="col" class="text-center">Quantidade de e-mails</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let contato of contatosFiltrados | slice : begin : end; let i = index">
+            <td
+              class="text-center hover"
+              [ngClass]="classStatusBorder(contato)">
+              {{contato.ID}}
+            </td>
+            <td  class="text-center hover">{{ contato.DESCRICAO }}</td>
+            <td  class="text-center hover">{{ contato.CONTATOS_VALIDOS}}</td>
+          </tr>
+        </ng-template>
+      </custom-table><br>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="noResult">
+      </empty-result>
+      <div *ngIf="!noResult">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+</app-body>

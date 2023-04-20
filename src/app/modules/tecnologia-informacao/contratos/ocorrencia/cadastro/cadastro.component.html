@@ -1,0 +1,428 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro de Ocorrências">
+  <button 
+    [disabled]="form.valid === false"
+    (click)="postOcorrencia()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-10 pt-2 mx-auto">
+        <legend>Dados da Ocorrência</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-3 pl-0">
+            <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+              <label class="my-auto" for="CD_ITEM">Código do Item</label>
+              <div class="my-auto text-uppercase" style="font-size: 10px">
+                <a
+                  class="text-primary"
+                  href="javascript:void(0)"
+                  (click)="openModal(pesquisaDeItens)">
+                  <strong>Selecionar</strong>
+                </a>
+              </div>
+            </div>
+            <input
+            type="text"
+            class="form-control"
+            id="CD_ITEM"
+            placeholder="Selecione..."
+            formControlName="CD_ITEM"
+            [ngClass]="onFieldError('CD_ITEM') + ' ' + onFieldRequired('CD_ITEM')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('CD_ITEM')" message="Item é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-9 pl-0">
+            <label for="NM_ITEM_TIPO">Tipo do Objeto</label>
+            <input
+            type="text"
+            class="form-control"
+            id="NM_ITEM_TIPO"
+            placeholder="Selecione..."
+            formControlName="NM_ITEM_TIPO"
+            [ngClass]="onFieldError('NM_ITEM_TIPO') + ' ' + onFieldRequired('NM_ITEM_TIPO')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('NM_ITEM_TIPO')" message="Tipo de item é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-3 pl-0">
+            <label for="VL_ITEM">Valor</label>
+            <input
+              type="text"
+              class="form-control"
+              id="VL_ITEM"
+              placeholder="Selecione..."
+              currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
+              formControlName="VL_ITEM"
+              [ngClass]="onFieldError('VL_ITEM') + ' ' + onFieldRequired('VL_ITEM')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('VL_ITEM')" message="Valor é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-9 pl-0">
+            <label for="NM_MODE">Modelo do Objeto</label>
+            <input
+            type="text"
+            class="form-control"
+            id="NM_MODE"
+            placeholder="Selecione..."
+            formControlName="NM_MODE"
+            [ngClass]="onFieldError('NM_MODE') + ' ' + onFieldRequired('NM_MODE')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('NM_MODE')" message="Modelo é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-12 pl-0">
+            <label for="NM_PROD">Produto</label>
+            <input
+            type="text"
+            class="form-control"
+            id="NM_PROD"
+            placeholder="Selecione..."
+            formControlName="NM_PROD"
+            [ngClass]="onFieldError('NM_PROD') + ' ' + onFieldRequired('NM_PROD')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('NM_PROD')" message="Produto é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-3 pl-0">
+            <label for="NR_MATR_FUNC">Matrícula</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NR_MATR_FUNC"
+              formControlName="NR_MATR_FUNC"
+              placeholder="Selecione..."
+              [ngClass]="onFieldError('NR_MATR_FUNC') + ' ' + onFieldRequired('NR_MATR_FUNC')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NR_MATR_FUNC')" message="Matrícula é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-9 pl-0">
+            <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+              <label class="my-auto" for="NM_FUNC">Funcionário</label>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_FUNC"
+              formControlName="NM_FUNC"
+              placeholder="Selecione..."
+              [ngClass]="onFieldError('NM_FUNC') + ' ' + onFieldRequired('NM_FUNC')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_FUNC')" message="Funcionário é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <fieldset class="border rounded shadow-sm col-10 pt-2 mx-auto">
+        <legend>Responsáveis</legend>
+        <div formArrayName="responsaveis">
+          <div class="form-row">
+            <div class="form-group col mb-0 d-flex justify-content-between">
+              <div class="mtc-title"></div>
+              <div>
+                <a
+                  class="text-secondary"
+                  (click)="onAddResponsavel()"
+                  href="javascript:void(0)">
+                  <b>Adicionar</b>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="form-row"  *ngFor="let item of formResponsaveis.controls; let i = index" [formGroupName]="i">
+            <div class="form-group col mb-0">
+              <div class="form-row">
+                <div class="form-group col-md-3 pl-0">
+                  <label for="NR_MATR_RESP">Matricula</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="NR_MATR_RESP"
+                    formControlName="NR_MATR_RESP"
+                    placeholder="Digite..."
+                    [ngClass]="onNestedFieldError('responsaveis', i, 'NR_MATR_RESP') + ' ' + onNestedFieldRequired('responsaveis', i, 'NR_MATR_RESP')"
+                  >
+                </div>
+                <div class="form-group col-md-8 pl-0">
+                  <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+                    <label class="my-auto" for="NM_RESP">Responsável</label>
+                    <div class="my-auto text-uppercase" style="font-size: 10px">
+                      <a
+                        class="text-primary"
+                        href="javascript:void(0)"
+                        (click)="openModal(selecionarUsuarios, i)">
+                        <strong>Selecionar</strong>
+                      </a>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="NM_RESP"
+                    formControlName="NM_RESP"
+                    [ngClass]="onNestedFieldError('responsaveis', i, 'NM_RESP') + ' ' + onNestedFieldRequired('responsaveis', i, 'NM_RESP')">
+                </div>
+                <div class="col-1 pt-4 mt-1 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon"
+                    (click)="onDeleteResponsavel(i)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+      <br>
+      <fieldset class="border rounded shadow-sm col-10 pt-2 mx-auto">
+        <legend>Observação</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observação:</label>
+            <textarea 
+              class="form-control" 
+              id="DS_OBSE" 
+              formControlName="DS_OBSE" 
+              rows="3"
+              [ngClass]="onFieldError('DS_OBSE') + ' ' + onFieldRequired('DS_OBSE')">
+            </textarea>
+            <invalid-form-control [show]="onFieldInvalid('DS_OBSE')" message="Observação é obrigatório, com no minímo 10 caracteres."></invalid-form-control>
+
+          </div>
+        </div>
+        <br>
+      </fieldset>
+      <br>
+      <fieldset class="border rounded shadow-sm col-10 pt-2 mx-auto">
+        <legend>Documentos</legend>
+        <div class="form-group border rounded p-1">
+          <div>
+            <label for="documento" class="w-100 d-flex justify-content-between align-items-center m-0 py-1" style="cursor: pointer;">
+              <span>Novo Documento</span>
+            </label>
+            <input
+              id="documento"
+              type="file"
+              (change)="appendFile($event.target.files)"
+              class="d-none"
+              >
+          </div>
+        </div>
+        <ul>
+          <li class="d-flex justify-content-between" *ngFor="let item of documentos ; let index = index">
+            <div>{{ item.NM_DOCU | uppercase }}</div>
+            <div>
+              <a
+                [hidden]="!item.ID_LOGI_ENMA_FHNC_DOCU"
+                [href]="item.LINK"
+                target="_blank"
+                class="btn-icon-sm mx-2 text-black"
+                tooltip="visualizar"
+              >
+                <i class="far fa-eye"></i>
+              </a>
+              <button
+                class="btn-icon-sm mx-2 hover"
+                tooltip="excluir"
+                (click)="onRemove(item, index)"
+                >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </fieldset>
+    </fieldset>
+  </form>
+  <ng-template #selecionarUsuarios>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Pesquisa de Responsáveis</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingUsuarios">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <advanced-filter>
+        <form [formGroup]="formUsuarios">
+          <div class="form-row">
+            <div class="form-group col-3">
+              <label for="buscarPor">BUSCAR POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="matricula">Matricula</option>
+                <option value="nome" selected> Nome Responsável</option>
+              </select>
+            </div>
+
+            <div class="form-group col-9">
+              <label>TERMO DE PESQUISA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  >
+                  <div class="input-group-append">
+                    <span 
+                      [tooltip]="formUsuarios.valid == false ? 'Digite um termo de pesquisa':''"
+                      container="body"
+                      placement ="left"
+                    >
+                      <button
+                      style="height: 25px;"
+                        [disabled]="formUsuarios.valid == false"
+                        class="input-group-text hover"
+                        (click)="getUsuarios()"
+                        >
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <custom-table *ngIf="!loadingUsuarios && !noUsuarios" class="text-center">
+        <ng-template #thead let-thead>
+          <tr>
+            <th>Matricula</th>
+            <th>Nome Responsável</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let usuario of usuarios | slice : begin : end; let i = index">
+            <td>{{ usuario.matricula }}</td>
+            <td>{{ usuario.nome }}</td>
+            <td>
+              <button
+                class="btn-icon-sm"
+                tooltip="Salvar Responsável"
+                container="body"
+                (click)="setUsuarios(usuario);modalRef.hide()"
+              >
+                <i class="far fa-save"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div *ngIf="totalItems > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #pesquisaDeItens>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Pesquisa de Itens</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingItens">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <advanced-filter>
+        <form [formGroup]="formPesquisaItem">
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="buscarPor">BUSCAR POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="ID_TECN_INFO_ITEM" selected>ID</option>
+                <option value="CD_ITEM">Código/Nº Série</option>
+                <option value="NM_PROD">Produto</option>
+                <option value="NM_ITEM_TIPO">Tipo de Item</option>
+                <option value="NM_MODE">Modelo</option>
+                <option value="DS_CONT">Contrato</option>
+                <option value="NR_MATR">Matrícula do Usuário</option>
+                <option value="NM_USUA">Nome do Usuário</option>
+              </select>
+            </div>
+            <div class="form-group col">
+              <label>TERMO DE PESQUISA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  (keyup.enter)="getItens()"
+                >
+                <div class="input-group-append">
+                  <span
+                    class="input-group-text hover"
+                    (click)="getItens()"
+                  >
+                    <i class="fas fa-search"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <custom-table *ngIf="!loadingItens && (itens.length > 0)">
+        <ng-template #thead let-thead>
+          <tr>
+            <th>ID</th>
+            <th>Código/Nº Série</th>
+            <th>Produto</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of itens">
+            <td>{{ item.ID_TECN_INFO_ITEM }}</td>
+            <td>{{ item.CD_ITEM }}</td>
+            <td>{{ item.NM_PROD }}</td>
+            <td>
+              <button
+                class="btn-icon-sm"
+                tooltip="Salvar Item"
+                container="body"
+                (click)="setItem(item);modalRef.hide()"
+              >
+                <i class="far fa-save"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+  </ng-template>
+</app-body>

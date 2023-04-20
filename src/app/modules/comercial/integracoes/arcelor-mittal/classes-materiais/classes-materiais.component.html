@@ -1,0 +1,39 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Classe de materiais"></app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row">
+    <div class="col">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col">Classe (Arcelor Mittal)</th>
+            <th scope="col">Classe (Manetoni)</th>
+            <th scope="col"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of classesMateriais">
+            <td>{{ item.nomeArcelorMittal }}</td>
+            <td>
+              <div *ngIf="item.associado == 0">
+                <i class="far fa-square text-danger mr-2"></i>
+                <span>Não associado</span>
+              </div>
+              <div *ngIf="item.associado == 1">
+                <i class="far fa-check-square text-success mr-2"></i>
+                <span>{{ item.nomeManetoni }}</span>
+              </div>
+            </td>
+            <td class="text-right">
+              <a
+                class="btn-icon-sm mr-2"
+                [routerLink]="['editar', item.idArcelorMittal]">
+                <i class="fas fa-edit"></i>
+              </a>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+  </div>
+</app-body>

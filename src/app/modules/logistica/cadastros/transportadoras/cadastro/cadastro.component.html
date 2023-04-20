@@ -1,0 +1,74 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Prontuário del Transportadoras">
+  <button 
+    [disabled]="form.valid === false"
+    (click)="postTransportadora()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-row">
+          <div class="form-group col-12">
+            <label for="cnpj"> Número de IVA </label>
+            <input
+              type="text"
+              class="form-control"
+              id="cnpj"
+              formControlName="NR_CNPJ"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NR_CNPJ') + ' ' + onFieldRequired('NR_CNPJ')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NR_CNPJ')" message="El Número de IVA es obligatorio."></invalid-form-control>
+          </div>
+          <div class="form-group col-12">
+            <label for="nomeFantasia">Nombre de Fantasia</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nomeFantasia"
+              formControlName="NM_FANT"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_FANT') + ' ' + onFieldRequired('NM_FANT')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_FANT')" message="El Nombre de Fantasia es obligatorio."></invalid-form-control>
+          </div>
+          <div class="form-group col-12">
+            <label for="razaoSocial">Razon social</label>
+            <input
+              type="text"
+              class="form-control"
+              id="razaoSocial"
+              formControlName="NM_RAZA_SOCI"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_RAZA_SOCI') + ' ' + onFieldRequired('NM_RAZA_SOCI')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_RAZA_SOCI')" message="Razão Social é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="IN_STAT">Status</label>
+            <select
+              class="form-control custom-select"
+              id="IN_STAT"
+              formControlName="IN_STAT"
+              [ngClass]="onFieldRequired('IN_STAT')">
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('IN_STAT')" message="El status es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observación:</label>
+            <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

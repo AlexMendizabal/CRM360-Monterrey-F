@@ -1,0 +1,32 @@
+<div id="box" class="border rounded bg-white shadow-sm">
+  <div class="row">
+    <div class="col-3 pr-0">
+      <div id="icon" [ngClass]="colorClass()">
+        <i [ngClass]="iconClass()"></i>
+      </div>
+    </div>
+    <div class="col-9 text-right">
+      <h5
+        class="font-weight-bolder mb-1"
+        counto
+        [step]="30"
+        [countTo]="counter"
+        [countFrom]="countFrom"
+        [duration]="duration"
+        (countoChange)="countTo = $event"
+        (countoEnd)="onCountoEnd()">
+        <span *ngIf="defaultConfig.showDecimals === true">
+          <span *ngIf="defaultConfig.format === 'number'">{{ countTo | number:'1.2-2' }}</span>
+          <span *ngIf="defaultConfig.format === 'currency'">{{ countTo | currency:'BRL':'symbol':'1.2-2' }}</span>
+          <span *ngIf="defaultConfig.format === 'percentage'">{{ countTo | number:'1.2-2' }}%</span>
+        </span>
+        <span *ngIf="defaultConfig.showDecimals === false">
+          <span *ngIf="defaultConfig.format === 'number'">{{ countTo | number:'1.0-0' }}</span>
+          <span *ngIf="defaultConfig.format === 'currency'">{{ countTo | currency:'BRL':'symbol':'1.0-0' }}</span>
+          <span *ngIf="defaultConfig.format === 'percentage'">{{ countTo | number:'1.0-0' }}%</span>
+        </span>
+      </h5>
+      <div class="text-muted small font-weight-bolder text-truncate">{{ text | uppercase }}</div>
+    </div>
+  </div>
+</div>

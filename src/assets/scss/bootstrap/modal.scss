@@ -1,0 +1,27 @@
+.modal-backdrop {
+  z-index: 1092;
+}
+.modal {
+  z-index: 1093;
+  .modal-xxl {
+    max-width: 90% !important;
+  }
+  .modal-header {
+    padding: 0.75rem;
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: unset;
+    }
+    .close {
+      padding: 0;
+      margin: 0;
+    }
+  }
+  .modal-body {
+    padding: 0.75rem;
+  }
+  .modal-footer {
+    padding: 0.75rem;
+  }
+}

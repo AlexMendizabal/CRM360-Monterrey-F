@@ -1,0 +1,182 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="PARECER">
+  <button
+  type="button"
+  (click)="onExport()"
+  [disabled]="loadingNavBar || noResult">
+  Exportar
+</button>
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-5 pl-0">
+              <label for="parecer">Parecer</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="parecer"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                [loading]="loadingParecer"
+                labelForId="ID_LOGI_ENMA_FHNC_OCPR"
+                bindLabel="NM_PARE"
+                bindValue="ID_LOGI_ENMA_FHNC_OCPR"
+                id="ID_LOGI_ENMA_FHNC_OCPR"
+                formControlName="ID_LOGI_ENMA_FHNC_OCPR">
+              </ng-select>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              (keydown.enter)="onFilter()"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-md-1 p-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (keydown.enter)="onFilter()"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0" [ngClass]="{'col': !showDetailPanel, 'col-6': showDetailPanel}">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('ID_LOGI_ENMA_FHNC_OCPR')">
+                <thead-sorter value="ID" [active]="ORDE_BY == 'ID_LOGI_ENMA_FHNC_OCPR'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('NM_PARE')">
+                <thead-sorter value="Descrição" [active]="ORDE_BY == 'NM_PARE'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th scope="col" style="width:120px"[hidden]="showDetailPanel"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let parecer of pareceres"  [class.table-active]="parecer?.ID_LOGI_ENMA_FHNC_OCPR == parecerSelecionado?.ID_LOGI_ENMA_FHNC_OCPR && showDetailPanel">
+              <td  [ngClass]="parecer.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+              {{parecer.ID_LOGI_ENMA_FHNC_OCPR }}
+              </td>
+              <td >{{ parecer.NM_PARE | uppercase}}</td>
+              <td class="align-middle" [hidden]="showDetailPanel">
+                <span class="mr-3" [tooltip]="parecer.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="changeType(parecer)">
+                    <i [ngClass]="parecer.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', parecer.ID_LOGI_ENMA_FHNC_OCPR]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+                <span class="mr-3"  tooltip="Detalhes" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm" (click)="onDetails(parecer)">
+                    <i class="fas fa-search"></i>                  
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div *ngIf="totalItems > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-6 pr-0" [hidden]="!showDetailPanel">
+      <detail-panel panelTitle="Histórico de alteração">
+        <custom-table>
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">Data</th>
+              <th scope="col">Usuário</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr>
+              <td class="text-center" *ngIf="parecerSelecionado?.DT_INCL != null && parecerSelecionado?.DT_ATUA == null ">{{ parecerSelecionado?.DT_INCL | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td class="text-center" *ngIf="parecerSelecionado?.DT_INCL != null && parecerSelecionado?.DT_ATUA != null ">{{ parecerSelecionado?.DT_ATUA | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ parecerSelecionado?.NM_USUA | uppercase }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

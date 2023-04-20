@@ -1,0 +1,329 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Relatórios de Notas Fiscais">
+  <button
+    (click)="exportarExcel()"
+    [disabled]="!noResult"
+    >
+    Exportar
+  </button>
+  <button
+    (click)="onFilter()"
+    [disabled]="form.status  == 'INVALID'"
+    >
+    Filtrar
+  </button>
+</app-header>
+<!-- Início dos Filtros -->
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter #scrollToFilter>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row justify-content-center">
+        <div class="form-group col-md-3">
+          <label for="dataInicio"> Data inicial </label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="inicioData"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="dataInicio"
+            [ngClass]="onFieldError('dataInicio') + ' ' + onFieldRequired('dataInicio')"
+            >
+          </div>
+          <invalid-form-control
+            [show]="onFieldInvalid('dataInicio')"
+            message="Data inicial é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="dataInicio"> Data final </label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="fimData"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="dataFim"
+            [ngClass]="onFieldError('dataFim') + ' ' + onFieldRequired('dataFim')"
+            >
+          </div>
+          <invalid-form-control
+            [show]="onFieldInvalid('dataFim')"
+            message="Data final é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="empresa"> Tipo de documento </label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="tipoDocumentos"
+            [virtualScroll]="true"
+            labelForId="tipoDocumento"
+            bindLabel="DOCUMENTO_NOME"
+            bindValue="DOCUMENTO_TIPO"
+            placeholder="Selecione..."
+            formControlName="tipoDocumento"
+            [ngClass]="onFieldError('tipoDocumento') + ' ' + onFieldRequired('tipoDocumento')"
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('tipoDocumento')"
+            message="Tipo de documento é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="numeroNota"> Número de nota fiscal </label>
+          <input
+            id="numeroNota"
+            type="text"
+            class="form-control"
+            placeholder="DIGITE..."
+            formControlName="numeroNota"
+            (keyup.enter)="onFilter()">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="cnpjFatFin"> CNPJ de faturamento (Fin) </label>
+          <input
+            id="cnpjFatFin"
+            type="text"
+            class="form-control"
+            placeholder="DIGITE..."
+            formControlName="cnpjFatFin"
+            (keyup.enter)="onFilter()">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="cnpjFatSup"> CNPJ de faturamento (Sup) </label>
+          <input
+            id="cnpjFatSup"
+            type="text"
+            class="form-control"
+            placeholder="DIGITE..."
+            formControlName="cnpjFatSup"
+            (keyup.enter)="onFilter()">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="cnpjFor"> CNPJ do fornecedor </label>
+          <input
+            id="cnpjFor"
+            type="text"
+            class="form-control"
+            placeholder="DIGITE..."
+            formControlName="cnpjFor"
+            (keyup.enter)="onFilter()">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="razaoFor"> Razão social do fornecedor </label>
+          <input
+            id="razaoFor"
+            type="text"
+            class="form-control"
+            placeholder="DIGITE..."
+            formControlName="razaoFor"
+            (keyup.enter)="onFilter()">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="formaPagamento"> Forma de pagamento </label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="formasPagamento"
+            [virtualScroll]="true"
+            labelForId="formaPagamento"
+            bindLabel="descFormaPagamento"
+            bindValue="cdFormaPagamento"
+            placeholder="Selecione..."
+            formControlName="formaPagamento"
+            [ngClass]="onFieldError('formaPagamento') + ' ' + onFieldRequired('formaPagamento')"
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('formaPagamento')"
+            message="Forma de pagamento é obrigatório.">
+          </invalid-form-control>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <!-- Início da Lista -->
+  <div class="row">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-6 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig" [hidden] = "!noResult">
+        <ng-template #thead let-thead>
+          <tr>
+            <th class="text-center" scope="col" style="width: 60px;">Nr. NF</th>
+            <th class="text-center" scope="col" style="width: 200px;">Fornecedor</th>
+            <th class="text-center" scope="col" style="width: 100px;">CNPJ Fornecedor</th>
+            <th class="text-center" scope="col" style="width: 80px;" [hidden]="showDetailPanel">Data Emissão</th>
+            <th class="text-center" scope="col" style="width: 80px;" [hidden]="showDetailPanel">Data Vencimento</th>
+            <th class="text-center" scope="col" style="width: 60px;" [hidden]="showDetailPanel">Valor Total</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let lista of listas | slice : begin : end; let i = index"
+              [ngClass]="lista.STATUS ?'bgRowTable' : ''" (click)="openTab(i); clickEvent(lista)" class="hover">
+            <td class="text-center">{{ lista.NUMERO_NF}}</td>
+            <td class="text-center">{{ lista.NOME_FANTASIA_FORNECEDOR | uppercase}}</td>
+            <td class="text-center">{{ lista.CNPJ_FORNECEDOR }}</td>
+            <td class="text-center" [hidden]="showDetailPanel">{{ lista.DATA_EMISSAO }}</td>
+            <td class="text-center" [hidden]="showDetailPanel">{{ lista.DATA_VENCIMENTO }}</td>
+            <td class="text-center" [hidden]="showDetailPanel">{{ lista.VALOR_TOTAL | currency:'BRL' }}</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="mt-3" [hidden]="!noResult">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          [(itemsPerPage)]="itemsPerPage"
+          (pageChanged)="onPageChanged($event)"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty">
+      </empty-result>
+    </div>
+    <!-- Início da tabela de informações -->
+    <div class="col-6" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="appTitle">
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label>Descrição Despesa</label>
+            <div class="text-nowrap">{{ decricaoDes | uppercase }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Razão Social Fornecedor</label>
+            <div class="text-nowrap">{{ razaoForn | uppercase }}</div>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div class="col-7 px-0">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Razão Social Fat. (Fin)</label>
+                <div class="text-nowrap">{{ razaoFatFin | uppercase }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Razão Social Fat.(Sup)</label>
+                <div class="text-nowrap">{{ razaoFatSup | uppercase }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-5 px-0">
+            <div class="form-row">
+              <div class="form-group col-md-10">
+                <label>CNPJ Fat. (Fin)</label>
+                <div class="text-nowrap">{{ cnpjFatFin }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-10">
+                <label>CNPJ Fat. (Sup)</label>
+                <div class="text-nowrap">{{ cnpjFatSup }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div class="col-7 px-0">
+            
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Grupo</label>
+                <div class="text-nowrap">{{ grupo }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Classe</label>
+                <div class="text-nowrap">{{ classe }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Tipo Despesa</label>
+                <div class="text-nowrap">{{ tipoDes}}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label class="text-nowrap">Tipo de Documento</label>
+                <div class="text-nowrap">{{ tipoPag | uppercase }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label class="text-nowrap">Forma de Pagamento</label>
+                <div class="text-nowrap">{{ formaPag | uppercase }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-5 px-0">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Data Emissão</label>
+                <div class="text-nowrap">{{ dtEmissao }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label class="text-nowrap">Data Vencimento</label>
+                <div class="text-nowrap">{{ dtLiquid }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label class="text-nowrap">Data Pagamento</label>
+                <div class="text-nowrap">{{ dtPagamento }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Valor Total</label>
+                <div class="text-nowrap">{{ valTotal | currency:'BRL' }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Banco/Caixa</label>
+                <div class="text-nowrap">{{ bancoCaixa | uppercase }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Banco</label>
+                <div class="text-nowrap">{{ banco | uppercase }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </detail-panel>
+    </div>
+  </div>
+</app-body>

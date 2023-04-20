@@ -1,0 +1,200 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle=" Integração DAGDA">
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+     <div class="row" #scrollToFilter>
+      <div class="col">
+        <advanced-filter>
+          <form [formGroup]="form" autocomplete="off">
+            <div class="form-row">
+              <div class="form-group col-lg-3">
+                <label for="pedidoTid">
+                  <span class="mr-1">Pedido TID</span>
+                <ng-template #tooltipLabelDeTemplate>
+                  <p class="text-nowrap mb-0">Código do Pedido TID</p>
+                </ng-template>
+                <i class="far fa-question-circle" [tooltip]="tooltipLabelDeTemplate" container="body"></i>
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pedidoTid"
+                  (keydown.enter)="onFilter()">
+              </div>
+              <div class="form-group col-lg-3">
+                <label for="pedidoDagda">
+                  <span class="mr-1">Pedido Dagda</span>
+                <ng-template #tooltipLabelParaTemplate>
+                  <p class="text-nowrap mb-0">Código do Pedido Dagda </p>
+                </ng-template>
+                <i class="far fa-question-circle" [tooltip]="tooltipLabelParaTemplate" container="body"></i> </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pedidoDagda"
+                  (keydown.enter)="onFilter()">
+              </div>
+              <div class="form-group col-lg-3">
+                <label for="status">Status</label>
+                <ng-select
+                  [searchable]="true"
+								  [clearable]="false"
+								  [items]="status"
+								  [virtualScroll]="true"
+                  placeholder="Selecione..."
+								  labelForId="status"
+								  bindLabel="nomeStatus"
+								  bindValue="id"
+                  formControlName="status"
+                  >
+                </ng-select>
+              </div>
+            </div>
+          </form>
+        </advanced-filter>
+      </div>
+    </div>
+    <!-- *ngIf="dadosPagination.length > 0 && !dadosEmpty -->
+    <div class="row" >
+      <div class="col">
+        <subtitles
+          [data]="subtitles"
+          [show]="dadosPagination.length > 0 && !dadosEmpty ">
+        </subtitles>
+      </div>
+    </div>
+    <div class="row">
+      <div [ngClass]="{'col': !showDetailPanel, 'col-5 pr-0': showDetailPanel}">
+        <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty"   class="table">
+          <ng-template  #thead let-thead >
+            <tr>
+              <th scope="col" class="text-center">Código Empresa</th>
+              <th scope="col" class="text-center">Nome da Empresa</th>
+              <th scope="col" class="text-center">Pedido TID</th>
+              <th scope="col" class="text-center">Pedido Dagda</th>
+              <th scope="col" class="text-center">Status</th>
+              <th scope="col" class="text-center">Dt.Integração</th>
+              <th scope="col" class="text-center"></th>
+              <th scope="col" class="text-center"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody >
+            <tr *ngFor="let item of dadosPagination; let i = index;">
+              <td
+                class="hover text-center"
+                [ngClass]="classStatusBorder(item)">
+                {{ item.idEmpresa }}
+              </td>
+              <td
+                class="hover text-center">
+                {{ item.nomeEmpresa | uppercase}}
+              </td>
+              <td
+                class="hover text-center">
+                {{ item.pedidoTid | uppercase}}
+              </td>
+              <td
+                class="hover text-center">
+                {{ item.pedidoDagda | uppercase}}
+              </td>
+              <td
+                class="hover text-center">
+                {{ item.nomeStatus | uppercase}}
+              </td>
+              <td
+                class="hover text-center">
+                {{ item.dataAcao | date: 'dd/MM/yyyy' }}
+              </td>
+              <td class="text-center" >
+                <span >
+                <btn-icon
+                  icon="fas fa-sync-alt"
+                  color="danger"
+                  size="small"
+                  tooltip="Reprocessar"
+                  *ngIf="item.status == '3'"
+                  (click)="postProcessamento(item , i);"
+                  >
+                </btn-icon>
+                </span>
+              </td>
+              <td>
+              <span class="ml-2">
+                <btn-icon
+                    icon="fas fa-history text-primary"
+                    size="small"
+                    tooltip="Log"
+                    (click)="openModal(template, i); onLogs(item)">
+                  </btn-icon>
+              </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+        <empty-result
+          message="Nenhuma informação encontrada"
+          class="my-3"
+          *ngIf="dadosEmpty">
+        </empty-result>
+        <div class="d-flex justify-content-center" *ngIf="totalItems > itemsPerPage && dadosLoaded">
+          <pagination
+            [maxSize]="10"
+            [(totalItems)]="totalItems"
+            (pageChanged)="onPageChanged($event)"
+            [(itemsPerPage)]="itemsPerPage"
+            [boundaryLinks]="true"
+            [(ngModel)]="currentPage"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;">
+          </pagination>
+        </div>
+     </div>
+    </div>
+
+    <ng-template #template>
+      <div class="modal-body">
+        <loader-spinner-full-screen *ngIf="loaderModalFullScreen"></loader-spinner-full-screen>
+        <button type="button" class="close pull-right " (click)="closeModal(template)" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="text-center mtc-title ">
+          <label>Integração de Pedidos</label>
+        </div>
+        <custom-table>
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">Data</th>
+              <th scope="col" class="text-center">Hora</th>
+              <th scope="col" class="text-center">Status</th>
+              <th scope="col" class="text-center">Motivo</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let item of logs; let i = index;" >
+              <td class="hover text-center">
+                {{ item.dataAcao | date: 'dd/MM/yyyy'}}
+              </td>
+              <td class="hover text-center">
+                {{ item.dataAcao | date: 'HH:MM:ss'}}
+              </td>
+              <td class="hover text-center">
+                {{ item.nomeStatus}}
+              </td>
+              <td class="hover text-center">
+                {{ item.dsIntegracao }}
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </div>
+    </ng-template>
+</app-body>
+

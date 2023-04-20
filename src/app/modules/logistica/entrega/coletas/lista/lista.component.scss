@@ -1,0 +1,12 @@
+button{
+  background: transparent;
+  border: none;
+}
+
+button:disabled{
+  cursor: no-drop;
+}
+
+::ng-deep .tooltip-inner{
+  max-width: 700px !important;
+}

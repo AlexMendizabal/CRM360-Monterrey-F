@@ -1,0 +1,329 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Análise de Compras Multíplas Visões">
+  <button type="button" (click)="onFilter(currentPage=1)" [disabled]="
+    form.status == 'INVALID' ||
+    (form.get('dataInicial').value == null &&
+      form.get('paramData').value != 1) ||
+    (form.get('dataFinal').value == null &&
+      form.get('paramData').value != 1) ||
+      compareDate() ||
+      compareStartDateFunc() ||
+      compareEndDateFunc()
+  ">
+    Filtrar
+  </button>
+  <button type="button" (click)="smModal.show() + ' ' + setValuesAlterarAgrupamento()" [disabled]="itemModal.length == 0">
+    Alterar Agrupamento
+  </button>
+  <button type="button" (click)="smModal.show() + ' ' + setValuesVisaoMensal()" [disabled]="itemModal.length == 0">
+    Visão Mensal
+  </button>
+  <button type="button" (click)="excelExport()" [disabled]="
+    form.status == 'INVALID' ||
+    (form.get('dataInicial').value == null &&
+      form.get('paramData').value != 1) ||
+    (form.get('dataFinal').value == null &&
+      form.get('paramData').value != 1) ||
+    compareDate() ||
+    compareStartDateFunc() ||
+    compareEndDateFunc()
+  ">
+    Exportar Excel
+  </button>
+  <button type="button" (click)="smModal.show() + ' ' + setValuesFavorite()" [disabled]="
+    form.status == 'INVALID' ||
+    (form.get('dataInicial').value == null &&
+      form.get('paramData').value != 1) ||
+    (form.get('dataFinal').value == null &&
+      form.get('paramData').value != 1) ||
+    compareDate() ||
+    compareStartDateFunc() ||
+    compareEndDateFunc()
+  ">
+    Favoritos
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-lg-2">
+          <label for="INFO_PRIN">Informação principal</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="infoPrincipal" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="false" placeholder="Selecione..." bindLabel="NM_INFO_PRIN"
+            bindValue="ID" formControlName="INFO_PRIN" [ngClass]="
+              onFieldError('INFO_PRIN') + ' ' + onFieldRequired('INFO_PRIN')
+            ">
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('INFO_PRIN')" message="Informação principal é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="INFO_AGRU">Agrupamento</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="agrupamento" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="false" placeholder="Selecione..." bindLabel="NM_INFO_AGRU"
+            bindValue="ID" formControlName="INFO_AGRU" [ngClass]="
+              onFieldError('INFO_AGRU') + ' ' + onFieldRequired('INFO_AGRU')
+            ">
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('INFO_AGRU')" message="Agrupamento é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="INFO_VOLU">Volume</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="volume" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="false" [multiple]="true" placeholder="Selecione..."
+            bindLabel="NM_INFO_VOLU" bindValue="ID" formControlName="INFO_VOLU" [ngClass]="
+              onFieldError('INFO_VOLU') + ' ' + onFieldRequired('INFO_VOLU')
+            ">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                <span class="ng-value-label"> {{item.NM_INFO_VOLU}} </span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 1">
+                <span class="ng-value-label">{{items.length - 1}} Item...</span>
+              </div>
+            </ng-template>
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('INFO_VOLU')" message="Volume é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="INFO_ADIC">Informações adicionais</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="infoAdicionais" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="false" [multiple]="true" placeholder="Selecione..."
+            formControlName="INFO_ADIC" bindLabel="NM_INFO_ADIC" bindValue="ID">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                <span class="ng-value-label"> {{item.NM_INFO_ADIC}} </span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 1">
+                <span class="ng-value-label">{{items.length - 1}} Item...</span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="INFO_ESTA">Estatistíca</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="infoEstatistica" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="false" [multiple]="true" placeholder="Selecione..."
+            bindLabel="NM_INFO_ESTA" bindValue="ID" formControlName="INFO_ESTA">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                <span class="ng-value-label"> {{item.NM_INFO_ESTA}} </span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 1">
+                <span class="ng-value-label">{{items.length - 1}} Item...</span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-3">
+          <label for="tipoMaterial">Tipo de Material</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="tiposMateriais" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="false" [multiple]="true" placeholder="Selecione..."
+            bindLabel="NM_APOI_TIPO_MATE" bindValue="ID" formControlName="tipoMaterial" (change)="resetForm()">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                <span class="ng-value-label"> {{item.NM_APOI_TIPO_MATE}} </span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 1">
+                <span class="ng-value-label">{{items.length - 1}} Item...</span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-1">
+          <label for="situacao">Situação</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="situations" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="true" placeholder="Selecione..." bindLabel="nome" bindValue="id"
+            formControlName="situacao" (change)="resetForm()" [ngClass]="
+              onFieldError('situacao') + ' ' + onFieldRequired('situacao')
+            ">
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('situacao')" message="Situação é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="linha">Linha</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="linhas" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="true" placeholder="Selecione..." bindLabel="NM_LINH" bindValue="ID"
+            formControlName="linha" (change)="
+              getSubLinhas() +
+                ' ' +
+                getClasses() +
+                ' ' +
+                getDepositosAssociados()
+            " [ngClass]="onFieldError('linha') + ' ' + onFieldRequired('linha')">
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('linha')" message="Linha é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="subLinha">Sublinha</label>
+          <ng-select [searchable]="true" [clearable]="true" [items]="subLinhas" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="true" placeholder="Selecione..." bindLabel="NM_SUB_LINH"
+            bindValue="ID" (change)="getClasses()" formControlName="subLinha">
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="classe">Classe</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="classes" [virtualScroll]="true" [multiple]="true"
+            [hideSelected]="true" [closeOnSelect]="false" maxSelectedItems="6" placeholder="Selecione..."
+            bindLabel="NM_CLAS" bindValue="ID" formControlName="classe"
+            (change)="getMateriais() + ' ' + getDepositosAssociados()">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                <span class="ng-value-label"> {{item.NM_CLAS}} </span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 1">
+                <span class="ng-value-label">{{items.length - 1}} Item...</span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-6">
+          <label for="material">Material</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="materiais" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="false" [multiple]="true" placeholder="Selecione..."
+            bindLabel="ID_REFE_ERP_NM_MATE" bindValue="ID" formControlName="material">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                <span class="ng-value-label"> {{item.ID_REFE_ERP_NM_MATE}} </span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 1">
+                <span class="ng-value-label">{{items.length - 1}} Item...</span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="empresas">Empresas</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="depositosAssociados" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="false" [multiple]="true" (change)="getDepositos($event)"
+            placeholder="Selecione..." bindLabel="NM_EMPR" bindValue="ID_EMPR" formControlName="empresas">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                <span class="ng-value-label"> {{item.NM_EMPR}} </span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 1">
+                <span class="ng-value-label">{{items.length - 1}} Item...</span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="depositos">Depósitos</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="depositos" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="false" [multiple]="true" placeholder="Selecione..."
+            bindLabel="NM_DEPO" bindValue="ID" formControlName="depositos">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                <span class="ng-value-label"> {{item.NM_DEPO}} </span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 1">
+                <span class="ng-value-label">{{items.length - 1}} Item...</span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-2">
+          <label for="nivelEstoque">Nível de Estoque</label>
+          <ng-select [searchable]="true" [clearable]="true" [items]="tiposNiveisEstoques" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="true" [multiple]="false" placeholder="Selecione..."
+            bindLabel="NM_APOI_TIPO_NIVE_ESTO" bindValue="ID" formControlName="nivelEstoque">
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="paramData">Período de Vendas</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="periodosBusca" [virtualScroll]="true"
+            [hideSelected]="true" [closeOnSelect]="true" placeholder="Selecione..." (change)="activeInputDate()"
+            bindLabel="nome" bindValue="id" formControlName="paramData" [ngClass]="
+              onFieldError('paramData') + ' ' + onFieldRequired('paramData')
+            ">
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('paramData')" message="Período de vendas é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="dataInicial">Data Inicial</label>
+          <input class="form-control" id="dataInicial" type="text" bsDatepicker [bsConfig]="bsConfig"
+            formControlName="dataInicial" />
+          <invalid-form-control [show]="compareStartDateFunc()"
+            message="Data inicial não pode ser maior que data atual">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="dataFinal">Data Final</label>
+          <input class="form-control" id="dataFinal" type="text" bsDatepicker [bsConfig]="bsConfig"
+            formControlName="dataFinal" />
+          <invalid-form-control [show]="compareDate()" message="Data final deve ser maior que data inicial">
+          </invalid-form-control>
+          <invalid-form-control [show]="compareEndDateFunc()" message="Data final não pode ser maior que data atual">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-1">
+          <label for="qtItensPagina">Registros</label>
+          <ng-select [searchable]="true" [clearable]="false" [items]="numberOfItems" [virtualScroll]="true"
+            labelForId="qtItensPagina" formControlName="qtItensPagina">
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <visao-material *ngIf="idView == 1" (newItemEvent)="addItem($event)"></visao-material>
+  <visao-classe *ngIf="idView == 2"></visao-classe>
+  <visao-sublinha *ngIf="idView == 3"></visao-sublinha>
+  <visao-linha *ngIf="idView == 4"></visao-linha>
+  <visao-deposito *ngIf="idView == 5"></visao-deposito>
+  <visao-empresa *ngIf="idView == 6"></visao-empresa>
+  <visao-tipo-material *ngIf="idView == 7"></visao-tipo-material>
+</app-body>
+<!-- Modais -->
+<div 
+  bsModal 
+  #smModal="bs-modal" 
+  class="modal fade" 
+  tabindex="-1" 
+  role="dialog" 
+  aria-labelledby="dialog-sizes-name2"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name2" class="modal-title pull-left">
+          {{ modal.title}}
+        </h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="smModal.hide() + '' + onCloseModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container" *ngIf="showModalFavoritos">
+          <abastecimento-analise-compras-multi-visoes-modal-favoritos></abastecimento-analise-compras-multi-visoes-modal-favoritos>
+        </div>
+        <div class="container" *ngIf="showModalAlterarAgrupamento">
+          <abastecimento-analise-compras-multi-visoes-modal-alterar-agrupamento [item]="itemModal"></abastecimento-analise-compras-multi-visoes-modal-alterar-agrupamento>
+        </div>
+        <div class="container" *ngIf="showModalVisaoMensal">
+          <abastecimento-analise-compras-multi-visoes-modal-visao-mensal [item]="itemModal"></abastecimento-analise-compras-multi-visoes-modal-visao-mensal>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,359 @@
+<loader-spinner-full-screen [hidden]="!loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+    <button
+    type="button"
+    (click) = "onResetForm()"
+    >
+    Limpiar
+  </button>
+  <button
+    [disabled]="form.status == 'INVALID'"
+    type="button"
+    (click) = "onSearch()"
+    >
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="dtInicial">Data Inicial</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+            </div>
+            <input
+              class="form-control"
+              id="dtInicial"
+              type="text"
+              bsDatepicker
+              placeholder="Escribelo..."
+              [bsConfig]="bsConfig"
+              formControlName="DT_INIC">
+          </div>
+        </div>
+        <div class="form-group col-3">
+          <label for="dtFinal">Final</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+            </div>
+            <input
+              class="form-control"
+              id="dtFinal"
+              type="text"
+              bsDatepicker
+              placeholder="Escribelo..."
+              [bsConfig]="bsConfig"
+              formControlName="DT_FINA">
+          </div>
+        </div>
+        <div class="form-group col-3">
+          <label for="pedido">Orden de venta</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+            </div>
+            <input
+              class="form-control"
+              id="pedido"
+              type="text"
+              formControlName="CD_PEDI"
+              placeholder="Escribelo..."
+              (keyup.enter)="onSearch()"
+              >
+          </div>
+        </div>
+        <div class="form-group col-3">
+          <label for="notaFiscal">Factura</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+            </div>
+            <input
+              class="form-control"
+              id="notaFiscal"
+              type="text"
+              formControlName="NOTA_FISC"
+              placeholder="Escribelo..."
+              (keyup.enter)="onSearch()"
+              >
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="cliente">Cliente</label>
+          <input
+            class="form-control"
+            id="cliente"
+            type="text"
+            formControlName="DS_CLIE"
+            placeholder="nombre o código"
+            (keyup.enter)="onSearch()"
+            >
+        </div>
+        <div class="form-group col-3">
+          <label for="filial">Filial</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [loading]="loadingFiliais"
+            [closeOnSelect]="false"
+            [items]="filiais"
+            [virtualScroll]="true"
+            dropdownPosition="bottom"
+            labelForId="filial"
+            bindLabel="nome"
+            bindValue="idFilial"
+            (change)="onSearch()"
+            placeholder="SELECCIONE..."
+            formControlName="CD_FILI"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-3">
+          <label for="statusIntegracao">Situación</label>
+          <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="statusIntegracao"
+              [virtualScroll]="true"
+              labelForId="statusIntegracao"
+              bindLabel="nome"
+              bindValue="id"
+              id="statusIntegracao"
+              formControlName="DS_INTE"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-3">
+          <label for="itemsPerPage">Registros</label>
+          <select 
+            class="form-control custom-select"
+            (change)="setItensPerPage($event)"
+            formControlName="TT_REGI_PAGI"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div [hidden]="loading || items.length == 0">
+    <table class="table table-sm table-hover border-left border-right border-bottom text-center table-fixed" style="width: 40%">
+      <tbody>
+        <tr>
+          <td><i class="fas fa-circle text-success"></i></td>
+          <td>Integrado</td>
+          <td>{{ qtItensIntegrados }}</td>
+          <td>{{ qtItensIntegrados / totalItems | percent : '1.0-0'}}</td>
+        </tr>
+        <tr>
+          <td><i class="fas fa-circle text-warning"></i></td>
+          <td>No integrado</td>
+          <td>{{ qtItensNaoIntegrados }}</td>
+          <td>{{ qtItensNaoIntegrados / totalItems | percent : '1.0-0'}}</td>
+        </tr>
+        <tr>
+          <td><i class="fas fa-circle text-danger"></i></td>
+          <td>Con error</td>
+          <td>{{ qtItensComErro }}</td>
+          <td>{{ qtItensComErro / totalItems | percent : '1.0-0'}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex">
+      <div class="col p-0">
+        <custom-table [config]="tableConfig">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col"width="12%">
+                <thead-sorter
+                  value="Filial"
+                  [active]="orderBy == 'CD_FILI'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('CD_FILI')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter
+                  value="Orden de vienda"
+                  [active]="orderBy == 'CD_PEDI'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('CD_PEDI')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter
+                  value="Factura"
+                  [active]="orderBy == 'NOTA_FISC'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('NOTA_FISC')">
+                </thead-sorter>
+              </th>
+              <th scope="col" width="20%">
+                <thead-sorter
+                  value="Cliente"
+                  [active]="orderBy == 'CD_CLIE'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('CD_CLIE')">
+                </thead-sorter>
+              </th>
+              <th scope="col" width="20%">
+                <thead-sorter
+                  value="Dirección"
+                  [active]="orderBy == 'DS_LOCA_ENTR'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('DS_LOCA_ENTR')">
+                </thead-sorter>
+              </th>
+              <th scope="col" width="12%">
+                <thead-sorter
+                  value="Emisión"
+                  [active]="orderBy == 'DT_PEDI'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('DT_PEDI')">
+                </thead-sorter>
+              </th>
+              <th scope="col" width="12%">
+                <thead-sorter
+                  value="Integración"
+                  [active]="orderBy == 'DT_INTE'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('DT_INTE')">
+                </thead-sorter>
+              </th>
+              <th scope="col" class="text-center" width="3%"></th>
+              <th scope="col" class="text-center" width="3%"></th>
+              <th scope="col" class="text-center" width="3%"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let item of items; let indice = index" >
+              <td class="align-middle text-center text-truncate">({{item?.CD_FILI}})&nbsp; {{ item?.NM_FILI }}</td>
+              <td class="align-middle text-center">{{ item?.CD_PEDI }}</td>
+              <td class="align-middle text-center">
+                <span *ngIf="item.NOTA_FISC">{{ item?.NOTA_FISC }}</span>
+                <span *ngIf="!item.NOTA_FISC">-</span>
+              </td>
+              <td
+                class="text-truncate"
+                [tooltip]="item?.NM_CLIE"
+                container="body"
+                placement="right" 
+              >
+                ({{ item?.CD_CLIE }})&nbsp;{{ item?.NM_CLIE }}
+              </td>
+              <td
+                class="text-truncate"
+                [tooltip]="item?.DS_ENDE"
+                container="body"
+                placement="right"  
+              >
+                {{ item?.DS_ENDE }}
+              </td>
+              <td class="align-middle text-center" *ngIf="compressedTable">{{ item?.DT_PEDI   | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
+              <td class="align-middle text-center" *ngIf="compressedTable">
+                <span *ngIf="item.DT_INTE"  >{{ item?.DT_INTE   | date : 'dd/MM/yyyy HH:mm:ss'}}</span>
+                <span *ngIf="!item.DT_INTE" >-</span>
+              </td>
+              <td *ngIf="compressedTable" class="align-middle text-center">
+                <i
+                  class="fas fa-exchange-alt"
+                  [tooltip]="item['IN_PEDI_CADA_MANU'] == 1 ? 'Pedido com coleta associada' : 'Pedido sem coleta associada'"
+                  container="body"
+                  placement="left"
+                  [ngClass]="item['IN_PEDI_CADA_MANU'] == 1 ? 'text-warning' : 'text-muted'"
+                ></i>
+              </td>
+              <td *ngIf="compressedTable" class="align-middle text-center">
+                <button
+                  class="btn-icon-sm"
+                  tooltip="Integrar"
+                  placement="left"
+                  container="body"
+                  (click)="integraPedido(item)"
+                  [hidden]="item.loading"
+                >
+                  <i
+                    class="fas fa-paper-plane"
+                    [ngClass]="{
+                      'text-success': item.DS_INTE === 'I',
+                      'text-warning': item.DS_INTE === 'N',
+                      'text-danger': item.DS_INTE === 'E'}"
+                  ></i>
+                </button>
+                <div class="spinner-border text-primary" role="status" [hidden]="!item.loading" style="height: 1rem; width: 1rem;">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </td>
+              <td *ngIf="compressedTable" class="align-middle text-center">
+                <button
+                  class="btn-icon-sm"
+                  tooltip="Gerar coleta"
+                  placement="left"
+                  container="body"
+                  (click)="onEdit(item)"
+                >
+                  <i class="far fa-edit"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+        Mostrando {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+      <tabset class="col-5 pr-0" [hidden]="compressedTable">
+        <button type="button" class="btn-icon close" (click)="onDetails(true)">
+          <i class="fas fa-times"></i>
+        </button>
+        <tab heading="Arquivo de integração">
+          <div class="border-right border-left border-bottom px-3 pt-3">
+            <pre class="rounded p-2" style="background: #eff0f1">{{ pedido | json }}</pre>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+  </div>
+  <div [hidden]="loading || items.length > 0" class="d-flex justify-content-center align-items-center" style="width: 100%; height: 300px">
+    <empty-result message="No se encontró información"></empty-result>
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header">
+      <h5 class="modal-title">Orden de vienda: {{ pedido.pedido_erp }}</h5>
+      <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <span>Escribelo o motivo do cancelamento</span>
+      <textarea name="motivoCancelamento" id="motivoCancelamento" class="w-100" rows="10" #txtMotivoCancelamento minlength="100" (input)="isDisabled = txtMotivoCancelamento.value.length == 0 ? true : false"></textarea>
+      <div class="w-100" style="position: relative; min-height: 25px;">
+        <button class="btn btn-primary" style="position: absolute; right: 0;" (click)="integraPedido(pedido, 'true', txtMotivoCancelamento.value); modalRef.hide()" [disabled]="isDisabled">Integrar <i class="far fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </ng-template>
+</app-body>

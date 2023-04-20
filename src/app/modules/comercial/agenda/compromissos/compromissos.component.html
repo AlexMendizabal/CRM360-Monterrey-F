@@ -1,0 +1,92 @@
+<ng-template #loading>
+  <loader-spinner-full-screen></loader-spinner-full-screen>
+</ng-template>
+<app-header [appTitle]="appTitle(viewDate)">
+  <button
+    type="button"
+    *ngIf="showCalendar"
+    mwlCalendarPreviousView
+    [view]="view"
+    [(viewDate)]="viewDate"
+    (viewDateChange)="fetchEvents()">
+    Anterior
+  </button>
+  <button
+    type="button"
+    *ngIf="showCalendar"
+    mwlCalendarToday
+    [(viewDate)]="viewDate"
+    (viewDateChange)="fetchEvents()">
+    Hoje
+  </button>
+  <button
+    type="button"
+    *ngIf="showCalendar"
+    mwlCalendarNextView
+    [view]="view"
+    [(viewDate)]="viewDate"
+    (viewDateChange)="fetchEvents()">
+    Próximo
+  </button>
+  <button
+    type="button"
+    *ngIf="showCalendar"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter(showFilter)"
+    *ngIf="enableFilterButton()"
+    [disabled]="idEscritorio == null || idVendedor == null">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row" *ngIf="showFilter">
+    <div class="col">
+      <comercial-templates-filtro-vendedor-escritorio
+        [profile]="profile"
+        [showAll]="false"
+        (formValue)="dataFilter($event)">
+      </comercial-templates-filtro-vendedor-escritorio>
+    </div>
+  </div>
+  <div class="row" *ngIf="showCalendar">
+    <div class="col">
+      <div class="row mb-3" *ngIf="(nomeEscritorio != null && nomeEscritorio.length > 0) || (nomeVendedor != null && nomeVendedor.length > 0)">
+        <div class="col">
+          <div class="d-flex">
+            <h6 class="mb-0 mr-2" *ngIf="nomeVendedor != null && nomeEscritorio != null && nomeEscritorio.length > 0">
+              <span class="badge badge-secondary">{{ nomeEscritorio }}</span>
+            </h6>
+            <h6 class="mb-0" *ngIf="nomeVendedor.length > 0">
+              <span class="badge badge-primary">{{ nomeVendedor }}</span>
+            </h6>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div *ngIf="events$ | async; else loading; let events">
+            <div [ngSwitch]="view">
+              <mwl-calendar-month-view
+                *ngSwitchCase="'month'"
+                [@.disabled]="true"
+                [viewDate]="viewDate"
+                [events]="events"
+                [activeDayIsOpen]="activeDayIsOpen"
+                (dayClicked)="dayClicked($event.day)"
+                (eventClicked)="eventClicked($event.event)">
+              </mwl-calendar-month-view>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <permission-denied
+    message="Seu perfil não tem acesso a essa aplicação"
+    *ngIf="showPermissionDenied">
+  </permission-denied>
+</app-body>

@@ -1,0 +1,36 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    (click)="putBancos()"
+    [disabled]="form.status == 'INVALID'"
+    >
+    Cadastrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col">
+      <form autocomplete="off" [formGroup]="form">
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-4">
+            <div class="form-group col-md-12 p-0">
+              <label for="banco"> Nome Banco/Fundo </label>
+              <input
+                id="banco"
+                type="text"
+                class="form-control"
+                placeholder="DIGITE..."
+                formControlName="DESC_BANCO"
+                [ngClass]="onFieldError('DESC_BANCO') + ' ' + onFieldRequired('DESC_BANCO')">
+            </div>
+            <invalid-form-control
+              [show]="onFieldInvalid('DESC_BANCO')"
+              message="Informar banco é obrigatório.">
+            </invalid-form-control>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

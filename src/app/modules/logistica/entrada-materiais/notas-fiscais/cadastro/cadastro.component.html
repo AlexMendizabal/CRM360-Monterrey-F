@@ -1,0 +1,514 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="NOTAS FISCAIS">
+  <button 
+    [disabled]="form.valid === false || loadingNavBar === true || noMaterial === false "
+    (click)="postNotasFiscais()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-10 pt-2 mx-auto">
+        <legend>Dados da Nota Fiscal</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-4 pl-0">
+            <label for="NR_NOTA_FISC">Nota Fiscal</label>
+            <input
+              type="text"
+              class="form-control"
+              pattern="[0-9]+$"
+              id="NR_NOTA_FISC"
+              formControlName="NR_NOTA_FISC"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NR_NOTA_FISC') + ' ' + onFieldRequired(form.controls.NR_NOTA_FISC)"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NR_NOTA_FISC') == 'required'" message="Nota Fiscal é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-8 pl-0">
+            <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+              <label class="my-auto" for="NM_FORN">Fornecedor</label>
+              <div class="my-auto text-uppercase" style="font-size: 10px" >
+                <a
+                  class="text-primary"
+                  href="javascript:void(0)"
+                  (click)="openModal(alterarFornecedor)">
+                  <strong>Selecionar</strong>
+                </a>
+              </div>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_FORN"
+              formControlName="NM_FORN"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_FORN') + ' ' + onFieldRequired(form.controls.NM_FORN)"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_FORN')" message="Fornecedor é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-4 pl-0">
+            <label for="DT_INIC">Data de Emissão</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+              </div>
+              <input
+              class="form-control"
+              id="DT_EMIS_NOTA_FISC"
+              type="text"
+              bsDatepicker
+              placeholder="Selecione..."
+              [bsConfig]="bsConfig"
+              formControlName="DT_EMIS_NOTA_FISC"
+              [ngClass]="onFieldError('DT_EMIS_NOTA_FISC') + ' ' + onFieldRequired(form.controls.DT_EMIS_NOTA_FISC)"
+              >
+              <invalid-form-control [show]="onFieldInvalid('DT_EMIS_NOTA_FISC')" message="Data de emissão do contrato é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-group col-md-8 pl-0">
+            <label for="statusRecebimento">Status de Recebimento</label>
+            <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="statusRecebimento"
+            [virtualScroll]="true"
+            dropdownPosition="bottom"
+            placeholder="Selecione..."
+            [loading]="loadingStatusRecebimento"
+            labelForId="ID_LOGI_ENMA_NOFI_STAT"
+            bindLabel="NM_STAT"
+            bindValue="ID_LOGI_ENMA_NOFI_STAT"
+            id="ID_LOGI_ENMA_NOFI_STAT"
+            formControlName="ID_LOGI_ENMA_NOFI_STAT"
+            (change)="checkStatus($event, popupStatus)"
+            >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('ID_LOGI_ENMA_NOFI_STAT')" message="Status de Recebimento é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-12 pl-0">
+            <label for="empresas">Empresa</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="empresas"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              placeholder="Selecione..."
+              [loading]="loadingEmpresas"
+              labelForId="UUID_EMPR"
+              bindLabel="NM_FANT"
+              bindValue="ID"
+              id="UUID_EMPR"
+              formControlName="UUID_EMPR"
+            >
+            </ng-select>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-10 pt-2 mx-auto">
+        <legend>Materiais</legend>
+        <div class="row" *ngIf="loadingMateriais">
+          <div class="col">
+            <message
+              icon="fas fa-cog fa-spin"
+              text="Estamos pesquisando os materiais para você...">
+            </message>
+          </div>
+        </div>
+        <div formArrayName="materiais">
+          <div class="form-row">
+            <div class="form-group col mb-0 d-flex justify-content-between">
+              <div class="mtc-title"></div>
+              <div>
+                <a
+                  class="text-secondary"
+                  (click)="onAddMaterial()"
+                  href="javascript:void(0)">
+                  <b>Adicionar</b>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="form-row"  *ngFor="let item of formMateriais.controls; let i = index" [formGroupName]="i">
+            <div class="form-group col mb-0">
+              <div class="form-row">
+                <div class="form-group col-md-1 pl-0">
+                  <label for="SEQU_MATE">Sequência</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="SEQU_MATE"
+                    formControlName="SEQU_MATE"
+                    [ngClass]="onNestedFieldError('materiais', i, 'SEQU_MATE') + ' ' + onNestedFieldRequired('materiais', i, 'SEQU_MATE')">
+                </div>
+                <div class="form-group col-md-2 pl-0">
+                  <label for="DS_UNID_MEDI">Unidade de Medida</label>
+                  <select 
+                  class="form-control custom-select"
+                  id="DS_UNID_MEDI"
+                  formControlName="DS_UNID_MEDI"
+                  [ngClass]="onNestedFieldError('materiais', i, 'DS_UNID_MEDI') + ' ' + onNestedFieldRequired('materiais', i, 'DS_UNID_MEDI')"
+                >
+                  <option >KG</option>
+                  <option >TON</option>
+                  <option >PC</option>
+                  <option >UN</option>
+                </select>
+                </div>
+                <div class="form-group col-md-2 pl-0">
+                  <label for="TT_MATE">Quantidade</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="TT_MATE"
+                    formControlName="TT_MATE"
+                    currencyMask [options]="{ align: 'right', prefix: '' , thousands: '.', decimal: ',' , precision: 3 }"
+                    [ngClass]="onNestedFieldError('materiais', i, 'TT_MATE') + ' ' + onNestedFieldRequired('materiais', i, 'TT_MATE')">
+                </div>
+                <div class="form-group col-md-2 pl-0">
+                  <label for="DS_LOTE">Lote</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="DS_LOTE"
+                    formControlName="DS_LOTE"
+                  >
+                </div>
+                <div class="form-group col-md-4 pl-0">
+                  <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+                    <label class="my-auto" for="NM_MATE">Material</label>
+                    <div class="my-auto text-uppercase" style="font-size: 10px">
+                      <a
+                        class="text-primary"
+                        href="javascript:void(0)"
+                        (click)="openModal(selecionarMateriais, i)">
+                        <strong>Selecionar</strong>
+                      </a>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="NM_MATE"
+                    formControlName="NM_MATE"
+                    [ngClass]="onNestedFieldError('materiais', i, 'NM_MATE') + ' ' + onNestedFieldRequired('materiais', i, 'NM_MATE')">
+                </div>
+                <div class="col-1 pt-4 mt-1 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon"
+                    (click)="onDeleteMaterial(i)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-10 pt-2 mx-auto">
+        <legend>Observação</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observação:</label>
+            <textarea 
+            class="form-control"
+            id="DS_OBSE"
+            formControlName="DS_OBSE" 
+            rows="3"></textarea>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+    </fieldset>
+  </form>
+  <ng-template #alterarFornecedor>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Pesquisa de Fornecedor</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingFornecedores">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <advanced-filter>
+        <form [formGroup]="formPesquisaFornecedor">
+          <div class="form-row">
+            <div class="form-group col-3">
+              <label for="IN_STAT">Situação</label>
+              <select
+                class="form-control custom-select"
+                formControlName="IN_STAT"
+              >
+                <option value="1">Ativo</option>
+                <option value="0">Inativo</option>
+                <option value="">Exibir Todos</option>
+              </select>
+            </div>
+            <div class="form-group col-3">
+              <label for="cdItem">BUSCAR POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="ID_REFE_ERP">Cód. Fornecedor</option>
+                <option value="NM_RAZA_SOCI" selected>Razão Social</option>
+                <option value="NM_FANT">Nome Fantasia</option>
+                <option value="NR_CNPJ_CPF">CNPJ</option>
+              </select>
+            </div>
+
+            <div class="form-group col-6">
+              <label>TERMO DE PESQUISA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  >
+                  <div class="input-group-append">
+                    <span 
+                      [tooltip]="formPesquisaFornecedor.valid == false ? 'Digite um termo de pesquisa':''"
+                      container="body"
+                      placement ="left"
+                    >
+                      <button
+                      style="height: 25px;"
+                        [disabled]="formPesquisaFornecedor.valid == false"
+                        class="input-group-text hover"
+                        (click)="getFornecedores()"
+                        >
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <custom-table *ngIf="!loadingFornecedores && !noFornecedor">
+        <ng-template #thead let-thead>
+          <tr>
+            <th>Cód. Fornecedor</th>
+            <th>Razão Social</th>
+            <th>Nome Fantasia</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let fornecedor of fornecedores | slice : begin : end; let i = index">
+            <td>{{ fornecedor.ID_REFE_ERP }}</td>
+            <td>{{ fornecedor.NM_RAZA_SOCI }}</td>
+            <td>{{ fornecedor.NM_FANT }}</td>
+            <td>
+              <button
+                class="btn-icon-sm"
+                tooltip="Salvar Fornecedor"
+                container="body"
+                (click)="setFornecedor(fornecedor);modalRef.hide()"
+              >
+                <i class="far fa-save"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div *ngIf="totalItems > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #selecionarMateriais>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Pesquisa de Materiais</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingAllMateriais">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <advanced-filter>
+        <form [formGroup]="formAllMateriais">
+          <div class="form-row">
+            <div class="form-group col-3">
+              <label for="IN_STAT">Situação</label>
+              <select
+                class="form-control custom-select"
+                formControlName="IN_STAT"
+              >
+                <option value="1">Ativo</option>
+                <option value="0">Inativo</option>
+                <option value="">Exibir Todos</option>
+              </select>
+            </div>
+            <div class="form-group col-3">
+              <label for="cdItem">BUSCAR POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="ID_REFE_ERP">Cód. Material</option>
+                <option value="NM_MATE" selected> Nome Material</option>
+                <option value="NM_CLAS">Classe</option>
+                <option value="NM_LINH">Linha</option>
+              </select>
+            </div>
+
+            <div class="form-group col-6">
+              <label>TERMO DE PESQUISA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  >
+                  <div class="input-group-append">
+                    <span 
+                      [tooltip]="formAllMateriais.valid == false ? 'Digite um termo de pesquisa':''"
+                      container="body"
+                      placement ="left"
+                    >
+                      <button
+                      style="height: 25px;"
+                        [disabled]="formAllMateriais.valid == false"
+                        class="input-group-text hover"
+                        (click)="getAllMateriais()"
+                        >
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <custom-table *ngIf="!loadingAllMateriais && !noAllMateriais" class="text-center">
+        <ng-template #thead let-thead>
+          <tr>
+            <th>Cód. Material</th>
+            <th>Nome Material</th>
+            <th>Classe</th>
+            <th>Linha</th>
+            <th>Unidade de Medida</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let material of allMateriais | slice : begin : end; let i = index">
+            <td>{{ material.ID_REFE_ERP }}</td>
+            <td>{{ material.NM_MATE }}</td>
+            <td>{{ material.NM_CLAS }}</td>
+            <td>{{ material.NM_LINH }}</td>
+            <td>{{ material.NM_APOI_UNID_MEDI }} </td>
+            <td>
+              <button
+                class="btn-icon-sm"
+                tooltip="Salvar Material"
+                container="body"
+                (click)="setMaterial(material);modalRef.hide()"
+              >
+                <i class="far fa-save"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div *ngIf="totalItemsMaterial > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItemsMaterial ? totalItemsMaterial : currentPage*(itemsPerPage) }} de {{ totalItemsMaterial }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItemsMaterial"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #popupStatus>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Alteração de Status de Recebimento</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hidePopup()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-3" >
+          <div class="text-center">
+            <i class="text-muted fas fa-file-excel fa-4x mt-3"></i>
+          </div>
+        </div>
+        <div class="col-lg-9">
+          <p>
+            <strong>Não encontramos nenhuma ficha de não conformidade para essa nota fiscal.</strong>
+          </p>
+
+          <p>
+            <strong>Deseja abrir uma ficha de não conformidade agora?</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button 
+      type="button" 
+      class="btn btn-success "
+      target="_blank"
+      (click)="gerarFicha()"
+    >
+      <span aria-hidden="true">
+      </span>Sim
+    </button>
+    <button 
+      type="button" 
+      class="btn btn-danger "
+      (click)="hidePopup()"
+    >
+      <span aria-hidden="true">
+      </span>Não
+    </button>
+    </div>
+  </ng-template>
+</app-body>

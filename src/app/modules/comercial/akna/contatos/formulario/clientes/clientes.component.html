@@ -1,0 +1,238 @@
+
+<div>
+  <advanced-filter>
+    <form [formGroup]="formFilter">
+      <div class="form-row">
+        <div class="form-group col-lg-3  pl-0">
+          <label for="buscarPor">Buscar por</label>
+          <select
+            class="form-control custom-select"
+            id="buscarPor"
+            formControlName="buscarPor">
+            <option value="1">Código, nome fantasia ou razão social</option>
+            <option value="2">CPF ou CNPJ</option>
+            <option value="3">Cidade</option>
+            <option value="4">Código SAP</option>
+            <option value="5">Contatos</option>
+          </select>
+        </div>
+        <div class="form-group col-lg-4  pl-0">
+          <label for="pesquisa">Termo de pesquisa</label>
+          <input
+            type="text"
+            placeholder="digite..."
+            class="form-control"
+            formControlName="pesquisa"
+            (keydown.enter)="onFilter()">
+        </div>
+        <div class="form-group col-lg-3  pl-0">
+          <label for="linhas">Linha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="linhas"
+            [virtualScroll]="true"
+            dropdownPosition="bottom"
+            placeholder="Selecione..."
+            labelForId="ID_LINH"
+            bindLabel="NM_LINH"
+            bindValue="linha"
+            id="linha"
+            formControlName="linha"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2  pl-0">
+          <label for="tipoPessoa">Tipo de pessoa</label>
+          <select
+            class="form-control custom-select"
+            id="tipoPessoa"
+            formControlName="tipoPessoa">
+            <option value="F">Pessoa física</option>
+            <option value="J">Pessoa jurídica</option>
+            <option value="T">Todos</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-3  pl-0">
+          <label for="tipoData">Tipo de Data</label>
+          <select
+            class="form-control custom-select"
+            id="tipoData"
+            formControlName="tipoData">
+            <option value="1">Data de Inclusão</option>
+            <option value="2">Data do Último Faturamento</option>
+          </select>
+        </div>
+        <div class="form-group col-md-2 pl-0">
+          <label for="dataInicio">Data Inicial</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+            </div>
+            <input
+            class="form-control"
+            id="dataInicio"
+            type="text"
+            bsDatepicker
+            data-placement="top"
+            placeholder="Selecione..."
+            [bsConfig]="bsConfig"
+            formControlName="dataInicio"
+            >
+          </div>
+        </div>
+        <div class="form-group col-md-2 pl-0">
+          <label for="dataFinal">Data Final</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+            </div>
+            <input
+            class="form-control"
+            id="dataFinal"
+            type="text"
+            bsDatepicker
+            data-placement="top"
+            placeholder="Selecione..."
+            [bsConfig]="bsConfig"
+            formControlName="dataFinal"
+            >
+          </div>
+        </div>
+        
+        <div class="form-group col-lg-3  pl-0">
+          <label for="situacao">Situação</label>
+          <select
+            class="form-control custom-select"
+            id="situacao"
+            formControlName="situacao">
+            <option value="Ativo">Ativos</option>
+            <option value="Inativo">Inativos</option>
+            <option value="Potenci">Potenciais</option>
+            <option value="Arquivo">Arquivados</option>
+            <option value="T">Todos</option>
+          </select>
+        </div>
+        <div class="form-group col-lg-2  pl-0">
+          <label for="registros">Registros</label>
+          <select
+            class="form-control custom-select"
+            id="registros"
+            formControlName="registros">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+            <option>100</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-3  pl-0">
+          <label for="gerentes">Gerencia</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="gerentes"
+            [virtualScroll]="true"
+            dropdownPosition="bottom"
+            placeholder="Selecione..."
+            labelForId="gerente"
+            bindLabel="DS_GERE"
+            bindValue="gerente"
+            id="gerente"
+            formControlName="gerente"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-4  pl-0">
+          <label for="vendedores">Vendedor</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="vendedores"
+            [virtualScroll]="true"
+            dropdownPosition="bottom"
+            placeholder="Selecione..."
+            labelForId="vendedor"
+            bindLabel="nome"
+            bindValue="id"
+            id="vendedor"
+            formControlName="vendedor"
+            >
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="row mt-3" *ngIf="dataLoaded && clientes.length > 0">
+    <div class="col-12" *ngIf="clientes.length > 1">
+      <div class="custom-control custom-checkbox mr-sm-2 hover">
+        <input 
+        class="custom-control-input hover" 
+        type="checkbox" 
+        id="toggleAll"
+        (click)="onToggleAll()">
+        <label class="custom-control-label hover font-weight-bold" for="toggleAll">
+          SELECIONAR OS {{totalClientes}} REGISTROS ENCONTRADOS
+        </label>
+      </div>
+    </div>
+    <br><br>
+    <div class="col-12">
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col"></th>
+            <th
+              scope="col"
+              class="text-center hover"
+              (click)="setOrderBy('codCliente')">
+              <thead-sorter value="Código" [active]="orderBy == 'codCliente'" [sort]="orderType"></thead-sorter>
+            </th>
+            <th
+              scope="col"
+              class="hover"
+              (click)="setOrderBy('razaoSocial')">
+              <thead-sorter value="Razão social" [active]="orderBy == 'razaoSocial'" [sort]="orderType"></thead-sorter>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let cliente of clientes" [class.table-active]="cliente.codCliente == clienteSelecionado">
+            <td class="text-center" style="width: 5%">
+              <btn-icon
+                [icon]="cliente.checked ? 'fas fa-check-square' : 'far fa-square'"
+                size="small"
+                (click)="onCheckClientes(cliente)">
+              </btn-icon>
+            </td>
+            <td class="text-center hover" (click)="onCheckClientes(cliente)">{{ cliente.codCliente | number: '6.0-0' }}</td>
+            <td (click)="onCheckClientes(cliente)">
+              <i class="text-success  fas fa-circle mr-3" tooltip="Ativo" *ngIf= "cliente.situacao == 'Ativo'" ></i>
+              <i class="text-danger fas fa-circle mr-3" tooltip="Inativo" *ngIf= "cliente.situacao == 'Inativo'" ></i>
+              <i class="text-primary fas fa-circle mr-3" tooltip="Potencial" *ngIf= "cliente.situacao == 'Potenci'"></i>
+              <i class="text-warning fas fa-circle mr-3"  tooltip="Arquivado" *ngIf= "cliente.situacao == 'Arquivo'" ></i>
+              <span>{{ cliente.razaoSocial}}</span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="d-flex justify-content-center mt-3" *ngIf="clientes[0]['total'] > itemsPerPage">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalClientes"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+</div>

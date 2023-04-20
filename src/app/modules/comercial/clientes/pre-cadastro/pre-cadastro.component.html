@@ -1,0 +1,313 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Pré-cadastro">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-row">
+          <div class="form-group col">
+            <div class="btn-group btn-group-sm">
+              <button
+                type="button"
+                class="btn btn-light active"
+                [ngClass]="{'active': tipoPessoa == 'F'}"
+                (click)="setType('F')">
+                <strong>Pessoa Física</strong>
+              </button>
+              <button
+                type="button"
+                class="btn btn-light"
+                [ngClass]="{'active': tipoPessoa == 'J'}"
+                (click)="setType('J')">
+                <strong>Pessoa Jurídica</strong>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6" *ngIf="tipoPessoa == 'F'">
+            <label for="cpf">CPF</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cpf"
+              formControlName="cpf"
+              (input)="onInput()"
+              (blur)="validateCPF()"
+              [ngClass]="onFieldError('cpf') + ' ' + onFieldRequired('cpf')"
+              cpf [textMask]="{ mask: MASKS.cpf.textMask }">
+            <invalid-form-control [show]="onFieldInvalid('cpf') == 'required'" message="CPF inválido."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6" *ngIf="tipoPessoa == 'J'">
+            <label for="cnpj">CNPJ</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cnpj"
+              formControlName="cnpj"
+              (input)="onInput()"
+              (blur)="validateCNPJ()"
+              [ngClass]="onFieldError('cnpj') + ' ' + onFieldRequired('cnpj')"
+              cnpj [textMask]="{ mask: MASKS.cnpj.textMask }">
+            <invalid-form-control [show]="onFieldInvalid('cnpj') == 'required'" message="CNPJ inválido."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="vendedor">Atribuir vendedor</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="vendedores"
+              [virtualScroll]="true"
+              labelForId="vendedor"
+              bindLabel="nome"
+              bindValue="id"
+              formControlName="vendedor"
+              (change)="onInput()">
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6" *ngIf="tipoPessoa == 'F'">
+            <label for="nome">Nome</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nome"
+              formControlName="nome"
+              (input)="onInput()"
+              [ngClass]="onFieldError('nome') + ' ' + onFieldRequired('nome')">
+            <invalid-form-control [show]="onFieldInvalid('nome') == 'required'" message="Nome é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('nome') == 'maxlength'" [message]="maxLengthMessages.nome"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6" *ngIf="tipoPessoa == 'F'">
+            <label for="sobrenome">Sobrenome</label>
+            <input
+              type="text"
+              class="form-control"
+              id="sobrenome"
+              formControlName="sobrenome"
+              (input)="onInput()"
+              [ngClass]="onFieldError('sobrenome') + ' ' + onFieldRequired('sobrenome')">
+            <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'required'" message="Sobrenome é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'maxlength'" [message]="maxLengthMessages.sobrenome"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6" *ngIf="tipoPessoa == 'J'">
+            <label for="razaoSocial">Razão social</label>
+            <input
+              type="text"
+              class="form-control"
+              id="razaoSocial"
+              formControlName="razaoSocial"
+              (input)="onInput()"
+              [ngClass]="onFieldError('razaoSocial') + ' ' + onFieldRequired('razaoSocial')">
+            <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'required'" message="Razão social é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'maxlength'" [message]="maxLengthMessages.razaoSocial"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6" *ngIf="tipoPessoa == 'J'">
+            <label for="nomeFantasia">Nome fantasia</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nomeFantasia"
+              formControlName="nomeFantasia"
+              (input)="onInput()"
+              [ngClass]="onFieldError('nomeFantasia') + ' ' + onFieldRequired('nomeFantasia')">
+            <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'required'" message="Nome fantasia é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'maxlength'" [message]="maxLengthMessages.nomeFantasia"></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row" *ngIf="tipoPessoa == 'J'">
+          <div class="form-group col">
+            <label for="cnae">CNAE (atividade principal)</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="cnaes"
+              [virtualScroll]="true"
+              labelForId="cnae"
+              bindLabel="descricao"
+              bindValue="id"
+              formControlName="cnae"
+              (change)="onInput()"
+              [ngClass]="onFieldError('cnae') + ' ' + onFieldRequired('cnae')">
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('cnae') == 'required'" message="CNAE é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="emailNfe">E-mail NFE</label>
+            <input
+              type="email"
+              class="form-control"
+              id="emailNfe"
+              formControlName="emailNfe"
+              (input)="onInput()"
+              [ngClass]="onFieldError('emailNfe') + ' ' + onFieldRequired('emailNfe')">
+            <invalid-form-control [show]="onFieldInvalid('emailNfe') == 'required'" message="E-mail NFE é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('emailNfe') == 'maxlength'" [message]="maxLengthMessages.emailNfe"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="telefone">Telefone</label>
+            <input
+              type="text"
+              class="form-control"
+              id="telefone"
+              formControlName="telefone"
+              (input)="onInput()"
+              [ngClass]="onFieldError('telefone') + ' ' + onFieldRequired('telefone')"
+              telefone [textMask]="{ mask: MASKS.telefone.textMaskFunction }">
+            <invalid-form-control [show]="onFieldInvalid('telefone') == 'required'" message="Telefone é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <!-- <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="emailMarketing">E-mail Marketing</label>
+            <input
+              type="email"
+              class="form-control"
+              id="emailMarketing"
+              formControlName="emailMarketing"
+              (input)="onInput()"
+              [ngClass]="onFieldError('emailMarketing') + ' ' + onFieldRequired('emailMarketing')">
+            <invalid-form-control [show]="onFieldInvalid('emailMarketing') == 'maxlength'" [message]="maxLengthMessages.emailMarketing"></invalid-form-control>
+          </div>
+        </div> -->
+      </form>
+    </div>
+  </div>
+</app-body>
+
+<ng-template #modalDetalhesCliente>
+  <div class="modal-header">
+    <h4 class="modal-title">Oops! Esse cliente já está cadastrado</h4>
+    <button type="button" class="close" aria-label="Close" (click)="onCloseDetails()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row">
+      <div class="col">
+        <div class="mtc-title">Dados cadastrais</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col">
+        <label>Código</label>
+        <div *ngIf="dadosCliente.codCliente == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.codCliente != null">{{ dadosCliente.codCliente }}</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-lg-6" *ngIf="dadosCliente.tipo == 'F'">
+        <label>CPF</label>
+        <div *ngIf="dadosCliente.cpf == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.cpf != null">{{ dadosCliente.cpf }}</div>
+      </div>
+      <div class="form-group col-lg-6" *ngIf="dadosCliente.tipo == 'J'">
+        <label>CNPJ</label>
+        <div *ngIf="dadosCliente.cnpj == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.cnpj != null">{{ dadosCliente.cnpj }}</div>
+      </div>
+      <div class="form-group col-lg-6">
+        <label>Nome fantasia</label>
+        <div *ngIf="dadosCliente.nomeFantasia == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.nomeFantasia != null">{{ dadosCliente.nomeFantasia }}</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col">
+        <label>Razão social</label>
+        <div *ngIf="dadosCliente.razaoSocial == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.razaoSocial != null">{{ dadosCliente.razaoSocial }}</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col">
+        <label>Endereço</label>
+        <div *ngIf="dadosCliente.endereco == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.endereco != null">{{ dadosCliente.endereco }}</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-lg-6">
+        <label>Bairro</label>
+        <div *ngIf="dadosCliente.bairro == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.bairro != null">{{ dadosCliente.bairro }}</div>
+      </div>
+      <div class="form-group col-lg-6">
+        <label>CEP</label>
+        <div *ngIf="dadosCliente.cep == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.cep != null">{{ dadosCliente.cep }}</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-lg-6">
+        <label>Cidade</label>
+        <div *ngIf="dadosCliente.cidade == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.cidade != null">{{ dadosCliente.cidade }}</div>
+      </div>
+      <div class="form-group col-lg-6">
+        <label>Estado</label>
+        <div *ngIf="dadosCliente.uf == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.uf != null">{{ dadosCliente.uf }}</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col">
+        <label>Segurado</label>
+        <div *ngIf="dadosCliente.segurado != ''">SIM</div>
+        <div *ngIf="dadosCliente.segurado == ''">NÃO</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-lg-6">
+        <label>Vendedor</label>
+        <div *ngIf="dadosCliente.vendedor == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.vendedor != null">{{ dadosCliente.vendedor }}</div>
+      </div>
+      <div class="form-group col-lg-6">
+        <label>Escritório</label>
+        <div *ngIf="dadosCliente.escritorio == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.escritorio != null">{{ dadosCliente.escritorio }}</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-lg-4" *ngIf="dadosCliente.codSAP != '' && dadosCliente.codSAP != null">
+        <label>Código DBA</label>
+        <div>{{ dadosCliente.codSAP }}</div>
+      </div>
+      <div class="form-group col-lg-4" *ngIf="dadosCliente.escritorioDba != '' && dadosCliente.escritorioDba != null">
+        <label>Escritório</label>
+        <div>{{ dadosCliente.escritorioDba }}</div>
+      </div>
+      <div class="form-group col-lg-4" *ngIf="dadosCliente.ultimaCompraDba != '' && dadosCliente.ultimaCompraDba != null">
+        <label>Última compra</label>
+        <div>{{ dadosCliente.ultimaCompraDba }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="onCloseDetails()">Fechar</button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="onNavigateDetail()">
+      Detalhes
+    </button>
+  </div>
+</ng-template>

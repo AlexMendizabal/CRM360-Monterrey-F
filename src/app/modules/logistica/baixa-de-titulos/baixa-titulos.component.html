@@ -1,0 +1,40 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Baixa de Títulos">
+  <button
+    (click)="onReset()"
+  >
+    Limpar
+  </button>
+  <button>
+    <form [formGroup]="form" style="cursor: pointer">
+      <label class="mb-0" for="file" (change)="onInput($event)" style="cursor: pointer">
+        Selecionar
+        <input type="file" id="file" formControlName="file" class="d-none">
+      </label>
+    </form>
+  </button>
+  <button 
+    (click)="copiarParaAreaDeTransferencia()">
+    Copiar
+  </button>
+  <button
+    (click)="salvar()">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="container">
+    <div class="row col-12">
+      <div class="legend blue hover" [ngClass]="{'active': document}" (click)="onTypeDocument('Cte')">
+        <div class="square"></div>
+        <div class="text">CONHECIMENTO DE TRANSPORTE</div>
+      </div>
+      <div class="legend green hover" [ngClass]="{'active': !document}" (click)="onTypeDocument('NFs')">
+        <div class="square"></div>
+        <div class="text">NOTA FISCAL DE SERVIÇOS</div>
+      </div>
+    </div>
+    <textarea rows="30" class="mt-2" style="font-size: 0.6em; width: 100%" >{{ file }}</textarea>
+  </div>
+</app-body>

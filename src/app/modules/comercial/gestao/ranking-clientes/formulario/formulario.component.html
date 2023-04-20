@@ -1,0 +1,199 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      <form [formGroup]="form">
+        <div class="form-row">
+            <div class="form-group col-6">
+                <label for="nomeClassificacao">Parâmetro</label>
+                <input
+                type="text"
+                class="form-control"
+                id="nomeClassificacao"
+                formControlName="nomeClassificacao"
+                (input)="onInput()"
+                autocomplete="new-password"
+                [ngClass]="onFieldError('nomeClassificacao') + ' ' + onFieldRequired(form.controls.nomeClassificacao)">
+                <invalid-form-control [show]="onFieldInvalid('nomeClassificacao')" message="Parâmetro é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-3">
+                <label for="peso">Peso</label>
+                <input type="text"
+                class="form-control"
+                id="peso"
+                formControlName="peso"
+                (input)="onInput()"
+                autocomplete="new-password"
+                [ngClass]="onFieldError('peso') + ' ' + onFieldRequired(form.controls.peso)">
+                <invalid-form-control [show]="onFieldInvalid('peso')" message="Peso é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-3">
+                <label for="situacao">Situação</label>
+                <select
+                class="form-control custom-select"
+                id="situacao"
+                formControlName="situacao"
+                [ngClass]="onFieldError('situacao') + ' ' + onFieldRequired(form.controls.situacao)">
+                <option value="1">Ativo</option>
+                <option value="0">Inativo</option>
+                </select>
+                <invalid-form-control [show]="onFieldInvalid('situacao')" message="Situação é obrigatório."></invalid-form-control> 
+            </div>
+        </div>
+        <br>
+        <div class="container">
+            <div class="form-row text-center justify-content-md-center">
+                <div class="form-group col-4">
+                    <label>Nota</label>
+                </div>
+                <div class="form-group col-4">
+                    <label>De</label>
+                </div>
+                <div class="form-group col-4">
+                    <label>Até</label>
+                </div>
+            </div>
+            <!-- nota1 -->
+            <div class="form-row text-center justify-content-md-center">
+                <div class="form-group col-4">
+                    <label>1</label>
+                </div>
+                <div class="form-group col-4">
+                    <input type="text" readonly
+                    class="form-control"
+                    value="0.01">
+                </div>
+                <div class="form-group col-4">
+                    <input type="text"
+                    class="form-control"
+                    id="nota1Fim"
+                    formControlName="nota1Fim"
+                    (input)="onInput()"
+                    autocomplete="new-password"
+                    [ngClass]="onFieldError('nota1Fim') + ' ' + onFieldRequired(form.controls.nota1Fim)">
+                    <invalid-form-control [show]="onFieldInvalid('nota1Fim')" message="Nota é obrigatório."></invalid-form-control>
+                </div>
+              </div>
+              <!-- nota2 -->
+              <div class="form-row text-center justify-content-md-center">
+                <div class="form-group col-4">
+                    <label>2</label>
+                </div>
+                <div class="form-group col-4">
+                    <input type="text"
+                    class="form-control"
+                    id="nota2Inicio"
+                    formControlName="nota2Inicio"
+                    (input)="onInput()"
+                    autocomplete="new-password"
+                    [ngClass]="onFieldError('nota2Inicio') + ' ' + onFieldRequired(form.controls.nota2Inicio)">
+                    <invalid-form-control [show]="onFieldInvalid('nota2Inicio')" message="Nota é obrigatório."></invalid-form-control>
+                </div>
+                <div class="form-group col-4">
+                    <input type="text"
+                    class="form-control"
+                    id="nota2Fim"
+                    formControlName="nota2Fim"
+                    (input)="onInput()"
+                    autocomplete="new-password"
+                    [ngClass]="onFieldError('nota2Fim') + ' ' + onFieldRequired(form.controls.nota2Fim)">
+                    <invalid-form-control [show]="onFieldInvalid('nota2Fim')" message="Nota é obrigatório."></invalid-form-control>
+                </div>
+              </div>
+              <!-- nota3 -->
+              <div class="form-row text-center justify-content-md-center">
+                <div class="form-group col-4">
+                    <label>3</label>
+                </div>
+                <div class="form-group col-4">
+                    <input type="text"
+                    class="form-control"
+                    id="nota3Inicio"
+                    formControlName="nota3Inicio"
+                    (input)="onInput()"
+                    autocomplete="new-password"
+                    [ngClass]="onFieldError('nota3Inicio') + ' ' + onFieldRequired(form.controls.nota3Inicio)">
+                    <invalid-form-control [show]="onFieldInvalid('nota3Inicio')" message="Nota é obrigatório."></invalid-form-control>
+                </div>
+                <div class="form-group col-4">
+                    <input type="text"
+                    class="form-control"
+                    id="nota3Fim"
+                    formControlName="nota3Fim"
+                    (input)="onInput()"
+                    autocomplete="new-password"
+                    [ngClass]="onFieldError('nota3Fim') + ' ' + onFieldRequired(form.controls.nota3Fim)">
+                    <invalid-form-control [show]="onFieldInvalid('nota3Fim')" message="Nota é obrigatório."></invalid-form-control>
+                </div>
+              </div>
+              <!-- nota4 -->
+              <div class="form-row text-center justify-content-md-center">
+                <div class="form-group col-4">
+                    <label>4</label>
+                </div>
+                <div class="form-group col-4">
+                    <input type="text"
+                    class="form-control"
+                    id="nota4Inicio"
+                    formControlName="nota4Inicio"
+                    (input)="onInput()"
+                    autocomplete="new-password"
+                    [ngClass]="onFieldError('nota4Inicio') + ' ' + onFieldRequired(form.controls.nota4Inicio)">
+                    <invalid-form-control [show]="onFieldInvalid('nota4Inicio')" message="Nota é obrigatório."></invalid-form-control>
+                </div>
+                <div class="form-group col-4">
+                    <input type="text"
+                    class="form-control"
+                    id="nota4Fim"
+                    formControlName="nota4Fim"
+                    (input)="onInput()"
+                    autocomplete="new-password"
+                    [ngClass]="onFieldError('nota4Fim') + ' ' + onFieldRequired(form.controls.nota4Fim)">
+                    <invalid-form-control [show]="onFieldInvalid('nota4Fim')" message="Nota é obrigatório."></invalid-form-control>
+                </div>
+              </div>
+              <!-- nota5 -->
+              <div class="form-row text-center justify-content-md-center">
+                <div class="form-group col-4">
+                    <label>5</label>
+                </div>
+                <div class="form-group col-4">
+                    <input type="text"
+                    class="form-control"
+                    id="nota5Inicio"
+                    formControlName="nota5Inicio"
+                    (input)="onInput()"
+                    autocomplete="new-password"
+                    [ngClass]="onFieldError('nota5Inicio') + ' ' + onFieldRequired(form.controls.nota5Inicio)">
+                    <invalid-form-control [show]="onFieldInvalid('nota5Inicio')" message="Nota é obrigatório."></invalid-form-control>
+                </div>
+                <!-- <div class="form-group col-4">
+                    <input type="text" readonly
+                    class="form-control"
+                    value="999999">
+                </div> -->
+                <div class="form-group col-4">
+                    <label> </label>
+                </div>
+              </div>
+              
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

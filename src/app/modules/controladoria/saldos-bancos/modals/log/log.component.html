@@ -1,0 +1,131 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<ng-template #template>
+  <div class="modal-body">
+    <h5>Log de lançamentos e alterações de fluxo de caixa</h5>
+    <div class="row">
+      <div [ngClass]="{'col-12': !showDetailPanel, 'col-7 pr-0': showDetailPanel}">
+        <custom-table [config]="tableLogConfig">
+          <ng-template #thead let-thead>
+            <tr>
+              <th class="text-center" scope="col" style="width: 60px;"> Nr. Lançamento </th>
+              <th class="text-center" scope="col" style="width: 100px;"> Tipo Lançamento </th>
+              <th class="text-center" scope="col" style="width: 100px;"> Banco/Fundo </th>
+              <th class="text-center" scope="col" style="width: 80px;" [hidden]="showDetailPanel"> Empresa </th>
+              <th class="text-center" scope="col" style="width: 80px;" [hidden]="showDetailPanel"> Cod. Usuário de Alteração </th>
+              <th class="text-center" scope="col" style="width: 80px;" [hidden]="showDetailPanel"> Nome Usuário de Alteração </th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody >
+            <tr class="text-center text-white" (click)="openTab(data); clickEvent(data)">
+              <td class="text-center bg-primary">{{ data.ID_BANC_SALD }}</td>
+              <td class="text-center bg-primary">{{ data.DS_BANC_TIPO | uppercase }}</td>
+              <td class="text-center bg-primary">{{ data.DS_LANC_BANC | uppercase }}</td>
+              <td class="text-center bg-primary" [hidden]="showDetailPanel">{{ data.DS_LANC_EMPR | uppercase }}</td>
+              <td class="text-center bg-primary" [hidden]="showDetailPanel">{{ data.COD_USUARIO }}</td>
+              <td class="text-center bg-primary" [hidden]="showDetailPanel">{{ data.NM_USUARIO }}</td>
+            </tr>
+            <tr class="text-center" *ngFor="let item of items | slice : begin : end; let i = index" (click)="openTab(item); clickEvent(item)">
+              <td class="text-center">{{ item?.ID_BANC_SALD }}</td>
+              <td class="text-center">{{ item?.DS_BANC_TIPO | uppercase }}</td>
+              <td class="text-center">{{ item?.DS_LANC_BANC | uppercase }}</td>
+              <td class="text-center" [hidden]="showDetailPanel">{{ item?.DS_LANC_EMPR | uppercase }}</td>
+              <td class="text-center" [hidden]="showDetailPanel">{{ item?.COD_USUARIO }}</td>
+              <td class="text-center" [hidden]="showDetailPanel">{{ item?.NM_USUARIO }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+        <div class="mt-3" [hidden]="!noResult">
+          Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+          <div class="row justify-content-between">
+            <div class="ml-3">
+              <pagination
+                [maxSize]="10"
+                [totalItems]="totalItems"
+                [(itemsPerPage)]="itemsPerPage"
+                (pageChanged)="onPageChanged($event)"
+                [boundaryLinks]="true"
+                [(ngModel)]="currentPage"
+                previousText="&lsaquo;"
+                nextText="&rsaquo;"
+                firstText="&laquo;"
+                lastText="&raquo;">
+              </pagination>
+            </div>
+            <div class="mr-2 pr-1">
+              <button  
+                type="button" class="btn btn-secondary mr-1" (click)="modalRef.hide()"
+                >
+                Fechar 
+              </button>
+            </div>
+          </div>
+        </div>
+        <empty-result
+          message="Nenhuma informação encontrada"
+          class="my-3"
+          *ngIf="dadosEmpty">
+        </empty-result>
+      </div>
+      <div class="col-5" [hidden]="!showDetailPanel">
+        <detail-panel [panelTitle]="appTitle">
+          <div class="d-flex">
+            <div class="col-6 pl-0">
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label> Cod. Usuário de Alteração </label>
+                  <div class="text-nowrap">{{ log.COD_USUARIO }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label> Empresa de lançamento </label>
+                  <div class="text-nowrap">{{ log.DS_LANC_EMPR | uppercase }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label> Data de lançamento </label>
+                  <div class="text-nowrap">{{ log.DATA_INCL }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label> Observação </label>
+                  <div class="text-nowrap">{{ log.DS_LANC_OBSE }}</div>
+                </div>
+              </div>
+            </div>  
+            <div class="col-6">
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label> Nome Usuário de Alteração </label>
+                  <div class="text-nowrap">{{ log.NM_USUARIO | uppercase }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label> Data Saldo </label>
+                  <div class="text-nowrap">{{ log.DATA_SALD }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label> Valor </label>
+                  <div class="text-nowrap">{{ log.VL_LANC | currency:'BRL' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col p-0">
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label> Justificativa da alteração </label>
+                <div class="text-nowrap">{{ log.JUSTIFICATIVA | uppercase }}</div>
+              </div>
+            </div>
+          </div>
+        </detail-panel>
+      </div>
+    </div>
+  </div>
+</ng-template>

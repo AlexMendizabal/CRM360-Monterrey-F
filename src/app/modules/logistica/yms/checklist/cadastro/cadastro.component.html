@@ -1,0 +1,45 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Checklist">
+  <button 
+    [disabled]="form.valid === false || loadingNavBar === true"
+    (click)="postChecklist()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-8 pt-2 mx-auto">
+        <legend>Dados do Checklist</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-12 pl-0">
+            <label for="NM_CHEC">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_CHEC"
+              formControlName="NM_CHEC"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_CHEC') + ' ' + onFieldRequired('NM_CHEC')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_CHEC')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-8 pt-2 mx-auto">
+        <legend>Observação</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observação:</label>
+            <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

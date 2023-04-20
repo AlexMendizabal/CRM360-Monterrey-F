@@ -1,0 +1,108 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Transportadoras">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2 mb-lg-0">
+              <label for="codigo">Código da transportadora</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="codigo"
+                (input)="onInput('codigo')"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-8 mb-lg-0">
+              <label for="nome">Nome da transportadora</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="nome"
+                (input)="onInput('nome')"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-2 mb-lg-0">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <custom-table *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center hover">
+              <thead-sorter
+                value="Código"
+                [active]="orderBy == 'codTransportadora'"
+                [sort]="orderType"
+                (click)="setOrderBy('codTransportadora')">
+              </thead-sorter>
+            </th>
+            <th scope="col" class="hover">
+              <thead-sorter
+                value="Nome transportadora"
+                [active]="orderBy == 'nomeTransportadora'"
+                [sort]="orderType"
+                (click)="setOrderBy('nomeTransportadora')">
+              </thead-sorter>
+            </th>
+            <th scope="col">Cidade</th>
+            <th scope="col" class="text-center">UF</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let transportadora of dadosPagination">
+            <td class="text-center hover" (click)="viewRegister(transportadora)">{{ transportadora.codTransportadoraTid }}</td>
+            <td class="hover" (click)="viewRegister(transportadora)">{{ transportadora.nomeTransportadora | uppercase }}</td>
+            <td class="hover" (click)="viewRegister(transportadora)">{{ transportadora.cidade | uppercase }}</td>
+            <td class="text-center hover" (click)="viewRegister(transportadora)">{{ transportadora.uf | uppercase }}</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && !dadosLoaded"></empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+</app-body>

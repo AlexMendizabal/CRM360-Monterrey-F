@@ -1,0 +1,763 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Auditoria de Endereços">
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter #scrollToFilter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-3">
+              <label for="tipoData">Buscar por</label>
+              <select
+                class="form-control"
+                id="tipoData"
+                formControlName="tipoData"
+                [ngClass]="onFieldError('tipoData') + ' ' + onFieldRequired('tipoData')">
+                <option value="1">Data de alteração</option>
+                <option value="2">Data de aprovação/reprovação</option>
+                <invalid-form-control [show]="onFieldInvalid('tipoData') == 'required'" message="'Buscar por' é obrigatório."></invalid-form-control>
+              </select>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="dataInicial">Data inicial</label>
+              <input
+                class="form-control"
+                id="dataInicial"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="dataInicial"
+                [ngClass]="onFieldError('dataInicial') + ' ' + onFieldRequired('dataInicial')">
+                <invalid-form-control [show]="onFieldInvalid('dataInicial') == 'required'" message="Data Inicial é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="dataFinal">Data final</label>
+              <input
+                class="form-control"
+                id="dataFinal"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="dataFinal"
+                [ngClass]="onFieldError('dataFinal') + ' ' + onFieldRequired('dataFinal')">
+                <invalid-form-control [show]="onFieldInvalid('dataFinal') == 'required'" message="Data Final é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="idCliente">Cód. Cliente</label>
+              <input
+                type="text"
+                class="form-control"
+                id="idCliente"
+                formControlName="idCliente">
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="dsCliente">Razão Social</label>
+              <input
+                type="text"
+                class="form-control"
+                id="dsCliente"
+                formControlName="dsCliente">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-3 mb-2 mb-md-0">
+              <label for="situacoes">Situação</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="situacoesFiltered"
+                formControlName="situacao"
+                [virtualScroll]="true"
+                [loading]="situacaoLoaded"
+                labelForId="situacoes"
+                bindLabel="situacao"
+                bindValue="id">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-3 mb-2 mb-md-0">
+              <label for="vendedores">Vendedor</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="vendedores"
+                formControlName="vendedor"
+                [virtualScroll]="true"
+                labelForId="vendedores"
+                bindLabel="nome"
+                bindValue="id">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-1 mb-2 mb-md-0">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="dadosPagination.length > 0 && !dadosEmpty">
+      </subtitles>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col-1">Dt. Atualização</th>
+            <th scope="col-4">(Cod. Cliente) Razão Social</th>
+            <th scope="col-2">Vendedor</th>
+            <th scope="col-2">Usuário Cadastro</th>
+            <th scope="col-1">Dt. Aprovação/Reprovação</th>
+            <th scope="col-2">Quem Aprovou</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let enderecoEntrega of dadosPagination; let i = index" [class.table-active]="enderecoEntrega.id == enderecoSelecionado.id">
+            <td
+              class="hover"
+              [ngClass]="classStatusBorder(enderecoEntrega)"
+              (click)="onDetails(detalhes, enderecoEntrega)">
+              {{ enderecoEntrega.dataAtualizacao | date: 'dd/MM/yyyy - hh:mm' }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(detalhes, enderecoEntrega)">
+              ({{enderecoEntrega.idCliente}}) {{ enderecoEntrega.nome | uppercase }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(detalhes, enderecoEntrega)">
+              {{ enderecoEntrega.vendedor | uppercase }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(detalhes, enderecoEntrega)">
+              {{ enderecoEntrega.usuarioCadastro | uppercase }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(detalhes, enderecoEntrega)">
+              {{ enderecoEntrega.dataAprovacaoReprovacao | date: 'dd/MM/yyyy - hh:mm' }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(detalhes, enderecoEntrega)">
+              {{ enderecoEntrega.usuarioAprovacaoReprovacao | uppercase }}
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty">
+      </empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && dadosLoaded">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+</app-body>
+<ng-template #detalhes>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+      {{ enderecoSelecionado.nome }} / {{ enderecoSelecionado.vendedor }}
+    </h4>
+    <button type="button" class="close pull-right" (click)="onModalClose('detalhes')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col">
+        <div class="container-xl">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Ult. Compra</label>
+              <div *ngIf="enderecoSelecionado.ultimaCompra == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.ultimaCompra != null">{{ enderecoSelecionado.ultimaCompra }}</div>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Ult. Compra Grupo</label>
+              <div *ngIf="enderecoSelecionado.ultimaCompraGrupo == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.ultimaCompraGrupo != null">{{ enderecoSelecionado.ultimaCompraGrupo }}</div>
+            </div>
+            <div class="form-group col-md-2 align-items-center">
+              <a
+                [routerLink]="['/comercial/clientes/detalhes', enderecoSelecionado.idCliente]"
+                target="_blank"
+                class="btn btn-primary"
+                tooltip="Visualizar cadastro do cliente">
+                Visualizar Cad. Completo
+              </a>
+            </div>
+          </div>
+          <div class="form-row" *ngIf="enderecoSelecionado.COD_CLIE_TERC">
+            <div class="col"><hr></div>
+          </div>
+          <div class="mtc-title" *ngIf="enderecoSelecionado.COD_CLIE_TERC">Cliente Terceiro da Entrega</div>
+          <div class="form-row" *ngIf="enderecoSelecionado.COD_CLIE_TERC">
+            <div class="form-group col-md-6">
+              <label>Codigo</label>
+              <div>{{ enderecoSelecionado.COD_CLIE_TERC }}</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>CPF ou CNPJ</label>
+              <div *ngIf="clienteTerceiro[0].result.cpf != 0">{{ clienteTerceiro[0].result.cpf }}</div>
+              <div *ngIf="clienteTerceiro[0].result.cnpj != 0">{{ clienteTerceiro[0].result.cnpj }}</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Nome ou Razão Social</label>
+              <div>{{ clienteTerceiro[0].result.razaoSocial }}</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Tipo do Endereço de Entrega</label>
+              <div>{{ enderecoSelecionado.TP_ACAO }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col"><hr></div>
+          </div>
+          <div class="mtc-title" >Endereço de Entrega</div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>CEP</label>
+              <div *ngIf="enderecoSelecionado.cep == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.cep != null">{{ enderecoSelecionado.cep | cep }}</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Endereço</label>
+              <div *ngIf="enderecoSelecionado.endereco == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.endereco != null">{{ enderecoSelecionado.endereco }}
+              <a *ngIf="enderecoSelecionado.endereco != null" class="btn-icon-sm ml-2"
+                [href]="enviarEndereco(enderecoSelecionado)"
+                target="_blank">
+                <ng-template #tooltipAutoScrollTemplate>
+                  <p class="text-nowrap mb-0">Visualizar no</p>
+                  <p class="text-nowrap mb-0">Google Maps</p>
+                </ng-template>
+                <i class="fas fa-map-marker-alt" [tooltip]="tooltipAutoScrollTemplate"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Complemento</label>
+              <div *ngIf="enderecoSelecionado.complemento == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.complemento != null">{{ enderecoSelecionado.complemento }}</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Referência</label>
+              <div *ngIf="enderecoSelecionado.referencia == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.referencia != null">{{ enderecoSelecionado.referencia }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Bairro</label>
+              <div *ngIf="enderecoSelecionado.bairro == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.bairro != null">{{ enderecoSelecionado.bairro }}</div>
+            </div>
+            <div class="form-group col-md-6 mb-0">
+              <label>Cidade</label>
+              <div *ngIf="enderecoSelecionado.cidade == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.cidade != null">
+                {{ enderecoSelecionado.cidade }}<span *ngIf="enderecoSelecionado.uf != null"> / {{ enderecoSelecionado.uf }}</span>
+              </div>
+            </div>
+          </div>
+
+          <form [formGroup]="formLatLong" autocomplete="off">
+            <div class="form-row">
+
+              <div class="form-group col-md-6 mb-0">
+                <label>Latitude</label>
+                <div *ngIf="enderecoSelecionado.latitude == null">
+                  <input
+                      class="form-control col-6"
+                      id="latitude"
+                      type="text"
+                      formControlName="latitude"
+                      [ngClass]="onFieldErrorLatLong('latitude') + ' ' + onFieldRequiredLatLong('latitude')"
+                      >
+
+                      <invalid-form-control [show]="onFieldInvalidLatLong('latitude')" message="Latitude é obrigatório."></invalid-form-control>
+                </div>
+                <div *ngIf="enderecoSelecionado.latitude != null">{{ enderecoSelecionado.latitude }}</div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Longitude</label>
+                <div *ngIf="enderecoSelecionado.longitude == null">
+                  <input
+                      class="form-control col-6"
+                      id="longitude"
+                      type="text"
+                      formControlName="longitude"
+                      [ngClass]="onFieldErrorLatLong('longitude') + ' ' + onFieldRequiredLatLong('longitude')"
+                      >
+                      <invalid-form-control [show]="onFieldInvalidLatLong('longitude')" message="Longitude é obrigatório."></invalid-form-control>
+                </div>
+                <div *ngIf="enderecoSelecionado.longitude != null">{{ enderecoSelecionado.longitude }}</div>
+              </div>
+            </div>
+        </form>
+
+          <div class="form-row">
+            <div class="col"><hr></div>
+          </div>
+          <div class="mtc-title">Dados de entrega</div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Título do local de entrega</label>
+              <div *ngIf="enderecoSelecionado.titulo == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.titulo != null">{{ enderecoSelecionado.titulo }}</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Região de entrega</label>
+              <div *ngIf="enderecoSelecionado.descRegiaoEntrega == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.descRegiaoEntrega != null">{{ enderecoSelecionado.descRegiaoEntrega }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label>Dias para realizar entregas</label>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="enderecoSelecionado.diasEntrega.segunda.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="enderecoSelecionado.diasEntrega.segunda.checked == 1"></i>
+                    </div>
+                    <span>Segunda-feira:</span>
+                  </div>
+                  <div *ngIf="enderecoSelecionado.diasEntrega.segunda.checked == 1">
+                    <div *ngIf="enderecoSelecionado.diasEntrega.segunda.minimo !== null && enderecoSelecionado.diasEntrega.segunda.maximo !== null">
+                      das {{ convertMysqlTime(enderecoSelecionado.diasEntrega.segunda.minimo) }} às {{ convertMysqlTime(enderecoSelecionado.diasEntrega.segunda.maximo) }}
+                    </div>
+                    <div *ngIf="enderecoSelecionado.diasEntrega.segunda.minimo == null || enderecoSelecionado.diasEntrega.segunda.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="enderecoSelecionado.diasEntrega.segunda.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="enderecoSelecionado.diasEntrega.terca.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="enderecoSelecionado.diasEntrega.terca.checked == 1"></i>
+                    </div>
+                    <span>Terça-feira:</span>
+                  </div>
+                  <div *ngIf="enderecoSelecionado.diasEntrega.terca.checked == 1">
+                    <div *ngIf="enderecoSelecionado.diasEntrega.terca.minimo !== null && enderecoSelecionado.diasEntrega.terca.maximo !== null">
+                      das {{ convertMysqlTime(enderecoSelecionado.diasEntrega.terca.minimo) }} às {{ convertMysqlTime(enderecoSelecionado.diasEntrega.terca.maximo) }}
+                    </div>
+                    <div *ngIf="enderecoSelecionado.diasEntrega.terca.minimo == null || enderecoSelecionado.diasEntrega.terca.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="enderecoSelecionado.diasEntrega.terca.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="enderecoSelecionado.diasEntrega.quarta.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="enderecoSelecionado.diasEntrega.quarta.checked == 1"></i>
+                    </div>
+                    <span>Quarta-feira:</span>
+                  </div>
+                  <div *ngIf="enderecoSelecionado.diasEntrega.quarta.checked == 1">
+                    <div *ngIf="enderecoSelecionado.diasEntrega.quarta.minimo !== null && enderecoSelecionado.diasEntrega.quarta.maximo !== null">
+                      das {{ convertMysqlTime(enderecoSelecionado.diasEntrega.quarta.minimo) }} às {{ convertMysqlTime(enderecoSelecionado.diasEntrega.quarta.maximo) }}
+                    </div>
+                    <div *ngIf="enderecoSelecionado.diasEntrega.quarta.minimo == null || enderecoSelecionado.diasEntrega.quarta.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="enderecoSelecionado.diasEntrega.quarta.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="enderecoSelecionado.diasEntrega.quinta.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="enderecoSelecionado.diasEntrega.quinta.checked == 1"></i>
+                    </div>
+                    <span>Quinta-feira:</span>
+                  </div>
+                  <div *ngIf="enderecoSelecionado.diasEntrega.quinta.checked == 1">
+                    <div *ngIf="enderecoSelecionado.diasEntrega.quinta.minimo !== null && enderecoSelecionado.diasEntrega.quinta.maximo !== null">
+                      das {{ convertMysqlTime(enderecoSelecionado.diasEntrega.quinta.minimo) }} às {{ convertMysqlTime(enderecoSelecionado.diasEntrega.quinta.maximo) }}
+                    </div>
+                    <div *ngIf="enderecoSelecionado.diasEntrega.quinta.minimo == null || enderecoSelecionado.diasEntrega.quinta.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="enderecoSelecionado.diasEntrega.quinta.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="enderecoSelecionado.diasEntrega.sexta.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="enderecoSelecionado.diasEntrega.sexta.checked == 1"></i>
+                    </div>
+                    <span>Sexta-feira:</span>
+                  </div>
+                  <div *ngIf="enderecoSelecionado.diasEntrega.sexta.checked == 1">
+                    <div *ngIf="enderecoSelecionado.diasEntrega.sexta.minimo !== null && enderecoSelecionado.diasEntrega.sexta.maximo !== null">
+                      das {{ convertMysqlTime(enderecoSelecionado.diasEntrega.sexta.minimo) }} às {{ convertMysqlTime(enderecoSelecionado.diasEntrega.sexta.maximo) }}
+                    </div>
+                    <div *ngIf="enderecoSelecionado.diasEntrega.sexta.minimo == null || enderecoSelecionado.diasEntrega.sexta.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="enderecoSelecionado.diasEntrega.sexta.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="enderecoSelecionado.diasEntrega.sabado.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="enderecoSelecionado.diasEntrega.sabado.checked == 1"></i>
+                    </div>
+                    <span>Sábado:</span>
+                  </div>
+                  <div *ngIf="enderecoSelecionado.diasEntrega.sabado.checked == 1">
+                    <div *ngIf="enderecoSelecionado.diasEntrega.sabado.minimo !== null && enderecoSelecionado.diasEntrega.sabado.maximo !== null">
+                      das {{ convertMysqlTime(enderecoSelecionado.diasEntrega.sabado.minimo) }} às {{ convertMysqlTime(enderecoSelecionado.diasEntrega.sabado.maximo) }}
+                    </div>
+                    <div *ngIf="enderecoSelecionado.diasEntrega.sabado.minimo == null || enderecoSelecionado.diasEntrega.sabado.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="enderecoSelecionado.diasEntrega.sabado.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="enderecoSelecionado.diasEntrega.domingo.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="enderecoSelecionado.diasEntrega.domingo.checked == 1"></i>
+                    </div>
+                    <span>Domingo:</span>
+                  </div>
+                  <div *ngIf="enderecoSelecionado.diasEntrega.domingo.checked == 1">
+                    <div *ngIf="enderecoSelecionado.diasEntrega.domingo.minimo !== null && enderecoSelecionado.diasEntrega.domingo.maximo !== null">
+                      das {{ convertMysqlTime(enderecoSelecionado.diasEntrega.domingo.minimo) }} às {{ convertMysqlTime(enderecoSelecionado.diasEntrega.domingo.maximo) }}
+                    </div>
+                    <div *ngIf="enderecoSelecionado.diasEntrega.domingo.minimo == null || enderecoSelecionado.diasEntrega.domingo.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="enderecoSelecionado.diasEntrega.domingo.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Tipo de material</label>
+              <div *ngIf="enderecoSelecionado.dsTipoMaterial == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.dsTipoMaterial != null">{{ enderecoSelecionado.dsTipoMaterial | uppercase }}</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Tipo de descarga</label>
+              <div *ngIf="enderecoSelecionado.dsTipoDescarga == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.dsTipoDescarga != null">{{ enderecoSelecionado.dsTipoDescarga | uppercase }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Modo de descarga</label>
+              <div *ngIf="enderecoSelecionado.dsModoDescarga == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.dsModoDescarga != null">{{ enderecoSelecionado.dsModoDescarga | uppercase }}</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Tipos de veículo</label>
+              <div *ngIf="enderecoSelecionado.tiposVeiculosDesc == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.tiposVeiculosDesc != null">{{ enderecoSelecionado.tiposVeiculosDesc | uppercase }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+              <label>Dados especiais</label>
+              <div *ngIf="enderecoSelecionado.dadosEspeciaisDesc == null">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.dadosEspeciaisDesc != null">{{ enderecoSelecionado.dadosEspeciaisDesc | uppercase }}</div>
+            </div>
+            <div class="form-group col-md-6 mb-0">
+              <label>Observação</label>
+              <div *ngIf="enderecoSelecionado.observacaoLib == null || enderecoSelecionado.observacaoLib == '' ">NÃO INFORMADO</div>
+              <div *ngIf="enderecoSelecionado.observacaoLib != null">{{ enderecoSelecionado.observacaoLib | uppercase }}</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <hr>
+            </div>
+          </div>
+
+          <div class="form-row" *ngIf="(showAnexos && anexos.length > 0 || showAnexosMarketing && anexosMarketing.length > 0)">
+
+            <div class="col-12">
+              <div class="row">
+                <div class="col-6">
+                  <div class="row">
+                    <div class="mtc-title mb-0">Anexos do Vendedor</div>
+                  </div>
+                  <div class="row">
+                    <custom-table [config]="tableConfigAnexos" *ngIf="showAnexos && anexos.length > 0">
+                      <ng-template #tbody let-tbody>
+                        <tr *ngFor="let anexo of anexos">
+                          <td style="width: 95%">
+                            {{ anexo.codAnexo }} - {{ anexo.nomeAnexo | uppercase }}
+                          </td>
+                          <td class="text-center" style="width: 5%">
+                            <a
+                              [href]="anexo.linkAnexo"
+                              *ngIf="anexo.linkAnexo != null"
+                              target="_blank"
+                              class="btn-icon-sm mx-2 text-black"
+                              tooltip="visualizar">
+                              <i class="far fa-eye"></i>
+                            </a>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </custom-table>
+                    <message
+                    icon="fas fa-exchange-alt"
+                    text="Nenhum documento encontrado"
+                    *ngIf="showAnexos && anexos.length === 0">
+                  </message>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="row">
+                  <div class="mtc-title mb-0">Anexos do Marketing</div>
+                </div>
+                <div class="row">
+                  <custom-table [config]="tableConfigAnexos" *ngIf="showAnexosMarketing && anexosMarketing.length > 0">
+                    <ng-template #tbody let-tbody>
+                      <tr *ngFor="let anexo of anexosMarketing">
+                        <td style="width: 95%">
+                          {{ anexo.codAnexo }} - {{ anexo.nomeAnexo | uppercase }}
+                        </td>
+                        <td class="text-center" style="width: 5%">
+                          <a
+                            [href]="anexo.linkAnexo"
+                            *ngIf="anexo.linkAnexo != null"
+                            target="_blank"
+                            class="btn-icon-sm mx-2 text-black"
+                            tooltip="visualizar">
+                            <i class="far fa-eye"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </custom-table>
+                  <message
+                    icon="fas fa-exchange-alt"
+                    text="Nenhum documento encontrado"
+                    *ngIf="showAnexosMarketing && anexosMarketing.length === 0">
+                  </message>
+                </div>
+              </div>
+            </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="modal-footer" *ngIf="enderecoSelecionado.situacao === 3">
+          <button class="btn btn-primary"(click)="onAction(confirm, 'Aprovação')">Aprovar</button>
+          <button class="btn btn-danger" (click)="onAction(confirm, 'Reprovação')">Reprovar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #confirm>
+  <div class="modal-header">
+
+    <h4 id="dialog-sizes-name1" class="modal-title">
+      Justificativa de {{ acao }}
+    </h4>
+    <button type="button" class="close pull-right" (click)="onModalClose('confirm')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-container">
+
+    <form [formGroup]="formExcecao" autocomplete="off">
+    <div class="col-lg-12 mt-2" formArrayName="anexosAprovacao">
+      <div class="row">
+        <div class="col-lg-12 d-flex align-items-start">
+          <div class="mtc-title mb-0">Anexos</div>
+        </div>
+        <div class="col">
+          <label
+            for="novoAnexo"
+            class="d-flex justify-content-start align-items-center"
+            style="cursor: pointer"
+            [hidden]="visualizar"
+          >
+            <p class="btn btn-sm btn-outline-primary m-0">
+              <i class="fas fa-plus"></i>
+              <span>Anexo</span>
+            </p>
+          </label>
+          <input
+            id="novoAnexo"
+            type="file"
+            (change)="appendFileAprovacao($event.target.files)"
+            class="d-none"
+          />
+        </div>
+      </div>
+      <div class="row" *ngIf="formExcecao.value.anexosAprovacao.length > 0">
+        <div class="col">
+          <custom-table [config]="tableConfigAnexos">
+            <ng-template #tbody let-tbody>
+              <tr
+                *ngFor="let anexo of anexosAprovacao.controls; let i = index"
+                [formGroupName]="i"
+              >
+                <td style="width: 90%">
+                  {{ formExcecao.value.anexosAprovacao[i].codAnexo }} -
+                  {{ formExcecao.value.anexosAprovacao[i].nomeAnexo | uppercase }}
+                </td>
+                <td class="text-center" style="width: 5%">
+                  <a
+                    (click)="navegarAnexo(anexo)"
+                    *ngIf="formExcecao.value.anexosAprovacao[i].codAnexo != null"
+                    target="_blank"
+                    class="btn-icon-sm mx-2 text-black"
+                    tooltip="visualizar"
+                  >
+                    <i class="far fa-eye"></i>
+                  </a>
+                </td>
+                <td class="text-center" style="width: 5%">
+                  <btn-icon
+                    icon="fas fa-trash"
+                    size="small"
+                    tooltip="Excluir"
+                    (click)="
+                      onDeleteAnexoAprovacao(formExcecao.value.anexosAprovacao[i].codAnexo, i)
+                    "
+                    [hidden]="visualizar"
+                  >
+                  </btn-icon>
+                </td>
+              </tr>
+            </ng-template>
+          </custom-table>
+        </div>
+      </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-container ml-3 mt-3 modal-title" *ngIf="acao === 'Aprovação'">
+
+    <btn-icon
+        [icon]="validaExcecao ? 'fas fa-check-square' : 'far fa-square'"
+        size="small"
+        (click)="onCheckExcecao()">
+    </btn-icon>
+
+      <label class="ml-1" for="situacoes" style="font-weight: bold; font-size: 0.7rem;">ADICIONAR EXCEÇÃO</label>
+  </div>
+
+  <div class="modal-container" *ngIf="acao === 'Aprovação'">
+    <form [formGroup]="formExcecao" autocomplete="off">
+      <div class="col-lg-12 mb-2 mb-md-0"
+      *ngIf="validaExcecao">
+        <ng-select
+          placeholder="SELECIONE..."
+          [searchable]="false"
+          [clearable]="false"
+          [items]="excecoes"
+          [virtualScroll]="false"
+          bindLabel="excecao"
+          bindValue="id"
+          formControlName="excecao">
+        </ng-select>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-body">
+    <label class="ml-1" for="motivo" style="font-weight: bold; font-size: 0.7rem;">MOTIVO</label>
+    <textarea class="form-control" [(ngModel)]="msgModal"></textarea>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="onSubmitModal()">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+

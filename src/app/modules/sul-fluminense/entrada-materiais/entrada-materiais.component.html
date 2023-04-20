@@ -1,0 +1,18 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+
+<app-header appTitle="Entrada de materiais">
+</app-header>
+<div class="row" id="application-body">
+  <div class="col">
+    <breadcrumb [tree]="breadCrumbTree"></breadcrumb>
+    <div class="row justify-content-center">
+      <div class="col-md-3" *ngFor="let atividade of atividades">
+        <card-button
+          [icon]="atividade.iconeAtividade"
+          [text]="atividade.nomeAtividade"
+          [routerLink]="[atividade.rotaAtividade]">
+        </card-button>
+      </div>
+    </div>
+  </div>
+</div>

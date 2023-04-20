@@ -1,0 +1,17 @@
+::ng-deep {
+  advanced-filter {
+    display: block;
+    width: 100%;
+    #filter-header {
+      padding: 7px 15px;
+    }
+    #filter-body {
+      padding: 7px 15px 15px 15px;
+      .form-row:last-child {
+        .form-group {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,303 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    (click)="onSearch()">
+    Pesquisar
+  </button>
+  <button
+    (click)="onCadastrar()">
+    Cadastro
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <!-- Início dos Filtros -->
+  <advanced-filter #scrollToFilter>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row justify-content-center">
+        <div class="form-group col-md-2">
+          <label for="tipo">Tipo de Inventário</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="tipoInventario"
+            [virtualScroll]="true"
+            labelForId="tipo"
+            bindLabel="descNome"
+            bindValue="value"
+            placeholder="Selecione um Tipo"
+            formControlName="tipoInventario"
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('tipoInventario')"
+            message="Empresa é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="empresa">Empresa</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="empresas"
+            [virtualScroll]="true"
+            labelForId="empresa"
+            bindLabel="nomeFantasia"
+            bindValue="codigoEmpresa"
+            placeholder="Selecione uma empresa"
+            formControlName="empresa"
+            (change) ="getDepositos()"
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('empresa')"
+            message="Empresa é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="depositos">Depósito</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="depositos"
+            [virtualScroll]="true"
+            labelForId="deposito"
+            bindLabel="depositoDescricao"
+            bindValue="depositoId"
+            placeholder="Selecione um deposito"
+            formControlName="depositos"
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('depositos')"
+            message="Despósito é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="linhas">Linha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="linhas"
+            [virtualScroll]="true"
+            labelForId="linha"
+            bindLabel="linha"
+            bindValue="linha"
+            placeholder="Selecione uma linha"
+            formControlName="linhas"
+            (change) = "getClasses(); getMateriais(linhas, '')"
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('linhas')"
+            message="Linha é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="classes">Classe</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="classes"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [virtualScroll]="true"
+              labelForId="classes"
+              bindLabel="classeDescricao"
+              bindValue="classeId"
+              placeholder="Selecione uma classe"
+              formControlName="classes"
+              (change) = "getMateriais(linhas, classes)"
+              [ngClass]="onFieldError('classes')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('classes')"
+              message="Classe é obrigatório.">
+            </invalid-form-control>
+          </div>
+      </div>
+      <div class="form-row justify-content-center">
+        <div class="form-group col-md-6">
+          <label for="materiais">Material</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="materiais"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            [virtualScroll]="true"
+            labelForId="materiais"
+            bindLabel="codigoDescricaoMaterial"
+            bindValue="codigoMaterial"
+            placeholder="Selecione um material"
+            formControlName="materiais"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="dataInicial"> Data inicial </label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="dataInicial"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="dataInicial"
+            >
+          </div>
+          <invalid-form-control
+            [show]="onFieldInvalid('dataInicial')"
+            message="Data inicial é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="dataFinal"> Data final </label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="dataFinal"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="dataFinal"
+            >
+          </div>
+          <invalid-form-control
+            [show]="onFieldInvalid('dataFinal')"
+            message="Data inicial é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-2 justify-content-end">
+          <label for="cdInventario"> Código do inventário </label>
+          <input 
+            id="cdInventario"
+            type="text"
+            class="form-control"
+            placeholder="DIGITE..."
+            formControlName="cdInventario"
+            (keyup.enter)="onSearch()"
+          >
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <!-- Início das Legendas -->
+  <subtitles
+    [data]="subtitles"
+    [show]="inve.length > 0"
+    [allowActivation]="true"
+    (activationChange)="onClickSubtitle($event?.id)">
+  </subtitles>
+  <!-- Início da Tabela -->
+  <div class="row">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-9 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig" [hidden]="noResult">
+        <ng-template #thead let-thead>
+          <tr>
+            <th>Data</th>
+            <th>Código</th>
+            <th>Depósito</th>
+            <th [hidden]="compressedTable">Linha</th>
+            <th>Tipo</th>
+            <th style="width:250px" nowrap>Auditor</th>
+            <th class="align-middle" style="width:70px"></th>
+            <th class="align-middle" style="width:70px"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let inventario of inventarios let i = index" class="hover" 
+                      [ngClass]="inventario.status ? 'bgRowTable' : ''" (click)="getClassesInventario(inventario.idInventario, i)"
+                >
+                  <td [ngClass]="{
+                    'border-primary'    : inventario.siglaStatusInventario == 'LOGI_INVE_STAT_APRO',
+                    'border-secondary'  : inventario.siglaStatusInventario == 'LOGI_INVE_STAT_CANC_SIST',
+                    'border-danger'     : inventario.siglaStatusInventario == 'LOGI_INVE_STAT_CANC',
+                    'border-success'    : inventario.siglaStatusInventario == 'LOGI_INVE_STAT_FINA',
+                    'border-warning'    : inventario.siglaStatusInventario == 'LOGI_INVE_STAT_ABER'
+                  }"
+                  > {{ inventario.dtInclusao  | date : 'dd/MM/yyyy HH:mm:ss'}} </td>
+                  <td> {{ inventario.idInventario   | number:'6.0-0'}} </td>
+                  <td> {{ inventario.dsDeposito | uppercase }} </td>
+                  <td [hidden]="compressedTable"> {{ inventario.dsLinha | uppercase }} </td>
+                  <td> {{ inventario.dsTipoInventario | uppercase }} </td>
+                  <td style="width:250px" nowrap> {{ inventario.dsUsuario | uppercase }} </td> 
+                  <td class="align-middle" style="width:70px">
+                    <span tooltip="Visualizar" placement="left" container="body">
+                      <button class="btn-icon-sm" (click)="abrirInventario(inventario.idInventario)">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </span>
+                  </td>
+                  <td class="align-middle" style="width:70px">
+                    <span tooltip="Imprimir" placement="left" container="body">
+                      <button class="btn-icon-sm" (click)="abrirRelatorio(inventario.idInventario)">
+                        <i class="fas fa-file-alt"></i>
+                      </button>
+                    </span>
+                  </td>
+                </tr>
+        </ng-template>
+      </custom-table>
+      <div class="mt-3" [hidden]="noResult">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          [(itemsPerPage)]="itemsPerPage"
+          (pageChanged)="onPageChanged($event)"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty">
+      </empty-result>
+    </div>
+    <div class="col-3" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="appTitle">
+          <custom-table>
+            <ng-template #thead let-thead>
+              <tr>
+                <th>Classe</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let infoClasse of infoClasses">
+                <td> {{ infoClasse.dsClasse | uppercase }} </td>
+              </tr>
+            </ng-template>
+          </custom-table>
+          <custom-table>
+            <ng-template #thead let-thead>
+              <tr [hidden]="infoLinha == null">
+                <th>Linha</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr [hidden]="infoLinha == null">
+                <td> {{ infoLinha | uppercase }} </td>
+              </tr>
+            </ng-template>
+          </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+</app-body>

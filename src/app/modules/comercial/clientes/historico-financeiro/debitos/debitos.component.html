@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="col">
+    <div class="d-flex w-100" *ngIf="!debitosLoaded">
+      <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+      <strong>Carregando débitos em aberto...</strong>
+    </div>
+    <custom-table *ngIf="debitos.length > 0 && debitosLoaded">
+      <ng-template #thead let-thead>
+        <tr>
+          <th scope="col" class="text-center">Data Pedido</th>
+          <th scope="col" class="text-center">Núm. Pedido</th>
+          <th scope="col" class="text-center">Núm. Duplicata</th>
+          <th scope="col" class="text-center">Valor Duplicata</th>
+          <th scope="col" class="text-center">Juros</th>
+          <th scope="col" class="text-center">Valor Cartório</th>
+          <th scope="col" class="text-center">Tarifa</th>
+          <th scope="col" class="text-center">Data Tarifa</th>
+          <th scope="col" class="text-center">Valor Tarifa</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let debito of debitos">
+          <td class="text-center" [ngClass]="classStatusBorder(debito.situacao)">{{ debito.dataPedido }}</td>
+          <td class="text-center">{{ debito.numPedido }}</td>
+          <td class="text-center">{{ debito.numDuplicata }}</td>
+          <td class="text-center">{{ debito.valorDuplicata | currency:'BRL':'symbol':'1.2-2' }}</td>
+          <td class="text-center">{{ debito.juros }}</td>
+          <td class="text-center">{{ debito.valorCartorio | currency:'BRL':'symbol':'1.2-2' }}</td>
+          <td class="text-center">{{ debito.tarifa }}</td>
+          <td class="text-center">{{ debito.dataTarifa }}</td>
+          <td class="text-center">{{ debito.valorTarifa | currency:'BRL':'symbol':'1.2-2' }}</td>
+        </tr>
+      </ng-template>
+    </custom-table>
+    <empty-result
+      message="Nenhuma informação encontrada"
+      *ngIf="debitos.length == 0 && debitosLoaded">
+    </empty-result>
+    <div class="row justify-content-center" *ngIf="debitos.length > 0 && debitosLoaded">
+      <div class="col-6 d-flex justify-content-center w-100">
+        <div class="d-flex justify-content-around">
+          <div class="legend green">
+            <div class="square"></div>
+            <div class="text">DÉBITO COM NOTA</div>
+          </div>
+          <div class="legend blue">
+            <div class="square"></div>
+            <div class="text">DÉBITO SEM NOTA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

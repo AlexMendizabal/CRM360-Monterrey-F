@@ -1,0 +1,525 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="RO's">
+  <button
+    type="button"
+    (click)= 'onRefresh();'>
+    Atualizar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" >
+  <div class="row">
+    <div class="col-12">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="dataInicial">Data Inicial</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="dataInicial"
+                type="text"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="dataInicial"
+                [ngClass]="onFieldError('dataInicial') + ' ' + onFieldRequired(form.controls.dataInicial)">
+                <invalid-form-control [show]="onFieldInvalid('dataInicial')" message="Data Inicial é obrigatória"></invalid-form-control>
+              </div>
+            </div>
+            
+            <div class="form-group col-md-2 pl-0">
+              <label for="dataFinal">Data final</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="dataFinal"
+                type="text"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="dataFinal"
+                [ngClass]="onFieldError('dataFinal') + ' ' + onFieldRequired(form.controls.dataFinal)">
+                <invalid-form-control [show]="onFieldInvalid('dataFinal')" message="Data Final é obrigatória"></invalid-form-control>
+              </div>
+            </div>
+
+            <div class="form-group col-md-2 pl-0">
+              <label for="codLinha">Linha</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="linhas"
+                formControlName="codLinha"
+                [virtualScroll]="true"
+                labelForId="codLinha"
+                bindLabel="descricao"
+                bindValue="id"
+                value=''>
+              </ng-select>
+            </div>
+
+            <div class="form-group col-md-2 pl-0">
+              <label for="codGerencia">gerência</label>
+              <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="coordenadores"
+                  [virtualScroll]="true"
+                  placeholder="Selecione..."
+                  bindLabel="nomeEscritorio"
+                  bindValue="codEscritorio"
+                  formControlName="codGerencia"
+                  (change)="onChangeEscritorio($event.id, true)"
+                >
+              </ng-select>
+            </div>
+
+            <div class="form-group col-md-4 pl-0">
+              <label for="codVendedor">vendedor</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                type='text'
+                [items]="vendedores"
+                placeholder="Selecione..."
+                bindLabel="nome"
+                bindValue="id"
+                formControlName="codVendedor"
+              >
+                  <invalid-form-control
+                  [show]="onFieldInvalid('codVendedor')"
+                  message="Descrição é obrigatório.">
+                  </invalid-form-control>
+              </ng-select>
+            </div>
+
+            <div class="form-group col-md-3 pl-0">
+              <label for="codEmpresa">Empresa</label>
+                    <ng-select
+                      [searchable]="true"
+                      [clearable]="false"
+                      type='text'
+                      [items]="empresa"
+                      [virtualScroll]="true"
+                      placeholder="Selecione..."
+                      bindLabel="nomeEmpresa"
+                      bindValue="idEmpresa"
+                      formControlName="codEmpresa"
+                    >
+                    <invalid-form-control
+                    [show]="onFieldInvalid('codEmpresa')"
+                    message="Empresa é obrigatório.">
+                    </invalid-form-control>
+                    </ng-select>
+                </div>
+
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+
+  <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && dadosLoaded"></empty-result>
+  <div class="row mt-4" *ngIf="!dadosEmpty && dadosLoaded">
+
+    <div class="col-2"></div>
+
+    <div class="col-4">
+      <h6 class='text-center'>ABERTAS</h6>
+    <div
+    class="mb-2 abertas"
+    *ngFor="let item of abertas"
+    [tooltip]="tooltipAutoScrollTemplate">
+      <div class="card-body cartao-abertas" >
+        <btn-icon
+        class="float-right"
+        icon="fas fa-plus"
+        size="small"
+        tooltip="mais detalhes"
+        id="detalhes"
+        (click)="openModalAbertas(abertas)">
+        </btn-icon> <br>
+
+        <strong >#{{ item.codCliente }} - {{ item.razaoSocial }}</strong><br>
+        <span>{{ item.nomeLinha }}</span><br>
+        <span>{{ item.dataLancamento | date: 'dd/MM/yyyy' }}</span><br>
+        <span>{{ item.nomeEmpresa }}</span><br>
+        <span>{{ item.nomeGerencia }}</span><br>
+        <span>{{ item.nomeVendedor }}</span>
+      </div>
+
+      <!-- Modal Detalhes dos Registros Abertas -->
+    <ng-template #abertas>
+      <div class="mt-4 mr-4 mb-4 ml-4 details" style="text-transform: uppercase;">
+        <div class="row">
+          <div class="col-6">            
+            <div class="mtc-title" *ngIf="item.nrOcorrencia != ''">Número da RO</div>
+            <p>#{{ item.nrOcorrencia}}</p>
+          </div>
+          <div class="col-6">
+            <div class="mtc-title" *ngIf="item.nomeSetor != ''">Setor</div>
+            <p>{{ item.nomeSetor | uppercase }}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="mtc-title" *ngIf="item.nomeSituacao != ''">Situação RO</div>
+            <p>{{ item.nomeSituacao | uppercase }}</p>
+          </div>
+          <div class="col-6">
+            <div class="mtc-title" *ngIf="item.descTipoDocumento != ''">Tipo de documento da descrição</div>
+            <p *ngIf="item.descTipoDocumento != ''">{{ item.descTipoDocumento | uppercase }}  - #{{ item.nrNotaFiscal }}</p>
+            <p *ngIf="item.descTipoDocumento == 'Item Nota Fiscal'">Item #{{ item.nrItemDocumento }}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="mtc-title" *ngIf="item.descMotivo != ''">Motivo</div>
+            <p>{{ item.descMotivo | uppercase }}</p>
+          </div>
+        </div>
+        <div class="row" *ngIf="item.nomeUsuarioLiberacaoSetor">
+          <fieldset class="border rounded shadow-sm col mx-auto">
+            <legend class="mtc-title text-left">Ciente Setor</legend>
+            <div class="row">
+              <div class="col-3">              
+                <span class="mtc-title text-left">Data</span>
+                <p class="text-left">{{item.dataLiberacaoSetor | date: 'dd/MM/yyyy'}}</p>
+              </div>
+              <div class="col-3">
+                <span class="mtc-title text-left">Hora</span>
+                <p class="text-left">{{item.dataLiberacaoSetor | date: 'HH:mm'}}</p>
+              </div>
+              <div class="col-6">
+                <span class="mtc-title text-left">Usuário</span>
+                <p class="text-left">{{ item.codUsuarioLiberacaoSetor }} - {{ item.nomeUsuarioLiberacaoSetor }}</p>
+              </div>
+            </div>           
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.nomeUsuarioCienteLogistica">
+          <fieldset class="border rounded shadow-sm col mx-auto">
+            <legend class="mtc-title text-left">Ciente Logística</legend>
+            <div class="row">
+              <div class="col-3">              
+                <span class="mtc-title text-left">Data</span>
+                <p class="text-left">{{item.dataCienteLogistica | date: 'dd/MM/yyyy'}}</p>
+              </div>
+              <div class="col-3">
+                <span class="mtc-title text-left">Hora</span>
+                <p class="text-left">{{item.dataCienteLogistica | date: 'HH:mm'}}</p>
+              </div>
+              <div class="col-6">
+                <span class="mtc-title text-left">Usuário</span>
+                <p class="text-left">{{ item.codUsuarioCienteLogistica }} - {{ item.nomeUsuarioCienteLogistica }}</p>
+              </div>
+            </div>           
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.nomeUsuarioCienteLogistica">
+          <fieldset class="border rounded shadow-sm col mx-auto">
+            <legend class="mtc-title text-left">Liberação</legend>
+            <div class="row">
+              <div class="col-3">              
+                <span class="mtc-title text-left">Data</span>
+                <p class="text-left">{{item.dataCienteOcorrencia | date: 'dd/MM/yyyy'}}</p>
+              </div>
+              <div class="col-3">
+                <span class="mtc-title text-left">Hora</span>
+                <p class="text-left">{{item.dataCienteOcorrencia | date: 'HH:mm'}}</p>
+              </div>
+              <div class="col-6">
+                <span class="mtc-title text-left">Usuário</span>
+                <p class="text-left">{{ item.codUsuarioCienteOcorrencia }} - {{ item.nomeUsuarioCienteLogistica }}</p>
+              </div>
+            </div>           
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.nomeUsuarioCienteFiscal">
+          <fieldset class="border rounded shadow-sm col mx-auto">
+            <legend class="mtc-title text-left">Ciente Fiscal</legend>
+            <div class="row">
+              <div class="col-3">              
+                <span class="mtc-title text-left">Data</span>
+                <p class="text-left">{{item.dataCienteFiscal | date: 'dd/MM/yyyy'}}</p>
+              </div>
+              <div class="col-3">
+                <span class="mtc-title text-left">Hora</span>
+                <p class="text-left">{{item.dataCienteFiscal | date: 'HH:mm'}}</p>
+              </div>
+              <div class="col-6">
+                <span class="mtc-title text-left">Usuário</span>
+                <p class="text-left">{{ item.codUsuarioCienteFiscal }} - {{ item.nomeUsuarioCienteFiscal }}</p>
+              </div>
+            </div>           
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.nomeUsuarioCienteFinanceiro">
+          <fieldset class="border rounded shadow-sm col mx-auto">
+            <legend class="mtc-title text-left">Ciente Financeiro</legend>
+            <div class="row">
+              <div class="col-3">              
+                <span class="mtc-title text-left">Data</span>
+                <p class="text-left">{{item.dataCienteFinanceiro | date: 'dd/MM/yyyy'}}</p>
+              </div>
+              <div class="col-3">
+                <span class="mtc-title text-left">Hora</span>
+                <p class="text-left">{{item.dataCienteFinanceiro | date: 'HH:mm'}}</p>
+              </div>
+              <div class="col-6">
+                <span class="mtc-title text-left">Usuário</span>
+                <p class="text-left">{{ item.codUsuarioCienteFinanceiro }} - {{ item.nomeUsuarioCienteFinanceiro }}</p>
+              </div>
+            </div>           
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.nomeUsuarioFechamentoOcorrencia">
+          <fieldset class="border rounded shadow-sm col mx-auto">
+            <legend class="mtc-title text-left">Fechamento</legend>
+            <div class="row">
+              <div class="col-3">              
+                <span class="mtc-title text-left">Data</span>
+                <p class="text-left">{{item.dataFechamentoOcorrencia | date: 'dd/MM/yyyy'}}</p>
+              </div>
+              <div class="col-3">
+                <span class="mtc-title text-left">Hora</span>
+                <p class="text-left">{{item.dataFechamentoOcorrencia | date: 'HH:mm'}}</p>
+              </div>
+              <div class="col-6">
+                <span class="mtc-title text-left">Usuário</span>
+                <p class="text-left">{{ item.codUsuarioFechamentoOcorrencia }} - {{ item.nomeUsuarioFechamentoOcorrencia }}</p>
+              </div>
+            </div>           
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.descOcorrencia != ''">
+          <fieldset class="border rounded shadow-sm col mx-auto">            
+            <legend class="mtc-title text-left">Descrição da Ocorrência</legend>
+            <p class="text-justify">{{ item.descOcorrencia | uppercase }}</p>
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.descAcaoCorretiva != ''">
+          <fieldset class="border rounded shadow-sm col mx-auto">            
+            <legend class="mtc-title text-left">Descrição da Ação Corretiva</legend>
+            <p class="text-justify">{{ item.descAcaoCorretiva | uppercase }}</p>
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.descAcaoPreventiva != ''">
+          <fieldset class="border rounded shadow-sm col mx-auto">            
+            <legend class="mtc-title text-left">Descrição da Acção Preventiva</legend>
+            <p class="text-justify">{{ item.descAcaoPreventiva | uppercase }}</p>
+          </fieldset>
+        </div>
+    </div>
+    </ng-template>
+    </div>
+  </div>
+
+  <div class="col-4">
+    <h6 class='text-center'>FECHADAS</h6>
+    <div
+    class="mb-2 fechadas"
+    *ngFor="let item of fechadas; let i = index"
+    [tooltip]="tooltipAutoScrollTemplate">
+
+      <div class="card-body cartao-fechadas" >
+        <btn-icon
+        class="float-right"
+        icon="fas fa-plus"
+        size="small"
+        tooltip="mais detalhes"
+        id="detalhes"
+        (click)="openModalFechadas(fechadas)">
+        </btn-icon> <br>
+        <strong >#{{ item.codCliente }} - {{ item.razaoSocial }}</strong><br>
+        <span>{{ item.nomeLinha }}</span><br>
+        <span>{{ item.dataLancamento | date: 'dd/MM/yyyy' }}</span><br>
+        <span>{{ item.nomeEmpresa }}</span><br>
+        <span>{{ item.nomeGerencia }}</span><br>
+        <span>{{ item.nomeVendedor }}</span>
+      </div>
+
+
+    <!-- Modal Detalhes dos Registros Fechadas -->
+    <ng-template #fechadas>
+      <div class="mt-4 mr-4 mb-4 ml-4 details" style="text-transform: uppercase;">
+        <div class="row">
+          <div class="col-6">            
+            <div class="mtc-title" *ngIf="item.nrOcorrencia != ''">Número da RO</div>
+            <p>#{{ item.nrOcorrencia}}</p>
+          </div>
+          <div class="col-6">
+            <div class="mtc-title" *ngIf="item.nomeSetor != ''">Setor</div>
+            <p>{{ item.nomeSetor | uppercase }}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="mtc-title" *ngIf="item.nomeSituacao != ''">Situação RO</div>
+            <p>{{ item.nomeSituacao | uppercase }}</p>
+          </div>
+          <div class="col-6">
+            <div class="mtc-title" *ngIf="item.descTipoDocumento != ''">Tipo de documento da descrição</div>
+            <p *ngIf="item.descTipoDocumento != ''">{{ item.descTipoDocumento | uppercase }}  - #{{ item.nrNotaFiscal }}</p>
+            <p *ngIf="item.descTipoDocumento == 'Item Nota Fiscal'">Item #{{ item.nrItemDocumento }}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="mtc-title" *ngIf="item.descMotivo != ''">Motivo</div>
+            <p>{{ item.descMotivo | uppercase }}</p>
+          </div>
+        </div>
+        <div class="row mt-2" *ngIf="item.nomeUsuarioLiberacaoSetor">
+          <fieldset class="border rounded shadow-sm col mx-auto">
+            <legend class="mtc-title text-left">Ciente Setor</legend>
+            <div class="row">
+              <div class="col-3">              
+                <span class="mtc-title text-left">Data</span>
+                <p class="text-left">{{item.dataLiberacaoSetor | date: 'dd/MM/yyyy'}}</p>
+              </div>
+              <div class="col-3">
+                <span class="mtc-title text-left">Hora</span>
+                <p class="text-left">{{item.dataLiberacaoSetor | date: 'HH:mm'}}</p>
+              </div>
+              <div class="col-6">
+                <span class="mtc-title text-left">Usuário</span>
+                <p class="text-left">{{ item.codUsuarioLiberacaoSetor }} - {{ item.nomeUsuarioLiberacaoSetor }}</p>
+              </div>
+            </div>           
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.nomeUsuarioCienteLogistica">
+          <fieldset class="border rounded shadow-sm col mx-auto">
+            <legend class="mtc-title text-left">Ciente Logística</legend>
+            <div class="row">
+              <div class="col-3">              
+                <span class="mtc-title text-left">Data</span>
+                <p class="text-left">{{item.dataCienteLogistica | date: 'dd/MM/yyyy'}}</p>
+              </div>
+              <div class="col-3">
+                <span class="mtc-title text-left">Hora</span>
+                <p class="text-left">{{item.dataCienteLogistica | date: 'HH:mm'}}</p>
+              </div>
+              <div class="col-6">
+                <span class="mtc-title text-left">Usuário</span>
+                <p class="text-left">{{ item.codUsuarioCienteLogistica }} - {{ item.nomeUsuarioCienteLogistica }}</p>
+              </div>
+            </div>           
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.nomeUsuarioCienteLogistica">
+          <fieldset class="border rounded shadow-sm col mx-auto">
+            <legend class="mtc-title text-left">Liberação</legend>
+            <div class="row">
+              <div class="col-3">              
+                <span class="mtc-title text-left">Data</span>
+                <p class="text-left">{{item.dataCienteOcorrencia | date: 'dd/MM/yyyy'}}</p>
+              </div>
+              <div class="col-3">
+                <span class="mtc-title text-left">Hora</span>
+                <p class="text-left">{{item.dataCienteOcorrencia | date: 'HH:mm'}}</p>
+              </div>
+              <div class="col-6">
+                <span class="mtc-title text-left">Usuário</span>
+                <p class="text-left">{{ item.codUsuarioCienteOcorrencia }} - {{ item.nomeUsuarioCienteLogistica }}</p>
+              </div>
+            </div>           
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.nomeUsuarioCienteFiscal">
+          <fieldset class="border rounded shadow-sm col mx-auto">
+            <legend class="mtc-title text-left">Ciente Fiscal</legend>
+            <div class="row">
+              <div class="col-3">              
+                <span class="mtc-title text-left">Data</span>
+                <p class="text-left">{{item.dataCienteFiscal | date: 'dd/MM/yyyy'}}</p>
+              </div>
+              <div class="col-3">
+                <span class="mtc-title text-left">Hora</span>
+                <p class="text-left">{{item.dataCienteFiscal | date: 'HH:mm'}}</p>
+              </div>
+              <div class="col-6">
+                <span class="mtc-title text-left">Usuário</span>
+                <p class="text-left">{{ item.codUsuarioCienteFiscal }} - {{ item.nomeUsuarioCienteFiscal }}</p>
+              </div>
+            </div>           
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.nomeUsuarioCienteFinanceiro">
+          <fieldset class="border rounded shadow-sm col mx-auto">
+            <legend class="mtc-title text-left">Ciente Financeiro</legend>
+            <div class="row">
+              <div class="col-3">              
+                <span class="mtc-title text-left">Data</span>
+                <p class="text-left">{{item.dataCienteFinanceiro | date: 'dd/MM/yyyy'}}</p>
+              </div>
+              <div class="col-3">
+                <span class="mtc-title text-left">Hora</span>
+                <p class="text-left">{{item.dataCienteFinanceiro | date: 'HH:mm'}}</p>
+              </div>
+              <div class="col-6">
+                <span class="mtc-title text-left">Usuário</span>
+                <p class="text-left">{{ item.codUsuarioCienteFinanceiro }} - {{ item.nomeUsuarioCienteFinanceiro }}</p>
+              </div>
+            </div>           
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.nomeUsuarioFechamentoOcorrencia">
+          <fieldset class="border rounded shadow-sm col mx-auto">
+            <legend class="mtc-title text-left">Fechamento</legend>
+            <div class="row">
+              <div class="col-3">              
+                <span class="mtc-title text-left">Data</span>
+                <p class="text-left">{{item.dataFechamentoOcorrencia | date: 'dd/MM/yyyy'}}</p>
+              </div>
+              <div class="col-3">
+                <span class="mtc-title text-left">Hora</span>
+                <p class="text-left">{{item.dataFechamentoOcorrencia | date: 'HH:mm'}}</p>
+              </div>
+              <div class="col-6">
+                <span class="mtc-title text-left">Usuário</span>
+                <p class="text-left">{{ item.codUsuarioFechamentoOcorrencia }} - {{ item.nomeUsuarioFechamentoOcorrencia }}</p>
+              </div>
+            </div>           
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.descOcorrencia != ''">
+          <fieldset class="border rounded shadow-sm col mx-auto">            
+            <legend class="mtc-title text-left">Descrição da Ocorrência</legend>
+            <p class="text-justify">{{ item.descOcorrencia | uppercase }}</p>
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.descAcaoCorretiva != ''">
+          <fieldset class="border rounded shadow-sm col mx-auto">            
+            <legend class="mtc-title text-left">Descrição da Ação Corretiva</legend>
+            <p class="text-justify">{{ item.descAcaoCorretiva | uppercase }}</p>
+          </fieldset>
+        </div>
+        <div class="row mt-2" *ngIf="item.descAcaoPreventiva != ''">
+          <fieldset class="border rounded shadow-sm col mx-auto">            
+            <legend class="mtc-title text-left">Descrição da Acção Preventiva</legend>
+            <p class="text-justify">{{ item.descAcaoPreventiva | uppercase }}</p>
+          </fieldset>
+        </div>
+    </div>
+    </ng-template>
+    </div>
+  </div>
+  <div class="col-2"></div>
+
+  </div>
+</app-body>

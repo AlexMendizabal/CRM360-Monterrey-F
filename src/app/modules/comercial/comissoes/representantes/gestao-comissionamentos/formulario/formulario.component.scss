@@ -1,0 +1,116 @@
+.representante{
+  border: 1px solid #B6B3B3;
+}
+
+.representante:hover{
+  background-color: #F4F7F6;
+}
+
+// .total{
+//   border: 2px solid rgb(163, 4, 4);
+// }
+
+// .details {
+//   thead, tr, td {
+//     border: 1px solid #B6B3B3;
+//   }
+// }
+
+#aprovado {
+  color: #008000;
+}
+
+.tableConfig{
+
+  thead, tr, td {
+    border: none;
+  }
+
+  thead, tbody {
+    border: 1px solid #0456A3;
+    border-radius: 7px;
+  }
+
+  th {
+    background-color:#deeafd;
+  }
+
+}
+
+  .tdHead {
+    background-color:#deeafd;
+    border: 1px solid #fff;
+    font-size: 0.7rem;
+    font-weight: bold;
+  }
+
+  .tdBody {
+    border: 1px solid #fff;
+    font-size: 0.7rem;
+  }
+
+  .borderCard {
+    border: solid 1px #deeafd;
+  }
+
+  .tdPrimaryLarge {
+    width: 45%;
+    background:#deeafd;
+  }
+
+  .tdPrimarySmall {
+    width: 5%;
+    background:#deeafd;
+  }
+
+  .tdAprovedLarge {
+    width: 45%;
+    background:#71ee8f;
+  }
+
+  .tdAprovedSmall {
+    width: 5%;
+    background:#71ee8f;
+  }
+
+  .tdReprovedLarge {
+    width: 45%;
+    background:#f18282;
+  }
+
+  .tdReprovedSmall {
+    width: 5%;
+    background:#f18282;
+  }
+
+  .totalColor {
+    background: #FCB4B4;
+  }
+
+  .totalColorBold {
+    font-weight: bold;
+    background: #FCB4B4;
+  }
+
+  .totalColorBoldUpper {
+    text-transform: uppercase;
+    font-weight: bold;
+    background: #FCB4B4;
+  }
+
+  .primaryColor {
+    background: #3E0752;
+    color: #fff;
+  }
+
+  .secondaryColor {
+    background: #CD7940;
+  }
+
+  .radiusLeft {
+    border-top-left-radius: 10px;
+  }
+
+  .radiusRight {
+    border-top-right-radius: 10px;
+  }

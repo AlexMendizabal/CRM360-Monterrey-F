@@ -1,0 +1,56 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    (click)="putTiposFluxoCaixa()"
+    [disabled]="form.status == 'INVALID'"
+    >
+    Cadastrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col">
+      <form autocomplete="off" [formGroup]="form">
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-4">
+            <label for="tipo"> Tipo </label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="DESC_TIPO"
+              bindValue="COD_TIPO"
+              placeholder="Selecione..."
+              formControlName="COD_TIPO"
+              [ngClass]="onFieldError('COD_TIPO') + ' ' + onFieldRequired('COD_TIPO')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('COD_TIPO')"
+              message="Tipo de documento é obrigatório.">
+            </invalid-form-control>
+          </div>
+          <div class="form-group col-md-4">
+            <div class="form-group col-md-12">
+              <label for="lancamento"> Descrição do lançamento </label>
+              <input
+                id="lancamento"
+                type="text"
+                class="form-control"
+                placeholder="DIGITE..."
+                formControlName="DESC_TIPO_LANCAMENTO"
+                [ngClass]="onFieldError('DESC_TIPO_LANCAMENTO') + ' ' + onFieldRequired('DESC_TIPO_LANCAMENTO')">
+            </div>
+            <invalid-form-control
+              [show]="onFieldInvalid('DESC_TIPO_LANCAMENTO')"
+              message="Tipo de documento é obrigatório.">
+            </invalid-form-control>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

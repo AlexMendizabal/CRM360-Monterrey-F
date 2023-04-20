@@ -1,0 +1,52 @@
+/* INÍCIO CSS BOX */
+.action-label .icon {
+    color: #FFFFFF;
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25rem;
+    width: 3.5rem;
+}
+.action-label .icon i {
+    font-size: 1.5rem;
+}
+.background-darkBlue {
+    background-color: #005fdc;
+}
+.action-label .info.darkBlue {
+    box-shadow: inset 0 0 0 0 #005fdc;
+    border-color: #005fdc;
+}
+
+.action-label .info {
+    border-top: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    border-top-right-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+    padding: .575rem 1.5rem;
+    width: calc(100% - 3.5rem);
+    transition: all ease 0.8s;
+    -moz-transition: all ease 0.8s;
+    -webkit-transition: all ease 0.8s;
+    -o-transition: all ease 0.8s;
+}
+.darkBlue {
+    color: #005fdc;
+}
+.action-label:hover {
+    cursor: pointer;
+}
+.action-label:hover .info .title {
+	color: #FFFFFF;
+}
+.action-label:hover .info .subtitle {
+	color: #000000;
+}
+.action-label:hover .info.darkBlue {
+	border-top: 1px solid #005fdc;
+	border-right: 1px solid #005fdc;
+	border-bottom: 1px solid #005fdc;
+  //box-shadow: inset 500px 0 0 0 #005fdc;
+  background-color: #005fdc;
+}
+
+/* FIM CSS BOX */

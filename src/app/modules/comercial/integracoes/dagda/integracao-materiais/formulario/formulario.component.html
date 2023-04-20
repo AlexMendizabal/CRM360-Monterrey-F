@@ -1,0 +1,258 @@
+<loader-spinner-full-screen *ngIf="spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!validForm || submittingForm || inactiveForDelete">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!spinnerFullScreen">
+  <div class="row">
+    <div class="col-lg-6">
+      <div [hidden]="form.getRawValue().codMaterial != null">
+        <comercial-integracao_dagda-materiais-templates-material-principal
+          [linhas]="linhas"
+          [classes]="classes"
+          [limparMaterialSelecionado]="limparMaterialPrincipal"
+          (loaderNavbar)="onLoaderNavbar($event)"
+          (materialPrincipal)="materialPrincipal($event)">
+        </comercial-integracao_dagda-materiais-templates-material-principal>
+
+        <div class="row">
+          <div class="col">
+            <hr>
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="form">
+        <div [hidden]="form.getRawValue().codMaterial === null">
+          <div class="row mb-3">
+            <div class="col mt-auto">
+              <div class="mtc-title mb-0">Associação material TID</div>
+            </div>
+            <div class="col" *ngIf="form.getRawValue().codMaterial != null && form.getRawValue().idMatTidDagda == null">
+              <div class="d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="onLimparMaterialPrincipal()">
+                  <i class="fas fa-trash"></i>
+                  <span>Limpar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-2">
+              <label for="codMaterial">Cód. Material</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nomeGrupo"
+                formControlName="codMaterial"
+                (input)="onInput()"
+                autocomplete="new-password">
+              <invalid-form-control [show]="onFieldInvalid('codMaterial')" message="Código é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-7">
+              <label for="nomeMaterial">Material</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nomeGrupo"
+                formControlName="nomeMaterial"
+                (input)="onInput()"
+                autocomplete="new-password">
+              <invalid-form-control [show]="onFieldInvalid('nomeMaterial')" message="Material é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-md-3">
+							<label for="status"> Situação </label>
+							<ng-select
+								[searchable]="true"
+								[clearable]="true"
+								[items]="situacao"
+								[virtualScroll]="true"
+								labelForId="status"
+								bindLabel="ds"
+								bindValue="cd"
+								placeholder="Selecione..."
+								formControlName="status"
+								[ngClass]="onFieldError('status') + ' ' + onFieldRequired('status')"
+							>
+							</ng-select>
+							<invalid-form-control
+								[show]="onFieldInvalid('status')"
+								message="Situação é obrigatório.">
+							</invalid-form-control>
+						</div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <hr>
+            </div>
+          </div>
+        </div>
+
+        <div formArrayName="assocMateriais">
+          <div class="row" *ngIf="showMateriais && form.value.assocMateriais.length > 0">
+            <div class="col">
+              <div class="mtc-title">Materiais Associados</div>
+              <custom-table [config]="tableConfigAssocMateriais">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th scope="col" style="width: 95%">Material</th>
+                    <th scope="col" style="width: 5%"></th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let material of assocMateriais.controls; let i = index" [formGroupName]="i">
+                    <td style="width: 95%">
+                      {{ form.value.assocMateriais[i].codMaterial }} - {{ form.value.assocMateriais[i].nomeMaterial | uppercase }}
+                    </td>
+                    <td class="text-center" style="width: 5%">
+                      <btn-icon
+                        icon="fas fa-trash"
+                        size="small"
+                        (click)="onDeleteMaterial(i, form.value.codMaterial)">
+                      </btn-icon>
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+            </div>
+          </div>
+          <div class="row" *ngIf="showMateriais && form.value.assocMateriais.length == 0">
+            <div class="col">
+              <message
+                icon="fas fa-exchange-alt"
+                text="Nenhuma associação encontrada">
+              </message>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-lg-6 border-left">
+      <div class="row" #scrollToFilter>
+        <div class="col">
+          <div class="row mb-2">
+            <div class="col mt-auto">
+              <div class="mtc-title mb-0">Pesquisar por materiais dagda para associação</div>
+            </div>
+            <div class="col">
+              <div class="d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary"
+                  (click)="getMateriaisDagda()"
+                  >
+                  <i class="fas fa-search"></i>
+                  <span>Pesquisar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <advanced-filter>
+            <form [formGroup]="form" autocomplete="off">
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label for="cdDagda">Código Dagda</label>
+                  <ng-select
+                    [searchable]="true"
+                    [clearable]="true"
+                    [items]="materiaisLista"
+                    [virtualScroll]="true"
+                    [multiple]="true"
+                    [closeOnSelect]="false"
+                    placeholder="Selecione..."
+                    [loading]="loadingDagda"
+                    labelForId="cdDagda"
+                    bindLabel="DS_MATE"
+                    bindValue="CD_MATE"
+                    id="cdDagda"
+                    (change) ="resetDagda()"
+                    formControlName="cdDagda"
+                    [ngClass]="onFieldError('cdDagda') + ' ' + onFieldRequired('cdDagda')"
+                    >
+                  </ng-select>
+                  <invalid-form-control
+                    [show]="onFieldInvalid('cdDagda')"
+                    message="Código Dagda é obrigatório.">
+                  </invalid-form-control>
+                </div>
+              </div>
+            </form>
+          </advanced-filter>
+        </div>
+      </div>
+      <div class="row" *ngIf="searchingDagda === true">
+        <div class="col">
+          <message
+            icon="fas fa-cog fa-spin"
+            text="Estamos pesquisando os materiais para você...">
+          </message>
+        </div>
+      </div>
+      <div class="col" *ngIf="matDagda.length > 0">
+        <div class="row mb-2">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Seleção de materiais</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                (click)="onAssociarMateriais()"
+                class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Associar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <custom-table [config]="tableConfig" [hidden] = "!noResult">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th scope="col" class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="toggleAll ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll()">
+                    </btn-icon>
+                  </th>
+                  <th class="text-center"> Código</th>
+                  <th class="text-left"> Material</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody >
+                <tr *ngFor="let lista of matDagda; let i = index">
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="lista.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onCheckMaterial(i, lista)">
+                    </btn-icon>
+                  </td>
+                  <td class="text-center">{{ lista.CD_MATE }}</td>
+                  <td class="text-left">{{ lista.NM_MATE }}</td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>

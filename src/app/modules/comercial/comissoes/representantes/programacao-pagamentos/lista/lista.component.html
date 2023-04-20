@@ -1,0 +1,289 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Programação de Pagamentos">
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" >
+  <div class="row" >
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-5">
+              <label for="codRepresentante">Representante</label>
+              <ng-select
+                  type='text'
+                  [items]="representantes"
+                  [searchable]="true"
+                  [clearable]="false"
+                  placeholder="Selecione..."
+                  bindLabel="nomeRepresentante"
+                  bindValue="codRepresentante"
+                  formControlName="codRepresentante">
+                </ng-select>
+            </div>
+
+            <div class="form-group col-lg-5">
+              <label for="codStatus">Status</label>
+              <ng-select
+                    type='text'
+                    [items]="situacao"
+                    [searchable]="true"
+                    [clearable]="false"
+                    [virtualScroll]="true"
+                    [hideSelected]="true"
+                    placeholder="Selecione..."
+                    bindLabel="nomeSituacao"
+                    bindValue="codSituacao"
+                    formControlName="codStatus"
+                  >
+                </ng-select>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row"  *ngIf="dados.length > 0 && !dadosEmpty">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!showDetailPanel ">
+      </subtitles>
+    </div>
+  </div>
+  <div class="row" >
+    <div [ngClass]="{'col': !showDetailPanel, 'col-4 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig" *ngIf="dados.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr >
+            <th scope="col" class="text-center hover" *ngIf="!showDetailPanel">
+              <thead-sorter
+                value="Código"
+                [active]="orderBy == 'codPreco'"
+                [sort]="orderType"
+                (click)="setOrderBy('codPreco')"
+                [hidden]="showDetailPanel">
+              </thead-sorter>
+            </th>
+
+            <th scope="col">Razão Social</th>
+
+            <th scope="col">Cpf</th>
+
+            <th scope="col"
+            [hidden]="showDetailPanel">Valor NF</th>
+
+            <th scope="col"
+            [hidden]="showDetailPanel">Retenções</th>
+
+            <th scope="col"
+            [hidden]="showDetailPanel">Valor Comissão</th>
+
+          <th scope="col"
+          [hidden]="showDetailPanel">
+          Data Previsão
+          </th>
+
+          <th scope="col"
+          [hidden]="showDetailPanel">
+          Data Pagamento
+          </th>
+
+          <th scope="col"
+          [hidden]="showDetailPanel">
+        </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dados; let i = index;"
+          [class.table-active]="item.codRepresentante == codigo"
+          >
+            <td
+              class="text-center hover"
+              (click)="onDetails(item)"
+              [hidden]="showDetailPanel"
+              [ngClass]="classStatusBorder(item)">
+              {{ item.codRepresentanteTid }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(item)"
+              >
+              {{ item.nomeRepresentante }}
+            </td>
+            <td
+              *ngIf="item.cpfCnpj !== ''"
+              class="hover"
+              (click)="onDetails(item)">
+              {{ item.cpfCnpj | cpf }}
+            </td>
+            <td
+              *ngIf="item.cpfCnpj === '' || item.cpfCnpj === null"
+              class="hover"
+              (click)="onDetails(item)">
+              NÃO INFORMADO
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(item)"
+              [hidden]="showDetailPanel">
+              {{ item.valorNotaFiscal | currency:'BRL':'symbol':'1.2-2' }}
+            </td>
+
+            <td
+              class="hover"
+              (click)="onDetails(item)"
+              [hidden]="showDetailPanel">
+              {{ item.valorImpostos | currency:'BRL':'symbol':'1.2-2' }}
+            </td>
+
+            <td
+            class="hover"
+            (click)="onDetails(item)"
+            [hidden]="showDetailPanel">
+            {{ item.valorComissao | currency:'BRL':'symbol':'1.2-2' }}
+          </td>
+
+            <td [hidden]="showDetailPanel">
+              {{ item.dataProgramacaoPagamento | date: 'dd/MM/yyyy' }}
+            </td>
+
+            <td [hidden]="showDetailPanel">
+              {{ item.dataPagamento | date: 'dd/MM/yyyy' }}
+            </td>
+
+            <td [hidden]="showDetailPanel">
+              <span class="mr-3"  placement="right" container="body">
+                <btn-icon
+                  *ngIf="item.codSituacao === 7"
+                  icon="fas fa-edit"
+                  size="medium"
+                  color="primary"
+                  tooltip="Inserir Data"
+                  (click)="openModal(template, i); setFormDate(item)">
+                </btn-icon>
+
+                <btn-icon
+                  *ngIf="item.dataProgramacaoPagamento != '' && item.codSituacao === 8"
+                  icon="fab fa-product-hunt"
+                  size="medium"
+                  color="success"
+                  tooltip="Dar baixa"
+                  (click)="onSubmitPagamento(item); setFormDate(item)">
+                </btn-icon>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && dadosLoaded"></empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-8" [hidden]="!showDetailPanel">
+
+      <detail-panel [panelTitle]="detailPanelTitle">
+        <custom-table [config]="tableConfigMateriais"
+        *ngIf="representantesDetail.length > 0"
+        >
+          <ng-template #thead let-thead >
+            <tr>
+              <th scope="col" class="text-center">Representante</th>
+              <th scope="col" class="text-center">Banco</th>
+              <th scope="col">Tipo de Conta</th>
+              <th scope="col" class="text-center">Titular</th>
+              <th scope="col" class="text-center">Agência</th>
+              <th scope="col" class="text-center">C/C</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor='let item of representantesDetail'>
+              <td class="text-center">{{ item.nomeRepresentante }}</td>
+              <td class="text-center">{{ item.nomeBanco }}</td>
+              <td class="text-center">{{ item.tipoConta }}</td>
+              <td class="text-center">{{ item.nrAgencia }}</td>
+              <td class="text-center">{{ item.nrContaCorrente }}</td>
+              <td class="text-center">{{ item.nomeTitularConta }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+
+  <ng-template #template>
+
+    <div class="modal-body">
+      <button type="button" class="close pull-right" (click)="closeModal(expedicao)" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div class="mtc-title text-center">Edição e baixa de pagamento</div>
+      <div class="mtc-title text-center" style="font-size: 0.7rem;">REPRESENTANTE: {{ nomeRepresentante | uppercase }}</div>
+      <form [formGroup]="formDate" autocomplete="off">
+        <div class="row mt-2">
+          <div class="form-group col-lg-3"></div>
+          <div class="form-group col-lg-6">
+            <div class="mtc-title text-center" style="font-size: 0.7rem;">Data de Programação</div>
+            <input
+              style="text-align: center;"
+              class="form-control"
+              id="dtProgramacao"
+              type="text"
+              bsDatepicker
+              [daysDisabled]="[6,0]"
+              [minDate]="minDate"
+              formControlName="dataProgramacao"
+              >
+            </div>
+              <div class="form-group col-lg-3"></div>
+          </div>
+        </form>
+        <div class="row mt-2">
+          <div class="col" style="text-align: center;">
+
+          <button
+            type="button"
+            class="btn btn-primary btn-sm "
+            (click)="modalRef.hide(); onSubmitProgramacao();"
+            >
+            Salvar
+          </button>
+
+        </div>
+      </div>
+          <div class="form-group col-lg-2"></div>
+
+
+    </div>
+  </ng-template>
+</app-body>

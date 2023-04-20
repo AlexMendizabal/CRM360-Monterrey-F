@@ -1,0 +1,634 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <!-- <button
+    (click)="openModal(pesquisaDeClientes)"
+    [disabled]="isDisable"
+  >
+    Pesquisar Cliente
+  </button> -->
+  <button
+    [disabled]="form.status == 'INVALID' || isDisable"
+    (click) = "postPedido()"
+  >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12" [disabled]="formDisabled">
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+        <legend>Datos del documento</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="cdPedido">Nº del documento</label>
+            <input
+                type="text"
+                class="form-control"
+                id="cdPedido"
+                placeholder="Escribelo..."
+                formControlName="CD_PEDI"
+                [ngClass]="onFieldRequired('CD_PEDI')"
+              />
+              <invalid-form-control [show]="onFieldInvalid('CD_PEDI')" message="Campo obligatorio"></invalid-form-control>
+            </div>
+          <div class="form-group col-md-6 pr-0">
+            <label for="DT_PEDI"> Fecha de expedición del documento </label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="far fa-calendar-alt"></i>
+                </span>
+              </div>
+              <input
+              class="form-control"
+              id="DT_PEDI"
+              type="text"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              placeholder="Escribelo..."
+              formControlName="DT_PEDI"
+              [ngClass]="onFieldRequired('DT_PEDI')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('DT_PEDI')" message="Campo obligatorio"></invalid-form-control>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="form-row">
+          <div class="form-group col-md-6 pl-0">
+            <label for="QT_PESO">Peso (Kg's)</label>
+            <input
+              type="number"
+              class="form-control"
+              id="QT_PESO"
+              placeholder="Escribelo..."
+              formControlName="QT_PESO"
+              [ngClass]="onFieldRequired('QT_PESO')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('QT_PESO')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pr-0">
+            <label for="TIPO_ENTR">Tipo de orden</label>
+            <select
+              class="form-control custom-select"
+              id="TIPO_ENTR"
+              formControlName="TIPO_ENTR"
+              [ngClass]="onFieldRequired('TIPO_ENTR')"  
+            >
+              <option value="Entrega">Entrega</option>
+              <option value="Servico">Serviço</option>
+            </select>
+          <invalid-form-control [show]="onFieldInvalid('TIPO_ENTR')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="NOTA_FISC">Factura</label>
+            <input
+              type="number"
+              class="form-control"
+              id="NOTA_FISC"
+              placeholder="Escribelo..."
+              formControlName="NOTA_FISC"
+              [ngClass]="onFieldRequired('NOTA_FISC')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NOTA_FISC')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pr-0">
+            <label for="DT_EMIS_NOTA_FISC"> Fecha de emisión de la factura </label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="far fa-calendar-alt"></i>
+                </span>
+              </div>
+              <input
+                class="form-control"
+                id="DT_EMIS_NOTA_FISC"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                placeholder="Escribelo..."
+                formControlName="DT_EMIS_NOTA_FISC"
+                [ngClass]="onFieldRequired('DT_EMIS_NOTA_FISC')"
+              />
+              <invalid-form-control [show]="onFieldInvalid('DT_EMIS_NOTA_FISC')" message="Campo obligatorio"></invalid-form-control>
+            </div>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="VL_NOTA_FISC">Monto de la factura</label>
+            <input
+              type="text"
+              class="form-control"
+              id="VL_NOTA_FISC"
+              placeholder="Escribelo..."
+              currencyMask
+              [options]="{align: 'left', 'prefix': 'R$', thousands: '.', decimal: ','}"
+              formControlName="VL_NOTA_FISC"
+              [ngClass]="onFieldRequired('VL_NOTA_FISC')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('VL_NOTA_FISC')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pr-0"></div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+        <legend>Dados do cliente</legend>
+        <!-- <div class="d-flex justify-content-between">
+          <div class="form-group">
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" id="pessoaJuridica" value="J" formControlName="TP_PESS">
+              <label class="custom-control-label" for="pessoaJuridica">Pessoa Jurídica</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" id="pessoaFisica" value="F" formControlName="TP_PESS">
+              <label class="custom-control-label" for="pessoaFisica">Pessoa Física</label>
+            </div>
+          </div>
+          <div
+          >
+            <button
+              class="font-weight-bold btn border-0"
+              [disabled]="isDisable"
+              (click)="openModal(pesquisaDeClientes)"
+            >
+              <a href="javascript:void(0)">Selecionar</a>
+            </button>
+          </div>
+        </div> -->
+
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="CD_CLIE_ORIG">Identificación del cliente</label>
+            <input
+              type="text"
+              class="form-control"
+              id="CD_CLIE_ORIG"
+              placeholder="Escribelo..."
+              formControlName="CD_CLIE_ORIG"
+              [ngClass]="onFieldRequired('CD_CLIE_ORIG')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('CD_CLIE_ORIG')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pr-0">
+            <label for="CD_CLIE_CNPJ_CPF">NIT</label>
+            <input
+              type="text"
+              class="form-control"
+              id="CD_CLIE_CNPJ_CPF"
+              placeholder="Escribelo..."
+              formControlName="CD_CLIE_CNPJ_CPF"
+              [ngClass]="onFieldRequired('CD_CLIE_CNPJ_CPF')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('CD_CLIE_CNPJ_CPF')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+          <!-- <div class="form-group col-md-6 pr-0" *ngIf="form.get('TP_PESS').value == 'F'">
+            <label for="CD_CLIE_CNPJ_CPF">CPF</label>
+            <input
+              type="text"
+              class="form-control"
+              id="CD_CLIE_CNPJ_CPF"
+              placeholder="Escribelo..."
+              formControlName="CD_CLIE_CNPJ_CPF"
+              [ngClass]="onFieldRequired('CD_CLIE_CNPJ_CPF')"
+              [textMask]="{mask: MASKS.cpf.textMask}"
+            />
+            <invalid-form-control [show]="onFieldInvalid('CD_CLIE_CNPJ_CPF')" message="Campo obligatorio"></invalid-form-control>
+          </div> -->
+        </div>
+        <div class="form-row">
+          <div class="form-group col p-0">
+            <label for="NM_CLIE">Razón social</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_CLIE"
+              placeholder="Escribelo..."
+              formControlName="NM_CLIE"
+              [ngClass]="onFieldRequired('NM_CLIE')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_CLIE')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col p-0">
+            <label for="NM_FANT_CLIE">Nombre de fantasía</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_FANT_CLIE"
+              placeholder="Escribelo..."
+              formControlName="NM_FANT_CLIE"
+              [ngClass]="onFieldRequired('NM_FANT_CLIE')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_FANT_CLIE')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+        <legend>Lugar de entrega de datos</legend>
+        <!-- <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="CD_CEP">CEP</label>
+            <input
+              type="text"
+              class="form-control"
+              id="CD_CEP"
+              placeholder="Escribelo..."
+              formControlName="CD_CEP"
+              [ngClass]="onFieldRequired('CD_CEP')"
+              (keyup.enter)="checkCEP($event.target.value)"
+              cep [textMask]="{mask: MASKS.cep.textMask}"
+            />
+            <invalid-form-control [show]="onFieldInvalid('CD_CEP')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pr-0"></div>
+        </div> -->
+        <div class="form-row">
+          <div class="form-group col p-0">
+            <label for="DS_LOCA_ENTR">Lugar de entrega</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DS_LOCA_ENTR"
+              placeholder="Escribelo..."
+              formControlName="DS_LOCA_ENTR"
+              [ngClass]="onFieldRequired('DS_LOCA_ENTR')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('DS_LOCA_ENTR')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <!-- <div class="form-group col-md-6 pl-0">
+            <label for="DS_ESTA">UF</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DS_ESTA"
+              placeholder="Escribelo..."
+              formControlName="DS_ESTA"
+              [ngClass]="onFieldRequired('DS_ESTA')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('DS_ESTA')" message="Campo obligatorio"></invalid-form-control>
+          </div> -->
+          <div class="form-group col p-0">
+            <label for="DS_CIDA">Ciudad</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DS_CIDA"
+              placeholder="Escribelo..."
+              formControlName="DS_CIDA"
+              [ngClass]="onFieldRequired('DS_CIDA')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('DS_CIDA')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+        </div>
+        <!-- <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="DS_BAIR">Bairro</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DS_BAIR"
+              placeholder="Escribelo..."
+              formControlName="DS_BAIR"
+              [ngClass]="onFieldRequired('DS_BAIR')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('DS_BAIR')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pr-0">
+            <label for="IBGE">Código IBGE</label>
+            <input
+              type="number"
+              class="form-control"
+              id="IBGE"
+              placeholder="Escribelo..."
+              formControlName="IBGE"
+              [ngClass]="onFieldRequired('IBGE')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('IBGE')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+        </div> -->
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+        <legend>Datos adicionales</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="CD_EMPR">Expedidor</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [loading]="loadingEmpresas"
+              [items]="empresas"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              labelForId="empresa"
+              bindLabel="nome"
+              bindValue="idFilial"
+              id="empresa"
+              [loading]="loadingFiliais"
+              [ngClass]="onFieldRequired('CD_EMPR')"
+              formControlName="CD_EMPR"
+              placeholder="SELECCIONE..."
+            >
+            </ng-select>
+          </div>
+          <div class="form-group col-md-6 pl-0">
+            <label for="CD_EMPR_CNPJ_CPF">CNPJ del remitente</label>
+            <input
+              type="text"
+              class="form-control"
+              id="CD_EMPR_CNPJ_CPF"
+              placeholder="Escribelo..."
+              formControlName="CD_EMPR_CNPJ_CPF"
+              [ngClass]="onFieldRequired('CD_EMPR_CNPJ_CPF')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('CD_EMPR_CNPJ_CPF')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+        </div>
+        <br>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="PRAZO">Fecha límite de asistencia</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="far fa-calendar-alt"></i>
+                </span>
+              </div>
+              <input
+              class="form-control"
+              id="PRAZO"
+              type="text"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              placeholder="Escribelo..."
+              formControlName="PRAZO"
+              [ngClass]="onFieldRequired('PRAZO')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('PRAZO')" message="Campo obligatorio"></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-group col-md-6 pr-0"></div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="CD_PRAC">Código de lugar</label>
+            <input
+              type="text"
+              class="form-control"
+              id="CD_PRAC"
+              placeholder="Escribelo..."
+              formControlName="CD_PRAC"
+              [ngClass]="onFieldRequired('CD_PRAC')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('CD_PRAC')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pr-0">
+            <label for="DS_PRAC">Descripción de la plaza</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DS_PRAC"
+              placeholder="Escribelo..."
+              formControlName="DS_PRAC"
+              [ngClass]="onFieldRequired('DS_PRAC')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('DS_PRAC')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="CD_REGI_ENTR">Código de región</label>
+            <input
+              type="text"
+              class="form-control"
+              id="CD_REGI_ENTR"
+              placeholder="Escribelo..."
+              formControlName="CD_REGI_ENTR"
+              (blur)="calculaPrazoAtendimento()"
+              (keyup.enter)="calculaPrazoAtendimento()"
+              [ngClass]="onFieldRequired('CD_REGI_ENTR')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('CD_REGI_ENTR')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pr-0">
+            <label for="DS_REGI_ENTR">Descripción de la región</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DS_REGI_ENTR"
+              placeholder="Escribelo..."
+              formControlName="DS_REGI_ENTR"
+              [ngClass]="onFieldRequired('DS_REGI_ENTR')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('DS_REGI_ENTR')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="SEGM_CLIE">Seguimiento del cliente</label>
+            <input
+              type="text"
+              class="form-control"
+              id="SEGM_CLIE"
+              placeholder="Escribelo..."
+              formControlName="SEGM_CLIE"
+              [ngClass]="onFieldRequired('SEGM_CLIE')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('SEGM_CLIE')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pr-0">
+            <label for="CD_REST">Restricción de transporte</label>
+            <select
+              class="form-control custom-select"
+              [ngClass]="onFieldRequired('CD_REST')"
+              formControlName="CD_REST"
+              id="CD_REST"
+              placeholder="Escribelo..."
+            >
+              <option></option>
+              <option *ngFor="let item of restricoesTransporte" [value]="item.id">{{ item.nome }}</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('CD_REST')" message="Campo obligatorio"></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="observacao">Observación</label>
+          <textarea
+            name="observacao"
+            id="observacao"
+            cols="30"
+            rows="10"
+            class="form-control"
+            formControlName="DS_OBSE"
+          >
+          </textarea>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-6 pt-2 pb-2 mx-auto">
+        <legend>Anexos</legend>
+        <div class="form-group border rounded p-1">
+          <div>
+            <label
+              for="documento"
+              class="w-100 d-flex justify-content-between align-items-center m-0 py-1"
+              [ngClass]="formDisabled ? 'no-drop' : 'hover'"
+            >
+              Novo Documento
+            </label>
+            <input
+              id="documento"
+              type="file"
+              (change)="appendFile($event.target.files)"
+              class="d-none"
+              >
+          </div>
+        </div>
+        <ul>
+          <li class="d-flex justify-content-between" *ngFor="let item of documentos">
+            <div>{{ item.NM_DOCU | uppercase }}</div>
+            <div [hidden]="!item.ID_LOGI_COLE_DOCU">
+              <a
+                [href]="item.LINK"
+                target="_blank"
+                class="btn-icon-sm mx-2 text-black"
+                tooltip="visualizar"
+              >
+                <i class="far fa-eye"></i>
+              </a>
+              <button
+                class="btn-icon-sm mx-2 hover"
+                tooltip="excluir"
+                (click)="onRemove(item)"
+                >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </fieldset>
+    </fieldset>
+  </form>
+  <!-- <ng-template #pesquisaDeClientes>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Pesquisa de clientes</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingClientes">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <advanced-filter>
+        <form [formGroup]="formPesquisaCliente">
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="cdCliente">Código do Cliente</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="1" selected>Código, nome fantasia ou razão social</option>
+                <option value="2">CPF ou CNPJ</option>
+                <option value="3">Cidade</option>
+                <option value="4">Código</option>
+                <option value="5">Contatos</option>
+              </select>
+            </div>
+            <div class="form-group col">
+              <label>Termo de Pesquisa</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  (keyup.enter)="getClientes()"
+                >
+                <div class="input-group-append">
+                  <span
+                    class="input-group-text hover"
+                    (click)="getClientes()"
+                  >
+                    <i class="fas fa-search"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-2">
+              <label for="cdCliente">Situação</label>
+              <select
+                class="form-control custom-select"
+                formControlName="situacao"
+              >
+                <option value="Ativo">Ativos</option>
+                <option value="Inativo">Inativos</option>
+                <option value="Potenci">Potenciais</option>
+                <option value="Arquivado">Arquivados</option>
+                <option value="T">Todos</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <div class="d-flex" *ngIf="!loadingClientes && clientes.length !== 0">
+        <accordion [closeOthers]="true" class="w-100">
+          <accordion-group
+            class="mb-1"
+            heading="({{cliente.codCliente}}) {{cliente.razaoSocial}}"
+            *ngFor="let cliente of clientes"
+            (click)="viewDetails(cliente)"
+          >
+            <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingEnderecos">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <custom-table *ngIf="!loadingEnderecos && (enderecos.length > 0)">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th>Cidade</th>
+                  <th>Bairro</th>
+                  <th>UF</th>
+                  <th>Endereço</th>
+                  <th></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let endereco of enderecos">
+                  <td>{{ endereco.cidade }}</td>
+                  <td>{{ endereco.bairro }}</td>
+                  <td>{{ endereco.uf }}</td>
+                  <td>{{ endereco.endereco }}</td>
+                  <td>
+                    <button
+                      class="btn-icon-sm"
+                      tooltip="Salvar cliente e endereço"
+                      container="body"
+                      (click)="setEndereco(endereco);modalRef.hide()"
+                    >
+                      <i class="far fa-save"></i>
+                    </button>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </accordion-group>
+        </accordion>
+      </div>
+    </div>
+  </ng-template> -->
+</app-body>

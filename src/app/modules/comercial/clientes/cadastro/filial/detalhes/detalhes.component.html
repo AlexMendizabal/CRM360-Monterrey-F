@@ -1,0 +1,43 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row" *ngIf="tipoEmpresaLoaded">
+  <div class="col">
+    <div class="mtc-title">Filial</div>
+    <div *ngIf="tipoEmpresa == 'matriz'">
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Tipo de empresa</label>
+          <div>MATRIZ</div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="tipoEmpresa == 'filial'">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Tipo de empresa</label>
+          <div>{{ filial.descTipo }}</div>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Código da matriz</label>
+          <div>
+            <a [routerLink]="['/comercial/clientes/cadastro', filial.idMatriz, 'dados-faturamento']" target="_blank">{{ filial.idMatriz }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>CNPJ da matriz</label>
+          <div>{{ filial.cnpjMatriz }}</div>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Razão social da matriz</label>
+          <div>{{ filial.razaoSocialMatriz }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="row py-5 my-5" *ngIf="tipoEmpresa == ''">
+      <div class="col">
+        <empty-result message="Nenhuma informação encontrada"></empty-result>
+      </div>
+    </div>
+  </div>
+</div>

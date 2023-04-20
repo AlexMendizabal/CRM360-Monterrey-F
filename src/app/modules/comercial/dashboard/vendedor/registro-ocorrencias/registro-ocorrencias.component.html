@@ -1,0 +1,12 @@
+<div id="registro-ocorrencias" class="row align-items-center">
+  <div class="col">
+    <div [hidden]="!chartLoaded">
+      <div id="pie-chart" class="amcharts" [hidden]="chartEmpty" tooltip="tooltip" containerClass="d-none" triggers="click"></div>
+      <div class="text-center" *ngIf="sumOcorrencias > 0">Total de <b>{{ sumOcorrencias }} ocorrências</b></div>
+      <empty-result message="Nenhuma informação encontrada" *ngIf="chartEmpty"></empty-result>
+    </div>
+    <div *ngIf="!chartLoaded" class="text-center">
+      <div class="spinner-border text-dark"></div>
+    </div>
+  </div>
+</div>

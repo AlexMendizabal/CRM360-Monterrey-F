@@ -1,0 +1,18 @@
+{
+  "login": {
+    "browserTitle": "Login",
+    "form": {
+      "button": "Proceder",
+      "password": "Contraseña",
+      "user": "Usuario"
+    },
+    "text": "para unirse a MTCorp",
+    "title": "Inicie sesión"
+  },
+
+  "logistica": {
+    "home" : {
+      "titlePage": "Home"
+    }
+  }
+}

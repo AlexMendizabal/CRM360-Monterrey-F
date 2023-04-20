@@ -1,0 +1,89 @@
+<div class="modal-header">
+  <h4>Búsqueda de Transportadoras</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-4">
+          <label for="buscarPor">Buscar Por</label>
+          <select name="buscarPor" id="buscarPor" class="form-control" formControlName="buscarPor">
+            <option value="ID_LOGI_TRAN">Id</option>
+            <option value="NM_FANT">Nome Fantasia</option>
+            <option value="NR_CNPJ">CNPJ</option>
+          </select>
+        </div>
+        <div class="form-group col-8">
+          <label>TÉRMINO DE BÚSQUEDA</label>
+          <div class="input-group">
+            <input
+            type="text"
+            class="form-control"
+            formControlName="pesquisa"
+            >
+            <div class="input-group-append">
+              <button
+                tooltip="Clique para pesquiar"
+                container="body"
+                class="input-group-text hover"
+                (click)="getTransportadoras()"
+                >
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="spinner-border" role="status" *ngIf="loading">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <table *ngIf="transportadoras?.length != 0 && !loading"  class="table table-sm table-hover custom-border border-left border-right border-bottom text-center table-fixed">
+    <thead class="thead-light">
+      <tr>
+        <th>ID </th>
+        <th>Nome Fantasia</th>
+        <th>Razão Social</th>
+        <th>CNPJ</th>
+        <th style="width:80px" ></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let transportadora of transportadoras; let i = index">
+        <td [ngClass]="transportadora.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+        {{transportadora.ID_LOGI_TRAN | number : '6.0-0'}}
+        </td>
+        <td class="text-truncate">{{ transportadora.NM_FANT }} </td>
+        <td class="text-truncate">{{ transportadora.NM_RAZA_SOCI }}</td>
+        <td>{{ transportadora.NR_CNPJ | cnpj}}</td>
+        <td class="align-middle" style="width:70px">
+          <span class="mr-3" tooltip="Salvar" placement="left" container="body">
+            <button type="button" class="btn-icon-sm" (click)="onSelect(transportadora);">
+              <i class="far fa-save"></i>
+            </button>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div [hidden]="(transportadoras?.length == 0) || (loading)">
+    Mostrando {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+    <pagination
+      [maxSize]="10"
+      [totalItems]="totalItems"
+      (pageChanged)="onPageChanged($event)"
+      [(itemsPerPage)]="itemsPerPage"
+      [boundaryLinks]="true"
+      [(ngModel)]="currentPage"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;">
+    </pagination>
+  </div>
+</div>
+

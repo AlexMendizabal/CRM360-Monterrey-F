@@ -1,0 +1,18 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">SIMILARIDADES / {{ title }}</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row pt-4 px-4" *ngIf="materiais">
+      <div class="col-6 mb-4" *ngFor="let material of materiais">
+        <comercial-ciclo-vendas-cotacoes-formulario-template-card-material
+          [material]="material"
+          (onMaterial)="onMaterial($event)">
+        </comercial-ciclo-vendas-cotacoes-formulario-template-card-material>
+      </div>
+    </div>
+  </div>
+</div>

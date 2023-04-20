@@ -1,0 +1,11 @@
+::ng-deep {
+  @import '../assets/scss/variables';
+
+  #mtcorp {
+    position: relative;
+    width: 100%;
+    #body {
+      padding-top: $navbar-size;
+    }
+  }
+}

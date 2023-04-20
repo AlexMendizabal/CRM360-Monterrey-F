@@ -1,0 +1,95 @@
+<div class="modal-header">
+  <h4>Dados da tabela</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <message
+    *ngIf="loading"
+    icon="fas fa-cog fa-spin"
+    text="Carregando dados da tabela..."
+  >
+  </message>
+  <div *ngIf="!loading">
+    <form [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col-lg-12">
+          <label for="nomePreco">Descrição da Tabela</label>
+          <input
+            class="form-control"
+            id="nomePreco"
+            type="text"
+            formControlName="nomePreco"
+            [ngClass]="onFieldError('nomePreco') + ' ' + onFieldRequired('nomePreco')">
+          <invalid-form-control [show]="onFieldInvalid('nomePreco')" message="Descrição é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-lg-6">
+          <label for="dataInicialVigencia">Data Inicio Vigência</label>
+          <input
+            class="form-control"
+            id="dataInicialVigencia"
+            type="text"
+            formControlName="dataInicialVigencia"
+            bsDatepicker
+            [ngClass]="onFieldError('dataInicialVigencia') + ' ' + onFieldRequired('dataInicialVigencia')">
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="dataFinalVigencia">Data Fim Vigência</label>
+          <input
+          class="form-control"
+          id="dataFinalVigencia"
+          type="text"
+          formControlName="dataFinalVigencia"
+          bsDatepicker
+          [ngClass]="onFieldError('dataFinalVigencia') + ' ' + onFieldRequired('dataFinalVigencia')">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-6">
+          <label for="percentualAcrescimo">Percentual Acréscimo</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="0,00%"
+            currencyMask
+            [options]="{ align: 'left', thousands: '.', decimal: ',', prefix: '', suffix: '%' }"
+            formControlName="percentualAcrescimo"
+            (ngModelChange)="onDesativarDesconto()"
+          >
+        </div>
+        <div class="form-group col-6">
+          <label for="percentualDesconto">Percentual Desconto</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="0,00%"
+            currencyMask
+            [options]="{ align: 'left', thousands: '.', decimal: ',', prefix: '', suffix: '%' }"
+            formControlName="percentualDesconto"
+            (ngModelChange)="onDesativarAcrescimo()"
+          >
+        </div>
+      </div>
+    </form>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <message
+          *ngIf="saving"
+          icon="fas fa-cog fa-spin"
+          text="Criando a tabela de preço..."
+        >
+        </message>
+      </div>
+    <button 
+    class="btn btn-outline-dark" 
+    (click)="saveTabelaPrecos(getParams())"
+    >Cadastrar
+    </button>
+
+    </div>
+  </div>
+</div>

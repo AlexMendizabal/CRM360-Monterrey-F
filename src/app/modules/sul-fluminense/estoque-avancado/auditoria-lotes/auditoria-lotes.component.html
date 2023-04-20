@@ -1,0 +1,493 @@
+<loader-spinner-full-screen *ngIf="carregando"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="carregandoNavBar"></loader-spinner-navbar>
+
+<app-header appTitle="Painel de auditoria Estoque Avançado">
+  <button 
+    (click)="exportarExcel()"
+    [disabled]="!visualizaTabela"
+    >
+    Exportar
+  </button>
+  <button 
+    (click)="onFilter()"
+    [disabled] = "form.status == 'INVALID'"
+    >
+    Filtrar
+  </button>
+</app-header>
+
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!carregando">
+  <advanced-filter>
+    <form id="form-sul-fluminense-auditoria-lotes" [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <label for="relatorio">Tipo de Relatório</label>
+          <!-- INICIO - Template do tooltip de tipo 4 -->
+          <ng-template #tipo4>
+            <div>
+                <p class="text-justify"> Visão aberta por lote, de todos os materiais da consulta de estoque do Faturamento:</p>
+                <ul>
+                  <li><p class="text-justify">ESTOQUE CONSOLIDADO = Visão da consulta de estoque de Faturamento;</p></li>
+                  <li><p class="text-justify">ESTOQUE DETALHADO = Visão da consulta de estoque de Faturamento, aberta por lote;</p></li>
+                  <li><p class="text-justify">ESTOQUE AVANÇADO = Visão consolidada dos lotes disponíveis para conferência, do módulo de Estoque Avançado do sistema TID.</p></li>
+                </ul>
+            </div>
+          </ng-template>
+          <!-- FIM - Template do tooltip de tipo 4 -->
+          <!-- INICIO - Tooltips -->             
+          <i *ngIf = "id_tipo == null" 
+            class="far fa-question-circle hover ml-1" 
+            tooltip="Selecione um tipo de relatório" 
+            placement="auto">
+          </i>
+          <i *ngIf = "id_tipo == '1'" 
+            class="far fa-question-circle hover ml-1" 
+            tooltip="Visão de todos os lotes do sistema, disponíveis para conferência"
+            placement="auto">
+          </i>
+          <i *ngIf = "id_tipo == '2'" 
+            class="far fa-question-circle hover ml-1" 
+            tooltip="Cópia fiel da tela de consulta de estoques do faturamento, do sistema TID, na localização de estoque 'Sul Fluminense Avançado'" 
+            placement="auto">
+          </i>
+          <i *ngIf = "id_tipo == '3'" 
+            class="far fa-question-circle hover ml-1" 
+            [tooltip]="tipo4" 
+            placement="auto">
+          </i>
+          <i *ngIf = "id_tipo == '4'" 
+            class="far fa-question-circle hover ml-1" 
+            tooltip="Auditoria em relação as três visões de estoque no sistema TID. Todas as informações devem ser iguais, para serem consideradas corretas." 
+            placement="auto">
+          </i>
+          <i *ngIf = "id_tipo == '5'" 
+            class="far fa-question-circle hover ml-1" 
+            tooltip="Auditoria em relação as três visões de estoque no sistema TID. Todas as informações devem ser iguais, para serem consideradas corretas." 
+            placement="auto">
+          </i>
+          <!-- FIM - Tooltips -->  
+          <ng-select
+            [searchable]="false"
+            [clearable]="false"
+            [items]="tipoRelatorios"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            labelForId="nome"
+            bindLabel="nome"
+            bindValue="id_tipo"
+            placeholder="Selecione tipo"
+            formControlName="relatorio"
+            (change) = "setTooltip($event); getReset()"
+            [ngClass]="onFieldError('relatorio') + ' ' + onFieldRequired('relatorio')"
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('relatorio')"
+            message="Tipo de relatório é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="linha">Linha</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="linhas"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="true"
+              placeholder="Selecione linha"
+              bindLabel="linha"
+              bindValue="linha"
+              placeholder="Selecione..."
+              formControlName="linhas"
+              (change) = "getClasses()"
+              [ngClass]="onFieldError('linhas') + ' ' + onFieldRequired('linhas')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('linhas')"
+              message="Linha é obrigatório.">
+            </invalid-form-control>
+          </div>
+        <div class="form-group col-md-2">
+          <label for="classe">Classe</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="classes"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            labelForId="classe"
+            bindLabel="classeDescricao"
+            bindValue="classeId"
+            placeholder="Selecione classe"
+            formControlName="classes"
+            (change) = "getMateriais()"
+            [ngClass]="onFieldError('classes') + ' ' + onFieldRequired('classes')"
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('classes')"
+            message="Classes é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="material">Material</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="materiais"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="true"
+              labelForId="material"
+              bindLabel="codigoDescricaoMaterial"
+              bindValue="codigoMaterial"
+              placeholder="Selecione material"
+              formControlName="materiais"
+              [ngClass]="onFieldError('materiais') + ' ' + onFieldRequired('materiais')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('materiais')"
+              message="Materiais é obrigatório.">
+            </invalid-form-control>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="col-12 p-0">
+    <div *ngIf="listaVazia && !carregando"class="text-center p-5" style="height: 80%">
+      <empty-result message="Nenhuma informação encontrada"></empty-result>
+    </div>
+    <div class="table-responsive" *ngIf="!carregando && visualizaTabela && id_tipo_tabela == '1'">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th class="hover" (click)="sort('CODIGO_MATERIAL')">Cód. Material
+              <span *ngIf="key == 'CODIGO_MATERIAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'CODIGO_MATERIAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DESCRICAO_MATERIAL')">Material
+              <span *ngIf="key == 'DESCRICAO_MATERIAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO_MATERIAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DESCRICAO_LINHA')">Linha
+              <span *ngIf="key == 'DESCRICAO_LINHA'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO_LINHA'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('CODIGO_CLASSE')">Cód. Classe
+              <span *ngIf="key == 'CODIGO_CLASSE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'CODIGO_CLASSE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DESCRICAO_CLASSE')">Classe
+              <span *ngIf="key == 'DESCRICAO_CLASSE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO_CLASSE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('LOTE')">Lote
+              <span *ngIf="key == 'LOTE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'LOTE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('QUANTIDADE')">Qtde
+              <span *ngIf="key == 'QUANTIDADE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'QUANTIDADE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DATA_ENTRADA_CLARION')">Dt. Entrada
+              <span *ngIf="key == 'DATA_ENTRADA_CLARION'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DATA_ENTRADA_CLARION'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of listaAuditoria | orderBy: key : reverse | slice: begin : end; let i = index">
+            <td class="text-center">{{item.CODIGO_MATERIAL | number: '0.0-0'}}</td>
+            <td>{{item.DESCRICAO_MATERIAL}}</td>
+            <td>{{item.DESCRICAO_LINHA}}</td>
+            <td class="text-center">{{item.CODIGO_CLASSE | number: '0.0-0'}}</td>
+            <td>{{item.DESCRICAO_CLASSE}}</td>
+            <td class="text-center">{{item.LOTE}}</td>
+            <td class="text-right">{{item.QUANTIDADE | number: '0.3-3'}}</td>
+            <td class="text-center">{{item.DATA_ENTRADA}}</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="table-responsive" *ngIf="!carregando && visualizaTabela && id_tipo_tabela == '2'">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th class="hover" (click)="sort('CODIGO_MATERIAL')">Cód. Material
+              <span *ngIf="key == 'CODIGO_MATERIAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'CODIGO_MATERIAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DESCRICAO_MATERIAL')">Material
+              <span *ngIf="key == 'DESCRICAO_MATERIAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO_MATERIAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DESCRICAO_LINHA')">Linha
+              <span *ngIf="key == 'DESCRICAO_LINHA'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO_LINHA'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('CODIGO_CLASSE')">Cód. Classe
+              <span *ngIf="key == 'CODIGO_CLASSE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'CODIGO_CLASSE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DESCRICAO_CLASSE')">Classe
+              <span *ngIf="key == 'DESCRICAO_CLASSE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO_CLASSE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('ESTOQUE_CONSOLIDADO')">Estoque Consolidado
+              <span *ngIf="key == 'ESTOQUE_CONSOLIDADO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'ESTOQUE_CONSOLIDADO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of listaAuditoria | orderBy: key : reverse | slice: begin : end">
+            <td class="text-center">{{item.CODIGO_MATERIAL | number: '0.0-0'}}</td>
+            <td>{{item.DESCRICAO_MATERIAL}}</td>
+            <td>{{item.DESCRICAO_LINHA}}</td>
+            <td class="text-center">{{item.CODIGO_CLASSE | number: '0.0-0'}}</td>
+            <td>{{item.DESCRICAO_CLASSE}}</td>
+            <td class="text-right">{{item.ESTOQUE_CONSOLIDADO | number: '0.3-3'}}</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="table-responsive" *ngIf="!carregando && visualizaTabela && id_tipo_tabela == '3'">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th class="hover" (click)="sort('CODIGO_MATERIAL')">Cód. Material
+              <span *ngIf="key == 'CODIGO_MATERIAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'CODIGO_MATERIAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DESCRICAO_MATERIAL')">Material
+              <span *ngIf="key == 'DESCRICAO_MATERIAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO_MATERIAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DESCRICAO_LINHA')">Linha
+              <span *ngIf="key == 'DESCRICAO_LINHA'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO_LINHA'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('CODIGO_CLASSE')">Cód. Classe
+              <span *ngIf="key == 'CODIGO_CLASSE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'CODIGO_CLASSE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DESCRICAO_CLASSE')">Classe
+              <span *ngIf="key == 'DESCRICAO_CLASSE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO_CLASSE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('LOTE')">Lote
+              <span *ngIf="key == 'LOTE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'LOTE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('QUANTIDADE')">Qtde
+              <span *ngIf="key == 'QUANTIDADE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'QUANTIDADE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of listaAuditoria | orderBy: key : reverse | slice: begin : end">
+            <td class="text-center">{{item.CODIGO_MATERIAL | number: '0.0-0'}}</td>
+            <td>{{item.DESCRICAO_MATERIAL}}</td>
+            <td>{{item.DESCRICAO_LINHA}}</td>
+            <td class="text-center">{{item.CODIGO_CLASSE | number: '0.0-0'}}</td>
+            <td>{{item.DESCRICAO_CLASSE}}</td>
+            <td class="text-center">{{item.LOTE}}</td>
+            <td class="text-right">{{item.QUANTIDADE | number: '0.3-3'}}</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="table-responsive" *ngIf="!carregando && visualizaTabela && id_tipo_tabela == '4'">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th class="hover" (click)="sort('CODIGO_MATERIAL')">Cód. Material
+              <span *ngIf="key == 'CODIGO_MATERIAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'CODIGO_MATERIAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DESCRICAO_MATERIAL')">Material
+              <span *ngIf="key == 'DESCRICAO_MATERIAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO_MATERIAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DESCRICAO_LINHA')">Linha
+              <span *ngIf="key == 'DESCRICAO_LINHA'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO_LINHA'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('CODIGO_CLASSE')">Cód. Classe
+              <span *ngIf="key == 'CODIGO_CLASSE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'CODIGO_CLASSE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('DESCRICAO_CLASSE')">Classe
+              <span *ngIf="key == 'DESCRICAO_CLASSE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO_CLASSE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('ESTOQUE_CONSOLIDADO')">Estoque Consolidado
+              <span *ngIf="key == 'ESTOQUE_CONSOLIDADO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'ESTOQUE_CONSOLIDADO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('ESTOQUE_DETALHADO')">Estoque Detalhado
+              <span *ngIf="key == 'ESTOQUE_DETALHADO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'ESTOQUE_DETALHADO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover" (click)="sort('ESTOQUE_AVANCADO')">Estoque Avançado
+              <span *ngIf="key == 'ESTOQUE_AVANCADO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'ESTOQUE_AVANCADO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of listaAuditoria | orderBy: key : reverse | slice: begin : end">
+            <td class="text-center">{{item.CODIGO_MATERIAL | number: '0.0-0'}}</td>
+            <td>{{item.DESCRICAO_MATERIAL}}</td>
+            <td>{{item.DESCRICAO_LINHA}}</td>
+            <td class="text-center">{{item.CODIGO_CLASSE | number: '0.0-0'}}</td>
+            <td>{{item.DESCRICAO_CLASSE}}</td>
+            <td class="text-right">{{item.ESTOQUE_CONSOLIDADO | number: '0.3-3'}}</td>
+            <td class="text-right">{{item.ESTOQUE_DETALHADO | number: '0.3-3'}}</td>
+            <td class="text-right">{{item.ESTOQUE_AVANCADO | number: '0.3-3'}}</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="table-responsive" *ngIf="!carregando && visualizaTabela && id_tipo_tabela == '5'">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th class="hover text-nowrap" (click)="sort('SITUACAO')">Situação
+              <span *ngIf="key == 'SITUACAO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'SITUACAO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('SIGLA_FORNEC')">Sigla Fornecedor
+              <span *ngIf="key == 'SIGLA_FORNEC'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'SIGLA_FORNEC'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('CD_MATERIAL')">Cód. Material
+              <span *ngIf="key == 'CD_MATERIAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'CD_MATERIAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('DESCRICAO')">Material
+              <span *ngIf="key == 'DESCRICAO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DESCRICAO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('LINHA')">Linha
+              <span *ngIf="key == 'LINHA'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'LINHA'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('CLASSE')">Classe
+              <span *ngIf="key == 'CLASSE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'CLASSE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('UNIDADE')">Uni. Medida
+              <span *ngIf="key == 'UNIDADE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'UNIDADE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('LOTE_MATERIAL')">Num. Lote
+              <span *ngIf="key == 'LOTE_MATERIAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'LOTE_MATERIAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('QUANTIDADE')">Quantidade
+              <span *ngIf="key == 'QUANTIDADE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'QUANTIDADE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('DT_ENTRADA')">Data Entrada
+              <span *ngIf="key == 'DT_ENTRADA'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DT_ENTRADA'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('DATA_CONF')">Data Conferência
+              <span *ngIf="key == 'DATA_CONF'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DATA_CONF'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('HORA_CONFE')">Hora Conferência
+              <span *ngIf="key == 'HORA_CONFE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'HORA_CONFE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('USER_CONFE')">Usuário Conferência
+              <span *ngIf="key == 'USER_CONFE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'USER_CONFE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('DATA_RETORNO')">Data Retorno
+              <span *ngIf="key == 'DATA_RETORNO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DATA_RETORNO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('HORA_RETORNO')">Hora Retorno
+              <span *ngIf="key == 'HORA_RETORNO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'HORA_RETORNO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('USER_RETORNO')">Usuário Retorno
+              <span *ngIf="key == 'USER_RETORNO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'USER_RETORNO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('DATA_BAIXA')">Data Baixa
+              <span *ngIf="key == 'DATA_BAIXA'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DATA_BAIXA'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('HORA_BAIXA')">Hora Baixa
+              <span *ngIf="key == 'HORA_BAIXA'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'HORA_BAIXA'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('USER_BAIXA')">Usuário Baixa
+              <span *ngIf="key == 'USER_BAIXA'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'USER_BAIXA'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('NR_PEDIDO_TRANSF')">Num. Tranferência
+              <span *ngIf="key == 'NR_PEDIDO_TRANSF'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NR_PEDIDO_TRANSF'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th class="hover text-nowrap" (click)="sort('NR_PEDIDO_NF')">Num. Pedido
+              <span *ngIf="key == 'NR_PEDIDO_NF'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NR_PEDIDO_NF'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of listaAuditoria | orderBy: key : reverse | slice: begin : end">
+            <td class="text-center text-nowrap">{{item.SITUACAO}}</td>
+            <td class="text-center text-nowrap">{{item.SIGLA_FORNEC}}</td>
+            <td class="text-center text-nowrap">{{item.CD_MATERIAL | number: '0.0-0'}}</td>
+            <td class="text-center text-nowrap">{{item.DESCRICAO}}</td>
+            <td class="text-center text-nowrap">{{item.LINHA}}</td>
+            <td class="text-center text-nowrap">{{item.CLASSE}}</td>
+            <td class="text-center text-nowrap">{{item.UNIDADE}}</td>
+            <td class="text-center text-nowrap">{{item.LOTE_MATERIAL}}</td>
+            <td class="text-center text-nowrap">{{item.QUANTIDADE | number: '0.3-3'}}</td>
+            <td class="text-center text-nowrap">{{item.DT_ENTRADA}}</td>
+            <td class="text-center text-nowrap">{{item.DATA_CONF}}</td>
+            <td class="text-center text-nowrap">{{item.HORA_CONFE}}</td>
+            <td class="text-center text-nowrap">{{item.USER_CONFE}}</td>
+            <td class="text-center text-nowrap">{{item.DATA_RETORNO}}</td>
+            <td class="text-center text-nowrap">{{item.HORA_RETORNO}}</td>
+            <td class="text-center text-nowrap">{{item.USER_RETORNO}}</td>
+            <td class="text-center text-nowrap">{{item.DATA_BAIXA}}</td>
+            <td class="text-center text-nowrap">{{item.HORA_BAIXA}}</td>
+            <td class="text-center text-nowrap">{{item.USER_BAIXA}}</td>            
+            <td class="text-center text-nowrap">{{item.NR_PEDIDO_NF}}</td>
+            <td class="text-center text-nowrap">{{item.NR_PEDIDO_TRANSF}}</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="mt-3" *ngIf="this.listaAuditoria?.length > 15 && !carregando && !listaVazia">
+      Exibindo {{ begin + 1 }} a {{ end }} de {{ this.listaAuditoria?.length }}
+      <div class="d-flex">
+        <pagination
+          [maxSize]="10"
+          [totalItems]="this.listaAuditoria?.length"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+
+</app-body>

@@ -1,0 +1,493 @@
+<loader-spinner-full-screen [hidden]="!loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    (click)="onReset()"
+    >
+    Limpiar
+  </button>
+  <button 
+  [disabled]="form.status == 'INVALID'"
+  (click)="onSearch()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="dtInicial">Inicio</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="dtInicial"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            placeholder="Escribelo..."
+            formControlName="DT_INIC"
+          />
+          </div>
+        </div>
+        <div class="form-group col">
+          <label for="dtFinal">Final</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="dtFinal"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            placeholder="Escribelo..."
+            formControlName="DT_FINA"
+          />
+          </div>
+        </div>
+        <div class="form-group col">
+          <label for="filial">Filial</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="filiais"
+            [virtualScroll]="true"
+            bindLabel="NM_FILI"
+            bindValue="CD_FILI"
+            formControlName="CD_FILI"
+            placeholder="SELECCIONE..."
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col">
+          <label for="pedido">Pedido</label>
+          <input
+            class="form-control"
+            id="pedido"
+            type="text"
+            placeholder="Escribelo..."
+            formControlName="CD_PEDI"
+            (keyup.enter)="onSearch()"
+          />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="notaFiscal">Nota Fiscal</label>
+          <input
+            class="form-control"
+            id="notaFiscal"
+            type="text"
+            placeholder="Escribelo..."
+            formControlName="NOTA_FISC"
+            (keyup.enter)="onSearch()"
+          />
+        </div>
+        <div class="form-group col">
+          <label for="uf">UF</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="estados"
+            [virtualScroll]="true"
+            labelForId="uf"
+            bindLabel="sigla"
+            bindValue="sigla"
+            id="sigla"
+            formControlName="DS_ESTA"
+            placeholder="SELECCIONE..."
+            (keyup.enter)="onSearch()"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col">
+          <label for="cep">CEP</label>
+          <input
+            class="form-control"
+            id="cep"
+            type="text"
+            placeholder="Escribelo..."
+            formControlName="CD_CEP"
+            (keyup.enter)="onSearch()"
+            max="9"
+          />
+        </div>
+        <div class="form-group col">
+          <label for="cidade">Cidade</label>
+          <input
+            class="form-control"
+            id="cidade"
+            type="text"
+            placeholder="Escribelo..."
+            formControlName="DS_CIDA"
+            (keyup.enter)="onSearch()"
+          />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="cdCliente">Cód. cliente</label>
+          <input
+            class="form-control"
+            id="cdCliente"
+            type="text"
+            placeholder="Escribelo..."
+            formControlName="CD_CLIE"
+            (keyup.enter)="onSearch()"
+          />
+        </div>
+        <div class="form-group col-6">
+          <label for="nomeCliente">Nome Cliente</label>
+          <input
+            class="form-control"
+            id="nomeCliente"
+            type="text"
+            placeholder="Escribelo..."
+            formControlName="NM_CLIE"
+            (keyup.enter)="onSearch()"
+          />
+        </div>
+        <div class="form-group col-3">
+          <label for="registros">Registros</label>
+          <select
+            name="registros"
+            id="registros"
+            class="form-control"
+            (change)="setItensPerPage($event.target.value)"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100" selected>100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="d-flex">
+    <div class="col-7 pl-0" *ngIf="pedidos.length !== 0">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr>
+            <!-- <th scope="col" style="width: 70px;"></th> -->
+            <th scope="col" class="text-center">Pedido</th>
+            <th scope="col" class="text-center">Cliente</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of pedidos | slice : begin : end; let index = index">
+            <td class="text-center">
+              <span>{{ item.CD_PEDI }}</span>
+              <span *ngIf="item?.CD_PEDI_ORIG"> / OV:&nbsp;{{ item.CD_PEDI_ORIG }}</span></td>
+            <td class="text-center">{{ item.NM_CLIE | uppercase}}</td>
+            <td>
+              <button
+                type="button"
+                class="btn-icon-sm"
+                tooltip="Detalhes"
+                container="body"
+                (click)="openDetails(item, pedidoDetalhes)"
+                >
+                <i class="fas fa-search"></i>
+              </button>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn-icon-sm"
+                tooltip="Adicionar"
+                container="body"
+                (click)="onAdd(item)"
+                >
+                <i class="fas fa-long-arrow-alt-right"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div>
+        Mostrando {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="w-100 d-flex align-items-center justify-content-center" *ngIf="pedidos.length === 0">
+      <empty-result message="Nenhum pedido disponível"></empty-result>
+    </div>
+    <div class="col-5 pr-0 border-left" >
+      <div>
+        <div class="d-flex justify-content-between pt-1">
+          <h6>{{ formTransporte.get('ID_LOGI_ROMA').value }}</h6>
+          <div class="d-flex">
+            <button
+              class="btn"
+              [ngClass]="isValidForm(formTransporte) ? 'btn-outline-success' : 'btn-outline-danger'"
+              [disabled]="!isValidForm(formTransporte)"
+              (click)="postRomaneio()"
+            >
+              <span *ngIf="loadingSalvarRomaneio" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <span *ngIf="!loadingSalvarRomaneio">Salvar</span>
+            </button>
+          </div>
+        </div>
+        <form autocomplete="off" class="mt-2" [formGroup]="formTransporte">
+            <div class="form-group">
+              <label for="filial">Filial</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="filiais"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                bindLabel="NM_FILI"
+                bindValue="CD_FILI"
+                formControlName="CD_FILI"
+                placeholder="SELECCIONE..."
+                [ngClass]="'is-required'" 
+                >
+              </ng-select>
+            </div>
+            <div class="form-group">
+              <div class="d-flex justify-content-between align-items-end w-100">
+                <label for="motorista">Motorista</label>
+                <button
+                  class="btn border-0"
+                  [disabled]="!routeTrucker">
+                <a [routerLink]="[routeTrucker]" target="_blank">
+                  Novo motorista
+                </a>
+                </button>
+              </div>
+              <div class="d-flex">
+                <ng-select
+                  [searchable]="true"
+                  [items]="motoristas"
+                  [virtualScroll]="true"
+                  [loading]="loadingMotoristas"
+                  class="col px-0 is-required"
+                  dropdownPosition="bottom"
+                  labelForId="motorista"
+                  bindLabel="NM_MOTO"
+                  bindValue="ID_LOGI_MOTO"
+                  id="motorista"
+                  formControlName="ID_LOGI_MOTO"
+                  placeholder="SELECCIONE..."
+                  >
+                  <ng-template ng-option-tmp let-item="item" let-index="index">
+                    {{item.CPF | cpf }} - {{item.NM_MOTO}}
+                  </ng-template>
+                </ng-select>
+                <button
+                  class="btn-icon-sm mx-3 my-auto"
+                  tooltip="Atualizar"
+                  conatiner="body"
+                  (click)="getMotoristas({ IN_PAGI: '0', IN_STAT: '1' })"
+                >
+                  <i class="fas fa-sync"></i>
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="d-flex justify-content-between align-items-end">
+                <label for="veiculo">Veículo</label>
+                <button
+                  class="btn border-0"
+                  [disabled]="!routeTruck"
+                >
+                <a [routerLink]="[routeTruck]" target="_blank">
+                  Novo veículo
+                </a>
+                </button>
+              </div>
+              <div class="d-flex">
+                <ng-select
+                  [searchable]="true"
+                  [items]="veiculos"
+                  [virtualScroll]="true"
+                  [loading]="loadingVeiculos"
+                  class="col px-0 is-required"
+                  dropdownPosition="bottom"
+                  labelForId="veiculo"
+                  bindLabel="PLAC"
+                  bindValue="ID_LOGI_VEIC"
+                  id="veiculo"
+                  formControlName="ID_LOGI_VEIC"
+                  placeholder="SELECCIONE..."
+                  >
+                  <ng-template ng-option-tmp let-item="item" let-index="index">
+                    {{item.PLAC}}
+                  </ng-template>
+                </ng-select>
+                <button
+                  class="btn-icon-sm mx-3 my-auto"
+                  tooltip="Atualizar"
+                  conatiner="body"
+                  (click)="getVeiculos({ IN_PAGI: '0', IN_STAT: '1' })"
+                >
+                  <i class="fas fa-sync"></i>
+                </button>
+              </div>
+            <!-- </div> -->
+          </div>
+        </form>
+        <hr>
+        <!-- <small>PEDIDOS</small> -->
+        <div class="spinner-border text-primary d-block" role="status" *ngIf="pedidosSelecionadosLoading && pedidosSelecionados.length === 0">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <div><!-- pedidosSelecionadosLoading &&   [hidden]="pedidosSelecionados.length == 0"-->
+          <ng-template #itemTemplate let-item="item" let-index="index">
+            <div class="shadow-sm border rounded p-2 d-flex">
+              <div class="d-flex align-items-center text-muted mr-2 flex-column">
+                <label style="font-size: 0.9em;">Sequência</label>
+                <strong>
+                  <input
+                    type="number"
+                    [ngModel]="item.value.NR_SQNC"
+                    (ngModelChange)=" item.value.NR_SQNC = $event"
+                    class="input-sequence"
+                    min="1"
+                    >
+                </strong>
+              </div>
+              <div class="col p-0 pl-1">
+                <div class="mb-1">
+                  <span class="d-block text-uppercase">{{ item.value.NM_CLIE }}</span>
+                  <small class="d-block text-uppercase">
+                    <span *ngIf="item.value.DS_LOCA_ENTR">{{ item.value.DS_LOCA_ENTR }}</span> 
+                    <span *ngIf="item.value.DS_BAIR">,&nbsp;{{ item.value.DS_BAIR }}</span>
+                    <span *ngIf="item.value.DS_CIDA">,&nbsp;{{ item.value.DS_CIDA }}</span>
+                    <span *ngIf="item.value.DS_ESTA">- {{ item.value.DS_ESTA }}</span>
+                  </small>
+                </div>
+                <div class="d-flex">
+                  <div class="form-group mb-0">
+                    <label>Pedido: &nbsp;</label>
+                    <span>{{ item.value.CD_PEDI}}</span>
+                  </div>
+                  &nbsp;|&nbsp;
+                  <div class="form-group mb-0">
+                    <label>Peso: &nbsp;</label>
+                    <span>{{ item.value.TT_PESO | number: '1.3-3' }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center">
+                <button class="btn-icon-sm text-danger" tooltip="Remover" (click)="onRemove(item.value)">
+                  <i class="far fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
+          </ng-template>
+          <bs-sortable
+            [(ngModel)]="pedidosSelecionados"
+            [itemTemplate]="itemTemplate"
+            itemClass="sortable-item mb-2"
+            itemActiveClass="sortable-item-active"
+            wrapperClass="sortable-wrapper"
+            placeholderClass="placeholderStyle"
+          ></bs-sortable>
+        </div>
+        <empty-result *ngIf="pedidosSelecionadosLoading === false && pedidosSelecionados.length === 0" message="Nenhum pedido importado"></empty-result>
+      </div>
+    </div>
+  </div>
+  <ng-template #pedidoDetalhes>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">({{ pedido.CD_CLIE }}) &nbsp; {{ pedido.NM_CLIE }}</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <h5 class="text-muted" style="font-size: 0.75rem;">NOTA FISCAL</h5>
+      <table>
+        <tbody>
+          <tr>
+            <th>Número:</th>
+            <td>&nbsp; {{ pedido.NR_NOTA_FISC }}</td>
+          </tr>
+          <tr>
+            <th>Emissão</th>
+            <td>&nbsp; {{ pedido.DT_EMIS_NOTA_FISC | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
+          </tr>
+          <tr>
+            <th>Chave de acesso:</th>
+            <td>&nbsp; {{ pedido.CD_CHAV_ACES }}</td>
+          </tr>
+          <tr>
+            <th>Pedido:</th>
+            <td>&nbsp; {{ pedido.CD_PEDI }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <hr>
+      <h5 class="text-muted" style="font-size: 0.75rem;">LOCAL DE ENTREGA</h5>
+      <table>
+        <tbody>
+          <tr>
+            <th>Cidade:</th>
+            <td>&nbsp; {{ pedido.DS_CIDA }} - {{ pedido.DS_ESTA }}</td>
+          </tr>
+          <tr>
+            <th>Bairro:</th>
+            <td>&nbsp; {{ pedido.DS_BAIR }}</td>
+          </tr>
+          <tr>
+            <th>Endereço:</th>
+            <td>&nbsp; {{ pedido.DS_LOCA_ENTR }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <hr>
+      <h5 class="text-muted" style="font-size: 0.75rem;">MATERIAIS</h5>
+      <custom-table *ngIf="materiais.length !== 0 && materiaisLoading == false">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center">Código</th>
+            <th scope="col" class="text-center">Material</th>
+            <th scope="col" class="text-center">Quantidade</th>
+            <th scope="col" class="text-center">Valor</th>
+            <th scope="col" class="text-center">Observação</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let material of materiais">
+            <td class="text-center">{{ material.CD_MATE }}</td>
+            <td class="text-center">{{ material.DS_MATE }}</td>
+            <td class="text-center">{{ material.QT_PESO | number: '1.3-3' }}</td>
+            <td class="text-center">{{ material.VL_ITEM | currency : 'BRL' : 'symbol' : '1.2-2'}}</td>
+            <td class="text-center">{{ material.DS_OBSE }}</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="spinner-border text-primary" role="status" *ngIf="materiaisLoading">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <empty-result class="d-flex align-items-center justify-content-center" *ngIf="materiais.length === 0 && materiaisLoading == false" message="Nenhum material disponível"></empty-result>
+    </div>
+  </ng-template>
+</app-body>

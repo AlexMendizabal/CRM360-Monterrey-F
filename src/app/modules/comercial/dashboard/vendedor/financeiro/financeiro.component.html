@@ -1,0 +1,53 @@
+<div class="row">
+  <div class="col-md-6">
+    <!-- <div class="col-md-5"> -->
+    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3 hover" tooltip="Clientes que estão com duplicatas abertas nos últimos seis meses" (click)="onClick(inadimplentes)">
+      <div class="bg-red rounded-circle text-white icon-40 my-auto"><i class="fas fa-dollar-sign"></i></div>
+      <div class="text-right" [hidden]="!inadimplentesLoaded || inadimplentesEmpty">
+        <h5
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="inadimplentes['valor']"
+          [countFrom]="0"
+          [duration]="3"
+          (countoChange)="countoValorInadimplentes = $event">
+          {{ countoValorInadimplentes | currency:'BRL':'symbol':'1.2-2' }}
+        </h5>
+        <div class="text-muted small font-weight-bold">{{ inadimplentes['quantidade'] }} CLIENTES INADIMPLENTES</div>
+      </div>
+      <div class="text-right" *ngIf="inadimplentesEmpty">
+        <div class="text-muted small font-weight-bold mt-3">Nenhum resultado encontrado</div>
+      </div>
+      <div class="text-right my-auto" *ngIf="!inadimplentesLoaded && !inadimplentesEmpty">
+        <div class="spinner-border text-dark"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <!-- <div class="col-md-5"> -->
+    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3 hover" tooltip="Clientes que estão com notas de débito abertas" (click)="onClick(notasDebito)">
+      <div class="bg-orange rounded-circle text-white icon-40 my-auto"><i class="fas fa-file-invoice-dollar"></i></div>
+      <div class="text-right" [hidden]="!notasDebitoLoaded || notasDebitoEmpty">
+        <h5
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="notasDebito['valor']"
+          [countFrom]="0"
+          [duration]="3"
+          (countoChange)="countoValorNotaDebito = $event">
+          {{ countoValorNotaDebito | currency:'BRL':'symbol':'1.2-2' }}
+        </h5>
+        <div class="text-muted small font-weight-bold">{{ notasDebito['quantidade'] }} CLIENTES COM NOTA DE DÉBITO</div>
+      </div>
+      <div class="text-right" *ngIf="notasDebitoEmpty">
+        <div class="text-muted small font-weight-bold mt-3">Nenhum resultado encontrado</div>
+      </div>
+      <div class="text-right my-auto" *ngIf="!notasDebitoLoaded && !notasDebitoEmpty">
+        <div class="spinner-border text-dark"></div>
+      </div>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>

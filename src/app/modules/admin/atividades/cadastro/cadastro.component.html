@@ -1,0 +1,214 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro de atividade">
+  <button 
+    (click)="onSave()"
+    [disabled] = "form.status == 'INVALID'"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="d-flex justify-content-center col" [hidden]="loading">
+      <form [formGroup]="form" autocomplete="off" class="col-6">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="icone">Icone</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="icones"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              labelForId="classe"
+              bindLabel="classe"
+              bindValue="classe"
+              id="classe"
+              formControlName="icone"
+              [ngClass]="onFieldRequired('icone')"
+              >
+              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                  <div class="d-flex align-items-center">
+                    <div [class]="item.classe" style="min-width: 25px;"></div>
+                    <div>{{item.classe}}</div>
+                  </div>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-index="index">
+                <div class="d-flex align-items-center">
+                  <div [class]="item.classe" style="min-width: 25px;"></div>
+                  <div>{{item.classe}}</div>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="nome">Nome</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nome"
+              formControlName="nome"
+              placeholder="Digite..."
+              [ngClass]="onFieldRequired('nome')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('nome')" message="Nome é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="modulo">Modulo</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="modulos"
+              [virtualScroll]="true"
+              [loading]="loadingModulos"
+              dropdownPosition="bottom"
+              labelForId="modulo"
+              bindLabel="nome"
+              bindValue="id"
+              id="modulo"
+              formControlName="moduloId"
+              (change)="getSubmodulos({moduloId: $event?.id})"
+              placeholder="Selecione..."
+              [ngClass]="onFieldRequired('moduloId')"
+            >
+              <ng-template ng-option-tmp let-item="item" let-index="index">
+                ({{item.id | number : '3.0-0'}}) {{item.nome}}
+              </ng-template>
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('moduloId')" message="Modulo é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="submodulo">Submodulo</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="submodulos"
+              [virtualScroll]="true"
+              [loading]="loadingSubmodulos"
+              dropdownPosition="bottom"
+              placeholder="Selecione..."
+              groupBy = "modulo"
+              labelForId="submodulo"
+              bindLabel="nome"
+              bindValue="id"
+              id="submodulo"
+              formControlName="submoduloId"
+              [ngClass]="onFieldRequired('submoduloId')"
+            >
+              <ng-template ng-option-tmp let-item="item" let-index="index">
+                ({{item.id | number : '3.0-0'}}) {{item.nome}}
+              </ng-template>
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('submoduloId')" message="Submodulo é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="rota">Rota</label>
+            <input
+              type="text"
+              class="form-control text-lowercase"
+              id="rota"
+              formControlName="rota"
+              placeholder="Digite..."
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="url">URL</label>
+            <input
+              type="text"
+              class="form-control"
+              id="url"
+              formControlName="url"
+              placeholder="Digite..."
+              style="text-transform: none !important;"
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="tipoAtividade">Tipo da Atividade</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tiposAtividade"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              [loading]="loadingTipoAtividade"
+              labelForId="tipoAtividade"
+              bindLabel="nome"
+              bindValue="id"
+              id="tipoAtividade"
+              formControlName="tipoAtividadeId"
+              placeholder="Selecione..."
+              [ngClass]="onFieldRequired('tipoAtividadeId')"
+            >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('tipoAtividadeId')" message="O Tipo da atividade é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="situacao">Situação</label>
+            <select
+              name="situacao"
+              id="situacao"
+              class="form-control"
+              formControlName="situacao"
+            >
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-6 d-flex justify-content-center flex-column">
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="exibeSidebar"
+                formControlName="exibeSidebar"
+              >
+              <label
+                class="custom-control-label"
+                for="exibeSidebar"
+                >Exibir no menu?
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="exibeNovaAba"
+                formControlName="exibeNovaAba"
+              >
+              <label
+                class="custom-control-label"
+                for="exibeNovaAba"
+                >Abrir em nova aba?</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="descricao">Descrição da Atividade</label>
+            <textarea
+              id="descricao"
+              class="w-100"
+              class="form-control"
+              rows="4"
+              formControlName="descricao"
+              [ngClass]="onFieldRequired('descricao')"
+              >
+            </textarea>
+            <invalid-form-control [show]="onFieldInvalid('descricao')" message="A descrição da atividade é obrigatório"></invalid-form-control>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

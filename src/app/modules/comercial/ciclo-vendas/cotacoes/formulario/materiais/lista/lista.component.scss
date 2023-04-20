@@ -1,0 +1,30 @@
+::ng-deep {
+    @import 'src/assets/scss/colors.scss';
+    @import 'src/assets/scss/variables';
+    @import 'src/app/modules/comercial/ciclo-vendas/cotacoes/formulario/formulario.component.scss';
+
+    .nav-tabs {
+        border-bottom: none !important;
+        align-items: flex-end;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #fff;
+        background-color: #7F849C;
+        border-color: #7F849C; 
+        padding-bottom: 6px;
+        padding-top: 6px;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid;
+        border-top-left-radius: .25rem;
+        border-top-right-radius: .25rem;
+        background-color: #fff;
+        border-color: #8e91a0fd; 
+        color: #7F849C;
+        padding-bottom: 2px;
+        padding-top: 2px;
+    }
+
+}

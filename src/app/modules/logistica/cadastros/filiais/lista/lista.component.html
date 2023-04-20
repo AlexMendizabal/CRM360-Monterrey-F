@@ -1,0 +1,147 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="Sucursais">
+  <button
+  type="button"
+  (click)="onExport()"
+  [disabled]="loadingNavBar || noResult">
+  Exportar
+</button>
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpiar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Agregar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-5 pl-0">
+              <label for="nome">Sucursal</label>
+              <input type="text"
+                class="form-control"
+                id="nome"
+                formControlName="nome"
+                placeholder="Ingresse..."/>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="idFilial">ID</label>
+              <input type="text"
+              class="form-control"
+              id="idFilial"
+              formControlName="idFilial"
+              placeholder="Ingresse..."/>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="status">Situación</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="tipos"
+                [virtualScroll]="true"
+                labelForId="tipo"
+                bindLabel="nome"
+                bindValue="cod"
+                id="tipo"
+                (change)="onFilter()"
+                formControlName="status"
+                (keydown.enter)="onFilter()"
+                placeholder="Ingresse..."
+              >
+              </ng-select>
+            </div>
+            <div class="form-group col-md-1 p-0">
+              <label>Datos</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (keydown.enter)="onFilter()"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0 col">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Sucursal</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let filial of filiais">
+              <td  [ngClass]="filial.status == '1' ? 'border-success' : 'border-danger'">
+                {{ filial.id}}
+              </td>
+              <td>{{ filial.nome | uppercase}}</td>
+              <td class="align-middle">
+                <span class="mr-3" [tooltip]="filial.status == '1' ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="changeType(filial)">
+                    <i [ngClass]="filial.status == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', filial.id]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div *ngIf="totalItems > itemsPerPage">
+        Visualización {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="No se encontró información"></empty-result>
+  </div>
+</app-body>

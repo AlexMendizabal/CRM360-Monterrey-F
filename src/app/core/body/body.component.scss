@@ -1,0 +1,19 @@
+::ng-deep {
+  @import '../../../assets/scss/variables';
+
+  core-body {
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+    -webkit-flex-flow: column nowrap;
+    -webkit-box-sizing: border-box;
+    #module-body {
+      padding-left: $sidebar-size + $gutter;
+    }
+  }
+}

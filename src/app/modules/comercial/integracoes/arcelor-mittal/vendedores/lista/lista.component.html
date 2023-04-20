@@ -1,0 +1,184 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Vendedores">
+  <!-- <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button> -->
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-3">
+              <label for="vendManetoni">
+                <span class="mr-1">Vendedor Manetoni</span>
+                <ng-template #tooltipLabelVendManetoniTemplate>
+                  <p class="text-nowrap mb-0">Código ou Nome</p>
+                  <p class="text-nowrap mb-0">do Vendedor</p>
+                  <p class="text-nowrap mb-0">Manetoni</p>
+                </ng-template>
+                <i class="far fa-question-circle" [tooltip]="tooltipLabelVendManetoniTemplate" container="body"></i>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="vendManetoni"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="codVendArcelor">
+                <span class="mr-1">Vendedor Arcelor</span>
+                <ng-template #tooltipLabelVendArcelorTemplate>
+                  <p class="text-nowrap mb-0">Código do</p>
+                  <p class="text-nowrap mb-0">Vendedor Arcelor</p>
+                </ng-template>
+                <i class="far fa-question-circle" [tooltip]="tooltipLabelVendArcelorTemplate" container="body"></i>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="codVendArcelor"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-3 mb-2 mb-md-0">
+              <label for="escritorio">Escritórios</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="escritorios"
+                formControlName="escritorio"
+                [virtualScroll]="true"
+                labelForId="escritorio"
+                bindLabel="nome"
+                bindValue="id">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-5 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="hover">
+              <thead-sorter
+                value="Vendedor (Arcelor Mittal) "
+                [active]="orderBy == 'idArcelorMittal'"
+                [sort]="orderType"
+                (click)="setOrderBy('idArcelorMittal')">
+              </thead-sorter>
+            </th>
+            <th scope="col" class="hover">
+              <thead-sorter
+                value="Vendedor Manetoni"
+                [active]="orderBy == 'idManetoni'"
+                [sort]="orderType"
+                (click)="setOrderBy('idManetoni')">
+              </thead-sorter>
+            </th>
+            <th scope="col" [hidden]="showDetailPanel">Escritório</th>
+            <th scope="col"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let vendedor of dadosPagination; let i = index;" [class.table-active]="vendedor.idArcelorMittal == vendedorSelecionado.idArcelorMittal && showDetailPanel">
+            <td
+              class="hover"
+              [ngClass]="classStatusBorder(vendedor)"
+              (click)="onDetails(vendedor)">
+              {{ vendedor.nomeArcelorMittal }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(vendedor)">
+              <span *ngIf="vendedor.nomeManetoni === null">NÃO INFORMADO</span>
+              <span *ngIf="vendedor.nomeManetoni !== null">
+                {{ vendedor.nomeManetoni | uppercase }}
+              </span>
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(vendedor)"
+              [hidden]="showDetailPanel">
+              <span *ngIf="vendedor.nomeEscritorio === null">NÃO INFORMADO</span>
+              <span *ngIf="vendedor.nomeEscritorio !== null">
+                {{ vendedor.nomeEscritorio | uppercase }}
+              </span>
+            </td>
+            <td class="text-right">
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onEdit(vendedor)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && !dadosLoaded"></empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-7" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="detailPanelTitle">
+        <custom-table [config]="tableConfigVendedores" *ngIf="vendedores.length > 0">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">Código</th>
+              <th scope="col">Vendedor</th>
+              <th scope="col">Escritório</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let vendedor of vendedores">
+              <td class="text-center">{{ vendedor.idManetoni }}</td>
+              <td>{{ vendedor.nomeManetoni | uppercase }}</td>
+              <td>
+                <span *ngIf="vendedor.nomeEscritorio === null">NÃO INFORMADO</span>
+                <span *ngIf="vendedor.nomeEscritorio != null">
+                  {{ vendedor.nomeEscritorio | uppercase }}
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+</app-body>

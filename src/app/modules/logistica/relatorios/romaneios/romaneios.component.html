@@ -1,0 +1,119 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loading"></loader-spinner-navbar>
+<app-header appTitle="Romaneios">
+    <button (click)="onGetCtesComplementares()" [disabled] = "!form.valid">Cte adicional</button>
+    <button (click)="onGetRomaneiosSinteticos()" [disabled] = "!form.valid">Sintético</button>
+    <button (click)="onGetRomaneiosAnaliticos()" [disabled] = "!form.valid">Analítico</button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [hidden]="loaderFullScreen">
+  <div class="d-flex justify-content-center">
+    <form [formGroup]="form" class="col-3" autocomplete="off" *ngIf="permission">
+      <div class="form-row">
+        <div class="form-group col">
+          <div class="row d-flex flex-column">
+            <label for="">Empresa</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="empresas"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              labelForId="idEmpresa"
+              bindLabel="dsEmpresa"
+              bindValue="dsEmpresa"
+              dropdownPosition="bottom"
+              id="idEmpresa"
+              multiple="true"
+              [closeOnSelect]="false"
+              formControlName="projeto"
+              >
+              <ng-template ng-header-tmp>
+                <div class="d-flex justify-content-between w-100">
+                  <button type="button" class="btn btn-light" (click)="selectAll()"><i class="fas fa-inbox"></i> Selecionar Todos</button>
+                  <button type="button" class="btn btn-light" (click)="clearAll()"><i class="far fa-trash-alt"></i> Remover Todos</button>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="">
+        <div class="form-row">
+          <div class="form-group col">
+            <div class="row">
+              <div class="col p-0">
+                <label for="">Fecha Inicial</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="inicioData"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                [ngClass]="onFieldRequired('dataInicial')"
+                formControlName="dataInicial">
+                <invalid-form-control [show]="onFieldInvalid('dataInicial')" message="Fecha Inicial é obligatorio."></invalid-form-control>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="">
+          <div class="form-row">
+            <div class="form-group col">
+              <div class="row">
+                <div class="col p-0">
+                  <label for="">Fecha Final</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                  </div>
+                  <input
+                  class="form-control"
+                  id="inicioData"
+                  type="text"
+                  bsDatepicker
+                  [bsConfig]="bsConfig"
+                  [ngClass]="onFieldRequired('dataFinal')"
+                  formControlName="dataFinal">
+                  <invalid-form-control [show]="onFieldInvalid('dataFinal')" message="Fecha Final é obligatorio."></invalid-form-control>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="">
+          <div class="form-row">
+            <div class="form-group col">
+              <div class="row">
+                <div class="col p-0">
+                  <label for="">Status da ficha</label>
+                </div>
+              </div>
+              <div class="row">
+                  <select
+                  class="form-control custom-select"
+                  formControlName="statusFicha">
+                  <option value=""></option>
+                  <option >Cerrado</option>
+                  <option >Abierto</option>
+                </select>
+              </div>
+            </div>
+          </div>
+      </div>
+    </form>
+    <div *ngIf="!permission && dataLoaded" class="text-center d-flex justify-content-center align-items-center w-100" style="height: 400px">
+      <empty-result message="No tienes acceso a esta aplicación. Solicite soporte del equipo de Tecnología de la Información"></empty-result>
+    </div>
+  </div>
+</app-body>

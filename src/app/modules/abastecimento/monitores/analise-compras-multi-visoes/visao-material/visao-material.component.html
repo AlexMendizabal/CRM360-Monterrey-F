@@ -1,0 +1,303 @@
+<subtitles [data]="subtitles" [show]="true"> </subtitles>
+<div class="table-responsive">
+  <custom-table [config]="tableConfig">
+    <ng-template let-thead #thead>
+      <tr class="text-center">
+        <th width="4%"></th>
+        <th nowrap>Material</th>
+        <th nowrap>Depósito</th>
+        <th nowrap [attr.colspan]="ableInformationEstoque ? colsEst : 1">
+          Estoque
+          <button class="btn-icon-sm" (click)="abledInfomationEstoque()">
+            <i [ngClass]="ableInformationEstoque ? 'fas fa-minus' : 'fas fa-plus'" title="Mostrar detalhes Estoque"
+              aria-hidden="true"></i>
+          </button>
+        </th>
+        <th nowrap>Saídas</th>
+      </tr>
+      <tr class="text-center">
+        <th nowrap scope="col" class="hover" width="4%">
+          <btn-icon
+            [icon]="toggle ? 'fas fa-check-square' : 'far fa-square'"
+            size="small"
+            (click)="onToggleAll()">
+          </btn-icon>
+        </th>
+        <th nowrap (click)="sort('NM_MATE')">
+          Descrição
+          <span *ngIf="key == 'NM_MATE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+          <span *ngIf="key != 'NM_MATE'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th nowrap (click)="sort('NM_DEPO')">
+          Descrição
+          <span *ngIf="key == 'NM_DEPO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+          <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th nowrap (click)="sort('TT_ESTO_DISP')" *ngIf="ableInformationEstoque">
+          Suspenso
+          <span *ngIf="key == 'TT_ESTO_DISP'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+          <span *ngIf="key != 'TT_ESTO_DISP'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th nowrap (click)="sort('TT_ESTO_ATUAL')" *ngIf="ableInformationEstoque">
+          Comprometido
+          <span *ngIf="key == 'TT_ESTO_ATUAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+          <span *ngIf="key != 'TT_ESTO_ATUAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th nowrap (click)="sort('TT_ESTO_COMP')" *ngIf="ableInformationEstoque">
+          Atual
+          <span *ngIf="key == 'TT_ESTO_COMP'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+          <span *ngIf="key != 'TT_ESTO_COMP'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th nowrap (click)="sort('TT_ESTO_SUSP')">
+          Disponível
+          <span *ngIf="key == 'TT_ESTO_SUSP'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+          <span *ngIf="key != 'TT_ESTO_SUSP'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th nowrap>
+          <div class="d-flex justify-content-center align-items-center">
+            <div (click)="sort('TT_SAID')">
+              Total
+              <span *ngIf="key == 'TT_SAID'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'TT_SAID'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </div>
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template let-tbody #tbody>
+      <tr  *ngFor="let item of data | orderBy: key:reverse | slice: begin:end">
+        <td nowrap class="text-center" width="4%" [ngClass]="{
+          'border-danger' :  item.IN_STAT == 0,
+          'border-success' :  item.IN_STAT == 1
+          }">
+          <btn-icon
+            [icon]="item.ON_SELE ? 'fas fa-check-square' : 'far fa-square'"
+            size="small"
+            (click)="onCheck(item)">
+          </btn-icon>
+        </td>  
+        <td nowrap class="text-center">{{ item.NM_MATE }}</td>
+        <td nowrap class="text-right">
+          {{ item.NM_DEPO }}
+          <button
+            class="btn-icon-sm"
+            (click)="lgModal.show() + '' + setValueRazaoEstoque(item)"
+            >
+            <i
+              class="fa fa-search text-primary"
+              tooltip="Razão de estoque"
+              aria-hidden="true"
+            ></i>
+        </button>
+        </td>
+        <td nowrap class="text-center">{{ item.TT_ESTO_DISP }}</td>
+        <td nowrap class="text-center" *ngIf="ableInformationEstoque">{{ item.TT_ESTO_ATUAL }}</td>
+        <td nowrap class="text-center" *ngIf="ableInformationEstoque">{{ item.TT_ESTO_COMP }}</td>
+        <td nowrap class="text-center" *ngIf="ableInformationEstoque">{{ item.TT_ESTO_SUSP }}</td>
+        <td nowrap class="text-center">{{ item.TT_SAID }}</td>
+      </tr>
+      <tr>
+        <td nowrap class="bg-dark border-dark text-center text-white">TOTAL</td>
+        <td nowrap class="bg-dark text-center text-white"></td>
+        <td nowrap class="bg-dark text-center text-white"></td>
+        <td nowrap class="bg-dark text-center text-white">1650,00</td>
+        <td nowrap class="bg-dark text-center text-white" *ngIf="ableInformationEstoque">1650,00</td>
+        <td nowrap class="bg-dark text-center text-white" *ngIf="ableInformationEstoque">1650,00</td>
+        <td nowrap class="bg-dark text-center text-white" *ngIf="ableInformationEstoque">1650,00</td>
+        <td nowrap class="bg-dark text-center text-white">4500,00</td>
+      </tr>
+    </ng-template>
+  </custom-table>
+</div>
+<div class="text-center d-flex justify-content-center align-items-center p-5" style="height: 80%;" *ngIf="noResult">
+  <!-- *ngIf="noResult && !loading" -->
+  <empty-result message="Nenhuma informação encontrada"></empty-result>
+</div>
+
+<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+          Razão de Estoque
+        </h4>
+        <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row mb-2 mt-2" id="header-modal-razao-estoque">
+            <div class="col-5">
+              <p style="font-size: 14px;">
+                <strong> MATERIAL: </strong> {{ modal.material }}
+              </p>
+            </div>
+            <div class="col-4">
+              <p style="font-size: 14px;">
+                <strong> DEPOSÍTO: </strong> {{ modal.deposito }}
+              </p>
+            </div>
+            <div class="col-3 text-right">
+              <button
+                type="button"
+                class="btn mr-2"
+                [disabled]="compareDate() ||
+                compareStartDateFunc() ||
+                compareEndDateFunc()"
+                >
+                <!-- (click)="onFilter()" -->
+                Filtrar
+              </button>
+              <button
+                type="button"
+                class="btn"
+                [disabled]="compareDate() ||
+                compareStartDateFunc() ||
+                compareEndDateFunc()"
+                (click)="excelExport()"
+                >
+                Exportar Excel
+              </button>
+            </div>
+          </div>
+          <advanced-filter>
+            <form [formGroup]="formModal" autocomplete="off">   
+              <div class="form-row">
+                <div class="form-group col-lg-2">
+                  <label for="DT_PEDI_INIC">Data Inicial</label>
+                  <input
+                    class="form-control"
+                    id="DT_PEDI_INIC"
+                    type="text"
+                    bsDatepicker
+                    [bsConfig]="bsConfig"
+                    formControlName="DT_PEDI_INIC"
+                  >
+                  <invalid-form-control [show]="compareStartDateFunc()"
+                    message="Data inicial não pode ser maior que data atual">
+                  </invalid-form-control>
+                </div>
+                <div class="form-group col-lg-2">
+                  <label for="DT_PEDI_FINA">Data Final</label>
+                  <input
+                    class="form-control"
+                    id="DT_PEDI_FINA"
+                    type="text"
+                    bsDatepicker
+                    [bsConfig]="bsConfig"
+                    formControlName="DT_PEDI_FINA"
+                  >
+                  <invalid-form-control [show]="compareDate()" message="Data final deve ser maior que data inicial">
+                  </invalid-form-control>
+                  <invalid-form-control [show]="compareEndDateFunc()" message="Data final não pode ser maior que data atual">
+                  </invalid-form-control>
+                </div>
+                <div class="form-group col-lg-2">
+                  <label for="TP_MOVI">Tipo Movimento</label>
+                  <ng-select
+                    [searchable]="true"
+                    [clearable]="false"
+                    [items]="tipoMovimentos"
+                    [virtualScroll]="true"
+                    [hideSelected]="true"
+                    [closeOnSelect]="true"
+                    placeholder="Selecione..."
+                    bindLabel="NAME"
+                    bindValue="ID"
+                    formControlName="TP_MOVI"
+                  >
+                  </ng-select>
+                </div>
+                <div class="form-group col-lg-2">
+                  <label for="N_DOCU">Nº Documento</label>
+                  <input
+                    class="form-control"
+                    id="N_DOCU"
+                    type="text"
+                    formControlName="N_DOCU"
+                  >
+                </div>
+              </div>
+            </form>
+          </advanced-filter>
+          <div class="table-responsive">
+            <custom-table>
+              <ng-template let-thead #thead>
+                <tr class="text-center">
+                  <th nowrap (click)="sort('NM_DEPO')">
+                    Data
+                    <span *ngIf="key == 'NM_DEPO'"><i
+                        [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                    <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+                  </th>
+                  <th nowrap (click)="sort('NM_DEPO')">
+                    Tipo Movimentação
+                    <span *ngIf="key == 'NM_DEPO'"><i
+                        [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                    <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+                  </th>
+                  <th nowrap (click)="sort('NM_DEPO')">
+                    Descrição
+                    <span *ngIf="key == 'NM_DEPO'"><i
+                        [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                    <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+                  </th>
+                  <th nowrap (click)="sort('NM_DEPO')">
+                    Nº Descrição
+                    <span *ngIf="key == 'NM_DEPO'"><i
+                        [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                    <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+                  </th>
+                  <th nowrap (click)="sort('NM_DEPO')">
+                    Estoque anterior
+                    <span *ngIf="key == 'NM_DEPO'"><i
+                        [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                    <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+                  </th>
+                  <th nowrap (click)="sort('NM_DEPO')">
+                    Quantidade
+                    <span *ngIf="key == 'NM_DEPO'"><i
+                        [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                    <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+                  </th>
+                  <th nowrap (click)="sort('NM_DEPO')">
+                    Estoque Atual
+                    <span *ngIf="key == 'NM_DEPO'"><i
+                        [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+                    <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+                  </th>
+                </tr>
+              </ng-template>
+
+              <ng-template let-tbody #tbody>
+                <tr>
+                  <td nowrap class="text-center">01/10/2020</td>
+                  <td nowrap class="text-center">Abastecimento</td>
+                  <td nowrap class="text-center">Abastecer Tiete</td>
+                  <td nowrap class="text-center">123456</td>
+                  <td nowrap class="text-center">900,00</td>
+                  <td nowrap class="text-center">5</td>
+                  <td nowrap class="text-center">1500,00</td>
+                </tr>
+                <tr>
+                  <td nowrap class="bg-dark text-center text-white">TOTAL</td>
+                  <td nowrap class="bg-dark text-center text-white"></td>
+                  <td nowrap class="bg-dark text-center text-white"></td>
+                  <td nowrap class="bg-dark text-center text-white"></td>
+                  <td nowrap class="bg-dark text-center text-white">900,00</td>
+                  <td nowrap class="bg-dark text-center text-white">5</td>
+                  <td nowrap class="bg-dark text-center text-white">1500,00</td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+          <!-- <div class="text-center d-flex justify-content-center align-items-center p-5" style="height: 80%;">
+            *ngIf="noResult && !loading"
+            <empty-result message="Nenhuma informação encontrada"></empty-result>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

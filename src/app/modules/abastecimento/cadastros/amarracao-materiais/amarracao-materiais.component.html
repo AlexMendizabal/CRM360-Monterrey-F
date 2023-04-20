@@ -1,0 +1,443 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Amarração de Materiais">
+  <button
+    type="button"
+    (click)="onFilter()"
+    [disabled]="form.status == 'INVALID'"
+  >
+    Filtrar
+  </button>
+  <button
+    type="button"
+    (click)="onExcel()"
+    [disabled]="true"
+  >
+    Exportar Excel
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-lg-2">
+          <label for="tipoAtendimento">Tipo Atendimento</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="tipoAtendimento"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            (change)="getSubLinhas() + '' + getClasses()"
+            placeholder="Selecione..."
+            bindLabel="NAME"
+            bindValue="ID"
+            formControlName="TP_ATEN"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="linhas">Linha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="linhas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            (change)="getSubLinhas() + '' + getClasses()"
+            placeholder="Selecione..."
+            bindLabel="NM_LINH"
+            bindValue="ID"
+            formControlName="ID_LINH"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="subLinhas">Sublinha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="subLinhas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            (change)="getClasses()"
+            placeholder="Selecione..."
+            bindLabel="NM_SUB_LINH"
+            bindValue="ID"
+            formControlName="ID_SUB_LINH"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="classes">Classe</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="classes"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            (change)="getMateriais()"
+            placeholder="Selecione..."
+            bindLabel="NM_CLAS"
+            bindValue="ID"
+            formControlName="ID_CLAS"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="situacoes">Situação</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="situations"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_SITU"
+            bindValue="ID"
+            formControlName="IN_STAT"
+            [ngClass]="
+              onFieldError('IN_STAT') + ' ' + onFieldRequired('IN_STAT')
+            "
+            >
+            <invalid-form-control
+              [show]="onFieldInvalid('IN_STAT')"
+              message="Situação é obrigatório."
+            >
+            </invalid-form-control>
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="DS_TIPO_AMAR">Amarração</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="tipoAmarracao"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_SITU"
+            bindValue="ID"
+            formControlName="DS_TIPO_AMAR"
+            [ngClass]="
+              onFieldError('DS_TIPO_AMAR') + ' ' + onFieldRequired('DS_TIPO_AMAR')
+            "
+            >
+            <invalid-form-control
+              [show]="onFieldInvalid('DS_TIPO_AMAR')"
+              message="Amarração é obrigatório."
+            >
+            </invalid-form-control>
+          </ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-6">
+          <label for="ID_MATE">Material</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="materiais"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            placeholder="Selecione..."
+            bindLabel="ID_REFE_ERP_NM_MATE"
+            bindValue="ID"
+            formControlName="ID_MATE"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="ID_FORN">Fornecedor</label>
+          <input
+            class="form-control"
+            placeholder="DIGITE..."
+            id="ID_FORN"
+            type="text"
+            formControlName="ID_FORN"
+          />
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="NM_ORDE">Ordenação</label>
+            <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="campoOrdenacao"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NAME"
+            bindValue="ID"
+            formControlName="NM_ORDE"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="TP_ORDE">Modo</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="tipoOrdenacao"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NAME"
+            bindValue="ID"
+            formControlName="TP_ORDE"
+            >
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div *ngIf="loading">
+    <ng-template #itemTemplate let-item="item">
+      <div>
+        <div class="card-body">
+          <div class="bg-light2 rounded">
+            <div class="row">
+              <div class="col-lg-2">
+                <strong>LINHA:</strong> {{item.value.linha}}
+              </div>
+              <div class="col-lg-2">
+                <strong>CLASSE:</strong> {{item.value.classe}}
+              </div>
+              <div class="col-lg-2">
+                <strong>UN. MEDIDA:</strong> {{item.value.unidadeMedida}}
+              </div>
+              <div class="col-lg-2">
+                <strong>CÓD. MATERIAL:</strong> {{item.value.codMaterial}}
+              </div>
+              <div class="col-lg-2">
+                <strong>MATERIAL:</strong> {{item.value.descMaterial}}
+              </div>
+              <div class="col-lg-2">
+                <strong>TIPO MATERIAL:</strong> {{item.value.tipoMaterial}}
+              </div>
+            </div>
+          </div>
+          <table class="table table-bordered">
+            <thead>
+              <tr class="text-center">
+                <th>TIPO ATENDIMENTO</th>
+                <th>ASSOCIAÇÃO</th>
+                <th>MATERIAS/FORNECEDORES</th>
+                <th>CUSTO ENTRADA</th>
+                <th width="5%"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tipoAtendimento of item.value.tipoAtendimento; let index = index">
+                
+                <td>{{ tipoAtendimento.name }}</td>
+                <td>{{ tipoAtendimento.associacao ? tipoAtendimento.associacao : '-'  }}</td>
+                <td>{{ tipoAtendimento.materiaisFornecedores ? tipoAtendimento.materiaisFornecedores  : '-'}}</td>
+                <td>{{ tipoAtendimento.custoEntrada ? (tipoAtendimento.custoEntrada | currency:'BRL') : '-' }}</td>
+                <td width="5%">
+                  <div>
+                    <button
+                      type="button"
+                      class="btn-icon-sm"
+                      tooltip="Editar"
+                      placement="left"
+                      container="body"
+                    >
+                    <i
+                      class="fas fa-edit"
+                      (click)="onEdit(item.value, tipoAtendimento) + ' ' + lgModal.show()" 
+                    >
+                    </i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div>
+            <div>
+              <button
+                type="button"
+                class="btn-icon-sm"
+                tooltip="Adicionar associação"
+                placement="up"
+                container="body"
+                (click)="onAdd(item.value) + ' ' + lgModal.show()" 
+              >
+              <i
+                class="fas fa-plus mr-1"
+              >
+              </i>
+              Associação
+              </button>
+            </div>            
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <bs-sortable
+      [(ngModel)]="data"
+      [itemTemplate]="itemTemplate"
+      itemClass="card mb-3"
+      itemActiveClass="border-card bg-info2 shadow"
+      wrapperClass="sortable-wrapper"
+    ></bs-sortable>
+    <div *ngIf="noResult"class="text-center d-flex justify-content-center align-items-center p-5" style="height: 80%">
+      <empty-result message="Nenhuma informação encontrada"></empty-result>
+    </div>
+  </div>
+</app-body>
+
+<div
+  bsModal
+  #lgModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dialog-sizes-name1"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+          Cadastro de associação
+        </h4>
+        <button
+          type="button"
+          class="close pull-right"
+          (click)="lgModal.hide() + '' + onClose()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div id="modal-cadastro">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                (click)="onSaveDataModal() + ' ' + lgModal.hide()"
+                [disabled]="formModal.status == 'INVALID'"
+                class="btn"
+              >
+                Salvar
+              </button>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row justify-content-md-center mt-3">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4">
+                    <p class="pFont">
+                      <strong>CÓD. MATERIAL</strong><br />
+                      {{ modal.codMaterial }}
+                    </p>
+                  </div>
+                  <div class="col-md-4">
+                    <p class="pFont">
+                      <strong>MATERIAL</strong><br />
+                      {{ modal.descMaterial }}
+                    </p>
+                  </div>
+                  <div class="col-md-4">
+                    <p class="pFont">
+                      <strong>TIPO DE MATERIAL</strong><br />
+                      {{ modal.tipoMaterial }}
+                    </p>
+                  </div>
+                </div>
+                <form [formGroup]="formModal" autocomplete="off">
+                  <div class="form-row">
+                    <div class="form-group col-lg-6">
+                      <label for="TP_ATEN">Tipo Atendimento</label>
+                      <ng-select
+                        [searchable]="true"
+                        [clearable]="false"
+                        [items]="tipoAtendimentoModal"
+                        [virtualScroll]="true"
+                        [hideSelected]="true"
+                        [closeOnSelect]="true"
+                        placeholder="Selecione..."
+                        bindLabel="NAME"
+                        bindValue="ID"
+                        formControlName="TP_ATEN"
+                      >
+                      </ng-select>
+                    </div>
+                    <div class="form-group col-lg-6">
+                      <label for="DESC_ASSO">Associação</label>
+                      <ng-select
+                        [searchable]="true"
+                        [clearable]="true"
+                        [multiple]="true"
+                        [maxSelectedItems]="2"
+                        [items]="associcaoModal"
+                        [virtualScroll]="true"
+                        [hideSelected]="true"
+                        [closeOnSelect]="false"
+                        placeholder="Selecione..."
+                        bindLabel="NAME"
+                        bindValue="ID"
+                        formControlName="DESC_ASSO"
+                        >
+                        <!-- [ngClass]="onFieldErrorModal('ID_DEPO') + ' ' + onFieldRequiredModal('ID_DEPO')" -->
+                      </ng-select>
+                      <!-- <invalid-form-control
+                        [show]="onFieldInvalidModal('ID_DEPO')"
+                        message="Depósito é obrigatório."
+                      >
+                      </invalid-form-control> -->
+                    </div>
+                    <div class="form-group col-lg-9">
+                      <label for="MATE_FORN">Materiais/Fornecedor</label>
+                      <ng-select
+                        [searchable]="true"
+                        [clearable]="true"
+                        [multiple]="true"
+                        [items]="materialFornecedorModal"
+                        [virtualScroll]="true"
+                        [hideSelected]="true"
+                        [closeOnSelect]="false"
+                        placeholder="Selecione..."
+                        bindLabel="NAME"
+                        bindValue="ID"
+                        formControlName="MATE_FORN"
+                      >
+                      </ng-select>
+                    </div>
+                    <div class="form-group col-lg-3">
+                      <label for="TP_ATEN">Custo Entrada(R$)</label>
+                      <input
+                        class="form-control"
+                        currencyMask [options]="current" placeholder="0,00"
+                        type="text"
+                        id="CUST_ENTR"
+                        formControlName="CUST_ENTR"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

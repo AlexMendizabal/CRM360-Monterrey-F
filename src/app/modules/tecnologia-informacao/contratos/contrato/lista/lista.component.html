@@ -1,0 +1,291 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="CONTRATOS">
+  <button
+  type="button"
+  (click)="getTotalContrato()"
+  [disabled]="loadingNavBar || noResult">
+  Exportar
+</button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2">
+              <label for="ID_TECN_INFO_CONT">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_TECN_INFO_CONT"
+                formControlName="ID_TECN_INFO_CONT"
+                placeholder="Digite..."
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="tipoContrato">Tipo de Contrato</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="tipoContrato"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="loadingTipoContrato"
+                labelForId="ID_TECN_INFO_CONT_TIPO"
+                bindLabel="NM_CONT_TIPO"
+                bindValue="ID_TECN_INFO_CONT_TIPO"
+                id="ID_TECN_INFO_CONT_TIPO"
+                formControlName="ID_TECN_INFO_CONT_TIPO"
+                >
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="DS_CONT">Descrição</label>
+              <input
+                type="text"
+                class="form-control"
+                id="DS_CONT"
+                formControlName="DS_CONT"
+                placeholder="Digite..."
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              placeholder="Selecione..."
+            >
+              <ng-template ng-option-tmp let-item="item" let-index="index"> {{item.nome}}
+              </ng-template>
+            </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0" [ngClass]="{'col': !showDetailPanel, 'col-6': showDetailPanel}">
+      <div class="w-100">
+        <table  class="table table-sm table-hover custom-border border-left border-right border-bottom text-center table-fixed">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col" width="5%">ID </th>
+              <th scope="col">Descrição</th>
+              <th scope="col" [hidden]="showDetailPanel">Tipo do Contrato</th>
+              <th scope="col" [hidden]="showDetailPanel" width="15%">Inicio do Contrato</th>
+              <th scope="col" [hidden]="showDetailPanel" width="15%">Fim do Contrato</th>
+              <th scope="col" [hidden]="showDetailPanel" width="20%"><span class="d-flex">Expiração do Prazo</span></th>
+              <th scope="col" [hidden]="showDetailPanel" style="width:80px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let contrato of contratos | slice : begin : end; let i = index" [class.table-active]="contrato?.ID_TECN_INFO_CONT == contratoSelecionado?.ID_TECN_INFO_CONT && showDetailPanel">
+              <td (click)="onDetails(contrato)"[ngClass]="contrato.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+              {{contrato.ID_TECN_INFO_CONT}}
+              </td>
+              <td (click)="onDetails(contrato)">{{ contrato.DS_CONT | uppercase }}</td>
+              <td [hidden]="showDetailPanel" (click)="onDetails(contrato)">{{ contrato.NM_CONT_TIPO | uppercase }}</td>
+              <td [hidden]="showDetailPanel" (click)="onDetails(contrato)">{{ contrato.DT_INIC | date : 'dd/MM/yyyy'}}</td>
+              <td [hidden]="showDetailPanel" (click)="onDetails(contrato)">{{ contrato.DT_VENC | date : 'dd/MM/yyyy'}}</td>
+              <td class="d-flex" [hidden]="showDetailPanel" (click)="onDetails(contrato)">
+                <i class="text-danger  fas fa-circle mr-3" *ngIf= "contrato.DS_STAT_VENC == 'VENCIDO'" ></i>
+                <i class="text-warning fas fa-circle mr-3" *ngIf= "contrato.DS_STAT_VENC == 'FALTA MENOS DE 30 DIAS'" ></i>
+                <i class="text-primary fas fa-circle mr-3" *ngIf="contrato.DS_STAT_VENC == 'FALTA MENOS DE 60 DIAS'"></i>
+                <i class="text-success fas fa-circle mr-3" *ngIf="contrato.DS_STAT_VENC == 'EM VIGÊNCIA'" ></i>
+                <span class="nowrap">{{ contrato.DS_STAT_VENC | uppercase }}</span>
+              </td>
+              <td [hidden]="showDetailPanel" class="align-middle" style="width:80px">
+                <span class="mr-3" [tooltip]="contrato.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="changeType(contrato)">
+                    <i [ngClass]="contrato.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', contrato.ID_TECN_INFO_CONT]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-6 pr-0" [hidden]="!showDetailPanel">
+      <detail-panel>
+        <tabset>
+          <tab heading="Dados cadastrais">
+            <div class="border-right border-left border-bottom px-3 pt-3">
+              <div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Descrição do Contrato</label>
+                    <div>{{ contratoSelecionado?.DS_CONT | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Tipo de Contrato</label>
+                    <div>{{ contratoSelecionado?.NM_CONT_TIPO | uppercase}}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Tipo de Valor (Váriavel/Fixo)</label>
+                    <div *ngIf="contratoSelecionado?.IN_VL_VARI == 1">VÁRIAVEL</div>
+                    <div *ngIf="contratoSelecionado?.IN_VL_VARI == 0">FIXO</div>
+                    <div *ngIf="contratoSelecionado?.IN_VL_VARI == ''">NÃO INFORMADO</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Valor do Contrato</label>
+                    <div>{{contratoSelecionado?.VL_CONT | currency: contratoSelecionado?.SG_MOED }}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Prazo de Cancelamento</label>
+                    <div>{{contratoSelecionado?.PRAZ_CANC | date: 'dd/MM/yyyy'}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label >Valor da Multa</label>
+                    <div>{{contratoSelecionado?.MULT_CANC | currency: contratoSelecionado?.SG_MOED }}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Inicio do Contrato</label>
+                    <div>{{ contratoSelecionado?.DT_INIC | date: 'dd/MM/yyyy' }}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Fim do Contrato</label>
+                    <div>{{ contratoSelecionado?.DT_VENC | date: 'dd/MM/yyyy'}}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-12">
+                    <label>OBSERVAÇÃO</label>
+                    <div>{{ contratoSelecionado?.DS_OBSE | uppercase}}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Expiração do Prazo</label>
+                    <div>{{ contratoSelecionado?.DS_STAT_VENC | uppercase}}</div>
+                  </div>
+                  <div class="form-group text-primary col-lg-6" *ngIf="contratoSelecionado?.IN_ITEM_COMP == 1">
+                    <label>Contrato com aquisição de produto</label>
+                    <div> Valor para aquisição é de {{contratoSelecionado?.VL_ITEM_COMP | currency: contratoSelecionado?.SG_MOED }}</div>
+                  </div>
+                </div><hr>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Usuário Responsável Pelo Cadastro</label>
+                    <div>{{ contratoSelecionado?.NM_USUA_CADA | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Data do Cadastro</label>
+                    <div>{{ contratoSelecionado?.DT_INCL | date: 'dd/MM/yyyy' }}</div>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="mb-3" *ngIf="dadosCadastraisLoaded && dadosCadastraisEmpty">
+                <empty-result message="Nenhuma informação encontrada"></empty-result>
+              </div>
+               -->
+            </div>
+          </tab>
+          <tab heading="Contratos Vinculados">
+            <div class="border-right border-left border-bottom px-3 pt-3" >
+              <div *ngIf="!loadingVinculo && !noVinculo">
+                <table  class="table table-borderless text-center" >
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col" style="width:40px"></th>
+                        <th scope="col">ID </th>
+                        <th scope="col">Descrição</th>
+                        <th scope="col">Inicio do Contrato</th>
+                        <th scope="col">Fim do Contrato</th>
+                        <th scope="col" style="width:40px"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let contrato of contratosVinculados; let i = index">
+                        <td class="d-flex">
+                          <i class="text-success fas fa-circle mr-3" *ngIf="contrato.IN_STAT == 1" tooltip="Ativo" ></i>
+                          <i class="text-danger  fas fa-circle mr-3" *ngIf="contrato.IN_STAT == 0" tooltip="Inativo"></i>
+                        </td>
+                        <td>{{ contrato.ID_TECN_INFO_CONT }}</td>
+                        <td>{{ contrato.DS_CONT | uppercase}}</td>
+                        <td>{{ contrato.DT_INIC | date: 'dd/MM/yyyy' }}</td>
+                        <td>{{ contrato.DT_VENC | date: 'dd/MM/yyyy'}}</td>
+                        <td style="text-align: right;">
+                          <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                            <button type="button" class="btn-icon-sm" [routerLink]="['./../', contrato.ID_TECN_INFO_CONT]">
+                              <i class="fas fa-edit"></i>
+                            </button>
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+              </div>
+              <div class="d-flex justify-content-center mb-3" *ngIf="loadingVinculo">
+                <div class="spinner-border text-dark"></div>
+              </div>
+              <div *ngIf="!loadingVinculo && noVinculo" class="d-flex justify-content-center mb-3">
+                <empty-result message="Nenhuma informação encontrada"></empty-result>
+              </div>
+            </div>
+          </tab>
+        </tabset>
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

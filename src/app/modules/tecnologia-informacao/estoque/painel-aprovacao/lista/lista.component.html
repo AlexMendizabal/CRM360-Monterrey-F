@@ -1,0 +1,481 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="PAINEL DE APROVAÇÕES">
+  <button
+  type="button"
+  (click)="onExport()"
+  [disabled]="loadingNavBar || noResult">
+  Exportar
+</button>
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-1 pl-0">
+              <label for="ID_TEIN_ESTO_APRO">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_TEIN_ESTO_APRO"
+                formControlName="ID_TEIN_ESTO_APRO"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="DT_INIC">Data Inicial</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="DT_INIC"
+                type="text"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="DT_INIC"
+                >
+              </div>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="DT_FINA">Data Final</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="DT_FINA"
+                type="text"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="DT_FINA"
+                >
+              </div>
+            </div>
+            <div class="form-group col-md-4 pl-0">
+              <label for="SG_SIST_ORIG">Sistema</label>
+              <input
+                type="text"
+                class="form-control"
+                id="SG_SIST_ORIG"
+                formControlName="SG_SIST_ORIG"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-lg-2 pl-0">
+              <label for="DS_APRO">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="DS_APRO"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-lg-1 p-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0 col-12">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" >ID</th>
+              <th scope="col" >Data da Solicitação</th>
+              <th scope="col" >Sistema</th>
+              <th scope="col" >Produto</th>
+              <th scope="col" >Código do Pedido</th>
+              <th scope="col" >Código de Referência</th>
+              <th scope="col" style="width:40px" ></th>
+              <th scope="col" style="width:40px" ></th>
+              <th scope="col" style="width:40px" ></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let status of solicitacoes" >
+              <td [ngClass]="classStatusBorder(status)">
+              {{status.ID_TEIN_ESTO_APRO }}
+              </td>
+              <td>{{ status.DT_INCL | date: 'dd/MM/yyyy HH:mm'}}</td>
+              <td>{{ status.SG_SIST_ORIG}}</td>
+              <td>{{ status.ID_TEIN_ESTO_PROD}} - {{ status.NM_PROD}}</td>
+              <td>{{ status.CD_PEDI }}</td>
+              <td>{{ status.CD_REFE }}</td>
+              <td >
+                <span class="mr-3" tooltip="Aprovar" placement="left" container="body" *ngIf="status.DS_APRO == 'PENDENTE'">
+                  <button type="button" class="btn-icon-sm" (click)="openModal(aprovarSolicitacao, status)">
+                    <i class=" text-success fas fa-thumbs-up"></i>
+                  </button>
+                </span>
+              </td>
+              <td >
+                <span class="mr-3" tooltip="Reprovar" placement="left" container="body" *ngIf="status.DS_APRO == 'PENDENTE'">
+                  <button type="button" class="btn-icon-sm" (click)="openModal(reprovarSolicitacao, status)">
+                    <i class=" text-danger fas fa-thumbs-down"></i>
+                  </button>
+                </span>
+              </td>
+              <td>
+                <span   tooltip="Detalhe da Solicitação" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm">
+                    <i class="fas fa-search" (click)="openModal(detalhesSolicitacao, status)"></i>                  
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div >
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+      </div>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+  <ng-template #detalhesSolicitacao>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Detalhes da Solicitação #{{solicitacaoSelecionada?.ID_TEIN_ESTO_APRO}}</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="text-center">
+        <blockquote class="blockquote mx-5">
+          <p class="text-primary mb-0"> INTEGRAÇÃO VIA {{solicitacaoSelecionada?.SG_SIST_ORIG | uppercase}}</p>
+          <footer class="blockquote-footer">
+            <small class="text-muted">
+              {{solicitacaoSelecionada?.DT_INCL | date: 'dd/MM/yyyy HH:mm' }}
+            </small>
+          </footer>
+          <footer class="blockquote-footer">
+            <small class="text-muted">
+                <cite >{{solicitacaoSelecionada?.DS_OBSE }}</cite>
+            </small>
+          </footer>
+          <footer class="blockquote-footer" *ngIf="solicitacaoSelecionada?.DS_APRO == 'APROVADO'">
+            <small class="text-success">
+              <cite >SOLICITAÇÃO APROVADA POR <strong>{{solicitacaoSelecionada?.NM_USUA}}</strong> NO DIA {{solicitacaoSelecionada?.DT_ATUA | date: 'dd/MM/yyyy HH:mm'}}</cite>
+            </small>
+          </footer>
+          <footer class="blockquote-footer" *ngIf="solicitacaoSelecionada?.DS_APRO == 'REPROVADO'">
+            <small class="text-danger">
+              <cite >SOLICITAÇÃO REPROVADA POR <strong>{{solicitacaoSelecionada?.NM_USUA}}</strong> NO DIA {{solicitacaoSelecionada?.DT_ATUA | date: 'dd/MM/yyyy HH:mm'}}</cite>
+            </small>
+          </footer>
+        </blockquote>
+      </div>
+      <div class="col-12">
+        <hr>
+        <div class="form-row justify-content-center ">
+          <div class="form-group col-lg-2">
+            <label>ID DO PRODUTO</label>
+            <div>{{solicitacaoSelecionada?.ID_TEIN_ESTO_PROD || 'NÃO INFORMADO'}}
+            </div>
+          </div>
+          <div class="form-group col-lg-2">
+            <label>SEQUÊNCIA</label>
+            <div>{{solicitacaoSelecionada?.NR_SQNC || 'NÃO INFORMADO'}}</div>
+          </div>
+          <div class="form-group col-lg-5 border-right">
+            <label>PRODUTO</label>
+            <div>{{solicitacaoSelecionada?.NM_PROD || 'NÃO INFORMADO'}}</div>
+          </div>
+          <div class="form-group col-lg-3">
+            <div><label>QUANTIDADE: </label> {{solicitacaoSelecionada?.TT_PROD | numberInt:solicitacaoSelecionada.DS_UNID_MEDI || 'NÃO INFORMADO'}} {{solicitacaoSelecionada?.DS_UNID_MEDI || 'NÃO INFORMADO'}} </div>
+            <div><label>VALOR UNITÁRIO: </label> {{solicitacaoSelecionada?.VL_UNIT | currency:'BRL' || 'NÃO INFORMADO'}}</div>
+          </div>
+        </div>
+        <div class="form-row justify-content-center ">
+          <div class="form-group col-lg-2">
+            <label>NOTA FISCAL</label>
+            <div>{{solicitacaoSelecionada?.NR_NOTA_FISC || 'NÃO INFORMADO'}}</div>
+          </div>
+          <div class="form-group col-lg-2">
+            <label>VALOR DA NOTA FISCAL</label>
+            <div>{{solicitacaoSelecionada?.VL_NOTA_FISC | currency:'BRL' || 'NÃO INFORMADO'}}</div>
+          </div>
+          <div class="form-group col-lg-5">
+            <label>CÓDIGO DO PEDIDO</label>
+            <div>{{solicitacaoSelecionada?.CD_PEDI || 'NÃO INFORMADO'}}</div>
+          </div>
+          <div class="form-group col-lg-3">
+            <label>CÓDIGO DE REFERÊNCIA</label>
+            <div>{{solicitacaoSelecionada?.CD_REFE || 'NÃO INFORMADO'}}</div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-row justify-content-center ">
+          <div class="form-group col-lg-4">
+            <label>NOME DO SOLICITANTE</label>
+            <div>{{solicitacaoSelecionada?.NM_SOLI || 'NÃO INFORMADO'}}
+            </div>
+          </div>
+          <div class="form-group col-lg-2 px-4">
+            <label>DATA DE SOLICITAÇÃO</label>
+            <div>{{solicitacaoSelecionada?.DT_SOLI | date: 'dd/MM/yyyy HH:mm' }}
+            </div>
+          </div>
+          <div class="form-group col-lg-4 border-left px-4">
+            <label>NOME DO RECEBEDOR</label>
+            <div>{{solicitacaoSelecionada?.NM_RECE || 'NÃO INFORMADO'}}
+            </div>
+          </div>
+          <div class="form-group col-lg-2">
+            <label>DATA DE RECEBIMENTO</label>
+            <div>{{solicitacaoSelecionada?.DT_RECE | date: 'dd/MM/yyyy HH:mm' }}
+            </div>
+          </div>
+        </div>
+        <hr>
+        <form [formGroup]="form" autocomplete="off" [hidden] ="solicitacaoSelecionada.DS_APRO != 'PENDENTE' ">
+          <div class="form-row justify-content-center">
+            <div class="form-group col-md pl-0">
+              <label for="empresas">Empresa</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="empresas"
+                [loading]="loadingEmpresas"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                labelForId="ID"
+                bindLabel="NM_FANT"
+                bindValue="ID"
+                id="ID"
+                formControlName="UUID_EMPR"
+                >
+              </ng-select>
+              <invalid-form-control [show]="onFieldInvalid('UUID_EMPR')" message="Empresa é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-row justify-content-center">
+            <div class="form-group col pl-0">
+              <label for="DS_PARE" >Parecer</label>
+              <textarea 
+                class="form-control" 
+                id="DS_PARE" 
+                formControlName="DS_PARE" 
+                rows="3"
+                [ngClass]="onFieldError('DS_PARE') + ' ' + onFieldRequired('DS_PARE')">
+              </textarea>
+              <invalid-form-control [show]="onFieldInvalid('DS_PARE')" message="Parecer é obrigatório e deve conter no mínimo 3 dígitos."></invalid-form-control>
+            </div>
+          </div>
+        </form>
+        <div  class="form-row justify-content-center text-center" [hidden] ="solicitacaoSelecionada.DS_APRO != 'PENDENTE'">
+          <button 
+            type="button" 
+            class="btn btn-default btn-lg m-2"
+            (click)="requestSuccess(solicitacaoSelecionada)"
+            [disabled]="form.valid === false || loadingNavBar === true"
+          >
+            <span aria-hidden="true">
+             <i class=" text-success fas fa-thumbs-up"></i>
+            </span>Aprovar
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-default btn-lg m-2"
+            (click)="requestFail()"
+            [disabled]="form.valid === false || loadingNavBar === true"
+          >
+            <span aria-hidden="true">
+             <i class=" text-danger fas fa-thumbs-down"></i>
+            </span>Reprovar
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #aprovarSolicitacao>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Parecer de Aprovação #{{solicitacaoSelecionada?.ID_TEIN_ESTO_APRO}}</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="col-12">
+        <form [formGroup]="form" autocomplete="off" [hidden] ="solicitacaoSelecionada.DS_APRO != 'PENDENTE'">
+          <div class="form-row justify-content-center">
+            <div class="form-group col pl-0">
+              <label for="empresas">Empresa</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="empresas"
+                [loading]="loadingEmpresas"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                labelForId="ID"
+                bindLabel="NM_FANT"
+                bindValue="ID"
+                id="ID"
+                formControlName="UUID_EMPR"
+                >
+              </ng-select>
+              <invalid-form-control [show]="onFieldInvalid('UUID_EMPR')" message="Empresa é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-row justify-content-center">
+            <div class="form-group col pl-0">
+              <label for="DS_PARE" >Parecer</label>
+              <textarea 
+                class="form-control" 
+                id="DS_PARE" 
+                formControlName="DS_PARE" 
+                rows="3"
+                [ngClass]="onFieldError('DS_PARE') + ' ' + onFieldRequired('DS_PARE')">
+              </textarea>
+              <invalid-form-control [show]="onFieldInvalid('DS_PARE')" message="Parecer é obrigatório e deve conter no mínimo 3 dígitos."></invalid-form-control>
+            </div>
+          </div>
+        </form>
+        <div  class="form-row justify-content-center text-center" [hidden] ="solicitacaoSelecionada.DS_APRO != 'PENDENTE'">
+          <button 
+            type="button" 
+            class="btn btn-default btn-lg m-2"
+            (click)="requestSuccess(solicitacaoSelecionada)"
+            [disabled]="form.valid === false"
+          >
+            <span aria-hidden="true">
+             <i class=" text-success fas fa-thumbs-up"></i>
+            </span>Aprovar
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+   <ng-template #reprovarSolicitacao>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Parecer de Reprovação #{{solicitacaoSelecionada?.ID_TEIN_ESTO_APRO}}</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="col-12">
+        <form [formGroup]="form" autocomplete="off" [hidden] ="solicitacaoSelecionada.DS_APRO != 'PENDENTE'">
+          <div class="form-row justify-content-center">
+            <div class="form-group col pl-0">
+              <label for="empresas">Empresa</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="empresas"
+                [loading]="loadingEmpresas"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                labelForId="ID"
+                bindLabel="NM_FANT"
+                bindValue="ID"
+                id="ID"
+                formControlName="UUID_EMPR"
+                >
+              </ng-select>
+              <invalid-form-control [show]="onFieldInvalid('UUID_EMPR')" message="Empresa é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-row justify-content-center">
+            <div class="form-group col pl-0">
+              <label for="DS_PARE" >Parecer</label>
+              <textarea 
+                class="form-control" 
+                id="DS_PARE" 
+                formControlName="DS_PARE" 
+                rows="3"
+                [ngClass]="onFieldError('DS_PARE') + ' ' + onFieldRequired('DS_PARE')">
+              </textarea>
+              <invalid-form-control [show]="onFieldInvalid('DS_PARE')" message="Parecer é obrigatório e deve conter no mínimo 3 dígitos."></invalid-form-control>
+            </div>
+          </div>
+        </form>
+        <div  class="form-row justify-content-center text-center" [hidden] ="solicitacaoSelecionada.DS_APRO != 'PENDENTE'">
+          <button 
+            type="button" 
+            class="btn btn-default btn-lg m-2"
+            (click)="requestFail(solicitacaoSelecionada)"
+            [disabled]="form.valid === false"
+          >
+            <span aria-hidden="true">
+             <i class=" text-danger fas fa-thumbs-down"></i>
+            </span>Reprovar
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</app-body>

@@ -1,0 +1,89 @@
+<form [formGroup]="form">
+  <div
+    class="input-group mb-3"
+  >
+    <input
+      type="text"
+      class="form-control"
+      placeholder="DIGITE..."
+      formControlName="search"
+      (keyup.enter)="onFilter()" 
+    >
+    <div
+      class="input-group-append hover"
+      (click)="onFilter()"  
+    >
+      <span class="input-group-text">
+        <i class="fas fa-search"></i>
+      </span>
+    </div>
+  </div>
+</form>
+<div [hidden]="loading || noResult">
+  <custom-table>
+    <ng-template #thead let-thead>
+      <tr>
+        <th></th>
+        <th>Código</th>
+        <th>Descrição</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template #tbody let-tbody>
+      <tr *ngFor="let item of planosConta | slice : begin : end; let index = index;">
+        <td>
+          <div
+            class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input hover"
+              [id]="'customCheck' + index"
+              [checked]="item.CHEC"
+            >
+            <label
+              class="custom-control-label hover"
+              [for]="'customCheck' + index"
+              (click)="postAssociacoes(item)"
+            ></label>
+          </div>
+        </td>
+        <td>{{ item.CD_PLAN_CONT }}</td>
+        <td>{{ item.DS_PLAN_CONT }}</td>
+        <td>
+          <div
+            class="spinner-border text-primary spinner-border-sm"
+            role="status"
+            *ngIf="item.LOAD"
+          >
+            <span class="sr-only">Loading...</span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </custom-table>
+  <div>
+    Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+    <pagination
+      [maxSize]="5"
+      [totalItems]="totalItems"
+      (pageChanged)="onPageChanged($event)"
+      [(itemsPerPage)]="itemsPerPage"
+      [boundaryLinks]="true"
+      [(ngModel)]="currentPage"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;">
+    </pagination>
+  </div>
+</div>
+<div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 250px">
+  <empty-result message="Nenhuma informação encontrada"></empty-result>
+</div>
+<div
+  class="spinner-border text-primary"
+  role="status"
+  *ngIf="loading"
+>
+  <span class="sr-only">Loading...</span>
+</div>

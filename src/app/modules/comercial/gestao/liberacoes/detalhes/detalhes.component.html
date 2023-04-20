@@ -1,0 +1,521 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Detalhes do Pedido">
+  <!-- <button
+    [disabled]="form.valid === false || loadingNavBar === true"
+    (click)="postMovimentacoes()"
+    >
+    Salvar
+  </button> -->
+  <button
+  type="button"
+  (click) = "onVoltar()"
+  >
+  Voltar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div [hidden] = "loaderFullScreen">
+    <div class="row">
+      <div class="col">
+        <hr class="mt-0 mb-4">
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-row">
+        <div class="form-group col-4">
+          <label>Vendedor</label>
+          <div>{{ solicitacao?.vendedor }}</div>
+        </div>
+        <div class="form-group col-4">
+          <label>Data da solicitação</label>
+          <div>{{ solicitacao?.dataCriacao | date: 'dd/MM/yyyy' }}</div>
+        </div>
+        <div class="form-group col-4" style="color: rgb(200, 0, 0);">
+          <label>Motivos da Trava</label>
+          <div *ngFor="let item of solicitacao?.motivoTrava">- {{ item.desTrava}} </div>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <div class="col-12" >
+      <label><strong>DADOS DO CLIENTE</strong></label>
+      <div class="form-row justify-content-center ">
+        <div class="form-group col-lg-2">
+          <label>Cód. Cliente</label>
+          <div *ngIf="solicitacao?.codCliente == null">NÃO INFORMADO</div>
+          <div *ngIf="solicitacao?.codCliente != null">{{ solicitacao?.codCliente}}</div>
+        </div>
+        <div class="form-group col-lg-4">
+          <label>Razão Social</label>
+          <div *ngIf="solicitacao?.razaoSocial == null">NÃO INFORMADO</div>
+          <div *ngIf="solicitacao?.razaoSocial != null">{{ solicitacao?.razaoSocial}}</div>
+        </div>
+        <div class="form-group col-lg-2" *ngIf="solicitacao?.tipoPessoa == 'J'">
+          <label >CNPJ</label>
+          <div *ngIf="solicitacao?.cpfCnpj == null">NÃO INFORMADO</div>
+          <div *ngIf="solicitacao?.cpfCnpj != null"> {{ solicitacao?.cpfCnpj }}</div>
+        </div>
+        <div class="form-group col-lg-2" *ngIf="solicitacao?.tipoPessoa == 'F'">
+          <label>CPF</label>
+          <div *ngIf="solicitacao?.cpfCnpj == null">NÃO INFORMADO</div>
+          <div *ngIf="solicitacao?.cpfCnpj != null"> {{solicitacao?.cpfCnpj}}</div>
+        </div>
+        <div class="form-group col-lg-2 align-items-center text-right">
+          <a
+          target="_blank"
+          class="btn btn-default btn-lg m-2 "
+          [routerLink]="['/comercial/clientes/historico-financeiro', solicitacao?.codCliente]"
+          tooltip="Abrir Histórico Financeiro"
+        >
+          <span aria-hidden="true">
+           <i class=" text-success fas fa-dollar-sign"></i>
+          </span>Histórico Financeiro
+        </a>
+        </div>
+        <div class="form-group col-lg-2 align-items-center text-right">
+          <a
+          target="_blank"
+          class="btn btn-default btn-lg m-2 "
+          (click)="openModal(detalhesCliente )"
+          tooltip="Visualizar Detalhes do Cliente"
+        >
+          <span aria-hidden="true">
+           <i class=" text-primary fas fa-user"></i>
+          </span>Detalhes do Cliente
+        </a>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <div class="col-12">
+      <label><strong>DADOS DO PEDIDO</strong></label>
+      <div class="form-row justify-content-start ">
+        <div class="form-group col-lg-2">
+          <label>Nº Pedido</label>
+          <div *ngIf="solicitacao?.nrPedido == null">NÃO INFORMADO</div>
+          <div *ngIf="solicitacao?.nrPedido != null">{{solicitacao?.nrPedido}}</div>
+        </div>
+        <div class="form-group col-lg-2">
+          <label>Data da Entrega</label>
+          <div *ngIf="solicitacao?.dataEntrega == null">NÃO INFORMADO</div>
+          <div *ngIf="solicitacao?.dataEntrega != null"> {{solicitacao?.dataEntrega | date: 'dd/MM/yyyy' }}</div>
+        </div>
+        <div class="form-group col-lg-2">
+          <label>Empresa</label>
+          <div *ngIf="solicitacao?.nomeEmpresa == null">NÃO INFORMADO</div>
+          <div *ngIf="solicitacao?.nomeEmpresa != null"> {{solicitacao?.nomeEmpresa}}</div>
+        </div>
+        <div class="form-group col-lg-2">
+          <label>Nota Fiscal Mãe</label>
+          <div *ngIf="solicitacao?.nfMae == null">NÃO INFORMADO</div>
+          <div *ngIf="solicitacao?.nfMae != null"> {{solicitacao?.nfMae}}</div>
+        </div>
+        <div class="form-group col-lg-2">
+          <label>Forma de Pagamento</label>
+          <div *ngIf="solicitacao?.formaPagamento == null">NÃO INFORMADO</div>
+          <div *ngIf="solicitacao?.formaPagamento != null"> {{solicitacao?.formaPagamento}}</div>
+        </div>
+        <div class="form-group col-lg-2">
+          <label>Linha Predominante</label>
+          <div *ngIf="solicitacao?.linha == null">NÃO INFORMADO</div>
+          <div *ngIf="solicitacao?.linha != null">{{solicitacao?.linha}}</div>
+        </div>
+        <div class="form-group col-lg-4">
+          <label>Local de Entrega</label>
+          <div *ngIf="solicitacao?.enderecoEntrega == null">NÃO INFORMADO</div>
+          <div *ngIf="solicitacao?.enderecoEntrega != null"> {{solicitacao?.enderecoEntrega}}</div>
+        </div>
+        <div class="form-group col-lg-4">
+          <label>UF de Entrega</label>
+          <div *ngIf="solicitacao?.ufEntrega == null">NÃO INFORMADO</div>
+          <div *ngIf="solicitacao?.ufEntrega != null"> {{solicitacao?.ufEntrega}}</div>
+        </div>
+      </div>
+    </div>
+      <hr>
+    <div class="col-12" *ngIf="solicitacao?.materiais.length > 0" >
+      <label><strong>MATERIAIS DO PEDIDO</strong></label>
+        <div *ngFor="let item of solicitacao?.materiais; let i = index">
+          <div class="border border-success rounded p-2 mb-1">
+            <label><strong>ITEM: {{ i + 1}}</strong></label><br>
+            <div class="form-row justify-content-start">
+              <div class="form-group col-lg-4">
+                <label>Material</label>
+                <div>{{item?.codMaterial}} - {{item?.nomeMaterial}}</div>
+              </div>
+              <div class="form-group col-lg-2">
+                <label>Valor Unitário</label>
+                <div>
+                  <span class="mr-2">{{ item?.valorUnitarioMaterial | currency:'BRL':'symbol':'1.2-2' }}</span>
+                  <i
+                    *ngIf="item?.variacaoPreco !== 0"
+                    [ngClass]="classVariacaoPreco(item.variacaoPreco)"
+                    [tooltip]="formatVariacaoPreco(item.variacaoPreco)">
+                  </i>
+                </div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>Peso</label>
+                <div>{{item?.pesoTotalMaterial}} {{item?.UnidadeMedida}}</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>ICMS</label>
+                <div>{{item?.vrPercentualIcmsMaterial}} %</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>IPI</label>
+                <div>{{item?.vrPercentualIpiMaterial}} %</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>Custo</label>
+                <div>{{item?.valorCustoMaterial | currency:'BRL':'symbol':'1.2-2'}}</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>% MC</label>
+                <div>{{item?.porcMcMaterial}} %</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>Valor Total</label>
+                <div>{{item?.valorTotalMaterial | currency:'BRL':'symbol':'1.2-2'}}</div>
+              </div>
+            </div>
+            <div class="form-row justify-content-start">
+              <div class="form-group col-lg-2">
+                <label>Margem de Lucro</label>
+                <div>{{item?.valorMargemLucroMaterial | currency:'BRL':'symbol':'1.2-2'}} / {{item?.porcMargemLucroMaterial}} %</div>
+              </div>
+              <div class="form-group col-lg-2">
+                <label>Preço Mínimo</label>
+                <div>{{item?.precoMinimoMaterial | currency:'BRL':'symbol':'1.2-2'}}</div>
+              </div>
+              <div class="form-group col-lg-2">
+                <label>Estoque Atual</label>
+                <div>{{item?.EstoqueAtual}} To</div>
+              </div>
+            </div>
+            <label><strong>DETALHES DA ÚLTIMA VENDA:</strong></label><br>
+            <div class="form-row justify-content-start" *ngIf="item?.nrPedidoUltimaVendaMaterial != null">
+              <div class="form-group col-lg-1">
+                <label>Nº Pedido</label>
+                <div>{{item?.nrPedidoUltimaVendaMaterial}}</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>Data</label>
+                <div>{{item?.dataUltimaVendaMaterial | date: 'dd/MM/yyyy' }}</div>
+              </div>
+              <div class="form-group col-lg-2">
+                <label>Valor Unitário</label>
+                <div>{{item?.valorUnitarioUltimaVenda | currency:'BRL':'symbol':'1.2-2'}}</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>Peso</label>
+                <div>{{item?.qtdeToneladasUltimaVenda}} {{item?.UnidadeMedida}}</div>
+              </div>
+              <div class="form-group col-lg-2">
+                <label>Empresa</label>
+                <div>{{item?.nomeEmpresaUltimaVenda}}</div>
+              </div>
+              <div class="form-group col-lg-2">
+                <label>Forma de pagamento</label>
+                <div>{{item?.formaPagamentoUltimaVenda}}</div>
+              </div>
+              <div class="form-group col-lg-1" *ngIf="item?.mediaDiasFormaPagamentoUltimaVenda != null" >
+                <label>Média de dias</label>
+                <div>{{item?.mediaDiasFormaPagamentoUltimaVenda}} dias</div>
+              </div>
+            </div>
+            <div class="form-row justify-content-start" *ngIf="item?.nrPedidoUltimaVendaMaterial == null">
+              <div class="form-group col-lg-3">
+                Primeiro pedido desse material.
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="col-12" *ngIf="solicitacao?.materiaisSemEstoque.length > 0" >
+      <label><strong>MATERIAIS DO PEDIDO - SEM ESTOQUE</strong></label>
+        <div *ngFor="let item of solicitacao?.materiaisSemEstoque; let j = index">
+          <div class="border border-danger rounded p-2 mb-1">
+            <label><strong>ITEM: {{ j + 1}}</strong></label><br>
+            <div class="form-row justify-content-start">
+              <div class="form-group col-lg-4">
+                <label>Material</label>
+                <div>{{item?.codMaterial}} - {{item?.nomeMaterial}}</div>
+              </div>
+              <div class="form-group col-lg-2">
+                <label>Valor Unitário</label>
+                <div>
+                  <span class="mr-2">{{ item?.valorUnitarioMaterial | currency:'BRL':'symbol':'1.2-2' }}</span>
+                  <i
+                    *ngIf="item?.variacaoPreco !== 0"
+                    [ngClass]="classVariacaoPreco(item.variacaoPreco)"
+                    [tooltip]="formatVariacaoPreco(item.variacaoPreco)">
+                  </i>
+                </div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>Peso</label>
+                <div>{{item?.pesoTotalMaterial}} {{item?.UnidadeMedida}}</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>ICMS</label>
+                <div>{{item?.vrPercentualIcmsMaterial}} %</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>IPI</label>
+                <div>{{item?.vrPercentualIpiMaterial}} %</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>Custo</label>
+                <div>{{item?.valorCustoMaterial | currency:'BRL':'symbol':'1.2-2'}}</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>% MC</label>
+                <div>{{item?.porcMcMaterial}} %</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>Valor Total</label>
+                <div>{{item?.valorTotalMaterial | currency:'BRL':'symbol':'1.2-2'}}</div>
+              </div>
+            </div>
+            <div class="form-row justify-content-start">
+              <div class="form-group col-lg-2">
+                <label>Margem de Lucro</label>
+                <div>{{item?.valorMargemLucroMaterial | currency:'BRL':'symbol':'1.2-2'}} / {{item?.porcMargemLucroMaterial}} %</div>
+              </div>
+              <div class="form-group col-lg-2">
+                <label>Preço Mínimo</label>
+                <div>{{item?.precoMinimoMaterial | currency:'BRL':'symbol':'1.2-2'}}</div>
+              </div>
+              <div class="form-group col-lg-2">
+                <label>Estoque Atual</label>
+                <div>{{item?.EstoqueAtual}} To</div>
+              </div>
+            </div>
+            <label><strong>DETALHES DA ÚLTIMA VENDA:</strong></label><br>
+            <div class="form-row justify-content-start" *ngIf="item?.nrPedidoUltimaVendaMaterial != null">
+              <div class="form-group col-lg-1">
+                <label>Nº Pedido</label>
+                <div>{{item?.nrPedidoUltimaVendaMaterial}}</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>Data</label>
+                <div>{{item?.dataUltimaVendaMaterial | date: 'dd/MM/yyyy' }}</div>
+              </div>
+              <div class="form-group col-lg-2">
+                <label>Valor Unitário</label>
+                <div>{{item?.valorUnitarioUltimaVenda | currency:'BRL':'symbol':'1.2-2'}}</div>
+              </div>
+              <div class="form-group col-lg-1">
+                <label>Peso</label>
+                <div>{{item?.qtdeToneladasUltimaVenda}} {{item?.UnidadeMedida}}</div>
+              </div>
+              <div class="form-group col-lg-2">
+                <label>Empresa</label>
+                <div>{{item?.nomeEmpresaUltimaVenda}}</div>
+              </div>
+              <div class="form-group col-lg-2">
+                <label>Forma de pagamento</label>
+                <div>{{item?.formaPagamentoUltimaVenda}}</div>
+              </div>
+              <div class="form-group col-lg-1" *ngIf="item?.mediaDiasFormaPagamentoUltimaVenda != null" >
+                <label>Média de dias</label>
+                <div>{{item?.mediaDiasFormaPagamentoUltimaVenda}} dias</div>
+              </div>
+            </div>
+            <div class="form-row justify-content-start" *ngIf="item?.nrPedidoUltimaVendaMaterial == null">
+              <div class="form-group col-lg-3">
+                Primeiro pedido desse material.
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="col-12" *ngIf="solicitacao?.totais.length > 0">
+      <label><strong>TOTAIS</strong></label>
+      <div class="form-row justify-content-start ">
+        <div class="form-group col-lg-1">
+          <label>Peso</label>
+          <div>{{solicitacao?.totais[0].qtdeToneladas}} To</div>
+        </div>
+        <div class="form-group col-lg-1">
+          <label>ICMS</label>
+          <div>{{solicitacao?.totais[0].vrPercentualIcmsProposta}} %</div>
+        </div>
+        <div class="form-group col-lg-1">
+          <label>IPI</label>
+          <div>{{solicitacao?.totais[0].vrPercentualIpiProposta}} %</div>
+        </div>
+        <div class="form-group col-lg-1">
+          <label>Média % MC</label>
+          <div>{{solicitacao?.totais[0].porcMcProposta}} %</div>
+        </div>
+        <div class="form-group col-lg-1">
+          <label>Valor</label>
+          <div>{{solicitacao?.totais[0].valorPedido | currency:'BRL':'symbol':'1.2-2'}}</div>
+        </div>
+        <div class="form-group col-lg-2">
+          <label>Margem de Lucro</label>
+          <div>{{solicitacao?.totais[0].valorMargemLucroProposta | currency:'BRL':'symbol':'1.2-2'}}</div>
+        </div>
+        <div class="form-group col-lg-2">
+          <label>Média Margem de Lucro</label>
+          <div>{{solicitacao?.totais[0].porcMargemLucroProposta}} %</div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    
+    <div class="col-12" *ngIf="profile.liberacoesAdm || profile.liberacoesPadrao">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-group col-12">
+          <label for="descObs">Observação:</label>
+          <input
+            class="form-control"
+            id="descObs"
+            formControlName="descObs" 
+            placeholder="Digite..."
+            [ngClass]="onFieldError('descObs') + ' ' + onFieldRequired('form.controls.descObs')">
+          <invalid-form-control [show]="onFieldInvalid('descObs')" message="Descrição é obrigatório e deve conter no mínimo 3 dígitos."></invalid-form-control>
+        </div>
+        <div class="checkbox col-1">
+          <label class="checkbox-inline">
+            <input
+            type="checkbox" 
+            id="excluiPedido"
+            formControlName="excluiPedido"
+            > Excluir pedido
+          </label>
+        </div>
+      </form>  
+      <div class="form-row justify-content-center">
+        <button
+          type="button"
+          class="btn btn-default btn-lg mx-1"
+          (click)="requestSuccess(solicitacao)"
+          [disabled]="_materiaisSemEstoqueEmpty === false || form.value.excluiPedido == true">
+          <span aria-hidden="true">
+          <i class=" text-success fas fa-thumbs-up"></i>
+          </span>Aprovar
+        </button>
+        <button
+          type="button"
+          class="btn btn-default btn-lg mx-1"
+          (click)="requestFail(solicitacao)"
+          [disabled]="loaderNavbar === true || form.valid === false">
+          <span aria-hidden="true">
+          <i class=" text-danger fas fa-thumbs-down"></i>
+          </span>Reprovar
+        </button>
+      </div>
+    </div>
+  </div>
+  <ng-template #detalhesCliente>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Detalhes do Cliente</h4>
+        <div class="d-flex justify-content-center align-items-center">
+          <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingDetalhes">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col" *ngIf="!loadingDetalhes">
+            <div class="form-row" >
+              <div class="form-group col-lg-8">
+                <label>Nome fantasia</label>
+                <div *ngIf="cliente.nomeFantasia == null">NÃO INFORMADO</div>
+                <div *ngIf="cliente.nomeFantasia != null">{{ cliente.nomeFantasia }}</div>
+              </div>
+              <div class="form-group col-lg-4" *ngIf="cliente.tipoPessoa == 'F'">
+                <label>CPF</label>
+                <div *ngIf="cliente.cpf == null">NÃO INFORMADO</div>
+                <div *ngIf="cliente.cpf != null">{{ cliente.cpf }}</div>
+              </div>
+              <div class="form-group col-lg-4" *ngIf="cliente.tipoPessoa == 'J'">
+                <label>CNPJ</label>
+                <div *ngIf="cliente.cnpj == null">NÃO INFORMADO</div>
+                <div *ngIf="cliente.cnpj != null">{{ cliente.cnpj }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col">
+                <label>Razão social</label>
+                <div *ngIf="cliente.razaoSocial == null">NÃO INFORMADO</div>
+                <div *ngIf="cliente.razaoSocial != null">{{ cliente.razaoSocial }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col">
+                <label>Endereço</label>
+                <div *ngIf="cliente.endereco == null">NÃO INFORMADO</div>
+                <div *ngIf="cliente.endereco != null">{{ cliente.endereco }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-lg-8">
+                <label>Bairro</label>
+                <div *ngIf="cliente.bairro == null">NÃO INFORMADO</div>
+                <div *ngIf="cliente.bairro != null">{{ cliente.bairro }}</div>
+              </div>
+              <div class="form-group col-lg-4">
+                <label>CEP</label>
+                <div *ngIf="cliente.cep == null">NÃO INFORMADO</div>
+                <div *ngIf="cliente.cep != null">{{ cliente.cep }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-lg-8">
+                <label>Cidade</label>
+                <div *ngIf="cliente.cidade == null">NÃO INFORMADO</div>
+                <div *ngIf="cliente.cidade != null">{{ cliente.cidade }} / {{ cliente.uf }}</div>
+              </div>
+              <div class="form-group col-lg-4">
+                <label>Segurado</label>
+                <div *ngIf="cliente.segurado != ''">SIM</div>
+                <div *ngIf="cliente.segurado == ''">NÃO</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-lg-8">
+                <label>Vendedor</label>
+                <div *ngIf="cliente.vendedor == null">NÃO INFORMADO</div>
+                <div *ngIf="cliente.vendedor != null">{{ cliente.vendedor }}</div>
+              </div>
+              <div class="form-group col-lg-4">
+                <label>Escritório</label>
+                <div *ngIf="cliente.escritorio == null">NÃO INFORMADO</div>
+                <div *ngIf="cliente.escritorio != null">{{ cliente.escritorio }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-lg-4" *ngIf="cliente.codSAP != '' && cliente.codSAP != null">
+                <label>Código DBA</label>
+                <div>{{ cliente.codSAP }}</div>
+              </div>
+              <div class="form-group col-lg-4" *ngIf="cliente.escritorioDba != '' && cliente.escritorioDba != null">
+                <label>Escritório</label>
+                <div>{{ cliente.escritorioDba }}</div>
+              </div>
+              <div class="form-group col-lg-4" *ngIf="cliente.ultimaCompraDba != '' && cliente.ultimaCompraDba != null">
+                <label>Última compra</label>
+                <div>{{ cliente.ultimaCompraDba }}</div>
+              </div>
+            </div>
+          </div>
+          <div [hidden]="!loadingDetalhes" class="col-lg-12 text-muted ">
+            <p><strong>Buscando os detalhes do cliente...</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</app-body>

@@ -1,0 +1,125 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Linhas">
+  <!-- <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button> -->
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-4">
+              <label for="linhas">Linha</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="linhas"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="linhasLoaded"
+                labelForId="ID_LINH"
+                bindLabel="NM_LINH"
+                bindValue="ID_LINH"
+                id="ID_LINH"
+                formControlName="ID_LINH"
+                >
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-5 pr-0': showDetailPanel}">
+      <custom-table *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center hover">Código</th>
+            <th scope="col" class="hover">Nome da Linha</th>
+            <th style="width:40px"[hidden]="showDetailPanel"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let linha of dadosPagination; let i = index;" [class.table-active]="linha.ID_LINH == linhaSelecionada.ID_LINH && showDetailPanel">
+            <td
+              class="text-center hover"
+              (click)="onDetails(linha)">
+              {{ linha.ID_LINH }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(linha)">
+              {{ linha.NM_LINH | uppercase }}
+            </td>
+            <td class="align-middle" [hidden]="showDetailPanel">
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onEdit(linha)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && dadosLoaded"></empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-7" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="detailPanelTitle">
+        <custom-table [config]="tableConfigSetores" *ngIf="setores.length > 0">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">Código</th>
+              <th scope="col">Setor de Atividade</th>
+              <th scope="col" class="text-center">Data de Alteração</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let setor of setores">
+              <td class="text-center">{{ setor.ID_SETO_ATIV }}</td>
+              <td>{{ setor.DESCRICAO | uppercase }}</td>
+              <td class="text-center">{{ setor.DT_INCL | date : 'dd/MM/yyyy'}}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+</app-body>

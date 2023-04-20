@@ -1,0 +1,106 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<!-- <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen> -->
+<app-header appTitle="GESTÃO DE COMISSIONAMENTOS">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" >
+  <div class="row" >
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label for="periodo">Período</label>
+              <input
+            class="form-control"
+            id="periodo"
+            type="text"
+            formControlName="periodo"
+            >
+            </div>
+            <div class="form-group col-lg-6">
+              <label for="descTabela">Descrição da tabela</label>
+              <input
+            class="form-control"
+            id="descTabela"
+            type="text"
+            formControlName="descTabela"
+            >
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row text-center justify-content-center" >
+    <div class="col">
+      <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr >
+            <!-- <th scope="col" class="text-center hover" >
+              <thead-sorter
+                value="Código"
+                [active]="orderBy == 'codDesc'"
+                [sort]="orderType"
+                (click)="setOrderBy('codDesc')">
+              </thead-sorter>
+            </th> -->
+            <th scope="col-6">Descrição Tabela</th>
+            <th scope="col-2">Data Lançamento</th>
+            <th scope="col-3">Usuário Lançamento</th>
+            <th scope="col-1" [hidden]="showDetailPanel"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let lista of dadosPagination; let i = index;" [class.table-active]="lista.codTabela == tabelaSelecionada.codTabela">
+            <!-- <td
+              class="text-center hover"
+              [ngClass]="classStatusBorder(lista)"
+              (click)="onDetails(lista)">
+              {{ lista.codRepresentante }}
+            </td> -->
+            <td class="hover">
+              {{ lista.nomeTabela }}
+            </td>
+            <td class="hover" >
+              {{ lista.dataCadastro }}
+            </td>
+            <td class="hover">
+              {{ lista.nomeUsuario }}
+            </td>
+            <td class="text-right">
+              <span class="mr-3" tooltip="Mais detalhes" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onEdit(lista)">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+</app-body>

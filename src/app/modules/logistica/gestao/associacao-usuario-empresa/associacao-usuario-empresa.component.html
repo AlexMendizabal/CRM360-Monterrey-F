@@ -1,0 +1,48 @@
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Associação: Usuário x Empresa">
+    <button
+      (click)="salvar()"
+      [disabled] = "!form.valid">
+      Salvar
+    </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="d-flex justify-content-center">
+    <form class="col-4" [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="usuario_">Usuário</label>
+          <ng-select
+            [items]="usuarios"
+            labelForId="usuario_"
+            bindValue="matricula"
+            dropdownPosition="bottom"
+            bindLabel="nome"
+            [loading]="loadingUsuarios"
+            formControlName="usuario"
+            (change)="getEmpresas()">
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              ({{item.matricula}}) {{item.nome}}
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="empresa">Empresas</label>
+          <ng-select
+            [items]="empresas"
+            [multiple]="true"
+            dropdownPosition="bottom"
+            [closeOnSelect]="false"
+            [loading]="loadingEmpresas"
+            labelForId="empresa"
+            bindValue="idEmpresa"
+            bindLabel="dsEmpresa"
+            formControlName="empresa">
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </div>
+</app-body>

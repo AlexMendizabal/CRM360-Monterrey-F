@@ -1,0 +1,196 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle"> 
+<button type="button">
+    <i class="fas fa-building" placement="bottom"   
+    [tooltip]="tooltip">
+    <ng-template #tooltip>
+    <div style="width: 190px !important; font-size:0.60rem; text-align: center;">
+      <span *ngFor="let empresa of empresas; let i = index;">
+        {{ 'ID '+ empresa.codDeposito }} {{ ' - ' + empresa.nomeDeposito }}<br>
+      </span>
+    </div>
+    <div class="d-flex w-100" *ngIf="!empresas > 0">
+      <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+      <strong>Carregando itens...</strong>
+    </div>
+    </ng-template>
+    </i>
+  </button>             
+<button type="button" (click)="downloadModel()">
+    Baixar arquivo de modelo
+</button>
+
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">   
+  <div class="row">    
+    <div class="col-12 text-center">
+      <div class="text-center" *ngIf="!nomePreco">
+        <div class="spinner-border spinner-border-sm text-dark my-auto mr-2 text-center"></div>
+      </div>
+      <h3 *ngIf="nomePreco">{{ codPreco }} - {{ nomePreco | uppercase}}</h3>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-1">
+        <label
+          for="novoCsv"
+          class="d-flex justify-content-start align-items-center"
+          style="cursor: pointer">
+          <p class="btn btn-sm btn-outline-primary m-0">
+            <i class="fas fa-plus"></i>
+            <span>Enviar</span>
+          </p>
+        </label>
+        <input            
+            id="novoCsv"
+            type="file" 
+            class="d-none" 
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            (change)="changeListener($event)"/>       
+      </div>
+      <div class="col-1">
+        <button type="button" class="btn-icon-sm">
+        <i class="fas fa-question-circle" placement="top" [tooltip]="tooltip">
+          <ng-template #tooltip>
+            <div style="width: 190px !important; font-size:0.63rem; text-align: center;">
+              <span *ngFor="let empresa of empresas; let i = index;">
+                {{ 'ID '+ empresa.codDeposito }} {{ ' - ' + empresa.nomeDeposito }}<br>
+              </span>
+            </div>
+            <div class="d-flex w-100" *ngIf="!empresas > 0">
+              <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+              <strong>Carregando itens...</strong>
+            </div>
+          </ng-template>
+        </i>
+        </button>
+      </div>
+      <div class="col-8">
+      </div>      
+      <div class="col-2">
+        <div class="d-flex justify-content-around">         
+          <button type="button" class="btn btn-sm btn-danger" (click)="clearValues()" [disabled]="!content">
+            Limpar
+            </button>
+            <button type="button" class="btn btn-sm btn-primary" [disabled]="!content" (click)="updateValues(template)">
+            Importar
+            </button>                
+        </div>         
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div>
+          <div class="row">
+            <div class="col">              
+              <custom-table [config]="tableConfigAssocGrupos">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th scope="col">Grupos associados</th>    
+                    <th class="text-center">Informações</th>       
+                  </tr>                        
+                </ng-template>                
+                <ng-template #tbody let-tbody *ngIf="dados">
+                  <tr *ngFor="let item of dados.assocGrupos; let i = index"
+                  onclick="var s = this.parentNode.querySelector('tr.table-active'); s && s.classList.remove('table-active'); this.classList.add('table-active');">
+                    <td>
+                      {{ item.codGrupo }} - {{ item.nomeGrupo | uppercase }}
+                    </td>    
+                    <td class="text-center">
+                      <button type="button" class="btn-icon-sm">
+                        <i class="fas fa-money-bill-wave" placement="left" id="tooltip-preco"        
+                        [tooltip]="tooltip">
+                        <ng-template #tooltip>
+                        <div style="width: 190px; font-size: 0.57rem">
+                          <span *ngFor="let item2 of item.precos; let i = index;">
+                            {{ item2.nomeEmpresa | uppercase  }} - {{ item2.ufDestino + ': R$ '}} {{  item2.valorMaterial | number:'1.2-2'  }}<br>
+                          </span>
+                        </div>
+                        </ng-template>
+                        </i>
+                      </button>              
+                    </td>                                                
+                  </tr>
+                </ng-template>
+              </custom-table>
+            </div>
+          </div>          
+        </div>
+      </div>
+      <div class="col-6">
+      <custom-table *ngIf="headers">
+        <ng-template #thead let-thead>
+          <tr>            
+            <th scope="col">Código</th>
+            <th scope="col">Depósito</th>
+            <th scope="col">UF</th> 
+            <th scope="col">Valor</th>
+            <th scope="col">Situação 
+              <button type="button" class="btn-icon-sm"> 
+              <i class="fas fa-exclamation-circle" placement="left" [tooltip]="tooltip2">
+              <ng-template #tooltip2>
+                <div>
+                  <span>
+                    Mostrará se o código do grupo já está cadastrado (OK) ou não (SEM CADASTRO)
+                  </span>
+                </div>           
+              </ng-template>
+              </i>
+            </button>
+            </th>                    
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody *ngIf="content">
+            <tr *ngFor="let row of content">
+                <td *ngFor="let col of row">
+                  {{ col }}
+                </td>              
+              </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+  </div>
+</app-body>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+    Registros atualizados do item {{ codPreco }} - {{ nomePreco }} 
+    </h4>
+    <button type="button" class="close pull-right" (click)="closeModal()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="height:350px; overflow-x: hidden; overflow-y: scroll;" (onClose)="select.handleClearClick()">  
+    <div *ngIf="elementsAdded.length == 0">
+      <p>Nenhum item foi atualizado.</p>
+    </div>  
+      <custom-table [config]="tableConfigPrecos" class="m-3" *ngIf="elementsAdded.length > 0">    
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col">Código</th>
+            <th scope="col">Depósito</th>
+            <th scope="col">UF</th>
+            <th scope="col">Valor</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody *ngIf="elementsAdded.length > 0">
+          <tr  *ngFor="let a of elementsAdded;">
+            <td> 
+             {{ a.codGrupo }}
+            </td>  
+            <td> 
+              {{ a.codEmpresa }}
+             </td> 
+             <td> 
+              {{ a.ufDestino }}
+             </td> 
+             <td> 
+              {{ a.valorMaterial | number:'1.2-2'}}
+             </td>       
+          </tr>
+        </ng-template>
+      </custom-table>    
+    </div>
+</ng-template>

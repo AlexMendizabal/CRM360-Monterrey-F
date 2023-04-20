@@ -1,0 +1,72 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row" *ngIf="dadosRelacionamentoLoaded">
+  <div class="col">
+    <div class="mtc-title">Dados de relacionamento</div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label>Tipo de atendimento</label>
+        <div *ngIf="dadosRelacionamento.descTipoAtendimento == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosRelacionamento.descTipoAtendimento != null">{{ dadosRelacionamento.descTipoAtendimento | uppercase }}</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Período</label>
+        <div *ngIf="dadosRelacionamento.descPeriodo == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosRelacionamento.descPeriodo != null">{{ dadosRelacionamento.descPeriodo | uppercase }}</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col">
+        <label>Melhores dias para contato</label>
+        <ol class="breadcrumb bg-white p-0 m-0">
+          <li class="breadcrumb-item active text-dark" *ngIf="dadosRelacionamento.diasContato.segunda == 1">SEGUNDA</li>
+          <li class="breadcrumb-item active text-dark" *ngIf="dadosRelacionamento.diasContato.terca == 1">TERÇA</li>
+          <li class="breadcrumb-item active text-dark" *ngIf="dadosRelacionamento.diasContato.quarta == 1">QUARTA</li>
+          <li class="breadcrumb-item active text-dark" *ngIf="dadosRelacionamento.diasContato.quinta == 1">QUINTA</li>
+          <li class="breadcrumb-item active text-dark" *ngIf="dadosRelacionamento.diasContato.sexta == 1">SEXTA</li>
+          <li class="breadcrumb-item active text-dark" *ngIf="dadosRelacionamento.diasContato.sabado == 1">SÁBADO</li>
+        </ol>
+        <div *ngIf="dadosRelacionamento.diasContato.segunda == 0 &&
+                    dadosRelacionamento.diasContato.terca == 0 &&
+                    dadosRelacionamento.diasContato.quarta == 0 &&
+                    dadosRelacionamento.diasContato.quinta == 0 &&
+                    dadosRelacionamento.diasContato.sexta == 0 &&
+                    dadosRelacionamento.diasContato.sabado == 0">
+          NÃO INFORMADO
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label>Frequência de contatos</label>
+        <div *ngIf="dadosRelacionamento.descFrequenciaContato == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosRelacionamento.descFrequenciaContato != null">{{ dadosRelacionamento.descFrequenciaContato | uppercase }}</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Frequência de visitas</label>
+        <div *ngIf="dadosRelacionamento.descFrequenciaVisita == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosRelacionamento.descFrequenciaVisita != null">{{ dadosRelacionamento.descFrequenciaVisita | uppercase }}</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label>Origem do contato</label>
+        <div *ngIf="dadosRelacionamento.descOrigemContato == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosRelacionamento.descOrigemContato != null">{{ dadosRelacionamento.descOrigemContato | uppercase }}</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Website</label>
+        <div *ngIf="dadosRelacionamento.website == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosRelacionamento.website != null">
+          <a [href]="dadosRelacionamento.website" target="_blank">{{ dadosRelacionamento.website | lowercase }}</a>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col">
+        <label>Observações (propostas)</label>
+        <div *ngIf="dadosRelacionamento.obsPropostas == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosRelacionamento.obsPropostas != null" [innerHTML]="dadosRelacionamento.obsPropostas | uppercase"></div>
+      </div>
+    </div>
+  </div>
+</div>

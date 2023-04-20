@@ -1,0 +1,133 @@
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="title">
+  <button
+    type="button"
+    (click)="onEdit()"
+    [hidden]="!showEditButton"
+    [disabled]="loaderNavbar">
+    Editar
+  </button>
+  <button
+    type="button"
+    (click)="onAdd()"
+    [hidden]="!showAddButton"
+    [disabled]="loaderNavbar">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onCancel()"
+    [hidden]="!showCancelButton"
+    [disabled]="loaderNavbar">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [hidden]="!showSubmitButton"
+    [disabled]="loaderNavbar">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row mb-3" *ngIf="cliente.codCliente">
+    <div class="col">
+      <h5 class="d-inline-block mb-0 mr-3" tooltip="Código do cliente">
+        <span class="badge badge-dark">CÓD.: {{ cliente.codCliente }}</span>
+      </h5>
+      <h6 class="d-inline-block mb-0">{{ cliente.razaoSocial }}</h6>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-9 col-xl-10">
+      <router-outlet></router-outlet>
+    </div>
+    <div class="col-md-3 col-xl-2 pl-0">
+      <ul class="sticky-top list-unstyled border-left pl-3 mb-0">
+        <li class="mb-2">
+          <a
+            class="text-black text-decoration-none"
+            [routerLink]="['dados-faturamento']"
+            [routerLinkActive]="'font-weight-bolder'">
+            Dados de faturamento
+          </a>
+        </li>
+        <li class="mb-2">
+          <a
+            class="text-black text-decoration-none"
+            [routerLink]="['enderecos']"
+            [routerLinkActive]="'font-weight-bolder'">
+            Endereços
+          </a>
+        </li>
+        <li class="mb-2">
+          <a
+            class="text-black text-decoration-none"
+            [routerLink]="['contatos']"
+            [routerLinkActive]="'font-weight-bolder'">
+            Contatos
+          </a>
+        </li>
+        <li class="mb-2">
+          <a
+            class="text-black text-decoration-none"
+            [routerLink]="['dados-relacionamento']"
+            [routerLinkActive]="'font-weight-bolder'">
+            Dados de relacionamento
+          </a>
+        </li>
+        <li class="mb-2">
+          <a
+            class="text-black text-decoration-none"
+            [routerLink]="['potencial-compra']"
+            [routerLinkActive]="'font-weight-bolder'">
+            Potencial de compra
+          </a>
+        </li>
+        <li class="mb-2">
+          <a
+            class="text-black text-decoration-none"
+            [routerLink]="['anexos']"
+            [routerLinkActive]="'font-weight-bolder'">
+            Anexos
+          </a>
+        </li>
+        <li class="mb-2">
+          <a
+            class="text-black text-decoration-none"
+            [routerLink]="['filial']"
+            [routerLinkActive]="'font-weight-bolder'">
+            Filial
+          </a>
+        </li>
+        <li class="mb-2">
+          <a
+            class="text-decoration-none"
+            [routerLink]="['travas']"
+            [routerLinkActive]="'font-weight-bolder'"
+            [ngClass]="{'text-black': travas == 0, 'text-danger font-weight-bold': travas > 0}">
+            Travas
+          </a>
+          <span class="badge badge-danger" *ngIf="travas > 0">{{ travas }}</span>
+        </li>
+        <li class="mb-2">
+          <a
+            class="text-black text-decoration-none"
+            [routerLink]="['informacoes-financeiras']"
+            [routerLinkActive]="'font-weight-bolder'">
+            Informações financeiras
+          </a>
+        </li>
+        <li class="mb-0">
+          <a
+            class="text-black text-decoration-none"
+            [routerLink]="['informacoes-comerciais']"
+            [routerLinkActive]="'font-weight-bolder'">
+            Informações comerciais
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</app-body>

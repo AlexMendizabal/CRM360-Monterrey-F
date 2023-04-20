@@ -1,0 +1,447 @@
+
+<div id="modalDetalhes">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto" >Detalles del pedido -  {{pedidoSelecionado?.CD_PEDI}}</h4>
+    <div>
+      <button
+        type="button"
+        class="btn-icon-sm mx-3"
+        tooltip="Download"
+        container="body"
+        (click)="onDownload(pedidoSelecionado)"
+      >
+        <i class="fas fa-download"></i>
+      </button>
+      <button
+        type="button"
+        class="btn-icon-sm mr-3"
+        tooltip="Imprimir"
+        container="body"
+        (click)="onPrint()"
+      >
+        <i class="fas fa-print"></i>
+      </button>
+      <button
+        type="button"
+        class="btn-icon-sm"
+        tooltip="Fechar"
+        container="body"
+        (click)="onClose()"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+  <div class="modal-body" id="pedido-pdf" >
+    <div class="d-flex">
+      <div class="justify-content-between col-8">
+        <div class="mb-1 d-flex justify-content-between">
+          <span class="d-block text-uppercase font-weight-bolder" *ngIf="pedidoSelecionado?.CD_CLIE">({{ pedidoSelecionado?.CD_CLIE }}) &nbsp; {{ pedidoSelecionado?.NM_CLIE }}</span>
+        </div>
+        <div class="d-block text-uppercase">
+          <span *ngIf="pedidoSelecionado?.DS_ENDE">{{ pedidoSelecionado?.DS_ENDE }}</span>
+        </div>
+        <div class="d-block text-uppercase mt-2">
+          <span *ngIf="pedidoSelecionado?.NM_FILI"><strong>Subsidiaria: </strong>{{ pedidoSelecionado?.NM_FILI }}</span>
+        </div>
+        <div class="d-block text-uppercase mt-2">
+          <span *ngIf="pedidoSelecionado?.CD_ROMA_FUSI"><strong>Romaneio: </strong>{{ pedidoSelecionado?.CD_ROMA_FUSI }}</span>
+        </div>
+        <div class="d-block text-uppercase mt-2">
+          <span *ngIf="pedidoSelecionado?.DT_PRZO"><strong>Plazo de entrega: </strong>{{ pedidoSelecionado?.DT_PRZO |  date: 'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+      <div class="justify-content-end col pr-0">
+        <div style="text-align: end;">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary button_action p-2"
+            *ngIf ="pedidos.length > 0 && pedidoSelecionado?.IN_DESM != 2"
+            (click)="sendDesmembramento()">
+            <span>
+              <i *ngIf="!loading" class="fas fa-save"></i>
+              <i *ngIf="loading" class="fas fa-cog fa-spin"></i>
+            </span>
+            <span *ngIf="!loading">Salvar</span>
+          </button>
+        </div>
+        <div style="text-align: end;">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-success button_action p-2"
+            *ngIf ="pedidos.length == 0 && pedidoSelecionado?.IN_DESM != 1"
+            (click)="integraPedido(pedidoSelecionado)">
+            <div *ngIf="!pedidoSelecionado.loading">
+              <i class="fas fa-paper-plane"></i>
+              <span>Integrar</span>
+            </div>
+            <div *ngIf="pedidoSelecionado.loading">
+              <i class="fas fa-cog fa-spin"></i>
+              <span>Aguarde</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between mt-1">
+      <div class="col p-0 card-indication">
+        <div class="border rounded bg-white shadow-sm text-center w-100 p-3">
+          <div class="font-weight-bolder">
+            <div
+              class="font-weight-bolder"
+              counto
+              [step]="30"
+              [countTo]="pedidoSelecionado?.VL_NOTA_FISC"
+              [countFrom]="0"
+              [duration]="2"
+              (countoChange)="countoValorNota = $event">
+              {{ countoValorNota | currency:'Bs' }}
+            </div>
+          </div>
+          <div class="pb-2 border-bottom">Monto de la factura</div>
+        </div>
+      </div>
+      <div class="col p-0 card-indication ml-4">
+        <div class="border rounded bg-white shadow-sm text-center w-100 p-3">
+          <div class="font-weight-bolder">
+            <div
+              class="font-weight-bolder"
+              counto
+              [step]="30"
+              [countTo]="pedidoSelecionado?.TT_PESO"
+              [countFrom]="0"
+              [duration]="2"
+              (countoChange)="countoTotalPeso = $event">
+              {{ countoTotalPeso | number: '1.3-3' }}
+            </div>
+          </div>
+          <div class="pb-2 border-bottom">Factura de peso total</div>
+        </div>
+      </div>
+      <div class="col p-0 card-indication ml-4">
+        <div class="border rounded bg-white shadow-sm text-center w-100 p-3">
+          <div class="font-weight-bolder" [hidden]="loadingProdutos">
+            <div
+            class="font-weight-bolder"
+            counto
+            [step]="30"
+            [countTo]="totalProdutos"
+            [countFrom]="0"
+            [duration]="2"
+            (countoChange)="countoTotalProdutos = $event">
+            {{ countoTotalProdutos | number: '1.0-0' }}
+          </div>
+          </div>
+          <div class="pb-2 border-bottom" [hidden]="loadingProdutos">Productos totales</div>
+          <div class="text-right my-auto" *ngIf="loadingProdutos">
+            <div class="spinner-border text-dark"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="row p-4" *ngIf="loadingProdutos">
+        <div class="col">
+          <message
+            icon="fas fa-cog fa-spin"
+            text="Estamos investigando productos para ti...">
+          </message>
+        </div>
+      </div>
+      <div class="justify-content-between" [hidden] = "produtos.length == 0">
+        <div class="my-2 d-flex justify-content-between">
+          <span class="d-block text-uppercase font-weight-bolder my-auto">Productos</span>
+          <div class="d-flex">
+            <input
+            id="quantidade"
+            type="text"
+            class="form-control mr-2"
+            placeholder="DIGITE..."
+            [(ngModel)]="quantidade"
+            style="align-self: center;width: 100px;height: 28px;"
+          >
+            <span container="body" placement="top" [tooltip]="pedidoSelecionado?.IN_PERM_DESM != 1 ? tooltipPermissaoDesmembramento : 'Desmembrar'">
+              <button
+                *ngIf="pedidoSelecionado?.IN_DESM != 2"
+                type="button"
+                class="btn btn-sm btn-outline-danger button_action"
+                [disabled]="pedidoSelecionado?.DS_INTE != 'N' && pedidoSelecionado?.IN_PERM_DESM != 1 "
+                (click)="onDesmembrar(produtos)">
+                <i class="fas fa-clone"></i>
+                <span>Desmembrar</span>
+              </button>
+            </span>
+
+
+            <ng-template #tooltipPermissaoDesmembramento>
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="text-left">No tiene permiso para dividir pedidos que ya están integrados</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
+
+          </div>
+        </div>
+
+        <div  class="d-flex border rounded">
+          <div class="col">
+            <custom-table [config]="tableConfig" class="table-borderless">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th class="text-center">COD.</th>
+                  <th>Material</th>
+                  <th class="text-center" colspan="2">Quantidade</th>
+                  <th class="text-center" colspan="2">Saldo</th> <!-- *ngIf="pedidos.length > 0 || pedidosAssociados.length > 0" -->
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of produtos; let i = index">
+                  <td width="10%" class="text-center">{{ item.CD_PROD }}</td>
+                  <td width="50%">{{ item.NM_PROD }}</td>
+                  <td width="10%" class="text-center">{{ item.TT_PROD | number: '1.3-3' }} {{item.DS_UNID_MEDI}}</td>
+                  <td width="10%" class="text-center">{{ item.TT_PROD_PESO / 1000 | number: '1.3-3' }} Tons</td>
+                  <td width="10%" class="text-center font-weight-bolder text-success"> <!--  *ngIf="pedidos.length > 0 || pedidosAssociados.length > 0" -->
+                    {{ (item?.TT_SALD | number: '1.3-3') || (item?.TT_PROD | number: '1.3-3') }} {{item.DS_UNID_MEDI}}
+                  </td>
+                  <td width="10%" class="text-center font-weight-bolder text-success"> <!--  *ngIf="pedidos.length > 0 || pedidosAssociados.length > 0" -->
+                    {{ (item?.TT_SALD_PESO / 1000 | number: '1.3-3') || (item?.TT_PROD | number: '1.3-3') }} Tons
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+      <div class="col p-4" *ngIf="loadingPedidosAssociados">
+        <div class="col">
+          <message
+            icon="fas fa-cog fa-spin"
+            text="Estamos investigando pedidos para ti...">
+          </message>
+        </div>
+      </div>
+      <div  class="d-flex border rounded mt-3" *ngFor="let pedido of pedidosAssociados; let i = index" [ngClass]="pedido.DS_INTE == 'I' ? 'border-success' : ''">
+        <div class="col p-4" *ngIf="pedido.loadingProdutosAssociados">
+          <div class="col">
+            <message
+              icon="fas fa-cog fa-spin"
+              text="Estamos investigando productos para ti...">
+            </message>
+          </div>
+        </div>
+        <div class="col" [hidden]= "pedido.loadingProdutosAssociados">
+          <div class="d-flex pr-4 mx-2">
+            <div class="mtc-title mb-0 my-auto" *ngIf="!pedido?.ID_LOGI_FUSI_PEDI">{{pedido?.CD_PEDI}}-{{i + 1}}</div>
+            <div class="mtc-title mb-0 my-auto" *ngIf="pedido?.ID_LOGI_FUSI_PEDI">{{pedido?.CD_PEDI}}</div>
+            <div class="col pr-0 d-flex" style="justify-content: flex-end;">
+              <span class="mtc-title my-auto">
+                Plazo de entrega
+              </span>
+              <div class="input-group p-2" style="width: 215px;">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="far fa-calendar-alt"></i>
+                  </span>
+                </div>
+                <input
+                class="form-control"
+                autocomplete="off"
+                [disabled]="pedido.ID_LOGI_FUSI_PEDI"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                placeholder="Escribelo..."
+                [(ngModel)]="pedido.prazoEntrega"
+              />
+              </div>
+            </div>
+            <!--
+              [icon]="
+                  pedido.loading ? 'fas fa-cog fa-spin' :
+                    (pedido.DS_INTE == 'I' ? 'fas fa-paper-plane text-success':
+                      (pedido.DS_INTE == 'N' ? 'fas fa-paper-plane text-warning':
+                        'fas fa-paper-plane text-danger'
+                      )
+                    )
+                "
+             -->
+            <div class="my-auto pl-2" style="width: 22px;">
+              <span
+                tooltip ="Integrar"
+                placement="left"
+                container="body"
+              >
+                <btn-icon
+                [icon]="
+                  pedido.loading ? 'fas fa-cog fa-spin' :
+                    (pedido.DS_INTE == 'I' ? 'fas fa-paper-plane text-success':
+                      (pedido.DS_INTE == 'N' ? 'fas fa-paper-plane text-warning':
+                        'fas fa-paper-plane text-danger'
+                      )
+                    )"
+                  [disabled]="pedido.TP_OPER == 'RETIRA' || pedido?.cancelamentoLoading || pedido.retiraLoading || pedido.loading"
+                  size="small"
+                  (click)="pedido.TP_OPER == 'RETIRA' || integraPedido(pedido)">
+                </btn-icon>
+              </span>
+            </div>
+            <div class="my-auto pl-2">
+              <span
+                [tooltip]="pedido.TP_OPER == 'RETIRA' ? 'Retira' : 'Marcar como retira'"
+                placement="left"
+                container="body"
+              >
+              <btn-icon
+                [icon]="pedido.retiraLoading ? 'fas fa-cog fa-spin' : 'fas fa-archive'"
+                [ngClass]="{'text-warning': pedido.TP_OPER == 'RETIRA'}"
+                [disabled]="pedido?.cancelamentoLoading || pedido.retiraLoading || pedido.loading || pedido.TP_OPER == 'RETIRA' || pedido.IN_DESM == 1 || pedido.IN_ENTR == 1"
+                size="small"
+                (click)="pedido.TP_OPER == 'RETIRA' || onMarcarRetira(pedido)"
+              >
+              </btn-icon>
+              </span>
+            </div>
+            <div class="my-auto pl-2">
+              <btn-icon
+                [icon] = "pedido?.cancelamentoLoading ? 'fas fa-cog fa-spin' : 'text-danger fas fa-trash'"
+                size="small"
+                tooltip ="Excluir"
+                [disabled]="pedido.IN_ENTR == 1 || pedido?.cancelamentoLoading || pedido.retiraLoading  || pedido.loading"
+                (click)="pedido.IN_ENTR == 1 || onExcluirPedido(pedido)"
+              ></btn-icon>
+            </div>
+          </div>
+          <custom-table [config]="tableConfig" class="table-borderless" >
+            <ng-template #thead let-thead>
+              <tr>
+                <th class="text-center">COD.</th>
+                <th>Material</th>
+                <th colspan="2" class="text-center">Saldo</th>
+                <th class="text-center">Quantidade</th>
+                <th></th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let item of pedido.produtos; let ip = index">
+                <td width="10%" class="text-center">{{ item.CD_PROD }}</td>
+                <td width="45%">{{ item.NM_PROD }}</td>
+                <td width="10%" class="text-center">{{ item.TT_PROD | number: '1.3-3' }} {{item.DS_UNID_MEDI}}</td>
+                <td width="10%" class="text-center">{{ item.TT_PROD_PESO / 1000 | number: '1.3-3' }} Tons</td>
+                <td width="20%" class="text-center">
+                  <input
+                    type="number"
+                    class="form-control"
+                    min = "0"
+                    [placeholder]="'0.000,000 ' + item?.DS_UNID_MEDI "
+                    [disabled]="pedido.ID_LOGI_FUSI_PEDI"
+                    (input)="OnCalcPeso($event, item, pedido)"
+                    [(ngModel)]="item.TT_PROD"
+                    />
+                </td>
+                <td width="5%">
+                  <btn-icon
+                  *ngIf="!pedido.ID_LOGI_FUSI_PEDI"
+                  icon="fas fa-trash"
+                  size="small"
+                  (click)="removeProduto(i , ip)"
+                >
+                </btn-icon>
+                </td>
+              </tr>
+            </ng-template>
+          </custom-table>
+          <div class="d-flex justify-content-end mt-2">
+            <span><strong>{{ pedido.TT_PESO / 1000  | number: '1.3-3' }} Tons</strong></span>
+          </div>
+        </div>
+      </div>
+      <div  class="d-flex border rounded mt-3" *ngFor="let pedido of pedidos; let i = index">
+        <div class="col" [hidden] = "loadingProdutos">
+          <div class="d-flex pr-4 mx-2">
+            <div class="mtc-title mb-0 my-auto" *ngIf="pedidosAssociados.length == 0">{{pedido?.CD_PEDI}}-{{i + 1}}</div>
+            <div class="mtc-title mb-0 my-auto" *ngIf="pedidosAssociados.length > 0">{{pedido?.CD_PEDI}}-{{pedidosAssociados.length + 1 + i}}</div>
+            <div class="col pr-0 d-flex" style="justify-content: flex-end;">
+              <span class="mtc-title my-auto">
+                Plazo de entrega
+              </span>
+              <div class="input-group p-2" style="width: 215px;">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="far fa-calendar-alt"></i>
+                  </span>
+                </div>
+                <input
+                class="form-control"
+                autocomplete="off"
+                [disabled]="pedido.ID_LOGI_FUSI_PEDI"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                placeholder="Escribelo..."
+                [(ngModel)]="pedido.prazoEntrega"
+              />
+              </div>
+            </div>
+            <div class="my-auto pl-2" style="width: 22px;">
+              <btn-icon
+                *ngIf="!pedido.ID_LOGI_FUSI_PEDI"
+                icon="fas fa-trash"
+                size="small"
+                (click)="removePedido(i, pedido)">
+              </btn-icon>
+            </div>
+          </div>
+          <custom-table [config]="tableConfig" class="table-borderless">
+            <ng-template #thead let-thead>
+              <tr>
+                <th class="text-center">COD.</th>
+                <th>Material</th>
+                <th class="text-center" colspan="2">Saldo</th>
+                <th class="text-center">Quantidade</th>
+                <th></th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let item of pedido.produtos; let ip = index">
+                <td width="10%" class="text-center">{{ item.CD_PROD }}</td>
+                <td width="45%">{{ item.NM_PROD }}</td>
+                <td width="10%" class="text-center">{{ item.TT_PROD | number: '1.3-3' }} {{item.DS_UNID_MEDI}}</td>
+                <td width="10%" class="text-center">{{ item.TT_PROD_PESO / 1000 | number: '1.3-3' }} Tons</td>
+                <td width="20%" class="text-center">
+                  <input
+                    type="number"
+                    class="form-control"
+                    min = "0"
+                    [placeholder]="'0.000,000 ' + item?.DS_UNID_MEDI"
+                    [disabled]="pedido.ID_LOGI_FUSI_PEDI"
+                    (input)="OnCalcPeso($event, item, pedido)"
+                    [(ngModel)]="item.TT_PROD"
+                    />
+                </td>
+                <td width="5%">
+                  <btn-icon
+                  *ngIf="!pedido.ID_LOGI_FUSI_PEDI"
+                  icon="fas fa-trash"
+                  size="small"
+                  (click)="removeProduto(i, ip)"
+                >
+                </btn-icon>
+                </td>
+              </tr>
+            </ng-template>
+          </custom-table>
+          <div class="d-flex justify-content-end mt-2">
+            <span><strong>{{ pedido.TT_PESO / 1000  | number: '1.3-3' }} Tons</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+

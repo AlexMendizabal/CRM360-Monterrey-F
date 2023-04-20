@@ -1,0 +1,190 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="Produtos">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2 pl-0">
+              <label for="ID_TEIN_ESTO_PROD">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_TEIN_ESTO_PROD"
+                placeholder="Digite..."
+                formControlName="ID_TEIN_ESTO_PROD"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4 pl-0 ">
+              <label for="tipoProduto">Tipo de Produto</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="tipoProduto"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="loadingTipoProduto"
+                labelForId="ID_TEIN_ESTO_PRTP"
+                bindLabel="NM_TIPO"
+                bindValue="ID_TEIN_ESTO_PRTP"
+                id="ID_TEIN_ESTO_PRTP"
+                formControlName="ID_TEIN_ESTO_PRTP"
+                (change)="getModelos({'ID_TEIN_ESTO_PRTP': $event?.ID_TEIN_ESTO_PRTP || ''})"
+                >
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-6 pl-0">
+              <label for="marca">Marca</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="marca"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="loadingMarca"
+                labelForId="ID_TEIN_ESTO_PRMA"
+                bindLabel="NM_MRCA"
+                bindValue="ID_TEIN_ESTO_PRMA"
+                id="ID_TEIN_ESTO_PRMA"
+                formControlName="ID_TEIN_ESTO_PRMA"
+                >
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-6 pl-0">
+              <label for="modelos">Modelo</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="modelos"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="loadingModelo"
+                labelForId="ID_TEIN_ESTO_PRMO"
+                bindLabel="NM_MODE"
+                bindValue="ID_TEIN_ESTO_PRMO"
+                id="ID_TEIN_ESTO_PRMO"
+                formControlName="ID_TEIN_ESTO_PRMO"
+              >
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-2 pl-0">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              placeholder="Selecione..."
+            >
+              <ng-template ng-option-tmp let-item="item" let-index="index"> {{item.nome}}
+              </ng-template>
+            </ng-select>
+            </div>
+            <div class="form-group col-lg-1 pl-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="col-12 p-0" [hidden] = "loading || noResult">
+    <div>
+      <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col">ID </th>
+            <th scope="col">Produto</th>
+            <th scope="col">Tipo do Produto</th>
+            <th scope="col">Modelo do Produto</th>
+            <th scope="col">Marca</th>
+            <th scope="col" style="width:80px"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let produto of produtos; let i = index">
+            <td [ngClass]="produto.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+            {{produto.ID_TEIN_ESTO_PROD}}
+            </td>
+            <td>{{ produto.NM_PROD | uppercase }}</td>
+            <td>{{ produto.NM_TIPO | uppercase }}</td>
+            <td>{{ produto.NM_MODE | uppercase }}</td>
+            <td>{{ produto.NM_MRCA | uppercase }}</td>
+            <td class="align-middle" style="width:70px">
+              <span class="mr-3" [tooltip]="produto.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="changeType(produto)">
+                  <i [ngClass]="produto.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                </button>
+              </span>
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" [routerLink]="['./', produto.ID_TEIN_ESTO_PROD]" >
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table><br>
+    </div>
+    <div>
+      Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

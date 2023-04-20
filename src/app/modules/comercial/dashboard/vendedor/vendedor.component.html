@@ -1,0 +1,170 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Dashboard vendedor">
+  <button
+    type="button"
+    (click)="onFilter(showFilter)"
+    *ngIf="enableFilterButton()"
+    [disabled]="idEscritorio == null || idVendedor == null">
+    Filtrar
+  </button>
+  <button
+    type="button"
+    (click)="onReload()"
+    *ngIf="showDashboard && profile.vendedor === true">
+    Recarregar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row" *ngIf="showFilter">
+    <div class="col">
+      <comercial-templates-filtro-vendedor-escritorio
+        [profile]="profile"
+        [showAll]="true"
+        (formValue)="dataFilter($event)">
+      </comercial-templates-filtro-vendedor-escritorio>
+    </div>
+  </div>
+  <div class="row" *ngIf="showDashboard">
+    <div class="col">
+      <div class="row mb-3" *ngIf="(nomeEscritorio != null && nomeEscritorio.length > 0) || (nomeVendedor != null && nomeVendedor.length > 0)">
+        <div class="col">
+          <div class="d-flex">
+            <h6 class="mb-0 mr-2" *ngIf="nomeVendedor != null && nomeEscritorio != null && nomeEscritorio.length > 0">
+              <span class="badge badge-secondary">{{ nomeEscritorio }}</span>
+            </h6>
+            <h6 class="mb-0" *ngIf="nomeVendedor.length > 0">
+              <span class="badge badge-primary">{{ nomeVendedor }}</span>
+            </h6>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <comercial-dashboard-vendedor-desempenho-toneladas
+            [idVendedor]="idVendedor"
+            [idEscritorio]="idEscritorio">
+          </comercial-dashboard-vendedor-desempenho-toneladas>
+        </div>
+        <div class="col-md-6 mb-4">
+          <comercial-dashboard-vendedor-desempenho-linha
+            [idVendedor]="idVendedor"
+            [idEscritorio]="idEscritorio">
+          </comercial-dashboard-vendedor-desempenho-linha>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col mb-4">
+          <comercial-dashboard-vendedor-concentracao-vendas
+            [idVendedor]="idVendedor"
+            (dataEmitter)="onAnalyticsData($event)">
+          </comercial-dashboard-vendedor-concentracao-vendas>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col mb-4">
+          <div class="border rounded bg-white shadow-sm p-3">
+            <comercial-templates-mapa-metas
+              [idVendedor]="idVendedor"
+              [idEscritorio]="idEscritorio">
+            </comercial-templates-mapa-metas>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="border rounded bg-white shadow-sm p-3">
+            <div class="mtc-title mb-0">
+              <ng-template #clientesTooltipTemplate>
+                <p><b><u>Ativos:</u></b> Clientes ativos.</p>
+                <p><b><u>Com compra:</u></b> Clientes ATIVOS que compraram nesse mês.</p>
+                <p><b><u>Sem compra:</u></b> Clientes ATIVOS que não compraram nesse mês.</p>
+                <p><b><u>Potenciais:</u></b> Clientes potenciais.</p>
+                <p><b><u>Novos c/ compra:</u></b> Clientes com primeira compra nesse mês.</p>
+                <p><b><u>Reativados:</u></b> Clientes reativados nesse mês.</p>
+                <p><b><u>À inativar:</u></b> Clientes que irão inativar nesse mês.</p>
+                <p><b><u>Inativos:</u></b> Clientes inativos.</p>
+                <p class="mb-0"><b><u>Inativados:</u></b> Clientes que foram inativados nesse mês.</p>
+              </ng-template>
+              <i
+                class="far fa-question-circle p-2"
+                [tooltip]="clientesTooltipTemplate"
+                placement="right">
+              </i>
+              Carteira de clientes
+              <button
+                type="button"
+                class="btn btn-outline-success"
+                style="float: right;"
+                (click)="excelExport()"
+              >
+                Exportar Excel
+              </button>
+            </div>
+            <comercial-dashboard-vendedor-clientes
+              [idVendedor]="idVendedor"
+              [idEscritorio]="idEscritorio"
+              (dataEmitter)="onAnalyticsData($event)">
+            </comercial-dashboard-vendedor-clientes>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="border rounded bg-white shadow-sm p-3">
+            <div class="mtc-title mb-0">
+              <ng-template #registroOcorerenciasTooltipTemplate>
+                <p><b><u>Em análise:</u></b> Ocorrências que estão abertas sem filtro de data.</p>
+                <p><b><u>Sinalização:</u></b> Ocorrências do tipo sinalização abertas nesse mês.</p>
+                <p><b><u>Reclamação:</u></b> Ocorrências do tipo reclamação abertas nesse mês.</p>
+                <p class="mb-0"><b><u>Concluídas:</u></b> Ocorrências concluídas nesse mês.</p>
+              </ng-template>
+              <i
+                class="far fa-question-circle p-2"
+                [tooltip]="registroOcorerenciasTooltipTemplate"
+                placement="right">
+              </i>
+              Registro de ocorrências
+            </div>
+            <comercial-dashboard-vendedor-registro-ocorrencias
+              [idVendedor]="idVendedor"
+              [idEscritorio]="idEscritorio"
+              (dataEmitter)="onAnalyticsData($event)">
+            </comercial-dashboard-vendedor-registro-ocorrencias>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- <div class="col-md-5"> -->
+        <div class="col-md-6">
+          <div class="mtc-title">Financeiro</div>
+          <comercial-dashboard-vendedor-financeiro
+            [idVendedor]="idVendedor"
+            [idEscritorio]="idEscritorio"
+            (dataEmitter)="onAnalyticsData($event)">
+          </comercial-dashboard-vendedor-financeiro>
+        </div>
+
+        <!-- <div class="col-md-7">
+          <div class="mtc-title">Valor Comissão</div>
+          <comercial-dashboard-vendedor-representante
+            [idVendedor]="idVendedor"
+            (dataEmitter)="onAnalyticsData($event)">
+          </comercial-dashboard-vendedor-representante>
+        </div> -->
+      </div>
+      <div class="row" *ngIf="showAnalytic">
+        <div class="col mt-4">
+          <div class="border rounded bg-white shadow-sm p-3">
+            <comercial-dashboard-vendedor-analitico
+              [data]="analyticData"
+              (close)="onCloseAnalytic($event)">
+            </comercial-dashboard-vendedor-analitico>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <permission-denied
+    message="Seu perfil não tem acesso a essa aplicação"
+    *ngIf="showPermissionDenied">
+  </permission-denied>
+</app-body>

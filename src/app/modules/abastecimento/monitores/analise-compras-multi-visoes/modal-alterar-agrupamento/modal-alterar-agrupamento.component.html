@@ -1,0 +1,170 @@
+<div class="row mb-2 mt-2" id="header-modal-alterar-agrupamento">
+  <div class="col text-right">
+    <button
+      type="button"
+      (click)="onFilter()"
+      [disabled]="form.status == 'INVALID'"
+      class="btn"
+    >
+      Filtrar
+    </button>
+  </div>
+</div>
+<advanced-filter>
+  <form [formGroup]="form" autocomplete="off">
+    <div class="form-row">
+      <div class="form-group col-lg-12">
+        <label for="TP_AGRU">Agrupamento</label>
+        <ng-select 
+          [searchable]="true" 
+          [clearable]="false" 
+          [items]="tipoAgrupamentos" 
+          [virtualScroll]="true"
+          [hideSelected]="true" 
+          [closeOnSelect]="true" 
+          placeholder="Selecione..." 
+          bindLabel="NAME"
+          bindValue="ID" 
+          formControlName="TP_AGRU" 
+          [ngClass]="onFieldError('TP_AGRU') + ' ' + onFieldRequired('TP_AGRU')
+          ">
+        </ng-select>
+        <invalid-form-control [show]="onFieldInvalid('TP_AGRU')" message="Agrupamento é obrigatório.">
+        </invalid-form-control>
+      </div>
+    </div>
+  </form>
+</advanced-filter>
+<div class="table-responsive" *ngIf="loadingDetalhesModal">
+  <custom-table subtitleBorder="true">
+    <ng-template #thead let-thead>
+      <tr class="text-center">
+        <th nowrap>Material</th>
+        <th nowrap>Empresa</th>
+        <th nowrap>
+          Estoque
+        </th>
+        <th nowrap>Saídas</th>
+      </tr>
+      <tr>
+        <th
+          nowrap
+          (click)="sort('NM_EMPR')"
+          class="hover text-center"
+        >
+          Descrição
+          <span *ngIf="key == 'NM_EMPR'"
+            ><i
+              [ngClass]="
+                reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "
+            ></i
+          ></span>
+          <span *ngIf="key != 'NM_EMPR'"
+            ><i [ngClass]="'fas fa-sort'"></i
+          ></span>
+        </th>
+        <th
+          nowrap
+          (click)="sort('NM_EMPR')"
+          class="hover text-center"
+        >
+          Descrição
+          <span *ngIf="key == 'NM_EMPR'"
+            ><i
+              [ngClass]="
+                reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "
+            ></i
+          ></span>
+          <span *ngIf="key != 'NM_EMPR'"
+            ><i [ngClass]="'fas fa-sort'"></i
+          ></span>
+        </th>
+        <th
+          nowrap
+          (click)="sort('NM_EMPR')"
+          class="hover text-center"
+        >
+          Disponível
+          <span *ngIf="key == 'NM_EMPR'"
+            ><i
+              [ngClass]="
+                reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "
+            ></i
+          ></span>
+          <span *ngIf="key != 'NM_EMPR'"
+            ><i [ngClass]="'fas fa-sort'"></i
+          ></span>
+        </th>
+        <th
+          nowrap
+          (click)="sort('NM_EMPR')"
+          class="hover text-center"
+        >
+          Total
+          <span *ngIf="key == 'NM_EMPR'"
+            ><i
+              [ngClass]="
+                reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "
+            ></i
+          ></span>
+          <span *ngIf="key != 'NM_EMPR'"
+            ><i [ngClass]="'fas fa-sort'"></i
+          ></span>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template #tbody let-tbody>
+      <tr
+        *ngFor="
+          let item of data
+            | orderBy: key:reverse
+            | slice: begin:end;
+          let i = index
+        "
+      >
+        <td nowrap class="text-center">{{ item.NM_MATE }}</td>
+        <td nowrap class="text-center">{{ item.NM_DEPO }}</td>
+        <td nowrap class="text-center">{{ item.TT_ESTO_DISP }}</td>
+        <td nowrap class="text-center">{{ item.TT_SAID }}</td>
+      </tr>
+    </ng-template>
+  </custom-table>
+</div>
+<div
+  class="mt-2 mb-2"
+  *ngIf="data?.length > itemsPerPage"
+>
+  Exibindo {{ begin + 1 }} a {{ end }} de
+  {{ data?.length }}
+  <div class="d-flex">
+    <pagination
+      [maxSize]="10"
+      [totalItems]="data?.length"
+      (pageChanged)="onPageChanged($event)"
+      [(itemsPerPage)]="itemsPerPage"
+      [boundaryLinks]="true"
+      [(ngModel)]="currentPage"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;"
+    >
+    </pagination>
+  </div>
+</div>
+<!-- <div class="text-center d-flex justify-content-center align-items-center p-5" *ngIf="loaderBody">
+  <div class="spinner-border">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div> -->
+<!-- <div
+  *ngIf="noResultModal && !loadingDetalhesModal"
+  class="text-center d-flex justify-content-center align-items-center p-5"
+  style="height: 80%;"
+  >
+  <empty-result message="Nenhuma informação encontrada"></empty-result>
+</div> -->

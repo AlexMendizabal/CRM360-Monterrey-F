@@ -1,0 +1,871 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    *ngIf="visualizar"
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm"
+  >
+    Voltar
+  </button>
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm"
+    [hidden]="visualizar"
+  >
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit(2)"
+    [disabled]="!form.valid || submittingForm || assocMateriais.value.length == 0"
+    [hidden]="visualizar"
+    >
+    Enviar para Aprovação
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit(1)"
+    [disabled]="!form.valid || submittingForm || assocMateriais.value.length == 0"
+    [hidden]="visualizar"
+  >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="ml-5 mr-5">
+    <div class="col-12">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="mtc-title mb-2">
+          Tela de cadastro de contratos comerciais
+        </div>
+        <hr />
+        <div class="row">
+          <div class="form-group col-lg-6">
+            <label for="codPeso">Tipo de Serviço</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipoServico"
+              [virtualScroll]="true"
+              [loading]="materiaisLoader"
+              [readonly]="visualizar"
+              formControlName="codTipoServico"
+              labelForId="codTipoServico"
+              bindLabel="nomeTipoServico"
+              bindValue="codTipoServico"
+              loadingText="Carregando..."
+              placeholder="Selecione..."
+              (change)="onChangeServico()"
+              [ngClass]="
+                onFieldError('codTipoServico') +
+                ' ' +
+                onFieldRequired('codTipoServico')
+              "
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('codTipoServico')"
+              message="Tipo de Serviço é obrigatório."
+            ></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="codEmpresa">Empresa</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="empresas"
+              [readonly]="visualizar"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              formControlName="codEmpresa"
+              labelForId="codEmpresa"
+              bindLabel="nomeEmpresa"
+              bindValue="idEmpresa"
+              [ngClass]="onFieldError('codEmpresa') + ' ' + onFieldRequired('codEmpresa')">
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('codEmpresa')" message="Empresa é obrigatório."></invalid-form-control>
+          </div>
+
+          <div class="form-group col-lg-12">
+            <div
+              class="mb-1 d-flex justify-content-between w-100"
+              style="height: 19px"
+            >
+              <label class="my-auto" for="codCliente">Cliente</label>
+              <div class="my-auto text-uppercase" style="font-size: 11px">
+                <a
+                  class="text-primary mr-2"
+                  href="javascript:void(0)"
+                  (click)="openModal(selecionarCliente)"
+                >
+                  <strong>Selecionar</strong>
+                </a>
+                <span class="mx-2" *ngIf="form.value.codCliente != null"
+                  >|</span
+                >
+                <a
+                  *ngIf="form.value.codCliente != null"
+                  class="text-primary mr-2"
+                  href="javascript:void(0)"
+                  (click)="onClienteDetalhes()"
+                >
+                  <strong>Detalhes</strong>
+                </a>
+              </div>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              id="codRazaoSocial"
+              formControlName="codRazaoSocial"
+              placeholder="Selecione..."
+              [attr.disabled]="true"
+            />
+          </div>
+
+          <div class="form-group col-lg-12" *ngIf="grupoEconomico.length > 1">
+            <label for="grupoEconomico">Grupo Econômico</label>
+            <ng-select
+              [searchable]="true"
+              [items]="grupoEconomico"
+              [virtualScroll]="true"
+              [multiple]="true"
+              [loading]="loaderGrupoEconomico"
+              [readonly]="visualizar"
+              [closeOnSelect]="false"
+              [clearSearchOnAdd]="true"
+              formControlName="grupoEconomico"
+              labelForId="grupoEconomico"
+              bindValue="codCliente"
+              bindLabel="codRazaoSocial"
+              loadingText="Carregando Grupo Econômico..."
+              placeholder="Selecione..."
+              [ngClass]="
+                onFieldError('grupoEconomico') +
+                ' ' +
+                onFieldRequired('grupoEconomico')
+              "
+            >
+            </ng-select>
+          </div>
+          <div class="form-group col-lg-12">
+            <label for="enderecoEntrega">Endereço de Entrega</label>
+            <ng-select
+              [items]="enderecos"
+              formControlName="codEnderecoEntrega"
+              [virtualScroll]="true"
+              labelForId="codEnderecoEntrega"
+              bindValue="id"
+              bindLabel="enderecoAjustado"
+              [loading]="loaderEnderecos"
+              loadingText="Carregando Endereços..."
+              [readonly]="visualizar"
+              placeholder="Selecione..."
+              [ngClass]="
+                onFieldError('codEnderecoEntrega') +
+                ' ' +
+                onFieldRequired('codEnderecoEntrega')
+              "
+            >
+            </ng-select>
+          </div>
+
+          <div class="form-group col-lg-12">
+            <label for="nomeContrato">Nome do Contrato</label>
+            <input
+              [readonly]="visualizar"
+              class="form-control"
+              id="nomeContrato"
+              type="text"
+              formControlName="nomeContrato"
+              placeholder="DIGITE..."
+              [ngClass]="
+                onFieldError('nomeContrato') +
+                ' ' +
+                onFieldRequired('nomeContrato')
+              "
+            />
+            <invalid-form-control
+              [show]="onFieldInvalid('nomeContrato') == 'required'"
+              message="O nome do contrato é obrigatório."
+            ></invalid-form-control>
+          </div>
+
+          <div class="form-group col-lg-3">
+            <label for="dataInicialContrato">Data Início</label>
+            <input
+              class="form-control"
+              id="dataInicialContrato"
+              type="text"
+              bsDatepicker
+              formControlName="dataInicialContrato"
+              [readonly]="visualizar"
+              [ngClass]="
+                onFieldError('dataInicialContrato') +
+                ' ' +
+                onFieldRequired('dataInicialContrato')
+              "
+            />
+            <invalid-form-control
+              [show]="onFieldInvalid('dataInicialContrato')"
+              message="Data Início é obrigatório."
+            ></invalid-form-control>
+          </div>
+
+          <div class="form-group col-lg-3">
+            <label for="dataFinalContrato">Data Final</label>
+            <input
+              class="form-control"
+              id="dataFinalContrato"
+              type="text"
+              bsDatepicker
+              formControlName="dataFinalContrato"
+              [readonly]="visualizar"
+              [ngClass]="
+                onFieldError('dataFinalContrato') +
+                ' ' +
+                onFieldRequired('dataFinalContrato')
+              "
+            />
+            <invalid-form-control
+              [show]="onFieldInvalid('dataFinalContrato')"
+              message="Data Vigência é obrigatório."
+            ></invalid-form-control>
+          </div>
+
+          <div class="form-group col-lg-3" *ngIf="!changeTipoServico">
+            <label for="codPeso">Quantidade Máxima</label>
+            <td class="text-center" style="width: 12%">
+              <input
+                class="form-control"
+                id="codPeso"
+                type="text"
+                formControlName="codPeso"
+                currencyMask
+                placeholder="0,000"
+                [readonly]="visualizar"
+                [options]="{
+                  align: 'left',
+                  prefix: '',
+                  thousands: '.',
+                  decimal: ',',
+                  precision: 3
+                }"
+              />
+            </td>
+          </div>
+
+          <div class="form-group col-lg-3" *ngIf="changeTipoServico">
+            <label for="codPeso">Quantidade Máxima</label>
+            <td class="text-center" style="width: 12%">
+              <input
+                class="form-control"
+                id="codPeso"
+                type="text"
+                formControlName="codPeso"
+                placeholder="0,000"
+                [readonly]="visualizar"
+                [ngClass]="
+                  onFieldError('codPeso') + ' ' + onFieldRequired('codPeso')
+                "
+                currencyMask
+                [options]="{
+                  align: 'left',
+                  prefix: '',
+                  thousands: '.',
+                  decimal: ',',
+                  precision: 3
+                }"
+              />
+            </td>
+            <invalid-form-control
+              [show]="onFieldInvalid('codPeso')"
+              message="Quantidade Máxima é obrigatório."
+            ></invalid-form-control>
+          </div>
+
+          <div class="form-group col-lg-3">
+            <label for="codSituacao"
+              >Situação
+              <i
+                class="far fa-question-circle"
+                [tooltip]="tooltipLabelTemplate"
+              ></i
+            ></label>
+            <ng-select
+              type="text"
+              [searchable]="true"
+              [clearable]="false"
+              [items]="situacoes"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="true"
+              placeholder="EM ABERTO"
+              bindLabel="nomeSituacao"
+              bindValue="codSituacao"
+              formControlName="codSituacao"
+              [readonly]="true"
+              [ngClass]="
+                onFieldError('codSituacao') +
+                ' ' +
+                onFieldRequired('codSituacao')
+              "
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('codSituacao') == 'required'"
+              message="Situação é obrigatória."
+            ></invalid-form-control>
+          </div>
+
+          <ng-template #tooltipLabelTemplate>
+            <p class="mt-3 mb-0"><b>Caso Finalize o pedido em:</b></p>
+            <p class="mt-3 mb-0"><b>Salvar - Situação: EM ABERTO</b></p>
+            <p class="mt-3 mb-0">
+              <b>Enviar para Aprovação - Situação: AGUARDANDO APROVAÇÃO</b>
+            </p>
+            <p class="text-nowrap mb-0"><br /><br /></p>
+          </ng-template>
+
+          <div class="form-group col-lg-3">
+            <label for="codPeso">Forma de pagamento</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="formaPagamento"
+              formControlName="codFormaPagamento"
+              [virtualScroll]="true"
+              labelForId="codFormaPagamento"
+              bindLabel="descricao"
+              bindValue="codigo"
+              [loading]="materiaisLoader"
+              loadingText="Carregando..."
+              [readonly]="visualizar"
+              placeholder="Selecione..."
+              [ngClass]="
+                onFieldError('codFormaPagamento') +
+                ' ' +
+                onFieldRequired('codFormaPagamento')
+              "
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('codFormaPagamento')"
+              message="Forma de pagamento é obrigatório."
+            ></invalid-form-control>
+          </div>
+
+          <div class="form-group col-lg-3">
+            <label for="codTipoFrete">Frete</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipoFrete"
+              formControlName="codTipoFrete"
+              labelForId="codTipoFrete"
+              bindLabel="descricao"
+              bindValue="codigo"
+              [loading]="materiaisLoader"
+              loadingText="Carregando..."
+              [readonly]="visualizar"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+          </div>
+
+          <div class="form-group col-lg-3" [hidden]="!changeTipoServico">
+            <label for="codTipoFrete">Preço Serviço APS</label>
+            <td class="text-center" style="width: 12%">
+              <input
+                class="form-control"
+                id="precoAps"
+                type="text"
+                formControlName="precoAps"
+                [readonly]="visualizar"
+                currencyMask
+                [options]="{
+                  align: 'left',
+                  prefix: '',
+                  thousands: '.',
+                  decimal: ',',
+                  precision: 2
+                }"
+              />
+            </td>
+          </div>
+          <div class="form-group col-lg-3" [hidden]="!changeTipoServico">
+            <label for="valorServico">Preço Serviço CD</label>
+            <td class="text-center" style="width: 12%">
+              <input
+                class="form-control"
+                id="valorServico"
+                type="text"
+                formControlName="valorServico"
+                [readonly]="visualizar"
+                currencyMask
+                [options]="{
+                  align: 'left',
+                  prefix: '',
+                  thousands: '.',
+                  decimal: ',',
+                  precision: 2
+                }"
+                [ngClass]="
+                onFieldError('valorServico') +
+                ' ' +
+                onFieldRequired('valorServico')
+              "
+              />
+              <invalid-form-control
+                [show]="onFieldInvalid('valorServico')"
+                message="Preço Serviço CD é obrigatório."
+              ></invalid-form-control>
+            </td>
+          </div>
+        </div>
+        <hr />
+        <div class="col-lg-12" formArrayName="anexos">
+          <div class="row">
+            <div class="col-lg-12 d-flex align-items-start">
+              <div class="mtc-title mb-0">Anexos</div>
+            </div>
+            <div class="col">
+              <label
+                for="novoAnexo"
+                class="d-flex justify-content-start align-items-center"
+                style="cursor: pointer"
+                [hidden]="visualizar"
+              >
+                <p class="btn btn-sm btn-outline-primary m-0">
+                  <i class="fas fa-plus"></i>
+                  <span>Anexo</span>
+                </p>
+              </label>
+              <input
+                id="novoAnexo"
+                type="file"
+                (change)="appendFile($event.target.files)"
+                class="d-none"
+              />
+            </div>
+          </div>
+          <div class="row" *ngIf="showAnexos && form.value.anexos.length > 0">
+            <div class="col">
+              <custom-table [config]="tableConfigAnexos">
+                <ng-template #tbody let-tbody>
+                  <tr
+                    *ngFor="let anexo of anexos.controls; let i = index"
+                    [formGroupName]="i"
+                  >
+                    <td style="width: 90%">
+                      {{ form.value.anexos[i].codAnexo }} -
+                      {{ form.value.anexos[i].nomeAnexo | uppercase }}
+                    </td>
+                    <td class="text-center" style="width: 5%">
+                      <a
+                        (click)="navegarAnexo(anexo)"
+                        *ngIf="form.value.anexos[i].codAnexo != null"
+                        target="_blank"
+                        class="btn-icon-sm mx-2 text-black"
+                        tooltip="visualizar"
+                      >
+                        <i class="far fa-eye"></i>
+                      </a>
+                    </td>
+                    <td class="text-center" style="width: 5%">
+                      <btn-icon
+                        icon="fas fa-trash"
+                        size="small"
+                        tooltip="Excluir"
+                        (click)="
+                          onDeleteAnexo(form.value.anexos[i].codAnexo, i)
+                        "
+                        [hidden]="visualizar"
+                      >
+                      </btn-icon>
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+            </div>
+          </div>
+          <div class="row" *ngIf="showAnexos && form.value.anexos.length === 0">
+            <div class="col">
+              <message
+                icon="fas fa-exchange-alt"
+                text="Nenhum documento encontrado"
+              >
+              </message>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-12" *ngIf="!visualizar">
+      <hr />
+      <div class="row mb-2">
+        <div class="col mt-auto">
+          <div class="mtc-title mb-0">Pesquisa de materiais</div>
+        </div>
+        <div class="col">
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              (click)="onFilterMateriais()"
+              [disabled]="!formMateriais.valid || searching === true "
+              [hidden]="visualizar"
+            >
+              <i class="fas fa-search"></i>
+              <span>Pesquisar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <advanced-filter>
+        <form [formGroup]="formMateriais" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-3">
+              <label for="codLinha">Linha</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="linhas"
+                [virtualScroll]="true"
+                [readonly]="visualizar"
+                formControlName="codLinha"
+                labelForId="codLinha"
+                bindLabel="descricao"
+                bindValue="id"
+                placeholder="Selecione..."
+                (change)="onChangeLinha($event.id)"
+                [ngClass]="
+                  onFieldErrorFormMaterial('codLinha') +
+                  ' ' +
+                  onFieldRequiredFormMaterial('codLinha')
+                "
+                >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalidFormMaterial('codLinha')"
+                message="Linha é obrigatório."
+              ></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="codClasse">Classe</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="filteredClasses"
+                [virtualScroll]="true"
+                [readonly]="visualizar"
+                formControlName="codClasse"
+                labelForId="codClasse"
+                bindLabel="nomeClasse"
+                bindValue="idClasse"
+                placeholder="Selecione..."
+                (change)="onChangeClasse($event.idClasse)"
+                [ngClass]="
+                  onFieldErrorFormMaterial('codClasse') +
+                  ' ' +
+                  onFieldRequiredFormMaterial('codClasse')
+                "
+              >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalidFormMaterial('codClasse')"
+                message="Classe é obrigatório."
+              ></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-6">
+              <label for="codMaterial">Material</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="materiais"
+                [virtualScroll]="true"
+                [loading]="materiaisLoader"
+                [readonly]="visualizar"
+                formControlName="codMaterial"
+                labelForId="codMaterial"
+                bindLabel="codigoDescricaoMaterial"
+                bindValue="codigoMaterial"
+                placeholder="Selecione..."
+                loadingText="Carregando..."
+              >
+              </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+
+    <div class="col-12">
+      <div *ngIf="materiaisLista.length > 0">
+        <div class="row mb-2">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Seleção de materiais</div>
+          </div>
+          <div class="col-12">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                (click)="onAssociarMateriais()"
+                [disabled]="searching === true"
+              >
+                <i class="fas fa-exchange-alt"></i>
+                <span>Adicionar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <custom-table [config]="tableConfigMateriais">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th scope="col" class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="
+                        toggleAll ? 'fas fa-check-square' : 'far fa-square'
+                      "
+                      size="small"
+                      (click)="onToggleAll()"
+                    >
+                    </btn-icon>
+                  </th>
+                  <th scope="col" style="width: 95%">Material</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let material of materiaisLista; let i = index">
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="
+                        material.checked == 1
+                          ? 'fas fa-check-square'
+                          : 'far fa-square'
+                      "
+                      size="small"
+                      (click)="onCheckMaterial(i, material)"
+                    >
+                    </btn-icon>
+                  </td>
+                  <td
+                    class="hover"
+                    style="width: 95%"
+                    (click)="onCheckMaterial(i, material)"
+                  >
+                    {{ material.codigoDescricaoMaterial | uppercase }}
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+      <hr />
+
+      <div class="col-12">
+        <form [formGroup]="form" autocomplete="off">
+          <div
+            class="col"
+            *ngIf="showMateriais && form.value.assocMateriais.length > 0"
+          >
+            <div class="col-12">
+              <div formArrayName="assocMateriais">
+                <custom-table [config]="tableConfigAssocMateriais">
+                  <ng-template #thead let-thead>
+                    <tr>
+                      <th scope="col" style="width: 35%">Material</th>
+                      <th scope="col" style="width: 12%">Preço Original</th>
+                      <th scope="col" style="width: 12%">Preço Negociado</th>
+                      <th scope="col" style="width: 12%">Qt Máxima</th>
+                      <th scope="col" style="width: 12%">Valor Final</th>
+                      <th scope="col" style="width: 5%"></th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <tr
+                      *ngFor="
+                        let material of assocMateriais.controls;
+                        let i = index
+                      "
+                      [formGroupName]="i"
+                    >
+                      <td style="width: 35%">
+                        <i
+                          class="fas fa-exclamation-circle"
+                          [tooltip]="tooltipServicoTemplate"
+                          [hidden]="!changeTipoServico"
+                        >
+                        </i>
+                        {{ form.value.assocMateriais[i].codMaterial }} -
+                        {{
+                          form.value.assocMateriais[i].nomeMaterial | uppercase
+                        }}
+                      </td>
+                      <ng-template #tooltipServicoTemplate>
+                        <p class="mt-3 mb-0">
+                          <b>Material com ocorrência de valor de serviço</b>
+                        </p>
+                        <p class="text-nowrap mb-0"><br /><br /></p>
+                      </ng-template>
+                      <td class="text-center" style="width: 12%">
+                        <input
+                          class="form-control"
+                          id="precoOriginal"
+                          type="text"
+                          formControlName="precoOriginal"
+                          [attr.disabled]="true"
+                          [readonly]="visualizar"
+                          currencyMask
+                          [options]="{
+                            align: 'left',
+                            prefix: '',
+                            thousands: '.',
+                            decimal: ',',
+                            precision: 2
+                          }"
+                        />
+                      </td>
+                      <td class="text-center" style="width: 12%">
+                        <input
+                          class="form-control"
+                          id="precoAlterado"
+                          type="text"
+                          formControlName="precoAlterado"
+                          [readonly]="visualizar"
+                          currencyMask
+                          [options]="{
+                            align: 'left',
+                            prefix: '',
+                            thousands: '.',
+                            decimal: ',',
+                            precision: 2
+                          }"
+                          [ngClass]="onNestedFieldError('assocMateriais', i, 'precoAlterado') + ' ' + onNestedFieldRequired('assocMateriais', i, 'precoAlterado')"
+                          />
+                      </td>
+                      <td class="text-center" style="width: 12%">
+                        <input
+                          class="form-control"
+                          id="qtdadeMaxima"
+                          type="text"
+                          formControlName="qtdadeMaxima"
+                          [readonly]="visualizar"
+                          currencyMask
+                          [options]="{
+                            align: 'left',
+                            prefix: '',
+                            thousands: '.',
+                            decimal: ',',
+                            precision: 3
+                          }"
+                          [ngClass]="onNestedFieldError('assocMateriais', i, 'qtdadeMaxima') + ' ' + onNestedFieldRequired('assocMateriais', i, 'qtdadeMaxima')"
+                          />
+                      </td>
+                      <td class="text-center" style="width: 12%">
+                        {{
+                         (changeTipoServico ? 
+                          (form.value.assocMateriais[i].precoAlterado + form.value.valorServico) : 
+                          form.value.assocMateriais[i].precoAlterado)
+                          | currency: 'BRL':'symbol':'1.2'
+                        }}
+                      </td>
+                      <td class="text-center" style="width: 5%">
+                        <btn-icon
+                          icon="fas fa-trash"
+                          size="small"
+                          (click)="onDeleteMaterial(i)"
+                          [hidden]="visualizar"
+                        >
+                        </btn-icon>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </custom-table>
+                <br *ngIf="!visualizar" />
+                <br *ngIf="!visualizar" />
+                <br *ngIf="!visualizar" />
+                <br *ngIf="!visualizar" />
+                <br *ngIf="!visualizar" />
+                <br *ngIf="!visualizar" />
+                <br *ngIf="!visualizar" />
+                <br *ngIf="!visualizar" />
+                <br *ngIf="!visualizar" />
+                <br *ngIf="!visualizar" />
+                <br *ngIf="!visualizar" />
+                <br *ngIf="!visualizar" />
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="row" *ngIf="searching === true">
+        <div class="col">
+          <message
+            icon="fas fa-cog fa-spin"
+            text="Estamos pesquisando os materiais para você..."
+          >
+          </message>
+        </div>
+      </div>
+      <div *ngIf="searching === false">
+        <div class="row" *ngIf="materiaisListaEmpty && materiaisListaLoaded">
+          <div class="col">
+            <message
+              icon="fas fa-box-open"
+              text="Nenhuma informação encontrada"
+            >
+            </message>
+          </div>
+        </div>
+        <div
+          class="row"
+          *ngIf="
+            materiaisLista.length === 0 &&
+            !firstSearch &&
+            !visualizar &&
+            !editar
+          "
+        >
+          <div class="col">
+            <message
+              icon="fas fa-search"
+              text="Preecha os campos acima para pesquisar materiais"
+            >
+            </message>
+            <br *ngIf="!visualizar" />
+            <br *ngIf="!visualizar" />
+            <br *ngIf="!visualizar" />
+            <br *ngIf="!visualizar" />
+            <br *ngIf="!visualizar" />
+            <br *ngIf="!visualizar" />
+            <br *ngIf="!visualizar" />
+            <br *ngIf="!visualizar" />
+            <br *ngIf="!visualizar" />
+            <br *ngIf="!visualizar" />
+            <br *ngIf="!visualizar" />
+            <br *ngIf="!visualizar" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #selecionarCliente>
+    <comercial-gestao-contratos-comerciais-formulario-modal-selecionar
+      (fecharModal)="onFecharModal($event)"
+      (cliente)="onCliente($event)"
+    >
+    </comercial-gestao-contratos-comerciais-formulario-modal-selecionar>
+  </ng-template>
+</app-body>

@@ -1,0 +1,249 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="Turnos">
+  <button
+  type="button"
+  (click)="onExport()"
+  [disabled]="loadingNavBar || noResult">
+  Exportar
+</button>
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-5 pl-0">
+              <label for="filterTurnos">Turno</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="filterTurnos"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                [loading]="loadingTurnos"
+                labelForId="filterTurnos"
+                bindLabel="DS_TURN"
+                bindValue="UUID_LOGI_TURN"
+                id="filterTurnos"
+                formControlName="UUID_LOGI_TURN">
+              </ng-select>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              (keydown.enter)="onFilter()"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-md-1 p-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (keydown.enter)="onFilter()"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0" [ngClass]="{'col': !showDetailPanel, 'col-6': showDetailPanel}">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" >Descrição</th>
+              <th scope="col" style="width:120px"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let turno of turnos"  [class.table-active]="turno?.UUID_LOGI_TURN == turnoSelecionado?.UUID_LOGI_TURN && showDetailPanel">
+              <td  [ngClass]="turno.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+              {{ turno.DS_TURN | uppercase}}
+              </td>
+              <td class="align-middle" >
+                <span class="mr-3" [tooltip]="turno.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="changeType(turno)">
+                    <i [ngClass]="turno.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', turno.UUID_LOGI_TURN]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+                <span class="mr-3"  tooltip="Detalhes" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm" (click)="onDetails(turno)">
+                    <i class="fas fa-search"></i>                  
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div *ngIf="totalItems > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-6 pr-0" [hidden]="!showDetailPanel">
+      <detail-panel panelTitle="Detalhes">
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label>ID</label>
+            <div>{{ turnoSelecionado?.UUID_LOGI_TURN }}</div>
+          </div>
+          <div class="form-group col-lg-6">
+            <label>Turno</label>
+            <div>{{ turnoSelecionado?.DS_TURN | uppercase}}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label>Horário Inicial</label>
+            <div>{{ convertMysqlTime(turnoSelecionado?.HR_INIC) | date: 'HH:mm'}}</div>
+          </div>
+          <div class="form-group col-lg-6">
+            <label>Horário Final</label>
+            <div>{{ convertMysqlTime(turnoSelecionado?.HR_FINA) | date: 'HH:mm'}}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-12">
+            <label>Dias da Semana</label>
+            <div class="d-flex mr-1">
+              <div class="mr-1">
+                <i [ngClass]="turnoSelecionado?.IN_SEGU ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>
+              </div>
+              <span>Segunda-feira</span>
+            </div>
+            <div class="d-flex mr-1">
+              <div class="mr-1">
+                <i [ngClass]="turnoSelecionado?.IN_TERC ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>
+              </div>
+              <span>Terça-feira</span>
+            </div>
+            <div class="d-flex mr-1">
+              <div class="mr-1">
+                <i [ngClass]="turnoSelecionado?.IN_QUAR ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>
+              </div>
+              <span>Quarta-feira</span>
+            </div>
+            <div class="d-flex mr-1">
+              <div class="mr-1">
+                <i [ngClass]="turnoSelecionado?.IN_QUIN ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>
+              </div>
+              <span>Quinta-feira</span>
+            </div>
+            <div class="d-flex mr-1">
+              <div class="mr-1">
+                <i [ngClass]="turnoSelecionado?.IN_SEXT ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>
+              </div>
+              <span>Sexta-feira</span>
+            </div>
+            <div class="d-flex mr-1">
+              <div class="mr-1">
+                <i [ngClass]="turnoSelecionado?.IN_SABA ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>
+              </div>
+              <span>Sábado</span>
+            </div>
+            <div class="d-flex mr-1">
+              <div class="mr-1">
+                <i [ngClass]="turnoSelecionado?.IN_DOMI ? 'fas fa-check-circle text-success' : 'fas fa-times-circle text-danger'"></i>
+              </div>
+              <span>Domingo</span>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label *ngIf="!turnoSelecionado?.DT_ATUA">Data de Cadastro</label>
+            <label *ngIf="turnoSelecionado?.DT_ATUA">Data da Atualização</label>
+            <div>{{(turnoSelecionado?.DT_ATUA | date: 'dd/MM/yyyy HH:mm') || (turnoSelecionado?.DT_INCL | date: 'dd/MM/yyyy HH:mm') }}</div>
+          </div>
+          <div class="form-group col-lg-6">
+            <label *ngIf="!turnoSelecionado?.DT_ATUA">Usuário Responsável pelo Cadastro</label>
+            <label *ngIf="turnoSelecionado?.DT_ATUA">Usuário Responsável pela Atualização</label>
+            <div>{{ turnoSelecionado?.NM_USUA | uppercase }}</div>
+          </div>
+        </div>
+        <!-- <custom-table>
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">Data</th>
+              <th scope="col">Usuário</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr>
+              <td class="text-center">{{(turnoSelecionado?.DT_ATUA | date: 'dd/MM/yyyy HH:mm') || (turnoSelecionado?.DT_INCL | date: 'dd/MM/yyyy HH:mm') }}</td>
+              <td>{{ turnoSelecionado?.NM_USUA | uppercase }}</td>
+            </tr>
+          </ng-template>
+        </custom-table> -->
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

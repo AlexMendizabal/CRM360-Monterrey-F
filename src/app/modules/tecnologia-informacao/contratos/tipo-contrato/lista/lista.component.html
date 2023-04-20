@@ -1,0 +1,122 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="Tipo de Contrato">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2">
+              <label for="ID_TECN_INFO_CONT_TIPO">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_TECN_INFO_CONT_TIPO"
+                formControlName="ID_TECN_INFO_CONT_TIPO"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="NM_CONT_TIPO">Tipo de Contrato</label>
+              <input
+                type="text"
+                class="form-control"
+                id="NM_CONT_TIPO"
+                formControlName="NM_CONT_TIPO"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              placeholder="Selecione..."
+            >
+              <ng-template ng-option-tmp let-item="item" let-index="index"> {{item.nome}}
+              </ng-template>
+            </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="col-12 p-0" [hidden] = "loading || noResult">
+    <div>
+      <table  class="table table-sm table-hover custom-border border-left border-right border-bottom text-center table-fixed">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">ID </th>
+            <th scope="col">Tipo de Contrato</th>
+            <th scope="col" style="width:80px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tipoContrato of tipoContratos | slice : begin : end; let i = index">
+            <td [ngClass]="tipoContrato.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+            {{tipoContrato.ID_TECN_INFO_CONT_TIPO}}
+            </td>
+            <td>{{ tipoContrato.NM_CONT_TIPO | uppercase }}</td>
+            <td class="align-middle" style="width:70px">
+              <span class="mr-3" [tooltip]="tipoContrato.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="changeType(tipoContrato)">
+                  <i [ngClass]="tipoContrato.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                </button>
+              </span>
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="openRegister(tipoContrato)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

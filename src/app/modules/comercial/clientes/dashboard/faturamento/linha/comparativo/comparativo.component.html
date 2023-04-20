@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col">
+    <div class="border rounded bg-white shadow-sm p-3 h-100">
+      <div class="mtc-title">{{ titulo }}</div>
+      <div class="row" id="mais-comprados">
+        <div class="col my-auto">
+          <div [hidden]="!comparativoLoaded">
+            <custom-table [config]="tableConfig" *ngIf="!comparativoEmpty">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th style="width: 40%" scope="col" class="text-truncate">Linha</th>
+                  <th style="width: 20%" scope="col" class="text-center text-truncate">{{ anoPassado }}</th>
+                  <th style="width: 20%" scope="col" class="text-center text-truncate">{{ anoCorrente }}</th>
+                  <th style="width: 20%" scope="col" class="text-center text-truncate">Comparativo</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of comparativo; let i = index">
+                  <td style="width: 40%" class="text-truncate">{{ item.linha }}</td>
+                  <td style="width: 20%" class="text-center text-truncate">{{ item.anoPassado | number:'1.3-3' }}t</td>
+                  <td style="width: 20%" class="text-center text-truncate">{{ item.anoCorrente | number:'1.3-3' }}t</td>
+                  <td style="width: 20%" class="text-center text-truncate" [ngClass]="classComparativo(item.percentual)">{{ item.percentual | number:'1.2-2' }}%</td>
+                </tr>
+                <tr>
+                  <td style="width: 40%" class="bg-dark text-white"><strong>Total</strong></td>
+                  <td style="width: 20%" class="bg-dark text-white text-center"><strong>{{ comparativoTotal.anoPassado | number:'1.3-3' }}t</strong></td>
+                  <td style="width: 20%" class="bg-dark text-white text-center"><strong>{{ comparativoTotal.anoCorrente | number:'1.3-3' }}t</strong></td>
+                  <td style="width: 20%" class="bg-dark text-white text-center"><strong [ngClass]="classComparativo(comparativoTotal.percentual)">{{ comparativoTotal.percentual | number:'1.2-2' }}%</strong></td>
+                </tr>
+              </ng-template>
+            </custom-table>
+            <empty-result message="Nenhuma informação encontrada" *ngIf="comparativoEmpty"></empty-result>
+          </div>
+          <div *ngIf="!comparativoLoaded" class="text-center">
+            <div class="spinner-border text-dark"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

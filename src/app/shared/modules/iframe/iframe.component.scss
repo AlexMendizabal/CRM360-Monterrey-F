@@ -1,0 +1,10 @@
+::ng-deep {
+  custom-iframe {
+    height: calc(100vh - 155px);
+    display: block;
+    iframe {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}

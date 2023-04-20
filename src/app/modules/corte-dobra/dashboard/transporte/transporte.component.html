@@ -1,0 +1,22 @@
+<div class="border rounded bg-white shadow-sm w-100 p-3 hover"  
+tooltip="Taxa de ocupação de veiculos do mês corrente">
+    <div class="d-flex justify-content-between" [hidden]="loading" (click)="onTransporteAnalitico()">
+      <div class="bg-red rounded-circle text-white icon-40 my-auto"><i class="fas fa-truck"></i></div>
+      <div class="text-right">
+        <h5
+        class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="taxaOcupacao"
+          [countFrom]="0"
+          [duration]="3"
+          (countoChange)="taxaOcupacaoEvent = $event">
+          {{ taxaOcupacaoEvent | number:'1.0-0' }} %
+        </h5>
+        <div class="text-muted small font-weight-bold">TAXA DE OCUPAÇÃO</div>
+      </div>
+    </div>
+    <div class="text-center" [hidden]="!loading">
+      <div class="spinner-border text-dark"></div>
+    </div>
+  </div>

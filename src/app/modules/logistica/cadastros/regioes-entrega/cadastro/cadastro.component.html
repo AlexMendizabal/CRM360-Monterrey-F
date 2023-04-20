@@ -1,0 +1,66 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button 
+    [disabled]="form.valid === false"
+    (click)="postRegiaoEntrega()"
+    >
+    Ahorrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="NM_REGI_ENTR">Descripción</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_REGI_ENTR"
+              formControlName="NM_REGI_ENTR"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_REGI_ENTR') + ' ' + onFieldRequired('NM_REGI_ENTR')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_REGI_ENTR')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="idErp">Código ERP</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="ID_REFE_ERP"
+              [ngClass]="onFieldError('ID_REFE_ERP') + ' ' + onFieldRequired('ID_REFE_ERP')"  
+            >
+            <invalid-form-control [show]="onFieldInvalid('ID_REFE_ERP')" message="O código da região é obrigatória."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="status">Situación</label>
+            <select
+                name="status"
+                id="status"
+                class="form-control"
+                formControlName="IN_STAT"
+                [ngClass]="onFieldError('IN_STAT') + ' ' + onFieldRequired('IN_STAT')"
+            >
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('IN_STAT')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="observacao" >Observación:</label>
+            <textarea class="form-control" id="observacao" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

@@ -1,0 +1,29 @@
+export interface ILogisticaEntregaRomaneio {
+  CD_FILI: number;
+  CD_EMPR: number;
+  CD_MOTO: number;
+  CD_PRIO: number;
+  CD_ROMA: number;
+  CD_STAT: number;
+  DS_OBSE: string;
+  DT_ATUA: string;
+  DT_INCL: string;
+  DT_PREV_SAID: string;
+  ID_LOGI_FUSI_ROMA: number;
+  INT_ID: number;
+  IN_STAT: string;
+  IN_VIAG_INIC: string;
+  KM_PREV: number;
+  PLAC: string;
+  NM_MOTO: string;
+  VL_FRET: number;
+  DT_SAID?: Date;
+  DT_FINA?: Date;
+  PARA?: number;
+  TT_PESO: number;
+  CTRC_VL_LIQD: number;
+  CTRC_VL_BRUT: number;
+  DS_FATU: string;
+  FATU_IN_STAT: string;
+  FINA_IN_STAT: string;
+}

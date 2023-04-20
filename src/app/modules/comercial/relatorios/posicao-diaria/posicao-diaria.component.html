@@ -1,0 +1,249 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Posição diária">
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+  <button
+    type="button"
+    (click)="onExport()"
+    *ngIf="listagemLoaded && adminProfile">
+    Exportar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    *ngIf="listagemLoaded && adminProfile">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-lg-2 mb-lg-0">
+          <label for="data">Data</label>
+          <input
+            class="form-control"
+            id="data"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="data"
+            [ngClass]="onFieldError('data') + ' ' + onFieldRequired('data')">
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="row" *ngIf="listagemLoaded">
+    <div class="col">
+      <tabset>
+        <tab heading="Manetoni" class="border-right border-left border-bottom">
+          <ng-template #templateRitmo><div [innerHtml]="tooltipRitmo"></div></ng-template>
+          <custom-table *ngIf="listagemLoaded && !listagemEmpty">
+            <ng-template #thead let-thead>
+              <tr>
+                <th class="align-middle text-center" rowspan="2" scope="col"></th>
+                <th class="align-middle text-center" rowspan="2" scope="col">Linha</th>
+                <th class="text-center" colspan="2" scope="col">{{ dtPesquisa }}</th>
+                <th class="text-center" colspan="2" scope="col">{{ mesAtual }}</th>
+                <th class="text-center" colspan="2" scope="col">Ritmo <i class="far fa-question-circle" [tooltip]="templateRitmo"></i></th>
+                <th class="text-center" colspan="2" scope="col">Editado</th>
+                <th class="text-center" colspan="2" scope="col">Metas</th>
+                <th class="text-center" colspan="2" scope="col">Metas/Editado</th>
+              </tr>
+              <tr>
+                <!-- Dia Atual -->
+                <th scope="col" class="text-center">Ton</th>
+                <th scope="col" class="text-center">R$</th>
+                <!-- Mes Atual -->
+                <th scope="col" class="text-center">Ton</th>
+                <th scope="col" class="text-center">R$</th>
+                <!-- Ritmo -->
+                <th scope="col" class="text-center">Ton</th>
+                <th scope="col" class="text-center">R$</th>
+                <!-- Editado -->
+                <th cope="col" class="text-center">Ton</th>
+                <th scope="col" class="text-center">R$</th>
+                <!-- Metas -->
+                <th scope="col" class="text-center">Ton</th>
+                <th scope="col" class="text-center">R$</th>
+                <!-- Metas/Editado -->
+                <th scope="col" class="text-center">Peso</th>
+                <th scope="col" class="text-center">Valor</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let item of listagem; let i = index" [class.table-active]="i == linha">
+                <td>
+                  <span tooltip="Mais informações" placement="left" container="body">
+                    <button type="button" class="btn-icon-sm ml-3" *ngIf="onExibir(item.podeEditar)" (click)="onDetalhesFilter(detalhes, item.linha, i + 1)">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </span>
+                </td>
+                <td class="text-center">{{ item.linha }}</td>
+                <td class="text-center">{{ item.toneladaHoje | number:'1.0-0' }}</td>
+                <td class="text-center">{{ item.valorHoje | number:'1.0-0' }}</td>
+                <td class="text-center">{{ item.toneladaMesAtual | number:'1.0-0' }}</td>
+                <td class="text-center">{{ item.valorMesAtual | number:'1.0-0' }}</td>
+                <td class="text-center">{{ item.toneladaRitmo | number:'1.0-0' }}</td>
+                <td class="text-center">{{ item.valorRitmo | number:'1.0-0' }}</td>
+                <!-- Campos Editaveis -->
+                <td class="text-center bg-white">
+                  <span *ngIf="!adminProfile || !onExibir(item.podeEditar)" >{{ item.toneladaEditado | number:'1.0-0' }}</span>
+                  <div class="d-flex justify-content-center" *ngIf="adminProfile && onExibir(item.podeEditar)">
+                    <input
+                      style="max-width: 80px;"
+                      type="text"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="formEdit.toneladaEditado[i]"
+                      name="toneladaEditado_{{i}}"
+                      currencyMask [options]="{ align: 'center', prefix: '', thousands: '.', decimal: ',' }">
+                  </div>
+                </td>
+                <td class="text-center bg-white">
+                  <span *ngIf="!adminProfile || !onExibir(item.podeEditar)">{{ item.valorEditado | number:'1.0-0' }}</span>
+                  <div class="d-flex justify-content-center" *ngIf="adminProfile && onExibir(item.podeEditar)">
+                    <input
+                      style="max-width: 80px;"
+                      type="text"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="formEdit.valorEditado[i]"
+                      name="valorEditado{{i}}"
+                      currencyMask [options]="{ align: 'center', prefix: '', thousands: '.', decimal: ',', precision: 0 }">
+                  </div>
+                </td>
+                <td class="text-center bg-white">
+                  <span *ngIf="!adminProfile || !onExibir(item.podeEditar)">{{ item.toneladaMeta | number:'1.0-0' }}</span>
+                  <div class="d-flex justify-content-center" *ngIf="adminProfile && onExibir(item.podeEditar)">
+                    <input
+                      style="max-width: 80px;"
+                      type="text"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="formEdit.toneladaMeta[i]"
+                      name="toneladaMeta{{i}}"
+                      currencyMask [options]="{ align: 'center', prefix: '', thousands: '.', decimal: ',' }">
+                  </div>
+                </td>
+                <td class="text-center bg-white">
+                  <span *ngIf="!adminProfile || !onExibir(item.podeEditar)">{{ item.valorMeta | number:'1.0-0' }}</span>
+                  <div class="d-flex justify-content-center" *ngIf="adminProfile && onExibir(item.podeEditar)">
+                    <input
+                      style="max-width: 80px;"
+                      type="text"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="formEdit.valorMeta[i]"
+                      name="valorMeta{{i}}"
+                      currencyMask [options]="{ align: 'center', prefix: '', thousands: '.', decimal: ',', precision: 0 }">
+                  </div>
+                </td>
+                <td class="text-center bg-white" [ngClass]="classComparativo(item.toneladaMetaEditado)">{{ item.toneladaMetaEditado | number:'1.2-2' }}%</td>
+                <td class="text-center bg-white" [ngClass]="classComparativo(item.valorMetaEditado)">{{ item.valorMetaEditado | number:'1.2-2' }}%</td>
+              </tr>
+              <!-- Totais -->
+              <tr>
+                <td class="bg-dark text-white text-center" colspan="2"><strong>Total</strong></td>
+                <td class="bg-dark text-white text-center"><strong>{{ totalGeral.toneladaHoje | number:'1.0-0' }}</strong></td>
+                <td class="bg-dark text-white text-center"><strong>{{ totalGeral.valorHoje | number:'1.0-0' }}</strong></td>
+                <td class="bg-dark text-white text-center"><strong>{{ totalGeral.toneladaMesAtual | number:'1.0-0' }}</strong></td>
+                <td class="bg-dark text-white text-center"><strong>{{ totalGeral.valorMesAtual | number:'1.0-0' }}</strong></td>
+                <td class="bg-dark text-white text-center"><strong>{{ totalGeral.toneladaRitmo | number:'1.3-3' }}</strong></td>
+                <td class="bg-dark text-white text-center"><strong>{{ totalGeral.valorRitmo | number:'1.0-0' }}</strong></td>
+                <td class="bg-dark text-white text-center"><strong>{{ totalGeral.toneladaEditado | number:'1.0-0' }}</strong></td>
+                <td class="bg-dark text-white text-center"><strong>{{ totalGeral.valorEditado | number:'1.0-0' }}</strong></td>
+                <td class="bg-dark text-white text-center"><strong>{{ totalGeral.toneladaMeta | number:'1.0-0' }}</strong></td>
+                <td class="bg-dark text-white text-center"><strong>{{ totalGeral.valorMeta | number:'1.0-0' }}</strong></td>
+                <td class="bg-dark text-white text-center" [ngClass]="classComparativo(totalGeral.toneladaMetaEditado)"><strong>{{ totalGeral.toneladaMetaEditado | number:'1.2-2' }}%</strong></td>
+                <td class="bg-dark text-white text-center" [ngClass]="classComparativo(totalGeral.valorMetaEditado)"><strong>{{ totalGeral.valorMetaEditado | number:'1.2-2' }}%</strong></td>
+              </tr>
+            </ng-template>
+          </custom-table>
+          <empty-result message="Nenhuma informação encontrada" class="py-3" *ngIf="listagemEmpty"></empty-result>
+        </tab>
+        <tab heading="DBA's" class="border-right border-left border-bottom" *ngIf="acessoDBAs === true">
+            <ng-template #templateRitmo><div [innerHtml]="tooltipRitmo"></div></ng-template>
+            <custom-table [config]="tableConfig" *ngIf="listagemDBALoaded && !listagemDBAEmpty">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th class="align-middle" scope="col">Unidade</th>
+                  <th class="align-middle text-center" scope="col">{{ dtPesquisa }}</th>
+                  <th class="align-middle text-center" scope="col">Total {{ mesAtual }}</th>
+                  <th class="align-middle text-center" scope="col">Ritmo {{ mesAtual }}</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of listagemDBA; let i = index">
+                  <td>{{ item.nomeEscritorio | uppercase }}</td>
+                  <td class="text-center">{{ item.toneladasDiaAnterior | number:'1.3-3' }} Ton</td>
+                  <td class="text-center">{{ item.toneladasMesAtual | number:'1.3-3' }} Ton</td>
+                  <td class="text-center">{{ item.ritmo | number:'1.0-0' }} Ton</td>
+                </tr>
+                <tr>
+                  <td class="bg-dark text-white"><strong>{{ totaisDBA.nomeEscritorio | uppercase }}</strong></td>
+                  <td class="bg-dark text-white text-center"><strong>{{ totaisDBA.toneladasDiaAnterior | number:'1.3-3' }} Ton</strong></td>
+                  <td class="bg-dark text-white text-center"><strong>{{ totaisDBA.toneladasMesAtual | number:'1.3-3' }} Ton</strong></td>
+                  <td class="bg-dark text-white text-center" [ngClass]="classComparativo(totaisDBA.ritmo)"><strong>{{ totaisDBA.ritmo | number:'1.0-0' }} Ton</strong></td>
+                </tr>
+              </ng-template>
+            </custom-table>
+            <empty-result message="Nenhuma informação encontrada" class="py-3" *ngIf="listagemDBAEmpty"></empty-result>
+        </tab>
+      </tabset>
+    </div>
+  </div>
+</app-body>
+<ng-template #detalhes>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ detalhesTitulo }}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="onModalClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <custom-table *ngIf="detalhesClasseLoaded && !detalhesClasseEmpty">
+      <ng-template #thead let-thead>
+        <tr>
+          <th class="text-center" rowspan="2" scope="col">Classe</th>
+          <th class="text-center" colspan="2" scope="col">{{ dtPesquisa }}</th>
+          <th class="text-center" colspan="2" scope="col">{{ mesAtual }}</th>
+          <th class="text-center" colspan="2" scope="col">Ritmo</th>
+        </tr>
+        <tr>
+          <!-- Dia Atual -->
+          <th scope="col" class="text-center">Ton</th>
+          <th scope="col" class="text-center">R$</th>
+          <!-- Mes Atual -->
+          <th scope="col" class="text-center">Ton</th>
+          <th scope="col" class="text-center">R$</th>
+          <!-- Ritmo -->
+          <th scope="col" class="text-center">Ton</th>
+          <th scope="col" class="text-center">R$</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let item of detalhesClasse">
+          <td class="text-center">{{ item.classe }}</td>
+          <td class="text-center">{{ item.toneladaHoje | number:'1.0-0' }}</td>
+          <td class="text-center">{{ item.valorHoje | number:'1.0-0' }}</td>
+          <td class="text-center">{{ item.toneladaMesAtual | number:'1.0-0' }}</td>
+          <td class="text-center">{{ item.valorMesAtual | number:'1.0-0' }}</td>
+          <td class="text-center">{{ item.toneladaRitmo | number:'1.0-0' }}</td>
+          <td class="text-center">{{ item.valorRitmo | number:'1.0-0' }}</td>
+        </tr>
+        <tr>
+          <td class="bg-dark text-white text-center"><strong>Total</strong></td>
+          <td class="bg-dark text-white text-center"><strong>{{ detalhesTotais.toneladaHoje | number:'1.0-0' }}</strong></td>
+          <td class="bg-dark text-white text-center"><strong>{{ detalhesTotais.valorHoje | number:'1.0-0' }}</strong></td>
+          <td class="bg-dark text-white text-center"><strong>{{ detalhesTotais.toneladaMesAtual | number:'1.0-0' }}</strong></td>
+          <td class="bg-dark text-white text-center"><strong>{{ detalhesTotais.valorMesAtual | number:'1.0-0' }}</strong></td>
+          <td class="bg-dark text-white text-center"><strong>{{ detalhesTotais.toneladaRitmo | number:'1.0-0' }}</strong></td>
+          <td class="bg-dark text-white text-center"><strong>{{ detalhesTotais.valorRitmo | number:'1.0-0' }}</strong></td>
+        </tr>
+      </ng-template>
+    </custom-table>
+    <empty-result message="Nenhuma informação encontrada" *ngIf="detalhesClasseEmpty"></empty-result>
+  </div>
+</ng-template>

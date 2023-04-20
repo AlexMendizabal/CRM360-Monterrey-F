@@ -1,0 +1,12 @@
+<div id="clientes" class="row align-items-center">
+  <div class="col">
+    <div [hidden]="!chartLoaded">
+      <div id="column-chart" class="amcharts" [hidden]="chartEmpty" tooltip="tooltip" containerClass="d-none" triggers="click"></div>
+      <div class="text-center" *ngIf="sumClientes > 0">Total de <b>{{ sumClientes }} clientes</b></div>
+      <empty-result message="Nenhuma informação encontrada" *ngIf="chartEmpty"></empty-result>
+    </div>
+    <div *ngIf="!chartLoaded" class="text-center">
+      <div class="spinner-border text-dark"></div>
+    </div>
+  </div>
+</div>

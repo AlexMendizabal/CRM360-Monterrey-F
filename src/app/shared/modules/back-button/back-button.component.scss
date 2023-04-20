@@ -1,0 +1,6 @@
+::ng-deep back-button {
+  @import '../../../../assets/scss/variables';
+
+  margin-right: $gutter;
+  line-height: 31px;
+}

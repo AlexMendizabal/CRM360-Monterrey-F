@@ -1,0 +1,147 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button (click)="onReset()">
+    Limpar
+  </button>
+  <button 
+  [disabled]="form.status == 'INVALID'"
+  (click)="onSearch()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="">Código do Tipo</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="DIGITE..."
+            formControlName="CD_DESP_TIPO"
+            (keyup.enter)="onSearch()"
+          >
+        </div>
+        <div class="form-group col-3">
+          <label for="">Descrição do Tipo</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="DIGITE..."
+            formControlName="DS_DESP_TIPO"
+            (keyup.enter)="onSearch()"
+          >
+        </div>
+        <div class="form-group col-3">
+          <label for="grupo">Grupo</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="gruposDespesa"
+            [virtualScroll]="true"
+            labelForId="grupo"
+            bindLabel="DS_DESP_GRUP"
+            bindValue="CD_DESP_GRUP"
+            (change)="onSearch()"
+            formControlName="CD_DESP_GRUP"
+            placeholder="SELECIONE..."
+          >
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              ({{item.CD_DESP_GRUP | number : '3.0-0'}}) {{item.DS_DESP_GRUP}}
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col-3">
+          <label for="classe">Classe</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="classesDespesa"
+            [virtualScroll]="true"
+            labelForId="grupo"
+            bindLabel="DS_DESP_CLAS"
+            bindValue="CD_DESP_CLAS"
+            (change)="onSearch()"
+            formControlName="CD_DESP_CLAS"
+            placeholder="SELECIONE..."
+          >
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              ({{item.CD_DESP_CLAS | number : '3.0-0'}}) {{item.DS_DESP_CLAS}}
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div  class="d-flex" [hidden] = "loading || noResult">
+    <div class="w-100">
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th class="text-truncate">Código do Tipo</th>
+            <th class="text-truncate">Descrição do Tipo</th>
+            <th class="text-truncate" *ngIf="!showDetailPanel">Código do Grupo</th>
+            <th class="text-truncate" *ngIf="!showDetailPanel">Descrição do Grupo</th>
+            <th class="text-truncate" *ngIf="!showDetailPanel">Código da Classe</th>
+            <th class="text-truncate" *ngIf="!showDetailPanel">Descrição da Classe</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>  
+          <tr
+            *ngFor="let item of tiposDespesa | slice : begin : end; let i = index"
+            [ngClass]="{'table-active': item.ACTI == true}"
+          >
+            <td [ngClass]="item.IN_STAT == 1 ? 'border-success' : 'border-danger'">{{ item.CD_DESP_TIPO }}</td>
+            <td class="text-truncate">{{ item.DS_DESP_TIPO }}</td>
+            <td class="text-truncate" *ngIf="!showDetailPanel">{{ item.CD_DESP_GRUP }}</td>
+            <td class="text-truncate" *ngIf="!showDetailPanel">{{ item.DS_DESP_GRUP }}</td>
+            <td class="text-truncate" *ngIf="!showDetailPanel">{{ item.CD_DESP_CLAS }}</td>
+            <td class="text-truncate" *ngIf="!showDetailPanel">{{ item.DS_DESP_CLAS }}</td>
+            <td class="text-truncate">
+              <button
+                class="btn-icon-sm hover float-right"
+                (click)="onViewDetails(item)"
+              >
+                <i class="far fa-edit"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div>
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-5 pr-0" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="detailPanelTitle">
+        <controladoria-associacoes-pluser-plano-conta [setTipoDespesa]="tipoDespesa"></controladoria-associacoes-pluser-plano-conta>
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 250px">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

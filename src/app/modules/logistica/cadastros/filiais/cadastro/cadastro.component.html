@@ -1,0 +1,62 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Sucursais">
+  <button 
+    [disabled]="form.valid === false || loadingNavBar === true"
+    (click)="postFiliais()"
+    >
+    Guardar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-7 pt-2 mx-auto">
+        <legend>Datos da Sucursal</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-12">
+            <label for="nome">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nome"
+              formControlName="nome"
+              placeholder="Ingresse..."
+              [ngClass]="onFieldError('nome') + ' ' + onFieldRequired('nome')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('nome')" message="Nombre es obligatorio."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="idFilial">Sucursal ID</label>
+            <input
+              type="number"
+              class="form-control"
+              id="idFilial"
+              formControlName="idFilial"
+              placeholder="Ingresse..."
+              [ngClass]="onFieldError('idFilial') + ' ' + onFieldRequired('idFilial')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('idFilial')" message="Sucursal ID es obligatorio."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="status">Situación</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="status"
+              formControlName="status"
+              placeholder="Ingresse..."
+            >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('status')" message="Situación es obligatoria."></invalid-form-control>
+          </div>
+        </div>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

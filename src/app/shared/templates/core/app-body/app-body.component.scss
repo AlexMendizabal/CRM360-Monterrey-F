@@ -1,0 +1,12 @@
+::ng-deep {
+  @import '../../../../../assets/scss/variables';
+
+  #application-body {
+    height: calc(100vh - (#{$navbar-size + $header-size}));
+    overflow-y: auto;
+    margin-top: $header-size;
+    padding-top: $gutter;
+    padding-bottom: $gutter;
+    position: relative;
+  }
+}

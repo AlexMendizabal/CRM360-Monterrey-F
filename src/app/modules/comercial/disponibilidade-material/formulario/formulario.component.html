@@ -1,0 +1,170 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle()">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="submittingForm || !form.valid">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row justify-content-center">
+    <div class="col-lg-5">
+      <form [formGroup]="form" autocomplete="off">
+        <div *ngIf="material.descricao.length > 0">
+          <div class="form-row">
+            <div class="form-group col mb-0">
+              <div class="mtc-title text-center mb-0">{{ material.descricao }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col"><hr></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="codMaterial">Código do material</label>
+            <input
+              type="text"
+              class="form-control"
+              id="codMaterial"
+              formControlName="codMaterial"
+              (input)="onInput()"
+              currencyMask [options]="{ align: 'left', prefix: '', thousands: '', decimal: '', precision: 0 }"
+              [ngClass]="onFieldError('codMaterial') + ' ' + onFieldRequired('codMaterial')">
+            <invalid-form-control [show]="onFieldInvalid('codMaterial')" message="Código do material é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="codUsuarioRequisicao">Vendedor</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="vendedores"
+              [virtualScroll]="true"
+              labelForId="codUsuarioRequisicao"
+              bindLabel="nome"
+              bindValue="id"
+              formControlName="codUsuarioRequisicao"
+              (change)="onInput()"
+              [ngClass]="onFieldError('codUsuarioRequisicao') + ' ' + onFieldRequired('codUsuarioRequisicao')">
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('codUsuarioRequisicao')" message="Vendedor é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="codEmpresa">Empresa</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="empresas"
+              formControlName="codEmpresa"
+              [virtualScroll]="true"
+              labelForId="codEmpresa"
+              bindLabel="nomeEmpresa"
+              bindValue="idEmpresa"
+              (change)="onInput() + ' ' + onChangeEmpresa($event.idEmpresa)"
+              [ngClass]="onFieldError('codEmpresa') + ' ' + onFieldRequired('codEmpresa')">
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('codEmpresa')" message="Empresa é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="codDeposito">Depósito</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="filteredDepositos"
+              formControlName="codDeposito"
+              [virtualScroll]="true"
+              labelForId="codDeposito"
+              bindLabel="nomeDeposito"
+              bindValue="idDeposito"
+              (change)="onInput() + ' ' + onChangeDeposito($event)"
+              [ngClass]="onFieldError('codDeposito') + ' ' + onFieldRequired('codDeposito')">
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('codDeposito')" message="Depósito é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="codCliente">Cliente</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="clientes"
+              [virtualScroll]="true"
+              labelForId="codCliente"
+              bindLabel="codRazaoSocial"
+              bindValue="codCliente"
+              formControlName="codCliente"
+              (change)="onInput()"
+              [ngClass]="onFieldError('codCliente') + ' ' + onFieldRequired('codCliente')">
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('codCliente')" message="Cliente é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="qtdeMinima">Quantidade mínima</label>
+            <input
+              type="text"
+              class="form-control"
+              id="qtdeMinima"
+              formControlName="qtdeMinima"
+              (input)="onInput()"
+              currencyMask [options]="currencyMaskOptions"
+              [ngClass]="onFieldError('qtdeMinima') + ' ' + onFieldRequired('qtdeMinima')">
+            <invalid-form-control [show]="onFieldInvalid('qtdeMinima')" message="Quantidade aceitável é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="qtdeMaxima">Quantidade ideal</label>
+            <input
+              type="text"
+              class="form-control"
+              id="qtdeMaxima"
+              formControlName="qtdeMaxima"
+              (input)="onInput()"
+              currencyMask [options]="currencyMaskOptions"
+              [ngClass]="onFieldError('qtdeMaxima') + ' ' + onFieldRequired('qtdeMaxima')">
+            <invalid-form-control [show]="onFieldInvalid('qtdeMaxima')" message="Quantidade ideal é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="dataInicialParametrizacao">Data inicial</label>
+            <input
+              class="form-control"
+              id="dataInicialParametrizacao"
+              type="text"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              formControlName="dataInicialParametrizacao"
+              (input)="onInput()"
+              [ngClass]="onFieldError('dataInicialParametrizacao') + ' ' + onFieldRequired('dataInicialParametrizacao')">
+            <invalid-form-control [show]="onFieldInvalid('dataInicialParametrizacao')" message="Data inicial é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="dataFinalParametrizacao">Data limite (expiração)</label>
+            <input
+              class="form-control"
+              id="dataFinalParametrizacao"
+              type="text"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              formControlName="dataFinalParametrizacao"
+              (input)="onInput()"
+              [ngClass]="onFieldError('dataFinalParametrizacao') + ' ' + onFieldRequired('dataFinalParametrizacao')">
+            <invalid-form-control [show]="onFieldInvalid('dataFinalParametrizacao')" message="Data limite é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

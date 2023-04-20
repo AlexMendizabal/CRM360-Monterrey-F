@@ -1,0 +1,39 @@
+<custom-table *ngIf="ultimosPrecosLoaded && !ultimosPrecosEmpty">
+  <ng-template #thead let-thead>
+    <tr>
+      <th scope="col" class="text-center">Código</th>
+      <th scope="col" class="text-center">Material</th>
+      <th scope="col" class="text-center">Última Data</th>
+      <th scope="col" class="text-center">Último Preço</th>
+      <th scope="col" class="text-center">Soma (TON)</th>
+      <th scope="col" class="text-center">Soma (R$)</th>
+      <th scope="col" class="text-center">Média (R$)</th>
+    </tr>
+  </ng-template>
+  <ng-template #tbody let-tbody>
+    <tr *ngFor="let preco of ultimosPrecos">
+      <td class="text-center">{{ preco.codMaterial }}</td>
+      <td class="text-center">{{ preco.nomeMaterial }}</td>
+      <td class="text-center">{{ preco.ultimaData }}</td>
+      <td class="text-center">{{ preco.ultimoPreco | currency:'BRL':'symbol':'1.2-2' }}</td>
+      <td class="bg-white text-center">{{ preco.tonelada | number:'1.3-3' }}t</td>
+      <td class="bg-white text-center">{{ preco.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
+      <td class="bg-white text-center">{{ preco.media | currency:'BRL':'symbol':'1.2-2' }}</td>
+    </tr>
+    <tr>
+      <td colspan="4"></td>
+      <td colspan="3" class="bg-white border text-center">
+        <strong>Últimos {{ ultimosPrecosDias }} dias</strong>
+      </td>
+    </tr>
+  </ng-template>
+</custom-table>
+<empty-result
+  message="Nenhuma informação encontrada"
+  class="mb-3"
+  *ngIf="ultimosPrecosLoaded && ultimosPrecosEmpty">
+</empty-result>
+<div class="d-flex w-100" *ngIf="!ultimosPrecosLoaded">
+  <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+  <strong>Carregando preços praticados...</strong>
+</div>

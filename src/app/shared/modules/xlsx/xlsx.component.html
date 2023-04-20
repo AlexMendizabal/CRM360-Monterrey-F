@@ -1,0 +1,10 @@
+<div class="upload-attachment-list" (change)="onFileChange($event)" (click)="fileInput.click();">
+  <div class="item d-flex justify-content-between">
+      <div class="d-flex">
+          <input hidden #fileInput type="file" ><!-- (change)="onFileChange($event)" -->
+          <div class="icon my-auto mr-3"><i class="fas fa-cloud-upload-alt"></i></div>
+          <div class="info">Selecione o arquivo</div>
+      </div>
+      <button class="btn--icon" type="button"><i class="fas fa-search"></i></button>
+  </div>
+</div><!--  " -->

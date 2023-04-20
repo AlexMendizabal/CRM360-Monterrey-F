@@ -1,0 +1,392 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="LIBERAÇÕES COMERCIAIS">
+  <button
+  type="button"
+  (click)="onExport()"
+  [disabled]="loaderNavbar">
+  Exportar
+</button>
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="tipoData">Tipo de data</label>
+              <select
+                class="form-control custom-select"
+                id="tipoData"
+                formControlName="tipoData"
+                [ngClass]="onFieldError('tipoData') + ' ' + onFieldRequired(form.controls.tipoData)">
+                <option value="1">Lançamento</option>
+                <option value="2">Transferência</option>
+              </select>
+              <invalid-form-control [show]="onFieldInvalid('tipoData')" message="Tipo de data é obrigatória"></invalid-form-control>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="dtInicial">Data Inicial</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="dtInicial"
+                type="text"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="dtInicial"
+                [ngClass]="onFieldError('dtInicial') + ' ' + onFieldRequired(form.controls.dtInicial)">
+                <invalid-form-control [show]="onFieldInvalid('dtInicial')" message="Data Inicial é obrigatória"></invalid-form-control>
+              </div>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="dtFinal">Data Final</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="dtFinal"
+                type="text"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="dtFinal"
+                [ngClass]="onFieldError('dtFinal') + ' ' + onFieldRequired(form.controls.dtFinal)">
+                <invalid-form-control [show]="onFieldInvalid('dtFinal')" message="Data Final é obrigatória"></invalid-form-control>
+              </div>
+            </div>
+            <div class="form-group col-md-1 pl-0">
+              <label for="numPedido">N. Pedido</label>
+              <input
+                type="text"
+                class="form-control"
+                id="numPedido"
+                formControlName="numPedido"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="gerenciaSolicitante">Gerencia do Vendedor</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="escritorios"
+                  labelForId="gerenciaSolicitante"
+                  formControlName="gerenciaSolicitante"
+                  placeholder="Selecione..."
+                  bindValue="codEscritorio"
+                  bindLabel="nomeEscritorio"
+                  (change)="onChangeEscritorio($event.id, true)">
+                </ng-select>
+            </div>
+            <div class="form-group col-md-3 pl-0">
+              <label for="nomeSolicitante">Vendedor</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="vendedores"
+                  labelForId="nomeSolicitante"
+                  formControlName="nomeSolicitante"
+                  placeholder="Selecione..."
+                  bindValue="id"
+                  bindLabel="nome"
+                  >
+                </ng-select>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="empresa">Empresa</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="empresas"
+                  formControlName="empresa"
+                  [virtualScroll]="true"
+                  placeholder="Selecione..."
+                  labelForId="empresa"
+                  bindLabel="nomeEmpresa"
+                  bindValue="idEmpresa"
+                  [ngClass]="onFieldError('empresa') + ' ' + onFieldRequired(form.controls.empresa)">
+                </ng-select>
+                <invalid-form-control [show]="onFieldInvalid('empresa')" message="Empresa é obrigatório"></invalid-form-control>
+            </div>
+            <div class="form-group col-md-5 pl-0">
+              <label for="cliente">
+                <span>Cliente </span>
+                <ng-template #tooltipLabelClienteTemplate>
+                  <p class="text-nowrap mb-0">Código ou razão social</p>
+                  <p class="text-nowrap mb-0">do Cliente</p>
+                </ng-template>
+                <i class="fa fa-question-circle" [tooltip]="tooltipLabelClienteTemplate" container="body"></i>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="cliente"
+                formControlName="cliente"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="linhaPredominante">Linha Predominante</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="linhas"
+                  formControlName="linhaPredominante"
+                  [virtualScroll]="true"
+                  placeholder="Selecione..."
+                  labelForId="linhaPredominante"
+                  bindLabel="descricao"
+                  bindValue="id"
+                >
+                </ng-select>
+            </div>
+            <div class="form-group col-lg-1 pl-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="registros">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="dadosPagination.length > 0 && !dadosEmpty">
+      </subtitles>
+    </div>
+  </div>
+  <div class="row text-center justify-content-center" >
+    <div [ngClass]="{'col': !showDetailPanel, 'col-7': showDetailPanel}" *ngIf="dadosPagination.length > 0 && !dadosEmpty">  
+      <custom-table  [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" ></th>
+            <th scope="col" >N. Pedido</th>
+            <th scope="col" [hidden]="showDetailPanel">Escritório</th>
+            <th scope="col" >Vendedor</th>
+            <th scope="col" [hidden]="showDetailPanel" *ngIf="tipoDataControl == 1" >Data da Lançamento</th>
+            <th scope="col" [hidden]="showDetailPanel" *ngIf="tipoDataControl == 2" >Data da Transferência</th>
+            <th scope="col" >Cliente</th>
+            <th scope="col" [hidden]="showDetailPanel">Valor</th>
+            <th scope="col" [hidden]="showDetailPanel">Peso</th>
+            
+            <th scope="col" style="width:40px" ></th>
+            <th scope="col" style="width:40px" ></th>
+            <th scope="col" style="width:40px" ></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let lista of dadosPagination; let i = index" [class.table-active]="lista.nrPedido == solicitacaoSelecionada.nrPedido">
+            <td (click)="onDetails(lista)" [ngClass]="classStatusBorder(lista)">
+              <span class="mr-3" tooltip="Retira" placement="center" *ngIf="lista.inRetira == 1" >
+                <i class="fas fa-folder-open"></i>
+              </span>
+            </td>
+            <td (click)="onDetails(lista)" >{{ lista.nrPedido }}</td>
+            <td (click)="onDetails(lista)" [hidden]="showDetailPanel">{{ lista.escritorio | uppercase}}</td>
+            <td (click)="onDetails(lista)" >{{ lista.vendedor | uppercase}}</td>
+            <td (click)="onDetails(lista)" [hidden]="showDetailPanel" *ngIf="tipoDataControl == 1">{{ lista.dataLancamento | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td (click)="onDetails(lista)" [hidden]="showDetailPanel" *ngIf="tipoDataControl == 2">{{ lista.dataTransferencia | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td (click)="onDetails(lista)" >{{ lista.codCliente }} - {{ lista.razaoSocial }}</td>
+            <td (click)="onDetails(lista)" [hidden]="showDetailPanel">{{ lista.valorTotal | currency:'BRL':'symbol':'1.2-2'}}</td>
+            <td (click)="onDetails(lista)" [hidden]="showDetailPanel">{{ lista.pesoTotal }} To</td>
+            
+            <td>
+              <span class="mr-3" tooltip="Aprovar" placement="left" container="body" *ngIf="profile.liberacoesAdm || profile.liberacoesPadrao"> 
+                <button type="button" class="btn-icon-sm" (click)="openModal(aprovarSolicitacao, lista, 1)">
+                  <i class=" text-success fas fa-thumbs-up"></i>
+                </button>
+              </span>
+            </td>
+            <td >
+              <span class="mr-3" tooltip="Reprovar" placement="left" container="body" *ngIf="profile.liberacoesAdm || profile.liberacoesPadrao"> 
+                <button type="button" class="btn-icon-sm" (click)="openModal(reprovarSolicitacao, lista, 2)">
+                  <i class=" text-danger fas fa-thumbs-down"></i>
+                </button>
+              </span>
+            </td>
+            <td>
+              <span   tooltip="Detalhe da Solicitação" placement="left" container="body" >
+                <button type="button" class="btn-icon-sm" (click)="onVisualizar(lista)">
+                  <i class="fas fa-search"></i>                  
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="col-5" [hidden]="!showDetailPanel || viewHistorico">
+      <detail-panel panelTitle="Aguardando Resposta">
+        <div class="d-flex justify-content-center mb-3" [hidden]="!loadingDetails">
+          <div class="spinner-border text-dark"></div>
+        </div>
+        <div class="text-center" [hidden]="loadingDetails">
+          <blockquote class="blockquote mx-5">
+            <p class="text-primary mb-0">Detalhes da trava</p>
+            <footer class="blockquote-footer">
+              <small class="text-muted">
+                {{solicitacaoSelecionada?.dataLancamento | date: 'dd/MM/yyyy'}}
+              </small>
+            </footer>
+            <footer class="blockquote-footer">
+              <small class="text-muted">
+                  <cite ><strong>Motivos Trava:</strong></cite>
+                  <div *ngFor="let itens of motivos" class="ml-3"> {{ itens.desTrava }} </div>
+              </small>
+            </footer>
+            <footer class="blockquote-footer" *ngIf="comentario != ''" >
+              <small class="text-muted">
+                  <cite ><strong>Observação da Reprovação:</strong></cite>
+                  <div class="ml-3" > {{ comentario }} </div>
+              </small>
+            </footer>
+          </blockquote>
+        </div>
+      </detail-panel>
+    </div>
+  </div>
+  <br>
+  <div class="text-center justify-content-center" *ngIf="totalItems > itemsPerPage && !dadosEmpty">
+    Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+    <pagination
+      class="text-center justify-content-center"
+      [maxSize]="10"
+      [totalItems]="totalItems"
+      (pageChanged)="onPageChanged($event)"
+      [(itemsPerPage)]="itemsPerPage"
+      [boundaryLinks]="true"
+      [(ngModel)]="currentPage"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;">
+    </pagination>
+  </div>
+  <div class="text-center justify-content-center">
+  <empty-result
+    message="Nenhuma informação encontrada"
+    class="my-3 justify-content-center text-center"
+    *ngIf="dadosEmpty">
+  </empty-result>
+  </div>
+  <ng-template #aprovarSolicitacao>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Observação de Aprovação #{{solicitacaoSelecionada?.nrPedido}}</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="col-12">
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row justify-content-center">
+            <div class="form-group col pl-0">
+              <label for="descObs" >Observação:</label>
+              <input 
+                class="form-control" 
+                id="descObs" 
+                formControlName="descObs" 
+                rows="3"
+                [ngClass]="onFieldError('descObs') + ' ' + onFieldRequired('form.controls.descObs')">
+              
+              <invalid-form-control [show]="onFieldInvalid('descObs')" message="Observação é obrigatório e deve conter no mínimo 3 dígitos."></invalid-form-control>
+            </div>
+          </div>
+        </form>
+        <div  class="form-row justify-content-center text-center">
+          <button 
+            type="button" 
+            class="btn btn-default btn-lg m-2"
+            (click)="requestSuccess(solicitacaoSelecionada)"
+            [disabled]="form.valid === false || loaderNavbar === true"
+          >
+            <span aria-hidden="true">
+             <i class=" text-success fas fa-thumbs-up"></i>
+            </span>Aprovar
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+   <ng-template #reprovarSolicitacao>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Observação de Reprovação #{{solicitacaoSelecionada?.nrPedido}}</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="col-12">
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row justify-content-center">
+            <div class="form-group col pl-0">
+              <label for="descObs" >Observação:</label>
+              <input 
+                class="form-control" 
+                id="descObs" 
+                formControlName="descObs" 
+                rows="3"
+                [ngClass]="onFieldError('descObs') + ' ' + onFieldRequired('form.controls.descObs')">
+              <invalid-form-control [show]="onFieldInvalid('descObs')" message="Observação é obrigatório e deve conter no mínimo 3 dígitos."></invalid-form-control>
+            </div>
+          </div>
+          <div class="checkbox">
+            <label class="checkbox-inline">
+              <input
+              type="checkbox" 
+              id="excluiPedido"
+              formControlName="excluiPedido"
+              > Excluir pedido
+            </label>
+          </div>
+        </form>
+        <div  class="form-row justify-content-center text-center">
+          <button 
+            type="button" 
+            class="btn btn-default btn-lg m-2"
+            (click)="requestFail(solicitacaoSelecionada)"
+            [disabled]="form.valid === false || loaderNavbar === true"
+          >
+            <span aria-hidden="true">
+             <i class=" text-danger fas fa-thumbs-down"></i>
+            </span>Reprovar
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</app-body>

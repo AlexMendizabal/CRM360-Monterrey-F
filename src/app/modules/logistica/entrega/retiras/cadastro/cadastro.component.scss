@@ -1,0 +1,30 @@
+.green{
+  color: green;
+}
+
+.cursor-pointer{
+  cursor: pointer;
+}
+
+.cursor-grab{
+  cursor: grab !important;
+}
+
+.input-sequence{
+  font-size: 1.25rem;
+  width: 4ch; 
+  border: none;
+  padding: 0.1em;
+  border-bottom: 1px solid transparent;
+  background-color: transparent;
+}
+
+.input-sequence:focus{
+  outline: none;
+  border-bottom: 1px solid lightgrey;
+}
+
+/* a{
+  text-decoration: none;
+  color: #000000;
+} */

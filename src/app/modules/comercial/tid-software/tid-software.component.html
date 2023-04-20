@@ -1,0 +1,137 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="TID Software">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="form.value['sistema'] == null">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onAcessar()"
+    [disabled]="!form.valid">
+    Acessar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row justify-content-center" *ngIf="!loaderFullScreen">
+    <div class="col-10">
+      <h5 class="pt-2 mb-4 text-center">{{ onTitleApplication() }}</h5>
+      <div class="row justify-content-center">
+        <div class="col-md-3" *ngIf="onShow('vendas')">
+          <card-button
+            icon="fas fa-shopping-cart"
+            text="Vendas"
+            [class]="borderClass('vendas')"
+            (click)="onClick('vendas', true)">
+          </card-button>
+        </div>
+        <div class="col-md-3" *ngIf="onShow('analiseLimiteCredito')">
+          <card-button
+            icon="fas fa-search-dollar"
+            text="Análise de limite de crédito"
+            [class]="borderClass('analiseLimiteCredito')"
+            (click)="onClick('analiseLimiteCredito', true)">
+          </card-button>
+        </div>
+        <div class="col-md-3" *ngIf="onShow('painelBobinas')">
+          <card-button
+            icon="fas fa-database"
+            text="Painel de bobinas"
+            [class]="borderClass('painelBobinas')"
+            (click)="onClick('painelBobinas', true)">
+          </card-button>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-3" *ngIf="onShow('liberacaoFaturamento')">
+          <card-button
+            icon="fas fa-unlock"
+            text="Liberação de faturamento"
+            [class]="borderClass('liberacaoFaturamento')"
+            (click)="onClick('liberacaoFaturamento', true)">
+          </card-button>
+        </div>
+        <div class="col-md-3" *ngIf="onShow('registroOcorrencias')">
+          <card-button
+            icon="fas fa-exclamation-triangle"
+            text="Registro de ocorrências"
+            [class]="borderClass('registroOcorrencias')"
+            (click)="onClick('registroOcorrencias', true)">
+          </card-button>
+        </div>
+        <div class="col-md-3" *ngIf="onShow('producaoTela')">
+          <card-button
+            icon="fas fa-border-none"
+            text="Produção de tela"
+            [class]="borderClass('producaoTela')"
+            (click)="onClick('producaoTela', true)">
+          </card-button>
+        </div>
+        <div class="col-md-3" *ngIf="onShow('FichaCCD')">
+          <card-button
+            icon="fas fa-clipboard-list"
+            text="Ficha Cadastral Corte e Dobra"
+            [class]="borderClass('FichaCCD')"
+            (click)="onClick('FichaCCD', true)">
+          </card-button>
+        </div>
+      </div>
+      <div class="row justify-content-center" *ngIf="onFormShow()">
+        <div [ngClass]="columnClass()">
+          <form [formGroup]="form" autocomplete="off">
+            <div class="form-row justify-content-center">
+              <div class="form-group col">
+                <label for="empresa">Empresa</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="empresas"
+                  [virtualScroll]="true"
+                  labelForId="empresa"
+                  bindLabel="nomeEmpresa"
+                  bindValue="idEmpresa"
+                  formControlName="empresa"
+                  [ngClass]="onFieldError('empresa') + ' ' + onFieldRequired('empresa')">
+                </ng-select>
+                <invalid-form-control [show]="onFieldInvalid('empresa') == 'required'" message="Empresa é obrigatório."></invalid-form-control>
+              </div>
+              <div class="form-group col" *ngIf="onFormModuloShow()">
+                <label for="modulo">Módulo</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="modulos"
+                  [virtualScroll]="true"
+                  labelForId="modulo"
+                  bindLabel="descricao"
+                  bindValue="id"
+                  formControlName="modulo"
+                  (change)="onChangeModuloVendas()"
+                  [ngClass]="onFieldError('modulo') + ' ' + onFieldRequired('modulo')">
+                </ng-select>
+                <invalid-form-control [show]="onFieldInvalid('modulo') == 'required'" message="Módulo é obrigatório."></invalid-form-control>
+              </div>
+              <div class="form-group col" *ngIf="onFormLinhaShow()">
+                <label for="linha">Linha</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="linhas"
+                  [virtualScroll]="true"
+                  labelForId="linha"
+                  bindLabel="descricao"
+                  bindValue="id"
+                  formControlName="linha"
+                  [ngClass]="onFieldError('linha') + ' ' + onFieldRequired('linha')">
+                </ng-select>
+                <invalid-form-control [show]="onFieldInvalid('linha') == 'required'" message="Linha é obrigatório."></invalid-form-control>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>

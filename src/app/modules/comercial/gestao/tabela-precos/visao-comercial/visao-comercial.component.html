@@ -1,0 +1,133 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    [routerLink]=""
+    (click)="onLimpar()">
+    Limpar
+  </button>
+  <button type="button" (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-3">
+              <label for="tabela">Tabela</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [closeOnSelect]="true"
+                [items]="tabelas"
+                formControlName="tabela"
+                [virtualScroll]="true"
+                labelForId="tabela"
+                bindValue="codPreco"
+                bindLabel="nomePreco"
+                >
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="codMaterial">cód. material</label>
+              <input class="form-control" id="codMaterial" type="text" formControlName="codMaterial"
+                placeholder="Código material..."
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="nomeMaterial">nome material</label>
+              <input class="form-control" id="nomeMaterial" type="text" formControlName="nomeMaterial"
+                placeholder="nome material..."
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="codLinha">Linha</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [closeOnSelect]="true"
+                [items]="linhas"
+                formControlName="codLinha"
+                [virtualScroll]="true"
+                labelForId="codLinha"
+                bindLabel="descricao"
+                bindValue="id"
+                >
+                <!-- (change)="onChangeLinha($event.id)" -->
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-1">
+              <label for="registros">Registros</label>
+              <select class="form-control" id="registros" formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row" *ngIf="!dadosEmpty && !boolimpar">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-6 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th nowrap scope="col" class="hover">
+              <thead-sorter value="Código" [active]="orderBy == 'codMaterial'" [sort]="orderType"
+                (click)="setOrderBy('codMaterial')">
+              </thead-sorter>
+            </th>
+            <th nowrap scope="col" class="hover">
+              <thead-sorter value="Material" [active]="orderBy == 'nomeMaterial'" [sort]="orderType"
+                (click)="setOrderBy('nomeMaterial')">
+              </thead-sorter>
+            </th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dados" [class.table-active]="item.codMaterial == codigoSelecionado">
+            <td nowrap class="hover text-left" [ngClass]="classStatusBorder(item)" (click)="getMateriaisDetalhes(item)">{{ item.codMaterial }}</td>
+            <td nowrap class="hover text-left" (click)="getMateriaisDetalhes(item)">{{ item.nomeMaterial }}</td>
+            <td></td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="d-flex justify-content-center mt-3" *ngIf="dados.length > maxSize">
+        <pagination [maxSize]="maxSize" [(totalItems)]="totalItems" (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
+          nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-6" [hidden]="!showDetailPanel">
+      <detail-panel panelTitle="{{materialSelecionado}}">
+        <custom-table *ngIf="dadosDetalhes.length > 0">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col">Empresa</th>
+              <th scope="col" class="text-center">UF</th>
+              <th scope="col">Valor</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let item of dadosDetalhes">
+              <td>{{ item.nomeEmpresa | uppercase }}</td>
+              <td class="text-center">{{ item.ufDestino | uppercase }}</td>
+              <td>{{ item.valorMaterial | currency:'BRL' }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+  <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && dadosLoaded && !boolimpar"></empty-result>
+</app-body>

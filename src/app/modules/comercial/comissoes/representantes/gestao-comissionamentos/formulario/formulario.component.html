@@ -1,0 +1,1857 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle">
+<!-- <button
+  *ngIf="profile.gerenteEscritorio && notasEscritorio"
+  type="button"
+  (click)="onNotasEscritorio()">
+  Solicitar Notas Escritório
+</button>
+<button
+  *ngIf="profile.gerenteEscritorio && !notasEscritorio"
+  type="button">
+  Notas Solicitadas
+</button> -->
+<!-- *ngIf="action === 'update'" -->
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" >
+  <div class="row" >
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2" [hidden]="action === 'update'">
+              <label for="dtInicioVigencia">Data Inicio</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                  <input
+                  class="form-control"
+                  id="dtInicioVigencia"
+                  type="text"
+                  formControlName="dtInicioVigencia"
+                  (change)="checkValidatorsData()"
+                  bsDatepicker>
+              </div>
+            </div>
+
+            <div class="form-group col-lg-2" [hidden]="action === 'create'">
+              <label for="mesReferente">Mês Referência</label>
+                <input
+                  class="form-control"
+                  id="mesReferente"
+                  type="text"
+                  formControlName="mesReferente"
+                  [readonly]="true">
+            </div>
+
+            <div class="form-group col-lg-2" [hidden]="action === 'update'">
+              <label for="dtFimVigencia">Data Fim</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                  <input
+                    class="form-control"
+                    id="dtFimVigencia"
+                    type="text"
+                    formControlName="dtFimVigencia"
+                    change="checkValidatorsData()"
+                    bsDatepicker>
+              </div>
+
+            </div>
+
+            <!-- <div class="form-group col-lg-1" [hidden]="action === 'create'">
+              <label for="dtFimVigencia">Dt Fim</label>
+              <input
+              value="{{ dataFinal | date: 'dd/MM/yyyy' }}"
+              class="form-control"
+              id="dtFimVigencia"
+              type="text"
+              formControlName="dtFimVigencia"
+              bsDatepicker
+              [readonly]="true">
+            </div> -->
+
+            <div class="form-group col-lg-3" [hidden]="action === 'create'">
+              <label for="codEscritorio">Escritório</label>
+              <ng-select
+                  type='text'
+                  [items]="escritorios"
+                  [searchable]="true"
+                  [clearable]="false"
+                  [virtualScroll]="true"
+                  [hideSelected]="true"
+                  placeholder="Selecione..."
+                  bindLabel="nomeEscritorio"
+                  bindValue="idEscritorio"
+                  formControlName="codEscritorio"
+                  [readonly]="profile.gerenteEscritorio || action === 'create'"
+                  >
+                </ng-select>
+
+            </div>
+            <div class="form-group col-lg-4" [hidden]="action === 'create'">
+              <label for="codRepresentante">Representante</label>
+              <ng-select
+                  type='text'
+                  [items]="representantes"
+                  [searchable]="true"
+                  [clearable]="false"
+                  placeholder="Selecione..."
+                  bindLabel="nomeRepresentante"
+                  bindValue="codRepresentante"
+                  formControlName="codRepresentante"
+                  [readonly]="action === 'create'">
+                </ng-select>
+            </div>
+
+            <div class="form-group col-lg-3" [hidden]="action === 'create'">
+              <label for="codStatus">Status</label>
+              <ng-select
+                type='text'
+                [items]="situacao"
+                [searchable]="true"
+                [clearable]="false"
+                placeholder="Selecione..."
+                bindLabel="nomeSituacao"
+                bindValue="codSituacao"
+                formControlName="codStatus"
+                [readonly]="!readonly"
+              >
+              </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+
+  <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && dadosLoaded"></empty-result>
+<div class=""*ngIf="dadosComissao.length > 0 && !dadosEmpty">
+  <div class="mb-2 border rounded border-light mb-3" *ngFor="let dados of dadosComissao; let indice = index;">
+    <custom-table [config]="tableConfigAnexos">
+      <ng-template #thead let-thead>
+        <tr *ngIf="validaBarraAzul(dados)">
+            <th
+            class="tdPrimaryLarge rounded-right rounded-left border-light"
+
+            *ngIf="action == 'create'">
+              <div style="text-transform: uppercase; font-weight: bold; font-size: 0.8rem; ">
+                  {{ dados.nomeRepresentante }}
+              </div>
+            </th>
+
+            <th
+            class="tdPrimaryLarge"
+
+            *ngIf="action == 'update'">
+              <div style="text-transform: uppercase; font-weight: bold; font-size: 0.8rem; ">
+                  {{ dados.nomeRepresentante }}
+              </div>
+              <div style="text-transform: uppercase; font-size: 0.7rem; ">
+                Período: DE {{ dados.dataInicial | date: 'dd/MM/yyyy' }} a {{ dados.dataFinal | date: 'dd/MM/yyyy' }}
+              </div>
+            </th>
+
+            <!-- input gerente de escritório -->
+            <th class="tdPrimarySmall">
+            </th>
+
+           <!-- inputs gerente fiscal -->
+            <th class="tdPrimarySmall">
+              <btn-icon
+                  *ngIf="profile.gerenteFiscal && dados.valoresEnviados !== 'true' && action === 'update'"
+                  icon="fas fa-plus-square"
+                  size="medium"
+                  color="primary"
+                  tooltip="Adicionar Valores"
+                  (click)="openModalValores(valores, indice); setFormValores(dados)">
+              </btn-icon>
+
+              <btn-icon
+                  *ngIf="profile.gerenteFiscal && dados.valoresEnviados === 'true' && action === 'update'"
+                  icon="fas fa-arrow-circle-right"
+                  size="medium"
+                  color="primary"
+                  tooltip="Valores adicionados">
+              </btn-icon>
+            </th>
+
+            <!-- notas -->
+            <th class="tdPrimarySmall" >
+              <btn-icon
+                  *ngIf="profile.gerenteEscritorio && dados.notasSolicitadas != 'true' && action === 'update' && (dados.codSituacao == 1 && dados.emiteNota == 1)"
+                  icon="fas fa-clipboard"
+                  size="medium"
+                  color="primary"
+                  tooltip="Solicitar Notas"
+                  [hidden]="dados.clicado"
+                  id="notas"
+                  (click)="onNotasRepresentante(dados)">
+              </btn-icon>
+
+              <btn-icon
+                  *ngIf="profile.gerenteEscritorio && dados.notasSolicitadas === 'true' && action === 'update' || (dados.codSituacao == 2 && dados.emiteNota == 1)"
+                  icon="fas fa-clipboard-check"
+                  size="medium"
+                  color="success"
+                  tooltip="Notas Solicitadas"
+                  id="notas">
+              </btn-icon>
+
+              <btn-icon
+                  *ngIf="profile.gerenteEscritorio && dados.notasSolicitadas != 'true' && action === 'update' && (dados.codSituacao == 1 && dados.emiteNota == 0)"
+                  icon="fas fa-check"
+                  size="medium"
+                  color="success"
+                  tooltip="Aprovar"
+                  id="notas"
+                  (click)="onAprovarEscritorio(dados)">
+              </btn-icon>
+
+              <btn-icon
+                  *ngIf="profile.gerenteEscritorio && dados.notasSolicitadas == 'true' && action === 'update' && (dados.codSituacao == 3 && dados.emiteNota == 0)"
+                  icon="fas fa-check"
+                  size="medium"
+                  color="success"
+                  tooltip="Aprovado"
+                  id="notas">
+              </btn-icon>
+            </th>
+
+            <!-- aprovar/reprovar -->
+            <!-- *ngFor="let item of dados.info; let i = index;" -->
+            <th class="tdPrimarySmall">
+              <!-- Analista de Marketing -->
+              <btn-icon
+                  *ngIf="profile.analistaMarketing && (dados.analista != 'false' && dados.analista != 'true') && action === 'update' && dados.codSituacao == 3"
+                  icon="fas fa-check"
+                  size="medium"
+                  color="success"
+                  tooltip="Aprovar"
+                  id="aprovado"
+                  [hidden]="dados.clicado"
+                  (click)="onAprovarAnalista(dados)">
+              </btn-icon>
+              <btn-icon
+                  *ngIf="profile.analistaMarketing && (dados.analista != 'false' && dados.analista != 'true') && action === 'update' && dados.codSituacao == 3"
+                  icon="fas fa-times"
+                  size="medium"
+                  color="danger"
+                  tooltip="Reprovar"
+                  id="reprovado"
+                  [hidden]="dados.clicado"
+                  (click)="openModalAnalista(analista);">
+              </btn-icon>
+              <!-- && (item.aprovadoAnalista === undefined || item.aprovadoAnalista === 'false') -->
+              <btn-icon
+                  *ngIf="profile.analistaMarketing && dados.analista === 'false' && action === 'update'"
+                  icon="fas fa-times"
+                  size="medium"
+                  color="danger"
+                  tooltip="Reprovado"
+                  id="reprovado">
+              </btn-icon>
+              <!-- (item.aprovadoAnalista === undefined || item.aprovadoAnalista === 'true') -->
+              <btn-icon
+                  *ngIf="profile.analistaMarketing  && dados.analista === 'true' && action === 'update'"
+                  icon="fas fa-check"
+                  size="medium"
+                  color="success"
+                  tooltip="Aprovado"
+                  id="aprovado">
+              </btn-icon>
+
+              <!-- Gerente de Marketing -->
+              <btn-icon
+                  *ngIf="profile.gerenteMarketing &&
+                  !profile.analistaMarketing &&
+                  (dados.gerente != 'false' &&
+                  dados.gerente != 'true') &&
+                  action === 'update' &&
+                  dados.codSituacao == 4"
+                  icon="fas fa-check"
+                  size="medium"
+                  color="success"
+                  tooltip="Aprovar"
+                  id="aprovado"
+                  [hidden]="dados.clicado"
+                  (click)="onAprovarGerente(dados)">
+              </btn-icon>
+              <btn-icon
+                  *ngIf="profile.gerenteMarketing &&
+                  !profile.analistaMarketing &&
+                  (dados.gerente != 'false' &&
+                  dados.gerente != 'true') &&
+                  action === 'update' &&
+                  dados.codSituacao == 4"
+                  icon="fas fa-times"
+                  size="medium"
+                  color="danger"
+                  tooltip="Reprovar"
+                  id="reprovado"
+                  [hidden]="dados.clicado"
+                  (click)="openModalGerente(gerente)">
+              </btn-icon>
+              <!-- && (item.aprovadoGerente === undefined || item.aprovadoGerente === 'false' -->
+              <btn-icon
+                  *ngIf="profile.gerenteMarketing && dados.gerente === 'false' && action === 'update'"
+                  icon="fas fa-times"
+                  size="medium"
+                  color="danger"
+                  tooltip="Reprovado"
+                  id="reprovado">
+              </btn-icon>
+              <!-- && (item.aprovadoGerente === undefined || item.aprovadoGerente === 'true') -->
+              <btn-icon
+                  *ngIf="profile.gerenteMarketing && dados.gerente === 'true' && action === 'update'"
+                  icon="fas fa-check"
+                  size="medium"
+                  color="success"
+                  tooltip="Aprovado"
+                  id="aprovado">
+              </btn-icon>
+
+              <!-- Diretor Comercial -->
+              <btn-icon
+                  *ngIf="profile.diretorComercial && (dados.diretor != 'false' && dados.diretor != 'true') && action === 'update' && dados.codSituacao == 6"
+                  icon="fas fa-check"
+                  size="medium"
+                  tooltip="Aprovar"
+                  color="success"
+                  id="aprovado"
+                  [hidden]="dados.clicado"
+                  (click)="onAprovarDiretor(dados)">
+              </btn-icon>
+              <btn-icon
+                  *ngIf="profile.diretorComercial && (dados.diretor != 'false' && dados.diretor != 'true') && action === 'update' && dados.codSituacao == 6"
+                  icon="fas fa-times"
+                  size="medium"
+                  color="danger"
+                  tooltip="Reprovar"
+                  id="reprovado"
+                  [hidden]="dados.clicado"
+                  (click)="openModalDiretor(diretor)">
+              </btn-icon>
+              <!-- && (item.aprovadoDiretor === undefined || item.aprovadoDiretor === 'false') -->
+              <btn-icon
+                  *ngIf="profile.diretorComercial && dados.diretor === 'false' "
+                  icon="fas fa-times"
+                  size="medium"
+                  color="danger"
+                  tooltip="Reprovado"
+                  id="reprovado">
+              </btn-icon>
+              <!-- && (item.aprovadoDiretor === undefined || item.aprovadoDiretor === 'true') -->
+              <btn-icon
+                  *ngIf="profile.diretorComercial && dados.diretor === 'true' && action === 'update'"
+                  icon="fas fa-check"
+                  size="medium"
+                  color="danger"
+                  tooltip="Aprovado"
+                  id="aprovado">
+              </btn-icon>
+
+            </th>
+
+            <!-- mais detalhes -->
+            <th
+            *ngIf="action === 'update'"
+            class="tdPrimarySmall">
+              <btn-icon
+                  icon="fas fa-history"
+                  type="button"
+                  size="medium"
+                  tooltip="Histórico"
+                  (click)="openModalHistorico(historico); onHistoricoExclusao(dados.info);">
+              </btn-icon>
+
+              <!-- <btn-icon
+                  class="ml-2"
+                  icon="fas fa-plus"
+                  size="small"
+                  tooltip="Mais detalhes"
+                  (click)="openModalDetails(details); openDetails(dados);">
+              </btn-icon> -->
+            </th>
+
+        </tr>
+
+
+        <tr *ngIf="validaBarraVerde(dados)">
+        <th
+          class="tdAprovedLarge"
+          >
+          <div style="text-transform: uppercase; font-weight: bold; font-size: 0.8rem; ">
+              {{ dados.nomeRepresentante }}
+          </div>
+          <div style="text-transform: uppercase; font-size: 0.7rem; ">
+            Período: DE {{ dados.dataInicial | date: 'dd/MM/yyyy' }} a {{ dados.dataFinal | date: 'dd/MM/yyyy' }}
+          </div>
+        </th>
+
+          <!-- input gerente de escritório -->
+          <th class="tdAprovedSmall">
+          </th>
+
+         <!-- inputs gerente fiscal -->
+          <th class="tdAprovedSmall">
+            <btn-icon
+            *ngIf="profile.gerenteFiscal && dados.valoresEnviados !== 'true' && action === 'update'"
+            icon="fas fa-plus-square"
+            size="small"
+            tooltip="Adicionar Valores"
+            (click)="openModalValores(valores, indice); setFormValores(dados)">
+        </btn-icon>
+
+        <btn-icon
+            *ngIf="profile.gerenteFiscal && dados.valoresEnviados === 'true' && action === 'update'"
+            icon="fas fa-check"
+            size="small"
+            tooltip="Valores adicionados">
+        </btn-icon>
+          </th>
+
+          <!-- notas -->
+          <th class="tdAprovedSmall" >
+            <btn-icon
+                  *ngIf="profile.gerenteEscritorio && dados.notasSolicitadas != 'true' && action === 'update' && (dados.codSituacao == 1 && dados.emiteNota == 1)"
+                  icon="fas fa-clipboard"
+                  size="medium"
+                  tooltip="Solicitar Notas"
+                  id="notas"
+                  (click)="onNotasRepresentante(dados)">
+              </btn-icon>
+
+              <btn-icon
+                  *ngIf="profile.gerenteEscritorio && dados.notasSolicitadas === 'true' && action === 'update' && (dados.codSituacao == 2 && dados.emiteNota == 1)"
+                  icon="fas fa-clipboard-check"
+                  size="medium"
+                  color="success"
+                  tooltip="Notas Solicitadas"
+                  id="notas">
+              </btn-icon>
+
+              <btn-icon
+                  *ngIf="profile.gerenteEscritorio && dados.notasSolicitadas != 'true' && action === 'update' && (dados.codSituacao == 1 && dados.emiteNota == 0)"
+                  icon="fas fa-check"
+                  size="medium"
+                  tooltip="Aprovar"
+                  id="notas">
+              </btn-icon>
+
+              <btn-icon
+                  *ngIf="profile.gerenteEscritorio && dados.notasSolicitadas != 'true' && action === 'update' && (dados.codSituacao == 3 && dados.emiteNota == 0)"
+                  icon="fas fa-check"
+                  size="medium"
+                  tooltip="Aprovado"
+                  id="notas">
+              </btn-icon>
+
+        </th>
+
+
+          <!-- aprovar/reprovar -->
+          <!-- *ngFor="let item of dados.info; let i = index;" -->
+          <th class="tdAprovedSmall">
+              <!-- Analista de Marketing -->
+              <btn-icon
+                  *ngIf="profile.analistaMarketing && (dados.analista != 'false' && dados.analista != 'true') && action === 'update'"
+                  icon="fas fa-check"
+                  size="medium"
+                  tooltip="Aprovar"
+                  id="aprovado"
+                  (click)="onAprovarAnalista(dados)">
+              </btn-icon>
+              <btn-icon
+                  *ngIf="profile.analistaMarketing && (dados.analista != 'false' && dados.analista != 'true') && action === 'update'"
+                  icon="fas fa-times"
+                  size="medium"
+                  tooltip="Reprovar"
+                  id="reprovado"
+                  (click)="openModalAnalista(analista);">
+              </btn-icon>
+              <!-- && (item.aprovadoAnalista === undefined || item.aprovadoAnalista === 'false') -->
+              <btn-icon
+                  *ngIf="profile.analistaMarketing && dados.analista === 'false' && action === 'update'"
+                  icon="fas fa-times"
+                  size="medium"
+                  tooltip="Reprovado"
+                  id="reprovado">
+              </btn-icon>
+              <!-- (item.aprovadoAnalista === undefined || item.aprovadoAnalista === 'true') -->
+              <btn-icon
+                  *ngIf="profile.analistaMarketing  && dados.analista === 'true' && action === 'update'"
+                  icon="fas fa-check"
+                  size="medium"
+                  tooltip="Aprovado"
+                  id="aprovado">
+              </btn-icon>
+
+              <!-- Gerente de Marketing -->
+              <btn-icon
+              *ngIf="profile.gerenteMarketing &&
+              !profile.analistaMarketing &&
+              (dados.gerente != 'false' &&
+              dados.gerente != 'true') &&
+              action === 'update' &&
+              dados.codSituacao == 4"
+              icon="fas fa-check"
+              size="medium"
+              color="success"
+              tooltip="Aprovar"
+              id="aprovado"
+              [hidden]="dados.clicado"
+              (click)="onAprovarGerente(dados)">
+          </btn-icon>
+          <btn-icon
+              *ngIf="profile.gerenteMarketing &&
+              !profile.analistaMarketing &&
+              (dados.gerente != 'false' &&
+              dados.gerente != 'true') &&
+              action === 'update' &&
+              dados.codSituacao == 4"
+              icon="fas fa-times"
+              size="medium"
+              color="danger"
+              tooltip="Reprovar"
+              id="reprovado"
+              [hidden]="dados.clicado"
+              (click)="openModalGerente(gerente)">
+          </btn-icon>
+              <!-- && (item.aprovadoGerente === undefined || item.aprovadoGerente === 'false' -->
+              <btn-icon
+                  *ngIf="profile.gerenteMarketing && dados.gerente === 'false' && action === 'update'"
+                  icon="fas fa-times"
+                  size="medium"
+                  tooltip="Reprovado"
+                  id="reprovado">
+              </btn-icon>
+              <!-- && (item.aprovadoGerente === undefined || item.aprovadoGerente === 'true') -->
+              <btn-icon
+                  *ngIf="profile.gerenteMarketing && dados.gerente === 'true' && action === 'update'"
+                  icon="fas fa-check"
+                  size="medium"
+                  tooltip="Aprovado"
+                  id="aprovado">
+              </btn-icon>
+
+              <!-- Diretor Comercial -->
+              <btn-icon
+                  *ngIf="profile.diretorComercial && (dados.diretor != 'false' && dados.diretor != 'true') && action === 'update'"
+                  icon="fas fa-check"
+                  size="medium"
+                  tooltip="Aprovar"
+                  id="aprovado"
+                  (click)="onAprovarDiretor(dados)">
+              </btn-icon>
+              <btn-icon
+                  *ngIf="profile.diretorComercial && (dados.diretor != 'false' && dados.diretor != 'true') && action === 'update'"
+                  icon="fas fa-times"
+                  size="medium"
+                  tooltip="Reprovar"
+                  id="reprovado"
+                  (click)="openModalDiretor(diretor)">
+              </btn-icon>
+              <!-- && (item.aprovadoDiretor === undefined || item.aprovadoDiretor === 'false') -->
+              <btn-icon
+                  *ngIf="profile.diretorComercial && dados.diretor === 'false' "
+                  icon="fas fa-times"
+                  size="medium"
+                  tooltip="Reprovado"
+                  id="reprovado">
+              </btn-icon>
+              <!-- && (item.aprovadoDiretor === undefined || item.aprovadoDiretor === 'true') -->
+              <btn-icon
+                  *ngIf="profile.diretorComercial && dados.diretor === 'true' && action === 'update'"
+                  icon="fas fa-check"
+                  size="medium"
+                  tooltip="Aprovado"
+                  id="aprovado">
+              </btn-icon>
+
+            </th>
+
+          <!-- mais detalhes -->
+          <!-- <th
+          *ngIf="action === 'update'"
+          class="tdAprovedSmall">
+            <btn-icon
+                icon="fas fa-plus"
+                size="small"
+                tooltip="Mais detalhes"
+                (click)="openModalDetails(details); openDetails(dados);">
+            </btn-icon>
+          </th> -->
+      </tr>
+
+      <tr *ngIf="validaBarraVermelha(dados)">
+        <th
+          class="tdReprovedLarge">
+          <div style="text-transform: uppercase; font-weight: bold; font-size: 0.8rem; ">
+              {{ dados.nomeRepresentante }}
+          </div>
+          <div style="text-transform: uppercase; font-size: 0.7rem; ">
+            Período: DE {{ dados.dataInicial | date: 'dd/MM/yyyy' }} a {{ dados.dataFinal | date: 'dd/MM/yyyy' }}
+          </div>
+        </th>
+
+        <!-- input gerente de escritório -->
+        <th class="tdReprovedSmall">
+        </th>
+
+       <!-- inputs gerente fiscal -->
+        <th class="tdReprovedSmall">
+          <btn-icon
+              *ngIf="(profile.gerenteFiscal)"
+              icon="fas fa-plus-square"
+              size="small"
+              tooltip="Adicionar Valores"
+              (click)="openModalValores(valores, indice)">
+          </btn-icon>
+        </th>
+
+        <!-- notas -->
+        <th class="tdReprovedSmall">
+          <btn-icon
+                  *ngIf="profile.gerenteEscritorio && dados.notasSolicitadas != 'true' && action === 'update' && (dados.codSituacao == 1 && dados.emiteNota == 1)"
+                  icon="fas fa-clipboard"
+                  size="medium"
+                  tooltip="Solicitar Notas"
+                  id="notas"
+                  (click)="onNotasRepresentante(dados)">
+              </btn-icon>
+
+              <btn-icon
+                  *ngIf="profile.gerenteEscritorio && dados.notasSolicitadas === 'true' && action === 'update' && (dados.codSituacao == 2 && dados.emiteNota == 1)"
+                  icon="fas fa-clipboard-check"
+                  size="medium"
+                  tooltip="Notas Solicitadas"
+                  id="notas">
+              </btn-icon>
+
+              <btn-icon
+                  *ngIf="profile.gerenteEscritorio && dados.notasSolicitadas != 'true' && action === 'update' && (dados.codSituacao == 1 && dados.emiteNota == 0)"
+                  icon="fas fa-check"
+                  size="medium"
+                  tooltip="Aprovar"
+                  id="notas">
+              </btn-icon>
+
+              <btn-icon
+                  *ngIf="profile.gerenteEscritorio && dados.notasSolicitadas != 'true' && action === 'update' && (dados.codSituacao == 3 && dados.emiteNota == 0)"
+                  icon="fas fa-check"
+                  size="medium"
+                  tooltip="Aprovado"
+                  id="notas">
+              </btn-icon>
+        </th>
+
+        <!-- aprovar/reprovar -->
+        <!-- *ngFor="let item of dados.info; let i = index;" -->
+
+        <th class="tdReprovedSmall">
+            <!-- Analista de Marketing -->
+            <btn-icon
+                *ngIf="profile.analistaMarketing && (dados.analista != 'false' && dados.analista != 'true') && action === 'update'"
+                icon="fas fa-check"
+                size="medium"
+                tooltip="Aprovar"
+                id="aprovado"
+                (click)="onAprovarAnalista(dados)">
+            </btn-icon>
+            <btn-icon
+                *ngIf="profile.analistaMarketing && (dados.analista != 'false' && dados.analista != 'true') && action === 'update'"
+                icon="fas fa-times"
+                size="medium"
+                tooltip="Reprovar"
+                id="reprovado"
+                (click)="openModalAnalista(analista);">
+            </btn-icon>
+            <!-- && (item.aprovadoAnalista === undefined || item.aprovadoAnalista === 'false') -->
+            <btn-icon
+                *ngIf="profile.analistaMarketing && dados.analista === 'false' && action === 'update'"
+                icon="fas fa-times"
+                size="medium"
+                tooltip="Reprovado"
+                id="reprovado">
+            </btn-icon>
+            <!-- (item.aprovadoAnalista === undefined || item.aprovadoAnalista === 'true') -->
+            <btn-icon
+                *ngIf="profile.analistaMarketing  && dados.analista === 'true' && action === 'update'"
+                icon="fas fa-check"
+                size="medium"
+                tooltip="Aprovado"
+                id="aprovado">
+            </btn-icon>
+
+            <!-- Gerente de Marketing -->
+            <btn-icon
+                *ngIf="profile.gerenteMarketing && (dados.gerente != 'false' && dados.gerente != 'true') && action === 'update'"
+                icon="fas fa-check"
+                size="medium"
+                tooltip="Aprovar"
+                id="aprovado"
+                (click)="onAprovarGerente(dados)">
+            </btn-icon>
+            <btn-icon
+            *ngIf="profile.gerenteMarketing && (dados.gerente != 'false' && dados.gerente != 'true') && action === 'update'"
+                icon="fas fa-times"
+                size="medium"
+                tooltip="Reprovar"
+                id="reprovado"
+                (click)="openModalGerente(gerente)">
+            </btn-icon>
+            <!-- && (item.aprovadoGerente === undefined || item.aprovadoGerente === 'false' -->
+            <btn-icon
+                *ngIf="profile.gerenteMarketing && dados.gerente === 'false' && action === 'update'"
+                icon="fas fa-times"
+                size="medium"
+                tooltip="Reprovado"
+                id="reprovado">
+            </btn-icon>
+            <!-- && (item.aprovadoGerente === undefined || item.aprovadoGerente === 'true') -->
+            <btn-icon
+                *ngIf="profile.gerenteMarketing && dados.gerente === 'true' && action === 'update'"
+                icon="fas fa-check"
+                size="medium"
+                tooltip="Aprovado"
+                id="aprovado">
+            </btn-icon>
+
+            <!-- Diretor Comercial -->
+            <btn-icon
+                *ngIf="profile.diretorComercial && (dados.diretor != 'false' && dados.diretor != 'true') && action === 'update'"
+                icon="fas fa-check"
+                size="medium"
+                tooltip="Aprovar"
+                id="aprovado"
+                (click)="onAprovarDiretor(dados)">
+            </btn-icon>
+            <btn-icon
+                *ngIf="profile.diretorComercial && (dados.diretor != 'false' && dados.diretor != 'true') && action === 'update'"
+                icon="fas fa-times"
+                size="medium"
+                tooltip="Reprovar"
+                id="reprovado"
+                (click)="openModalDiretor(diretor)">
+            </btn-icon>
+            <!-- && (item.aprovadoDiretor === undefined || item.aprovadoDiretor === 'false') -->
+            <btn-icon
+                *ngIf="profile.diretorComercial && dados.diretor === 'false' "
+                icon="fas fa-times"
+                size="medium"
+                tooltip="Reprovado"
+                id="reprovado">
+            </btn-icon>
+            <!-- && (item.aprovadoDiretor === undefined || item.aprovadoDiretor === 'true') -->
+            <btn-icon
+                *ngIf="profile.diretorComercial && dados.diretor === 'true' && action === 'update'"
+                icon="fas fa-check"
+                size="medium"
+                tooltip="Aprovado"
+                id="aprovado">
+            </btn-icon>
+
+          </th>
+
+        <!-- mais detalhes -->
+        <!-- <th
+        *ngIf="action === 'update'"
+        class="tdReprovedSmall">
+          <btn-icon
+              icon="fas fa-plus"
+              size="small"
+              tooltip="Mais detalhes"
+              (click)="openModalDetails(details); openDetails(dados);">
+          </btn-icon>
+        </th> -->
+    </tr>
+      </ng-template>
+    </custom-table>
+
+    <!-- Anexos -->
+
+    <div *ngIf="dados.codSituacao != 1">
+
+        <div class="col" *ngIf="action === 'update'">
+          <!-- *ngIf="dados.anexos.length === 0" -->
+          <div class="row" *ngIf="dados.anexos.length === 0">
+            <div class="col-lg-12 d-flex align-items-start" >
+              <div class="mtc-title mb-0">Anexos</div>
+            </div>
+            <div class="col-2" *ngIf="dados.codSituacao == 2 && profile.gerenteEscritorio">
+              <label
+
+                for="novoAnexo" class="d-flex justify-content-start align-items-center"
+                style="cursor: pointer;"
+                >
+                <p class="btn btn-sm btn-outline-primary m-0" (click)="getIndexAnexos(dados, indice)">
+                  <i class="fas fa-plus"></i>
+                  <span>Anexar</span>
+                </p>
+              </label>
+              <input
+                id="novoAnexo"
+                type="file"
+                (change)="appendFile($event.target.files, indice, dados);"
+                (click)="validAnexos()"
+                class="d-none">
+            </div>
+
+            <!-- <div class="col-1" *ngIf="dados.codSituacao == 2 && profile.gerenteEscritorio">
+              <btn-icon
+                class="ml-2"
+                icon="fas fa-bullseye"
+                size="medium"
+                tooltip="Exibir nome do anexo para envio"
+                id="notas"
+                (click)="showNome(dados, indice)">
+              </btn-icon>
+          </div> -->
+
+          </div>
+          <div class="row">
+            <div class="col" >
+
+              <custom-table [config]="tableConfigAnexos" >
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let anexo of dados.anexos; let i = index">
+                    <td
+                      style="width: 85%">
+                      {{ anexo.nomeAnexo  }}
+                    </td>
+                    <td class="text-center" style="width: 5%">
+                      <btn-icon
+                        *ngIf="anexo.nomeAnexo && !anexo.codAnexo && dados.anexoEnviado != 'true'"
+                        class="ml-2"
+                        icon="fas fa-file-export"
+                        size="medium"
+                        tooltip="Enviar Nota para análise"
+                        id="diretor"
+                        (click)="onEnviarNotas(dados, indice)">
+                      </btn-icon>
+                      <btn-icon
+                        *ngIf="anexo.nomeAnexo && !anexo.codAnexo && dados.anexoEnviado === 'true'"
+                        class="ml-2"
+                        icon="fas fa-file-import"
+                        size="medium"
+                        tooltip="Nota enviada"
+                        id="notas">
+                      </btn-icon>
+                    </td>
+                    <td
+                      class="text-center" style="width: 5%">
+                      <a
+                        *ngIf="anexo.urlAnexo && dados.anexos[0].codComissaoRepresentante != dados.codComissaoRepresentante"
+                        (click)="navegarAnexo(anexo)"
+                        target="_blank"
+                        class="btn-icon-sm mx-2 text-black"
+                        tooltip="visualizar">
+                        <i class="far fa-eye"></i>
+                      </a>
+                    </td>
+                    <td class="text-center" style="width: 5%">
+                      <btn-icon
+                        *ngIf="profile.gerenteEscritorio && dados.anexoEnviado != 'true'"
+                        icon="fas fa-trash"
+                        size="small"
+                        tooltip="Excluir"
+                        (click)="onDeleteAnexo(dados.anexos.codAnexo, i, dados)">
+                      </btn-icon>
+                    </td>
+                    <td
+                      *ngIf="dados.anexoEnviado === 'true'"
+                      class="text-center"
+                      style="width: 5%">
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+
+            </div>
+          </div>
+          <!-- <div class="row" *ngIf="showAnexos && anexo.anexos.length > 0">
+            <div class="col">
+              <message
+                icon="fas fa-exchange-alt"
+                text="Nenhum documento encontrado">
+              </message>
+            </div>
+          </div> -->
+        </div>
+    </div>
+
+
+
+    <form [formGroup]="formInputs" autocomplete="off">
+    <div class="row">
+    <div class="col" >
+
+
+      <custom-table [config]="tableConfig" >
+
+        <ng-template #thead let-thead >
+
+          <tr>
+            <th scope="col-1"></th>
+
+            <th scope="col-4">Unidade</th>
+
+            <th scope="col-1">Valor Base <i class="far fa-question-circle" [tooltip]="tooltipTemplateValor"></i></th>
+
+            <th scope="col-1">Descontos</th>
+
+            <th scope="col-1">Ajuda de Custo</th>
+
+            <th scope="col-1">Percentual</th>
+
+            <th scope="col-1"></th>
+
+            <th scope="col-1">Valor Comissão</th>
+
+            <th scope="col-1"></th>
+
+          </tr>
+          <!-- Tooltip -->
+          <ng-template #tooltipTemplateValor>
+            <p class="mt-3 mb-0"><b></b></p>
+            <p class="mt-3 mb-0"><b></b></p>
+            <p class="mt-3 mb-0"><b>Valor NF + Valor ICMS = Valor Base</b></p>
+            <p class="mt-3 mb-0"><b></b></p>
+            <p class="mt-3 mb-0"><b></b></p>
+          </ng-template>
+
+        </ng-template>
+
+        <!-- Dados Unidade, Valores -->
+
+        <ng-template #tbody let-tbody>
+
+          <tr *ngFor="let item of dados.info; let i = index;">
+            <td
+            scope="col-1"
+            class="hover"
+            >
+            </td>
+
+            <!-- UNIDADE -->
+            <td *ngIf="validaUnidade1(dados, item)"
+              scope="col-4"
+              class="hover">
+              {{ item.unidade | uppercase }}
+            </td>
+
+            <td
+            *ngIf="validaUnidadeRo(dados, item)"
+              scope="col-4"
+              class="hover">
+              {{ item.unidade }} - {{ item.nrRo }}
+            </td>
+
+            <td
+            *ngIf="validaUnidade2(dados, item)"
+              scope="col-4"
+              class="hover">
+              {{ item.unidade | uppercase }}
+            </td>
+
+            <td
+              *ngIf="validaUnidadeInput(dados, item)"
+              scope="col-4"
+              class="hover"
+              >
+              <input
+              value="{{ item.unidade }}"
+              class="form-control col-6"
+              id="unidade"
+              type="text"
+              formControlName="unidade"
+              [readonly]="visualizar"
+              [ngClass]="onFieldErrorInputs('unidade') + ' ' + onFieldRequiredInputs('unidade')">
+            </td>
+
+            <!-- VALOR BASE -->
+            <td *ngIf="validaValorBase(dados, item)"
+              scope="col-4"
+              class="hover">
+              {{ item.valorBase | currency:'BRL':'symbol':'1.2-2' }}
+            </td>
+
+            <td *ngIf="validaValorBaseVazio(dados, item)"
+              scope="col-4"
+              class="hover">
+            </td>
+
+            <td
+            *ngIf="validaValorBaseInput(dados, item)"
+              scope="col-1"
+              class="hover">
+              <input
+                value="{{ item.valorBase | number:'1.2-2' }}"
+                class="form-control col-6"
+                id="valorBaseInput"
+                type="text"
+                formControlName="valorBaseInput"
+                currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }"
+                [readonly]="visualizar"
+                [ngClass]="onFieldErrorInputs('valorBaseInput') + ' ' + onFieldRequiredInputs('valorBaseInput')">
+            </td>
+
+            <td
+            *ngIf="validaValorBaseInputVazio(dados, item)"
+              scope="col-1"
+              class="hover">
+              <input
+                class="form-control col-6"
+                id="valorBaseInput"
+                type="text"
+                formControlName="valorBaseInput"
+                currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }"
+                [readonly]="visualizar"
+                [ngClass]="onFieldErrorInputs('valorBaseInput') + ' ' + onFieldRequiredInputs('valorBaseInput')">
+            </td>
+
+            <td
+            *ngIf="validaValorBaseInputDba(dados, item)"
+              scope="col-1"
+              class="hover">
+              <input
+                class="form-control col-6"
+                id="valorBaseDBA"
+                type="text"
+                formControlName="valorBaseDBA"
+                currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',', precision: 2 }"
+                [readonly]="visualizar"
+                [ngClass]="onFieldErrorInputs('valorBaseDBA') + ' ' + onFieldRequiredInputs('valorBaseDBA')">
+            </td>
+
+            <td
+            *ngIf="validaValorBaseInputAco(dados, item)"
+              scope="col-1"
+              class="hover">
+              <input
+                class="form-control col-6"
+                id="valorBaseACO"
+                type="text"
+                formControlName="valorBaseACO"
+                currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',', precision: 2 }"
+                [readonly]="visualizar"
+                [ngClass]="onFieldErrorInputs('valorBaseACO') + ' ' + onFieldRequiredInputs('valorBaseACO')">
+            </td>
+
+            <!-- DESCONTO -->
+            <td *ngIf="validaDesconto(dados, item)"
+              scope="col-4"
+              class="hover">
+              {{ item.valorDesconto | number:'1.2-2' }}
+            </td>
+
+            <td *ngIf="validaDescontoVazio(dados, item)"
+              scope="col-4"
+              class="hover">
+            </td>
+
+            <td
+              *ngIf="validaDescontoInput(dados, item)"
+              scope="col-1"
+              class="hover">
+            <input
+              value="{{ item.valorDesconto | number:'1.2-2' }}"
+              class="form-control col-6"
+              id="descontos"
+              type="text"
+              formControlName="descontos"
+              currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }"
+              [readonly]="visualizar || item.valorBase > 0">
+            </td>
+
+            <!-- VALOR AJUDA CUSTO -->
+            <td *ngIf="validaAjudaCusto(dados, item)"
+            scope="col-4"
+            class="hover">
+            {{ item.valorAjudaCusto | number:'1.2-2' }}
+            </td>
+
+            <td
+            *ngIf="validaAjudaCustoVazio(dados, item)"
+              scope="col-4"
+              class="hover">
+            </td>
+
+            <!-- <td
+              *ngIf="validaAjudaCustoInput(dados, item)"
+              scope="col-1"
+              class="hover"
+              id="inputs">
+                <input
+                  class="form-control col-6"
+                  value="{{ item.valorAjudaCusto | number:'1.2-2' }}"
+                  id="valorAjudaCusto"
+                  type="text"
+                  formControlName="valorAjudaCusto"
+                  currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }"
+                  [readonly]="visualizar || item.valorBase > 0">
+            </td> -->
+
+            <!-- PERCENTUAL COMISSAO -->
+            <td *ngIf="validaPercentual(dados, item)"
+              scope="col-4"
+              class="hover">
+              {{ item.percentualComissao | number:'1.2-2' }} %
+            </td>
+
+            <td *ngIf="validaPercentualVazio(dados, item)"
+              scope="col-4"
+              class="hover">
+            </td>
+
+            <td
+              *ngIf="validaPercentualInput(dados, item)"
+              scope="col-1"
+              class="hover"
+              id="inputs">
+                <input
+                  class="form-control col-6"
+                  value="{{ item.percentualComissao }}"
+                  id="percentual"
+                  type="text"
+                  formControlName="percentual"
+                  currencyMask [options]="{ align: 'left', thousands: '.', decimal: ',', precision: 1, prefix: '', suffix: '%' }"
+                  [readonly]="visualizar">
+            </td>
+
+            <td
+              *ngIf="validaPercentualInputVazio(dados, item)"
+              scope="col-1"
+              class="hover"
+              id="inputs">
+                <input
+                  class="form-control col-6"
+                  id="percentual"
+                  type="text"
+                  formControlName="percentual"
+                  currencyMask [options]="{ align: 'left', thousands: '.', decimal: ',', precision: 1, prefix: '', suffix: '%' }"
+                  [readonly]="visualizar"
+                  [ngClass]="onFieldErrorInputs('percentual') + ' ' + onFieldRequiredInputs('percentual')">
+            </td>
+
+            <!-- BUTTON CALCULAR -->
+            <td
+              scope="col-1"
+              class="hover"
+              [hidden]="visualizar"
+              *ngIf="validaButtonCalcular(dados, item)"
+              >
+                <btn-icon
+                  icon="fas fa-calculator"
+                  size="small"
+                  tooltip="Calcular"
+                  (click)="getConta(indice, dados, i, item);">
+                </btn-icon>
+            </td>
+
+            <td *ngIf="validaButtonCalcularVazio(dados, item)"
+              scope="col-1"
+              class="hover">
+            </td>
+
+            <td
+              scope="col-1"
+              class="hover"
+              [hidden]="!visualizar">
+            </td>
+
+            <td
+              *ngIf= "item.valorComissao == 0"
+              scope="col-1"
+              class="hover">
+              {{ item.valorComissao | currency:'BRL':'symbol':'1.2-2' }}
+            </td>
+
+            <td
+              *ngIf= "item.valorComissao > 0"
+              style="color:#0a0dad;"
+              scope="col-1"
+              class="hover">
+              {{ item.valorComissao | currency:'BRL':'symbol':'1.2-2' }}
+            </td>
+
+            <td
+              *ngIf= "item.valorComissao < 0"
+              style="color:#830808;"
+              scope="col-1"
+              class="hover">
+              {{ item.valorComissao | currency:'BRL':'symbol':'1.2-2' }}
+            </td>
+
+            <!-- BUTTON DELETAR -->
+            <td
+              scope="col-1"
+              class="hover">
+                <btn-icon
+                  *ngIf="validaButtonDelete(dados, item)"
+                  icon="fas fa-trash"
+                  size="small"
+                  tooltip="Excluir"
+                  (click)="onDelete(dados, indice, item, i)">
+                </btn-icon>
+            </td>
+
+          </tr>
+
+          <tr>
+            <td
+              scope="col-1"
+              class="hover totalColor ml-5">
+            </td>
+            <td
+              scope="col-4"
+              class="hover totalColorBoldUpper">
+              Total
+            </td>
+            <td
+              scope="col-2"
+              class="hover totalColor">
+            </td>
+            <td
+              scope="col-1"
+              class="hover totalColor">
+            </td>
+            <td
+              scope="col-1"
+              class="hover totalColor">
+            </td>
+            <td
+              scope="col-1"
+              class="hover totalColor">
+            </td>
+            <td
+              scope="col-1"
+              class="hover totalColor">
+            </td>
+            <td
+              scope="col-1"
+              class="hover totalColorBold">
+              {{ dados.valorTotalComissao | currency:'BRL':'symbol':'1.2-2' }}
+            </td>
+            <td
+              scope="col-1"
+              class="hover totalColorBold">
+            </td>
+          </tr>
+
+          <hr *ngIf="validaDadosSalvo(dados) && !visualizar">
+
+          <tr *ngIf="validaDadosSalvo(dados) && !visualizar">
+            <td
+              scope="col-1"
+              class="hover">
+            </td>
+            <td
+              scope="col-4"
+              class="hover">
+              <input
+                class="form-control col-12"
+                id="unidadeInput"
+                type="text"
+                formControlName="unidadeInput"
+                [readonly]="visualizar"
+                [ngClass]="onFieldErrorInputs('unidadeInput') + ' ' + onFieldRequiredInputs('unidadeInput')">
+            </td>
+            <td
+              scope="col-1"
+              class="hover">
+            </td>
+
+            <td
+              scope="col-1"
+              class="hover">
+              <input
+                class="form-control col-6"
+                id="descontosInput"
+                type="text"
+                formControlName="descontosInput"
+                currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }"
+                [readonly]="visualizar">
+            </td>
+            <td
+              scope="col-1"
+              class="hover"
+              id="inputs">
+              <input
+                class="form-control col-6"
+                id="valorAjudaCustoInput"
+                type="text"
+                formControlName="valorAjudaCustoInput"
+                currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }"
+                [readonly]="visualizar">
+            </td>
+            <td
+              scope="col-1"
+              class="hover">
+            </td>
+
+            <td
+              scope="col-1"
+              class="hover"
+              [hidden]="visualizar">
+                <btn-icon
+                  icon="fas fa-calculator"
+                  size="small"
+                  tooltip="Calcular"
+                  (click)="getConta(indice, dados, i, dados.info);">
+                </btn-icon>
+            </td>
+
+            <td
+              scope="col-1"
+              class="hover"
+              [hidden]="!visualizar">
+            </td>
+
+            <td
+              scope="col-1"
+              class="hover"></td>
+
+            <td
+              scope="col-1"
+              class="hover"></td>
+          </tr>
+
+        </ng-template>
+      </custom-table>
+
+      <div
+      *ngIf="!visualizar && dados.salvo === 'true'"
+      class="float-right mt-2 mr-2 mb-2">
+        <button type="button" class="btn btn-success" >Salvo</button>
+      </div>
+
+      <div
+      *ngIf="validaDadosSalvo(dados)"
+      class="float-right mt-2 mr-2 mb-2"
+      [hidden]="visualizar">
+        <button  type="button" class="btn btn-light" (click)="onSubmit(dados)" >Salvar</button>
+      </div>
+      <br>
+
+    </div>
+  </div>
+
+</form>
+
+  <!-- Modal do Analista de Marketing -->
+  <ng-template #analista>
+    <div>
+      <div class="modal-body">
+
+          <div class="mtc-title">Motivo da Reprovação do Analista de Marketing</div>
+            <button type="button" class="close pull-right" (click)="closeModal(analista)" aria-label="Close"></button>
+              <form [formGroup]="formReprovar" autocomplete="off">
+                <div class="form-group">
+                  <textarea class="form-control" id="text-area" rows="3" formControlName="descMotivo"></textarea>
+                </div>
+              </form>
+
+          <div class="row mt-2">
+            <div class="col" style="text-align: center;">
+
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="modalRef.hide(); onReprovarAnalista(dados); "
+                >
+                Enviar
+              </button>
+
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </ng-template>
+
+   <!-- Modal do Gerente de Marketing -->
+   <ng-template #gerente>
+
+    <div>
+      <div class="modal-body">
+
+          <div class="mtc-title">Motivo da Reprovação do Gerente de Marketing</div>
+            <button type="button" class="close pull-right" (click)="closeModal(gerente)" aria-label="Close"></button>
+              <form [formGroup]="formReprovar" autocomplete="off">
+                <div class="form-group">
+                  <textarea class="form-control" id="text-area" rows="3" formControlName="descMotivo"></textarea>
+                </div>
+              </form>
+
+          <div class="row mt-2">
+            <div class="col" style="text-align: center;">
+
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="modalRef.hide(); onReprovarGerente(dados); "
+                >
+                Enviar
+              </button>
+
+          </div>
+        </div>
+
+    </div>
+  </div>
+    </ng-template>
+
+    <!-- Modal do Diretor Comercial -->
+  <ng-template #diretor>
+      <div class="modal-body">
+
+        <div class="mtc-title">Motivo da Reprovação do Diretor Comercial</div>
+          <button type="button" class="close pull-right" (click)="closeModal(diretor)" aria-label="Close"></button>
+            <form [formGroup]="formReprovar" autocomplete="off">
+              <div class="form-group">
+                <textarea class="form-control" id="text-area" rows="3" formControlName="descMotivo"></textarea>
+              </div>
+            </form>
+
+        <div class="row mt-2">
+          <div class="col" style="text-align: center;">
+
+            <button
+              type="button"
+              class="btn btn-success"
+              (click)="modalRef.hide(); onReprovarDiretor(dados); "
+              >
+              Enviar
+            </button>
+
+          </div>
+        </div>
+
+      </div>
+
+    </ng-template>
+
+    <!-- Modal de Adição de Valores das notas e comissão -->
+  <ng-template #valores>
+
+    <div>
+        <div class="modal-header">
+          <div class="mtc-title text-center pull-left">Adicionar Valores de Nota e Comissão</div>
+          <button type="button" class="close pull-right" (click)="closeModal(valores);" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <br>
+        <div class="modal-body">
+          <form [formGroup]="formValores" autocomplete="off">
+
+              <div class="row d-flex justify-content-center">
+
+                <div class="form-group col-lg-2"></div>
+
+                <div class="form-group col-lg-4">
+                  <label for="valorLiquido">Valor Líquido</label>
+                  <input
+                    class="form-control text-center"
+                    id="valorLiquido"
+                    type="text"
+                    formControlName="valorLiquido"
+                    currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }">
+                </div>
+
+                <div class="form-group col-lg-4">
+                  <label for="valorImposto">Valor Imposto</label>
+                  <input
+                    class="form-control text-center"
+                    id="valorImposto"
+                    type="text"
+                    formControlName="valorImposto"
+                    currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }">
+                </div>
+
+                <div class="form-group col-lg-2"></div>
+
+              </div>
+          </form>
+
+
+          <div class="row mt-2">
+            <div class="col" style="text-align: center;">
+
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="modalRef.hide(); onSubmitValores(dados);"
+              >
+              Enviar
+            </button>
+
+          </div>
+        </div>
+
+    </div>
+  </div>
+  </ng-template>
+
+  </div>
+</div>
+<br>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+
+  <!-- Modal Detalhes dos Registros -->
+  <ng-template #details>
+
+    <div class="mt-4 mr-4 mb-4 ml-4 details detailsConfig" style="text-transform: uppercase;" *ngIf="dadosDetalhes.length > 0">
+
+      <div class="modal-header">
+        <div class="mtc-title text-center">Detalhes do Representante</div>
+        <button type="button" class="close pull-right" (click)="closeModal(details);" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+    <!-- <div class="mtc-title text-center">Detalhes do Representante</div>
+    <button type="button" class="close pull-right" (click)="closeModal(details)" aria-label="Close"></button> -->
+    <custom-table [config]="tableConfig">
+
+      <ng-template #tbody let-tbody *ngFor="let item of dadosDetalhes; let i = index;">
+        <tr>
+          <td class="tdHead">
+            Nome do Representante
+          </td>
+          <td class="text-center tdBody" >
+            {{ item.nomeRepresentante | uppercase }}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="tdHead">
+            Tipo de comissionamento do Representante
+          </td>
+          <td class="text-center tdBody" >
+            {{ item.tipoComissionamento | uppercase }}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="tdHead">
+            Número da Porcentagem
+          </td>
+          <td class="text-center tdBody" >
+            {{ item.percentualPagamento | percent:'1.2-5' }}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="tdHead">
+            Período selecionado
+          </td>
+          <td class="text-center tdBody" >
+            {{ item.nomeGestao | uppercase }}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="tdHead">
+            Número da RO
+          </td>
+          <td class="text-center tdBody" >
+            {{ item.nrRo }}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="tdHead">
+            Descontos
+          </td>
+          <td class="text-center tdBody" >
+            {{ item.valorDesconto | currency:'BRL':'symbol':'1.2-2' }}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="tdHead">
+            Ajuda de custos
+          </td>
+          <td class="text-center tdBody" >
+            {{ item.valorAjudaCusto | currency:'BRL':'symbol':'1.2-2' }}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="tdHead">
+            Valor final de comissão a ser pago
+          </td>
+          <td class="text-center tdBody" >
+           {{ item.valorComissao | currency:'BRL':'symbol':'1.2-2' }}
+          </td>
+        </tr>
+
+      </ng-template>
+
+    </custom-table>
+  </div>
+  </ng-template>
+
+   <!-- Modal Detalhes das Unidades -->
+   <ng-template #detailsRos>
+
+    <div class="mt-5 mb-5" *ngIf="dadosEmptyUnidades">
+      <empty-result message="Nenhuma informação encontrada" ></empty-result>
+    </div>
+
+    <div class="mt-4 mr-4 mb-4 ml-4 details"
+    *ngIf="dadosDetalhesUnidades.length > 0 && !dadosEmptyUnidades"
+    style="text-transform: uppercase;">
+
+
+    <div class="mtc-title text-center">Detalhes da RO</div>
+
+    <button type="button" class="close pull-right" (click)="closeModal(detailsUnidades)" aria-label="Close"></button>
+    <custom-table [config]="tableConfig">
+      <ng-template #thead let-thead>
+        <tr >
+
+          <th>Cód - Cliente</th>
+
+          <th>Vendedor</th>
+
+          <th>Empresa</th>
+
+          <th>Nr. Ro</th>
+
+          <th>Valor Ro</th>
+
+          <th>Nr. Nota Fiscal</th>
+
+          <th>Tipo Pagamento</th>
+
+          <th>Data Ro</th>
+
+          <th>Data Inicial Período</th>
+
+          <th>Data Final Período</th>
+
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let item of dadosDetalhesUnidades; let i = index;">
+          <td class="hover">
+            {{ item.codNomeCliente }}
+          </td>
+          <td class="hover">
+            {{ item.nomeVendedor }}
+          </td>
+          <td class="hover">
+            {{ item.nomeEmpresa }}
+          </td>
+          <td class="hover">
+            {{ item.nrRo }}
+          </td>
+          <td class="hover">
+            {{ item.valorRo | currency:'BRL':'symbol':'1.2-2' }}
+          </td>
+          <td class="hover">
+            {{ item.nrNotaFiscal }}
+          </td>
+          <td class="hover">
+            {{ item.nomeTipoPagamento }}
+          </td>
+          <td class="hover">
+            {{ item.dataRo | date: 'dd/MM/yyyy' }}
+          </td>
+          <td class="hover">
+            {{ item.dataInicialPeriodo | date: 'dd/MM/yyyy' }}
+          </td>
+          <td class="hover">
+            {{ item.dataFinalPeriodo  | date: 'dd/MM/yyyy' }}
+          </td>
+        </tr>
+      </ng-template>
+    </custom-table>
+  </div>
+  </ng-template>
+
+     <!-- Modal Detalhes das Ros -->
+     <ng-template #detailsUnidades>
+
+      <div class="mt-5 mb-5" *ngIf="dadosEmptyUnidades">
+        <empty-result message="Nenhuma informação encontrada" ></empty-result>
+      </div>
+
+      <div class="mt-4 mr-4 mb-4 ml-4 details"
+      *ngIf="dadosDetalhesUnidades.length > 0 && !dadosEmptyUnidades"
+      style="text-transform: uppercase;">
+
+
+      <div class="mtc-title text-center">Detalhes da Unidade</div>
+
+      <button type="button" class="close pull-right" (click)="closeModal(detailsRos)" aria-label="Close"></button>
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr >
+
+            <th>Cód - Cliente</th>
+
+            <th>Vendedor</th>
+
+            <th>Empresa</th>
+
+            <th>Unidade</th>
+
+            <th>Valor Nota Fiscal</th>
+
+            <th>Nr. Nota Fiscal</th>
+
+            <th>Valor Título</th>
+
+            <th>Nr. Título</th>
+
+            <th>Tipo Pagamento</th>
+
+            <th>Data Baixa</th>
+
+            <th>Data Nota Fiscal</th>
+
+            <th>Data Inicial Período</th>
+
+            <th>Data Final Período</th>
+
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dadosDetalhesUnidades; let i = index;">
+            <td class="hover">
+              {{ item.codNomeCliente }}
+            </td>
+            <td class="hover">
+              {{ item.nomeVendedor }}
+            </td>
+            <td class="hover">
+              {{ item.nomeEmpresa }}
+            </td>
+            <td class="hover">
+              {{ item.unidade }}
+            </td>
+            <td class="hover">
+              {{ item.valorNotaFiscal | currency:'BRL':'symbol':'1.2-2' }}
+            </td>
+            <td class="hover">
+              {{ item.nrNotaFiscal }}
+            </td>
+            <td class="hover">
+              {{ item.valorTitulo | currency:'BRL':'symbol':'1.2-2' }}
+            </td>
+            <td class="hover">
+              {{ item.nrTitulo }}
+            </td>
+            <td class="hover">
+              {{ item.nomeTipoPagamento }}
+            </td>
+            <td class="hover">
+              {{ item.dataBaixaTitulo | date: 'dd/MM/yyyy' }}
+            </td>
+            <td class="hover">
+              {{ item.dataNotaFiscal | date: 'dd/MM/yyyy' }}
+            </td>
+            <td class="hover">
+              {{ item.dataInicialPeriodo | date: 'dd/MM/yyyy' }}
+            </td>
+            <td class="hover">
+              {{ item.dataFinalPeriodo  | date: 'dd/MM/yyyy' }}
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    </ng-template>
+
+     <!-- Modal Historico Exclusão -->
+     <ng-template #historico>
+
+      <div class="mt-5 mb-5" *ngIf="dadosEmptyHistorico">
+        <empty-result message="Nenhuma informação encontrada" ></empty-result>
+      </div>
+
+      <div class="mt-4 mr-4 mb-4 ml-4 details"
+      *ngIf="dadosHistorico.length > 0 && !dadosEmptyHistorico"
+      style="text-transform: uppercase;">
+
+      <div class="modal-header">
+        <div class="mtc-title text-center">Histórico de Aprovações</div>
+        <button type="button" class="close pull-right" (click)="closeModal(details);" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+
+      <custom-table [config]="tableConfig" class="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+
+            <th class="theme">Usuário</th>
+            <!-- style="width: 15%;" -->
+            <th >Data Cadastro</th>
+            <!-- style="width: 8%;" -->
+
+            <th >De</th>
+            <!-- style="width: 20%;" -->
+
+            <th >Para</th>
+            <!-- style="width: 20%;" -->
+
+            <th >Motivo</th>
+            <!-- style="width: 37%;" -->
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dadosHistorico; let i = index;">
+            <td class="hover">
+              {{ item.nomeUsuario }}
+            </td>
+            <td class="hover">
+              {{ item.dataCadastro | date: 'dd/MM/yyyy' }}
+            </td>
+            <td class="hover" *ngIf="item.de == '' ">
+              CRIAÇÃO COMISSÃO ANALISTA DE MARKETING
+            </td>
+            <td class="hover" *ngIf="item.de != '' ">
+              {{ item.de }}
+            </td>
+            <td class="hover">
+              {{ item.para }}
+            </td>
+            <td class="hover">
+              {{ item.motivo }}
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+  </ng-template>
+</app-body>
+

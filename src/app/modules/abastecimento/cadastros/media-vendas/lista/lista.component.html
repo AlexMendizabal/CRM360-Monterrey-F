@@ -1,0 +1,373 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavBar"></loader-spinner-navbar>
+<app-header appTitle="Média de vendas">
+  <button
+    type="button"
+    (click)="onFilter()"
+    [disabled]="form.status == 'INVALID'"
+  >
+    Filtrar
+  </button>
+  <button type="button" (click)="onNew()">Novo</button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-lg-3">
+          <label for="linha">Linha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="linhas"
+            [virtualScroll]="true"
+            [multiple]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            placeholder="Selecione linha"
+            bindLabel="linha"
+            bindValue="linha"
+            formControlName="linhas"
+            (change)="getClasses()"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="classe">Classe</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="classes"
+            [virtualScroll]="true"
+            [multiple]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            labelForId="classe"
+            bindLabel="classeDescricao"
+            bindValue="classeId"
+            placeholder="TODOS"
+            formControlName="classes"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="situacao">Situação</label>
+          <ng-select
+            [items]="situacao"
+            bindLabel="name"
+            autofocus
+            bindValue="id"
+            formControlName="situacao"
+          >
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <subtitles [data]="subtitles" [show]="loading"> </subtitles>
+  <div class="mt-3" *ngIf="loading">
+    <div class="table-responsive">
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th (click)="sort('Linha')">
+              Linha
+              <span *ngIf="key == 'Linha'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'Linha'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th (click)="sort('Classe')">
+              Classe
+              <span *ngIf="key == 'Classe'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'Classe'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th (click)="sort('PeriodoInicial')">
+              Data inicial
+              <span *ngIf="key == 'PeriodoInicial'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'PeriodoInicial'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th (click)="sort('PeriodoFinal')">
+              Data final
+              <span *ngIf="key == 'PeriodoFinal'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'PeriodoFinal'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th class="align-middle" style="width: 70px;"></th>
+            <th class="align-middle" style="width: 70px;"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr
+            *ngFor="
+              let item of mediaVendas | orderBy: key:reverse | slice: begin:end;
+              let i = index
+            "
+          >
+            <td
+              class="text-truncate"
+              [ngClass]="
+                item.Situacao == 1 ? 'border-success' : 'border-danger'
+              "
+            >
+              {{ item.Linha }}
+            </td>
+            <td class="text-truncate">{{ item.Classe }}</td>
+            <td class="text-center">
+              {{
+                item.PeriodoInicial
+                  ? (item.PeriodoInicial | date: 'dd/MM/yyyy')
+                  : '-'
+              }}
+            </td>
+            <td class="text-center">
+              {{
+                item.PeriodoFinal
+                  ? (item.PeriodoFinal | date: 'dd/MM/yyyy')
+                  : '-'
+              }}
+            </td>
+            <td class="align-middle" style="width: 70px;">
+              <button
+                class="btn-icon-sm"
+                tooltip="Editar"
+                (click)="onSearch(item)"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+            </td>
+            <td>
+              <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  placement="left"
+                  tooltip="Logs"
+                  (click)="openModal(item) + '' + lgModal.show()"
+                  container="body"
+                >
+                  <i class="fas fa-external-link-alt text-primary"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="mt-2 text-center" *ngIf="mediaVendas.length > itemsPerPage">
+      Exibindo {{ begin + 1 }} a {{ end }} de {{ mediaVendas?.length }}
+      <div class="d-flex align-items-center justify-content-center">
+        <pagination
+          [maxSize]="10"
+          [totalItems]="mediaVendas?.length"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="noResult"
+    class="text-center d-flex justify-content-center align-items-center p-5"
+    style="height: 80%;"
+  >
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>
+<div
+  bsModal
+  #lgModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dialog-sizes-name1"
+>
+  <div class="modal-dialog modal-xl" [hidden]="!loadingDetalhesLog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+          LOGS MÉDIA VENDAS
+        </h4>
+        <button
+          type="button"
+          class="close pull-right"
+          (click)="lgModal.hide()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <custom-table *ngIf="loadingLogs">
+            <ng-template #thead let-thead>
+              <tr class="text-center">
+                <th scope="col" (click)="sortA('DS_LINH')">
+                  Linha
+                  <span *ngIf="keyA == 'DS_LINH'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'DS_LINH'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+                <th scope="col" (click)="sortA('NM_CLAS')">
+                  Classe
+                  <span *ngIf="keyA == 'NM_CLAS'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'NM_CLAS'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+                <th scope="col" (click)="sortA('DT_PERI_INIC')">
+                  Data Inicial
+                  <span *ngIf="keyA == 'DT_PERI_INIC'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'DT_PERI_INIC'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+                <th scope="col" (click)="sortA('DT_PERI_FINA')">
+                  Data Final
+                  <span *ngIf="keyA == 'DT_PERI_FINA'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'DT_PERI_FINA'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+                <th scope="col" (click)="sortA('DT_ACAO')">
+                  Data
+                  <span *ngIf="keyA == 'DT_ACAO'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'DT_ACAO'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+                <th scope="col" (click)="sortA('NM_ACAO')">
+                  Ação
+                  <span *ngIf="keyA == 'NM_ACAO'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'NM_ACAO'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+                <th scope="col" (click)="sortA('NM_USUA')">
+                  Usuário
+                  <span *ngIf="keyA == 'NM_USUA'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'NM_USUA'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let item of dadosLogs | orderBy: keyA:reverseA | slice: beginA:endA; let i = index">
+                <td class="text-center">{{ item.DS_LINH }}</td>
+                <td class="text-center">{{ item.NM_CLAS }}</td>
+                <td class="text-center">
+                  {{ item.DT_PERI_INIC | date: 'dd/MM/yyyy' }}
+                </td>
+                <td class="text-center">
+                  {{ item.DT_PERI_FINA | date: 'dd/MM/yyyy' }}
+                </td>
+                <td class="text-center">
+                  {{ item.DT_ACAO | date: 'dd/MM/yyyy HH:mm' }}
+                </td>
+                <td class="text-center">{{ item.NM_ACAO }}</td>
+                <td class="text-center">{{ item.NM_USUA }}</td>
+              </tr>
+            </ng-template>
+          </custom-table>
+        </div>
+        <div class="col-12 mb-2 ml-2" *ngIf="dadosLogs.length > itemsPerPage && loadingLogs">
+          Exibindo {{ beginA + 1 }} a {{ endA }} de {{ dadosLogs?.length }}
+          <pagination
+            [maxSize]="10"
+            [totalItems]="dadosLogs?.length"
+            (pageChanged)="onPageChangedA($event)"
+            [(itemsPerPage)]="itemsPerPage"
+            [boundaryLinks]="true"
+            [(ngModel)]="currentPageA"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;"
+          >
+          </pagination>
+        </div>
+        <div
+          *ngIf="noResultLogs"
+          class="text-center d-flex justify-content-center align-items-center p-5"
+          style="height: 80%;"
+        >
+          <empty-result message="Nenhuma informação encontrada"></empty-result>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

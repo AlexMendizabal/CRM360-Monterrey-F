@@ -1,0 +1,5 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="GESTIÓN DE ENTREGAS"></app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <card-group text="SELECCIONE uma atividade" [list]="atividades"></card-group>
+</app-body>

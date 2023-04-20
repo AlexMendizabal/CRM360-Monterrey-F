@@ -1,0 +1,196 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<!-- <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen> -->
+<app-header appTitle="Representantes">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" >
+  <div class="row" >
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label for="nome">Representante</label>
+              <input
+            class="form-control"
+            id="nome"
+            type="text"
+            formControlName="nome"
+            >
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="codSituacao">Situação</label>
+              <select
+                class="form-control custom-select"
+                id="codSituacao"
+                formControlName="codSituacao">
+                <option value="">Todos</option>
+                <option value="0">Inativos</option>
+                <option value="1">Ativos</option>
+              </select>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="emiteNota">Emite Nota</label>
+              <select
+                class="form-control custom-select"
+                id="emiteNota"
+                formControlName="emiteNota">
+                <option value="">Todos</option>
+                <option value="0">Não</option>
+                <option value="1">Sim</option>
+              </select>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row" >
+    <div [ngClass]="{'col': !showDetailPanel, 'col-5 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig" *ngIf="dados.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr >
+            <th scope="col" class="text-center hover" >
+              <thead-sorter
+                value="Código"
+                [active]="orderBy == 'NM_VEND'"
+                [sort]="orderType"
+                (click)="setOrderBy('NM_VEND')">
+              </thead-sorter>
+            </th>
+            <th scope="col">Nome</th>
+
+            <th scope="col">Dt Vigência</th>
+
+            <th scope="col">CNPJ</th>
+
+            <th scope="col"
+            [hidden]="showDetailPanel">
+            Usuário
+          </th>
+
+            <th scope="col" [hidden]="showDetailPanel"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dadosPagination; let i = index;"
+          [class.table-active]="item.codRepresentante && showDetailPanel"
+          >
+            <td
+              class="text-center hover"
+              [ngClass]="classStatusBorder(item)"
+              >
+              {{ item.codRepresentante }}
+            </td>
+            <!-- (click)="onDetails(item)" -->
+            <td
+              class="hover"
+              >
+              {{ item.nome | uppercase }}
+            </td>
+            <!-- (click)="onDetails(item)" -->
+            <td
+              class="hover"
+
+              >
+              {{ item.dataFinalContrato | date: 'dd/MM/yyyy'}}
+            </td>
+            <!-- (click)="onDetails(item)" -->
+            <td
+              class="hover"
+
+              >
+              {{ item.cnpjEmpresaRepresentacao }}
+            </td>
+            <!-- (click)="onDetails(item)" -->
+              <td
+              class="hover"
+
+              [hidden]="showDetailPanel"
+              >
+              <span >{{ item.nomeUsuarioCadastro | uppercase }}</span>
+
+            </td>
+            <!-- (click)="onDetails(item)" -->
+            <td class="text-right" [hidden]="showDetailPanel">
+              <span *ngIf="item.codSituacao == 0" class="mr-3" tooltip="Ativar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onActivate(i, item)">
+                  <i class="fas fa-toggle-off"></i>
+                </button>
+              </span>
+              <span *ngIf="item.codSituacao == 1" class="mr-3" tooltip="Inativar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onInactivate(i, item)">
+                  <i class="fas fa-toggle-on"></i>
+                </button>
+              </span>
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onEdit(item)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && dadosLoaded"></empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && dadosLoaded">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-7" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="detailPanelTitle">
+        <custom-table [config]="tableConfigMateriais" *ngIf="modeloComissao.length > 0">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">De</th>
+              <th scope="col" class="text-center">Até</th>
+              <th scope="col" class="text-center">Valor Comissão</th>
+              <th scope="col" class="text-center">Valor Fixo</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor='let item of modeloComissao'>
+              <td class="text-center">{{ item.grupos.de }}</td>
+              <td class="text-center">{{ item.grupos.ate }}</td>
+              <td class="text-center">{{ item.grupos.valorComissao }}</td>
+              <td class="text-center">{{ item.grupos.valorFixo }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+</app-body>

@@ -1,0 +1,78 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro de Modelos">
+  <button 
+    [disabled]="form.valid === false"
+    (click)="postModelo()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+        <legend>Dados do Modelo</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col pl-0">
+            <label for="NM_MODE">Modelo</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_MODE"
+              formControlName="NM_MODE"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_MODE') + ' ' + onFieldRequired('NM_MODE')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_MODE')" message="Modelo é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col pl-0">
+            <label for="tipoProduto">Tipo de Produto</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipoProduto"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              [loading]="loadingTipoProduto"
+              labelForId="ID_TEIN_ESTO_PRTP"
+              bindLabel="NM_TIPO"
+              bindValue="ID_TEIN_ESTO_PRTP"
+              id="ID_TEIN_ESTO_PRTP"
+              formControlName="ID_TEIN_ESTO_PRTP">
+            </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('ID_TEIN_ESTO_PRTP')" message="Tipo de Produto é obrigatório."></invalid-form-control>
+        </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col pl-0">
+            <label for="IN_STAT">Situação</label>
+            <select
+              class="form-control custom-select"
+              id="IN_STAT"
+              formControlName="IN_STAT"
+              [ngClass]="onFieldRequired('IN_STAT')">
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('IN_STAT')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+            <legend>Observação</legend>
+            <div class="form-row justify-content-center">
+              <div class="form-group col">
+                <label for="DS_OBSE" >Observação:</label>
+                <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+              </div>
+            </div>
+            <br>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

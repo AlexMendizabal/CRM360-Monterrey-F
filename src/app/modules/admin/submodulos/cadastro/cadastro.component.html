@@ -1,0 +1,103 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<div class="row" id="application-header">
+  <div class="col-6">
+    <div id="title">
+      <back-button></back-button>
+      <h1>Cadastro de SubMódulos</h1>
+    </div>
+  </div>
+  <div class="col-6 d-flex justify-content-end">
+    <div id="actions">
+      <button 
+        (click)="onSave()"
+        [disabled] = "form.status == 'INVALID'"
+        >
+        Salvar
+      </button>
+    </div>
+  </div>
+</div>
+<div class="row" id="application-body">
+  <div class="container-fluid">
+    <breadcrumb [tree]="breadCrumbTree"></breadcrumb>
+    <div class="col-12 p-0">
+      <form [formGroup]="form" autocomplete="off" [hidden]="loading">
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-3">
+            <label for="icone">Icones</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="icones"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              placeholder="Selecione..."
+              labelForId="classe"
+              bindLabel="classe"
+              bindValue="classe"
+              id="classe"
+              formControlName="icone"
+              >
+              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                  <div class="d-flex align-items-center">
+                    <div [class]="item.classe" style="min-width: 25px;"></div>
+                    <div>{{item.classe}}</div>
+                  </div>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-index="index">
+                <div class="d-flex align-items-center">
+                  <div [class]="item.classe" style="min-width: 25px;"></div>
+                  <div>{{item.classe}}</div>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="nome">Nome</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nome"
+              formControlName="nome"
+              [ngClass]="onFieldRequired('nome')"
+              placeholder="Digite..."
+            />
+            <invalid-form-control [show]="onFieldInvalid('nome')" message="Nome é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-3">
+            <label for="modulo">Modulo</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="modulos"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              labelForId="modulo"
+              bindLabel="nome"
+              bindValue="id"
+              id="modulo"
+              formControlName="moduloId"
+            >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('moduloId')" message="Modulo é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="status">Situação</label>
+            <select
+              name="status"
+              id="status"
+              class="form-control"
+              formControlName="status"  
+            >
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

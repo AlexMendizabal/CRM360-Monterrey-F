@@ -1,0 +1,482 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Vínculo de material e depósito">
+  <button
+    type="button"
+    (click)="onFilter()"
+    >
+    Filtrar
+  </button>
+  <button
+    type="button"
+    (click)="excelExport()"
+  >
+    Exportar Excel
+  </button>
+  <button
+    type="button"
+    routerLink="../lista-nao-vinculados"
+  >
+    Adicionar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-lg-2">
+          <label for="linha">Linha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [multiple]="true"
+            [items]="linhas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_LINH"
+            bindValue="ID"
+            formControlName="linha"
+            (change)="getClasses() + ' ' + getSubLinhas()"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="subLinha">Sublinha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [multiple]="true"
+            [items]="subLinhas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_SUB_LINH"
+            bindValue="ID"
+            formControlName="subLinha"
+            (change)="getClasses()"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="classe">Classe</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [multiple]="true"
+            [items]="classes"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_CLAS"
+            bindValue="ID"
+            formControlName="classe"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="tipoMaterial">Tipo material</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [multiple]="true"
+            [items]="tiposMateriais"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_APOI_TIPO_MATE"
+            bindValue="ID"
+            formControlName="tipoMaterial"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="deposito">Depósito</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="depositos"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_DEPO"
+            bindValue="ID"
+            formControlName="deposito"
+            (change)="enableCondicao($event)"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="condicao">Condição</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="tiposCondicao"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="name"
+            bindValue="id"
+            formControlName="condicao"
+            >
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="row">
+    <div
+      [ngClass]="{ 'col-12': !compressedTable, 'col-6 pr-0': compressedTable }"
+      *ngIf="loading"
+    >
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th scope="col" class="hover" (click)="sort('NM_APOI_TIPO_MATE')">
+              Tipo Material
+              <span *ngIf="key == 'NM_APOI_TIPO_MATE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_APOI_TIPO_MATE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th scope="col" class="hover" (click)="sort('NM_LINH')">
+              Linha
+              <span *ngIf="key == 'NM_LINH'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_LINH'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th scope="col" class="hover" (click)="sort('NM_SUB_LINH')">
+              Sublinha
+              <span *ngIf="key == 'NM_SUB_LINH'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_SUB_LINH'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th scope="col" class="hover" (click)="sort('NM_CLAS')">
+              Classe
+              <span *ngIf="key == 'NM_CLAS'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_CLAS'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th scope="col" class="hover" [hidden]="compressedTable" width="5%"></th>
+            <th scope="col" class="hover" [hidden]="compressedTable" width="5%"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr
+            *ngFor="
+              let item of dados | orderBy: key:reverse | slice: begin:end;
+              let i = index
+            "
+          >
+            <td
+              class="text-center"
+              [ngClass]="item.select ? 'bg-row-selected' : ''"
+            >
+              {{ item.NM_APOI_TIPO_MATE }}
+            </td>
+            <td class="text-center" [ngClass]=" item.select ? 'bg-row-selected' : ''">{{ item.NM_LINH }}</td>
+            <td class="text-center" [ngClass]=" item.select ? 'bg-row-selected' : ''">
+              {{ item.NM_SUB_LINH ? item.NM_SUB_LINH : '-' }}
+            </td>
+            <td class="text-center" [ngClass]=" item.select ? 'bg-row-selected' : ''">{{ item.NM_CLAS }}</td>
+            <td class="text-center" [hidden]="compressedTable" width="5%">
+              <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  tooltip="Editar"
+                  placement="left"
+                  container="body"
+                >
+                <i
+                  class="fas fa-edit"
+                  (click)="onAdd(item)" 
+                  >
+                </i>
+                </button>
+              </div>
+            </td>
+            <td class="text-center" [hidden]="compressedTable" width="5%">
+              <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  (click)="openTab(item)"
+                  tooltip="Detalhes"
+                  placement="left"
+                  container="body"
+                >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="col-6">
+      <tabset [hidden]="!compressedTable">
+        <button
+          type="button"
+          class="btn-icon close position-absolute"
+          (click)="onClose()"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+        <tab heading="Detalhes">
+          <div
+            class="border-right border-left border-bottom px-3 pt-3"
+            style="overflow: auto; height: 338px;"
+          >
+            <custom-table *ngIf="!noResultDetalhes && loadingDetalhes">
+              <ng-template #thead let-thead>
+                <tr class="text-center">
+                  <th scope="col">Empresa</th>
+                  <th scope="col">Depósito</th>
+                  <th scope="col">Situação</th>
+                  <th scope="col" width="5%"></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of dadosDetalhes">
+                  <td class="text-left">{{ item.NM_EMPR }}</td>
+                  <td class="text-left">{{ item.NM_DEPO }}</td>
+                  <td class="text-left">{{ item.DS_STAT }}</td>
+                  <td class="text-center" width="5%">
+                    <div>
+                      <button
+                        type="button"
+                        class="btn-icon-sm"
+                        (click)="openModal(item) + '' + lgModal.show()"
+                        tooltip="Logs"
+                        placement="left"
+                        container="body"
+                      >
+                        <i class="fas fa-external-link-alt text-primary"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+            <div
+              *ngIf="noResultDetalhes"
+              class="text-center d-flex justify-content-center align-items-center p-5"
+              style="height: 80%;"
+            >
+              <empty-result
+                message="Nenhuma informação encontrada"
+              ></empty-result>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+    <div
+      class="col-12 mb-2 ml-2"
+      *ngIf="!noResult && dados?.length > itemsPerPage"
+    >
+      Exibindo {{ begin + 1 }} a {{ end }} de {{ dados?.length }}
+      <div class="d-flex">
+        <pagination
+          [maxSize]="10"
+          [totalItems]="dados?.length"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="noResult"
+    class="text-center d-flex justify-content-center align-items-center p-5"
+    style="height: 80%;"
+  >
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>
+
+<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1"
+     role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-xl" [hidden]="!loadingDetalhesLog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">LOGS VÍNCULO MATERIAL DEPÓSITO</h4>
+        <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div
+        class="table-responsive"
+        >
+          <custom-table *ngIf="loadingLogs">
+            <ng-template #thead let-thead>
+              <tr class="text-center">
+                <th scope="col" nowrap (click)="sortA('NM_APOI_TIPO_MATE')">
+                  Tipo Material
+                    <span *ngIf="keyA == 'NM_APOI_TIPO_MATE'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'NM_APOI_TIPO_MATE'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+                <th scope="col" nowrap (click)="sortA('NM_CLAS')">
+                  Classe
+                    <span *ngIf="keyA == 'NM_CLAS'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'NM_CLAS'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+                <th scope="col" nowrap (click)="sortA('NM_DEPO')">
+                  Depósito
+                    <span *ngIf="keyA == 'NM_DEPO'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'NM_DEPO'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+                <th scope="col" nowrap (click)="sortA('DS_STAT')">
+                  Situação
+                    <span *ngIf="keyA == 'DS_STAT'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'DS_STAT'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+                <th scope="col" nowrap (click)="sortA('DT_ACAO')">
+                  Data
+                    <span *ngIf="keyA == 'DT_ACAO'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'DT_ACAO'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+                <th scope="col" nowrap (click)="sortA('NM_ACAO')">
+                  Ação
+                    <span *ngIf="keyA == 'NM_ACAO'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'NM_ACAO'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+                <th scope="col" nowrap (click)="sortA('NM_USUA')">
+                  Usuário
+                    <span *ngIf="keyA == 'NM_USUA'"
+                    ><i
+                      [ngClass]="
+                        reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                      "
+                    ></i
+                  ></span>
+                  <span *ngIf="keyA != 'NM_USUA'"
+                    ><i [ngClass]="'fas fa-sort'"></i
+                  ></span>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let item of dadosLogs | orderBy: keyA:reverseA | slice: beginA:endA; let i = index">
+                <td class="text-center">{{ item.NM_APOI_TIPO_MATE }}</td>
+                <td class="text-center">{{ item.NM_CLAS }}</td>
+                <td class="text-center">{{ item.NM_DEPO }}</td>
+                <td class="text-center">{{ item.DS_STAT }}</td>
+                <td class="text-center">{{ item.DT_ACAO | date:'dd/MM/yyyy HH:mm'}}</td>
+                <td class="text-center">{{ item.NM_ACAO }}</td>
+                <td class="text-center">{{ item.NM_USUA }}</td>
+              </tr>
+            </ng-template>
+          </custom-table>
+        </div>
+        <div class="col-12 mb-2 ml-2" *ngIf="dadosLogs.length > itemsPerPage && loadingLogs">
+          Exibindo {{ beginA + 1 }} a {{ endA }} de {{ dadosLogs?.length }}
+          <pagination
+            [maxSize]="10"
+            [totalItems]="dadosLogs?.length"
+            (pageChanged)="onPageChangedA($event)"
+            [(itemsPerPage)]="itemsPerPage"
+            [boundaryLinks]="true"
+            [(ngModel)]="currentPageA"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;"
+          >
+          </pagination>
+        </div>
+        <div
+          *ngIf="noResultLogs"
+          class="text-center d-flex justify-content-center align-items-center p-5"
+          style="height: 80%;"
+        >
+          <empty-result message="Nenhuma informação encontrada"></empty-result>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

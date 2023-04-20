@@ -1,0 +1,58 @@
+::ng-deep {
+  @import '../../../../assets/scss/colors';
+  @import '../../../../assets/scss/variables';
+
+  card-button {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    display: block;
+    margin-bottom: 25px;
+    text-align: center;
+    width: 100%;
+    div {
+      border: 1px solid rgba($black, 0.15);
+      &.list {
+        display: flex;
+        padding: $gutter;
+        i {
+          font-size: 22px;
+          margin-right: $gutter;
+        }
+        h6 {
+          font-size: 13px;
+          margin-top: auto;
+          margin-bottom: auto;
+        }
+      }
+      &.grid {
+        padding: 17px 10px 15px 10px;
+        i {
+          font-size: 40px;
+          margin-bottom: $gutter;
+        }
+        h6 {
+          font-size: 12px;
+          margin-bottom: 0;
+        }
+      }
+      i {
+        color: $black;
+      }
+      h6 {
+        color: $black;
+        font-weight: 700;
+        height: 18px;
+        line-height: 18px;
+      }
+    }
+    &:hover {
+      box-shadow: 0 0.15rem 0.5rem rgba(0, 0, 0, 0.15) !important;
+      cursor: pointer;
+      div {
+        border: 1px solid rgba($black, 0.25);
+      }
+    }
+    &:focus {
+      outline: unset !important;
+    }
+  }
+}

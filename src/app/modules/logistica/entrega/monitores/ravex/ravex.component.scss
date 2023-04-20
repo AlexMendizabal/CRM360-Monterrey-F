@@ -1,0 +1,21 @@
+.custom-input-datetime:focus,
+.custom-input-datetime:not([disabled]):hover{
+  border: 1px dashed !important;
+  transition: 0.2s linear;
+  background: white;
+  font-weight: 600;
+}
+
+button:disabled {
+  cursor: no-drop;
+  color: #b9bdb9 !important;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+}
+
+::ng-deep .tooltip-inner{
+  max-width: 700px !important;
+}

@@ -1,0 +1,26 @@
+<div class="row mb-3">
+  <div class="col-lg-12">
+    <div class="border shadow-sm">
+      <div class="row">
+        <div class="col">
+          <div
+            id="filter-header"
+            class="bg-light hover w-100 d-flex justify-content-between"
+            [ngClass]="{'shadow-sm border-bottom': showAdvancedFilter}"
+            (click)="onAdvancedFilter()">
+            <div class="mtc-title mb-0"><i class="fas fa-filter mr-1"></i> Filtros</div>
+            <button
+              type="button"
+              class="btn-icon-sm my-auto mr-1">
+              <i class="fas fa-chevron-down" [hidden]="showAdvancedFilter"></i>
+              <i class="fas fa-chevron-up" [hidden]="!showAdvancedFilter"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="filter-body" [hidden]="!showAdvancedFilter">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+</div>

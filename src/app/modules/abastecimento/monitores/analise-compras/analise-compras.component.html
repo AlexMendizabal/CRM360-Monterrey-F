@@ -1,0 +1,1427 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Análise de Compras">
+  <button
+    type="button"
+    (click)="onFilter(currentPage=1)"
+    [disabled]="
+      form.status == 'INVALID' ||
+      (form.get('dataInicial').value == null &&
+        form.get('paramData').value != 1) ||
+      (form.get('dataFinal').value == null &&
+        form.get('paramData').value != 1) ||
+      comparaData() ||
+      comparaDataInicial() ||
+      comparaDataFinal()
+    "
+  >
+    Filtrar
+  </button>
+  <button
+    type="button"
+    (click)="excelExport()"
+    [disabled]="
+      form.status == 'INVALID' ||
+      (form.get('dataInicial').value == null &&
+        form.get('paramData').value != 1) ||
+      (form.get('dataFinal').value == null &&
+        form.get('paramData').value != 1) ||
+      comparaData() ||
+      comparaDataInicial() ||
+      comparaDataFinal()
+    "
+  >
+    Exportar Excel
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-lg-2">
+          <label for="tipoMaterial">Tipo de Material</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="tiposMateriais"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            [multiple]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_APOI_TIPO_MATE"
+            bindValue="ID"
+            formControlName="tipoMaterial"
+            (change)="resetForm()"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="situacao">Situação</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="situacoes"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="nome"
+            bindValue="id"
+            formControlName="situacao"
+            (change)="resetForm()"
+            [ngClass]="
+              onFieldError('situacao') + ' ' + onFieldRequired('situacao')
+            "
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('situacao')"
+            message="Situação é obrigatório."
+          >
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="linha">Linha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="linhas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_LINH"
+            bindValue="ID"
+            formControlName="linha"
+            (change)="
+              getSubLinhas() +
+                ' ' +
+                getClasses() +
+                ' ' +
+                getDepositosAssociados()
+            "
+            [ngClass]="onFieldError('linha') + ' ' + onFieldRequired('linha')"
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('linha')"
+            message="Linha é obrigatório."
+          >
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="subLinha">Sublinha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="subLinhas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_SUB_LINH"
+            bindValue="ID"
+            (change)="getClasses()"
+            formControlName="subLinha"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="classe">Classe</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="classes"
+            [virtualScroll]="true"
+            [multiple]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            maxSelectedItems="6"
+            placeholder="Selecione..."
+            bindLabel="NM_CLAS"
+            bindValue="ID"
+            formControlName="classe"
+            (change)="getMateriais() + ' ' + getDepositosAssociados()"
+          >
+          </ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-6">
+          <label for="material">Material</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="materiais"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            [multiple]="true"
+            placeholder="Selecione..."
+            bindLabel="ID_REFE_ERP_NM_MATE"
+            bindValue="ID"
+            formControlName="material"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="empresas">Empresas</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="depositosAssociados"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            [multiple]="true"
+            (change)="getDepositos($event)"
+            placeholder="Selecione..."
+            bindLabel="NM_EMPR"
+            bindValue="ID_EMPR"
+            formControlName="empresas"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="depositos">Depósitos</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="depositos"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            [multiple]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_DEPO"
+            bindValue="ID"
+            formControlName="depositos"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="nivelEstoque">Nível de Estoque</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="tiposNiveisEstoques"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            [multiple]="false"
+            placeholder="Selecione..."
+            bindLabel="NM_APOI_TIPO_NIVE_ESTO"
+            bindValue="ID"
+            formControlName="nivelEstoque"
+          >
+          </ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-2">
+          <label for="paramData">Período de Vendas</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="periodosBusca"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            (change)="activeInputDate()"
+            bindLabel="nome"
+            bindValue="id"
+            formControlName="paramData"
+            [ngClass]="
+              onFieldError('paramData') + ' ' + onFieldRequired('paramData')
+            "
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('paramData')"
+            message="Período de vendas é obrigatório."
+          >
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="dataInicial">Data Inicial</label>
+          <input
+            class="form-control"
+            id="dataInicial"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="dataInicial"
+          />
+          <invalid-form-control
+            [show]="comparaDataInicial()"
+            message="Data inicial não pode ser maior que data atual"
+          >
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="dataFinal">Data Final</label>
+          <input
+            class="form-control"
+            id="dataFinal"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="dataFinal"
+          />
+          <invalid-form-control
+            [show]="comparaData()"
+            message="Data final deve ser maior que data inicial"
+          >
+          </invalid-form-control>
+          <invalid-form-control
+            [show]="comparaDataFinal()"
+            message="Data final não pode ser maior que data atual"
+          >
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="tipoVisualizacao">Tipo Visualização</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="tiposVisualizacao"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="nome"
+            bindValue="id"
+            formControlName="tipoVisualizacao"
+            [ngClass]="
+              onFieldError('tipoVisualizacao') +
+              ' ' +
+              onFieldRequired('tipoVisualizacao')
+            "
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('tipoVisualizacao')"
+            message="Tipo visualização é obrigatório."
+          >
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="infAdicionais">Inf. Adicionais</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="infAdicionaisDados"
+            [virtualScroll]="true"
+            [closeOnSelect]="false"
+            [multiple]="true"
+            dropdownPosition="bottom"
+            bindLabel="NM_INFO"
+            bindValue="ID_INFO"
+            groupBy="INFO"
+            placeholder="Selecione..."
+            formControlName="infAdicionais"
+          >
+            <ng-template ng-optgroup-tmp let-item="item">
+              {{ item.NM_GRUP }}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              {{ item.NM_INFO }}
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-1">
+          <label for="qtItensPagina">Registros</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="numberOfItems"
+            [virtualScroll]="true"
+            labelForId="qtItensPagina"
+            formControlName="qtItensPagina"
+          >
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <subtitles [data]="subtitles" [show]="totalItems > 0 && loading"> </subtitles>
+  <div class="mt-3" *ngIf="loading && totalItems > 0">
+    <div class="table-responsive">
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th
+              nowrap
+              class="sticky"
+              scope="col"
+              colspan="1"
+              *ngIf="depositoBool"
+              [ngStyle]="{ left: '0px' }"
+              style="background-color: #fff;"
+              width="180px"
+            >
+              Grupo
+            </th>
+            <th
+              nowrap
+              class="sticky"
+              scope="col"
+              colspan="2"
+              [ngStyle]="{ left: !depositoBool ? '0px' : '180px' }"
+              style="background-color: #fff;"
+            >
+              Material
+            </th>
+            <th
+              nowrap
+              scope="col"
+              [attr.colspan]="colsMat"
+              *ngIf="colsMat != 0"
+            ></th>
+            <th nowrap scope="col" [attr.colspan]="colsEstoque ? colsEst : 1">
+              Estoque(TON)
+              <button
+                class="btn-icon-sm"
+                (click)="setColsEstoqueTrue()"
+                *ngIf="colsEst > 1"
+              >
+                <i
+                  [ngClass]="colsEstoque ? 'fas fa-minus' : 'fas fa-plus'"
+                  title="Mostrar detalhes Estoque"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </th>
+            <th nowrap scope="col" [attr.colspan]="colsCarteira ? colsCar : 1">
+              Carteira(TON)
+              <button
+                class="btn-icon-sm"
+                (click)="setColsCarteiraTrue()"
+                *ngIf="colsCar > 1"
+              >
+                <i
+                  [ngClass]="colsCarteira ? 'fas fa-minus' : 'fas fa-plus'"
+                  title="Mostrar Carteira/mês"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              [attr.colspan]="colsVendasReal ? colsVenRea : 2"
+            >
+              Vendas Realizadas (TON)
+              <button
+                class="btn-icon-sm"
+                (click)="setColsVendasRealTrue()"
+                *ngIf="colsVenRea > 2"
+              >
+                <i
+                  [ngClass]="colsVendasReal ? 'fas fa-minus' : 'fas fa-plus'"
+                  title="Mostrar Vendas Realizadas/mês"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              [attr.colspan]="colsVendasPerd ? colsVenPed : 2"
+            >
+              Vendas Perdidas (TON)
+              <button
+                class="btn-icon-sm"
+                (click)="setColsVendasPerdTrue()"
+                *ngIf="colsVenPed > 2"
+              >
+                <i
+                  [ngClass]="colsVendasPerd ? 'fas fa-minus' : 'fas fa-plus'"
+                  title="Mostrar Vendas Perdidas/mês"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </th>
+            <th nowrap scope="col" colspan="2">Estatístico</th>
+          </tr>
+          <tr class="text-center">
+            <!-- Inicio - Materiais -->
+            <th
+              nowrap
+              scope="col"
+              class="hover sticky"
+              [ngStyle]="{ left: '0px' }"
+              style="background-color: #fff;"
+              width="180px"
+              (click)="sort('NM_DEPO')"
+              *ngIf="depositoBool"
+            >
+              Depósito
+              <span *ngIf="key == 'NM_DEPO'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_DEPO'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover sticky"
+              [ngStyle]="{ left: !depositoBool ? '0px' : '180px' }"
+              style="background-color: #fff;"
+              width="105px"
+              (click)="sort('ID_REFE_ERP')"
+            >
+              Cód. Material
+              <span *ngIf="key == 'ID_REFE_ERP'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'ID_REFE_ERP'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover sticky"
+              [ngStyle]="{ left: !depositoBool ? '105px' : '285px' }"
+              style="background-color: #fff;"
+              (click)="sort('NM_MATE')"
+            >
+              Descrição
+              <span *ngIf="key == 'NM_MATE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_MATE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('NM_LINH')"
+              *ngIf="linhaBool"
+            >
+              Linha
+              <span *ngIf="key == 'NM_LINH'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_LINH'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('NM_SUB_LINH')"
+              *ngIf="subLinhaBool"
+            >
+              Sublinha
+              <span *ngIf="key == 'NM_SUB_LINH'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_SUB_LINH'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('NM_CLAS')"
+              *ngIf="classeBool"
+            >
+              Classe
+              <span *ngIf="key == 'NM_CLAS'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_CLAS'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('NM_APOI_UNID_MEDI')"
+              *ngIf="uniMedidaBool"
+            >
+              Unidade de Medida
+              <span *ngIf="key == 'NM_APOI_UNID_MEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_APOI_UNID_MEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('NM_APOI_UNID_MEDI')"
+              *ngIf="bitolaBool"
+            >
+              Bitola
+              <span *ngIf="key == 'NM_APOI_UNID_MEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_APOI_UNID_MEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('NM_APOI_UNID_MEDI')"
+              *ngIf="larguraBool"
+            >
+              Largura
+              <span *ngIf="key == 'NM_APOI_UNID_MEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_APOI_UNID_MEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('NM_APOI_UNID_MEDI')"
+              *ngIf="comprimentoBool"
+            >
+              Comprimento
+              <span *ngIf="key == 'NM_APOI_UNID_MEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_APOI_UNID_MEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('NM_APOI_UNID_MEDI')"
+              *ngIf="qualidadeBool"
+            >
+              Qualidade
+              <span *ngIf="key == 'NM_APOI_UNID_MEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_APOI_UNID_MEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('NM_APOI_UNID_MEDI')"
+              *ngIf="revestimentoBool"
+            >
+              Revestimento
+              <span *ngIf="key == 'NM_APOI_UNID_MEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_APOI_UNID_MEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('NM_APOI_UNID_MEDI')"
+              *ngIf="tipoAcoBool"
+            >
+              Tipo de Aço
+              <span *ngIf="key == 'NM_APOI_UNID_MEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_APOI_UNID_MEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <!-- FIM - Materiais -->
+            <!-- Inicio - Estoque -->
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('TT_ESTO_ATUA_TONE')"
+              *ngIf="estAtualBool && colsEstoque"
+            >
+              Atual
+              <span *ngIf="key == 'TT_ESTO_ATUA_TONE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'TT_ESTO_ATUA_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('TT_ESTO_COMP_TONE')"
+              *ngIf="estComprBool && colsEstoque"
+            >
+              Comprometido
+              <span *ngIf="key == 'TT_ESTO_COMP_TONE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'TT_ESTO_COMP_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('TT_ESTO_SUSP_TONE')"
+              *ngIf="estSuspBool && colsEstoque"
+            >
+              Supenso
+              <span *ngIf="key == 'TT_ESTO_SUSP_TONE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'TT_ESTO_SUSP_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('TT_ESTO_DISP_TONE')"
+            >
+              Disponível
+              <span *ngIf="key == 'TT_ESTO_DISP_TONE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'TT_ESTO_DISP_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <!-- FIM - Estoque -->
+            <!-- Inicio - Carteira -->
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort(item.row)"
+              *ngFor="let item of dadosCarteiraDetalhe"
+              [hidden]="!colsCarteira"
+            >
+              {{ item.header }}
+              <span *ngIf="key == item.row"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != item.row"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('TT_CART_ABER_TONE')"
+            >
+              Carteira
+              <span *ngIf="key == 'TT_CART_ABER_TONE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'TT_CART_ABER_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <!-- FIM - Carteira -->
+            <!-- Inicio - Vendas Realizadas -->
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort(item.row)"
+              *ngFor="let item of dadosVendasRealDetalhe"
+              [hidden]="!colsVendasReal"
+            >
+              {{ item.header }}
+              <span *ngIf="key == item.row"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != item.row"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('TT_VEND_REAL_TONE')"
+            >
+              Vendas
+              <span *ngIf="key == 'TT_VEND_REAL_TONE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'TT_VEND_REAL_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('TT_MEDI_VEND_REAL_TONE')"
+              tooltip="(Vol. vendas / Período) * 30"
+              placement="top"
+            >
+              Média
+              <span *ngIf="key == 'TT_MEDI_VEND_REAL_TONE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'TT_MEDI_VEND_REAL_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <!-- FIM - Vendas Realizadas -->
+            <!-- Inicio - Vendas Perdidas -->
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort(item.row)"
+              *ngFor="let item of dadosVendasPerdDetalhe"
+              [hidden]="!colsVendasPerd"
+            >
+              {{ item.header }}
+              <span *ngIf="key == item.row"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != item.row"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('TT_VEND_PERD_TONE')"
+            >
+              Perdas
+              <span *ngIf="key == 'TT_VEND_PERD_TONE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'TT_VEND_PERD_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('TT_MEDI_VEND_PERD_TONE')"
+              tooltip="(Vol. vendas perd / Período) * 30"
+              placement="top"
+            >
+              Média
+              <span *ngIf="key == 'TT_MEDI_VEND_PERD_TONE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'TT_MEDI_VEND_PERD_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <!-- FIM - Vendas Realizadas -->
+            <!-- Inicio - Estatistico -->
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('VL_RITM_VEND_TONE')"
+              tooltip="(Vendas mês / Dia mês) * 30"
+              placement="top"
+            >
+              Ritmo
+              <span *ngIf="key == 'VL_RITM_VEND_TONE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'VL_RITM_VEND_TONE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              nowrap
+              scope="col"
+              class="hover"
+              (click)="sort('NR_DIAS_GIRO')"
+              tooltip="Est. disponível / Med. diária"
+              placement="left"
+            >
+              Giro
+              <span *ngIf="key == 'NR_DIAS_GIRO'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NR_DIAS_GIRO'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <!-- FIM - Estatistico -->
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dados">
+            <!-- Inicio - Materiais -->
+            <td
+              nowrap
+              class="text-center hover sticky"
+              *ngIf="depositoBool"
+              [ngClass]="setColorBorder(item.DS_COR_TIPO_NIVE_ESTO)"
+              [ngStyle]="{ left: '0px' }"
+              width="180px"
+              (click)="lgModal.show() + ' ' + getNivelEstoqueModal(item)"
+              >
+              {{ item.NM_DEPO }}
+            </td>
+            <td
+              nowrap
+              class="text-center hover sticky"
+              [ngClass]="!depositoBool ? setColorBorder(item.DS_COR_TIPO_NIVE_ESTO) : ''"
+              [ngStyle]="{ left: !depositoBool ? '0px' : '180px' }"
+              width="105px"
+              (click)="lgModal.show() + ' ' + getNivelEstoqueModal(item)"
+              >
+              {{ item.ID_REFE_ERP | number }}
+            </td>
+            <td
+              nowrap
+              class="sticky"
+              [ngStyle]="{ left: !depositoBool ? '105px' : '285px' }"
+            >
+              {{ item.NM_MATE }}
+            </td>
+            <td nowrap class="text-center" *ngIf="linhaBool">
+              {{ item.NM_LINH }}
+            </td>
+            <td nowrap class="text-center" *ngIf="subLinhaBool">
+              {{ item.NM_SUB_LINH ? item.NM_SUB_LINH : '-' }}
+            </td>
+            <td nowrap class="text-center" *ngIf="classeBool">
+              {{ item.NM_CLAS }}
+            </td>
+            <td nowrap class="text-center" *ngIf="uniMedidaBool">
+              {{ item.NM_APOI_UNID_MEDI ? item.NM_APOI_UNID_MEDI : '-' }}
+            </td>
+            <td nowrap class="text-center" *ngIf="bitolaBool">
+              {{ item.VL_MEDI ? item.VL_MEDI : '-' }}
+            </td>
+            <td nowrap class="text-center" *ngIf="larguraBool">
+              {{ item.VL_LARG ? item.VL_LARG : '-' }}
+            </td>
+            <td nowrap class="text-center" *ngIf="comprimentoBool">
+              {{ item.VL_COMP ? item.VL_COMP : '-' }}
+            </td>
+            <td nowrap class="text-center" *ngIf="qualidadeBool">
+              {{ item.DS_QUAL ? item.DS_QUAL : '-' }}
+            </td>
+            <td nowrap class="text-center" *ngIf="revestimentoBool">
+              {{ item.DS_REVE ? item.DS_REVE : '-' }}
+            </td>
+            <td nowrap class="text-center" *ngIf="tipoAcoBool">
+              {{ item.DS_TIPO_ACO ? item.DS_TIPO_ACO : '-' }}
+            </td>
+            <!-- FIM - Materiais -->
+            <!-- Inicio - Estoque -->
+            <td nowrap class="text-center" *ngIf="estAtualBool && colsEstoque">
+              {{ item.TT_ESTO_ATUA_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="text-center" *ngIf="estComprBool && colsEstoque">
+              {{ item.TT_ESTO_COMP_TONE | number: '0.3' }}
+              <button
+                class="btn-icon-sm"
+                (click)="
+                  lgModal.show() + ' ' + getEstoqueComprometidoModal(item)
+                "
+                [disabled]="item.TT_ESTO_COMP_TONE == 0"
+              >
+                <i
+                  class="fa fa-search text-primary"
+                  title="Detalhes Estoque Comprometido"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </td>
+            <td nowrap class="text-center" *ngIf="estSuspBool && colsEstoque">
+              {{ item.TT_ESTO_SUSP_TONE | number: '0.3' }}
+              <button
+                class="btn-icon-sm"
+                (click)="
+                  lgModal.show() + ' ' + getEstoqueSupensoModal(item)
+                "
+                [disabled]="item.TT_ESTO_SUSP_TONE == 0"
+              >
+                <i
+                  class="fa fa-search text-primary"
+                  title="Detalhes Estoque Suspendo"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </td>
+            <td nowrap class="text-center">
+              {{ item.TT_ESTO_DISP_TONE | number: '0.3' }}
+            </td>
+            <!-- FIM - Estoque -->
+            <!-- Inicio - Carteira -->
+            <td
+              nowrap
+              class="text-right"
+              *ngFor="let column of dadosCarteiraDetalhe"
+              [hidden]="!colsCarteira"
+            >
+              {{ item[column.row] | number: '0.3' }}
+              <button
+                class="btn-icon-sm"
+                (click)="
+                  lgModal.show() + ' ' + getCarteiraModal(item, column.id)
+                "
+                [disabled]="item[column.row] == 0"
+              >
+                <i
+                  class="fa fa-search text-primary"
+                  title="Detalhes Carteira/mês"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </td>
+            <td nowrap class="text-right">
+              {{ item.TT_CART_ABER_TONE | number: '0.3' }}
+              <button
+                class="btn-icon-sm"
+                (click)="lgModal.show() + ' ' + getCarteiraModal(item)"
+                [disabled]="item.TT_CART_ABER_TONE == 0"
+              >
+                <i
+                  class="fa fa-search text-primary"
+                  title="Detalhes Carteira"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </td>
+            <!-- FIM - Carteira -->
+            <!-- Inicio - Vendas Realizadas -->
+            <td
+              nowrap
+              class="text-right"
+              *ngFor="let column of dadosVendasRealDetalhe"
+              [hidden]="!colsVendasReal"
+            >
+              {{ item[column.row] | number: '0.3' }}
+              <button
+                class="btn-icon-sm"
+                (click)="
+                  lgModal.show() + ' ' + getVendasRealModal(item, column.id)
+                "
+                [disabled]="item[column.row] == 0"
+              >
+                <i
+                  class="fa fa-search text-primary"
+                  title="Detalhes Vendas Realizadas/mês"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </td>
+            <td nowrap class="text-right">
+              {{ item.TT_VEND_REAL_TONE | number: '0.3' }}
+              <button
+                class="btn-icon-sm"
+                (click)="lgModal.show() + ' ' + getVendasRealModal(item)"
+                [disabled]="item.TT_VEND_REAL_TONE == 0"
+              >
+                <i
+                  class="fa fa-search text-primary"
+                  title="Detalhes Vendas Realizadas"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </td>
+            <td nowrap class="text-center">
+              {{ item.TT_MEDI_VEND_REAL_TONE | number: '0.3' }}
+            </td>
+            <!-- FIM - Vendas Realizadas -->
+            <!-- Inicio - Vendas Perdidas -->
+            <td
+              nowrap
+              class="text-right"
+              *ngFor="let column of dadosVendasPerdDetalhe"
+              [hidden]="!colsVendasPerd"
+            >
+              {{ item[column.row] | number: '0.3' }}
+              <button
+                class="btn-icon-sm"
+                (click)="
+                  lgModal.show() + ' ' + getVendasPerdModal(item, column.id)
+                "
+                [disabled]="item[column.row] == 0"
+              >
+                <i
+                  class="fa fa-search text-primary"
+                  title="Detalhes Vendas Perdidas/mês"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </td>
+            <td nowrap class="text-right">
+              {{ item.TT_VEND_PERD_TONE | number: '0.3' }}
+              <button
+                class="btn-icon-sm"
+                (click)="lgModal.show() + ' ' + getVendasPerdModal(item)"
+                [disabled]="item.TT_VEND_PERD_TONE == 0"
+              >
+                <i
+                  class="fa fa-search text-primary"
+                  title="Detalhes Vendas Perdidas"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </td>
+            <td nowrap class="text-center">
+              {{ item.TT_MEDI_VEND_PERD_TONE | number: '0.3' }}
+            </td>
+            <!-- FIM - Vendas Perdidas -->
+            <!-- Inicio - Estatístico -->
+            <td nowrap class="text-center">
+              {{ item.VL_RITM_VEND_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="text-center">{{ item.NR_DIAS_GIRO | number }}</td>
+            <!-- FIM - Estatístico -->
+          </tr>
+          <!-- Totalizadores -->
+          <tr>
+            <!-- Inicio - Materiais -->
+            <td
+              nowrap
+              class="bg-dark border-dark text-white text-center"
+              *ngIf="depositoBool"
+              [ngStyle]="{ left: '0px' }"
+              style="position: sticky;"
+              width="180px"
+            >
+              <strong>TOTAL</strong>
+            </td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              [ngStyle]="{ left: !depositoBool ? '0px' : '180px' }"
+              [ngClass]="!depositoBool ? 'border-dark' : ''"
+              style="position: sticky;"
+              width="105px"
+            >
+              <strong>{{ !depositoBool ? 'TOTAL' : '' }}</strong>
+            </td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              [ngStyle]="{ left: !depositoBool ? '105px' : '272px' }"
+              style="position: sticky;"
+            ></td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="linhaBool"
+            ></td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="subLinhaBool"
+            ></td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="classeBool"
+            ></td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="uniMedidaBool"
+            ></td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="bitolaBool"
+            ></td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="larguraBool"
+            ></td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="comprimentoBool"
+            ></td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="qualidadeBool"
+            ></td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="revestimentoBool"
+            ></td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="tipoAcoBool"
+            ></td>
+            <!-- FIM - Materiais -->
+            <!-- Inicio - Estoque -->
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="estAtualBool && colsEstoque"
+            >
+              {{ dadosTotalizadores.TT_ESTO_ATUA_TONE | number: '0.3' }}
+            </td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="estComprBool && colsEstoque"
+            >
+              {{ dadosTotalizadores.TT_ESTO_COMP_TONE | number: '0.3' }}
+            </td>
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngIf="estSuspBool && colsEstoque"
+            >
+              {{ dadosTotalizadores.TT_ESTO_SUSP_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-center">
+              {{ dadosTotalizadores.TT_ESTO_DISP_TONE | number: '0.3' }}
+            </td>
+            <!-- FIM - Estoque -->
+            <!-- Inicio - Carteira -->
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngFor="let column of dadosCarteiraDetalhe"
+              [hidden]="!colsCarteira"
+            >
+              {{ dadosTotalizadores[column.row] | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-center">
+              {{ dadosTotalizadores.TT_CART_ABER_TONE | number: '0.3' }}
+            </td>
+            <!-- FIM - Carteira -->
+            <!-- Inicio - Vendas Realizadas -->
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngFor="let column of dadosVendasRealDetalhe"
+              [hidden]="!colsVendasReal"
+            >
+              {{ dadosTotalizadores[column.row] | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-center">
+              {{ dadosTotalizadores.TT_VEND_REAL_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-center">
+              {{ dadosTotalizadores.TT_MEDI_VEND_REAL_TONE | number: '0.3' }}
+            </td>
+            <!-- FIM - Vendas Realizadas -->
+            <!-- Inicio - Vendas Perdidas -->
+            <td
+              nowrap
+              class="bg-dark text-white text-center"
+              *ngFor="let column of dadosVendasPerdDetalhe"
+              [hidden]="!colsVendasPerd"
+            >
+              {{ dadosTotalizadores[column.row] | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-center">
+              {{ dadosTotalizadores.TT_VEND_PERD_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-center">
+              {{ dadosTotalizadores.TT_MEDI_VEND_PERD_TONE | number: '0.3' }}
+            </td>
+            <!-- FIM - Vendas Perdidas -->
+            <!-- Inicio - Estatístico -->
+            <td nowrap class="bg-dark text-white text-center">
+              {{ dadosTotalizadores.VL_RITM_VEND_TONE | number: '0.3' }}
+            </td>
+            <td nowrap class="bg-dark text-white text-center">
+              {{ dadosTotalizadores.NR_DIAS_GIRO | number: '0.0' }}
+            </td>
+            <!-- FIM - Estatístico -->
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="mt-2" *ngIf="totalItems > itemsPerPageParam">
+      Exibindo {{ itemsPerPageParam * (currentPage - 1) + 1 }} a
+      {{
+        currentPage * itemsPerPageParam > totalItems
+          ? totalItems
+          : currentPage * itemsPerPageParam
+      }}
+      de {{ totalItems }}
+      <div class="d-flex">
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPageParam"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="noResult && !loading"
+    class="text-center d-flex justify-content-center align-items-center p-5"
+    style="height: 80%;"
+  >
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>
+
+<div
+  bsModal
+  #lgModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dialog-sizes-name1"
+  [hidden]="!loadingDetalhesModal"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+          {{ modal.title }}
+        </h4>
+        <button
+          type="button"
+          class="close pull-right"
+          (click)="lgModal.hide() + ' ' + closeModal()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Detalhes nível de estoque -->
+        <div class="container" *ngIf="nivelEstBool">
+          <abastecimento-monitores-analise-compras-modal-nivel-estoque [item]=itemNivelEstoque>
+          </abastecimento-monitores-analise-compras-modal-nivel-estoque>
+        </div>
+        <!-- Detalhes Carteira -->
+        <div class="container" *ngIf="carteiraBool">
+          <abastecimento-monitores-analise-compras-modal-carteira [item]=itemCarteira [idMesAno]=idMesAnoCarteira>
+          </abastecimento-monitores-analise-compras-modal-carteira>
+        </div>
+        <!-- Detalhes Vendas Realizadas -->
+        <div
+          class="container"
+          *ngIf="vendasRealBool"
+        >
+          <abastecimento-monitores-analise-compras-modal-vendas-realizadas [item]=itemVendasRealizadas [idMesAno]=idMesAnoVendasRealizadas>
+          </abastecimento-monitores-analise-compras-modal-vendas-realizadas>
+        </div>
+        <!-- Detalhes Vendas Perdidas -->
+        <div
+          class="container"
+          *ngIf="vendasPerdBool"
+        >
+          <abastecimento-monitores-analise-compras-modal-vendas-perdidas [item]=itemVendasPerdidas [idMesAno]=idMesAnoVendasPerdidas>
+          </abastecimento-monitores-analise-compras-modal-vendas-perdidas>
+        </div>
+        <!-- Detalhes Estoque Supenso -->
+        <div
+        class="container"
+        *ngIf="estoqueSuspBool"
+        >
+          <abastecimento-monitores-analise-compras-modal-estoque-suspenso [item]=itemEstoqueSupenso>
+          </abastecimento-monitores-analise-compras-modal-estoque-suspenso>
+        </div>
+        <!-- Detalhes Estoque Comprometido -->
+        <div
+          class="container"
+          *ngIf="estoqueCompBool"
+        >
+          <abastecimento-monitores-analise-compras-modal-estoque-comprometido [item]=itemEstoqueComprometido>
+          </abastecimento-monitores-analise-compras-modal-estoque-comprometido>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      <form [formGroup]="form">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="codTipoFrete">Código Tipo Frete</label>
+            <input
+              type="text"
+              class="form-control"
+              id="codTipoFrete"
+              formControlName="codTipoFrete"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('codTipoFrete') + ' ' + onFieldRequired(form.controls.codTipoFrete)">
+            <invalid-form-control [show]="onFieldInvalid('codTipoFrete')" message="Código do tipo de frete é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col">
+            <label for="codSituacao">Situação</label>
+            <select
+              class="form-control custom-select"
+              id="codSituacao"
+              formControlName="codSituacao"
+              [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
+              <option value="1">Ativo</option>
+              <option value="2">Inativo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="descricao">Descrição do Tipo de Frete</label>
+            <input
+              type="text"
+              class="form-control"
+              id="descricao"
+              formControlName="descricao"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('descricao') + ' ' + onFieldRequired(form.controls.descricao)">
+            <invalid-form-control [show]="onFieldInvalid('descricao')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>
+

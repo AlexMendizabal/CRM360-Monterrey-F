@@ -1,0 +1,40 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row justify-content-center" *ngIf="!loaderFullScreen">
+  <div class="col-12 mb-4">
+    <div class="mtc-title text-center">Filtrar resultados</div>
+  </div>
+  <form id="form-filtro-vendedor-escritorio" [formGroup]="form">
+    <div class="form-row" *ngIf="adminOnly()">
+      <div class="form-group col">
+        <label for="idEscritorio">Escritório</label>
+        <ng-select
+          [searchable]="true"
+          [clearable]="false"
+          [items]="escritorios"
+          [virtualScroll]="true"
+          labelForId="escritorio"
+          bindLabel="nome"
+          bindValue="id"
+          formControlName="idEscritorio"
+          (change)="onEscritorioChange($event); onInput()">
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col">
+        <label for="idVendedor">Vendedor</label>
+        <ng-select
+          [searchable]="true"
+          [clearable]="false"
+          [items]="filteredVendedores"
+          [virtualScroll]="true"
+          labelForId="vendedor"
+          bindLabel="nome"
+          bindValue="id"
+          formControlName="idVendedor"
+          (change)="onInput()">
+        </ng-select>
+      </div>
+    </div>
+  </form>
+</div>

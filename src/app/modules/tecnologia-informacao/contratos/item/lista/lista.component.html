@@ -1,0 +1,375 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="ITENS">
+  <button
+  type="button"
+  (click)="getTotalItens()">
+  Exportar
+</button>
+  <button
+  type="button"
+  (click)="onReset()">
+  Limpar
+</button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-1 pl-0">
+              <label for="ID_TECN_INFO_ITEM">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Digite..."
+                id="ID_TECN_INFO_ITEM"
+                formControlName="ID_TECN_INFO_ITEM"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4 pl-0">
+              <label for="CD_ITEM">Código/Nº Série</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Digite..."
+                id="CD_ITEM"
+                formControlName="CD_ITEM"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-7 pl-0">
+              <label for="produtos">Produtos</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="produtos"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="loadingProduto"
+                labelForId="ID_TEIN_ESTO_PROD"
+                bindLabel="NM_PROD"
+                bindValue="ID_TEIN_ESTO_PROD"
+                id="ID_TEIN_ESTO_PROD"
+                formControlName="ID_TEIN_ESTO_PROD">
+              </ng-select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-1 pl-0">
+              <label for="NR_MATR">Matricula</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Digite..."
+                id="NR_MATR"
+                formControlName="NR_MATR"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4 pl-0">
+              <label for="NM_USUA">Funcionario</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Digite..."
+                id="NM_USUA"
+                formControlName="NM_USUA"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4 pl-0">
+              <label for="centroCusto">Centro de Custo</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="centroCusto"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="loadingCcu"
+                labelForId="CD_CCU"
+                bindLabel="NM_CCU"
+                bindValue="CD_CCU"
+                id="CD_CCU"
+                formControlName="CD_CCU"
+              >
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-3 pl-0">
+              <label for="CD_STAT_USUA">Status do Responsável</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="situacoesUsuarios"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                [loading]="loadingSitUsuarios"
+                labelForId="CD_STAT_USUA"
+                bindLabel="DS_STAT_USUA"
+                bindValue="CD_STAT_USUA"
+                id="CD_STAT_USUA"
+                formControlName="CD_STAT_USUA">
+              </ng-select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-3 pl-0">
+              <label for="contrato">Contrato</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="contrato"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="loadingContrato"
+                labelForId="ID_TECN_INFO_CONT"
+                bindLabel="DS_CONT"
+                bindValue="ID_TECN_INFO_CONT"
+                id="ID_TECN_INFO_CONT"
+                formControlName="ID_TECN_INFO_CONT"
+                >
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-2 pl-0">
+              <label for="ID_TECN_INFO_ITEM_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="ID_TECN_INFO_ITEM_STAT"
+              placeholder="Selecione..."
+            >
+              <ng-template ng-option-tmp let-item="item" let-index="index"> {{item.nome}}
+              </ng-template>
+            </ng-select>
+            </div>
+            <div class="form-group col-lg-1 pl-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0" [ngClass]="{'col': !showDetailPanel, 'col-4': showDetailPanel}">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" >ID </th>
+              <th scope="col">Código/Nº Série</th>
+              <th scope="col"[hidden]="showDetailPanel">Produto</th>
+              <th scope="col"[hidden]="showDetailPanel">Responsável</th>
+              <th scope="col" style="width:120px"[hidden]="showDetailPanel"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let item of item; let i = index"  [class.table-active]="item?.ID_TECN_INFO_ITEM == itemSelecionado?.ID_TECN_INFO_ITEM && showDetailPanel">
+              <td (click)="onDetails(item)"[ngClass]="classStatusBorder(item)">
+              {{item.ID_TECN_INFO_ITEM}}
+              </td>
+              <td (click)="onDetails(item)">{{ item.CD_ITEM }}</td>
+              <td (click)="onDetails(item)" [hidden]="showDetailPanel">{{ item.NM_PROD }}</td>
+              <td  *ngIf="item.NM_USUA != null && item.NM_USUA != ''" (click)="onDetails(item)" [hidden]="showDetailPanel">{{ item.NM_USUA | uppercase }}</td>
+              <td  *ngIf="item.NM_USUA != null && item.NM_USUA == ''" (click)="onDetails(item)" [hidden]="showDetailPanel">NENHUM RESPONSÁVEL</td>
+              <td  *ngIf="item.NM_USUA == null && item.NM_CCU != null" (click)="onDetails(item)" [hidden]="showDetailPanel">{{ item.NM_CCU | uppercase }}</td>
+              <td  *ngIf="item.NM_USUA == null && item.NM_CCU == null" (click)="onDetails(item)" [hidden]="showDetailPanel">NENHUM RESPONSÁVEL</td>
+              <td class="align-middle" [hidden]="showDetailPanel">
+                <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', item.ID_TECN_INFO_ITEM]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip=" Gerar Termo" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm" (click)="onTermo(item)">
+                    <i class="text-warning fas fa-file" *ngIf= "item.QT_DOCU > 0 "placement="right"></i>
+                    <i class="text-black fas fa-file" *ngIf="item.QT_DOCU == 0"  placement="right"></i>
+                  </button>
+                </span>
+                <span class="mr-3"  placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm">
+                    <i class="text-{{item.DS_COR_STAT_USUA}} fas fa-user" placement="right" *ngIf="item.CD_STAT_USUA == 7 && item.NM_USUA != null"  tooltip="Responsável {{item.DS_STAT_USUA}}"></i>
+                    <i class="text-{{item.DS_COR_STAT_USUA}} fas fa-user" placement="right" *ngIf="item.CD_STAT_USUA == 1 && item.NM_USUA != null"  tooltip="Responsável {{item.DS_STAT_USUA}}"></i>
+                    <i class="text-{{item.DS_COR_STAT_USUA}} fas fa-user" placement="right" *ngIf="item.CD_STAT_USUA != 1 && item.CD_STAT_USUA != 7 && item.NM_USUA != null " tooltip="Responsável {{item.DS_STAT_USUA}}"></i>
+                    <i class="text-black fas fa-hotel" placement="right" *ngIf="item.NM_USUA == null && item.NM_CCU != null" tooltip="Escritório"></i>
+                    <i class="text-black fas fa-times" placement="right" *ngIf="item.NM_USUA == null && item.NM_CCU == null" tooltip="Nenhum Responsável"></i>
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div>
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-8" [hidden]="!showDetailPanel">
+      <detail-panel>
+        <tabset>
+          <tab heading="Dados cadastrais">
+            <div class="border-right border-left border-bottom px-3 pt-3">
+              <div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Nome</label>
+                    <div *ngIf="itemSelecionado?.NM_USUA == null">NÃO INFORMADO</div>
+                    <div *ngIf="itemSelecionado?.NM_USUA == ''" >NÃO INFORMADO</div>
+                    <div *ngIf="itemSelecionado?.NM_USUA != null && itemSelecionado?.NM_USUA != ''">{{itemSelecionado?.NR_MATR}} - {{ itemSelecionado?.NM_USUA | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Código/Nº Série</label>
+                    <div *ngIf="itemSelecionado?.CD_ITEM == null">NÃO INFORMADO</div>
+                    <div *ngIf="itemSelecionado?.CD_ITEM != null">{{ itemSelecionado?.CD_ITEM}}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Centro de Custo</label>
+                    <div *ngIf="itemSelecionado?.CD_CCU == null">NÃO INFORMADO</div>
+                    <div *ngIf="itemSelecionado?.CD_CCU != null"> {{itemSelecionado?.CD_CCU}} - {{ itemSelecionado?.NM_CCU | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Valor</label>
+                    <div *ngIf="itemSelecionado?.VL_ITEM == null">NÃO INFORMADO</div>
+                    <div *ngIf="itemSelecionado?.VL_ITEM != null">{{ itemSelecionado?.VL_ITEM  | currency:'BRL' }}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-12">
+                    <label>Produto</label>
+                    <div *ngIf="itemSelecionado?.ID_TEIN_ESTO_PROD == null">NÃO INFORMADO</div>
+                    <div *ngIf="itemSelecionado?.ID_TEIN_ESTO_PROD != null">{{ itemSelecionado?.NM_ITEM_TIPO | uppercase}}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Contrato</label>
+                    <div *ngIf="itemSelecionado?.ID_TECN_INFO_CONT == null ">NÃO INFORMADO</div>
+                    <div *ngIf="itemSelecionado?.ID_TECN_INFO_CONT != null ">{{ itemSelecionado?.DS_CONT | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>OBSERVAÇÃO</label>
+                    <div *ngIf="itemSelecionado?.DS_OBSE == null ">NÃO INFORMADO</div>
+                    <div *ngIf="itemSelecionado?.DS_OBSE != null ">{{ itemSelecionado?.DS_OBSE | uppercase}}</div>
+                  </div>
+                </div><hr>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Usuário Responsável Pelo Cadastro</label>
+                    <div>{{ itemSelecionado?.NM_USUA_CADA | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Data do Cadastro</label>
+                    <div>{{ itemSelecionado?.DT_INCL | date: 'dd/MM/yyyy' }}</div>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="mb-3" *ngIf="dadosCadastraisLoaded && dadosCadastraisEmpty">
+                <empty-result message="Nenhuma informação encontrada"></empty-result>
+              </div>
+               -->
+            </div>
+          </tab>
+          <tab heading="Itens Vinculados">
+            <div class="border-right border-left border-bottom px-3 pt-3" >
+              <div *ngIf="!loadingVinculo && !noVinculo">
+                <table  class="table table-borderless text-center" >
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col" style="width:40px"></th>
+                        <th scope="col">ID </th>
+                        <th scope="col">Código/Nº Série</th>
+                        <th scope="col">Tipo de Item</th>
+                        <th scope="col">Modelo</th>
+                        <th scope="col" style="width:40px"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of itensVinculados; let i = index">
+                        <td class="d-flex">
+                          <i class="text-success fas fa-circle mr-3" *ngIf="item.ID_TECN_INFO_ITEM_STAT == 1" tooltip="Ativo" ></i>
+                          <i class="text-danger  fas fa-circle mr-3" *ngIf="item.ID_TECN_INFO_ITEM_STAT == 2" tooltip="Inativo"></i>
+                          <i class="text-warning fas fa-circle mr-3" *ngIf="item.ID_TECN_INFO_ITEM_STAT == 3" tooltip="Furtado"></i>
+                          <i class="text-primary fas fa-circle mr-3" *ngIf="item.ID_TECN_INFO_ITEM_STAT == 4" tooltip="Assistência Técnica"></i>
+                        </td>
+                        <td>{{ item.ID_TECN_INFO_ITEM }}</td>
+                        <td>{{ item.CD_ITEM }}</td>
+                        <td>{{ item.NM_ITEM_TIPO | uppercase }}</td>
+                        <td>{{ item.NM_MODE  | uppercase}}</td>                        <td style="text-align: right;">
+                          <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                            <button type="button" class="btn-icon-sm" [routerLink]="['./../', item.ID_TECN_INFO_ITEM]">
+                              <i class="fas fa-edit"></i>
+                            </button>
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+              </div>
+              <div class="d-flex justify-content-center mb-3" *ngIf="loadingVinculo">
+                <div class="spinner-border text-dark"></div>
+              </div>
+              <div *ngIf="!loadingVinculo && noVinculo" class="d-flex justify-content-center mb-3">
+                <empty-result message="Nenhuma informação encontrada"></empty-result>
+              </div>
+            </div>
+          </tab>
+        </tabset>
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

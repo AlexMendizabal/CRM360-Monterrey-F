@@ -1,0 +1,125 @@
+<div class="modal-content" *ngIf="dataCotacao">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">
+      COTAÇÃO #{{ dataCotacao.codCotacao }} / {{ dataCotacao.situacao.situacaoProposta | uppercase }}
+    </h4>
+    <button type="button" class="close" (click)="onClose()" [disabled]="submittingForm === true">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body py-5">
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row mb-4">
+        <div class="form-group col-lg-6">
+          <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
+            <label class="my-auto" for="codConcorrente">Concorrente</label>
+            <div class="my-auto text-uppercase" style="font-size: 11px">
+              <a
+                class="text-secondary"
+                href="javascript:void(0)"
+                (click)="onDetalhesConcorrente()"
+                *ngIf="form.value.codConcorrente != null">
+                <strong>Detalhes</strong>
+              </a>
+              <span class="mx-2" *ngIf="form.value.codConcorrente != null">|</span>
+              <a
+                class="text-primary"
+                href="javascript:void(0)"
+                [routerLink]="[getLinkAddConcorrente()]"
+                target="_blank">
+                <strong>Adicionar</strong>
+              </a>
+              <span class="mx-2">|</span>
+              <btn-icon
+                icon="fas fa-redo-alt"
+                size="small"
+                class="mr-2"
+                tooltip="Recarregar"
+                (click)="onReloadConcorrentes()">
+              </btn-icon>
+            </div>
+          </div>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="concorrentes"
+            formControlName="codConcorrente"
+            [virtualScroll]="true"
+            bindLabel="nomeConcorrente"
+            bindValue="codConcorrenteTid"
+            [loading]="concorrentesLoader"
+            loadingText="Carregando...">
+          </ng-select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="mtc-title">Resumo do pedido</div>
+          <custom-table [config]="tableConfig">
+            <ng-template #thead let-thead>
+              <tr>
+                <th scope="col" width="35%">Material</th>
+                <th scope="col" width="12%" class="text-center">Ton</th>
+                <th scope="col" width="12%" class="text-center">Unit.</th>
+                <th scope="col" width="12%" class="text-center">R$</th>
+                <th scope="col" width="14%" class="text-center">Concorrente</th>
+                <th scope="col" width="15%">Depósito</th>
+              </tr>
+            </ng-template>
+            <div formArrayName="materiais">
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let material of materiais.controls; let i = index" [formGroupName]="i">
+                  <td width="35%" class="text-truncate">
+                    {{ form.value.materiais[i].codMaterial }} - {{ form.value.materiais[i].nomeMaterial | uppercase }}
+                  </td>
+                  <td width="12%" class="text-center">{{ form.value.materiais[i].quantidade | number:'1.3-3' }} TON</td>
+                  <td width="12%" class="text-center">{{ form.value.materiais[i].valorUnit | currency:'BRL':symbol:'1.2-2' }}</td>
+                  <td width="12%" class="text-center">{{ form.value.materiais[i].valorTotal | currency:'BRL':symbol:'1.2-2' }}</td>
+                  <td width="14%">
+                    <input
+                      type="text"
+                      id="valorConcorrente"
+                      class="form-control text-center"
+                      formControlName="valorConcorrente"
+                      currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',', precision: 2 }">
+                  </td>
+                  <td width="15%" class="text-truncate">{{ form.value.materiais[i].nomeDeposito | uppercase }}</td>
+                </tr>
+                <tr>
+                  <td width="35%" class="text-right">TOTAL</td>
+                  <td width="12%" class="text-center">{{ calcularTotais('quantidade') | number:'1.3-3' }} TON</td>
+                  <td width="12%" class="text-center"></td>
+                  <td width="12%" class="text-center">{{ calcularTotais('valor') | currency:'BRL':'symbol':'1.2-2' }}</td>
+                  <td width="14%" class="text-center">{{ calcularTotais('concorrente') | currency:'BRL':'symbol':'1.2-2' }}</td>
+                  <td width="15%"></td>
+                </tr>
+              </ng-template>
+            </div>
+          </custom-table>
+        </div>
+      </div>
+    </form>
+    <div class="row mt-5">
+      <div class="col">
+        <span class="mtc-title mb-0 mr-2">Cotação realizada para:</span>
+        <span>{{ dataCotacao.razaoSocial | uppercase }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="onClose()"
+      [disabled]="submittingForm === true">
+      Fechar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="onSubmit()"
+      [disabled]="submittingForm === true">
+      Enviar
+    </button>
+  </div>
+</div>

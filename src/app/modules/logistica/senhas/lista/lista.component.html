@@ -1,0 +1,162 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="this.appTitle">
+  <button (click)="onReset()">
+    Limpar
+  </button>
+  <button 
+  [disabled]="form.status == 'INVALID'"
+  (click)="onSearch()">
+    Filtrar
+  </button>
+  <button [routerLink]="['./novo']" >
+    Novo
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row">
+        <!-- <div class="form-group col">
+          <label for="dtInicial">Data inicial</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="dtInicial"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            placeholder="Digite..."
+            formControlName="DT_INIC"
+          />
+          </div>
+        </div>
+        <div class="form-group col">
+          <label for="dtFinal">Data Final</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="dtFinal"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            placeholder="Digite..."
+            formControlName="DT_FINA"
+          />
+          </div>
+        </div> -->
+        <div class="form-group col">
+          <label for="usuario">Usuário</label>
+          <input
+            id="usuario" 
+            type="text" 
+            class="form-control" 
+            placeholder="DIGITE..." 
+            formControlName="DS_USUA"
+            (keyup.enter)="onSearch()">
+        </div>
+        <div class="form-group col">
+          <label for="senha">Senha</label>
+          <input
+            id="senha" 
+            type="text" 
+            class="form-control" 
+            placeholder="DIGITE..." 
+            formControlName="DS_SENH"
+            (keyup.enter)="onSearch()">
+        </div>
+        <div class="form-group col">
+          <label for="aplicacao">Aplicação</label>
+          <input
+            id="aplicacao" 
+            type="text" 
+            class="form-control" 
+            placeholder="DIGITE..." 
+            formControlName="DS_APLC"
+            (keyup.enter)="onSearch()">
+        </div>
+        <div class="form-group">
+          <label for="itensPorPagina">Registros</label>
+          <select
+            class="form-control custom-select"
+            (change)="setItensPerPage($event); onSearch()"
+            formControlName="TT_REGI_PAGI"
+            >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div  class="col-12 p-0" [hidden] = "loading || noResult">
+    <div>
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th class="text-center">Código</th>
+            <th class="text-center">Data de cadastro</th>
+            <th class="text-center">Usuário</th>
+            <th class="text-center">Senha</th>
+            <th class="text-center">Aplicação</th>
+            <th class="text-left"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>  
+          <tr *ngFor="let item of senhas; let i = index">
+            <td class="text-center" [ngClass]="item.IN_STAT == 1 ? 'border-success' : 'border-danger'">{{ item.ID_LOGI_SENH | number: '6.0-0'}}</td>
+            <td class="text-center">{{ item.DT_INCL | date: 'dd/MM/yyyy HH:mm'}}</td>
+            <td class="text-center">{{ item.DS_USUA}}</td>
+            <td class="text-center text-truncate">{{ item.DS_SENH }}</td>
+            <td class="text-center text-truncate">{{ item.DS_APLC }}</td>
+            <td class="text-right">
+              <a class="btn-icon-sm" [routerLink]="['./' + item.ID_LOGI_SENH]" routerLinkActive="router-link-active" >
+                <i class="far fa-edit"></i>
+              </a>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div>
+      Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 250px">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

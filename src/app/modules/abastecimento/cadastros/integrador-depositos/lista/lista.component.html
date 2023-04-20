@@ -1,0 +1,184 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Vínculo Integrador X Depósito">
+  <button type="button" (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-lg-3">
+          <label for="integrador">Integrador</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [multiple]="true"
+            [items]="integradores"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_APOI_INTE_PEDI"
+            bindValue="ID"
+            formControlName="integrador"
+          >
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="row">
+    <div
+      [ngClass]="{ 'col-12': !compressedTable, 'col-6 pr-0': compressedTable }"
+      *ngIf="loading"
+    >
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th scope="col" class="hover" (click)="sort('NM_APOI_INTE_PEDI')">
+              Integrador
+              <span *ngIf="key == 'NM_APOI_INTE_PEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_APOI_INTE_PEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th
+              scope="col"
+              class="hover"
+              [hidden]="compressedTable"
+              width="5%"
+            ></th>
+            <th
+              scope="col"
+              class="hover"
+              [hidden]="compressedTable"
+              width="5%"
+            ></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr
+            *ngFor="
+              let item of dados | orderBy: key:reverse | slice: begin:end;
+              let i = index
+            "
+          >
+            <td
+              class="text-center"
+              [ngClass]="[
+                item.select ? 'bg-row-selected' : '',
+                item.IN_STAT == 0 ? 'border-danger' : 'border-success'
+              ]"
+            >
+              {{ item.NM_APOI_INTE_PEDI }}
+            </td>
+            <td class="text-center" [hidden]="compressedTable" width="5%">
+              <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  tooltip="Editar"
+                  placement="left"
+                  container="body"
+                >
+                  <i class="fas fa-edit" (click)="onAdd(item)"> </i>
+                </button>
+              </div>
+            </td>
+            <td class="text-center" [hidden]="compressedTable" width="5%">
+              <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  (click)="openTab(item)"
+                  tooltip="Detalhes"
+                  placement="left"
+                  container="body"
+                >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="col-6">
+      <tabset [hidden]="!compressedTable">
+        <button
+          type="button"
+          class="btn-icon close position-absolute"
+          (click)="onClose()"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+        <tab heading="Detalhes">
+          <div
+            class="border-right border-left border-bottom px-3 pt-3"
+            style="overflow: auto; height: 338px;"
+          >
+            <custom-table *ngIf="!noResultDetalhes && loadingDetalhes">
+              <ng-template #thead let-thead>
+                <tr class="text-center">
+                  <th scope="col">Empresa</th>
+                  <th scope="col">Depósito</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of dadosDetalhes">
+                  <td class="text-left">{{ item.NM_EMPR }}</td>
+                  <td class="text-left">{{ item.NM_DEPO }}</td>
+                </tr>
+              </ng-template>
+            </custom-table>
+            <div
+              *ngIf="noResultDetalhes"
+              class="text-center d-flex justify-content-center align-items-center p-5"
+              style="height: 80%;"
+            >
+              <empty-result
+                message="Nenhuma informação encontrada"
+              ></empty-result>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+    <div
+      class="col-12 mb-2 ml-2"
+      *ngIf="!noResult && dados?.length > itemsPerPage"
+    >
+      Exibindo {{ begin + 1 }} a {{ end }} de {{ dados?.length }}
+      <div class="d-flex">
+        <pagination
+          [maxSize]="10"
+          [totalItems]="dados?.length"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="noResult"
+    class="text-center d-flex justify-content-center align-items-center p-5"
+    style="height: 80%;"
+  >
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

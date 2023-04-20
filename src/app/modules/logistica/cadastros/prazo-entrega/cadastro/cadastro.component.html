@@ -1,0 +1,90 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    [disabled]="form.valid === false"
+    (click)="postPrazoEntrega()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="regiaoEntrega">Región de Entrega</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="regioesEntrega"
+              [virtualScroll]="true"
+              labelForId="regiaoEntrega"
+              bindLabel="NM_REGI_ENTR"
+              bindValue="UUID"
+              id="regiaoEntrega"
+              formControlName="UUID_LOGI_REGI_ENTR"
+              placeholder="Selecione..."
+              [ngClass]="onFieldError('UUID_LOGI_REGI_ENTR') + ' ' + onFieldRequired('UUID_LOGI_REGI_ENTR')"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="filial">Subsidiaria</label>
+            <select
+              name="filial"
+              id="filial"
+              class="form-control"
+              formControlName="CD_FILI"
+              [ngClass]="onFieldError('CD_FILI') + ' ' + onFieldRequired('CD_FILI')"
+            >
+              <option value="18">Distribución Tietê</option>
+              <option value="79">Distribución Taipas</option>
+              <option value="06">Distribución Osasco</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="prazo">Plazo</label>
+            <input
+              type="number"
+              min="1"
+              class="form-control"
+              id="prazo"
+              formControlName="TT_PRZO"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('TT_PRZO') + ' ' + onFieldRequired('TT_PRZO')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('TT_PRZO')" message="Plazo é obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="status">Situación</label>
+            <select
+                name="status"
+                id="status"
+                class="form-control"
+                formControlName="IN_STAT"
+                [ngClass]="onFieldError('IN_STAT') + ' ' + onFieldRequired('IN_STAT')"
+            >
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('IN_STAT')" message="La situación es obligatoria."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="observacao" >Observación:</label>
+            <textarea class="form-control" id="observacao" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

@@ -1,0 +1,99 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row" *ngIf="!loaderFullScreen">
+  <div class="col">
+    <div class="mtc-title">Upload de anexos</div>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="tipoAnexo">Tipo de anexo</label>
+          <select
+            class="form-control"
+            id="tipoAnexo"
+            formControlName="tipoAnexo"            
+            [ngClass]="onFieldError('tipoAnexo') + ' ' + onFieldRequired('tipoAnexo')"
+            (change)="onChange()" 
+            >            
+            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option *ngFor="let item of tiposAnexo" [value]="item.id">{{ item.descricao }}</option>
+          </select>
+          <invalid-form-control [show]="onFieldInvalid('tipoAnexo')" message="Tipo de anexo é obrigatório."></invalid-form-control>
+        </div>
+        <div class="col-lg-12" formArrayName="anexos">
+          <div class="row">
+            <div class="col-lg-12 d-flex align-items-start">
+              <div class="mtc-title mb-0">Anexos</div>
+            </div>
+            <div class="col">
+              <label
+                for="novoAnexo"
+                class="d-flex justify-content-start align-items-center"
+                style="cursor: pointer"
+                [hidden]="visualizar"
+              >
+                <p class="btn btn-sm btn-outline-primary m-0">
+                  <i class="fas fa-plus"></i>
+                  <span>Anexo</span>
+                </p>
+              </label>
+              <input
+                id="novoAnexo"
+                type="file"
+                (change)="appendFile($event.target.files)"
+                class="d-none"
+              />
+            </div>
+          </div>
+          <div class="row" *ngIf="showAnexos && form.value.anexos.length > 0">
+            <div class="col">
+              <custom-table [config]="tableConfigAnexos">
+                <ng-template #tbody let-tbody>
+                  <tr
+                    *ngFor="let anexo of anexos.controls; let i = index"
+                    [formGroupName]="i"
+                  >
+                    <td style="width: 90%">
+                      {{ form.value.anexos[i].codAnexo }} -
+                      {{ form.value.anexos[i].nomeAnexo | uppercase }}
+                    </td>
+                    <td class="text-center" style="width: 5%">
+                      <a
+                        (click)="navegarAnexo(anexo)"
+                        *ngIf="form.value.anexos[i].codAnexo != null"
+                        target="_blank"
+                        class="btn-icon-sm mx-2 text-black"
+                        tooltip="visualizar"
+                      >
+                        <i class="far fa-eye"></i>
+                      </a>
+                    </td>
+                    <td class="text-center" style="width: 5%">
+                      <btn-icon
+                        icon="fas fa-trash"
+                        size="small"
+                        tooltip="Excluir"
+                        (click)="
+                          onDeleteAnexo(form.value.anexos[i].codAnexo, i)
+                        "
+                        [hidden]="visualizar"
+                      >
+                      </btn-icon>
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+            </div>
+          </div>
+          <div class="row" *ngIf="showAnexos && form.value.anexos.length === 0">
+            <div class="col">
+              <message
+                icon="fas fa-exchange-alt"
+                text="Nenhum documento encontrado"
+              >
+              </message>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

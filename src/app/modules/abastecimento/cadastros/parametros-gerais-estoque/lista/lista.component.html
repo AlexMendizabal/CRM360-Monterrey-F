@@ -1,0 +1,839 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Parâmetros Gerais de Estoque">
+  <button
+    type="button"
+    (click)="onFilter()"
+    [disabled]="form.status == 'INVALID'"
+  >
+    Filtrar
+  </button>
+  <button
+    type="button"
+    (click)="smModal.show()"
+    [disabled]="!ableButtonEditMassa"
+  >
+    Edição em massa
+  </button>
+  <button
+    type="button"
+    (click)="setDefaultValueFormModalNivelEstoque(null) + '' + smModal1.show()"
+    [disabled]="!ableButtonCallModal"
+  >
+    Calcular Nível Estoque
+  </button>
+  <button
+    type="button"
+    [disabled]="true"
+    (click)="OnExcel()"
+  >
+    Exportar Excel
+  </button>
+  <button
+    type="button"
+    [disabled]="!ableEditMassa"
+    (click)="OnSaveMassa()"
+  >
+    Salvar em massa
+  </button>
+  <button
+    type="button"
+    routerLink="../vinculo-deposito"
+    >
+    Vincular depósitos
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-lg-2">
+          <label for="tipoMateriais">Tipo de material</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="tipoMateriais"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_APOI_TIPO_MATE"
+            bindValue="ID"
+            formControlName="ID_TIPO_MATE"
+            [ngClass]="
+              onFieldError('ID_TIPO_MATE') + ' ' + onFieldRequired('ID_TIPO_MATE')
+            "
+          >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('ID_TIPO_MATE')"
+            message="Tipo de Materiais é obrigatório."
+          >
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="linhas">Linha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="linhas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            (change)="getSubLinhas() + '' + getClasses()"
+            placeholder="Selecione..."
+            bindLabel="NM_LINH"
+            bindValue="ID"
+            formControlName="ID_LINH"
+            [ngClass]="
+              onFieldError('ID_LINH') + ' ' + onFieldRequired('ID_LINH')
+            "
+            >
+          </ng-select>
+          <invalid-form-control
+            [show]="onFieldInvalid('ID_LINH')"
+            message="Linha é obrigatório."
+          >
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="subLinhas">Sublinha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="subLinhas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            (change)="getClasses()"
+            placeholder="Selecione..."
+            bindLabel="NM_SUB_LINH"
+            bindValue="ID"
+            formControlName="ID_SUB_LINH"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="classes">Classe</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="classes"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            (change)="getMateriais()"
+            placeholder="Selecione..."
+            bindLabel="NM_CLAS"
+            bindValue="ID"
+            formControlName="ID_CLAS"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="empresas">Empresa</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="empresas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            (change)="getDepositos()" 
+            placeholder="Selecione..."
+            bindLabel="NM_FANT"
+            bindValue="ID"
+            formControlName="ID_EMPR"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="depositos">Depósitos</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="depositos"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            placeholder="Selecione..."
+            bindLabel="NM_DEPO"
+            bindValue="ID"
+            formControlName="ID_DEPO"
+            >
+          </ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-6">
+          <label for="materiais">Material</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="materiais"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            placeholder="Selecione..."
+            bindLabel="ID_REFE_ERP_NM_MATE"
+            bindValue="ID"
+            formControlName="ID_MATE"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="situacoes">Situação</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="situations"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_SITU"
+            bindValue="ID"
+            formControlName="IN_STAT"
+            [ngClass]="
+              onFieldError('IN_STAT') + ' ' + onFieldRequired('IN_STAT')
+            "
+            >
+            <invalid-form-control
+              [show]="onFieldInvalid('IN_STAT')"
+              message="Situação é obrigatório."
+            >
+            </invalid-form-control>
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="row" *ngIf="loading">
+    <div class="col-lg-6">
+      <subtitles [data]="subtitles" [show]="loading"> </subtitles>
+    </div>
+    <div class="col-lg-6 d-flex justify-content-end" *ngIf="ableEditMassa">
+      <p>
+        <strong>PERÍODO DE VENDAS SIMULADO:</strong> {{ periodoVendasMassa }} MESES
+      </p>
+    </div>
+  </div>
+  <div class="row m-0">
+    <div class="table-responsive" [ngClass]="{'col-12': !compressedTable, 'col-7 pr-0': compressedTable}" *ngIf="loading">
+      <custom-table [config]="tableConfig">
+        <ng-template let-thead #thead>
+          <tr class="text-center">
+            <th nowrap scope="col" class="hover" (click)="sort('NM_TIPO_MATE')">
+              Tipo material
+              <span *ngIf="key == 'NM_TIPO_MATE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NM_TIPO_MATE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NM_LINH')" [hidden]="colsNivelEstoque || ableEditMassa">
+              Linha
+              <span *ngIf="key == 'NM_LINH'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NM_LINH'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NM_SUB_LINH')" [hidden]="colsNivelEstoque || ableEditMassa">
+              Sublinha
+              <span *ngIf="key == 'NM_SUB_LINH'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NM_SUB_LINH'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NM_CLAS')">
+              Classe
+              <span *ngIf="key == 'NM_CLAS'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NM_CLAS'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NM_EMPR')" [hidden]="colsNivelEstoque || ableEditMassa">
+              Empresa
+              <span *ngIf="key == 'NM_EMPR'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NM_EMPR'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NM_DEPO')">
+              Depósito
+              <span *ngIf="key == 'NM_DEPO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('TT_PERI_VEND_MESE')" [hidden]="colsNivelEstoque">
+              Per. vendas
+              <span *ngIf="key == 'TT_PERI_VEND_MESE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'TT_PERI_VEND_MESE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" [hidden]="colsNivelEstoque">
+              Período
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('TT_MEDI_VEND_PERI')" [hidden]="colsNivelEstoque">
+              Média Vendas
+              <span *ngIf="key == 'TT_MEDI_VEND_PERI'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'TT_MEDI_VEND_PERI'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('TT_ESTO_DISP')">
+              Estoque Disponível
+              <span *ngIf="key == 'TT_ESTO_DISP'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'TT_ESTO_DISP'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NR_DIAS_GIRO')" [hidden]="colsNivelEstoque">
+              GIRO
+              <span *ngIf="key == 'NR_DIAS_GIRO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NR_DIAS_GIRO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover">
+            <!-- <th nowrap scope="col" class="hover" (click)="sort('DS_APOI_TIPO_NIVE_ESTO')"> -->
+              Nível Estoque
+              <button
+                class="btn-icon-sm"
+                (click)="setColsNivelEstoqueTrue()"
+              >
+                <i
+                  [ngClass]="colsNivelEstoque ? 'fas fa-minus' : 'fas fa-plus'"
+                  title="Mostrar Nivel Estoque"
+                  aria-hidden="true"
+                ></i>
+              </button>
+              <!-- <span *ngIf="key == 'DS_APOI_TIPO_NIVE_ESTO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DS_APOI_TIPO_NIVE_ESTO'"><i [ngClass]="'fas fa-sort'"></i></span> -->
+            </th>
+            <th nowrap scope="col" (click)="sort('TT_ESTO_MINI')" *ngIf="colsNivelEstoque">
+              Estoque mínimo
+              <span *ngIf="key == 'TT_ESTO_MINI'"
+                ><i
+                  [ngClass]="
+                    reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="key != 'TT_ESTO_MINI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th nowrap scope="col" (click)="sort('TT_ESTO_MEDI')" *ngIf="colsNivelEstoque">
+              Estoque médio
+              <span *ngIf="key == 'TT_ESTO_MEDI'"
+                ><i
+                  [ngClass]="
+                    reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="key != 'TT_ESTO_MEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th nowrap scope="col" (click)="sort('TT_ESTO_MAXI')" *ngIf="colsNivelEstoque">
+              Estoque máximo
+              <span *ngIf="key == 'TT_ESTO_MAXI'"
+                ><i
+                  [ngClass]="
+                    reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="key != 'TT_ESTO_MAXI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th nowrap scope="col" (click)="sort('DS_APOI_TIPO_NIVE_ESTO')" *ngIf="colsNivelEstoque">
+              % Variação
+              <span *ngIf="key == 'DS_APOI_TIPO_NIVE_ESTO'"
+                ><i
+                  [ngClass]="
+                    reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="key != 'DS_APOI_TIPO_NIVE_ESTO'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th nowrap scope="col" (click)="sort('DS_APOI_TIPO_NIVE_ESTO')" *ngIf="colsNivelEstoque">
+              Último cálculo
+              <span *ngIf="key == 'DS_APOI_TIPO_NIVE_ESTO'"
+                ><i
+                  [ngClass]="
+                    reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "
+                ></i
+              ></span>
+              <span *ngIf="key != 'DS_APOI_TIPO_NIVE_ESTO'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th nowrap scope="col" class="hover bg-secondary text-white" (click)="sort('TT_MESE_PERI_VEND_SIMU')" [hidden]="colsNivelEstoque || !ableEditMassa">
+              Per. vendas(Simulado)
+              <span *ngIf="key == 'TT_MESE_PERI_VEND_SIMU'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'TT_MESE_PERI_VEND_SIMU'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover bg-secondary text-white" [hidden]="colsNivelEstoque || !ableEditMassa">
+              Período(Simulado)
+            </th>
+            <th nowrap scope="col" class="hover bg-secondary text-white" (click)="sort('TT_MEDI_VEND_PERI_SIMU')" [hidden]="colsNivelEstoque || !ableEditMassa">
+              Média Vendas(Simulado)
+              <span *ngIf="key == 'TT_MEDI_VEND_PERI_SIMU'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'TT_MEDI_VEND_PERI_SIMU'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" [hidden]="colsNivelEstoque || ableEditMassa" width="4%"></th>
+            <th nowrap scope="col" class="hover" [ngClass]="ableEditMassa ? 'bg-secondary' : ''" [hidden]="colsNivelEstoque" width="4%"></th>
+            <th nowrap scope="col" class="hover" [hidden]="colsNivelEstoque || ableEditMassa" width="4%"></th>
+          </tr>
+        </ng-template>
+        <ng-template let-tbody #tbody>
+          <tr *ngFor="let item of data | orderBy: key:reverse | slice: begin:end">
+            <td nowrap class="text-left" [ngClass]="{
+              'border-danger' :  item.IN_STAT == 0,
+              'border-success' :  item.IN_STAT == 1,
+              'bg-row-selected' :  item.SELECTED
+              }">
+              {{ item.NM_TIPO_MATE }}
+            </td>        
+            <td nowrap class="text-left" [hidden]="colsNivelEstoque || ableEditMassa">{{ item.NM_LINH }}</td>        
+            <td nowrap class="text-center" [hidden]="colsNivelEstoque || ableEditMassa">{{ item.NM_SUB_LINH ? item.NM_SUB_LINH : "-" }}</td>    
+            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-center">{{ item.NM_CLAS }}</td>        
+            <td nowrap class="text-left" [hidden]="colsNivelEstoque || ableEditMassa">{{ item.NM_EMPR }}</td>        
+            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-left">{{ item.NM_DEPO }}</td>              
+            <td nowrap class="text-center" [hidden]="colsNivelEstoque">
+              <span *ngIf="!item.ON_EDIT_CELL || ableEditMassa">
+                {{ item.TT_PERI_VEND_MESE | number: '0.0' }}
+                <!-- <span class="btn-icon-sm ml-1">
+                  <i 
+                    class="fas fa-info-circle" 
+                    tooltip="Há materiais com parametrizações diferentes" 
+                    aria-hidden="true"
+                  >
+                  </i>
+                </span> -->
+              </span>
+              <div class="d-flex align-items-center justify-content-end" *ngIf="item.ON_EDIT_CELL && !ableEditMassa">
+                <input
+                  style="max-width: 80px;"
+                  type="text"
+                  class="form-control form-control-sm"
+                  placeholder="0"
+                  [(ngModel)]="item.FORM_PERI_VEND"
+                  #FORM_PERI_VEND_VALI="ngModel"
+                  [ngClass]="{ 'is-invalid': FORM_PERI_VEND_VALI.invalid && (FORM_PERI_VEND_VALI.dirty || FORM_PERI_VEND_VALI.touched) }" 
+                  required
+                />
+                <!-- name="toneladaEditado_{{i}}" -->
+                <button class="btn-icon-sm ml-1" (click)="calculateMediaVendas(item)">
+                  <i class="fas fa-sync text-success" tooltip="Calcular"></i>
+                </button>
+              </div>
+            </td>        
+            <td nowrap class="text-center" [hidden]="colsNivelEstoque"> 
+              <span *ngIf="!item.ON_EDIT_CELL || ableEditMassa"> 
+                {{ item.DT_INIC_PERI_VEND ? (item.DT_INIC_PERI_VEND | date: 'dd/MM/yyy') : '--/--/----' }} 
+                  à 
+                {{ item.DT_FINA_PERI_VEND ? (item.DT_FINA_PERI_VEND | date: 'dd/MM/yyy') : '--/--/----' }} 
+              </span>
+              <span class="text-danger" *ngIf="item.ON_EDIT_CELL  && !ableEditMassa"> 
+                {{ item.DATE_STAR_CALC ? (item.DATE_STAR_CALC | date: 'dd/MM/yyyy') : '--/--/----' }} 
+                  à 
+                {{ item.DATE_END_CALC ? (item.DATE_END_CALC | date: 'dd/MM/yyyy') : '--/--/----' }} 
+              </span>
+            </td>        
+            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-center" [hidden]="colsNivelEstoque"> 
+              <span *ngIf="!item.ON_EDIT_CELL || ableEditMassa"> 
+                {{ item.TT_MEDI_VEND_PERI | number: '0.3'}} 
+              </span>
+              <span class="text-danger" *ngIf="item.ON_EDIT_CELL  && !ableEditMassa"> 
+                {{ item.MEDI_VEND_CALC ? (item.MEDI_VEND_CALC | number:'0.3') : '0,000'}}
+              </span>
+            </td>        
+            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-center"> {{ item.TT_ESTO_DISP | number: '0.3'}} </td>        
+            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-center" [hidden]="colsNivelEstoque"> {{ item.NR_DIAS_GIRO | number: '0.0'}} </td>        
+            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-right"> 
+              {{ item.DS_APOI_TIPO_NIVE_ESTO }}
+              <button 
+                class="btn-icon-sm" 
+                (click)="setDefaultValueFormModalNivelEstoque(item) + '' +smModal1.show()"
+                [disabled]="item.TT_PERI_VEND_MESE == 0 || item.TT_PERI_VEND_MESE == null" 
+                *ngIf="!item.ON_EDIT_CELL"
+              >
+                <i class="fas fa-calculator" tooltip="Calcular nível de estoque"></i>
+              </button>
+            </td>
+            <td nowrap class="text-center" [hidden]="!colsNivelEstoque">{{colsNivelEstoque ? item.TT_DIAS_ESTO_MINI + ' dias - ' : ''}} {{item.TT_ESTO_MINI | number: '0.3'}}</td>
+            <td nowrap class="text-center" [hidden]="!colsNivelEstoque">{{colsNivelEstoque ? item.TT_DIAS_ESTO_MEDI + ' dias - ' : ''}} {{item.TT_ESTO_MEDI | number: '0.3'}}</td>
+            <td nowrap class="text-center" [hidden]="!colsNivelEstoque">{{colsNivelEstoque ? item.TT_DIAS_ESTO_MAXI + ' dias - ' : ''}} {{item.TT_ESTO_MAXI | number: '0.3'}}</td>
+            <td nowrap class="text-center" [hidden]="!colsNivelEstoque">{{ item.TT_PERC_VARI_CONS ?  (item.TT_PERC_VARI_CONS | number: '0.2'): (0 | number:'0.2') }} %</td>
+            <td nowrap class="text-center" [hidden]="!colsNivelEstoque">{{ item.DT_ULTI_CALC_ESTO ? (item.DT_ULTI_CALC_ESTO | date: 'dd/MM/yyyy HH:mm') : '--/--/----  --:--' }}</td>
+            <td nowrap class="bg-secondary text-center text-white" [hidden]="colsNivelEstoque || !ableEditMassa">
+              <span *ngIf="!item.ON_EDIT_CELL">
+                {{ item.TT_MESE_PERI_VEND_SIMU }}
+              </span>
+              <div class="d-flex align-items-center justify-content-end" *ngIf="item.ON_EDIT_CELL">
+                <input
+                  style="max-width: 80px;"
+                  type="text"
+                  class="form-control form-control-sm"
+                  placeholder="0"
+                  [(ngModel)]="item.FORM_PERI_VEND"
+                  #FORM_PERI_VEND_VALI="ngModel"
+                  [ngClass]="{ 'is-invalid': FORM_PERI_VEND_VALI.invalid && (FORM_PERI_VEND_VALI.dirty || FORM_PERI_VEND_VALI.touched) }" 
+                  required
+                />
+                <!-- name="toneladaEditado_{{i}}" -->
+                <button class="btn-icon-sm ml-1" (click)="calculateMediaVendas(item)">
+                  <i class="fas fa-sync text-success" tooltip="Calcular"></i>
+                </button>
+              </div>
+            </td>        
+            <td nowrap class="bg-secondary text-center text-white" [hidden]="colsNivelEstoque || !ableEditMassa">
+              <span *ngIf="!item.ON_EDIT_CELL"> 
+                {{ item.DT_INIC_PERI_VEND_SIMU ? (item.DT_INIC_PERI_VEND_SIMU | date: 'dd/MM/yyy') : '--/--/----' }} 
+                  à 
+                {{ item.DT_FINA_PERI_VEND_SIMU ? (item.DT_FINA_PERI_VEND_SIMU | date: 'dd/MM/yyy') : '--/--/----' }} 
+              </span>
+              <span class="text-warning" *ngIf="item.ON_EDIT_CELL"> 
+                {{ item.DATE_STAR_CALC ? (item.DATE_STAR_CALC | date: 'dd/MM/yyyy') : '--/--/----' }} 
+                  à 
+                {{ item.DATE_END_CALC ? (item.DATE_END_CALC | date: 'dd/MM/yyyy') : '--/--/----' }} 
+              </span>
+            </td>        
+            <td nowrap class="bg-secondary text-center text-white" [hidden]="colsNivelEstoque || !ableEditMassa">
+              <span *ngIf="!item.ON_EDIT_CELL">
+                {{ item.TT_MEDI_VEND_PERI_SIMU | number:'0.3' }}
+              </span>
+              <span class="text-warning" *ngIf="item.ON_EDIT_CELL"> 
+                {{ item.MEDI_VEND_CALC ? (item.MEDI_VEND_CALC | number:'0.3') : '0,000'}}
+              </span>              
+            </td>        
+            <td nowrap class="text-center"  [hidden]="colsNivelEstoque || ableEditMassa" width="4%">
+              <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  tooltip="Salvar"
+                  (click)="onEdit(item)"
+                  [disabled]="(item.FORM_PERI_VEND == '' || item.FORM_PERI_VEND == null) || !item.BOOL_CALC"
+                >
+                <i class="fas fa-save"></i>
+                </button>
+              </div>
+            </td>       
+            <td nowrap class="text-center" [ngClass]="ableEditMassa ? 'bg-secondary' : ''" [hidden]="colsNivelEstoque" width="4%">
+              <div *ngIf="!item.ON_EDIT_CELL">
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  placement="left"
+                  (click)="ableEditCell(item)"
+                >
+                  <i
+                    class="fas fa-edit"
+                    [ngClass]="ableEditMassa ? 'text-white' : ''" 
+                    tooltip="Editar"
+                  >
+                  </i>
+                </button>
+              </div>
+              <div *ngIf="item.ON_EDIT_CELL">
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  placement="left"
+                  (click)="disableEditCell(item)"
+                >
+                  <i
+                    class="fas fa-times text-danger"
+                    [ngClass]="ableEditMassa ? 'text-white' : ''" 
+                    tooltip="Cancelar edição"
+                  >
+                  </i>
+                </button>
+              </div>
+            </td>       
+            <td nowrap  class="text-center" [hidden]="colsNivelEstoque || ableEditMassa" width="4%">
+              <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  tooltip="Detalhes materiais"
+                  placement="left"
+                  (click)="onDetails(item)"
+                >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </td>       
+          </tr>
+          <tr>
+            <td nowrap class="bg-dark text-white text-left border-dark">TOTAL</td>        
+            <td nowrap class="bg-dark text-white text-left" [hidden]="colsNivelEstoque || ableEditMassa"></td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || ableEditMassa"></td>    
+            <td nowrap class="bg-dark text-white text-center"></td>        
+            <td nowrap class="bg-dark text-white text-left" [hidden]="colsNivelEstoque || ableEditMassa"></td>        
+            <td nowrap class="bg-dark text-white text-left"></td>              
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"></td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"></td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"> {{ dataTotal['TT_MEDI_VEND_PERI'] | number: '0.3' }} </td>        
+            <td nowrap class="bg-dark text-white text-center"> {{ dataTotal['TT_ESTO_DISP'] | number: '0.3' }} </td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"> {{ dataTotal['NR_DIAS_GIRO'] | number: '0.0' }} </td>        
+            <td nowrap class="bg-dark text-white text-center"></td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || !ableEditMassa"></td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || !ableEditMassa"></td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || !ableEditMassa"> {{ dataTotal['TT_MEDI_VEND_PERI_SIMU'] | number: '0.3' }}</td>        
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || ableEditMassa"></td>       
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"></td>       
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || ableEditMassa"></td>       
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="col-lg-12 mb-2 ml-2" *ngIf="data.length > itemsPerPage && loading">
+      Exibindo {{ begin + 1 }} a {{ end }} de {{ data?.length }}
+      <div class="d-flex">
+        <pagination
+          [maxSize]="10"
+          [totalItems]="data?.length"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div
+      *ngIf="noResult"
+      class="col-lg-12 d-flex justify-content-center align-items-center p-5"
+      style="height: 80%;"
+    >
+      <empty-result message="Nenhuma informação encontrada"></empty-result>
+    </div>
+  </div>
+</app-body>
+<!-- Modal Edição em massa -->
+<div bsModal #smModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name2">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name2" class="modal-title pull-left">Período de Vendas</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="smModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label for="TT_MESE_PERI_VEND_SIMU">Meses</label>
+              <input
+                placeholder="INSERIR..."
+                formControlName="TT_MESE_PERI_VEND_SIMU"
+                class="form-control"
+              >
+            </div>
+          </div>
+        </form>
+        <div class="d-flex justify-content-end">
+          <button 
+            class="btn btn-primary"
+            (click)="OnEditMassa() + '' + smModal.hide()"
+          >
+            Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Calcular Nível de estoque -->
+<div bsModal #smModal1="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name2">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name2" class="modal-title pull-left" *ngIf="ableHeaderModalNivelEstoque">Calcular Nível Estoque - Por Classe</h4>
+        <h4 id="dialog-sizes-name2" class="modal-title pull-left" *ngIf="!ableHeaderModalNivelEstoque">Calcular Nível Estoque - Em Massa</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="smModal1.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="ableHeaderModalNivelEstoque">
+          <div class="row">
+            <div class="col-lg-4">
+              <p>
+                <strong>TIPO DE MATERIAL</strong><br />
+                {{ headerModalTipoMaterial }}
+              </p>
+            </div>
+            <div class="col-lg-4">
+              <p>
+                <strong>DEPÓSITO</strong><br />
+                {{ headerModalDeposito }}
+              </p>
+            </div>
+            <div class="col-lg-4">
+              <p>
+                <strong>CLASSE</strong><br />
+                {{ headerModalClasse }}
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4">
+              <p>
+                <strong>PERÍODO</strong><br />
+                {{ headerModalPeriodo | number: '0.0' }}
+              </p>
+            </div>
+            <div class="col-lg-4">
+              <p>
+                <strong>MÉDIA DE VENDAS</strong><br />
+                {{ headerModalMediaVendas | number: '0.3' }}
+              </p>
+            </div>
+            <div class="col-lg-4">
+              <p>
+                <strong>ESTOQUE DISPONÍVEL</strong><br />
+                {{ headerModalEstoqueDisponivel | number: '0.3' }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <form [formGroup]="formModal" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label for="PERC_VARI_CONS">% Variação de consumo </label>
+              <input
+                type="text"
+                id="DIAS_ESTO_MINI"
+                placeholder="INSERIR..."
+                formControlName="PERC_VARI_CONS"
+                currencyMask
+                [options]="decimal"
+                placeholder="0,00"
+                class="form-control"
+                [ngClass]="
+                  onFieldErrorModal('PERC_VARI_CONS') + ' ' + onFieldRequiredModal('PERC_VARI_CONS')
+                "
+              >
+              <invalid-form-control
+                [show]="onFieldInvalidModal('PERC_VARI_CONS')"
+                message="% Variação de consumo é obrigatório."
+              >
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-lg-6 mt-4">
+              <div class="custom-control custom-radio custom-control-inline">
+                <input
+                  type="radio"
+                  id="TIPO_VARI_POSI"
+                  name="TIPO_VARI"
+                  class="custom-control-input"
+                  value="1"
+                  formControlName="TIPO_VARI">
+                <label class="custom-control-label" for="TIPO_VARI_POSI">Aumento</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input
+                  type="radio"
+                  id="TIPO_VARI_NEGA"
+                  name="TIPO_VARI"
+                  class="custom-control-input"
+                  value="0"
+                  formControlName="TIPO_VARI">
+                <label class="custom-control-label" for="TIPO_VARI_NEGA">Redução</label>
+              </div>
+              <!-- <invalid-form-control [show]="onFieldInvalid('TIPO_VARI')" message="Tipo variação é obrigatório."></invalid-form-control> -->
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-4">
+              <label for="DIAS_ESTO_MINI">Dias de estoque mínimo</label>
+              <input
+                type="number"
+                id="DIAS_ESTO_MINI"
+                placeholder="INSERIR..."
+                formControlName="DIAS_ESTO_MINI"
+                class="form-control"
+                [ngClass]="
+                onFieldErrorModal('DIAS_ESTO_MINI') + ' ' + onFieldRequiredModal('DIAS_ESTO_MINI')
+                "
+              >
+              <invalid-form-control
+                [show]="onFieldInvalidModal('DIAS_ESTO_MINI')"
+                message="Dias de estoque mínimo é obrigatório."
+              >
+              </invalid-form-control>
+              <invalid-form-control
+                  [show]="compareValuesEstoque('DIAS_ESTO_MINI')"
+                  message="Deve ser menor que volume máximo ou segurança"
+                  >
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="DIAS_ESTO_MEDI">Dias de estoque médio</label>
+              <input
+                type="number"
+                id="DIAS_ESTO_MEDI"
+                placeholder="INSERIR..."
+                formControlName="DIAS_ESTO_MEDI"
+                class="form-control"
+                [ngClass]="
+                onFieldErrorModal('DIAS_ESTO_MEDI') + ' ' + onFieldRequiredModal('DIAS_ESTO_MEDI')
+                "
+              >
+              <invalid-form-control
+                [show]="onFieldInvalidModal('DIAS_ESTO_MEDI')"
+                message="Dias de estoque médio é obrigatório."
+              >
+              </invalid-form-control>
+              <invalid-form-control
+                  [show]="compareValuesEstoque('DIAS_ESTO_MEDI')"
+                  message="Deve ser menor que máximo ou maior que mínimo"
+                  >
+                </invalid-form-control>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="DIAS_ESTO_MAXI">Dias de estoque máximo</label>
+              <input
+                type="number"
+                id="DIAS_ESTO_MAXI"
+                placeholder="INSERIR..."
+                formControlName="DIAS_ESTO_MAXI"
+                class="form-control"
+                [ngClass]="
+                onFieldErrorModal('DIAS_ESTO_MAXI') + ' ' + onFieldRequiredModal('DIAS_ESTO_MAXI')
+                "
+              >
+              <invalid-form-control
+                [show]="onFieldInvalidModal('DIAS_ESTO_MAXI')"
+                message="Dias de estoque máximo é obrigatório."
+              >
+              </invalid-form-control>
+              <invalid-form-control
+                [show]="compareValuesEstoque('DIAS_ESTO_MAXI')"
+                message="Deve ser maior que mínimo ou segurança"
+              >
+              </invalid-form-control>
+            </div>
+          </div>
+        </form>
+        <div class="d-flex justify-content-end">
+          <button 
+            class="btn btn-primary"
+            (click)="OnSaveNivelEstoque() + '' + smModal1.hide()"
+            [disabled]="formModal.status == 'INVALID' || !validatorsSaveModal()"
+          >
+            Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

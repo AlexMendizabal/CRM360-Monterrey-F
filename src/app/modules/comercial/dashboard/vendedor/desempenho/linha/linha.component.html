@@ -1,0 +1,59 @@
+<div class="border rounded bg-white shadow-sm p-3">
+  <div class="d-flex justify-content-between mb-3">
+    <div class="mtc-title mb-0">
+      <i
+        class="far fa-question-circle p-2"
+        tooltip="Faturamento em toneladas por linha do mês atual e do mês anterior."
+        placement="right">
+      </i>
+      Desempenho por linha
+    </div>
+    <div class="btn-group btn-group-sm" *ngIf="currMonth && pastMonth">
+      <button
+        type="button"
+        class="btn btn-light"
+        (click)="setMonth('past', pastMonth)"
+        [ngClass]="{'active': activeMonth == pastMonth}"
+        [disabled]="!linhasLoaded">
+        <strong>{{ pastMonth }}</strong>
+      </button>
+      <button
+        type="button"
+        class="btn btn-light active"
+        (click)="setMonth('current', currMonth)"
+        [ngClass]="{'active': activeMonth == currMonth}"
+        [disabled]="!linhasLoaded">
+        <strong>{{ currMonth }}</strong>
+      </button>
+    </div>
+  </div>
+  <div class="row align-items-center" id="analytic-performance">
+    <div class="col">
+      <custom-table [config]="tableConfig" *ngIf="linhasLoaded && !linhasEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col">Linha</th>
+            <th scope="col" class="text-center">TON</th>
+            <th scope="col" class="text-center">R$</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let linha of linhas; let i = index">
+            <td>{{ linha.linha }}</td>
+            <td class="text-center">{{ linha.ton | number:'1.3-3' }}t</td>
+            <td class="text-center">{{ linha.valor | currency:'BRL' }}</td>
+          </tr>
+          <tr>
+            <td class="bg-dark text-white"><b>Faturamento total</b></td>
+            <td class="bg-dark text-white text-center"><b>{{ totais.ton | number:'1.3-3' }}t</b></td>
+            <td class="bg-dark text-white text-center"><b>{{ totais.valor | currency:'BRL' }}</b></td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result message="Nenhuma informação encontrada" *ngIf="linhasLoaded && linhasEmpty"></empty-result>
+      <div *ngIf="!linhasLoaded" class="text-center">
+        <div class="spinner-border text-dark"></div>
+      </div>
+    </div>
+  </div>
+</div>

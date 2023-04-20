@@ -1,0 +1,110 @@
+<div class="row mb-2 mt-2">
+  <div class="col-3">
+    <p style="font-size: 14px;">
+      <strong> CLASSE: </strong> {{ modal.NM_CLAS }}
+    </p>
+  </div>
+  <div class="col-4">
+    <p style="font-size: 14px;">
+      <strong> SUBLINHA: </strong> {{ modal.NM_SUB_LINH ? modal.NM_SUB_LINH : '-' }}
+    </p>
+  </div>
+  <div class="col-2">
+    <p style="font-size: 14px;">
+      <strong> LINHA: </strong> {{ modal.NM_LINH }}
+    </p>
+  </div>
+  <div class="col-2">
+    <p style="font-size: 14px;">
+      <strong> PER. INATIVO: </strong> 8
+    </p>
+  </div>
+</div>
+<div class="table-responsive">
+  <custom-table *ngIf="loadingLogs">
+    <ng-template #thead let-thead>
+      <tr class="text-center">
+        <th scope="col" (click)="sort('ID_REFE_ERP')">
+          Código
+          <span *ngIf="key == 'ID_REFE_ERP'"><i [ngClass]="
+                reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "></i></span>
+          <span *ngIf="key != 'ID_REFE_ERP'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th scope="col" (click)="sort('NM_CLAS')">
+          Classe
+          <span *ngIf="key == 'NM_CLAS'"><i [ngClass]="
+                reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "></i></span>
+          <span *ngIf="key != 'NM_CLAS'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th scope="col" (click)="sort('NM_SUB_LINH')">
+          Sub Linha
+          <span *ngIf="key == 'NM_SUB_LINH'"><i [ngClass]="
+                reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "></i></span>
+          <span *ngIf="key != 'NM_SUB_LINH'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th scope="col" (click)="sort('NM_LINH')">
+          Linha
+          <span *ngIf="key == 'NM_LINH'"><i [ngClass]="
+                reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "></i></span>
+          <span *ngIf="key != 'NM_LINH'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th scope="col" (click)="sort('DS_STAT')">
+          Situação
+          <span *ngIf="key == 'DS_STAT'"><i [ngClass]="
+                reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "></i></span>
+          <span *ngIf="key != 'DS_STAT'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th scope="col" (click)="sort('DT_ACAO')">
+          Data Ação
+          <span *ngIf="key == 'DT_ACAO'"><i [ngClass]="
+                reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "></i></span>
+          <span *ngIf="key != 'DT_ACAO'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th scope="col" (click)="sort('NM_ACAO')">
+          Ação
+          <span *ngIf="key == 'NM_ACAO'"><i [ngClass]="
+                reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "></i></span>
+          <span *ngIf="key != 'NM_ACAO'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th scope="col" (click)="sort('NM_USUA')">
+          Usuário
+          <span *ngIf="key == 'NM_USUA'"><i [ngClass]="
+                reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "></i></span>
+          <span *ngIf="key != 'NM_USUA'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template #tbody let-tbody>
+      <tr *ngFor="let item of dataLogs | orderBy: key:reverse | slice: begin:end; let i = index">
+        <td class="text-center">{{ item.ID_REFE_ERP }}</td>
+        <td class="text-center">{{ item.NM_CLAS }}</td>
+        <td class="text-center">{{ item.ID_SUB_LINH ? item.ID_SUB_LINH : '-' }}</td>
+        <td class="text-center">{{ item.NM_LINH }}</td>
+        <td class="text-center">{{ item.DS_STAT }}</td>
+        <td class="text-center">
+          {{ item.DT_ACAO | date: 'dd/MM/yyyy HH:mm' }}
+        </td>
+        <td class="text-center">{{ item.NM_ACAO }}</td>
+        <td class="text-center">{{ item.NM_USUA }}</td>
+      </tr>
+    </ng-template>
+  </custom-table>
+</div>
+<div class="col-12 mt-2" *ngIf="dataLogs.length > itemsPerPage && loadingLogs">
+  Exibindo {{ begin + 1 }} a {{ end }} de {{ dataLogs?.length }}
+  <pagination [maxSize]="10" [totalItems]="dataLogs?.length" (pageChanged)="onPageChanged($event)"
+    [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
+    nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+  </pagination>
+</div>
+<div *ngIf="noResultLogs" class="text-center d-flex justify-content-center align-items-center p-5" style="height: 80%;">
+  <empty-result message="Nenhuma informação encontrada"></empty-result>
+</div>

@@ -1,0 +1,177 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      
+      <div [hidden]="form.getRawValue().codMaterial != null">
+        <comercial-cadastros-materiais-templates-material-principal
+          [linhas]="linhas"
+          [classes]="classes"
+          [limparMaterialSelecionado]="limparMaterialPrincipal"
+          (loaderNavbar)="onLoaderNavbar($event)"
+          (materialPrincipal)="materialPrincipal($event)">
+        </comercial-cadastros-materiais-templates-material-principal>
+
+        <div class="row">
+          <div class="col">
+            <hr>
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="form">
+        <div [hidden]="form.getRawValue().codMaterial === null">
+          <div class="row mb-3">
+            <div class="col mt-auto">
+              <div class="mtc-title mb-0">Dados do Material</div>
+            </div>
+            <div class="col" *ngIf="form.getRawValue().codMaterial != null && form.getRawValue().codFichaCadastral == null">
+              <div class="d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="onLimparMaterialPrincipal()">
+                  <i class="fas fa-trash"></i>
+                  <span>Limpar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-2">
+              <label for="codMaterial">Cód. Mat</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nomeGrupo"
+                formControlName="codMaterial"
+                (input)="onInput()"
+                disabled
+                (click)="buscaMate()"
+                (blur)="buscaMate()"
+                autocomplete="new-password"
+                [ngClass]="onFieldError('codMaterial') + ' ' + onFieldRequired(form.controls.codMaterial)">
+              <invalid-form-control [show]="onFieldInvalid('codMaterial')" message="Código é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-8">
+              <label for="nomeMaterial">Material</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nomeGrupo"
+                formControlName="nomeMaterial"
+                (input)="onInput()"
+                disabled
+                autocomplete="new-password"
+                [ngClass]="onFieldError('nomeMaterial') + ' ' + onFieldRequired(form.controls.nomeMaterial)">
+              <invalid-form-control [show]="onFieldInvalid('nomeMaterial')" message="Material é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="codSituacao">Situação</label>
+              <select
+                class="form-control custom-select"
+                id="codSituacao"
+                formControlName="codSituacao"
+                [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
+                <option value="1">Ativo</option>
+                <option value="0">Inativo</option>
+              </select>
+              <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação é obrigatório."></invalid-form-control>
+            </div>
+          </div>        
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="descMaterial">Descrição</label>
+              <textarea 
+                class="form-control" 
+                rows="10" 
+                id="descMaterial"
+                formControlName="descMaterial"
+                (input)="onInput()"
+                autocomplete="new-password"
+                [ngClass]="onFieldError('descMaterial') + ' ' + onFieldRequired(form.controls.descMaterial)"></textarea>
+              <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Descrição é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div formArrayName="anexos">
+            <div class="row">
+              <div class="col d-flex align-items-start">
+                <div class="mtc-title mb-0">Anexos</div>
+              </div>
+              <div class="col">
+                <label for="novoAnexo" class="d-flex justify-content-end align-items-center" style="cursor: pointer;">
+                  <p class="btn btn-sm btn-outline-primary m-0">
+                    <i class="fas fa-plus"></i>
+                    <span>Novo</span>
+                  </p>
+                </label>
+                <input
+                  id="novoAnexo"
+                  type="file"
+                  (change)="appendFile($event.target.files)"
+                  class="d-none"
+                  >
+              </div>
+            </div>
+            <div class="row" *ngIf="showAnexos && form.value.anexos.length > 0">
+              <div class="col">
+                <custom-table [config]="tableConfigAnexos">
+                  <ng-template #tbody let-tbody>
+                    <tr *ngFor="let anexo of anexos.controls; let i = index" [formGroupName]="i">
+                      <td style="width: 90%">
+                        {{ form.value.anexos[i].codAnexo }} - {{ form.value.anexos[i].nomeAnexo | uppercase }}
+                      </td>
+                      <td class="text-center" style="width: 5%">
+                        <a
+                          [href]="form.value.anexos[i].linkAnexo"
+                          *ngIf="form.value.anexos[i].linkAnexo != null"
+                          target="_blank"
+                          class="btn-icon-sm mx-2 text-black"
+                          tooltip="visualizar">
+                          <i class="far fa-eye"></i>
+                        </a>
+                      </td>
+                      <td class="text-center" style="width: 5%">
+                        <btn-icon
+                          icon="fas fa-trash"
+                          size="small"
+                          tooltip="Excluir"
+                          (click)="onDeleteAnexo(form.value.anexos[i].codAnexo, i)">
+                        </btn-icon>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </custom-table>
+              </div>
+            </div>
+            <div class="row" *ngIf="showAnexos && form.value.anexos.length === 0">
+              <div class="col">
+                <message
+                  icon="fas fa-exchange-alt"
+                  text="Nenhum documento encontrado">
+                </message>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</app-body>
+

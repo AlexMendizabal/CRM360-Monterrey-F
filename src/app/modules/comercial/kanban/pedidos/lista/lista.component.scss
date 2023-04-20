@@ -1,0 +1,70 @@
+::ng-deep {
+  .dropdown-item:hover {
+    cursor: pointer;
+  }
+  .card-title {
+    font-size: 1.05rem;
+  }
+
+  h6{
+    display: flex;
+    height: 45px;
+    text-align: center;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .em-aberto {
+    background-color: #F5B7B1;
+    border: solid 1.5px #b60707;
+    border-radius: 7px;
+  }
+  .cartao-em-aberto:hover {
+    background-color: #F1948A;
+    border-radius: 7px;
+  }
+
+  .transferidos {
+    background-color: #F5CBA7;
+    border: solid 1.5px #E67E22;
+    border-radius: 7px;
+  }
+  .cartao-transferidos:hover {
+    background-color: #F0B27A;
+    border-radius: 7px;
+  }
+
+  .em-liberacao {
+    background-color :#F9E79F;
+    border: solid 1.5px #F1C40F;
+    border-radius: 7px;
+  }
+  .cartao-em-liberacao:hover {
+    background-color: #F7DC6F;
+    border-radius: 7px;
+  }
+
+  .aguard-faturamento {
+    background-color: #A9DFBF;
+    border: solid 1.5px #067504;
+    border-radius: 7px;
+  }
+  .cartao-aguard-faturamento:hover {
+    background-color: #7DCEA0;
+    border-radius: 7px;
+  }
+
+  .aguard-entrega {
+    background-color: #A9CCE3;
+    border: solid 1.5px #0f2edb;
+    border-radius: 7px;
+  }
+  .cartao-aguard-entrega:hover {
+    background-color: #7FB3D5;
+    border-radius: 7px;
+  }
+
+}
+
+

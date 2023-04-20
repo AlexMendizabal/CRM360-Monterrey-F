@@ -1,0 +1,673 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div  class="ml-5 mr-5">
+  <div class="row ml-5 mr-5">
+  <div class="row ml-5 mr-5">
+  <div class="row ml-5 mr-5">
+
+  <form [formGroup]="form" autocomplete="off" >
+    <div class="mtc-title mb-2">Formulário cadastro de representante</div>
+    <hr>
+  <div class="row ml-5 mr-5">
+    <div class="mtc-title mb-3 mt-2 ml-3 col-lg-12">Dados do Representante</div>
+          <div class="form-group col-lg-2">
+              <label>Situação</label>
+              <ng-select
+              type='text'
+              [searchable]="true"
+              [clearable]="false"
+              [items]="situacao"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="true"
+              placeholder="Selecione..."
+              bindLabel="descricao"
+              bindValue="id"
+              formControlName="codSituacao"
+              [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired('codSituacao')"
+            >
+            </ng-select>
+            </div>
+
+
+
+            <div class="form-group col-lg-6">
+              <label for="tipoPagamentoComissao">Tipos Comissão</label>
+                    <ng-select
+                      type='text'
+                      [searchable]="true"
+                      [clearable]="false"
+                      [items]="tipoComissao"
+                      [virtualScroll]="true"
+                      [hideSelected]="true"
+                      [closeOnSelect]="true"
+                      placeholder="Selecione..."
+                      bindLabel="dsTipoComissao"
+                      bindValue="idTipoComissao"
+                      formControlName="tipoPagamentoComissao"
+                      (change)="openModal(tiposComissao);"
+                      [ngClass]="onFieldError('tipoPagamentoComissao') + ' ' + onFieldRequired('tipoPagamentoComissao')"
+                    >
+
+
+                    <invalid-form-control [show]="onFieldInvalid('tipoPagamentoComissao')" message="Equipe é obrigatório."></invalid-form-control>
+                    </ng-select>
+                </div>
+
+            <div class="form-group col-lg-2">
+              <label for="emiteNotaFiscal">Emite Nota</label>
+              <select
+                class="form-control custom-select"
+                id="emiteNotaFiscal"
+                formControlName="emiteNotaFiscal">
+                <option value="0">Não</option>
+                <option value="1">Sim</option>
+              </select>
+            </div>
+
+            <div class="form-group col-lg-2">
+              <label for="recebeEmailInativacaoCliente">Recebe Email</label>
+              <select
+                  class="form-control custom-select"
+                  id="recebeEmailInativacaoCliente"
+                  formControlName="recebeEmailInativacaoCliente">
+                  <option value="0">Não</option>
+                  <option value="1">Sim</option>
+              </select>
+            </div>
+
+            <div class="form-group col-lg-5">
+              <label for="codEquipe">Equipe</label>
+                <ng-select
+                  type='text'
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="equipes"
+                  [virtualScroll]="true"
+                  [hideSelected]="true"
+                  [closeOnSelect]="true"
+                  placeholder="Selecione..."
+                  bindLabel="dsEquipeVenda"
+                  bindValue="codEquipeVenda"
+                  formControlName="codEquipe"
+                  [ngClass]="onFieldError('codEquipe') + ' ' + onFieldRequired('codEquipe')"
+                >
+                <invalid-form-control
+                [show]="onFieldInvalid('codEquipe')"
+                message="Equipe é obrigatório.">
+                </invalid-form-control>
+                  </ng-select>
+              </div>
+
+              <div class="form-group col-lg-5">
+                <label for="codEscritorio">Escritório</label>
+                <ng-select
+                  type='text'
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="escritorio"
+                  [virtualScroll]="true"
+                  [hideSelected]="true"
+                  [closeOnSelect]="true"
+                  placeholder="Selecione..."
+                  bindLabel="nomeEscritorio"
+                  bindValue="codEscritorio"
+                  formControlName="codEscritorio"
+                  [ngClass]="onFieldError('codEscritorio') + ' ' + onFieldRequired('codEscritorio')"
+                >
+                <!-- (change)="openModal(template)" -->
+                <invalid-form-control
+                [show]="onFieldInvalid('codEscritorio')"
+                message="Escritorio é obrigatório.">
+                </invalid-form-control>
+                </ng-select>
+            </div>
+
+            <div class="form-group col-lg-2">
+              <label for="nrMatricula">Matrícula</label>
+              <input
+            class="form-control"
+            id="nrMatricula"
+            type="text"
+            formControlName="nrMatricula"
+            [ngClass]="onFieldError('nrMatricula') + ' ' + onFieldRequired('nrMatricula')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('nrMatricula')" message="Número da Matrícula é obrigatório."></invalid-form-control>
+            </div>
+
+
+            <div class="form-group col-lg-12">
+              <label for="nome">Nome</label>
+              <input
+                class="form-control"
+                id="nome"
+                type="text"
+                formControlName="nome"
+                [ngClass]="onFieldError('nome') + ' ' + onFieldRequired('nome')"
+                >
+            <invalid-form-control [show]="onFieldInvalid('nome')" message="Nome é obrigatório."></invalid-form-control>
+            </div>
+
+            <div class="form-group col-lg-12">
+              <label for="razaoSocial">Razão Social</label>
+              <input
+                class="form-control"
+                id="razaoSocial"
+                type="text"
+                formControlName="razaoSocial"
+                [ngClass]="onFieldError('razaoSocial') + ' ' + onFieldRequired('razaoSocial')"
+                >
+            <invalid-form-control [show]="onFieldInvalid('razaoSocial')" message="Razão Social é obrigatório."></invalid-form-control>
+            </div>
+
+            <div class="form-group col-lg-2">
+              <label for="cep">Cep</label>
+              <input
+                class="form-control"
+                id="cep"
+                type="text"
+                formControlName="cep"
+                (input)="onInput(); onInputCep(detalhes);"
+                [ngClass]="onFieldError('cep') + ' ' + onFieldRequired('cep')"
+                cep [textMask]="{ mask: MASKS.cep.textMask }">
+            <invalid-form-control [show]="onFieldInvalid('cep')" message="Cep é obrigatório."></invalid-form-control>
+            </div>
+
+            <div class="form-group col-lg-10">
+              <label for="endereco">Endereço</label>
+              <input
+                class="form-control"
+                id="endereco"
+                type="text"
+                formControlName="endereco"
+                (input)="onInput()"
+                [ngClass]="onFieldError('endereco') + ' ' + onFieldRequired('endereco')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('endereco')" message="Endereço é obrigatório."></invalid-form-control>
+            </div>
+
+            <!-- <div class="form-group col-lg-2">
+              <label for="nrEndereco">Número</label>
+              <input
+                  class="form-control"
+                  id="nrEndereco"
+                  type="text"
+                  formControlName="nrEndereco"
+              >
+
+            </div> -->
+
+
+            <div class="form-group col-lg-5">
+              <label for="nomeBairro">Bairro</label>
+              <input
+                class="form-control"
+                id="nomeBairro"
+                type="text"
+                formControlName="nomeBairro"
+                (input)="onInput()"
+                [ngClass]="onFieldError('nomeBairro') + ' ' + onFieldRequired('nomeBairro')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('nomeBairro')" message="Bairro é obrigatório."></invalid-form-control>
+            </div>
+
+            <!-- <div class="form-group col-lg-4">
+              <label for="complemento">Complemento</label>
+              <input
+                class="form-control"
+                id="complemento"
+                type="text"
+                formControlName="complemento"
+            >
+            </div> -->
+
+            <div class="form-group col-lg-5">
+              <label for="nomeCidade">Cidade</label>
+              <input
+                class="form-control"
+                id="nomeCidade"
+                type="text"
+                formControlName="nomeCidade"
+                (input)="onInput()"
+                [ngClass]="onFieldError('nomeCidade') + ' ' + onFieldRequired('nomeCidade')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('nomeCidade')" message="Cidade é obrigatório."></invalid-form-control>
+            </div>
+
+            <div class="form-group col-lg-2">
+              <label for="uf">UF</label>
+              <select
+                class="form-control"
+                id="uf"
+                formControlName="uf"
+                (change)="onInput()"
+                [ngClass]="onFieldError('uf') + ' ' + onFieldRequired('uf')">
+                <option value="">SELECIONE UMA OPÇÃO</option>
+                <option *ngFor="let item of estados" [value]="item.sigla">{{ item.sigla }}</option>
+              </select>
+            <invalid-form-control [show]="onFieldInvalid('uf')" message="Uf é obrigatório."></invalid-form-control>
+            </div>
+
+
+            <div class="form-group col-lg-6">
+              <label for="cpf">cpf</label>
+              <input
+                class="form-control"
+                id="cpf"
+                type="text"
+                formControlName="cpf"
+                [ngClass]="onFieldError('cpf') + ' ' + onFieldRequired('cpf')"
+                cpf [textMask]="{ mask: MASKS.cpf.textMask }">
+            <invalid-form-control [show]="onFieldInvalid('cpf')" message="CPF é obrigatório."></invalid-form-control>
+            </div>
+
+            <div class="form-group col-lg-6">
+              <label for="rg">Rg</label>
+              <input
+                  class="form-control"
+                  id="rg"
+                  type="text"
+                  formControlName="rg"
+            >
+            <invalid-form-control [show]="onFieldInvalid('rg')" message="RG é obrigatório."></invalid-form-control>
+            </div>
+
+            <div class="form-group col-lg-12">
+              <label for="email">E-mail</label>
+              <input
+                  class="form-control"
+                  id="email"
+                  type="text"
+                  formControlName="email"
+            >
+            <invalid-form-control [show]="onFieldInvalid('email')" message="E-mail é obrigatório."></invalid-form-control>
+            </div>
+
+
+          <div class="form-group col-lg-3">
+            <label for="telefone">Telefone</label>
+            <input
+                class="form-control"
+                id="telefone"
+                type="text"
+                formControlName="telefone"
+                telefone [textMask]="{ mask: MASKS.telefone.textMaskFunction }">
+          <invalid-form-control [show]="onFieldInvalid('telefone')" message="Telefone é obrigatório."></invalid-form-control>
+          </div>
+
+          <div class="form-group col-lg-3">
+            <label for="celular">Celular</label>
+            <input
+                class="form-control"
+                id="celular"
+                type="text"
+                formControlName="celular"
+                telefone [textMask]="{ mask: MASKS.telefone.textMaskFunction }">
+          <invalid-form-control [show]="onFieldInvalid('celular')" message="Celular é obrigatório."></invalid-form-control>
+          </div>
+
+
+
+          <div class="form-group col-lg-3">
+          <label for="dataInicialContrato">Data Início</label>
+          <input
+                class="form-control"
+                id="dataInicialContrato"
+                type="text"
+                bsDatepicker
+                formControlName="dataInicialContrato"
+                [ngClass]="onFieldError('dataInicialContrato') + ' ' + onFieldRequired('dataInicialContrato')"
+          >
+          <invalid-form-control [show]="onFieldInvalid('dataInicialContrato')" message="Data Inicial é obrigatório."></invalid-form-control>
+          </div>
+
+          <div class="form-group col-lg-3">
+          <label for="dataFinalContrato">Data Final</label>
+          <input
+                class="form-control"
+                id="dataFinalContrato"
+                type="text"
+                bsDatepicker
+                formControlName="dataFinalContrato"
+                [ngClass]="onFieldError('dataFinalContrato') + ' ' + onFieldRequired('dataFinalContrato')"
+          >
+          <invalid-form-control [show]="onFieldInvalid('dataFinalContrato')" message="Data Vigência é obrigatório."></invalid-form-control>
+          </div>
+
+          <!-- <div class="form-group col-lg-4">
+          <label for="dataRenovacaoContrato">Data Renovação</label>
+          <input
+                class="form-control"
+                id="dataRenovacaoContrato"
+                type="text"
+                bsDatepicker
+                formControlName="dataRenovacaoContrato"
+          >
+          <invalid-form-control [show]="onFieldInvalid('dataRenovacaoContrato')" message="Data Renovação é obrigatório."></invalid-form-control>
+          </div> -->
+
+          <!-- ####################################################################################### -->
+          <div class="col-lg-12" formArrayName="anexos">
+            <div class="row">
+              <div class="col-lg-12 d-flex align-items-start">
+                <div class="mtc-title mb-0">Anexos</div>
+              </div>
+              <!-- Se não puder permitir mais de um anexo, adicione [hidden]="form.value.anexos.length > 0"  -->
+              <div class="col">
+                <label
+                  for="novoAnexo"
+                  class="d-flex justify-content-start align-items-center"
+                  style="cursor: pointer">
+                  <p class="btn btn-sm btn-outline-primary m-0">
+                    <i class="fas fa-plus"></i>
+                    <span>Anexo</span>
+                  </p>
+                </label>
+                <input
+                  id="novoAnexo"
+                  type="file"
+                  (change)="appendFile($event.target.files)"
+                  class="d-none"
+                />
+              </div>
+            </div>
+            <div class="row" *ngIf="showAnexos && form.value.anexos.length > 0">
+              <div class="col">
+                <custom-table [config]="tableConfigAnexos">
+                  <ng-template #tbody let-tbody>
+                    <tr
+                      *ngFor="let anexo of anexos.controls; let i = index"
+                      [formGroupName]="i"
+                    >
+                      <td style="width: 90%">
+                        {{ form.value.anexos[i].codAnexo }} -
+                        {{ form.value.anexos[i].nomeAnexo | uppercase }}
+                      </td>
+                      <td class="text-center" style="width: 5%">
+                        <a
+                          (click)="navegarAnexo(anexo)"
+                          *ngIf="form.value.anexos[i].codAnexo != null"
+                          target="_blank"
+                          class="btn-icon-sm mx-2 text-black"
+                          tooltip="visualizar"
+                        >
+                          <i class="far fa-eye"></i>
+                        </a>
+                      </td>
+                      <td class="text-center" style="width: 5%">
+                        <btn-icon
+                          icon="fas fa-trash"
+                          size="small"
+                          tooltip="Excluir"
+                          (click)="
+                            onDeleteAnexo(form.value.anexos[i].codAnexo, i)
+                          "
+
+                        >
+                        <!-- [hidden]="visualizar" -->
+                        </btn-icon>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </custom-table>
+              </div>
+            </div>
+            <div class="row" *ngIf="showAnexos && form.value.anexos.length === 0">
+              <div class="col">
+                <message
+                  icon="fas fa-exchange-alt"
+                  text="Nenhum documento encontrado"
+                >
+                </message>
+              </div>
+            </div>
+          </div>
+
+
+    <!-- ####################################################################################### -->
+
+
+      </div>
+
+          <hr>
+          <div class="row ml-5 mr-5">
+          <div class="mtc-title mb-3 mt-2 ml-3 col-lg-12">Dados da Empresa de Representação</div>
+
+          <div class="form-group col-lg-12">
+            <label for="nomeFantasiaRepresentacao">Nome Fantasia</label>
+            <input
+                class="form-control"
+                id="nomeFantasiaRepresentacao"
+                type="text"
+                formControlName="nomeFantasiaRepresentacao"
+
+          >
+          <!-- [ngClass]="onFieldError('nomeFantasiaRepresentacao') + ' ' + onFieldRequired('nomeFantasiaRepresentacao')"
+          <invalid-form-control [show]="onFieldInvalid('nomeFantasiaRepresentacao')" message="Nome Fantasia é obrigatório."></invalid-form-control> -->
+          </div>
+
+          <div class="form-group col-lg-12">
+            <label for="razaoSocialRepresentacao">Razão Social</label>
+            <input
+                class="form-control"
+                id="razaoSocialRepresentacao"
+                type="text"
+                formControlName="razaoSocialRepresentacao"
+
+          >
+          <!-- [ngClass]="onFieldError('razaoSocialRepresentacao') + ' ' + onFieldRequired('razaoSocialRepresentacao')"
+          <invalid-form-control [show]="onFieldInvalid('razaoSocialRepresentacao')" message="Razão Social é obrigatório."></invalid-form-control> -->
+          </div>
+
+          <div class="form-group col-lg-6">
+            <label for="cnpjEmpresaRepresentacao">CNPJ</label>
+            <input
+                class="form-control"
+                id="cnpjEmpresaRepresentacao"
+                type="text"
+                formControlName="cnpjEmpresaRepresentacao"
+                cnpj [textMask]="{ mask: MASKS.cnpj.textMask }">
+                <!-- [ngClass]="onFieldError('cnpjEmpresaRepresentacao') + ' ' + onFieldRequired('cnpjEmpresaRepresentacao')"
+          <invalid-form-control [show]="onFieldInvalid('cnpjEmpresaRepresentacao')" message="CNPJ é obrigatório."></invalid-form-control> -->
+          </div>
+
+          <div class="form-group col-lg-3">
+            <label for="ieEmpresaRepresentacao">Inscrição Estadual</label>
+            <input
+                class="form-control"
+                id="ieEmpresaRepresentacao"
+                type="text"
+                formControlName="ieEmpresaRepresentacao"
+          >
+          <invalid-form-control [show]="onFieldInvalid('ieEmpresaRepresentacao')" message="Inscrição Estadual é obrigatório."></invalid-form-control>
+          </div>
+
+          <div class="form-group col-lg-3">
+            <label for="imEmpresaRepresentacao">Inscrição Municipal</label>
+            <input
+                class="form-control"
+                id="imEmpresaRepresentacao"
+                type="text"
+                formControlName="imEmpresaRepresentacao"
+          >
+          <invalid-form-control [show]="onFieldInvalid('imEmpresaRepresentacao')" message="Inscrição Municipal é obrigatório."></invalid-form-control>
+          </div>
+
+        <div class="form-group col-lg-6"></div>
+        </div>
+
+        <hr>
+        <div class="row ml-5 mr-5">
+        <div class="mtc-title mb-3 mt-2 ml-3 col-lg-12">Dados Bancários</div><br>
+
+
+        <div class="form-group col-lg-9">
+        <label for="nomeTitularConta">Titular</label>
+        <input
+                class="form-control"
+                id="nomeTitularConta"
+                type="text"
+                formControlName="nomeTitularConta"
+          >
+        <invalid-form-control [show]="onFieldInvalid('nomeTitularConta')" message="Titular é obrigatório."></invalid-form-control>
+        </div>
+
+        <div class="form-group col-lg-3">
+        <label for="tipoConta">Tipo</label>
+        <select
+          class="form-control custom-select"
+          id="tipoConta"
+          placeholder="Selecione..."
+          formControlName="tipoConta">
+          <option value="F">Física</option>
+          <option value="J">Jurídica</option>
+        </select>
+        </div>
+
+        <div class="form-group col-lg-6">
+          <label for="nomeBanco">Banco</label>
+
+          <ng-select
+            type='text'
+            [searchable]="true"
+            [clearable]="false"
+            [items]="bancos"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="nomeBanco"
+            bindValue="idBanco"
+            formControlName="nomeBanco"
+            [ngClass]="onFieldError('nomeBanco') + ' ' + onFieldRequired('nomeBanco')">
+        <invalid-form-control [show]="onFieldInvalid('nomeBanco')" message="Banco é obrigatório."></invalid-form-control>
+        </ng-select>
+        </div>
+
+        <div class="form-group col-lg-3">
+          <label for="agencia">Agência</label>
+          <input
+              class="form-control"
+              id="agencia"
+              type="text"
+              formControlName="agencia"
+        >
+        <invalid-form-control [show]="onFieldInvalid('agencia')" message="Agência é obrigatório."></invalid-form-control>
+        </div>
+
+        <div class="form-group col-lg-3">
+          <label for="contaCorrente">Conta Corrente</label>
+          <input
+              class="form-control"
+              id="contaCorrente"
+              type="text"
+              formControlName="contaCorrente"
+        >
+        <invalid-form-control [show]="onFieldInvalid('contaCorrente')" message="Conta Corrente é obrigatório."></invalid-form-control>
+        </div>
+    </div>
+      <hr>
+
+
+
+
+  </form>
+
+  <ng-template #tiposComissao>
+
+    <div class="modal-header">
+      <div class="mtc-title">Faixa de percentual</div>
+      <button type="button" class="close pull-right" (click)="closeModal(tiposComissao);" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="row mb-3">
+        <div class="col-1"></div>
+
+        <div class="mtc-title"*ngIf="tipoComissaoModal.length > 0">{{ tipoComissaoModal[0].dsTipoComissionamento }}</div>
+        <div class="col-12 mb-4" *ngFor="let dados of tipoComissaoModal">
+          <custom-table *ngIf="tipoComissaoModal.length > 0">
+            <ng-template #thead let-thead  >
+              <tr>
+                <th scope="col" class="border text-center" style="width: 50%">Linha</th>
+                <th scope="col" class="border text-center" style="width: 50%">Classe</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr>
+                <td class="text-center">{{ dados.nomeLinha }}</td>
+                <td class="text-center" *ngIf="dados.codClasse === 0" >TODOS</td>
+                <td class="text-center" *ngIf="dados.codClasse != 0">{{ dados.nomeClasse }}</td>
+              </tr>
+            </ng-template>
+          </custom-table>
+
+        <custom-table *ngIf="tipoComissaoModal.length > 0" [config]="tableConfigDetail">
+          <!-- *ngIf="dados.length > 0" -->
+          <ng-template #thead let-thead  >
+            <tr>
+              <th scope="col" class="border text-center" style="width: 55%">Percentual de desconto da tabela de vendas de materiais (%) </th>
+              <th scope="col" class="border text-center" style="width: 45%">Percentual a ser pago de comissão sobre o título (%) </th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let item of dados.percentual">
+              <td class="text-center">{{ item.percDescontoDe }} a {{ item.percDescontoAte }} %</td>
+              <td class="text-center">{{ item.percPago }} %</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </div>
+
+        <div class="col-1"></div>
+
+      </div>
+    </div>
+
+  </ng-template>
+</div>
+</div>
+</div>
+</div>
+<ng-template #detalhes>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Escolha o endereço a ser utilizado</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="onModalClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="formEnderecos" (ngSubmit)="setValueEndereco()" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-md-12" *ngFor="let endereco of enderecosOp; let i = index">
+          <div class="custom-control custom-radio">
+            <input [id]="i" class="custom-control-input" formControlName="enderecosRetorno" type="radio" [value]="endereco"/>
+            <label class="custom-control-label" [for]="i">{{endereco.logradouro}}, {{endereco.unidade}} - {{endereco.bairro}}, {{endereco.localidade}} - {{endereco.uf}}, {{endereco.cep}}</label>
+          </div>
+        </div>
+        <div class="col-md-12 d-flex justify-content-center">
+          <button class="btn btn-primary">Selecionar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+</app-body>

@@ -1,0 +1,310 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Controle de Linhas">
+  <button
+    type="button"
+    (click)="onExport()"
+    [disabled]="!dadosPagination.length > 0"
+    *ngIf="!dadosEmpty">
+    Exportar
+  </button>
+
+  <!-- <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button> -->
+  
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2">
+              <label for="numLinha">Número da Linha</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="numLinha"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="nomeUsuario">Usuário</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="nomeUsuario"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="nomeEmpresa">Empresa</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="nomeEmpresa"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="nomeEscritorio">Escritório</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="nomeEscritorio"
+                (keydown.enter)="onFilter()">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-2">
+              <label for="descricao">Modelo do Aparelho</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="descricao"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="numContrato">Núm. contrato</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="numContrato"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="dataVencimentoInicial">Data inicial</label>
+              <input
+                class="form-control"
+                id="dataVencimentoInicial"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="dataVencimentoInicial">
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="dataVencimentoFinal">Data final</label>
+              <input
+                class="form-control"
+                id="dataVencimentoFinal"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="dataVencimentoFinal"
+              >
+              <invalid-form-control
+                [show]="comparaData()"
+                message="Data final deve ser maior que data inicial">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="dsSituacao">Situação</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="situacoes"
+                [virtualScroll]="true"
+                [loading]="loadingSituacoes"
+                labelForId="dsSituacao"
+                bindLabel="dsSituacao"
+                bindValue="codSituacao"
+                id="dsSituacao"
+                formControlName="codSituacao">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="dadosPagination.length > 0 && !dadosEmpty">
+      </subtitles>
+    </div>
+  </div>
+  <div class="row">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-5 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center">Número da linha</th>
+            <th scope="col">Usuário</th>
+            <th scope="col" class="text-center" [hidden]="showDetailPanel">Plano</th>
+            <th scope="col" class="text-center" [hidden]="showDetailPanel">Gestor</th>
+            <th scope="col" [hidden]="showDetailPanel"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let linha of dadosPagination" [class.table-active]="linha.codLinha == linhaSelecionado.codLinha && showDetailPanel">
+            <td
+              class="text-center hover"
+              [ngClass]="classStatusBorder(linha)"
+              (click)="onDetails(linha)">
+              {{ linha.numLinha }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(linha)">
+              {{ linha.nomeUsuario | uppercase }}
+            </td>
+            <td
+              class="text-center hover"
+              (click)="onDetails(linha)"
+              [hidden]="showDetailPanel">
+              {{ linha.plano | uppercase }}
+            </td>
+            <td
+              class="text-center hover"
+              (click)="onDetails(linha)"
+              [hidden]="showDetailPanel">
+              {{ linha.gestorFun | uppercase }}
+            </td>
+            <td class="text-right" [hidden]="showDetailPanel">
+              <span class="mr-3" tooltip="Excluir" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onDelete(linha)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </span>
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onEdit(linha)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+              <span class="mr-3" tooltip=" Gerar Termo" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onTermo(linha)">
+                  <i class="text-warning fas fa-file mr-3" *ngIf= "linha.qtDocumentos > 0"  placement="right"></i>
+                  <i class="text-black fas fa-file mr-3" *ngIf="linha.qtDocumentos == 0"  placement="right"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty">
+      </empty-result>
+      <div class="d-flex justify-content-center" *ngIf="totalItems > itemsPerPage && dadosLoaded">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-7" [hidden]="!showDetailPanel">
+      <detail-panel>
+        <div id="impressao">
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label>Nome</label>
+              <div>{{ linhaSelecionado.nomeUsuario | uppercase}}</div>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>Número da Linha</label>
+              <div>{{ linhaSelecionado.numLinha }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label>Empresa</label>
+              <div>{{ linhaSelecionado.nomeEmpresa | uppercase}}</div>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>Escritório</label>
+              <div>{{ linhaSelecionado.nomeEscritorio | uppercase}}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label>Modelo do Aparelho</label>
+              <div>{{ linhaSelecionado.descricao | uppercase }}</div>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>Valor</label>
+              <div>{{ linhaSelecionado.valor  | currency:'BRL' }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label>Nº Contrato</label>
+              <div>{{ linhaSelecionado.numContrato }}</div>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>Data de Vencimento do Contrato</label>
+              <div>{{ linhaSelecionado.dataVencimentoContrato | date: 'dd/MM/yyyy' }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label>Plano</label>
+              <div>{{ linhaSelecionado.plano | uppercase}}</div>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>Dados</label>
+              <div>{{ linhaSelecionado.dados | uppercase }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label>Número da Conta</label>
+              <div>{{ linhaSelecionado.numConta }}</div>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>Cód. Chip</label>
+              <div>{{ linhaSelecionado.codChip }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label>Situação</label>
+              <div>{{ linhaSelecionado.dsSituacao | uppercase }}</div>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>Gestor Responsável</label>
+              <div>{{ linhaSelecionado.gestorFun | uppercase}}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label>Conta</label>
+              <div>{{ linhaSelecionado.conta}}</div>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>Senha</label>
+              <div>{{ linhaSelecionado.senha}}</div>
+            </div>
+          </div>
+        </div>
+      </detail-panel>
+    </div>
+  </div>
+</app-body>

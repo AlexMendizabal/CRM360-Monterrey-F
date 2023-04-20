@@ -1,0 +1,220 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="Tipos de Não Conformidade">
+  <button
+  type="button"
+  (click)="onExport()"
+  [disabled]="loadingNavBar || noResult">
+  Exportar
+</button>
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="ID_LOGI_ENMA_FHNC_TIPO">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_LOGI_ENMA_FHNC_TIPO"
+                formControlName="ID_LOGI_ENMA_FHNC_TIPO"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-md-4 pl-0">
+              <label for="NM_TIPO">Tipo de Não Conformidade</label>
+              <input
+                type="text"
+                class="form-control"
+                id="NM_TIPO"
+                formControlName="NM_TIPO"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-lg-2 pl-0">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-lg-1 pl-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0" [ngClass]="{'col': !showDetailPanel, 'col-6': showDetailPanel}">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('ID_LOGI_ENMA_FHNC_TIPO')">
+                <thead-sorter value="ID" [active]="ORDE_BY == 'ID_LOGI_ENMA_FHNC_TIPO'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('NM_TIPO')">
+                <thead-sorter value="Tipo de não conformidade" [active]="ORDE_BY == 'NM_TIPO'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th scope="col" style="width:120px"[hidden]="showDetailPanel"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let tipo of tiposConformidade"  [class.table-active]="tipo?.ID_LOGI_ENMA_FHNC_TIPO == motivoSelecionado?.ID_LOGI_ENMA_FHNC_TIPO && showDetailPanel">
+              <td [ngClass]="tipo.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+              {{tipo.ID_LOGI_ENMA_FHNC_TIPO }}
+              </td>
+              <td>{{ tipo.NM_TIPO | uppercase}}</td>
+              <td class="align-middle" [hidden]="showDetailPanel">
+                <span class="mr-3" [tooltip]="tipo.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="changeType(tipo)">
+                    <i [ngClass]="tipo.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', tipo.ID_LOGI_ENMA_FHNC_TIPO]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+                <span class="mr-3"  tooltip="Detalhes" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm" (click)="onDetails(tipo)">
+                    <i class="fas fa-search"></i>                  
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div *ngIf="totalItems > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-6 pr-0" [hidden]="!showDetailPanel">
+      <detail-panel panelTitle="Detalhes">
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Tipo de não conformidade</label>
+            <div *ngIf="tipoSelecionado?.NM_TIPO == null">NÃO INFORMADO</div>
+            <div *ngIf="tipoSelecionado?.NM_TIPO != null">{{ tipoSelecionado.NM_TIPO | uppercase}}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Observação:</label>
+            <div *ngIf="tipoSelecionado?.DS_OBSE == null">NÃO INFORMADO</div>
+            <div *ngIf="tipoSelecionado?.DS_OBSE != null">{{ tipoSelecionado?.DS_OBSE }}</div>
+          </div>
+        </div>
+        <hr>
+        <div [hidden]="!loadingResponsaveis" class="text-muted">
+          <p><strong>Buscando os Responsáveis...</strong></p>
+        </div>
+        <div *ngIf="!loadingResponsaveis && noResponsaveis" class="text-muted">
+          <p><strong>Nenhum Responsável vinculado!</strong></p>
+        </div>
+        <div class="form-group" *ngIf="!loadingResponsaveis && !noResponsaveis">
+          <label>Responsáveis</label>
+          <custom-table class="text-center" >
+            <ng-template #thead let-thead>
+              <tr>
+                <th>Matricula</th>
+                <th>Nome</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let item of responsaveis">
+                <td>{{item.NR_MATR_RESP}}</td>
+                <td>{{item.NM_RESP}}</td>
+              </tr>
+            </ng-template>
+          </custom-table>
+        </div>
+        <hr>
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Usuário Responsável Pelo Cadastro</label>
+            <div *ngIf="tipoSelecionado?.NR_MATR == null">NÃO INFORMADO</div>
+            <div *ngIf="tipoSelecionado?.NR_MATR != null">{{tipoSelecionado?.NR_MATR}} - {{ tipoSelecionado?.NM_USUA }}</div>
+          </div>
+          <div class="form-group col">
+            <label>Data do Cadastro</label>
+            <div *ngIf="tipoSelecionado?.DT_INCL == null">NÃO INFORMADO</div>
+            <div *ngIf="tipoSelecionado?.DT_INCL != null">{{ tipoSelecionado?.DT_INCL | date: 'dd/MM/yyyy HH:mm'}}</div>
+          </div>
+        </div>
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

@@ -1,0 +1,317 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="Setores">
+  <button
+  type="button"
+  (click)="onExport()"
+  [disabled]="loadingNavBar || noResult">
+  Exportar
+</button>
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-4 pl-0">
+              <label for="tiposSetor">Tipo de Setor</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="tiposSetor"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                [loading]="loadingTiposSetor"
+                labelForId="UUID_LOGI_YMS_SETO_TIPO"
+                bindLabel="NM_SETO_TIPO"
+                bindValue="UUID_LOGI_YMS_SETO_TIPO"
+                id="UUID_LOGI_YMS_SETO_TIPO"
+                formControlName="UUID_LOGI_YMS_SETO_TIPO"
+                (change)="getFilterSetores({'UUID_LOGI_YMS_SETO_TIPO': $event?.UUID_LOGI_YMS_SETO_TIPO || ''})">
+              </ng-select>
+            </div>
+            <div class="form-group col-md-4 pl-0">
+              <label for="filterSetores">Setor</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="filterSetores"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                [loading]="loadingSetores"
+                labelForId="UUID_LOGI_YMS_SETO"
+                bindLabel="NM_SETO"
+                bindValue="UUID_LOGI_YMS_SETO"
+                id="UUID_LOGI_YMS_SETO"
+                formControlName="UUID_LOGI_YMS_SETO">
+              </ng-select>
+            </div>
+            <div class="form-group col-md-3 pl-0">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              (keydown.enter)="onFilter()"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-md-1 p-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (keydown.enter)="onFilter()"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0" [ngClass]="{'col': !showDetailPanel, 'col-6': showDetailPanel}">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" ></th>
+              <th scope="col" >ID</th>
+              <th scope="col" >Descrição</th>
+              <th scope="col" >Tipo de Setor</th>
+              <th scope="col" style="width:160px"[hidden]="showDetailPanel"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let setor of setores"  [class.table-active]="setor?.UUID_LOGI_YMS_SETO == setorSelecionado?.UUID_LOGI_YMS_SETO && showDetailPanel">
+              <td  [ngClass]="setor.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+                <div [class]="setor.DS_ICON"></div>
+              </td>
+              <td>{{setor.UUID_LOGI_YMS_SETO }}</td>
+              <td >{{ setor.NM_SETO | uppercase}}</td>
+              <td >{{ setor.NM_SETO_TIPO | uppercase}}</td>
+              <td class="align-middle" [hidden]="showDetailPanel">
+                <span class="mr-3" [tooltip]="setor.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="changeType(setor)">
+                    <i [ngClass]="setor.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', setor.UUID_LOGI_YMS_SETO]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip="Associar Materiais" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../materiais/', setor.UUID_LOGI_YMS_SETO]">
+                    <i class="fas fa-th-large"></i>
+                  </button>
+                </span>
+                <span class="mr-3"  tooltip="Detalhes" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm" (click)="onDetails(setor)">
+                    <i class="fas fa-search"></i>                  
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div *ngIf="totalItems > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-6 pr-0" [hidden]="!showDetailPanel">
+      <detail-panel panelTitle="Detalhes">
+        <tabset>
+          <tab heading="Dados do Setor">
+            <div class="border-right border-left border-bottom px-3 pt-3">
+              <div>
+                <div class="d-flex w-100">
+                  <div class="rounded-circle text-white icon-40 bg-secondary" >
+                    <i [class]="setorSelecionado?.DS_ICON"></i>
+                  </div>
+                  <strong class="my-auto ml-3 text-truncate" >
+                    {{setorSelecionado?.NM_SETO | uppercase}}
+                  </strong>
+                </div>
+                <div class="form-row mt-3">
+                  <div class="form-group col-lg-6">
+                    <label>ID do Setor</label>
+                    <div>{{ setorSelecionado?.UUID_LOGI_YMS_SETO}}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Tipo de Setor</label>
+                    <div>{{ setorSelecionado?.NM_SETO_TIPO | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Filial</label>
+                    <div>{{ setorSelecionado?.NM_FILI | uppercase}}</div>
+                  </div>
+                </div>
+                <div class="form-row ">
+                  <div class="form-group col-lg-12">
+                    <label>Observação:</label>
+                    <div>{{ setorSelecionado?.DS_OBSE | uppercase}}</div>
+                  </div>
+                </div>
+                <hr>
+                <div class="form-row">
+                  <div class="form-group col">
+                    <label *ngIf="!setorSelecionado?.DT_ATUA == null">Usuário Responsável Pelo Cadastro</label>
+                    <label *ngIf="setorSelecionado?.DT_ATUA == null">Usuário Responsável Pela Atualização</label>
+                    <div>{{ setorSelecionado?.NM_USUA | uppercase }}</div>
+                  </div>
+                  <div class="form-group col">
+                    <label *ngIf="!setorSelecionado?.DT_ATUA == null">Data do Cadastro</label>
+                    <label *ngIf="setorSelecionado?.DT_ATUA == null">Data da Atualização</label>
+                    <div>{{(setorSelecionado?.DT_ATUA | date: 'dd/MM/yyyy HH:mm') || (setorSelecionado?.DT_INCL | date: 'dd/MM/yyyy HH:mm') }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </tab>
+          <tab  heading="Materiais Associados">
+            <div class="border-right border-left border-bottom px-3 pt-3">
+              <div class="mb-3">
+                <custom-table  [config]="tableConfigAssocMateriais"  class="text-center" *ngIf="!loadingAssociacaoMateriais && !noAssocMateriais">
+                  <ng-template #thead let-thead>
+                    <tr>
+                      <th scope="col"  width="20%">Código</th>
+                      <th scope="col"  width="80%">Material</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <tr *ngFor="let material of associacaoMateriais">
+                      <td  width="20%">{{ material?.ID_REFE_ERP }}</td>
+                      <td  width="80%">{{ material?.NM_MATE | uppercase }}</td>
+                    </tr>
+                  </ng-template>
+                </custom-table>
+                <message
+                  *ngIf="loadingAssociacaoMateriais"
+                  icon="fas fa-cog fa-spin"
+                  text="Estamos pesquisando os materiais para você...">
+                </message>
+                <div [hidden]="loadingAssociacaoMateriais || !noAssocMateriais" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+                  <empty-result message="Nenhuma informação encontrada"></empty-result>
+                </div>
+              </div>
+            </div>
+          </tab>  
+          <tab  heading="Intervalos">
+            <div class="border-right border-left border-bottom px-3 pt-3">
+              <div class="mb-3">
+                <custom-table  [config]="tableConfigAssocIntervalos" class="text-center" *ngIf="!loadingAssociacaoIntervalos && !noAssocIntervalos">
+                  <ng-template #thead let-thead>
+                    <tr>
+                      <th scope="col"  width="40%">Tipo de Circuito</th>
+                      <th scope="col"  width="40%">
+                        Tipo de Intervalo
+                        <button
+                          class="btn-icon-sm"
+                          [tooltip]="tooltipTipoIntervalo"
+                          container="body"
+                          placement="top"  
+                          >
+                          <i class="far fa-question-circle"></i>
+                        </button>
+                      
+                        <ng-template #tooltipTipoIntervalo>
+                          <table>
+                            <tbody>
+                              <tr>
+                                <th><i class="fas fa-circle text-primary"></i> FIXO :Tempo fixo de permanência</th>
+                              </tr>
+                              <br>
+                              <tr>
+                                <th><i class="fas fa-circle text-primary"></i>Variável : Tempo de permanência pode variar de acordo com a quantidade</th>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </ng-template>
+
+                      </th>
+                      <th scope="col"  width="20%">Tempo</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <tr *ngFor="let intervalo of associacaoIntervalos">
+                      <td  width="40%">{{ intervalo?.NM_CIRC_TIPO  | uppercase }}</td>
+                      <td  width="40%">{{ intervalo?.TP_INTV | uppercase }}</td>
+                      <td  width="20%">{{ convertMysqlTime(intervalo?.HR_INTV) | date: 'HH:mm'}}</td>
+                    </tr>
+                  </ng-template>
+                </custom-table>
+                <message
+                  *ngIf="loadingAssociacaoIntervalos"
+                  icon="fas fa-cog fa-spin"
+                  text="Estamos pesquisando os intervalos para você...">
+                </message>
+                <div [hidden]="loadingAssociacaoIntervalos || !noAssocIntervalos" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+                  <empty-result message="Nenhuma informação encontrada"></empty-result>
+                </div>
+              </div>
+            </div>
+          </tab>       
+        </tabset> 
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

@@ -1,0 +1,14 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Kanban"></app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <h5 class="pt-2 mb-4 text-center">Selecione uma atividade</h5>
+  <div class="row justify-content-center">
+    <div class="col-md-3" *ngFor="let atividade of atividades">
+      <card-button
+        [icon]="atividade.iconeAtividade"
+        [text]="atividade.nomeAtividade"
+        [routerLink]="[atividade.rotaAtividade]">
+      </card-button>
+    </div>
+  </div>
+</app-body>

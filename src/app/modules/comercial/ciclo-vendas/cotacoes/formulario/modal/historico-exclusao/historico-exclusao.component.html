@@ -1,0 +1,47 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">Histórico de exclusões do pedido de venda</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row mb-3">
+      <div class="col">
+        <custom-table [config]="tableConfig">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">Seq.</th>
+              <th scope="col" class="text-center">Data/Hora</th>
+              <th scope="col" class="text-center">Usuário</th>
+              <th scope="col" class="text-center">Tipo</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr
+              *ngFor="let item of exclusoes; let i = index"
+              [class.table-active]="i == activeRow"
+              (click)="onShowDescricao(i, item)">
+              <td class="text-center hover">{{ item.sequencia }}</td>
+              <td class="text-center hover">{{ item.dataExclusao | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="text-center hover">{{ item.usuario | uppercase }}</td>
+              <td class="text-center hover">{{ item.tipo | uppercase }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Descrição</label>
+            <div class="border rounded p-2">
+              {{ selectedItem.descricao | uppercase }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

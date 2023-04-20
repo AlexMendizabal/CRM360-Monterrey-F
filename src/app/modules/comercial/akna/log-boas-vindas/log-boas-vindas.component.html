@@ -1,0 +1,262 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <!-- <button
+    (click)="exportarExcel()"
+    [disabled]="!noResult"
+    >
+    Exportar
+  </button> -->
+  <!-- <button
+    (click)="onFilter()"
+    > -->
+    <!-- [disabled]="form.status  == 'INVALID'" -->
+    <!-- Filtrar
+  </button> -->
+</app-header>
+<!-- Início dos Filtros -->
+<app-body ><!-- [breadCrumbTree]="breadCrumbTree" -->
+  <advanced-filter #scrollToFilter>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row justify-content-center">
+        <div class="form-group col-md-2">
+          <label for="dataInicio"> Data inicial </label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="inicioData"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="DT_INCL"
+            [ngClass]="onFieldError('DT_INCL') + ' ' + onFieldRequired('DT_INCL')"
+            >
+          </div>
+          <invalid-form-control
+            [show]="onFieldInvalid('DT_INCL')"
+            message="Data inicial é obrigatório.">
+          </invalid-form-control>
+        </div>
+        <!-- <div class="form-group col-md-2">
+          <label for="dataInicio"> Data final </label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="fimData"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="DT_FINA"
+            [ngClass]="onFieldError('DT_FINA') + ' ' + onFieldRequired('DT_FINA')"
+            >
+          </div>
+          <invalid-form-control
+            [show]="onFieldInvalid('DT_FINA')"
+            message="Data final é obrigatório.">
+          </invalid-form-control>
+        </div> -->
+      </div>
+    </form>
+  </advanced-filter>
+  <!-- Início da Lista -->
+  <div class="row">
+    <div class="col"><!-- [ngClass]="{'col': !showDetailPanel, 'col-6 pr-0': showDetailPanel}" -->
+      <custom-table [config]="tableConfig" [hidden] = "!noResult">
+        <ng-template #thead let-thead>
+          <tr>
+            <th class="align-middle" style="width:10px"></th>
+            <th class="text-center" scope="col">Código do Cliente</th>
+            <th class="text-center" scope="col">Nome Cliente</th>
+            <th class="text-center" scope="col">Email Cliente</th>
+            <th class="text-center" scope="col" [hidden]="showDetailPanel">Data do Envio</th>
+            <th class="text-center" scope="col" [hidden]="showDetailPanel">Mensagem de confirmação</th>
+            <th class="text-center mx-2" style="width:30px"></th>
+            <th class="text-center mx-2" style="width:30px"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let log of logs | slice : begin : end; let i = index"
+              [ngClass]="log.STATUS ?'bgRowTable' : ''"  class="hover"> <!-- (click)="openTab(i); clickEvent(log)" -->
+            <td [ngClass]="{
+              'border-success'    : log.IN_STAT == '1',
+              'border-danger'     : log.IN_STAT == '0'
+              }"
+            ></td>
+            <td class="text-center">{{ log.CD_CLIE }}</td>
+            <td class="text-center">{{ log.NOME }}</td>
+            <td class="text-center">{{ log.EMAIL }}</td>
+            <td class="text-center" [hidden]="showDetailPanel">{{ log.DT_INCL }}</td>
+            <td class="text-center" [hidden]="showDetailPanel">{{ log.DS_MENS }}</td>
+            <td class="align-middle" style="width:50px">
+              <button type="button" class="btn-icon-sm"
+                [ngClass]="{
+                  'text-success'    : log.IN_STAT == '1',
+                  'text-danger'     : log.IN_STAT == '0'
+                  }"
+              >
+                <i [ngClass]="log.IN_STAT == 1 ? 'fas fa-calendar-check' : 'fas fa-calendar-times'"></i>
+              </button>
+            </td>
+            <td class="align-middle" style="width:50px" [hidden]="showDetailPanel">
+              <button class="btn-icon-sm"  (click)="reenviarEmail(log)">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="mt-3" [hidden]="!noResult">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          [(itemsPerPage)]="itemsPerPage"
+          (pageChanged)="onPageChanged($event)"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty"
+        >
+      </empty-result>
+    </div>
+    <!-- Início da tabela de informações -->
+    <!-- <div class="col-6" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="appTitle">
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label>Descrição Despesa</label>
+            <div class="text-nowrap">{{ decricaoDes | uppercase }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Razão Social Fornecedor</label>
+            <div class="text-nowrap">{{ razaoForn | uppercase }}</div>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div class="col-7 px-0">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Razão Social Fat. (Fin)</label>
+                <div class="text-nowrap">{{ razaoFatFin | uppercase }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Razão Social Fat.(Sup)</label>
+                <div class="text-nowrap">{{ razaoFatSup | uppercase }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-5 px-0">
+            <div class="form-row">
+              <div class="form-group col-md-10">
+                <label>CNPJ Fat. (Fin)</label>
+                <div class="text-nowrap">{{ cnpjFatFin }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-10">
+                <label>CNPJ Fat. (Sup)</label>
+                <div class="text-nowrap">{{ cnpjFatSup }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div class="col-7 px-0">
+            
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Grupo</label>
+                <div class="text-nowrap">{{ grupo }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Classe</label>
+                <div class="text-nowrap">{{ classe }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Tipo Despesa</label>
+                <div class="text-nowrap">{{ tipoDes}}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label class="text-nowrap">Tipo de Documento</label>
+                <div class="text-nowrap">{{ tipoPag | uppercase }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label class="text-nowrap">Forma de Pagamento</label>
+                <div class="text-nowrap">{{ formaPag | uppercase }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-5 px-0">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Data Emissão</label>
+                <div class="text-nowrap">{{ dtEmissao }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label class="text-nowrap">Data Vencimento</label>
+                <div class="text-nowrap">{{ dtLiquid }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label class="text-nowrap">Data Pagamento</label>
+                <div class="text-nowrap">{{ dtPagamento }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Valor Total</label>
+                <div class="text-nowrap">{{ valTotal | currency:'BRL' }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Banco/Caixa</label>
+                <div class="text-nowrap">{{ bancoCaixa | uppercase }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Banco</label>
+                <div class="text-nowrap">{{ banco | uppercase }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </detail-panel>
+    </div> -->
+  </div>
+</app-body>
+

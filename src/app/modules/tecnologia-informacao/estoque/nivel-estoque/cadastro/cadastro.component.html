@@ -1,0 +1,216 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Nível de Estoque">
+  <!-- <button
+  (click)="openModal(pesquisaDeProdutos)"
+>
+  Pesquisar Produto
+</button> -->
+  <button 
+    [disabled]="form.valid === false"
+    (click)="postNiveisEstoque()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-9 pt-2 mx-auto">
+        <legend>Dados</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col pl-0">
+            <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+              <label class="my-auto" for="ID_TEIN_ESTO_PROD">Produto</label>
+              <div class="my-auto text-uppercase" style="font-size: 10px" >
+                <a
+                  class="text-primary"
+                  href="javascript:void(0)"
+                  (click)="openModal(pesquisaDeProdutos)">
+                  <strong>Selecionar</strong>
+                </a>
+              </div>
+            </div>
+            <select
+              type="text"
+              class="form-control"
+              id="ID_TEIN_ESTO_PROD"
+              formControlName="ID_TEIN_ESTO_PROD"
+              placeholder="Selecionar...">
+              <option [value]="item.ID_TEIN_ESTO_PROD" *ngFor="let item of produtos">{{ item.NM_PROD }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col pl-0">
+            <label for="empresas">Empresa</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="empresas"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              placeholder="Selecione..."
+              [loading]="loadingEmpresas"
+              labelForId="ID"
+              bindLabel="NM_FANT"
+              bindValue="ID"
+              id="ID"
+              formControlName="UUID_EMPR"
+              [ngClass]="onFieldRequired('UUID_EMPR')"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('UUID_EMPR')" message="Empresa é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-3 pl-0">
+            <label for="DS_UNID_MEDI">Unidade de Medida</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DS_UNID_MEDI"
+              formControlName="DS_UNID_MEDI"
+              placeholder="Selecione o Produto..."
+              disabled
+            >
+          </div>
+          <div class="form-group col-md-3 pl-0">
+            <label for="TT_ESTO_MNMO">Quantidade Mínima</label>
+            <input 
+              class="form-control" 
+              type="text"
+              placeholder="Digite..."
+              id="TT_ESTO_MNMO"
+              formControlName="TT_ESTO_MNMO"
+              [ngClass]="onFieldRequired('TT_ESTO_MNMO')"
+              currencyMask [options]="{ align: 'left', prefix: '' , thousands: '.', decimal: ',' , precision: precisao }"
+            />
+            <invalid-form-control [show]="onFieldInvalid('TT_ESTO_MNMO')" message="Quantidade Mínima é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-3 pl-0">
+            <label for="TT_ESTO_MXMO">Quantidade Máxima</label>
+            <input 
+              class="form-control" 
+              type="text"
+              placeholder="Digite..."
+              id="TT_ESTO_MXMO"
+              formControlName="TT_ESTO_MXMO"
+              [ngClass]="onFieldRequired('TT_ESTO_MXMO')"
+              currencyMask [options]="{ align: 'left', prefix: '' , thousands: '.', decimal: ',' , precision: precisao }"
+            />
+            <invalid-form-control [show]="onFieldInvalid('TT_ESTO_MXMO')" message="Quantidade Máxima é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-3 pl-0">
+            <label for="IN_STAT">Situação</label>
+            <select
+              class="form-control custom-select"
+              id="IN_STAT"
+              formControlName="IN_STAT"
+              [ngClass]="onFieldRequired('IN_STAT')">
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('IN_STAT')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-9 pt-2 mx-auto">
+            <legend>Observação</legend>
+            <div class="form-row justify-content-center">
+              <div class="form-group col">
+                <label for="DS_OBSE" >Observação:</label>
+                <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+              </div>
+            </div>
+            <br>
+      </fieldset>
+    </fieldset>
+  </form>
+  <ng-template #pesquisaDeProdutos>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Pesquisa de Produtos</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingProdutos">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <advanced-filter>
+        <form [formGroup]="formPesquisaProduto">
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="cdItem">BUSCAR POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="ID_TEIN_ESTO_PROD" selected>ID</option>
+                <option value="NM_PROD" >Nome de Produto</option>
+                <option value="NM_TIPO">Tipo do Produto</option>
+                <option value="NM_MODE">Modelo</option>
+                <option value="NM_MRCA">Marca</option>
+              </select>
+            </div>
+            <div class="form-group col">
+              <label>TERMO DE PESQUISA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  (keyup.enter)="getProdutos()"
+                >
+                <div class="input-group-append">
+                  <span
+                    class="input-group-text hover"
+                    (click)="getProdutos()"
+                  >
+                    <i class="fas fa-search"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <custom-table *ngIf="!loadingProdutos && (produtos.length > 0)">
+        <ng-template #thead let-thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome do Produto</th>
+            <th>Tipo de Produto</th>
+            <th>Modelo</th>
+            <th>Marca</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of produtos">
+            <td>{{ item.ID_TEIN_ESTO_PROD }}</td>
+            <td>{{ item.NM_PROD }}</td>
+            <td>{{ item.NM_TIPO }}</td>
+            <td>{{ item.NM_MODE }}</td>
+            <td>{{ item.NM_MRCA }}</td>
+            <td>
+              <button
+                class="btn-icon-sm"
+                tooltip="Salvar Item"
+                container="body"
+                (click)="setProduto(item);modalRef.hide()"
+              >
+                <i class="far fa-save"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+  </ng-template>
+</app-body>

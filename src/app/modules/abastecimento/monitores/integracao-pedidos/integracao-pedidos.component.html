@@ -1,0 +1,832 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Integração de Pedidos">
+  <button
+    type="button"
+    (click)="onFilter()"
+    [disabled]= "form.status == 'INVALID'"
+    >
+    Filtrar
+  </button>
+  <button
+    type="button"
+    (click)="excelExport()"
+    [disabled]= "form.status == 'INVALID'"
+    >
+    Exportar Excel
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-row">
+          <div class="form-group col-lg-2">
+            <label for="dataInicial">Data Inicial</label>
+            <input
+              class="form-control"
+              id="dataInicial"
+              type="text"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              formControlName="dataInicial"
+            />
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="dataFinal">Data Final</label>
+            <input
+              class="form-control"
+              id="dataFinal"
+              type="text"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              formControlName="dataFinal"
+            />
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="Integrador">Integrador</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="integradores"
+              [virtualScroll]="true"
+              [multiple]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="false"
+              maxSelectedItems="6"
+              placeholder="Selecione..."
+              bindLabel="NM_APOI_INTE_PEDI"
+              bindValue="ID"
+              formControlName="integrador"
+              (change)="getIntegradorDepositos()"
+              [ngClass]="onFieldRequired('integrador')"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('integrador')" message="Integrador é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="depositos">Depositos</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="depositos"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="false"
+              [multiple]="true"
+              placeholder="Selecione..."
+              bindLabel="NM_DEPO"
+              bindValue="ID_DEPO"
+              formControlName="depositos"
+            >
+            </ng-select>
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="linha">Linha</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="linhas"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="true"
+              placeholder="Selecione..."
+              bindLabel="NM_LINH"
+              bindValue="ID"
+              formControlName="linha"
+              (change)="
+                getSubLinhas() +
+                  ' ' +
+                  getClasses()
+              "
+            >
+            </ng-select>
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="subLinha">Sublinha</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="subLinhas"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="true"
+              placeholder="Selecione..."
+              bindLabel="NM_SUB_LINH"
+              bindValue="ID"
+              (change)="getClasses()"
+              formControlName="subLinha"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-2">
+            <label for="classe">Classe</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="classes"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="false"
+              maxSelectedItems="6"
+              placeholder="Selecione..."
+              bindLabel="NM_CLAS"
+              bindValue="ID"
+              formControlName="classe"
+              (change)="getMateriais()"
+            >
+            </ng-select>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="material">Material</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="materiais"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="false"
+              [multiple]="true"
+              placeholder="Selecione..."
+              bindLabel="ID_REFE_ERP_NM_MATE"
+              bindValue="ID"
+              formControlName="material"
+            >
+            </ng-select>
+          </div>        
+          <div class="form-group col-lg-2">
+            <label for="situacao">Situação</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="situacoes"
+              [virtualScroll]="true"
+              [hideSelected]="true"
+              [closeOnSelect]="false"
+              [multiple]="true"
+              placeholder="Selecione..."
+              bindLabel="NM_APOI_SITU_INTE_PEDI"
+              bindValue="ID"
+              formControlName="situacao"
+            >
+            </ng-select>
+          </div>        
+        </div>
+      </form>
+  </advanced-filter>
+  <div class="mt-3" *ngIf="loading">
+    <div class="text-primary d-flex align-items-center justify-content-end">
+      <span (click)="setVisibleEtapas()">
+        <p *ngIf="visibleEtapas"><strong>MOSTRAR ETAPAS</strong></p>
+        <p *ngIf="!visibleEtapas"><strong>OCULTAR ETAPAS</strong></p>
+      </span>
+    </div>
+    <div class="card-deck" [hidden]="visibleEtapas">
+      <div class="card border rounded bg-white shadow-sm">
+        <div class="card-body">
+          <h6 class="card-title">ETAPA 1</h6>
+          <div class="border rounded bg-white shadow-sm w-100 p-3 mb-2">
+            <div class="d-flex justify-content-between">
+              <div class="bg-gray rounded-circle text-white icon-40 my-auto"><i class="fas fa-hourglass-half"></i></div>
+              <div class="text-right">
+                <h5
+                class="font-weight-bolder mb-1">
+                  {{dados[0].TT_AGUA_INTE}}
+                </h5>
+                <div class="text-muted small font-weight-bold">AGUARDANDO INTEGRAÇÃO</div>
+              </div>
+            </div>
+          </div>
+          <div class="border rounded bg-white shadow-sm w-100 p-3 mb-2">
+            <div class="d-flex justify-content-between">
+              <div class="bg-secondary rounded-circle text-white icon-40 my-auto"><i class="fas fa-paper-plane"></i></div>
+              <div class="text-right">
+                <h5
+                class="font-weight-bolder mb-1">
+                  {{dados[0].TT_PRON_INTE}}
+                </h5>
+                <div class="text-muted small font-weight-bold">PRONTO PARA INTEGRAR</div>
+              </div>
+            </div>
+          </div>
+          <div class="border rounded bg-white shadow-sm w-100 p-3">
+            <div class="d-flex justify-content-between">
+              <div class="bg-blue rounded-circle text-white icon-40 my-auto"><i class="fas fa-exchange-alt"></i></div>
+              <div class="text-right">
+                <h5
+                class="font-weight-bolder mb-1">
+                  {{dados[0].TT_AGUA_PROC_UNIC}}
+                </h5>
+                <div class="text-muted small font-weight-bold">AGUARDANDO PROCESSAMENTO ÚNICA</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card border rounded bg-white shadow-sm">
+        <div class="card-body">
+          <h6 class="card-title">ETAPA 2</h6>
+          <div class="border rounded bg-white shadow-sm w-100 p-3 mb-2">
+            <div class="d-flex justify-content-between">
+              <div class="bg-red rounded-circle text-white icon-40 my-auto"><i class="fas fa-window-close"></i></div>
+              <div class="text-right">
+                <h5
+                class="font-weight-bolder mb-1">
+                  {{dados[0].TT_PROC_UNIC_ERRO}}
+                </h5>
+                <div class="text-muted small font-weight-bold">ERRO DE PROCESSAMENTO ÚNICA</div>
+              </div>
+            </div>
+          </div>
+          <div class="border rounded bg-white shadow-sm w-100 p-3">
+            <div class="d-flex justify-content-between">
+              <div class="bg-purple rounded-circle text-white icon-40 my-auto"><i class="fas fa-cogs"></i></div>
+              <div class="text-right">
+                <h5
+                class="font-weight-bolder mb-1">
+                {{dados[0].TT_AGUA_ORDE_VEND}}
+                </h5>
+                <div class="text-muted small font-weight-bold">AGUARDANDO CRIAÇÃO DE OV</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card border rounded bg-white shadow-sm">
+        <div class="card-body">
+          <h6 class="card-title">ETAPA 3</h6>
+          <div class="border rounded bg-white shadow-sm w-100 p-3 mb-2">
+            <div class="d-flex justify-content-between">
+              <div class="bg-yellow rounded-circle text-white icon-40 my-auto"><i class="fas fa-exclamation-triangle"></i></div>
+              <div class="text-right">
+                <h5
+                class="font-weight-bolder mb-1">
+                  {{dados[0].TT_ORDE_VEND_ERRO}}
+                </h5>
+                <div class="text-muted small font-weight-bold">ERRO DE CRIAÇÃO DE OV</div>
+              </div>
+            </div>
+          </div>
+          <div class="border rounded bg-white shadow-sm w-100 p-3">
+            <div class="d-flex justify-content-between">
+              <div class="bg-green rounded-circle text-white icon-40 my-auto"><i class="fas fa-check"></i></div>
+              <div class="text-right">
+                <h5
+                class="font-weight-bolder mb-1">
+                  {{dados[0].TT_ORDE_VEND_SUCE}}
+                </h5>
+                <div class="text-muted small font-weight-bold">OV GERADA COM SUCESSO</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive mt-3">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th nowrap scope="col" class="hover" (click)="sort('NM_EMPR')">Empresa
+              <span *ngIf="key == 'NM_EMPR'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_EMPR'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>  
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NM_DEPO')">Depósito
+              <span *ngIf="key == 'NM_DEPO'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_DEPO'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>  
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NR_PEDI')">Nº pedido
+              <span *ngIf="key == 'NR_PEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NR_PEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>  
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('DT_PEDI')">Data pedido
+              <span *ngIf="key == 'DT_PEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'DT_PEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>  
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NM_APOI_INTE_PEDI')">Linha do pedido
+              <span *ngIf="key == 'NM_APOI_INTE_PEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_APOI_INTE_PEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>  
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NM_GRUP_FORN')">Grupo do fornecedor
+              <span *ngIf="key == 'NM_GRUP_FORN'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_GRUP_FORN'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>  
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('VL_TOTA_PEDI')">Valor total
+              <span *ngIf="key == 'VL_TOTA_PEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'VL_TOTA_PEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>  
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('QT_TOTA_PEDI')">Peso (ton)
+              <span *ngIf="key == 'QT_TOTA_PEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'QT_TOTA_PEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>  
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('DT_ENTR')">Data desejada
+              <span *ngIf="key == 'DT_ENTR'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'DT_ENTR'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>  
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NR_ORDE_VEND_PEDI')">Ordem de Venda
+              <span *ngIf="key == 'NR_ORDE_VEND_PEDI'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NR_ORDE_VEND_PEDI'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>  
+            </th>
+            <th nowrap scope="col" width="5%"></th>
+            <th nowrap scope="col" width="5%"></th>
+            <th nowrap scope="col" width="5%"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dados | orderBy: key:reverse | slice: begin:end">
+            <td nowrap>{{item.NM_EMPR}}</td>
+            <td nowrap>{{item.NM_DEPO}}</td>
+            <td nowrap class="text-right">{{item.NR_PEDI | number}}</td>
+            <td nowrap class="text-center">{{item.DT_PEDI | date:'dd/MM/yyyy'}}</td>
+            <td nowrap>{{item.NM_LINH}}</td>
+            <td nowrap>{{item.NM_GRUP_FORN}}</td>
+            <td nowrap class="text-right">{{item.VL_TOTA_PEDI | currency:'BRL'}}</td>
+            <td nowrap class="text-right">{{item.QT_TOTA_PEDI_TONE | number:'0.3'}}</td>
+            <td nowrap class="text-center">{{item.DT_ENTR ? (item.DT_ENTR | date:'dd/MM/yyyy') : "-"}}</td>
+            <td nowrap class="text-center">{{item.NR_ORDE_VEND_PEDI ? (item.NR_ORDE_VEND_PEDI | number:'0.0') : '-' }}</td>
+            <td nowrap width="5%" class="text-center">
+              <span>
+                <i [ngClass]="setIconeStatus(item.ID_STAT_PEDI)" tooltip="{{item.DS_STAT_PEDI}}"></i>
+              </span>
+            </td>
+            <td width="5%" class="text-center">
+              <span>
+                <i class="fas fa-external-link-alt text-info" (click)="lgModalA.show() + '' +  onLogs(item)" tooltip="Logs"></i>
+              </span>
+            </td>
+            <td nowrap width="5%" class="text-center">
+              <span>
+                <i class="fas fa-search" (click)="lgModal.show() + ' ' +  onDetalhes(item)" tooltip="Detalhes"></i>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div
+    class="col-12 mb-2 ml-2"
+    *ngIf="!noResult && dados?.length > itemsPerPage"
+  >
+    Exibindo {{ begin + 1 }} a {{ end }} de {{ dados?.length }}
+    <div class="d-flex">
+      <pagination
+        [maxSize]="10"
+        [totalItems]="dados?.length"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;"
+      >
+      </pagination>
+    </div>
+  </div>
+  </div>
+  <div
+    *ngIf="noResult"
+    class="text-center d-flex justify-content-center align-items-center p-5"
+    style="height: 80%;"
+  >
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>
+<div
+  bsModal
+  #lgModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dialog-sizes-name1"
+  [hidden]="!loadingDetalhes"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+          Detalhes
+        </h4>
+        <button
+          type="button"
+          class="close pull-right"
+          (click)="lgModal.hide()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="mt-3">
+          <div class="row mb-2 mt-2">
+            <div class="col-3">
+              <p style="font-size: 14px;">
+                <strong> CÓD. FORNECEDOR: </strong> {{ modal.codFornecedor | number}}
+              </p>
+            </div>
+            <div class="col-3">
+              <p style="font-size: 14px;">
+                <strong> FORNECEDOR: </strong> {{ modal.descFornecedor }}
+              </p>
+            </div>
+            <div class="col-3">
+              <p style="font-size: 14px;">
+                <strong> Nº PEDIDO: </strong> {{ modal.nPedido | number }}
+              </p>
+            </div>
+            <div class="col-3">
+              <p style="font-size: 14px;">
+                <strong> LINHA PEDIDO: </strong> {{ modal.linhaPedido }}
+              </p>
+            </div>
+          </div>
+          <div class="row mb-2 mt-2">
+            <div class="col-4">
+              <p style="font-size: 14px;">
+                <strong> COND. PAGAMENTO: </strong> {{ modal.condPagamento }}
+              </p>
+            </div>
+            <div class="col-4">
+              <p style="font-size: 14px;">
+                <strong> DATA ENVIO: </strong> {{ modal.dataEnvio ? (modal.dataEnvio | date:'dd/MM/yyyy') : '-' }}
+              </p>
+            </div>
+          </div>
+          <div class="table-responsive" *ngIf="!noResultDetalhes && loadingDetalhes">
+            <custom-table>
+              <ng-template #thead let-thead>
+                <tr class="text-center">
+                  <th nowrap scope="col" class="hover" (click)="sortA('NR_ITEM_PEDI')">Item
+                    <span *ngIf="keyA == 'NR_ITEM_PEDI'"
+                      ><i
+                        [ngClass]="reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyA != 'NR_ITEM_PEDI'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortA('ID_MATE_REFE_ERP')">Cód. material
+                    <span *ngIf="keyA == 'ID_MATE_REFE_ERP'"
+                      ><i
+                        [ngClass]="reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyA != 'ID_MATE_REFE_ERP'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortA('NM_MATE')">Material
+                    <span *ngIf="keyA == 'NM_MATE'"
+                      ><i
+                        [ngClass]="reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyA != 'NM_MATE'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortA('NM_LINH')">Linha
+                    <span *ngIf="keyA == 'NM_LINH'"
+                      ><i
+                        [ngClass]="reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyA != 'NM_LINH'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortA('NM_SUB_LINH')">Sublinha
+                    <span *ngIf="keyA == 'NM_SUB_LINH'"
+                      ><i
+                        [ngClass]="reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyA != 'NM_SUB_LINH'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortA('NM_CLAS')">Classe
+                    <span *ngIf="keyA == 'NM_CLAS'"
+                      ><i
+                        [ngClass]="reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyA != 'NM_CLAS'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortA('DS_UNID')">Un. Medida
+                    <span *ngIf="keyA == 'DS_UNID'"
+                      ><i
+                        [ngClass]="reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyA != 'DS_UNID'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortA('CD_MATE_FORN')">Cód. Mat. Fornecedor
+                    <span *ngIf="keyA == 'CD_MATE_FORN'"
+                      ><i
+                        [ngClass]="reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyA != 'CD_MATE_FORN'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortA('VL_UNIT_ITEM')">Valor Unitário
+                    <span *ngIf="keyA == 'VL_UNIT_ITEM'"
+                      ><i
+                        [ngClass]="reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyA != 'VL_UNIT_ITEM'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortA('QT_ITEM')">Peso (TON)
+                    <span *ngIf="keyA == 'QT_ITEM'"
+                      ><i
+                        [ngClass]="reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyA != 'QT_ITEM'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortA('VL_TOTA_ITEM')">Valor Total
+                    <span *ngIf="keyA == 'VL_TOTA_ITEM'"
+                      ><i
+                        [ngClass]="reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyA != 'VL_TOTA_ITEM'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortA('NR_ORDE_VEND_ITEM_PEDI')">Ordem de Venda
+                    <span *ngIf="keyA == 'NR_ORDE_VEND_ITEM_PEDI'"
+                      ><i
+                        [ngClass]="reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyA != 'NR_ORDE_VEND_ITEM_PEDI'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th scope="col" width="5%"></th>
+                  <th scope="col" width="5%"></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of dadosDetalhes | orderBy: keyA:reverseA | slice: beginA:endA">
+                  <td nowrap class="text-right">{{ item.NR_ITEM_PEDI | number}}</td>
+                  <td nowrap class="text-right">{{ item.ID_MATE_REFE_ERP | number}}</td>
+                  <td nowrap>{{ item.NM_MATE}}</td>
+                  <td nowrap>{{ item.NM_LINH}}</td>
+                  <td nowrap class="text-center">{{ item.NM_SUB_LINH ? item.NM_SUB_LINH : '-' }}</td>
+                  <td nowrap>{{ item.NM_CLAS}}</td>
+                  <td nowrap class="text-center">{{ item.DS_UNID}}</td>
+                  <td nowrap class="text-center">{{ item.CD_MATE_FORN ? item.CD_MATE_FORN : '-' }} </td>
+                  <td nowrap class="text-right">{{ item.VL_UNIT_ITEM | currency:'BRL'}}</td>
+                  <td nowrap class="text-right">{{ item.QT_ITEM_TONE | number: '0.3'}}</td>
+                  <td nowrap class="text-right">{{ item.VL_TOTA_ITEM | currency:'BRL'}}</td>
+                  <td nowrap class="text-center">{{item.NR_ORDE_VEND_ITEM_PEDI? (item.NR_ORDE_VEND_ITEM_PEDI | number:'0.0' ) : '-'}}</td>
+                  <td width="5%" class="text-center">
+                    <span>
+                      <i [ngClass]="setIconeStatus(item.ID_STAT_ITEM_PEDI)" tooltip="{{item.DS_STAT_ITEM_PEDI}}"></i>
+                    </span>
+                  </td>
+                  <td width="5%" class="text-center">
+                    <span>
+                      <i class="fas fa-external-link-alt text-info" (click)="lgModalA.show() + '' +  onLogs(item)" tooltip="Logs"></i>
+                    </span>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+          <div
+          class="col-12 mb-2 ml-2"
+          *ngIf="!noResultDetalhes && dadosDetalhes?.length > itemsPerPage"
+        >
+          Exibindo {{ beginA + 1 }} a {{ endA }} de {{ dadosDetalhes?.length }}
+          <div class="d-flex">
+            <pagination
+              [maxSize]="10"
+              [totalItems]="dadosDetalhes?.length"
+              (pageChanged)="onPageChangedA($event)"
+              [(itemsPerPage)]="itemsPerPage"
+              [boundaryLinks]="true"
+              [(ngModel)]="currentPageA"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+            >
+            </pagination>
+          </div>
+        </div>
+        </div>
+        <div
+          *ngIf="noResultDetalhes"
+          class="text-center d-flex justify-content-center align-items-center p-5"
+          style="height: 80%;"
+        >
+          <empty-result message="Nenhuma informação encontrada"></empty-result>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  bsModal
+  #lgModalA="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dialog-sizes-name1"
+  [hidden]="!loadingLogs"
+  >
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+          Logs
+        </h4>
+        <button
+          type="button"
+          class="close pull-right"
+          (click)="lgModalA.hide()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="height:550px">
+        <div class="mt-3">
+          <div class="table-responsive" *ngIf="!noResultLogs && loadingLogs">
+            <custom-table>
+              <ng-template #thead let-thead>
+                <tr class="text-center">
+                  <th nowrap scope="col" class="hover" (click)="sortB('NR_ITEM_PEDI')">Item
+                    <span *ngIf="keyB == 'NR_ITEM_PEDI'"
+                      ><i
+                        [ngClass]="reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyB != 'NR_ITEM_PEDI'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortB('ID_MATE_REFE_ERP')">Cód. Requisição
+                    <span *ngIf="keyB == 'ID_MATE_REFE_ERP'"
+                      ><i
+                        [ngClass]="reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyB != 'ID_MATE_REFE_ERP'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortB('NM_MATE')">Descrição envio
+                    <span *ngIf="keyB == 'NM_MATE'"
+                      ><i
+                        [ngClass]="reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyB != 'NM_MATE'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortB('NM_LINH')">Data envio
+                    <span *ngIf="keyB == 'NM_LINH'"
+                      ><i
+                        [ngClass]="reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyB != 'NM_LINH'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                  <th nowrap scope="col" class="hover" (click)="sortB('NM_SUB_LINH')">Usuário
+                    <span *ngIf="keyB == 'NM_SUB_LINH'"
+                      ><i
+                        [ngClass]="reverseB ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                      ></i
+                    ></span>
+                    <span *ngIf="keyB != 'NM_SUB_LINH'"
+                      ><i [ngClass]="'fas fa-sort'"></i
+                    ></span>  
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr class="text-center" *ngFor="let item of dadosLogs | orderBy: keyB:reverseB | slice: beginB:endB">
+                  <td nowrap>{{ item.NR_ITEM_PEDI }}</td>
+                  <td nowrap>{{ item.CD_STAT_RETO_REQU }}</td>
+                  <td nowrap>{{ item.DS_STAT_RETO_REQU }}</td>
+                  <td nowrap>{{ item.DT_ACAO | date:'dd/MM/yyyy HH:mm' }}</td>
+                  <td nowrap>{{ item.NM_USUA }}</td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+          <div
+          class="col-12 mb-2 ml-2"
+          *ngIf="!noResultLogs && dadosLogs?.length > itemsPerPage"
+        >
+          Exibindo {{ beginB + 1 }} a {{ endB }} de {{ dadosLogs?.length }}
+          <div class="d-flex">
+            <pagination
+              [maxSize]="10"
+              [totalItems]="dadosLogs?.length"
+              (pageChanged)="onPageChangedB($event)"
+              [(itemsPerPage)]="itemsPerPage"
+              [boundaryLinks]="true"
+              [(ngModel)]="currentPageB"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+            >
+            </pagination>
+          </div>
+        </div>
+        </div>
+        <div
+          *ngIf="noResultLogs"
+          class="text-center d-flex justify-content-center align-items-center p-5"
+          style="height: 80%;"
+        >
+          <empty-result message="Nenhuma informação encontrada"></empty-result>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,524 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="Termo de Devolução">
+  <button
+    type="button"
+    *ngIf="tipoVisao == 'formulario'"
+    [disabled]="!form.valid"
+    (click)="onSubmit()">
+    Gerar
+  </button>
+  <button
+    type="button"
+    *ngIf="tipoVisao == 'ficha'"
+    (click)="onCancel()">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    *ngIf="tipoVisao == 'ficha'"
+    (click)="onDownload()">
+    Download
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row justify-content-center" *ngIf="tipoVisao == 'formulario'">
+    <div class="col-12" >
+      <h1>Termo de Devolução</h1>
+      <form  [formGroup]="form">
+        <div class="form-row">
+          <div class="form-group col mb-0">
+            <div class="mtc-title">Dados do Comodante</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="NM_EMPR">Nome</label>
+            <input
+            type="text"
+            class="form-control"
+            id="NM_EMPR"
+            formControlName="NM_EMPR"
+            >
+          </div>
+          <div class="form-group col-md-6">
+            <label for="CD_EMPR_CNPJ">CNPJ </label>
+            <input
+            type="text"
+            class="form-control"
+            id="CD_EMPR_CNPJ"
+            formControlName="CD_EMPR_CNPJ"
+            cnpj [textMask]="{ mask: MASKS.cnpj.textMask }"
+            >
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="DS_EMPR_ENDE">Endereço</label>
+            <input
+            type="text"
+            class="form-control"
+            id="DS_EMPR_ENDE"
+            formControlName="DS_EMPR_ENDE"
+            >
+          </div>
+          <div class="form-group col-md-6">
+            <label for="NM_EMPR_BAIR">Bairro</label>
+            <input
+            type="text"
+            class="form-control"
+            id="NM_EMPR_BAIR"
+            formControlName="NM_EMPR_BAIR"
+            >
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="NM_EMPR_CIDA">Cidade</label>
+            <input
+            type="text"
+            class="form-control"
+            id="NM_EMPR_CIDA"
+            formControlName="NM_EMPR_CIDA"
+            >
+          </div>
+          <div class="form-group col-md-6">
+            <label for="NM_EMPR_ESTA">Estado</label>
+            <input
+            type="text"
+            class="form-control"
+            id="NM_EMPR_ESTA"
+            formControlName="NM_EMPR_ESTA"
+            >
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col mb-0">
+            <hr class="mt-0">
+            <div class="mtc-title">Dados do Comodatário</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="NM_FUNC">Nome</label>
+            <input
+            type="text"
+            class="form-control"
+            id="NM_FUNC"
+            formControlName="NM_FUNC"
+            >
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="CD_USUA_CPF">CPF</label>
+            <input
+            type="text"
+            class="form-control"
+            id="CD_USUA_CPF"
+            formControlName="CD_USUA_CPF"
+            cpf [textMask]="{ mask: MASKS.cpf.textMask }">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="CD_USUA_RG">RG</label>
+            <input
+            type="text"
+            class="form-control"
+            id="CD_USUA_RG"
+            formControlName="CD_USUA_RG"
+            >
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="DS_USUA_ENDE">Endereço</label>
+            <input
+            type="text"
+            class="form-control"
+            id="DS_USUA_ENDE"
+            formControlName="DS_USUA_ENDE"
+            >
+          </div>
+          <div class="form-group col-md-6">
+            <label for="NM_FUNC_BAIR">Bairro</label>
+            <input
+            type="text"
+            class="form-control"
+            id="NM_FUNC_BAIR"
+            formControlName="NM_FUNC_BAIR"
+            >
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="NM_FUNC_CIDA">Cidade</label>
+            <input
+            type="text"
+            class="form-control"
+            id="NM_FUNC_CIDA"
+            formControlName="NM_FUNC_CIDA"
+            >
+          </div>
+          <div class="form-group col-md-6">
+            <label for="NM_FUNC_ESTA">Estado</label>
+            <input
+            type="text"
+            class="form-control"
+            id="NM_FUNC_ESTA"
+            formControlName="NM_FUNC_ESTA"
+            >
+          </div>
+        </div>
+        <div formArrayName="objetos">
+          <div class="form-row">
+            <div class="form-group col mb-0">
+              <hr class="mt-0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col mb-0 d-flex justify-content-between">
+              <div class="mtc-title">Dados da Ocorrência</div>
+              <div>
+                <a
+                  class="text-secondary"
+                  (click)="onAddObjeto()"
+                  href="javascript:void(0)">
+                  <b>Adicionar</b>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="form-row"  *ngFor="let item of objetos.controls; let i = index" [formGroupName]="i">
+            <div class="form-group col mb-0">
+              <div class="form-row">
+                <div class="form-group col-2">
+                  <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+                    <label class="my-auto" for="CD_ITEM">Código do Produto</label>
+                    <div class="my-auto text-uppercase" style="font-size: 10px">
+                      <a
+                        class="text-primary"
+                        href="javascript:void(0)"
+                        (click)="openModal(pesquisaDeItens, i)">
+                        <strong>Selecionar</strong>
+                      </a>
+                    </div>
+                  </div>
+                  <input
+                  type="text"
+                  class="form-control"
+                  id="CD_ITEM"
+                  formControlName="CD_ITEM"
+                  (input)="onInput()"
+                  [ngClass]="onNestedFieldError('objetos', i, 'CD_ITEM') + ' ' + onNestedFieldRequired('objetos', i, 'CD_ITEM')">
+                </div>
+                <div class="form-group col-2">
+                  <label for="NM_ITEM_TIPO">Tipo do Produto</label>
+                  <input
+                  type="text"
+                  class="form-control"
+                  id="NM_ITEM_TIPO"
+                  formControlName="NM_ITEM_TIPO"
+                  (input)="onInput()"
+                  [ngClass]="onNestedFieldError('objetos', i, 'NM_ITEM_TIPO') + ' ' + onNestedFieldRequired('objetos', i, 'NM_ITEM_TIPO')">
+                </div>
+                <div class="form-group col-4">
+                  <label for="NM_MODE">Modelo do Produto</label>
+                  <input
+                  type="text"
+                  class="form-control"
+                  id="NM_MODE"
+                  formControlName="NM_MODE"
+                  (input)="onInput()"
+                  [ngClass]="onNestedFieldError('objetos', i, 'NM_MODE') + ' ' + onNestedFieldRequired('objetos', i, 'NM_MODE')">
+                </div>
+                <div class="form-group col-1">
+                  <label for="quantidadeObj">Quantidade</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="quantidadeObj"
+                    formControlName="quantidadeObj"
+                    (input)="onInput()"
+                    [ngClass]="onNestedFieldError('objetos', i, 'quantidadeObj') + ' ' + onNestedFieldRequired('objetos', i, 'quantidadeObj')">
+                </div>
+                <div class="form-group col-2">
+                  <label for="VL_ITEM">Valor</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="valorObj"
+                    formControlName="VL_ITEM"
+                    currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                    (input)="onInput()"
+                    [ngClass]="onNestedFieldError('objetos', i, 'VL_ITEM') + ' ' + onNestedFieldRequired('objetos', i, 'VL_ITEM')">
+                </div>
+                <div class="col-1 pt-4 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon"
+                    (click)="onDeleteObjeto(i)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-12">
+                  <label for="NM_PROD">Produto</label>
+                  <input
+                  type="text"
+                  class="form-control"
+                  id="NM_PROD"
+                  formControlName="NM_PROD"
+                  (input)="onInput()"
+                  [ngClass]="onNestedFieldError('objetos', i, 'NM_PROD') + ' ' + onNestedFieldRequired('objetos', i, 'NM_PROD')">
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="form-row">
+            <div class="form-group col-md-8" >
+              <label>Observação</label>
+              <div >{{ocorrencias.DS_OBSE}}</div>
+            </div>
+            <div class="form-group col-md-4" >
+              <label>Data de cadastro da ocorrência</label>
+              <div >{{ocorrencias.DT_INCL | date: 'dd/MM/yyyy HH:mm'}}</div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <ng-template #pesquisaDeItens>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Pesquisa de Itens</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingItens">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <advanced-filter>
+        <form [formGroup]="formPesquisaItem">
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="cdItem">BUSCAR POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="ID_TECN_INFO_ITEM" selected>ID</option>
+                <option value="NM_PROD">Produto</option>
+                <option value="CD_ITEM">Código/Nº Série</option>
+                <option value="NM_ITEM_TIPO">Tipo de Item</option>
+                <option value="NM_MODE">Modelo</option>
+                <option value="DS_CONT">Contrato</option>
+              </select>
+            </div>
+            <div class="form-group col">
+              <label>TERMO DE PESQUISA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  (keyup.enter)="getItens()"
+                >
+                <div class="input-group-append">
+                  <span
+                    class="input-group-text hover"
+                    (click)="getItens()"
+                  >
+                    <i class="fas fa-search"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <custom-table *ngIf="!loadingItens && (itens.length > 0)">
+        <ng-template #thead let-thead>
+          <tr>
+            <th>ID</th>
+            <th>Código/Nº Série</th>
+            <th>Produto</th>
+            <th>Contrato</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of itens">
+            <td>{{ item.ID_TECN_INFO_ITEM }}</td>
+            <td>{{ item.CD_ITEM }}</td>
+            <td>{{ item.NM_PROD}}</td>
+            <td>{{ item.DS_CONT }}</td>
+            <td>
+              <button
+                class="btn-icon-sm"
+                tooltip="Salvar Item"
+                container="body"
+                (click)="setObjetos(item);modalRef.hide()"
+              >
+                <i class="far fa-save"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+  </ng-template>
+  <div class="row justify-content-center pt-5 uk-margin-top" id="termo-devolucao" *ngIf="tipoVisao == 'ficha'" >
+    <div class=" row justify-content-center col-10 pt-5 pb-5">
+      <h1 >CONTRATO DE COMODATO</h1><br>
+      <div>
+        <div class=" mt-5 pt-5">
+          <p>
+            <strong>COMODANTE:</strong> {{dataFicha.NM_EMPR | uppercase}}, com sede na {{dataFicha.DS_EMPR_ENDE | uppercase }},
+            bairro {{dataFicha.NM_EMPR_BAIR | uppercase}}, na cidade de {{dataFicha.NM_EMPR_CIDA | uppercase}}, Estado de {{dataFicha.NM_EMPR_ESTA | uppercase}}, inscrita 
+            no CNPJ sob o Nº{{dataFicha.CD_EMPR_CNPJ | cnpj }}.
+          </p>
+          <p>
+            <strong>COMODATÁRIO: </strong>{{dataFicha.NM_FUNC | uppercase}}, (estado civil), (profissão), portador da cédula de identidade R.G. nº {{dataFicha.CD_USUA_RG}}, e CPF/MF nº {{dataFicha.CD_USUA_CPF}}, residente e 
+            domiciliado na residente e domiciliado na {{dataFicha.DS_USUA_ENDE | uppercase}} , {{dataFicha.DS_USUA_BAIR | uppercase}} na 
+            cidade de, {{dataFicha.NM_FUNC_CIDA | uppercase}} no Estado de {{dataFicha.NM_FUNC_ESTA | uppercase}}, registro nº {{dataFicha.NR_MATR}}, sob a gestão de (nome do Gestor);
+          </p>
+          <p>
+            As partes acima identificadas acordam com o presente Contrato de Comodato de Equipamentos, que se regerá pelas cláusulas seguintes:
+          </p>
+          <br>
+          <p class="pt-3">
+            <strong><u>DO OBJETO DO CONTRATO</u></strong>
+          </p>
+          <p>
+            Cláusula 1ª. O OBJETO do presente instrumento é a transferência, pela COMODANTE ao COMODATÁRIO, dos direitos de uso e gozo dos equipamentos e computadores descritos a seguir:
+          </p>
+          <div *ngIf="dataFicha.objetos.length == 0" class="pt-3">NÃO INFORMADO</div>
+          <div *ngIf="dataFicha.objetos.length > 0" class="pt-3">
+            <div class="row mt-0 col-12" *ngFor="let item of dataFicha.objetos">
+              <div class="col-8">
+                <p class="mt-0 mb-0">
+                  <strong class="mr-2">Produto:</strong>
+                  <span *ngIf="item.NM_PROD == null">NÃO INFORMADO</span>
+                  <span *ngIf="item.NM_PROD != null">{{ item.NM_PROD | uppercase }}</span>
+                </p>
+              </div>
+              <div class="col-1 mr-5">
+                <p class="mt-0 mb-2">
+                  <strong class="mr-2">Quantidade:</strong>
+                  <span *ngIf="item.quantidadeObj == null">NÃO INFORMADO</span>
+                  <span *ngIf="item.quantidadeObj != null">{{ item.quantidadeObj }}</span>
+                </p>
+              </div>
+              <div class="col-2">
+                <p class="mt-0 mb-2">
+                  <strong class="mr-2">Valor:</strong>
+                  <span *ngIf="item.VL_ITEM == null">NÃO INFORMADO</span>
+                  <span *ngIf="item.VL_ITEM != null">{{ item.VL_ITEM | currency:'BRL':'symbol':'1.2-2'}}</span>
+                </p>
+              </div>
+            </div>
+            <hr width = “2” size = “100”>
+          </div>
+          <br>
+          <p class="pt-3">
+            <strong><u>DO USO E DAS OBRIGAÇÕES DO COMODATÁRIO</u></strong>
+          </p>
+          <p>
+            Cláusula 2ª. Os equipamentos, objeto deste contrato, deverão ser utilizados somente, pelo COMODATÁRIO, não devendo serem utilizados para fins pessoais.
+          </p>
+          <p>
+            Cláusula 3ª. O COMODATÁRIO deverá utilizar o equipamento e devolve-lo nas mesmas condições em que o recebeu - a <strong>{{dataFicha.NM_EMPR | uppercase}}</strong> irá avaliar o objeto quando da devolução.
+          </p>
+          <p>
+            Cláusula 4ª. O COMODATÁRIO de compromete a não ceder, transferir ou emprestar o equipamento a terceiros, assim como a ressarcir à <strong>{{dataFicha.NM_EMPR | uppercase}}</strong>  o valor correspondente ao custo com reparos, caso o equipamento empresado sofra qualquer tipo de dano; 
+          </p>
+          <p>
+            Cláusula 5ª. Em caso de perda, o COMODATÁRIO deverá adquirir e restituir à <strong>{{dataFicha.NM_EMPR | uppercase}}</strong>, qualquer que seja o motivo, novo equipamento da mesma marca e modelo similar. Se o original não for mais comercializado, a <strong>{{dataFicha.NM_EMPR | uppercase}}</strong> deverá aprovar o novo modelo e marca.
+          </p>
+          <p>
+            Cláusula 6ª. O uso e gozo do equipamento, assim como o cumprimento das demais cláusulas referentes ao uso e obrigações, é de responsabilidade do COMODATÁRO, assim como do seu gestor direto.
+          </p>
+          <br>
+          <p>
+            <strong><u>DA DEVOLUÇÃO</u></strong>
+          </p>
+          <p>
+            Cláusula 7ª. Fica obrigado o COMODATÁRIO em devolver o equipamento à COMODANTE quando forem por esta requisitado, em idênticas condições em que estava, e em condições de uso, devendo reparar os equipamentos quando danificados.
+          </p>
+          <p>
+            Cláusula 8ª. O processo de devolução do equipamento deverá ser acompanhado pelo gestor direto do COMODATÁRIO, assim como deverá ser preenchido o <strong>termo de devolução</strong> anexo a este contrato.
+          </p>
+          <br>
+          <p>
+            <strong><u>DA RESCISÃO</u></strong>
+          </p>
+          <p>
+            Cláusula 9ª. O presente contrato é celebrado por prazo indeterminado e será considerado rescindido de pleno direito em caso de infração, por parte da COMODATÁRIA e/ou de seu gestor, de qualquer cláusula acordada, assegurado à COMODANTE o direito de retirar, de onde quer que esteja, o bem ora cedido em comodato.
+          </p>
+          <br>
+          <p>
+            <strong><u>CONDIÇÕES GERAIS</u></strong>
+          </p>
+          <p>
+            Cláusula 10ª. Este contrato, passa a vigorar a partir da assinatura das partes.
+          </p>
+          <br>
+          <p>
+            <strong><u>DO FORO</u></strong>
+          </p>
+          <p>
+            Cláusula 11ª. As partes elegem o foro da comarca de Piracicaba/SP, para dirimirem quaisquer controvérsias oriundas do presente contrato.
+          </p>
+          <div class="col-11 d-flex justify-content-end pt-3">{{dataFicha.NM_EMPR_CIDA | uppercase}}/{{dataFicha.NM_EMPR_ESTA | uppercase}}-{{dataFicha.dataHoje}} </div>
+          <div class="col-11 d-flex justify-content-end pt-5">_____________________________________________________</div>
+          <div class="col-11 d-flex justify-content-end">{{dataFicha.NM_FUNC | uppercase}}</div>
+          <div class="col-11 d-flex justify-content-end pt-3">_____________________________________________________</div>
+          <div class="col-11 d-flex justify-content-end">(GESTOR DO RESPONSÁVEL)</div>
+          <div class="col-11 d-flex justify-content-end pt-3">_____________________________________________________</div>
+          <div class="col-11 d-flex justify-content-end">(Comodatária)</div>
+          <div class="justify-content-end" style="height: 200px;"></div>
+        </div>
+      </div>
+      <br>
+    </div>
+    <br>
+    <div class=" row justify-content-center col-10 pt-5 ">
+      <br><br>
+      <h1 class="pt-5">TERMO DE DEVOLUÇÃO</h1><br>
+      <div>
+        <div class=" mt-5 pt-5">
+          <p>
+            Pelo presente Termo de Devolução, o COMODATÁRIO acima qualificado declara que devolveu o(s) equipamento(s) e acessórios acima especificados, de guarda e responsabilidade da <strong>{{dataFicha.NM_EMPR | uppercase}}</strong>, nas mesmas condições que os recebeu.
+          </p>
+          <p>
+            A COMODANTE e o gestor do COMODATÁRIO, declaram que receberam os equipamentos em devolução, nas mesmas condições de empréstimo.
+          </p>
+          <br>
+          <p class="mb-1">
+            <strong>OBSERVAÇÕES</strong>
+          </p>
+          <a *ngIf ="dataFicha.DS_OBSE != null">{{dataFicha.DS_OBSE}}</a>
+          <a *ngIf ="dataFicha.DS_OBSE == null">
+            <hr style="border: 2px;border-bottom-style: solid;">
+            <hr style="border: 2px;border-bottom-style: solid;">
+            <hr style="border: 2px;border-bottom-style: solid;">
+            <hr style="border: 2px;border-bottom-style: solid;">
+          </a>
+          <div class="col-11 d-flex justify-content-end pt-5">{{dataFicha.dataHoje}} </div>
+          <div class="col-11 d-flex justify-content-end pt-5">_____________________________________________________</div>
+          <div class="col-11 d-flex justify-content-end">{{dataFicha.NM_FUNC | uppercase}}</div>
+          <div class="col-11 d-flex justify-content-end pt-3">_____________________________________________________</div>
+          <div class="col-11 d-flex justify-content-end">(GESTOR DO RESPONSÁVEL)</div>
+          <div class="col-11 d-flex justify-content-end pt-3">_____________________________________________________</div>
+          <div class="col-11 d-flex justify-content-end">(Comodatária)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>

@@ -1,0 +1,163 @@
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{romaneio?.CD_ROMA}}</h4>
+    <div>
+      <button
+        type="button"
+        class="btn-icon-sm"
+        tooltip="Exportar"
+        container="body"
+        (click)="onExcel()"
+      >
+        <i class="far fa-file-excel"></i>
+      </button>
+      <button
+        type="button"
+        class="btn-icon-sm mx-3"
+        tooltip="Download"
+        container="body"
+        (click)="onDownload()"
+      >
+        <i class="far fa-save"></i>
+      </button>
+      <button
+        type="button"
+        class="btn-icon-sm mr-3"
+        tooltip="Imprimir"
+        container="body"  
+        (click)="onPrint()"
+      >
+        <i class="fas fa-print"></i>
+      </button>
+      <button
+        type="button"
+        class="btn-icon-sm"
+        tooltip="Fechar"
+        container="body"
+        (click)="modalRef.hide()"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="p-5" id="capaRomaneio">
+      <div class="d-flex justify-content-between align-items-center">
+        <table style="font-size: 1.25rem;">
+          <tbody>
+            <tr>
+              <th>Rota:&nbsp;</th>
+              <td>{{ romaneio?.CD_ROMA }}</td>
+            </tr>
+            <tr>
+              <th>Inicio:&nbsp;</th>
+              <td>{{ romaneio?.DT_PREV_SAID | date: 'dd/MM/yyyy HH:mm'}}</td>
+            </tr>
+            <tr>
+              <th>Chofer:&nbsp;</th>
+              <td>{{ romaneio?.NM_MOTO | hifen | uppercase }}</td>
+            </tr>
+            <tr>
+              <th>Vehículo:&nbsp;</th>
+              <td>{{ romaneio?.PLAC | hifen | uppercase }}</td>
+            </tr>
+            <tr>
+              <th>Peso:&nbsp;</th>
+              <td>
+                <span *ngIf="romaneio?.TT_PESO">{{ romaneio?.TT_PESO | number:'0.3-3'}}&nbsp; Tons</span>
+                <span *ngIf="!romaneio?.TT_PESO">-</span>
+              </td>
+            </tr>
+            <tr>
+              <th>Distancia:&nbsp;</th>
+              <td>{{ romaneio?.KM_PREV | number:'0.0-0'}}KM</td>
+            </tr>
+            <tr>
+              <th>Destino:&nbsp;</th>
+              <td>{{ romaneio?.DS_DEST | hifen | uppercase }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div>
+          <img [src]="url" alt="Logo" class="mr-2" height="80px" *ngFor="let url of getLogos()">
+        </div>
+      </div>
+      <textarea rows="1"></textarea>
+      <div *ngIf="!loadingPedidos">
+        <div *ngFor="let pedido of pedidos">
+          <div class="mt-5 px-2 py-3 border border-dark d-flex w-100">
+            <div class="mx-2 d-flex align-items-center" style="font-size: 2.5rem;">
+              <span>{{pedido?.ENTR_NR_SQNC}}</span>
+            </div>
+            <div class="w-100">
+              <div class="d-flex" style="border-bottom: 1px dashed; padding-bottom: 0.5em;">
+                <div class="d-flex col-6 p-0">
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th>Factura:</th>
+                        <td>{{ pedido?.NOTA_FISC }}</td>
+                      </tr>
+                      <tr>
+                        <th>Orden de vienda:</th>
+                        <td>{{ pedido?.CD_PEDI }}</td>
+                      </tr>
+                      <tr>
+                        <th>Peso:</th>
+                        <td>{{ pedido?.TT_PESO | number : '0.3-3' }}&nbsp;Tons</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-6 p-0 d-flex justify-content-end flex-column">
+                  <span class="font-weight-bolder d-block">
+                    ({{ pedido?.CD_CLIE }})&nbsp;{{ pedido?.NM_CLIE }}
+                  </span>
+                  <span>
+                    {{pedido?.DS_ENDE | uppercase}}
+                  </span>
+                </div>
+              </div>
+              <div class="mt-1 d-flex justify-content-center" *ngIf="!pedido.materialLoading && pedido?.MATE">
+                <table width="100%">
+                  <thead>
+                    <tr>
+                      <th width="10%">#</th>
+                      <th width="10%">Código</th>
+                      <th width="40%">Descripción</th>
+                      <th width="10%" class="text-center">Unidade</th>
+                      <th width="10%" class="text-right">Monto</th>
+                      <th width="20%" class="text-left pl-3">Nota</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let material of pedido?.MATE; let index = index;">
+                      <td width="10%">
+                        <span *ngIf="material?.CD_SEQU_MATE">{{ material?.NR_SQNC }}</span>
+                        <span *ngIf="!material?.CD_SEQU_MATE">{{ index + 1 }}</span>
+                      </td>
+                      <td width="10%">{{ material?.CD_PROD }}</td>
+                      <td width="35%">{{ material?.NM_PROD | uppercase }}</td>
+                      <td width="10%" class="text-center">{{ material?.DS_UNID_MEDI }}</td>
+                      <td width="15%" class="text-right">{{ material?.TT_PROD | number:'0.3-3' }}</td>
+                      <td width="20%" class="text-left pl-3">
+                        <span *ngIf="material?.DS_OBSE">{{ material?.DS_OBSE }}</span>
+                        <span *ngIf="!material?.DS_OBSE" class="d-block w-100 text-center">-</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div *ngIf="pedido.materialLoading" class="spinner-border text-primary mt-1" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="loadingPedidos" class="spinner-border text-primary mt-3" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  </div>
+</ng-template>

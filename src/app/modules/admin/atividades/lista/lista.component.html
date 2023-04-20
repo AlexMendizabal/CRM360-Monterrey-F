@@ -1,0 +1,175 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button type="button" (click)="onReset()">Limpar</button>
+  <button type="button" (click)="onFilter()">Filtrar</button>
+  <button type="button" [routerLink]="['./novo']">Adicionar</button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" class="form-control" placeholder="DIGITE..." formControlName="nome" (keyup.enter)="onFilter()">
+        </div>
+        <div class="form-group col">
+          <label for="modulo">Módulo</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="modulos"
+            [virtualScroll]="true"
+            [loading]="loadingModulo"
+            dropdownPosition="bottom"
+            placeholder="SELECIONE"
+            labelForId="modulo"
+            bindLabel="nome"
+            bindValue="id"
+            id="modulo"
+            formControlName="moduloId"
+            (change)="onFilter(); getSubmodulos({moduloId: $event?.id})"
+          >
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              ({{item.id | number : '3.0-0'}}) {{item.nome}}
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col">
+          <label for="submodulo">Submódulo</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="submodulos"
+            [virtualScroll]="true"
+            [loading]="loadingSubmodulo"
+            dropdownPosition="bottom"
+            placeholder="SELECIONE..."
+            groupBy="modulo"
+            labelForId="submodulo"
+            bindLabel="nome"
+            bindValue="id"
+            id="submodulo"
+            formControlName="submoduloId"
+            (change)="onFilter()"
+          >
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              ({{item.id | number : '3.0-0'}}) {{item.nome}}
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col">
+          <label for="tipoAtividade">Tipo de Atividade</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="tipoAtividade"
+            [virtualScroll]="true"
+            [loading]="loadingTipoAtividade"
+            placeholder="Selecione..."
+            labelForId="tipoAtividade"
+            bindLabel="nome"
+            bindValue="id"
+            id="tipoAtividadeId"
+            formControlName="tipoAtividadeId"
+            (change)="onFilter()"
+          >
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              ({{item.id | number : '3.0-0'}}) {{item.nome}}
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col">
+          <label for="situacao">Situação</label>
+          <select
+            name="situacao"
+            id="situacao"
+            formControlName="situacao"  
+            class="form-control"
+            (change)="onFilter()"
+          >
+            <option value="">Todos</option>
+            <option value="1">Ativos</option>
+            <option value="0">Inativos</option>
+          </select>
+        </div>
+        <div class="form-group col-1">
+          <label for="registrosPorPagina">Registros</label>
+          <select
+            name="registrosPorPagina"
+            id="registrosPorPagina"
+            class="form-control"
+            formControlName="registrosPorPagina"
+            >
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="250">250</option>
+              <option value="500">500</option>
+            </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="col-12 p-0" [hidden] = "loading || noResult">
+    <div>
+      <table class="table table-sm table-hover custom-border border-left border-right border-bottom text-center table-fixed">
+        <thead class="thead-light">
+          <tr>
+            <th style="width:100px">ID</th>
+            <th style="width: 30%">Nome</th>
+            <th>Módulo</th>
+            <th>Submódulo</th>
+            <th>Tipo de atividade</th>
+            <th style="width:70px"></th>
+            <th style="width:70px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of data; let i = index">
+            <td class="text-truncate" [ngClass]="item.situacao == 1 ? 'border-success' : 'border-danger'">
+              {{ item.id | number:'6.0-0' }}
+            </td>
+            <td>
+              {{ item.nome }}
+            </td>
+            <td class="text-truncate"> {{ item.moduloNome }} </td>
+            <td class="text-truncate"> {{ item.submoduloNome }} </td>
+            <td class="text-truncate"> {{ item.tipoAtividadeNome }} </td>
+            <td> <div [class]="item.icone"></div></td>
+            <td class="align-middle">
+              <button
+                class="btn-icon-sm"
+                tooltip="Editar"
+                container="body"
+              >
+                <a [routerLink]="['./', item.id]">
+                  <i class="fas fa-edit"></i>
+                </a>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

@@ -1,0 +1,279 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button 
+    (click)="onSave()"
+    [disabled] = "form.status == 'INVALID'"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col-lg-6">
+      <form
+        [formGroup]="form"
+        class="d-flex flex-column"
+        autocomplete="off"
+        [hidden]="loading"
+      >
+        <div class="mtc-title">Dados do perfil</div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="nome">Nome</label>
+            <input
+              id="nome"
+              type="text"
+              class="form-control"
+              formControlName="nome"
+              placeholder="Digite..."
+              [ngClass]="onFieldRequired('nome')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('nome')" message="Nome é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="sigla">Sigla</label>
+            <input 
+              id="sigla"
+              type="text"
+              class="form-control"
+              formControlName="sigla"
+              placeholder="Digite..."
+              [ngClass]="onFieldRequired('sigla')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('sigla')" message="Sigla é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="situacao">Situação</label>
+            <select
+              name="situacao"
+              id="situacao"
+              class="form-control"
+              formControlName="situacao"
+            >
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
+            </select>
+          </div>
+        </div>
+      </form>
+      <div class="row mb-4">
+        <div class="col mb-3">
+          <hr>
+        </div>
+      </div>
+      <message
+        *ngIf="atividadesAssociadasLoading"
+        icon="fas fa-cog fa-spin"
+        text="Estamos buscando informações do perfil selecionado...">
+      </message>
+      <div [hidden]="atividadesAssociadasLoading">
+        <div class="row mb-2 mt-4">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Atividades associados ao perfil</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                (click)="onRemoverAssociacao()">
+                <i class="fas fa-trash"></i>
+                <span>Limpar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="!atividadesAssociadasLoading && atividadesAssociadas.length > 0">
+          <div class="col">
+            <custom-table [config]="tableConfigAtividadesAssociadas">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="text-center"
+                    style="width: 5%">
+                    <btn-icon
+                      [icon]="toggle?.atividadesAssociadas ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll('atividadesAssociadas')">
+                    </btn-icon>
+                  </th>
+                  <th scope="col" width="20%">Código</th>
+                  <th scope="col" width="70%">Descrição</th>
+                  <th scope="col" width="5%"></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of atividadesAssociadas" >
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="item.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="item.checked = !item.checked">
+                    </btn-icon>
+                  </td>
+                  <td width="20%">{{ item.id }}</td>
+                  <td width="70%">
+                   {{ item.nome | uppercase }}
+                  </td>
+                  <td class="text-center" width="5%">
+                    <btn-icon
+                      icon="fas fa-trash"
+                      size="small"
+                      (click)="onRemoverAssociacao(item)"
+                      *ngIf="!item.loading"  
+                    >
+                    </btn-icon>
+                    <div class="text-primary small" *ngIf="item.loading">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+        <div class="row" *ngIf="!atividadesLoading && atividadesAssociadas.length === 0">
+          <div class="col">
+            <message
+              icon="fas fa-exchange-alt"
+              text="Nenhuma associação encontrada">
+            </message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 border-left">
+      <div class="row mb-2">
+        <div class="col mt-auto">
+          <div class="mtc-title mb-0">Pesquisa de Atividades</div>
+        </div>
+        <div class="col">
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              (click)="getAtividades()">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <advanced-filter>
+        <form [formGroup]="formAtividades" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-4">
+              <label for="buscarPor">BUSCAR POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="id">Id</option>
+                <option value="nome" selected>Nome</option>
+              </select>
+            </div>
+            <div class="form-group col-8">
+              <label>TERMO DE PESQUISA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  (keyup.enter)="getAtividades()"
+                >
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <div *ngIf="atividades.length > 0 && !atividadesLoading">
+        <div class="row mb-2">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Seleção de Atividades</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                (click)="onAssociarAtividades()"
+                [disabled]="!form.get('id')?.value">
+                <i class="fas fa-exchange-alt"></i>
+                <span
+                  [tooltip]="!form.get('id')?.value ? 'Selecione um perfil':''"
+                  container="body"
+                  placement ="left">Associar
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <custom-table [config]="tableConfigAtividades">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="text-center"
+                    style="width: 5%">
+                    <btn-icon
+                      [icon]="toggle?.atividades ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll('atividades')">
+                    </btn-icon>
+                  </th>
+                  <th scope="col" style="width: 90%">Atividades</th>
+                  <th style="width: 5%"></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of atividades">
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="item.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="item.checked = !item.checked">
+                    </btn-icon>
+                  </td>
+                  <td
+                    class="hover"
+                    style="width: 90%"
+                    (click)="item.checked = !item.checked">
+                    ({{ item.moduloNome }}) ({{ item.id }}) {{ item.nome | uppercase }}
+                  </td>
+                  <td style="width: 5%">
+                    <div class="text-primary small" *ngIf="item.loading">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="atividadesLoading">
+        <div class="col">
+          <message
+            icon="fas fa-cog fa-spin"
+            text="Estamos pesquisando os atividades para você...">
+          </message>
+        </div>
+      </div>
+      <div>
+        <div class="row" *ngIf="(atividades.length == 0) && !atividadesLoading">
+          <div class="col">
+            <message
+              icon="fas fa-box-open"
+              text="Nenhuma informação encontrada">
+            </message>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>

@@ -1,0 +1,293 @@
+<div class="row">
+  <div class="col">
+    <div class="d-flex w-100" *ngIf="!duplicataLoaded">
+      <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+      <strong>Carregando informações da duplicata...</strong>
+    </div>
+    <tabset *ngIf="duplicataLoaded">
+      <tab heading="Principal">
+        <div class="border-left border-right border-bottom p-3">
+          <div class="row mb-4">
+            <div class="col">
+              <div class="bg-light rounded p-4">
+                <div class="mtc-title">Duplicata</div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <p><strong>Núm. NF:</strong> {{ principal.duplicata.notaSaida }}</p>
+                    <p class="mb-0"><strong>Núm. Pedido:</strong> {{ principal.duplicata.numPedido }}</p>
+                  </div>
+                  <div class="col-md-4">
+                    <p><strong>Data:</strong> {{ principal.duplicata.data }}</p>
+                    <p class="mb-0"><strong>Linha:</strong> {{ principal.duplicata.linhaNota }}</p>
+                  </div>
+                  <div class="col-md-4">
+                    <p><strong>Cliente:</strong> {{ principal.duplicata.razaoSocial }}</p>
+                    <p class="mb-0"><strong>Vendedor:</strong> {{ principal.duplicata.nomeVendedor }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col">
+              <custom-table *ngIf="principal.materiais.length > 0">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th scope="col" class="text-center">Código</th>
+                    <th scope="col" class="text-center">Descrição</th>
+                    <th scope="col" class="text-center">Sit. Tributária</th>
+                    <th scope="col" class="text-center">Qtde.</th>
+                    <th scope="col" class="text-center">Valor unidade</th>
+                    <th scope="col" class="text-center">Valor total</th>
+                    <th scope="col" class="text-center">Alíquota ICMS</th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let material of principal.materiais">
+                    <td class="text-center">{{ material.idMaterial }}</td>
+                    <td class="text-center">{{ material.nomeMaterial }}</td>
+                    <td class="text-center">{{ material.situacaoTributaria }}</td>
+                    <td class="text-center">{{ material.quantidade }}</td>
+                    <td class="text-center">{{ material.valorUnitario | currency:'BRL':'symbol':'1.2-2' }}</td>
+                    <td class="text-center">{{ material.valorTotalItem | currency:'BRL':'symbol':'1.2-2' }}</td>
+                    <td class="text-center" *ngIf="material.aliquotaIcms > 0">{{ material.aliquotaIcms | number:'1.2-2' }}%</td>
+                    <td class="text-center" *ngIf="material.aliquotaIcms == 0">0,00%</td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+              <empty-result
+                message="Nenhuma informação encontrada"
+                *ngIf="principal.materiais.length == 0">
+              </empty-result>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="bg-light rounded p-4">
+                <div class="mtc-title">Condições de pagamento</div>
+                <p class="mb-0"><strong></strong>{{ principal.materiais[0]['condicaoPagamento'] }}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="bg-light rounded p-4">
+                <div class="mtc-title">Total dos produtos</div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p class="mb-0"><strong>Quantidade:</strong> {{ principal.total.peso | number:'1.3-3' }} TON</p>
+                  </div>
+                  <div class="col-md-6">
+                    <p class="mb-0"><strong>Valor:</strong> {{ principal.total.valor | currency:'BRL':'symbol':'1.2-2' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="bg-light rounded p-4">
+                <div class="mtc-title">Local de entrega</div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p><strong>Referência:</strong> {{ principal.entrega.referencia }}</p>
+                    <p class="mb-0"><strong>Endereço:</strong> {{ principal.entrega.logradouro }}</p>
+                  </div>
+                  <div class="col-md-4">
+                    <p><strong>Cidade:</strong> {{ principal.entrega.cidade }}</p>
+                    <p class="mb-0"><strong>Bairro:</strong> {{ principal.entrega.bairro }}</p>
+                  </div>
+                  <div class="col-md-2">
+                    <p class="mb-0"><strong>UF:</strong> {{ principal.entrega.uf }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Histórico de cobranças">
+        <div class="border-left border-right border-bottom p-3">
+          <div class="row mb-4">
+            <div class="col">
+              <div class="bg-light rounded p-4">
+                <div class="mtc-title">Duplicata</div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <p><strong>Núm. NF:</strong> {{ principal.duplicata.notaSaida }}</p>
+                    <p class="mb-0"><strong>Núm. Pedido:</strong> {{ principal.duplicata.numPedido }}</p>
+                  </div>
+                  <div class="col-md-4">
+                    <p><strong>Data:</strong> {{ principal.duplicata.data }}</p>
+                    <p class="mb-0"><strong>Linha:</strong> {{ principal.duplicata.linhaNota }}</p>
+                  </div>
+                  <div class="col-md-4">
+                    <p><strong>Cliente:</strong> {{ principal.duplicata.razaoSocial }}</p>
+                    <p class="mb-0"><strong>Vendedor:</strong> {{ principal.duplicata.nomeVendedor }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col">
+              <custom-table *ngIf="historicoCobrancas.length > 0">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th scope="col" class="text-center">Núm. Lançamento</th>
+                    <th scope="col" class="text-center">Situação</th>
+                    <th scope="col" class="text-center">Data</th>
+                    <th scope="col" class="text-center">Usuário</th>
+                    <th scope="col" class="text-center">Comentário</th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let cobranca of historicoCobrancas">
+                    <td class="text-center">{{ cobranca.numLancamento }}</td>
+                    <td class="text-center">{{ cobranca.situacao }}</td>
+                    <td class="text-center">{{ cobranca.data }}</td>
+                    <td class="text-center">{{ cobranca.nome }}</td>
+                    <td class="text-center">{{ cobranca.comentario }}</td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+              <empty-result
+                message="Nenhuma informação encontrada"
+                *ngIf="historicoCobrancas.length == 0">
+              </empty-result>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="bg-light rounded p-4">
+                <div class="mtc-title">Empresa cobrança</div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p class="mb-0"><strong>Código:</strong> Nenhuma informação</p>
+                  </div>
+                  <div class="col-md-6">
+                    <p class="mb-0"><strong>Descrição:</strong> Nenhuma informação</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="bg-light rounded p-4">
+                <div class="mtc-title">Vencimento original</div>
+                <div class="row">
+                  <div class="col">
+                    <p class="mb-0">Nenhuma informação</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Ocorrências da duplicata">
+        <div class="border-left border-right border-bottom p-3">
+          <div class="row mb-4">
+            <div class="col">
+              <div class="bg-light rounded p-4">
+                <div class="mtc-title">Duplicata</div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <p><strong>Núm. NF:</strong> {{ principal.duplicata.notaSaida }}</p>
+                    <p class="mb-0"><strong>Núm. Pedido:</strong> {{ principal.duplicata.numPedido }}</p>
+                  </div>
+                  <div class="col-md-4">
+                    <p><strong>Data:</strong> {{ principal.duplicata.data }}</p>
+                    <p class="mb-0"><strong>Linha:</strong> {{ principal.duplicata.linhaNota }}</p>
+                  </div>
+                  <div class="col-md-4">
+                    <p><strong>Cliente:</strong> {{ principal.duplicata.razaoSocial }}</p>
+                    <p class="mb-0"><strong>Vendedor:</strong> {{ principal.duplicata.nomeVendedor }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <custom-table *ngIf="ocorrenciasDuplicatas.length > 0">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th scope="col" class="text-center">Duplicata</th>
+                    <th scope="col" class="text-center">Operação</th>
+                    <th scope="col" class="text-center">Data</th>
+                    <th scope="col" class="text-center">Descrição</th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let ocorrencia of ocorrenciasDuplicatas">
+                    <td class="text-center">{{ ocorrencia.numDuplicata }}</td>
+                    <td class="text-center">{{ ocorrencia.operacao }}</td>
+                    <td class="text-center">{{ ocorrencia.data }}</td>
+                    <td class="text-center">{{ ocorrencia.descricao }}</td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+              <empty-result
+                message="Nenhuma informação encontrada"
+                *ngIf="ocorrenciasDuplicatas.length == 0">
+              </empty-result>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Ocorrências comerciais">
+        <div class="border-left border-right border-bottom p-3">
+          <div class="row mb-4">
+            <div class="col">
+              <div class="bg-light rounded p-4">
+                <div class="mtc-title">Duplicata</div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <p><strong>Núm. NF:</strong> {{ principal.duplicata.notaSaida }}</p>
+                    <p class="mb-0"><strong>Núm. Pedido:</strong> {{ principal.duplicata.numPedido }}</p>
+                  </div>
+                  <div class="col-md-4">
+                    <p><strong>Data:</strong> {{ principal.duplicata.data }}</p>
+                    <p class="mb-0"><strong>Linha:</strong> {{ principal.duplicata.linhaNota }}</p>
+                  </div>
+                  <div class="col-md-4">
+                    <p><strong>Cliente:</strong> {{ principal.duplicata.razaoSocial }}</p>
+                    <p class="mb-0"><strong>Vendedor:</strong> {{ principal.duplicata.nomeVendedor }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <custom-table *ngIf="ocorrenciasComerciais.length > 0">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th scope="col" class="text-center">Número</th>
+                    <th scope="col" class="text-center">Data</th>
+                    <th scope="col" class="text-center">Hora</th>
+                    <th scope="col" class="text-center">Usuário</th>
+                    <th scope="col" class="text-center">Operação</th>
+                    <th scope="col" class="text-center">Situação</th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let ocorrencia of ocorrenciasComerciais">
+                    <td class="text-center">{{ ocorrencia.numero }}</td>
+                    <td class="text-center">{{ ocorrencia.data }}</td>
+                    <td class="text-center">{{ ocorrencia.hora }}</td>
+                    <td class="text-center">{{ ocorrencia.nome }}</td>
+                    <td class="text-center">{{ ocorrencia.operacao }}</td>
+                    <td class="text-center">{{ ocorrencia.situacao }}</td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+              <empty-result
+                message="Nenhuma informação encontrada"
+                *ngIf="ocorrenciasComerciais.length == 0">
+              </empty-result>
+            </div>
+          </div>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<div class="modal-content">
+  <div class="modal-header" *ngIf="showHeader()">
+    <h4 class="modal-title">{{ title }}</h4>
+    <button type="button" class="close"
+      (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p [ngClass]="bodyMessageClass()">
+      {{ message }}
+    </p>
+    <div *ngIf="showBodyMessage()">
+      <p class="mb-0" *ngFor="let alert of messageAlerts">
+        <strong>{{ alert }}</strong>
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      (click)="onClose()">
+      {{ cancelTxt }}
+    </button>
+    <button
+      type="button"
+      class="btn"
+      [ngClass]="buttonClass()"
+      (click)="onConfirm()">
+      {{ okTxt }}
+    </button>
+  </div>
+</div>

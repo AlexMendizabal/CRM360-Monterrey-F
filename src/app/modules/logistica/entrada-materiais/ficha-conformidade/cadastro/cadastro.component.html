@@ -1,0 +1,439 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Fichas de Não Conformidade">
+  <button 
+    [disabled]="form.valid === false || loadingNavBar === true"
+    (click)="postFichasConformidade()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-10 pt-2 mx-auto">
+        <legend>Dados do Ficha de Não Conformidade</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-7 pl-0">
+            <label for="tiposConformidade">Tipo de Não Conformidade</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tiposConformidade"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              placeholder="Selecione..."
+              [loading]="loadingTiposConformidade"
+              labelForId="ID_LOGI_ENMA_FHNC_TIPO"
+              bindLabel="NM_TIPO"
+              bindValue="ID_LOGI_ENMA_FHNC_TIPO"
+              id="ID_LOGI_ENMA_FHNC_TIPO"
+              formControlName="ID_LOGI_ENMA_FHNC_TIPO"
+              [ngClass]="onFieldError('ID_LOGI_ENMA_FHNC_TIPO') + ' ' + onFieldRequired('ID_LOGI_ENMA_FHNC_TIPO')">
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('ID_LOGI_ENMA_FHNC_TIPO')" message="Tipo de não conformidade é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-5 pl-0"></div> 
+        </div>
+      </fieldset>
+      <br>
+      <fieldset class="border rounded shadow-sm col-10 pt-2 mx-auto">
+        <legend>Materiais</legend>
+        <div formArrayName="materiais">
+          <div class="form-row">
+            <div class="form-group col mb-0 d-flex justify-content-between">
+              <div class="mtc-title"></div>
+              <div>
+                <a
+                  class="text-secondary"
+                  (click)="onAddMaterial()"
+                  href="javascript:void(0)">
+                  <b>Adicionar</b>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="form-row"  *ngFor="let item of formMateriais.controls; let i = index" [formGroupName]="i">
+            <div class="form-group col mb-0">
+              <div class="form-row">
+                <div class="form-group col-md-3 pl-0">
+                  <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+                    <label class="my-auto" for="NR_NOTA_FISC">Nota Fiscal</label>
+                    <div class="my-auto text-uppercase" style="font-size: 10px" >
+                      <a
+                        class="text-primary"
+                        href="javascript:void(0)"
+                        (click)="openModal(selecionarNotaFiscal, i)">
+                        <strong>Selecionar</strong>
+                      </a>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="NR_NOTA_FISC"
+                    formControlName="NR_NOTA_FISC"
+                    (change)="onCanAddMaterial(i)"
+                    placeholder="Digite..."
+                    [ngClass]="onNestedFieldError('materiais', i, 'NR_NOTA_FISC') + ' ' + onNestedFieldRequired('materiais', i, 'NR_NOTA_FISC')"
+                  />
+                </div>
+                <div class="form-group col-md-4 pl-0">
+                  <label for="NM_CLAS">Classe</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="NM_CLAS"
+                    formControlName="NM_CLAS"
+                    >
+                </div>
+                <div class="form-group col-md-2 pl-0">
+                  <label for="DS_LOTE">Lote</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="DS_LOTE"
+                    formControlName="DS_LOTE"
+                    >
+                </div>
+                <div class="form-group col-md-2 pl-0">
+                  <label for="DS_UNID_MEDI">Un. Medida</label>
+                  <select 
+                  class="form-control custom-select"
+                  id="DS_UNID_MEDI"
+                  formControlName="DS_UNID_MEDI"
+                  [ngClass]="onNestedFieldError('materiais', i, 'DS_UNID_MEDI') + ' ' + onNestedFieldRequired('materiais', i, 'DS_UNID_MEDI')"
+                >
+                  <option >KG</option>
+                  <option >TON</option>
+                  <option >PC</option>
+                  <option >UN</option>
+                </select>
+                </div>
+                <div class="col-1 pt-4 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon"
+                    (click)="onDeleteMaterial(i)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-7 pl-0">
+                  <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+                    <label class="my-auto" for="NM_MATE">Material</label>
+                    <div class="my-auto text-uppercase" style="font-size: 10px"  >
+                      <a
+                      *ngIf="onCanAddMaterial(i)"
+                        class="text-primary"
+                        href="javascript:void(0)"
+                        (click)="openModal(selecionarMateriais, i)">
+                        <strong>Selecionar</strong>
+                      </a>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="NM_MATE"
+                    formControlName="NM_MATE"
+                    placeholder="Digite..."
+                    [ngClass]="onNestedFieldError('materiais', i, 'NM_MATE') + ' ' + onNestedFieldRequired('materiais', i, 'NM_MATE')"
+                  />
+                </div>
+                <div class="form-group col-md-2 pl-0">
+                  <label for="TT_MATE_ORIG">Quantidade Total</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="TT_MATE_ORIG"
+                    formControlName="TT_MATE_ORIG"
+                    currencyMask [options]="{ align: 'right', prefix: '' , thousands: '.', decimal: ',' , precision: 3 }"
+
+                    [ngClass]="onNestedFieldError('materiais', i, 'TT_MATE_ORIG') + ' ' + onNestedFieldRequired('materiais', i, 'TT_MATE_ORIG')">
+                </div>
+                <div class="form-group col-md-2 pl-0">
+                  <label for="TT_MATE">Quantidade NC</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="TT_MATE"
+                    formControlName="TT_MATE"
+                    currencyMask [options]="{ align: 'right', prefix: '' , thousands: '.', decimal: ',' , precision: 3 }"
+                    [ngClass]="onNestedFieldError('materiais', i, 'TT_MATE') + ' ' + onNestedFieldRequired('materiais', i, 'TT_MATE')">
+                </div>
+                <invalid-form-control
+                [show]="comparaQuantidade(i)"
+                message="Quantidade total está menor que a quantidade não conforme">
+              </invalid-form-control>
+              </div>
+              <hr>
+            </div>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+      <br>
+      <fieldset class="border rounded shadow-sm col-10 pt-2 mx-auto">
+        <legend>Descrição</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Descrição da NC:</label>
+            <textarea 
+              class="form-control" 
+              id="DS_OBSE" 
+              formControlName="DS_OBSE" 
+              [ngClass]="onFieldError('DS_OBSE') + ' ' + onFieldRequired('DS_OBSE')">
+            </textarea>
+            <invalid-form-control [show]="onFieldInvalid('DS_OBSE')" message="Descrição é obrigatório com no mínimo {{numberDescricao}} caracteres."></invalid-form-control>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+      <br>
+      <logistica-entrada-materiais-notas-fiscais-documentos
+      [fichaId] = "fichaId"
+      >
+      </logistica-entrada-materiais-notas-fiscais-documentos>
+    </fieldset>
+  </form>
+  <ng-template #selecionarNotaFiscal>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Pesquisa de Notas/Materiais</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingNotasFiscais">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <advanced-filter>
+        <form [formGroup]="formNotasFiscais">
+          <div class="form-row">
+            <div class="form-group col-3">
+              <label for="IN_STAT">Situação</label>
+              <select
+                class="form-control custom-select"
+                formControlName="IN_STAT"
+              >
+                <option value="1">Ativo</option>
+                <option value="0">Inativo</option>
+                <option value="">Exibir Todos</option>
+              </select>
+            </div>
+            <div class="form-group col-3">
+              <label for="cdItem">BUSCAR POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="ID_MATE">ID</option>
+                <option value="NR_NOTA_FISC" selected>Nota Fiscal</option>
+                <option value="DS_LOTE">Lote</option>
+                <option value="NM_MATE">Material</option>
+                <option value="NM_FORN">Fornecedor</option>
+              </select>
+            </div>
+
+            <div class="form-group col-6">
+              <label>TERMO DE PESQUISA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  >
+                  <div class="input-group-append">
+                    <span 
+                      [tooltip]="formNotasFiscais.valid == false ? 'Digite um termo de pesquisa':''"
+                      container="body"
+                      placement ="left"
+                    >
+                      <button
+                      style="height: 25px;"
+                        [disabled]="formNotasFiscais.valid == false"
+                        class="input-group-text hover"
+                        (click)="getNotasMateriais()"
+                        >
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <custom-table *ngIf="!noNotasFiscais" class="text-center">
+        <ng-template #thead let-thead>
+          <tr>
+            <th>ID NF</th>
+            <th>Nota Fiscal</th>
+            <th>Lote</th>
+            <th>Nome Material</th>
+            <th>Total de Material</th>
+            <th>Fornecedor</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let material of notasFiscais">
+            <td>{{ material.ID_LOGI_ENMA_NOFI }}</td>
+            <td>{{ material.NR_NOTA_FISC }}</td>
+            <td *ngIf="material.DS_LOTE != null ">{{ material.DS_LOTE }}</td>
+            <td *ngIf="material.DS_LOTE == null">NÃO INFORMADO</td>
+            <td>{{ material.NM_MATE }}</td>
+            <td>{{ material.TT_MATE_ORIG }} {{ material.DS_UNID_MEDI }}</td>
+            <td>{{ material.NM_FORN }} </td>
+            <td>
+              <button
+                class="btn-icon-sm"
+                tooltip="Salvar Informações"
+                container="body"
+                (click)="setMaterial(material);modalRef.hide()"
+              >
+                <i class="far fa-save"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div *ngIf="totalItems > itemsPerPage" >
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #selecionarMateriais>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Pesquisa de Materiais</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingAllMateriais">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <advanced-filter>
+        <form [formGroup]="formAllMateriais">
+          <div class="form-row">
+            <div class="form-group col-3">
+              <label for="IN_STAT">Situação</label>
+              <select
+                class="form-control custom-select"
+                formControlName="IN_STAT"
+              >
+                <option value="1">Ativo</option>
+                <option value="0">Inativo</option>
+                <option value="">Exibir Todos</option>
+              </select>
+            </div>
+            <div class="form-group col-3">
+              <label for="cdItem">BUSCAR POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="ID_REFE_ERP">ID ERP</option>
+                <option value="NM_MATE" selected> Nome Material</option>
+                <option value="NM_CLAS">Classe</option>
+                <option value="NM_LINH">Linha</option>
+              </select>
+            </div>
+
+            <div class="form-group col-6">
+              <label>TERMO DE PESQUISA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  >
+                  <div class="input-group-append">
+                    <span 
+                      [tooltip]="formAllMateriais.valid == false ? 'Digite um termo de pesquisa':''"
+                      container="body"
+                      placement ="left"
+                    >
+                      <button
+                      style="height: 25px;"
+                        [disabled]="formAllMateriais.valid == false"
+                        class="input-group-text hover"
+                        (click)="getAllMateriais()"
+                        >
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <custom-table *ngIf="!loadingAllMateriais && !noAllMateriais" class="text-center">
+        <ng-template #thead let-thead>
+          <tr>
+            <th>ID ERP</th>
+            <th>Nome Material</th>
+            <th>Classe</th>
+            <th>Linha</th>
+            <th>Unidade de Medida</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let material of allMateriais | slice : begin : end; let i = index">
+            <td>{{ material.ID_REFE_ERP }}</td>
+            <td>{{ material.NM_MATE }}</td>
+            <td>{{ material.NM_CLAS }}</td>
+            <td>{{ material.NM_LINH }}</td>
+            <td>{{ material.NM_APOI_UNID_MEDI }} </td>
+            <td>
+              <button
+                class="btn-icon-sm"
+                tooltip="Salvar Material"
+                container="body"
+                (click)="setMaterial(material);modalRef.hide()"
+              >
+                <i class="far fa-save"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div *ngIf="totalItemsMaterial > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItemsMaterial ? totalItemsMaterial : currentPage*(itemsPerPage) }} de {{ totalItemsMaterial }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItemsMaterial"
+          (pageChanged)="onPageChangedMaterial($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </ng-template>
+</app-body>

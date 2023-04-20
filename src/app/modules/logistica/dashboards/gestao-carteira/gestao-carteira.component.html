@@ -1,0 +1,427 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="Gestão de Carteira">
+  <!-- <button
+    type="button"
+    (click)="getExport()">
+    Exportar
+  </button> -->
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()"
+    [disabled]="form.valid === false">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-5 pl-0">
+              <label for="empresas">Empresa</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="empresas"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="loadingEmpresas"
+                labelForId="id"
+                bindLabel="nome"
+                bindValue="id"
+                id="id"
+                formControlName="CD_EMPR"
+                [ngClass]="onFieldError('CD_EMPR') + ' ' + onFieldRequired('CD_EMPR')">
+              >
+              </ng-select>
+              <invalid-form-control [show]="onFieldInvalid('CD_EMPR')" message="Empresa é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-2 pl-0">
+              <label for="SG_EVEN">Status</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="status"
+              bindLabel="nome"
+              bindValue="cod"
+              id="status"
+              (change)="changeStatus($event.cod)"
+              formControlName="SG_EVEN"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row" [hidden]="noCarteira">
+    <div class="col text-right">
+      <div class="mtc-title mb-0">
+        <a
+          class="text-primary"
+          href="javascript:void(0)"
+          (click)="changeView($event)">
+          <strong *ngIf="modoView == 1">Visualizar Mapa</strong>
+          <strong *ngIf="modoView == 0">Visualizar modo Analítico</strong>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-8 p-0 pr-3 pl-3 border-right" [hidden]="modoView == 0">
+      <div class="row justify-content-between" [hidden]="noCarteira">
+        <div class="col pr-1 border-right">
+          <div class="mtc-title mr-2 p-0 w-100 text-center border" style="background: lightgray;">Dados Gerais</div>
+          <!-- EM TRANSITO -->
+          <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3 mb-2" (click)="changeStatus('emTransito')" >
+            <div class="bg-success rounded-circle text-white icon-40 my-auto" tooltip="Em Trânsito"><i class="fas fa-truck"></i></div>
+            <div class="text-center" [hidden]="cardEmTranLoading " style="width:20%">
+              <h6
+              class="font-weight-bolder mb-1"
+              counto
+              [step]="30"
+              [countTo]="carteira?.emTransito?.romaneios?.quantidade"
+              [countFrom]="0"
+              [duration]="2"
+              (countoChange)="countoRomaneiosEmTran = $event">
+              {{ countoRomaneiosEmTran | number:'1.0-0' }}
+              </h6>
+              <div class="text-muted small font-weight-bold">ROMANEIOS</div>
+            </div>
+            <div class="text-center" [hidden]="cardEmTranLoading " style="width:20%">
+              <h6
+              class="font-weight-bolder mb-1"
+              counto
+              [step]="30"
+              [countTo]="carteira?.emTransito?.pedidos?.quantidade"
+              [countFrom]="0"
+              [duration]="2"
+              (countoChange)="countoPedidosEmTran = $event">
+              {{ countoPedidosEmTran | number:'1.0-0' }}
+              </h6>
+              <div class="text-muted small font-weight-bold">NOTAS FISCAIS</div>
+            </div>
+            <div class="text-center" [hidden]="cardEmTranLoading" style="width:20%">
+              <h6
+              class="font-weight-bolder mb-1"
+              counto
+              [step]="30"
+              [countTo]="carteira?.emTransito?.pedidos?.peso"
+              [countFrom]="0"
+              [duration]="2"
+              (countoChange)="countoTonEmTran = $event">
+              {{ countoTonEmTran | number:'1.3-3' }}
+              </h6>
+              <div class="text-muted small font-weight-bold">TON</div>
+            </div>
+            <div class="text-center" [hidden]="cardEmTranLoading " style="width:20%">
+              <h6
+              class="font-weight-bolder mb-1"
+              counto
+              [step]="30"
+              [countTo]="(carteira?.emTransito?.taxaOcupacao * 100)"
+              [countFrom]="0"
+              [duration]="2"
+              (countoChange)="countoOcupacaoEmTran = $event">
+              {{ countoOcupacaoEmTran | number:'1.2-2' }}%
+              </h6>
+              <div class="text-muted small font-weight-bold">OCUPAÇÃO MÉDIA</div>
+            </div>
+
+            <div class="text-right my-auto" *ngIf="cardEmTranLoading ">
+              <div class="spinner-border text-dark"></div>
+            </div>
+          </div>
+    
+          <!-- PRÉ AGENDADO -->
+          <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3 mb-2"  (click)="changeStatus('preAgendado')" >
+            <div class="bg-warning rounded-circle text-white icon-40 my-auto" tooltip="Pré-Agendado"><i class="fas fa-calendar-alt"></i></div>
+            <div class="text-center" [hidden]="cardPreAgenLoading " style="width:20%">
+              <h6
+              class="font-weight-bolder mb-1"
+              counto
+              [step]="30"
+              [countTo]="carteira?.preAgendado?.romaneios?.quantidade"
+              [countFrom]="0"
+              [duration]="2"
+              (countoChange)="countoRomaneiosPreAgen = $event">
+              {{ countoRomaneiosPreAgen | number:'1.0-0' }}
+              </h6>
+              <div class="text-muted small font-weight-bold">ROMANEIOS</div>
+            </div>
+            <div class="text-center" [hidden]="cardPreAgenLoading " style="width:20%">
+              <h6
+              class="font-weight-bolder mb-1"
+              counto
+              [step]="30"
+              [countTo]="carteira?.preAgendado?.pedidos?.quantidade"
+              [countFrom]="0"
+              [duration]="2"
+              (countoChange)="countoPedidosPreAgen = $event">
+              {{ countoPedidosPreAgen | number:'1.0-0' }}
+              </h6>
+              <div class="text-muted small font-weight-bold">NOTAS FISCAIS</div>
+            </div>
+            <div class="text-center" [hidden]="cardPreAgenLoading " style="width:20%">
+              <h6
+              class="font-weight-bolder mb-1"
+              counto
+              [step]="30"
+              [countTo]="carteira?.preAgendado?.pedidos?.peso"
+              [countFrom]="0"
+              [duration]="2"
+              (countoChange)="countoTonPreAgen = $event">
+              {{ countoTonPreAgen | number:'1.3-3' }}
+              </h6>
+              <div class="text-muted small font-weight-bold">TON</div>
+            </div>
+
+            <div class="text-center" [hidden]="cardPreAgenLoading " style="width:20%">
+              <h6
+              class="font-weight-bolder mb-1"
+              counto
+              [step]="30"
+              [countTo]="(carteira?.preAgendado?.taxaOcupacao * 100)"
+              [countFrom]="0"
+              [duration]="2"
+              (countoChange)="countoOcupacaoPreAgen = $event">
+              {{ countoOcupacaoPreAgen | number:'1.2-2' }}%
+              </h6>
+              <div class="text-muted small font-weight-bold">OCUPAÇÃO MÉDIA</div>
+            </div>
+            <div class="text-right my-auto" *ngIf="cardPreAgenLoading ">
+              <div class="spinner-border text-dark"></div>
+            </div>
+          </div>
+    
+          <!-- EM CARTEIRA -->
+          <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3 "  (click)="changeStatus('emCarteira')">
+            <div class="bg-danger rounded-circle text-white icon-40 my-auto" tooltip="Em Carteira"><i class="fas fa-user-tag"></i></div>
+            <div class="text-center" style="width:20%"></div>
+            <div class="text-center" [hidden]="cardEmCartLoading " style="width:20%" >
+              <h6
+              class="font-weight-bolder mb-1"
+              counto
+              [step]="30"
+              [countTo]="carteira?.emCarteira?.pedidos?.quantidade"
+              [countFrom]="0"
+              [duration]="2"
+              (countoChange)="countoPedidosEmCart = $event">
+              {{ countoPedidosEmCart | number:'1.0-0' }}
+              </h6>
+              <div class="text-muted small font-weight-bold">NOTAS FISCAIS</div>
+            </div>
+            <div class="text-center" [hidden]="cardEmCartLoading " style="width:20%">
+              <h6
+              class="font-weight-bolder mb-1"
+              counto
+              [step]="30"
+              [countTo]="carteira?.emCarteira?.pedidos?.peso"
+              [countFrom]="0"
+              [duration]="2"
+              (countoChange)="countoTonEmCart = $event">
+              {{ countoTonEmCart | number:'1.3-3'  }}
+              </h6>
+              <div class="text-muted small font-weight-bold">TON</div>
+            </div>
+            <div class="text-center" style="width:20%"></div>
+            <div class="text-right my-auto" *ngIf="cardEmCartLoading ">
+              <div class="spinner-border text-dark"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col px-1">
+            
+
+          <!-- GRAFICO STATUS DE VENCIMENTO -->
+          <div class="col">
+            <div class="row justify-content-between">
+              <div class="mtc-title p-0 mb-0 h-100 w-100 text-center border" style="background: lightgray;">Status Vencimento</div>
+              <div id="pieChart" class="amcharts" style="position: relative; height: 200px"></div>
+              <div class="border rounded bg-white shadow-sm d-flex w-100 p-3 justify-content-between">
+                <div class="text-center" style="width:33%" >
+                  <h6
+                  class="font-weight-bolder mb-1"
+                  counto
+                  [step]="30"
+                  [countTo]="carteira?.todos?.statusVencimento?.vencido?.quantidade"
+                  [countFrom]="0"
+                  [duration]="2"
+                  (countoChange)="countoAtrasado = $event">
+                  {{ countoAtrasado | number:'1.0-0' }}
+                  </h6>
+                  <div class="text-muted small font-weight-bold">ATRASADO</div>
+                </div>
+                <div class="text-center"  style="width:33%" >
+                  <h6
+                  class="font-weight-bolder mb-1"
+                  counto
+                  [step]="30"
+                  [countTo]="carteira?.todos?.statusVencimento?.venceHoje?.quantidade"
+                  [countFrom]="0"
+                  [duration]="2"
+                  (countoChange)="countoVenceHoje = $event">
+                  {{ countoVenceHoje | number:'1.0-0' }}
+                  </h6>
+                  <div class="text-muted small font-weight-bold">VENCE HOJE</div>
+                </div>
+                <div class="text-center" style="width:33%" >
+                  <h6
+                  class="font-weight-bolder mb-1"
+                  counto
+                  [step]="30"
+                  [countTo]="carteira?.todos?.statusVencimento?.aVencer?.quantidade"
+                  [countFrom]="0"
+                  [duration]="2"
+                  (countoChange)="countoAVencer = $event">
+                  {{ countoAVencer | number:'1.0-0' }}
+                  </h6>
+                  <div class="text-muted small font-weight-bold">A VENCER</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="row justify-content-between" *ngIf="!noPedidos">
+        <div class="col-lg-12 p-0 mt-4 scroll-relacao-pedidos" >
+          <div class="d-flex" >
+            <div class="col-md-12 pr-0">
+              <div class="w-100">
+                <custom-table  [config]="tableConfig"  class="text-center">
+                  <ng-template #thead let-thead >
+                    <tr >
+                      <th
+                      colspan="10"
+                    >
+                      Relação de Pedidos
+                    </th>
+                    </tr>
+                    <tr>
+                      <th
+                        scope="col"
+                        class="text-center hover"
+                        (click)="setOrderBy('CD_PEDI')">
+                        <thead-sorter value="Pedido" [active]="ORDE_BY == 'CD_PEDI'" [sort]="ORDE_TYPE"></thead-sorter>
+                      </th>
+                      <th
+                        scope="col"
+                        class="text-center hover"
+                        (click)="setOrderBy('NOTA_FISC')">
+                        <thead-sorter value="NF" [active]="ORDE_BY == 'NOTA_FISC'" [sort]="ORDE_TYPE"></thead-sorter>
+                      </th>
+                      <th
+                        scope="col"
+                        class="text-center hover"
+                        style="width: 90px;
+"
+                        (click)="setOrderBy('CD_ROMA')">
+                        <thead-sorter value="Romaneio" [active]="ORDE_BY == 'CD_ROMA'" [sort]="ORDE_TYPE"></thead-sorter>
+                      </th>
+                      <th
+                        scope="col"
+                        class="text-center hover"
+                        (click)="setOrderBy('NM_FANT')">
+                        <thead-sorter value="Cliente" [active]="ORDE_BY == 'NM_FANT'" [sort]="ORDE_TYPE"></thead-sorter>
+                      </th>
+                      <th
+                        scope="col"
+                        class="text-center hover"
+                        (click)="setOrderBy('DS_REGI_ENTR')">
+                        <thead-sorter value="Região" [active]="ORDE_BY == 'DS_REGI_ENTR'" [sort]="ORDE_TYPE"></thead-sorter>
+                      </th>
+                      <th
+                        scope="col"
+                        class="text-center hover"
+                        (click)="setOrderBy('DT_PEDI')">
+                        <thead-sorter value="Emissão" [active]="ORDE_BY == 'DT_PEDI'" [sort]="ORDE_TYPE"></thead-sorter>
+                      </th>
+                      <th
+                        scope="col"
+                        class="text-center hover"
+                        (click)="setOrderBy('DS_PESO')">
+                        <thead-sorter value="Peso" [active]="ORDE_BY == 'DS_PESO'" [sort]="ORDE_TYPE"></thead-sorter>
+                      </th>
+                      <th
+                        scope="col"
+                        class="text-center hover"
+                        (click)="setOrderBy('QT_VENC')">
+                        <thead-sorter value="Dias Vencidos" [active]="ORDE_BY == 'QT_VENC'" [sort]="ORDE_TYPE"></thead-sorter>
+                      </th>
+                      <th
+                        scope="col"
+                        class="text-center hover"
+                        (click)="setOrderBy('DT_PREV')">
+                        <thead-sorter value="Saída Prevista" [active]="ORDE_BY == 'DT_PREV'" [sort]="ORDE_TYPE"></thead-sorter>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <tr *ngFor="let item of pedidos" >
+                      <td >{{ item.CD_PEDI }} </td>
+                      <td >{{ item.NOTA_FISC }} </td>
+                      <td >{{ item.CD_ROMA || 'NÃO INFORMADO' }}</td>
+                      <td >{{ item.NM_FANT }}</td>
+                      <td >{{ item.DS_REGI_ENTR }}</td>
+                      <td >{{ item.DT_PEDI | date: 'dd/MM/yyyy' }}</td>
+                      <td >{{ item.TT_PESO_PEDI | number:'1.3-3'}}</td>
+                      <td >{{ item.DIFF_PRZO }}</td>
+                      <td *ngIf="item.DT_PREV_SAID != null ">{{ item.DT_PREV_SAID | date: 'dd/MM/yyyy' }}</td>
+                      <td *ngIf="item.DT_PREV_SAID == null ">{{ item.DT_PRZO | date: 'dd/MM/yyyy' }}</td>
+                    </tr>
+                  </ng-template>
+                </custom-table><br>
+              </div>
+              <div *ngIf="totalItems > itemsPerPage">
+                Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+                <pagination
+                  [maxSize]="10"
+                  [totalItems]="totalItems"
+                  (pageChanged)="onPageChanged($event)"
+                  [(itemsPerPage)]="itemsPerPage"
+                  [boundaryLinks]="true"
+                  [(ngModel)]="currentPage"
+                  previousText="&lsaquo;"
+                  nextText="&rsaquo;"
+                  firstText="&laquo;"
+                  lastText="&raquo;">
+                </pagination>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-8 p-0 pr-3 pl-3 border-right" [hidden]="modoView == 1">
+      <div class="row justify-content-between" >
+        <div class="col-lg-12 pr-1">
+          <div class="mtc-title mr-2 p-0 w-100 text-center border" style="background: lightgray;">Mapa Região x Volume (Ton)</div>
+          <div id="mapChart" style="width: auto;height: 600px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4 p-0 pr-1 pl-1 scroll-regiao-volume" [hidden]="noCarteira" >
+      <div class="mtc-title p-0 w-100 text-center border" *ngIf="form.get('SG_EVEN').value == 'todos'" style="background: lightgray;">Região x Volume (Ton)  -  TODOS</div>
+      <div class="mtc-title p-0 w-100 text-center border" *ngIf="form.get('SG_EVEN').value == 'emTransito'" style="background: lightgray;">Região x Volume (Ton)  -  EM TRÂNSITO</div>
+      <div class="mtc-title p-0 w-100 text-center border" *ngIf="form.get('SG_EVEN').value == 'preAgendado'" style="background: lightgray;">Região x Volume (Ton)  -  PRÉ-AGENDADO</div>
+      <div class="mtc-title p-0 w-100 text-center border" *ngIf="form.get('SG_EVEN').value == 'emCarteira'" style="background: lightgray;">Região x Volume (Ton)  -  EM CARTEIRA</div>
+      <div id="sortedBarChart" class="amcharts"  [hidden]="regioes.length == 0" style="min-height: 600px"></div>
+      <div [hidden]="regioes.length > 0" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+        <empty-result message="Nenhuma informação encontrada"></empty-result>
+      </div>
+    </div>
+  </div>
+</app-body>

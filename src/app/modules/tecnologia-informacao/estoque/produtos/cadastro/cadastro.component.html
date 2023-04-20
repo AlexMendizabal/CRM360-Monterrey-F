@@ -1,0 +1,167 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro de Produtos">
+  <button 
+    [disabled]="form.valid === false"
+    (click)="postProdutos()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+        <legend>Dados do Produto</legend>
+        <div class="form-row">
+          <div class="form-group col pl-0">
+            <label for="produtoNome">Nome do produto</label>
+            <input
+              id="produtoNome"
+              placeholder="Digite..."
+              type="text"
+              class="form-control"
+              formControlName="NM_PROD"
+              [ngClass]="onFieldRequired('NM_PROD')"  
+            >
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col pl-0">
+            <label for="marca">Marca</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="marca"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              placeholder="Selecione..."
+              [loading]="loadingMarca"
+              labelForId="ID_TEIN_ESTO_PRMA"
+              bindLabel="NM_MRCA"
+              bindValue="ID_TEIN_ESTO_PRMA"
+              id="ID_TEIN_ESTO_PRMA"
+              formControlName="ID_TEIN_ESTO_PRMA"
+              [ngClass]="onFieldRequired('ID_TEIN_ESTO_PRMA')"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('ID_TEIN_ESTO_PRMA')" message="Marca é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col pl-0">
+            <label for="tipoProduto">Tipo de Produto</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipoProduto"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              placeholder="Selecione..."
+              [loading]="loadingTipoProduto"
+              labelForId="ID_TEIN_ESTO_PRTP"
+              bindLabel="NM_TIPO"
+              bindValue="ID_TEIN_ESTO_PRTP"
+              id="ID_TEIN_ESTO_PRTP"
+              formControlName="ID_TEIN_ESTO_PRTP"
+              [ngClass]="onFieldRequired('ID_TEIN_ESTO_PRTP')"
+              (change)="getModelos({'ID_TEIN_ESTO_PRTP': $event?.ID_TEIN_ESTO_PRTP || ''})"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('ID_TEIN_ESTO_PRTP')" message="Tipo de Produto é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col pl-0">
+            <label for="modelos">Modelo</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="modelos"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              placeholder="Selecione..."
+              [loading]="loadingModelo"
+              labelForId="ID_TEIN_ESTO_PRMO"
+              bindLabel="NM_MODE"
+              bindValue="ID_TEIN_ESTO_PRMO"
+              id="ID_TEIN_ESTO_PRMO"
+              [ngClass]="onFieldRequired('ID_TEIN_ESTO_PRMO')"
+              formControlName="ID_TEIN_ESTO_PRMO"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('ID_TEIN_ESTO_PRMO')" message="Modelo do Item é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="DS_UNID_MEDI">Unidade de Medida</label>
+            <select 
+              class="form-control custom-select"
+              id="DS_UNID_MEDI"
+              placeholder="Selecione..."
+              formControlName="DS_UNID_MEDI"
+              [ngClass]="onFieldRequired('DS_UNID_MEDI')"
+            >
+              <option value="KG">KG</option>
+              <option value="TON">TON</option>
+              <option value="PC">PC</option>
+              <option value="UN">UN</option>
+            </select>
+          </div>
+          <div class="form-group col-md-6 pl-0">
+            <label for="TT_PESO_UNIT">Peso Unitário</label>
+            <input
+              type="text"
+              class="form-control"
+              id="TT_PESO_UNIT"
+              [ngClass]="onFieldRequired('TT_PESO_UNIT')"
+              formControlName="TT_PESO_UNIT"
+              currencyMask [options]="{ align: 'left', prefix: ' KG ' , thousands: '.', decimal: ',' , precision: 3 }"
+              placeholder="INFORME O PESO EM KG..."
+            />
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col pl-0">
+            <label for="IN_STAT">Situação</label>
+            <select
+              class="form-control custom-select"
+              id="IN_STAT"
+              formControlName="IN_STAT"
+              [ngClass]="onFieldRequired('IN_STAT')">
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('IN_STAT')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="IN_CODI_SERI"
+                formControlName="IN_CODI_SERI">
+              <label class="custom-control-label" for="IN_CODI_SERI">Produto com número de série</label>
+            </div>
+          </div>
+          <div class="form-group col-md-6 pl-0"></div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+            <legend>Observação</legend>
+            <div class="form-row justify-content-center">
+              <div class="form-group col">
+                <label for="DS_OBSE" >Observação:</label>
+                <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+              </div>
+            </div>
+            <br>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

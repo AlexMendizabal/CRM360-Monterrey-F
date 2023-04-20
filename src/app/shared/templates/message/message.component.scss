@@ -1,0 +1,38 @@
+::ng-deep {
+  @import '../../../../assets/scss/colors';
+  @import '../../../../assets/scss/variables';
+
+  message {
+    display: block;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    #message {
+      display: flex;
+      &.left {
+        justify-content: start;
+      }
+      &.center {
+        justify-content: center;
+      }
+      &.right {
+        justify-content: end;
+      }
+      i {
+        color: $medium-gray;
+        font-size: 18px;
+        font-weight: 600;
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-right: 10px;
+      }
+      #text {
+        color: $medium-gray;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.25px;
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+
+<app-header appTitle="Distribuição">
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row justify-content-center">
+    <div class="col-md-3" *ngFor="let atividade of atividades">
+      <card-button
+        [icon]="atividade.iconeAtividade"
+        [text]="atividade.nomeAtividade"
+        [routerLink]="[atividade.rotaAtividade]">
+      </card-button>
+    </div>
+  </div>
+</app-body>

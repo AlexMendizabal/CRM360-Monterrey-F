@@ -1,0 +1,358 @@
+<loader-spinner-full-screen [hidden]="!loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    [disabled]="form.status == 'INVALID'"
+    (click)="onExport()"  
+  >
+    Gerar Relatório
+  </button>
+  <button (click)="onReset()">
+    Limpiar
+  </button>
+  <button 
+  [disabled]="form.status == 'INVALID'"
+  (click)="onFilter()">
+    Filtrar
+  </button>
+  <button 
+  [routerLink]="['../novo']" 
+  >
+    Adicionar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="dtInicial">Inicio</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="dtInicial"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            placeholder="Escribelo..."
+            formControlName="DT_INIC"
+          />
+          </div>
+        </div>
+        <div class="form-group col-3">
+          <label for="dtFinal">Final</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="dtFinal"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            placeholder="Escribelo..."
+            formControlName="DT_FINA"
+          />
+          </div>
+        </div>
+        <div class="form-group col-3">
+          <label for="filiais">Filial</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="filiais"
+            [virtualScroll]="true"
+            bindLabel="NM_FILI"
+            bindValue="CD_FILI"
+            formControlName="CD_FILI"
+            placeholder="SELECCIONE..."
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-3">
+          <label for="romaneio">Romaneio</label>
+          <input 
+            class="form-control"
+            id="romaneio"
+            type="text"
+            (keyup.enter)="onFilter()"
+            placeholder="Escribelo..."
+            formControlName="ID_LOGI_ROMA">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="pedido">Pedido</label>
+          <input
+            type="text"
+            class="form-control"
+            id="pedido"
+            (keyup.enter)="onFilter()"
+            placeholder="Escribelo..."
+            formControlName="CD_PEDI"
+          >
+        </div>
+        <div class="form-group col-3">
+          <label for="motorista">Motorista</label>
+          <ng-select
+            [searchable]="true"
+            [items]="motoristas"
+            [virtualScroll]="true"
+            [loading]="loadingMotoristas"
+            labelForId="motorista"
+            editableSearchTerm="true"
+            bindLabel="NM_MOTO"
+            bindValue="ID_LOGI_MOTO"
+            id="motorista"
+            formControlName="ID_LOGI_MOTO"
+            placeholder="SELECCIONE..."
+            (change)="onFilter()"
+          >
+          <ng-template ng-option-tmp let-item="item" let-index="index">
+            {{item.CPF | cpf }} - {{item.NM_MOTO}}
+          </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col-2">
+          <label for="veiculo">Placa</label>
+          <ng-select
+            [searchable]="true"
+            [items]="veiculos"
+            [virtualScroll]="true"
+            [loading]="loadingVeiculos"
+            labelForId="veiculo"
+            editableSearchTerm="true"
+            bindLabel="PLAC"
+            bindValue="ID_LOGI_VEIC"
+            id="veiculo"
+            formControlName="ID_LOGI_VEIC"
+            placeholder="SELECCIONE..."
+            (change)="onFilter()"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-2">
+          <label for="status">Status</label>
+          <select
+            name="status"
+            id="status"
+            class="form-control"
+            formControlName="IN_STAT"
+            (change)="onFilter()"
+          >
+            <option value="T" selected>TODOS</option>
+            <option value="1">Ativo</option>
+            <option value="0">Inativo</option>
+          </select>
+        </div>
+        <div class="form-group col-2">
+          <label for="registros">Registros</label>
+          <select
+            name="registros"
+            id="registros"
+            class="form-control"
+            (change)="setItensPerPage($event.target.value)"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100" selected>100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="d-flex w-100">
+    <div class="w-100" *ngIf="romaneios.length !== 0">
+      <custom-table class="w-100" [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center">Filial</th>
+            <th scope="col" class="text-center">Romaneio</th>
+            <th scope="col" class="text-center">Veículo</th>
+            <th scope="col" class="text-center">Motorista</th>
+            <th scope="col" class="text-center">Data de criação</th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of romaneios | slice : begin : end">
+            <td class="text-center text-truncate" [ngClass]="item.IN_STAT == 1 ? 'border-success' : 'border-danger'">({{ item.CD_FILI }})&nbsp;{{ item.NM_FILI }}</td>
+            <td class="text-center" >{{ item.ID_LOGI_ROMA | number : '6.0-0'}}</td>
+            <td class="text-center" >{{ item.PLAC}}</td>
+            <td class="text-center" >{{ item.NM_MOTO}}</td>
+            <td class="text-center" >{{ item.DT_INCL | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
+            <td class="align-middle">
+              <button
+                class="btn-icon-sm"
+                tooltip="Editar"
+                placement="left"
+                (click)="openRegister(item)"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+            </td>
+            <td class="align-middle">
+              <button
+                class="btn-icon-sm"
+                [tooltip]="item.IN_STAT == 1 ? 'Cancelar' : 'Ativar'"
+                placement="left"
+                (click)="showModalReasonCancellation(item, motivoCancelamento)"
+                >
+                <i *ngIf="item.IN_STAT == 0" class="fas fa-ban text-danger"></i>
+                <i *ngIf="item.IN_STAT == 1" class="fas fa-check text-success"></i>
+              </button>
+            </td>
+            <td class="align-middle">
+              <button
+                class="btn-icon-sm"
+                tooltip="Detalhes"
+                placement="left"
+                (click)="romaneioDetalhes.show(); openDetails(item)"
+              >
+                <i class="fas fa-search"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div>
+        Mostrando {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <empty-result class="d-flex align-items-center justify-content-center w-100" *ngIf="romaneios.length === 0" message="Nenhum romaneio disponível" style="height: 50vh;"></empty-result>
+  </div>
+  <div class="modal" bsModal #romaneioDetalhes="bs-modal" tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-xxl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">{{ romaneio?.ID_LOGI_ROMA | number: '6.0-0' }}</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="romaneioDetalhes.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table>
+            <tbody>
+              <tr>
+                <th>Número:</th>
+                <td>&nbsp; {{ romaneio?.ID_LOGI_ROMA | number:'6.0-0' }}</td>
+              </tr>
+              <tr>
+                <th>Emissão</th>
+                <td>&nbsp; {{ romaneio?.DT_INCL | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
+              </tr>
+              <tr>
+                <th>Placa do Veículo:</th>
+                <td>&nbsp; {{ romaneio?.PLAC }}</td>
+              </tr>
+              <tr>
+                <th>Nome do Motorista:</th>
+                <td>&nbsp; {{ romaneio?.NM_MOTO }}</td>
+              </tr>
+              <tr>
+                <th>CPF do Motorista:</th>
+                <td>&nbsp; {{ romaneio?.CPF | cpf}}</td>
+              </tr>
+              <tr>
+                <th>Status do Romaneio:</th>
+                <td>&nbsp; 
+                  <span *ngIf="romaneio?.IN_STAT == 1">ATIVO</span>
+                  <span *ngIf="romaneio?.IN_STAT == 0">INATIVO</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <hr>
+          <h5 class="text-muted" style="font-size: 0.75rem;">PEDIDOS</h5>
+          <custom-table *ngIf="pedidos.length !== 0 && pedidosLoading == false">
+            <ng-template #thead let-thead>
+              <tr>
+                <th scope="col" class="text-center">Pedido</th>
+                <th scope="col" class="text-center">Nota Fiscal</th>
+                <th scope="col" class="text-left">Cliente</th>
+                <th scope="col">Cidade</th>
+                <th scope="col">Bairro</th>
+                <th scope="col">Local de Entrega</th>
+                <th scope="col" class="text-center">Quantidade</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let pedido of pedidos">
+                <td class="text-center">{{ pedido?.CD_PEDI }}</td>
+                <td class="text-center">{{ pedido?.NOTA_FISC }}</td>
+                <td>({{ pedido?.CD_CLIE }}) {{ pedido?.NM_CLIE }}</td>
+                <td>{{ pedido?.DS_CIDA }}-{{ pedido?.DS_ESTA }}</td>
+                <td>{{ pedido?.DS_BAIR }}</td>
+                <td>{{ pedido?.DS_LOCA_ENTR }}</td>
+                <td class="text-center">{{ pedido?.TT_PESO | number: '1.3-3'}}</td>
+              </tr>
+            </ng-template>
+          </custom-table>
+          <div class="spinner-border text-primary" role="status" *ngIf="pedidosLoading">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <empty-result class="d-flex align-items-center justify-content-center" *ngIf="pedidos.length === 0 && pedidosLoading == false" message="Nenhum pedido disponível"></empty-result>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #motivoCancelamento>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Escribelo o motivo para o cancelamento do romaneio {{ romaneio?.ID_LOGI_ROMA | number: '6.0-0' }}</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <textarea
+        name="motivoCancelamento"
+        id="motivoCancelamento"
+        cols="30"
+        rows="10"
+        class="form-control"
+        [(ngModel)]="romaneio.DS_OBSE"
+      >
+      </textarea>
+      <div
+        class="d-flex justify-content-end mt-3"
+      >
+        <button
+          type="button"
+          class="btn btn-danger mr-2"
+          (click)="modalRef.hide()"  
+        >Cancelar</button>
+        <button
+          type="button"
+          class="btn btn-outline-success"
+          [disabled]="!romaneio?.DS_OBSE"
+          (click)="modalRef.hide(); onCancel(romaneio)"
+        >Confirmar</button>
+      </div>
+    </div>
+  </ng-template>
+</app-body>

@@ -1,0 +1,5 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="YMS"></app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <card-group text="Selecione uma atividade" [list]="atividades"></card-group>
+</app-body>

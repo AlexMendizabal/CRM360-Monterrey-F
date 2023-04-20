@@ -1,0 +1,38 @@
+<div class="border rounded bg-white shadow-sm w-100 p-3">
+  <div *ngIf="show" class="d-flex justify-content-between">
+    <div>
+      <i
+        class="far fa-question-circle"
+        placement="right"
+        container="body"
+        [tooltip]="label?.descricao"
+        >
+      </i>
+      <!-- [tooltip]="onGetTooltip()" -->
+      <div class="bg-red rounded-circle text-white icon-40 my-auto">
+        <i [class]="icon"></i>
+      </div>
+    </div>
+    <div class="d-flex align-items-end">
+      <div class="text-right">
+        <h5
+        class="font-weight-bolder mb-1"
+        counto
+        [step]="30"
+        [countTo]="value"
+        [countFrom]="0"
+        [duration]="3"
+        (countoChange)="countToEvent = $event">
+        {{ countToEvent | number: label?.formatacao }}
+        </h5>
+        <div class="text-muted small font-weight-bold text-truncate">{{ selectedKey }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="text-right" *ngIf="empty">
+    <div class="text-muted text-center small font-weight-bold mb-3 mt-3">No se encontró información</div>
+  </div>
+  <div class="text-center" *ngIf="loading">
+    <div class="spinner-border text-dark"></div>
+  </div>
+</div>

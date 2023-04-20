@@ -1,0 +1,7 @@
+.custom-input-datetime:focus,
+.custom-input-datetime:not([disabled]):hover{
+  border: 1px dashed !important;
+  transition: 0.2s linear;
+  background: white;
+  font-weight: 600;
+}

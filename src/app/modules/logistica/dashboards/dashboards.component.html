@@ -1,0 +1,5 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Dashboards"></app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <card-group text="Seleccionar una actividad" [list]="atividades"></card-group>
+</app-body>

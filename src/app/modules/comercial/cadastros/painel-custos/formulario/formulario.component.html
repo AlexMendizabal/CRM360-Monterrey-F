@@ -1,0 +1,90 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form">
+    <div class="form-row justify-content-center">
+      <div class="form-group col-md-2">
+        <label for="ID_ITEM">COD. ITEM</label>
+        <ng-select
+        [hidden]="!editar"
+        type="text"
+        [searchable]="true"
+        [clearable]="false"
+        [items]="dagda"
+        [virtualScroll]="true"
+        [hideSelected]="true"
+        [closeOnSelect]="true"
+        placeholder="Selecione..."
+        bindLabel="COD_ITEM"
+        bindValue="COD_ITEM"
+        formControlName="ID_ITEM"
+        (change)="selectDagda($event.COD_ITEM)">
+      </ng-select>
+      <input [hidden]="editar" formControlName="ID_ITEM" type="text" class="form-control" id="ID_ITEM" readonly>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="NM_ITEM">MATERIAL</label>
+        <input formControlName="NM_ITEM" type="text" class="form-control" id="NM_ITEM" readonly>
+      </div>
+    </div> 
+    <div class="form-row justify-content-center">
+      <div class="form-group col-md-8">
+        <label for="NM_LINH">Linha</label>
+        <input formControlName="NM_LINH" type="text" class="form-control" id="NM_LINH" readonly>
+      </div>
+    </div>
+    <div class="form-row justify-content-center">
+      <div class="form-group col-md-8">
+        <label for="NM_FAMI">FAMILIA</label>
+        <input formControlName="NM_FAMI" type="text" class="form-control" id="NM_FAMI" readonly>
+      </div>
+    </div>
+    <div class="form-row justify-content-center">
+      <div class="form-group col-md-2">
+        <label for="IN_STAT">SITUAÇÂO</label>
+        <select formControlName="IN_STAT" id="IN_STAT" class="form-control">
+          <option value="1">Ativos</option>
+          <option value="0">Inativos</option>
+        </select>
+      </div>
+      <div class="form-group col-md-1">
+        <label for="AL_IPI">IPI</label>
+        <input formControlName="AL_IPI" type="number" class="form-control" id="AL_IPI" min="0.00" max="100.00" step="0.01">
+      </div>
+      <div class="form-group col-md-1">
+        <label for="AL_ICMS">ICMS</label>
+        <input formControlName="AL_ICMS" type="number" class="form-control" id="AL_ICMS" min="0.00" max="100.00" step="0.01">
+      </div>
+      <div class="form-group col-md-1">
+        <label for="AL_ICMS_ST">ICMS_ST</label>
+        <input formControlName="AL_ICMS_ST" type="number" class="form-control" id="AL_ICMS_ST" min="0.00" max="100.00" step="0.01">
+      </div>
+      <div class="form-group col-md-1">
+        <label for="AL_PIS">PIS</label>
+        <input formControlName="AL_PIS" type="number" class="form-control" id="AL_PIS" min="0.00" max="100.00" step="0.01">
+      </div>
+      <div class="form-group col-md-1">
+        <label for="AL_COFI">COFINS</label>
+        <input formControlName="AL_COFI" type="number" class="form-control" id="AL_COFI" min="0.00" max="100.00" step="0.01">
+      </div>
+      <div class="form-group col-md-1">
+        <label for="AL_FCP">Fcp</label>
+        <input formControlName="AL_FCP" type="number" class="form-control" id="AL_FCP" min="0.00" max="100.00" step="0.01">
+      </div>
+    </div>
+  </form>
+</app-body>
+

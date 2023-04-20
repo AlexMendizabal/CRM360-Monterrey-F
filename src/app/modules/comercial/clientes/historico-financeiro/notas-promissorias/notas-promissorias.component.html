@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col">
+    <div class="d-flex w-100" *ngIf="!notasPromissoriasLoaded">
+      <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+      <strong>Carregando notas promissórias...</strong>
+    </div>
+    <custom-table [config]="tableConfig">
+      <ng-template #thead let-thead *ngIf="notasPromissorias.length > 0 && notasPromissoriasLoaded">
+        <tr>
+          <th scope="col" class="text-center">Núm. Registro</th>
+          <th scope="col" class="text-center">Núm. Bancário</th>
+          <th scope="col" class="text-center">Baixa</th>
+          <th scope="col" class="text-center">Valor da baixa</th>
+          <th scope="col" class="text-center">Vencimento</th>
+          <th scope="col" class="text-center">Valor da duplicata</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let nota of notasPromissorias">
+          <td class="text-center" [ngClass]="classStatusBorder(nota.situacao)">{{ nota.numRegistro }}</td>
+          <td class="text-center">{{ nota.numBancario }}</td>
+          <td class="text-center">{{ nota.dataBaixa }}</td>
+          <td class="text-center">{{ nota.valorBaixa | currency:'BRL':'symbol':'1.2-2' }}</td>
+          <td class="text-center">{{ nota.dataVencimento }}</td>
+          <td class="text-center">{{ nota.valorDuplicata | currency:'BRL':'symbol':'1.2-2' }}</td>
+        </tr>
+      </ng-template>
+    </custom-table>
+    <div class="row justify-content-center" *ngIf="notasPromissorias.length > 0 && notasPromissoriasLoaded">
+      <div class="col-6 d-flex justify-content-center w-100">
+        <div class="d-flex justify-content-around">
+          <div class="legend green">
+            <div class="square"></div>
+            <div class="text">BAIXADA</div>
+          </div>
+          <div class="legend blue">
+            <div class="square"></div>
+            <div class="text">QUITADA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <empty-result
+      message="Nenhuma informação encontrada"
+      *ngIf="notasPromissorias.length == 0 && notasPromissoriasLoaded">
+    </empty-result>
+  </div>
+</div>

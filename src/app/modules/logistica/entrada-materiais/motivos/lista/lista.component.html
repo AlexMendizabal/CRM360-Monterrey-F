@@ -1,0 +1,189 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="MOTIVOS">
+  <button
+  type="button"
+  (click)="onExport()"
+  [disabled]="loadingNavBar || noResult">
+  Exportar
+</button>
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="ID_LOGI_ENTR_MATE_MOTI">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_LOGI_ENTR_MATE_MOTI"
+                formControlName="ID_LOGI_ENTR_MATE_MOTI"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-md-4 pl-0">
+              <label for="DS_LOGI_ENTR_MATE_MOTI">Descrição</label>
+              <input
+                type="text"
+                class="form-control"
+                id="DS_LOGI_ENTR_MATE_MOTI"
+                formControlName="DS_LOGI_ENTR_MATE_MOTI"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="DS_LOGI_ENTR_MATE_CATE_MOTI">Categoria</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="categorias"
+              [virtualScroll]="true"
+              labelForId="categotia"
+              bindLabel="nome"
+              bindValue="cod"
+              id="categotia"
+              (change)="onFilter()"
+              formControlName="DS_LOGI_ENTR_MATE_CATE_MOTI"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-lg-1">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0" [ngClass]="{'col': !showDetailPanel, 'col-6': showDetailPanel}">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" >ID</th>
+              <th scope="col" >Descrição</th>
+              <th scope="col" [hidden]="showDetailPanel">Categoria</th>
+              <th scope="col" style="width:80px"[hidden]="showDetailPanel"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let motivo of motivos"  [class.table-active]="motivo?.ID_LOGI_ENTR_MATE_MOTI == motivoSelecionado?.ID_LOGI_ENTR_MATE_MOTI && showDetailPanel">
+              <td (click)="onDetails(motivo)" [ngClass]="motivo.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+              {{motivo.ID_LOGI_ENTR_MATE_MOTI }}
+              </td>
+              <td (click)="onDetails(motivo)">{{ motivo.DS_LOGI_ENTR_MATE_MOTI | uppercase}}</td>
+              <td (click)="onDetails(motivo)" [hidden]="showDetailPanel">{{ motivo.DS_LOGI_ENTR_MATE_CATE_MOTI }}</td>
+              <td class="align-middle" [hidden]="showDetailPanel">
+                <span class="mr-3" [tooltip]="motivo.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="changeType(motivo)">
+                    <i [ngClass]="motivo.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', motivo.ID_LOGI_ENTR_MATE_MOTI]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div *ngIf="totalItems > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-6" [hidden]="!showDetailPanel">
+      <detail-panel panelTitle="Histórico de alteração">
+        <custom-table>
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">Data</th>
+              <th scope="col">Usuário</th>
+              <!-- <th scope="col">Alteração</th> -->
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let alteracao of alteracoes">
+              <td class="text-center">{{ alteracao.DT_INCL | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ alteracao.DS_USUA_CADA | uppercase }}</td>
+              <!-- <td>{{ alteracao.nomeUsuario | uppercase }}</td> -->
+            </tr>
+          </ng-template>
+        </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

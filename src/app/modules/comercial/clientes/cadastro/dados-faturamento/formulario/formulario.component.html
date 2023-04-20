@@ -1,0 +1,607 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row" *ngIf="!loaderFullScreen">
+  <div class="col">
+    <div class="mtc-title">Editar dados de faturamento</div>
+    <form [formGroup]="form" autocomplete="off" *ngIf="tipoPessoa == 'F'">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="cpf">CPF</label>
+          <input
+            type="text"
+            class="form-control"
+            id="cpf"
+            formControlName="cpf"
+            (input)="onInput()"
+            [ngClass]="onFieldError('cpf') + ' ' + onFieldRequired('cpf')"
+            cpf [textMask]="{ mask: MASKS.cpf.textMask }">
+          <invalid-form-control [show]="onFieldInvalid('cpf') == 'required'" message="CPF é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="rg">RG</label>
+          <input
+            type="text"
+            class="form-control"
+            id="rg"
+            formControlName="rg"
+            (input)="onInput()"
+            [ngClass]="onFieldError('rg') + ' ' + onFieldRequired('rg')">
+          <invalid-form-control [show]="onFieldInvalid('rg') == 'required'" message="RG é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('rg') == 'maxlength'" [message]="maxLengthMessages.rg"></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="nome">Nome</label>
+          <input
+            type="text"
+            class="form-control"
+            id="nome"
+            formControlName="nome"
+            (input)="onInput()"
+            [ngClass]="onFieldError('nome') + ' ' + onFieldRequired('nome')">
+          <invalid-form-control [show]="onFieldInvalid('nome') == 'required'" message="Nome é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('nome') == 'maxlength'" [message]="maxLengthMessages.nome"></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="nome">Sobrenome</label>
+          <input
+            type="text"
+            class="form-control"
+            id="sobrenome"
+            formControlName="sobrenome"
+            (input)="onInput()"
+            [ngClass]="onFieldError('sobrenome') + ' ' + onFieldRequired('sobrenome')">
+          <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'required'" message="Sobrenome é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'maxlength'" [message]="maxLengthMessages.sobrenome"></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="tipoCadastro">Tipo de cadastro</label>
+          <select
+            class="form-control"
+            id="tipoCadastro"
+            formControlName="tipoCadastro"
+            (change)="onInput()"
+            [ngClass]="onFieldError('tipoCadastro') + ' ' + onFieldRequired('tipoCadastro')">
+            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option *ngFor="let item of tiposCadastro" [value]="item.id">{{ item.descricao }}</option>
+          </select>
+          <invalid-form-control [show]="onFieldInvalid('tipoCadastro') == 'required'" message="Tipo de cadastro é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inscricaoProdRural">Inscrição produtor rural</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inscricaoProdRural"
+            formControlName="inscricaoProdRural"
+            (input)="onInput(); onInscricaoProdutorRural();">
+            <invalid-form-control [show]="onFieldInvalid('inscricaoProdRural') == 'maxlength'" [message]="maxLengthMessages.inscricaoProdRural"></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="contribuinte">Contribuinte</label>
+          <select
+            class="form-control"
+            id="contribuinte"
+            formControlName="contribuinte"
+            (change)="onInput()"
+            [ngClass]="onFieldError('contribuinte') + ' ' + onFieldRequired('contribuinte')">
+            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option *ngFor="let item of contribuintes" [value]="item.id">{{ item.descricao }}</option>
+          </select>
+          <invalid-form-control [show]="onFieldInvalid('contribuinte') == 'required'" message="Contribuinte é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="setorAtividade">Setor de atividade</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="setorAtividades"
+            [virtualScroll]="true"
+            labelForId="setorAtividade"
+            bindLabel="descricao"
+            bindValue="id"
+            formControlName="setorAtividade"
+            (input)="onInput()"
+            [ngClass]="onFieldError('setorAtividade') + ' ' + onFieldRequired('setorAtividade')">
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('setorAtividade') == 'required'" message="Setor de atividade é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="limiteCredito">Limite de crédito</label>
+          <input
+            type="text"
+            class="form-control"
+            id="limiteCredito"
+            formControlName="limiteCredito"
+            currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
+            (input)="onInput()"
+            [ngClass]="onFieldError('limiteCredito') + ' ' + onFieldRequired('limiteCredito')">
+          <invalid-form-control [show]="onFieldInvalid('limiteCredito') == 'required'" message="Limite de crédito é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="creditoSeguradora">Limite de crédito (seguradora)</label>
+          <input
+            type="text"
+            class="form-control"
+            id="creditoSeguradora"
+            formControlName="creditoSeguradora"
+            currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
+            (input)="onInput()"
+            [ngClass]="onFieldError('creditoSeguradora') + ' ' + onFieldRequired('creditoSeguradora')">
+          <invalid-form-control [show]="onFieldInvalid('dataInclusao') == 'required'" message="Limite de crédito (seguradora) é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="dataInclusao">Data de inclusão</label>
+          <input
+            type="text"
+            class="form-control"
+            id="dataInclusao"
+            formControlName="dataInclusao"
+            (input)="onInput()"
+            [ngClass]="onFieldError('dataInclusao') + ' ' + onFieldRequired('dataInclusao')">
+          <invalid-form-control [show]="onFieldInvalid('dataInclusao') == 'required'" message="Data de inclusão é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="proximaAnaliseCredito">Próxima análise de crédito em</label>
+          <input
+            type="text"
+            class="form-control"
+            id="proximaAnaliseCredito"
+            formControlName="proximaAnaliseCredito"
+            (input)="onInput()"
+            [ngClass]="onFieldError('proximaAnaliseCredito') + ' ' + onFieldRequired('proximaAnaliseCredito')">
+          <invalid-form-control [show]="onFieldInvalid('proximaAnaliseCredito') == 'required'" message="Próxima análise de crédito é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="quemCadastrou">Quem cadastrou</label>
+          <input
+            type="text"
+            class="form-control"
+            id="quemCadastrou"
+            formControlName="quemCadastrou"
+            (input)="onInput()"
+            [ngClass]="onFieldError('quemCadastrou') + ' ' + onFieldRequired('quemCadastrou')">
+          <invalid-form-control [show]="onFieldInvalid('quemCadastrou') == 'required'" message="Quem cadastrou é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="somenteCarteira"
+              formControlName="somenteCarteira">
+            <label class="custom-control-label" for="somenteCarteira">Cobrança somente carteira</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="boletoDescontado"
+              formControlName="boletoDescontado">
+            <label class="custom-control-label" for="boletoDescontado">Não aceita boleto descontado</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="somenteAVista"
+              formControlName="somenteAVista">
+            <label class="custom-control-label" for="somenteAVista">Cliente somente à vista</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="exigePesagem"
+              formControlName="exigePesagem">
+            <label class="custom-control-label" for="exigePesagem">Exige pesagem</label>
+          </div>
+        </div>
+      </div>
+    </form>
+    <form [formGroup]="form" autocomplete="off" *ngIf="tipoPessoa == 'J'">
+      <div class="form-row">
+        <div class="form-group col-md-2 offset-md-10">
+          <label for="notaCliente">Nota do Cliente 
+            <ng-template #tooltipLabelNotaClienteTemplate>
+              <p class="text-nowrap mb-0">Nota do Cliente</p>
+              <p class="text-nowrap mb-0">de 1 a 5</p>
+            </ng-template>
+            <i class="far fa-question-circle" [tooltip]="tooltipLabelNotaClienteTemplate" container="body"></i>
+          </label>
+          <input type="text"
+          class="form-control"
+          id="notaCliente"
+          formControlName="notaCliente"
+          (input)="onInput()"
+          [ngClass]="onFieldError('notaCliente') + ' ' + onFieldRequired('notaCliente')">
+          <invalid-form-control [show]="onFieldInvalid('notaCliente') == 'required'" message="Nota do Cliente é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-group col-md-2 offset-md-10">
+          <div class="custom-control custom-checkbox mt-auto">
+            <input
+            type="checkbox"
+            class="custom-control-input"
+            id="auto-update-nota"
+            formControlName="autoUpdateNota">
+            <label
+              class="custom-control-label"
+              for="auto-update-nota">
+              Fixar nota
+              <ng-template #tooltipAutoUpdateNotaTemplate>
+                <p class="text-nowrap mb-0">Ao marcar esse campo</p>
+                <p class="text-nowrap mb-0">a nota não será atualizada</p>
+                <p class="text-nowrap mb-0">automaticamente</p>
+              </ng-template>
+              <i class="far fa-question-circle" [tooltip]="tooltipAutoUpdateNotaTemplate" container="body"></i>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="cnpj">CNPJ</label>
+          <input
+            type="text"
+            class="form-control"
+            id="cnpj"
+            formControlName="cnpj"
+            (input)="onInput()"
+            [ngClass]="onFieldError('cnpj') + ' ' + onFieldRequired('cnpj')"
+            cnpj [textMask]="{ mask: MASKS.cnpj.textMask }">
+          <invalid-form-control [show]="onFieldInvalid('cnpj') == 'required'" message="CNPJ é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="razaoSocial">Razão social</label>
+          <input
+            type="text"
+            class="form-control"
+            id="razaoSocial"
+            formControlName="razaoSocial"
+            (input)="onInput()"
+            [ngClass]="onFieldError('razaoSocial') + ' ' + onFieldRequired('razaoSocial')">
+          <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'required'" message="Razão social é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'maxlength'" [message]="maxLengthRules.razaoSocial"></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="nomeFantasia">Nome fantasia</label>
+          <input
+            type="text"
+            class="form-control"
+            id="nomeFantasia"
+            formControlName="nomeFantasia"
+            (input)="onInput()"
+            [ngClass]="onFieldError('nomeFantasia') + ' ' + onFieldRequired('nomeFantasia')">
+          <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'required'" message="Nome fantasia é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'maxlength'" [message]="maxLengthRules.nomeFantasia"></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="tipoCadastro">Tipo de cadastro</label>
+          <select
+            class="form-control"
+            id="tipoCadastro"
+            formControlName="tipoCadastro"
+            (change)="onInput()"
+            [ngClass]="onFieldError('tipoCadastro') + ' ' + onFieldRequired('tipoCadastro')">
+            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option *ngFor="let item of tiposCadastro" [value]="item.id">{{ item.descricao }}</option>
+          </select>
+          <invalid-form-control [show]="onFieldInvalid('tipoCadastro') == 'required'" message="Tipo de cadastro é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="tributacao">Regime de tributação</label>
+          <select
+            class="form-control"
+            id="tributacao"
+            formControlName="tributacao"
+            (change)="onInput()">
+            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option *ngFor="let item of regimesTributacao" [value]="item.id">{{ item.descricao }}</option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="contribuinte">Contribuinte</label>
+          <select
+            class="form-control"
+            id="contribuinte"
+            formControlName="contribuinte"
+            (change)="onInput(); checkValidatorsInscricaoEstadual(form.value['contribuinte']); onChangeContribuinte(form.value['contribuinte'])"
+            [ngClass]="onFieldError('contribuinte') + ' ' + onFieldRequired('contribuinte')">
+            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option *ngFor="let item of contribuintes" [value]="item.id">{{ item.descricao }}</option>
+          </select>
+          <invalid-form-control [show]="onFieldInvalid('contribuinte') == 'required'" message="Contribuinte é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inscricaoEstadual">Inscrição estadual</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inscricaoEstadual"
+            formControlName="inscricaoEstadual"
+            (input)="onInput()"
+            [ngClass]="onFieldError('inscricaoEstadual') + ' ' + onFieldRequired('inscricaoEstadual')">
+          <invalid-form-control [show]="onFieldInvalid('inscricaoEstadual') == 'required'" message="Inscrição estadual é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('inscricaoEstadual') == 'maxlength'" [message]="maxLengthMessages.inscricaoEstadual"></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="setorAtividade">Setor de atividade</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="setorAtividades"
+            [virtualScroll]="true"
+            labelForId="setorAtividade"
+            bindLabel="descricao"
+            bindValue="id"
+            formControlName="setorAtividade"
+            (input)="onInput()"
+            [ngClass]="onFieldError('setorAtividade') + ' ' + onFieldRequired('setorAtividade')">
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('setorAtividade') == 'required'" message="Setor de atividade é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="finalidadeMaterial">Finalidade do material</label>
+          <select
+            class="form-control"
+            id="finalidadeMaterial"
+            formControlName="finalidadeMaterial"
+            (change)="onInput()"
+            [ngClass]="onFieldError('finalidadeMaterial') + ' ' + onFieldRequired('finalidadeMaterial')">
+            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option *ngFor="let item of finalidadesMaterial" [value]="item.id">{{ item.descricao }}</option>
+          </select>
+          <invalid-form-control [show]="onFieldInvalid('finalidadeMaterial') == 'required'" message="Finalidade do material é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="cnae">CNAE (atividade principal)</label>
+          <div class="form-row">
+            <div class="col-11">
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="cnaes"
+                [virtualScroll]="true"
+                labelForId="cnae"
+                bindLabel="descricao"
+                bindValue="id"
+                formControlName="cnae"
+                (input)="onInput()">
+              </ng-select>
+            </div>
+            <div class="col-1 pt-1 d-flex justify-content-center">
+              <button
+                type="button"
+                class="btn-icon-sm"
+                tooltip="Atividades secundárias"
+                container="body"
+                (click)="onAtividadesSecundarias()">
+                <i [ngClass]="{'fa-plus': !showAtividadesSecundarias, 'fa-minus': showAtividadesSecundarias}" class="fas"></i>
+              </button>
+            </div>
+          </div>
+          <invalid-form-control [show]="onFieldInvalid('cnae') == 'required'" message="CNAE é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div *ngIf="showAtividadesSecundarias">
+        <div class="form-row">
+          <div class="form-group col">
+            <hr class="my-2">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <div class="form-row">
+              <div class="col-11">
+                <div class="mtc-title">Atividades secundárias</div>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="cnaes"
+                  [virtualScroll]="true"
+                  labelForId="cnaeSecundario"
+                  bindLabel="descricao"
+                  bindValue="id"
+                  [(ngModel)]="selectedAtividadeSecundaria"
+                  [ngModelOptions]="{ standalone: true }">
+                </ng-select>
+              </div>
+              <div class="col-1 pt-4 d-flex justify-content-center">
+                <button
+                  type="button"
+                  class="btn-icon-sm my-auto"
+                  tooltip="Adicionar"
+                  container="body"
+                  [disabled]="selectedAtividadeSecundaria == null"
+                  (click)="onAddAtividadeSecundaria()">
+                  <i class="fas fa-check"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div formArrayName="atividadesSecundarias">
+          <div *ngIf="atividadesSecundarias.controls.length > 0">
+              <div class="form-row" *ngFor="let item of atividadesSecundarias.controls; let i = index" [formGroupName]="i">
+              <div class="form-group col">
+                <div class="form-row">
+                  <div class="col my-auto">
+                    {{ item.value['descCnae'] | uppercase }}
+                    <button
+                      type="button"
+                      class="btn-icon-sm ml-3"
+                      (click)="onDeleteAtividadeSecundaria(i)">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <hr class="my-2">
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="limiteCredito">Limite de crédito</label>
+          <input
+            type="text"
+            class="form-control"
+            id="limiteCredito"
+            formControlName="limiteCredito"
+            currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
+            (input)="onInput()"
+            [ngClass]="onFieldError('limiteCredito') + ' ' + onFieldRequired('limiteCredito')">
+          <invalid-form-control [show]="onFieldInvalid('limiteCredito') == 'required'" message="Limite de crédito é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="creditoSeguradora">Limite de crédito (seguradora)</label>
+          <input
+            type="text"
+            class="form-control"
+            id="creditoSeguradora"
+            formControlName="creditoSeguradora"
+            currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
+            (input)="onInput()"
+            [ngClass]="onFieldError('creditoSeguradora') + ' ' + onFieldRequired('creditoSeguradora')">
+          <invalid-form-control [show]="onFieldInvalid('dataInclusao') == 'required'" message="Limite de crédito (seguradora) é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="dataInclusao">Data de inclusão</label>
+          <input
+            type="text"
+            class="form-control"
+            id="dataInclusao"
+            formControlName="dataInclusao"
+            (input)="onInput()"
+            [ngClass]="onFieldError('dataInclusao') + ' ' + onFieldRequired('dataInclusao')">
+          <invalid-form-control [show]="onFieldInvalid('dataInclusao') == 'required'" message="Data de inclusão é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="proximaAnaliseCredito">Próxima análise de crédito em</label>
+          <input
+            type="text"
+            class="form-control"
+            id="proximaAnaliseCredito"
+            formControlName="proximaAnaliseCredito"
+            (input)="onInput()"
+            [ngClass]="onFieldError('proximaAnaliseCredito') + ' ' + onFieldRequired('proximaAnaliseCredito')">
+          <invalid-form-control [show]="onFieldInvalid('proximaAnaliseCredito') == 'required'" message="Próxima análise de crédito é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="quemCadastrou">Quem cadastrou</label>
+          <input
+            type="text"
+            class="form-control"
+            id="quemCadastrou"
+            formControlName="quemCadastrou"
+            (input)="onInput()"
+            [ngClass]="onFieldError('quemCadastrou') + ' ' + onFieldRequired('quemCadastrou')">
+          <invalid-form-control [show]="onFieldInvalid('quemCadastrou') == 'required'" message="Quem cadastrou é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="somenteCarteira"
+              formControlName="somenteCarteira">
+            <label class="custom-control-label" for="somenteCarteira">Cobrança somente carteira</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="boletoDescontado"
+              formControlName="boletoDescontado">
+            <label class="custom-control-label" for="boletoDescontado">Não aceita boleto descontado</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="somenteAVista"
+              formControlName="somenteAVista">
+            <label class="custom-control-label" for="somenteAVista">Cliente somente à vista</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="exigePesagem"
+              formControlName="exigePesagem">
+            <label class="custom-control-label" for="exigePesagem">Exige pesagem</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="marca"
+              formControlName="marca">
+            <label class="custom-control-label" for="marca">Marca</label>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

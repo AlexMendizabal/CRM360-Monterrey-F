@@ -1,0 +1,123 @@
+<nav>
+  <div id="toggle-menu" class="d-flex">
+    <button
+      type="button"
+      class="mx-auto my-auto"
+      (click)="toggleLockMenu()">
+      <i [ngClass]="toggleMenuClass()"></i>
+    </button>
+  </div>
+  <div id="sidebar" (mouseenter)="mouseEnterMenu()" (mouseleave)="mouseLeaveMenu()" [ngClass]="{'open': menuOpen}">
+    <div id="content" perfectScrollbar>
+      <ul class="sidebar-navbar" *ngIf="atividadesLoaded && !atividadesError">
+        <li
+          placement="right"
+          tooltip="Home"
+          container="body"
+          [isDisabled]="tooltipDisabled"
+          containerClass="sidebar-navbar-tooltip">
+          <a
+            [routerLinkActive]="['active']"
+            [routerLink]="routerLinkHome"
+            (click)="onHideMenu()">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li
+          placement="right"
+          [tooltip]="atividade.nome"
+          container="body"
+          [isDisabled]="tooltipDisabled"
+          containerClass="sidebar-navbar-tooltip"
+          *ngFor="let atividade of atividades">
+          <!-- Atividade comum -->
+          <a
+            [routerLinkActive]="['active']"
+            [routerLink]="[atividade.rota]"
+            (click)="onHideMenu()"
+            *ngIf="atividade.renderizacao == 'ATIVIDADE_SEM_SUBMODULO'"
+            >
+            <!-- *ngIf="atividade.rota != null && atividade.submoduloId == null && atividade.url == null" -->
+            <i [class]="atividade.icone"></i>
+            <span class="text-truncate">{{ atividade.nome }}</span>
+          </a>
+          <!-- Atividade comum -->
+
+          <!-- Atividade com submódulo Versão 1 -->
+          <a
+            [routerLinkActive]="['active']"
+            [routerLink]="[atividade.rota, atividade.submoduloId]"
+            (click)="onHideMenu()"
+            *ngIf="atividade.renderizacao == 'ATIVIDADE_COM_SUBMODULO' && atividade.versao != 2 "
+            >
+            <!-- *ngIf="atividade.rota != null && atividade.submoduloId != null && atividade.url == null" -->
+            <i [class]="atividade.icone"></i>
+            <span class="text-truncate">{{ atividade.nome }}</span>
+          </a>
+          <!-- Atividade com submódulo -->
+
+          <!-- Atividade com submódulo Versão 2 -->
+          <a
+            [routerLinkActive]="['active']"
+            [routerLink]="[atividade.rota]"
+            (click)="onHideMenu()"
+            *ngIf="atividade.renderizacao == 'ATIVIDADE_COM_SUBMODULO' && atividade.versao == 2"
+            >
+            <!-- *ngIf="atividade.rota != null && atividade.submoduloId != null && atividade.url == null" -->
+            <i [class]="atividade.icone"></i>
+            <span class="text-truncate">{{ atividade.nome }}</span>
+          </a>
+          <!-- Atividade com submódulo -->
+
+          <!-- Atividade externa com renderização no Iframe -->
+          <a
+            [routerLinkActive]="['active']"
+            [routerLink]="[atividade.rota, atividade.id]"
+            (click)="onHideMenu()"
+            *ngIf="atividade.renderizacao == 'ATIVIDADE_EXTERNA_RENDERIZADA_INTERNAMENTE'"  
+          >
+            <!-- *ngIf="atividade.url != null && atividade.exibeNovaAba == 0" -->
+            <i [class]="atividade.icone"></i>
+            <span class="text-truncate">{{ atividade.nome }}</span>
+          </a>
+          <!-- Atividade externa com renderização no Iframe -->
+
+          <!-- Atividade externa com renderização externa -->
+          <a
+            [href]="atividade.url"
+            target="_blank"
+            (click)="onHideMenu()"
+            *ngIf="atividade.renderizacao == 'ATIVIDADE_EXTERNA_RENDERIZADA_EXTERNAMENTE'"
+            >
+            <!-- *ngIf="atividade.url != null && atividade.exibeNovaAba == 1" -->
+            <i [class]="atividade.icone"></i>
+            <span class="text-truncate">{{ atividade.nome }}</span>
+          </a>
+          <!-- Atividade externa com renderização externa -->
+        </li>
+      </ul>
+      <ul class="sidebar-navbar" *ngIf="atividadesLoaded && atividadesError">
+        <li
+          placement="right"
+          tooltip="Recarregar"
+          container="body"
+          [isDisabled]="tooltipDisabled"
+          containerClass="sidebar-navbar-tooltip">
+          <a class="hover" (click)="onReloadAtividades(); + ' ' + onHideMenu();">
+            <i class="fas fa-redo-alt"></i>
+            <span>Recarregar</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="sidebar-navbar" *ngIf="!atividadesLoaded">
+        <li>
+          <a>
+            <div class="spinner-border text-white"></div>
+            <span>Carregando atividades...</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

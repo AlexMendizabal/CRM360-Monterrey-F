@@ -1,0 +1,12 @@
+::ng-deep {
+  card-group {
+    display: block;
+    width: 100%;
+    #header {
+      padding: 12px 15px;
+    }
+    #body {
+      padding: 30px 30px 5px 30px !important
+    }
+  }
+}

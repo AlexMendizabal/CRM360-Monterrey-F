@@ -1,0 +1,27 @@
+.custom-switch .custom-control-label::after {
+  background-color: #fff;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+  color: #fff;
+  border-color: #28a745;
+  background-color: #28a745;
+}
+
+button:disabled {
+  cursor: no-drop;
+  color: #b9bdb9 !important;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+}
+
+::ng-deep .tooltip-inner{
+  max-width: 700px !important;
+}
+
+tr{
+  line-height: 1.5rem;
+}

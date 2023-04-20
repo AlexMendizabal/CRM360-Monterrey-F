@@ -1,0 +1,17 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row" *ngIf="potencialCompraLoaded">
+  <div class="col">
+    <div class="mtc-title">Potencial de compra (mensal)</div>
+    <div class="form-row" *ngIf="potencialCompra.length > 0">
+      <div class="form-group col-md-6" *ngFor="let item of potencialCompra">
+        <label>{{ item.descricao | capitalizeFirst }}</label>
+        <div>De {{ handleNumber(item.de) }}t até {{ handleNumber(item.ate) }}t</div>
+      </div>
+    </div>
+    <div class="row py-5 my-5" *ngIf="potencialCompra.length == 0">
+      <div class="col">
+        <empty-result message="Nenhuma informação encontrada"></empty-result>
+      </div>
+    </div>
+  </div>
+</div>

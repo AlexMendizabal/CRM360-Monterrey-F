@@ -1,0 +1,5 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="appName" [show]="!loaderFullScreen"></app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <custom-iframe [url]="appUrl"></custom-iframe>
+</app-body>

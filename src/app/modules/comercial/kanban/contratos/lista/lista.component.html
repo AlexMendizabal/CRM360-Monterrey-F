@@ -1,0 +1,189 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<!-- <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen> -->
+<app-header appTitle="Kanban Contratos">
+  <button
+    type="button"
+    (click)= 'onRefresh();'>
+    Atualizar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" >
+  <div class="row">
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-1">
+              <label for="dataInicial">Data Inicial</label>
+              <input
+              class="form-control"
+              id="dataInicial"
+              type="text"
+              formControlName="dataInicial"
+              bsDatepicker
+              [ngClass]="onFieldError('dataInicial') + ' ' + onFieldRequired('dataInicial')">
+
+            </div>
+            <div class="form-group col-lg-1">
+              <label for="dataFinal">Data final</label>
+              <input
+              class="form-control"
+              id="dataFinal"
+              type="text"
+              formControlName="dataFinal"
+              bsDatepicker
+              [ngClass]="onFieldError('dataFinal') + ' ' + onFieldRequired('dataFinal')">
+
+            </div>
+
+            <div class="form-group col-lg-1">
+              <label for="codSituacao">Situação</label>
+              <select
+                class="form-control custom-select"
+                id="codSituacao"
+                formControlName="codSituacao">
+                <option selected value="">Todos</option>
+                <option value="0">Inativos</option>
+                <option value="1">Ativos</option>
+              </select>
+            </div>
+
+            <div class="form-group col-lg-4">
+              <label for="codVendedor">Por vendedor</label>
+                    <ng-select
+                      type='text'
+                      [searchable]="true"
+                      [clearable]="false"
+                      [items]="vendedores"
+                      [virtualScroll]="true"
+                      [hideSelected]="true"
+                      [closeOnSelect]="true"
+                      placeholder="Selecione..."
+                      bindLabel="nome"
+                      bindValue="id"
+                      formControlName="codVendedor"
+                    >
+
+                        <invalid-form-control
+                        [show]="onFieldInvalid('codVendedor')"
+                        message="Descrição é obrigatório.">
+                        </invalid-form-control>
+                    </ng-select>
+                </div>
+
+            <div class="form-group col-lg-3">
+              <label for="codGerencia">Por gerência</label>
+              <ng-select
+                      [searchable]="true"
+                      [clearable]="false"
+                      [items]="coordenadores"
+                      [virtualScroll]="true"
+                      [hideSelected]="true"
+                      [closeOnSelect]="true"
+                      placeholder="Selecione..."
+                      bindLabel="nome"
+                      bindValue="matricula"
+                      formControlName="codGerencia"
+                    >
+
+                  <invalid-form-control
+                  [show]="onFieldInvalid('codGerencia')" message="Descrição é obrigatório.">
+                  </invalid-form-control>
+              </ng-select>
+            </div>
+
+            <div class="form-group col-lg-2">
+              <label for="codLinha">Linha</label>
+              <ng-select
+                [closeOnSelect]="true"
+                [items]="linhas"
+                formControlName="codLinha"
+                [virtualScroll]="true"
+                labelForId="codLinha"
+                bindLabel="descricao"
+                bindValue="id">
+              </ng-select>
+            </div>
+
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+
+
+<div class="row mt-4" *ngIf="this.contratos && dadosEmpty">
+
+  <div class="col-3"></div>
+
+  <div class="col-2">
+    <h6 class='text-center'>CONTRATOS</h6>
+  <div
+  class="ml-3 border border-success rounded border-top-0 border-right-0 border-bottom-0 "
+  style="background-color: rgb(249, 252, 252);"
+  *ngFor="let item of contratos"
+  [class.border-danger]="item.tempo > 10"
+  [class.border-warning]="item.tempo > 5 && item.tempo <= 10"
+  [class.border-success]="item.tempo <= 5"
+  [tooltip]="tooltipAutoScrollTemplate">
+    <div class="card-body mb-2 cartao" >
+      <strong >#{{ item.contrato }} - {{ item.cliente }}</strong><br>
+      <span>{{ item.linha }}</span><br>
+      <span>{{ item.peso }}kg </span><br>
+      <span>{{ item.vendedor }}</span><br>
+      <span>{{ item.unidade }}</span>
+    </div>
+    <ng-template #tooltipAutoScrollTemplate>
+      <p class="mt-3 mb-0"><b>TEMPO NO STATUS - {{ item.tempo }} DIAS</b></p>
+      <p class="text-nowrap mb-0"><br><br></p>
+    </ng-template>
+  </div>
+</div>
+
+<div class="col-2">
+  <h6 class='text-center'>QTDADE FATURADA</h6>
+  <div
+  class="ml-3 border border-danger rounded border-top-0 border-right-0 border-bottom-0"
+  style="background-color: rgb(249, 252, 252);"
+  *ngFor="let item of faturados"
+  [class.border-danger]="item.tempo > 10"
+  [class.border-warning]="item.tempo > 5 && item.tempo <= 10"
+  [class.border-success]="item.tempo <= 5">
+    <div class="card-body mb-2 cartao" style='text-align: center;'>
+      <br>
+      <br>
+      <strong>{{ item.quantidade }}</strong><br>
+      <br>
+      <br>
+    </div>
+  </div>
+</div>
+
+<div class="col-2">
+  <h6 class='text-center'>QTDADE PENDENTE</h6>
+  <div
+  class="ml-3 border border-danger rounded border-top-0 border-right-0 border-bottom-0"
+  style="background-color: rgb(249, 252, 252);"
+  *ngFor="let item of pendentes"
+  [class.border-danger]="item.tempo > 10"
+  [class.border-warning]="item.tempo > 5 && item.tempo <= 10"
+  [class.border-success]="item.tempo <= 5">
+    <div class="card-body mb-2 cartao" style='text-align: center;'>
+      <br>
+      <br>
+      <strong>{{ item.quantidade }}</strong><br>
+      <br>
+      <br>
+    </div>
+  </div>
+</div>
+<div class="col-3"></div>
+
+</div>
+
+
