@@ -5,7 +5,7 @@
     *ngIf="tipoVisao == 'formulario'"
     [disabled]="!form.valid"
     (click)="onSubmit()">
-    Gerar
+    Generar
   </button>
   <button
     type="button"
@@ -26,12 +26,12 @@
       <form [formGroup]="form" autocomplete="off">
         <div class="form-row">
           <div class="form-group col mb-0">
-            <div class="mtc-title">Dados do cliente</div>
+            <div class="mtc-title">Datos del cliente</div>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="razaoSocial">Razão social</label>
+            <label for="razaoSocial">Razon social</label>
             <input
               type="text"
               class="form-control"
@@ -39,7 +39,7 @@
               formControlName="razaoSocial">
           </div>
           <div class="form-group col-md-6">
-            <label for="dataSolicitacao">Data da solicitação</label>
+            <label for="dataSolicitacao">Fecha de la solicitud</label>
             <input
               type="text"
               class="form-control"
@@ -54,7 +54,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-4">
-            <label for="codCliente">Código do cliente</label>
+            <label for="codCliente">Código de cliente</label>
             <input
               type="text"
               class="form-control"
@@ -82,7 +82,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="setorAtividade">Setor de atividade</label>
+            <label for="setorAtividade">Setor de atividades</label>
             <input
               type="text"
               class="form-control"
@@ -90,7 +90,7 @@
               formControlName="setorAtividade">
           </div>
           <div class="form-group col-md-6">
-            <label for="dataUltimaVisita">Data da última visita</label>
+            <label for="dataUltimaVisita">Fecha de la última visita</label>
             <input
               type="text"
               class="form-control"
@@ -103,7 +103,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="instalacoes">Instalações</label>
+            <label for="instalacoes">Instalaciones</label>
             <input
               type="text"
               class="form-control"
@@ -112,7 +112,7 @@
               (input)="onInput()">
           </div>
           <div class="form-group col-md-6">
-            <label for="numFuncionarios">Número de funcionários</label>
+            <label for="numFuncionarios">Número de empleados</label>
             <input
               type="text"
               class="form-control"
@@ -136,7 +136,7 @@
             <invalid-form-control [show]="onFieldInvalid('limiteCreditoSolicitado')" message="Limite de crédito solicitado é obrigatório."></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
-            <label for="condicaoPagto">Condição de pagamento</label>
+            <label for="condicaoPagto">Condiciones de pago</label>
             <input
               type="text"
               class="form-control"
@@ -150,7 +150,7 @@
         <div class="form-row">
           <div class="form-group col mb-0">
             <hr class="mt-0">
-            <div class="mtc-title">Dados solicitante</div>
+            <div class="mtc-title">Solicitud de datos</div>
           </div>
         </div>
         <div class="form-row">
@@ -163,7 +163,7 @@
               formControlName="nomeVendedor">
           </div>
           <div class="form-group col-md-6">
-            <label for="telefoneVendedor">Telefone</label>
+            <label for="telefoneVendedor">Teléfono</label>
             <input
               type="text"
               class="form-control"
@@ -173,7 +173,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="gestorVendas">Gestor(a) de venda</label>
+            <label for="gestorVendas">Jefe de ventas</label>
             <input
               type="text"
               class="form-control"
@@ -184,7 +184,7 @@
             <invalid-form-control [show]="onFieldInvalid('gestorVendas')" message="Gestor(a) de venda é obrigatório."></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
-            <label for="nomeEscritorio">Escritório de venda</label>
+            <label for="nomeEscritorio">Oficina de ventas</label>
             <input
               type="text"
               class="form-control"
@@ -200,7 +200,7 @@
           </div>
           <div class="form-row">
             <div class="form-group col mb-0 d-flex justify-content-between">
-              <div class="mtc-title">Fornecedores</div>
+              <div class="mtc-title">Proveedores</div>
               <div>
                 <a
                   class="text-secondary"
@@ -215,7 +215,7 @@
             <div class="form-group col mb-0">
               <div class="form-row">
                 <div class="form-group col-6">
-                  <label for="nome">Nome</label>
+                  <label for="nome">Nobre</label>
                   <input
                     type="text"
                     class="form-control"
@@ -225,7 +225,7 @@
                     [ngClass]="onNestedFieldError('fornecedores', i, 'nome') + ' ' + onNestedFieldRequired('fornecedores', i, 'nome')">
                 </div>
                 <div class="form-group col-5">
-                  <label for="telefone">Telefone</label>
+                  <label for="telefone">Telefono</label>
                   <input
                     type="text"
                     class="form-control"
@@ -270,7 +270,7 @@
               <div class="form-group col mb-0">
                 <div class="form-row">
                   <div class="form-group col-11">
-                    <label for="nome">Nome</label>
+                    <label for="nome">Nombre</label>
                     <input
                       type="text"
                       class="form-control"
@@ -327,7 +327,7 @@
                     [ngClass]="onNestedFieldError('bancos', i, 'nome') + ' ' + onNestedFieldRequired('bancos', i, 'nome')">
                 </div>
                 <div class="form-group col-2">
-                  <label for="agencia">Agência</label>
+                  <label for="agencia">Agencia</label>
                   <input
                     type="text"
                     class="form-control"
@@ -337,7 +337,7 @@
                     [ngClass]="onNestedFieldError('bancos', i, 'agencia') + ' ' + onNestedFieldRequired('bancos', i, 'agencia')">
                 </div>
                 <div class="form-group col-3">
-                  <label for="contaCorrente">Conta corrente</label>
+                  <label for="contaCorrente">Cuenta corriente</label>
                   <input
                     type="text"
                     class="form-control"
@@ -347,7 +347,7 @@
                     [ngClass]="onNestedFieldError('bancos', i, 'contaCorrente') + ' ' + onNestedFieldRequired('bancos', i, 'contaCorrente')">
                 </div>
                 <div class="form-group col-3">
-                  <label for="telefone">Telefone</label>
+                  <label for="telefone">Telefono</label>
                   <input
                     type="text"
                     class="form-control"
@@ -376,7 +376,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col mb-0">
-            <label>Vendas concentradas</label>
+            <label>Ventas concentradas</label>
             <div class="form-row">
               <div class="form-group col">
                 <div class="custom-control custom-radio custom-control-inline">
@@ -403,7 +403,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="previsaoCompraTon">Previsão de compra mensal (Ton)</label>
+            <label for="previsaoCompraTon">Compra mensual estimada (Ton)</label>
             <input
               type="text"
               class="form-control"
@@ -412,7 +412,7 @@
               currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 3 }">
           </div>
           <div class="form-group col-md-6">
-            <label for="previsaoCompraValor">Previsão de compra mensal (R$)</label>
+            <label for="previsaoCompraValor">Compra mensual estimada (R$)</label>
             <input
               type="text"
               class="form-control"
@@ -423,7 +423,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="faturamentoMedio">Faturamento médio mensal</label>
+            <label for="faturamentoMedio">Facturación media mensual</label>
             <input
               type="text"
               class="form-control"
@@ -434,7 +434,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col">
-            <label for="parecerVendedor">Parecer do vendedor</label>
+            <label for="parecerVendedor">Opinión del vendedor</label>
             <textarea
               class="form-control"
               id="parecerVendedor"
@@ -450,107 +450,107 @@
   </div>
   <div class="row justify-content-center pt-5" id="impressao-ficha-pac" *ngIf="tipoVisao == 'ficha'">
     <div class="col-9">
-      <h1>Proposta para análise de crédito (PAC)</h1>
+      <h1>Propuesta de análisis de créditos (PAC)</h1>
       <div class="jumbotron p-3 mb-3">
         <div class="mtc-title">Dados do cliente</div>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Razão social:</strong>
-          <span *ngIf="dataFicha.razaoSocial == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Razon social:</strong>
+          <span *ngIf="dataFicha.razaoSocial == null">Sin informacion</span>
           <span *ngIf="dataFicha.razaoSocial != null">{{ dataFicha.razaoSocial }}</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Data da solicitação:</strong>
-          <span *ngIf="dataFicha.dataSolicitacao == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Fecha de la solicitud:</strong>
+          <span *ngIf="dataFicha.dataSolicitacao == null">Sin informacion</span>
           <span *ngIf="dataFicha.dataSolicitacao != null">{{ dataFicha.dataSolicitacao }}</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Código do cliente (TID):</strong>
-          <span *ngIf="dataFicha.codCliente == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Código de cliente (TID):</strong>
+          <span *ngIf="dataFicha.codCliente == null">Sin informacion</span>
           <span *ngIf="dataFicha.codCliente != null">{{ dataFicha.codCliente }}</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Código do cliente (SAP):</strong>
-          <span *ngIf="dataFicha.codClienteDBA == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Código de cliente (SAP):</strong>
+          <span *ngIf="dataFicha.codClienteDBA == null">Sin informacion</span>
           <span *ngIf="dataFicha.codClienteDBA != null">{{ dataFicha.codClienteDBA }}</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Limite de crédito atual:</strong>
-          <span *ngIf="dataFicha.limiteCreditoAtual == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Limite de crédito actual:</strong>
+          <span *ngIf="dataFicha.limiteCreditoAtual == null">Sin informacion</span>
           <span *ngIf="dataFicha.limiteCreditoAtual == null">{{ dataFicha.limiteCreditoAtual | currency:'BRL':'symbol':'1.2-2' }}</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Setor de atividade:</strong>
-          <span *ngIf="dataFicha.setorAtividade == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Sector de actividade:</strong>
+          <span *ngIf="dataFicha.setorAtividade == null">Sin informacion</span>
           <span *ngIf="dataFicha.setorAtividade != null">{{ dataFicha.setorAtividade }}</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Data da última visita:</strong>
-          <span *ngIf="dataFicha.dataUltimaVisita == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Fecha de la última visita:</strong>
+          <span *ngIf="dataFicha.dataUltimaVisita == null">Sin informacion</span>
           <span *ngIf="dataFicha.dataUltimaVisita != null">{{ dataFicha.dataUltimaVisita }}</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Instalações:</strong>
-          <span *ngIf="dataFicha.instalacoes == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Instalaciones:</strong>
+          <span *ngIf="dataFicha.instalacoes == null">Sin informacion</span>
           <span *ngIf="dataFicha.instalacoes != null">{{ dataFicha.instalacoes }}</span>
         </p>
         <p class="mt-2 mb-0">
           <strong class="mr-2">Número de funcionários:</strong>
-          <span *ngIf="dataFicha.numFuncionarios == null">NÃO INFORMADO</span>
+          <span *ngIf="dataFicha.numFuncionarios == null">Sin informacion</span>
           <span *ngIf="dataFicha.numFuncionarios == null">{{ dataFicha.numFuncionarios }}</span>
         </p>
       </div>
       <div class="jumbotron p-3 mb-3">
-        <div class="mtc-title">Proposta</div>
+        <div class="mtc-title">Propuestas</div>
         <p class="mt-2 mb-0">
           <strong class="mr-2">Limite de crédito solicitado:</strong>
-          <span *ngIf="dataFicha.limiteCreditoSolicitado == null">NÃO INFORMADO</span>
+          <span *ngIf="dataFicha.limiteCreditoSolicitado == null">Sin informacion</span>
           <span *ngIf="dataFicha.limiteCreditoSolicitado != null">{{ dataFicha.limiteCreditoSolicitado | currency:'BRL':'symbol':'1.2-2' }}</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Condição de pagamento:</strong>
-          <span *ngIf="dataFicha.condicaoPagto == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Condiciones de pago:</strong>
+          <span *ngIf="dataFicha.condicaoPagto == null">Sin informacion</span>
           <span *ngIf="dataFicha.condicaoPagto != null">{{ dataFicha.condicaoPagto }}</span>
         </p>
       </div>
       <div class="jumbotron p-3 mb-3">
-        <div class="mtc-title">Dados do solicitante</div>
+        <div class="mtc-title">Datos del solicitante</div>
         <p class="mt-2 mb-0">
           <strong class="mr-2">Vendedor(a):</strong>
-          <span *ngIf="dataFicha.condicaoPagto == null">NÃO INFORMADO</span>
+          <span *ngIf="dataFicha.condicaoPagto == null">Sin informacion</span>
           <span *ngIf="dataFicha.condicaoPagto != null">{{ dataFicha.nomeVendedor }}</span>
         </p>
         <p class="mt-2 mb-0">
           <strong class="mr-2">Gestor(a):</strong>
-          <span *ngIf="dataFicha.gestorVendas == null">NÃO INFORMADO</span>
+          <span *ngIf="dataFicha.gestorVendas == null">Sin informacion</span>
           <span *ngIf="dataFicha.gestorVendas != null">{{ dataFicha.gestorVendas | uppercase }}</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Telefone:</strong>
-          <span *ngIf="dataFicha.gestorVendas == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Telefono:</strong>
+          <span *ngIf="dataFicha.gestorVendas == null">Sin informacion</span>
           <span *ngIf="dataFicha.gestorVendas != null">{{ dataFicha.telefoneVendedor }}</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Escritório de venda:</strong>
-          <span *ngIf="dataFicha.nomeEscritorio == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Oficina de ventas:</strong>
+          <span *ngIf="dataFicha.nomeEscritorio == null">Sin informacion</span>
           <span *ngIf="dataFicha.nomeEscritorio != null">{{ dataFicha.nomeEscritorio }}</span>
         </p>
       </div>
       <div class="jumbotron p-3 mb-3">
-        <div class="mtc-title">Principais fornecedores</div>
-        <div *ngIf="dataFicha.fornecedores.length == 0">NÃO INFORMADO</div>
+        <div class="mtc-title">Principales proveedores</div>
+        <div *ngIf="dataFicha.fornecedores.length == 0">Sin informacion</div>
         <div *ngIf="dataFicha.fornecedores.length > 0">
           <div class="row mt-2" *ngFor="let item of dataFicha.fornecedores">
             <div class="col-6">
               <p class="mt-2 mb-0">
-                <strong class="mr-2">Nome:</strong>
-                <span *ngIf="item.nome == null">NÃO INFORMADO</span>
+                <strong class="mr-2">Nombre:</strong>
+                <span *ngIf="item.nome == null">Sin informacion</span>
                 <span *ngIf="item.nome != null">{{ item.nome | uppercase }}</span>
               </p>
             </div>
             <div class="col-6">
               <p class="mt-2 mb-0">
-                <strong class="mr-2">Telefone:</strong>
-                <span *ngIf="item.telefone == null">NÃO INFORMADO</span>
+                <strong class="mr-2">Telefono:</strong>
+                <span *ngIf="item.telefone == null">Sin informacion</span>
                 <span *ngIf="item.telefone != null">{{ item.telefone }}</span>
               </p>
             </div>
@@ -558,8 +558,8 @@
         </div>
       </div>
       <div class="jumbotron p-3 mb-3">
-        <div class="mtc-title">Principais clientes</div>
-        <div *ngIf="dataFicha.clientes.length == 0">NÃO INFORMADO</div>
+        <div class="mtc-title">Principales clientes</div>
+        <div *ngIf="dataFicha.clientes.length == 0">Sin informacion</div>
         <div *ngIf="dataFicha.clientes.length > 0">
           <div *ngFor="let item of dataFicha.clientes">
             <p class="mt-2 mb-0">
@@ -569,35 +569,35 @@
         </div>
       </div>
       <div class="jumbotron p-3 mb-3">
-        <div class="mtc-title">Principais bancos</div>
-        <div *ngIf="dataFicha.bancos.length == 0">NÃO INFORMADO</div>
+        <div class="mtc-title">Principaless bancos</div>
+        <div *ngIf="dataFicha.bancos.length == 0">Sin informacion</div>
         <div *ngIf="dataFicha.bancos.length > 0">
           <div class="row" *ngFor="let item of dataFicha.bancos">
             <div class="col-3">
               <p class="mt-2 mb-0">
                 <strong class="mr-2">Banco:</strong>
-                <span *ngIf="item.nome == null">NÃO INFORMADO</span>
+                <span *ngIf="item.nome == null">Sin informacion</span>
                 <span *ngIf="item.nome != null">{{ item.nome | uppercase }}</span>
               </p>
             </div>
             <div class="col-3">
               <p class="mt-2 mb-0">
-                <strong class="mr-2">Agência:</strong>
-                <span *ngIf="item.agencia == null">NÃO INFORMADO</span>
+                <strong class="mr-2">Agencia:</strong>
+                <span *ngIf="item.agencia == null">Sin informacion</span>
                 <span *ngIf="item.agencia != null">{{ item.agencia }}</span>
               </p>
             </div>
             <div class="col-3">
               <p class="mt-2 mb-0">
-                <strong class="mr-2">Conta corrente:</strong>
-                <span *ngIf="item.contaCorrente == null">NÃO INFORMADO</span>
+                <strong class="mr-2">Cuenta corrinte:</strong>
+                <span *ngIf="item.contaCorrente == null">Sin informacion</span>
                 <span *ngIf="item.contaCorrente != null">{{ item.contaCorrente }}</span>
               </p>
             </div>
             <div class="col-3">
               <p class="mt-2 mb-0">
-                <strong class="mr-2">Telefone:</strong>
-                <span *ngIf="item.telefone == null">NÃO INFORMADO</span>
+                <strong class="mr-2">Telefono:</strong>
+                <span *ngIf="item.telefone == null">Sin informacion</span>
                 <span *ngIf="item.telefone != null">{{ item.telefone }}</span>
               </p>
             </div>
@@ -605,32 +605,32 @@
         </div>
       </div>
       <div class="jumbotron p-3 mb-3">
-        <div class="mtc-title">Dados financeiros</div>
+        <div class="mtc-title">Datos financieros</div>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Vendas concentradas:</strong>
-          <span *ngIf="dataFicha.vendasConcentradas == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Vendas concretadas:</strong>
+          <span *ngIf="dataFicha.vendasConcentradas == null">Sin informacion</span>
           <span *ngIf="dataFicha.vendasConcentradas != null">{{ dataFicha.vendasConcentradas }}</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Previsão mensal de compras (Ton):</strong>
-          <span *ngIf="dataFicha.previsaoCompraTon == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Previsión mensual de compras (Ton):</strong>
+          <span *ngIf="dataFicha.previsaoCompraTon == null">Sin informacion</span>
           <span *ngIf="dataFicha.previsaoCompraTon != null">{{ dataFicha.previsaoCompraTon | number:'1.3-3' }}t</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Previsão mensal de compras (R$):</strong>
-          <span *ngIf="dataFicha.previsaoCompraValor == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Previsión mensual de compras (R$):</strong>
+          <span *ngIf="dataFicha.previsaoCompraValor == null">Sin informacion</span>
           <span *ngIf="dataFicha.previsaoCompraValor != null">{{ dataFicha.previsaoCompraValor | currency:'BRL':'symbol':'1.2-2' }}</span>
         </p>
         <p class="mt-2 mb-0">
-          <strong class="mr-2">Faturamento médio mensal (R$):</strong>
-          <span *ngIf="dataFicha.faturamentoMedio == null">NÃO INFORMADO</span>
+          <strong class="mr-2">Facturación media mensual (R$):</strong>
+          <span *ngIf="dataFicha.faturamentoMedio == null">Sin informacion</span>
           <span *ngIf="dataFicha.faturamentoMedio != null">{{ dataFicha.faturamentoMedio | currency:'BRL':'symbol':'1.2-2' }}</span>
         </p>
       </div>
       <div class="jumbotron p-3 mb-0">
-        <div class="mtc-title">Parecer do vendedor</div>
+        <div class="mtc-title">Opinión del vendedor</div>
         <p class="mt-2 mb-0">
-          <span *ngIf="dataFicha.parecerVendedor == null">NÃO INFORMADO</span>
+          <span *ngIf="dataFicha.parecerVendedor == null">Sin informacion</span>
           <span *ngIf="dataFicha.parecerVendedor != null">{{ dataFicha.parecerVendedor | uppercase }}</span>
         </p>
       </div>

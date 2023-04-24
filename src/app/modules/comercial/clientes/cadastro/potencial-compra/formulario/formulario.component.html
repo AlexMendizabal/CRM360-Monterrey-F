@@ -1,7 +1,7 @@
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
 <div class="row" *ngIf="!loaderFullScreen">
   <div class="col">
-    <div class="mtc-title">Editar potencial de compra (mensal)</div>
+    <div class="mtc-title">Editar potencial de compra (mensual)</div>
     <form [formGroup]="form" autocomplete="off">
       <div formArrayName="linhas">
         <div class="form-row" *ngFor="let item of linhas.controls; let i = index" [formGroupName]="i">

@@ -1,7 +1,7 @@
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
 <div class="row" *ngIf="!loaderFullScreen">
   <div class="col">
-    <div class="mtc-title">Editar dados de faturamento</div>
+    <div class="mtc-title">Editar datos de facturación</div>
     <form [formGroup]="form" autocomplete="off" *ngIf="tipoPessoa == 'F'">
       <div class="form-row">
         <div class="form-group col-md-6">
@@ -14,7 +14,7 @@
             (input)="onInput()"
             [ngClass]="onFieldError('cpf') + ' ' + onFieldRequired('cpf')"
             cpf [textMask]="{ mask: MASKS.cpf.textMask }">
-          <invalid-form-control [show]="onFieldInvalid('cpf') == 'required'" message="CPF é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('cpf') == 'required'" message="CPF es obligatorio."></invalid-form-control>
         </div>
         <div class="form-group col-md-6">
           <label for="rg">RG</label>
@@ -25,13 +25,13 @@
             formControlName="rg"
             (input)="onInput()"
             [ngClass]="onFieldError('rg') + ' ' + onFieldRequired('rg')">
-          <invalid-form-control [show]="onFieldInvalid('rg') == 'required'" message="RG é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('rg') == 'required'" message="RG es obligatorio."></invalid-form-control>
           <invalid-form-control [show]="onFieldInvalid('rg') == 'maxlength'" [message]="maxLengthMessages.rg"></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="nome">Nome</label>
+          <label for="nome">Nombre</label>
           <input
             type="text"
             class="form-control"
@@ -39,11 +39,11 @@
             formControlName="nome"
             (input)="onInput()"
             [ngClass]="onFieldError('nome') + ' ' + onFieldRequired('nome')">
-          <invalid-form-control [show]="onFieldInvalid('nome') == 'required'" message="Nome é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('nome') == 'required'" message="Nome es obligatorio."></invalid-form-control>
           <invalid-form-control [show]="onFieldInvalid('nome') == 'maxlength'" [message]="maxLengthMessages.nome"></invalid-form-control>
         </div>
         <div class="form-group col-md-6">
-          <label for="nome">Sobrenome</label>
+          <label for="nome">Apellido</label>
           <input
             type="text"
             class="form-control"
@@ -51,26 +51,26 @@
             formControlName="sobrenome"
             (input)="onInput()"
             [ngClass]="onFieldError('sobrenome') + ' ' + onFieldRequired('sobrenome')">
-          <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'required'" message="Sobrenome é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'required'" message="Sobrenome es obligatorio."></invalid-form-control>
           <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'maxlength'" [message]="maxLengthMessages.sobrenome"></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="tipoCadastro">Tipo de cadastro</label>
+          <label for="tipoCadastro">Tipo de registro</label>
           <select
             class="form-control"
             id="tipoCadastro"
             formControlName="tipoCadastro"
             (change)="onInput()"
             [ngClass]="onFieldError('tipoCadastro') + ' ' + onFieldRequired('tipoCadastro')">
-            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option value="">SELECCIONE UNA OPCIÓN</option>
             <option *ngFor="let item of tiposCadastro" [value]="item.id">{{ item.descricao }}</option>
           </select>
-          <invalid-form-control [show]="onFieldInvalid('tipoCadastro') == 'required'" message="Tipo de cadastro é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('tipoCadastro') == 'required'" message="Tipo de cadastro es obligatorio."></invalid-form-control>
         </div>
         <div class="form-group col-md-6">
-          <label for="inscricaoProdRural">Inscrição produtor rural</label>
+          <label for="inscricaoProdRural">Registro de productores rurales</label>
           <input
             type="text"
             class="form-control"
@@ -82,20 +82,20 @@
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="contribuinte">Contribuinte</label>
+          <label for="contribuinte">Contribuyente</label>
           <select
             class="form-control"
             id="contribuinte"
             formControlName="contribuinte"
             (change)="onInput()"
             [ngClass]="onFieldError('contribuinte') + ' ' + onFieldRequired('contribuinte')">
-            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option value="">SELECCIONE UNA OPCIÓN</option>
             <option *ngFor="let item of contribuintes" [value]="item.id">{{ item.descricao }}</option>
           </select>
-          <invalid-form-control [show]="onFieldInvalid('contribuinte') == 'required'" message="Contribuinte é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('contribuinte') == 'required'" message="Contribuinte es obligatorio."></invalid-form-control>
         </div>
         <div class="form-group col-md-6">
-          <label for="setorAtividade">Setor de atividade</label>
+          <label for="setorAtividade">Sector de actividad</label>
           <ng-select
             [searchable]="true"
             [clearable]="false"
@@ -108,7 +108,7 @@
             (input)="onInput()"
             [ngClass]="onFieldError('setorAtividade') + ' ' + onFieldRequired('setorAtividade')">
           </ng-select>
-          <invalid-form-control [show]="onFieldInvalid('setorAtividade') == 'required'" message="Setor de atividade é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('setorAtividade') == 'required'" message="Setor de atividade es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
@@ -122,10 +122,10 @@
             currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
             (input)="onInput()"
             [ngClass]="onFieldError('limiteCredito') + ' ' + onFieldRequired('limiteCredito')">
-          <invalid-form-control [show]="onFieldInvalid('limiteCredito') == 'required'" message="Limite de crédito é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('limiteCredito') == 'required'" message="Limite de crédito es obligatorio."></invalid-form-control>
         </div>
         <div class="form-group col-md-6">
-          <label for="creditoSeguradora">Limite de crédito (seguradora)</label>
+          <label for="creditoSeguradora">Limite de crédito (aseguradora)</label>
           <input
             type="text"
             class="form-control"
@@ -134,12 +134,12 @@
             currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
             (input)="onInput()"
             [ngClass]="onFieldError('creditoSeguradora') + ' ' + onFieldRequired('creditoSeguradora')">
-          <invalid-form-control [show]="onFieldInvalid('dataInclusao') == 'required'" message="Limite de crédito (seguradora) é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('dataInclusao') == 'required'" message="Limite de crédito (seguradora) es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="dataInclusao">Data de inclusão</label>
+          <label for="dataInclusao">Fecha de inclusión</label>
           <input
             type="text"
             class="form-control"
@@ -147,10 +147,10 @@
             formControlName="dataInclusao"
             (input)="onInput()"
             [ngClass]="onFieldError('dataInclusao') + ' ' + onFieldRequired('dataInclusao')">
-          <invalid-form-control [show]="onFieldInvalid('dataInclusao') == 'required'" message="Data de inclusão é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('dataInclusao') == 'required'" message="Data de inclusão es obligatorio."></invalid-form-control>
         </div>
         <div class="form-group col-md-6">
-          <label for="proximaAnaliseCredito">Próxima análise de crédito em</label>
+          <label for="proximaAnaliseCredito">Próximo análisis de crédito en</label>
           <input
             type="text"
             class="form-control"
@@ -158,12 +158,12 @@
             formControlName="proximaAnaliseCredito"
             (input)="onInput()"
             [ngClass]="onFieldError('proximaAnaliseCredito') + ' ' + onFieldRequired('proximaAnaliseCredito')">
-          <invalid-form-control [show]="onFieldInvalid('proximaAnaliseCredito') == 'required'" message="Próxima análise de crédito é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('proximaAnaliseCredito') == 'required'" message="Próxima análise de crédito es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="quemCadastrou">Quem cadastrou</label>
+          <label for="quemCadastrou">Quien se registró</label>
           <input
             type="text"
             class="form-control"
@@ -171,7 +171,7 @@
             formControlName="quemCadastrou"
             (input)="onInput()"
             [ngClass]="onFieldError('quemCadastrou') + ' ' + onFieldRequired('quemCadastrou')">
-          <invalid-form-control [show]="onFieldInvalid('quemCadastrou') == 'required'" message="Quem cadastrou é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('quemCadastrou') == 'required'" message="Quien se registró es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
@@ -182,7 +182,7 @@
               class="custom-control-input"
               id="somenteCarteira"
               formControlName="somenteCarteira">
-            <label class="custom-control-label" for="somenteCarteira">Cobrança somente carteira</label>
+            <label class="custom-control-label" for="somenteCarteira">Facturación solo de Cartera</label>
           </div>
         </div>
       </div>
@@ -194,7 +194,7 @@
               class="custom-control-input"
               id="boletoDescontado"
               formControlName="boletoDescontado">
-            <label class="custom-control-label" for="boletoDescontado">Não aceita boleto descontado</label>
+            <label class="custom-control-label" for="boletoDescontado">No acepta boleto con descuento</label>
           </div>
         </div>
       </div>
@@ -206,7 +206,7 @@
               class="custom-control-input"
               id="somenteAVista"
               formControlName="somenteAVista">
-            <label class="custom-control-label" for="somenteAVista">Cliente somente à vista</label>
+            <label class="custom-control-label" for="somenteAVista">cliente solo efectivo</label>
           </div>
         </div>
       </div>
@@ -218,7 +218,7 @@
               class="custom-control-input"
               id="exigePesagem"
               formControlName="exigePesagem">
-            <label class="custom-control-label" for="exigePesagem">Exige pesagem</label>
+            <label class="custom-control-label" for="exigePesagem">Requiere pesaje</label>
           </div>
         </div>
       </div>
@@ -226,9 +226,9 @@
     <form [formGroup]="form" autocomplete="off" *ngIf="tipoPessoa == 'J'">
       <div class="form-row">
         <div class="form-group col-md-2 offset-md-10">
-          <label for="notaCliente">Nota do Cliente 
+          <label for="notaCliente">Nota del cliente 
             <ng-template #tooltipLabelNotaClienteTemplate>
-              <p class="text-nowrap mb-0">Nota do Cliente</p>
+              <p class="text-nowrap mb-0">Nota del cliente </p>
               <p class="text-nowrap mb-0">de 1 a 5</p>
             </ng-template>
             <i class="far fa-question-circle" [tooltip]="tooltipLabelNotaClienteTemplate" container="body"></i>
@@ -239,7 +239,7 @@
           formControlName="notaCliente"
           (input)="onInput()"
           [ngClass]="onFieldError('notaCliente') + ' ' + onFieldRequired('notaCliente')">
-          <invalid-form-control [show]="onFieldInvalid('notaCliente') == 'required'" message="Nota do Cliente é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('notaCliente') == 'required'" message="Nota del cliente es obligatorio."></invalid-form-control>
         </div>
         <div class="form-group col-md-2 offset-md-10">
           <div class="custom-control custom-checkbox mt-auto">
@@ -273,10 +273,10 @@
             (input)="onInput()"
             [ngClass]="onFieldError('cnpj') + ' ' + onFieldRequired('cnpj')"
             cnpj [textMask]="{ mask: MASKS.cnpj.textMask }">
-          <invalid-form-control [show]="onFieldInvalid('cnpj') == 'required'" message="CNPJ é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('cnpj') == 'required'" message="CNPJ es obligatorio."></invalid-form-control>
         </div>
         <div class="form-group col-md-6">
-          <label for="razaoSocial">Razão social</label>
+          <label for="razaoSocial">Razon Social</label>
           <input
             type="text"
             class="form-control"
@@ -284,13 +284,13 @@
             formControlName="razaoSocial"
             (input)="onInput()"
             [ngClass]="onFieldError('razaoSocial') + ' ' + onFieldRequired('razaoSocial')">
-          <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'required'" message="Razão social é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'required'" message="Razon Social es obligatorio."></invalid-form-control>
           <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'maxlength'" [message]="maxLengthRules.razaoSocial"></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="nomeFantasia">Nome fantasia</label>
+          <label for="nomeFantasia">Nombre ficticio</label>
           <input
             type="text"
             class="form-control"
@@ -298,32 +298,32 @@
             formControlName="nomeFantasia"
             (input)="onInput()"
             [ngClass]="onFieldError('nomeFantasia') + ' ' + onFieldRequired('nomeFantasia')">
-          <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'required'" message="Nome fantasia é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'required'" message="Nombre ficticio es obligatorio."></invalid-form-control>
           <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'maxlength'" [message]="maxLengthRules.nomeFantasia"></invalid-form-control>
         </div>
         <div class="form-group col-md-6">
-          <label for="tipoCadastro">Tipo de cadastro</label>
+          <label for="tipoCadastro">Tipo de registro</label>
           <select
             class="form-control"
             id="tipoCadastro"
             formControlName="tipoCadastro"
             (change)="onInput()"
             [ngClass]="onFieldError('tipoCadastro') + ' ' + onFieldRequired('tipoCadastro')">
-            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option value="">SELECCIONE UNA OPCIÓN</option>
             <option *ngFor="let item of tiposCadastro" [value]="item.id">{{ item.descricao }}</option>
           </select>
-          <invalid-form-control [show]="onFieldInvalid('tipoCadastro') == 'required'" message="Tipo de cadastro é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('tipoCadastro') == 'required'" message="Tipo de registro es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="tributacao">Regime de tributação</label>
+          <label for="tributacao">Régimen fiscal</label>
           <select
             class="form-control"
             id="tributacao"
             formControlName="tributacao"
             (change)="onInput()">
-            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option value="">SELECCIONE UNA OPCIÓN</option>
             <option *ngFor="let item of regimesTributacao" [value]="item.id">{{ item.descricao }}</option>
           </select>
         </div>
@@ -335,15 +335,15 @@
             formControlName="contribuinte"
             (change)="onInput(); checkValidatorsInscricaoEstadual(form.value['contribuinte']); onChangeContribuinte(form.value['contribuinte'])"
             [ngClass]="onFieldError('contribuinte') + ' ' + onFieldRequired('contribuinte')">
-            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option value="">SELECCIONE UNA OPCIÓN</option>
             <option *ngFor="let item of contribuintes" [value]="item.id">{{ item.descricao }}</option>
           </select>
-          <invalid-form-control [show]="onFieldInvalid('contribuinte') == 'required'" message="Contribuinte é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('contribuinte') == 'required'" message="Contribuinte es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="inscricaoEstadual">Inscrição estadual</label>
+          <label for="inscricaoEstadual">Inscripción Estatal</label>
           <input
             type="text"
             class="form-control"
@@ -351,11 +351,11 @@
             formControlName="inscricaoEstadual"
             (input)="onInput()"
             [ngClass]="onFieldError('inscricaoEstadual') + ' ' + onFieldRequired('inscricaoEstadual')">
-          <invalid-form-control [show]="onFieldInvalid('inscricaoEstadual') == 'required'" message="Inscrição estadual é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('inscricaoEstadual') == 'required'" message="Inscrição estadual es obligatorio."></invalid-form-control>
           <invalid-form-control [show]="onFieldInvalid('inscricaoEstadual') == 'maxlength'" [message]="maxLengthMessages.inscricaoEstadual"></invalid-form-control>
         </div>
         <div class="form-group col-md-6">
-          <label for="setorAtividade">Setor de atividade</label>
+          <label for="setorAtividade">Sector de actividad</label>
           <ng-select
             [searchable]="true"
             [clearable]="false"
@@ -368,7 +368,7 @@
             (input)="onInput()"
             [ngClass]="onFieldError('setorAtividade') + ' ' + onFieldRequired('setorAtividade')">
           </ng-select>
-          <invalid-form-control [show]="onFieldInvalid('setorAtividade') == 'required'" message="Setor de atividade é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('setorAtividade') == 'required'" message="Setor de atividade es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
@@ -380,10 +380,10 @@
             formControlName="finalidadeMaterial"
             (change)="onInput()"
             [ngClass]="onFieldError('finalidadeMaterial') + ' ' + onFieldRequired('finalidadeMaterial')">
-            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option value="">SELECCIONE UNA OPCIÓN</option>
             <option *ngFor="let item of finalidadesMaterial" [value]="item.id">{{ item.descricao }}</option>
           </select>
-          <invalid-form-control [show]="onFieldInvalid('finalidadeMaterial') == 'required'" message="Finalidade do material é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('finalidadeMaterial') == 'required'" message="Finalidade do material es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
@@ -414,7 +414,7 @@
               </button>
             </div>
           </div>
-          <invalid-form-control [show]="onFieldInvalid('cnae') == 'required'" message="CNAE é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('cnae') == 'required'" message="CNAE es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div *ngIf="showAtividadesSecundarias">
@@ -427,7 +427,7 @@
           <div class="form-group col">
             <div class="form-row">
               <div class="col-11">
-                <div class="mtc-title">Atividades secundárias</div>
+                <div class="mtc-title">Actividades secundarias</div>
                 <ng-select
                   [searchable]="true"
                   [clearable]="false"
@@ -490,7 +490,7 @@
             currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
             (input)="onInput()"
             [ngClass]="onFieldError('limiteCredito') + ' ' + onFieldRequired('limiteCredito')">
-          <invalid-form-control [show]="onFieldInvalid('limiteCredito') == 'required'" message="Limite de crédito é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('limiteCredito') == 'required'" message="Limite de crédito es obligatorio."></invalid-form-control>
         </div>
         <div class="form-group col-md-6">
           <label for="creditoSeguradora">Limite de crédito (seguradora)</label>
@@ -502,12 +502,12 @@
             currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
             (input)="onInput()"
             [ngClass]="onFieldError('creditoSeguradora') + ' ' + onFieldRequired('creditoSeguradora')">
-          <invalid-form-control [show]="onFieldInvalid('dataInclusao') == 'required'" message="Limite de crédito (seguradora) é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('dataInclusao') == 'required'" message="Limite de crédito (seguradora) es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="dataInclusao">Data de inclusão</label>
+          <label for="dataInclusao">Fecha de inclusión</label>
           <input
             type="text"
             class="form-control"
@@ -515,10 +515,10 @@
             formControlName="dataInclusao"
             (input)="onInput()"
             [ngClass]="onFieldError('dataInclusao') + ' ' + onFieldRequired('dataInclusao')">
-          <invalid-form-control [show]="onFieldInvalid('dataInclusao') == 'required'" message="Data de inclusão é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('dataInclusao') == 'required'" message="Fecha de inclusión es obligatorio."></invalid-form-control>
         </div>
         <div class="form-group col-md-6">
-          <label for="proximaAnaliseCredito">Próxima análise de crédito em</label>
+          <label for="proximaAnaliseCredito">Próximo análisis de crédito en</label>
           <input
             type="text"
             class="form-control"
@@ -526,12 +526,12 @@
             formControlName="proximaAnaliseCredito"
             (input)="onInput()"
             [ngClass]="onFieldError('proximaAnaliseCredito') + ' ' + onFieldRequired('proximaAnaliseCredito')">
-          <invalid-form-control [show]="onFieldInvalid('proximaAnaliseCredito') == 'required'" message="Próxima análise de crédito é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('proximaAnaliseCredito') == 'required'" message="Próxima análise de crédito es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="quemCadastrou">Quem cadastrou</label>
+          <label for="quemCadastrou">Quien se registró</label>
           <input
             type="text"
             class="form-control"
@@ -539,7 +539,7 @@
             formControlName="quemCadastrou"
             (input)="onInput()"
             [ngClass]="onFieldError('quemCadastrou') + ' ' + onFieldRequired('quemCadastrou')">
-          <invalid-form-control [show]="onFieldInvalid('quemCadastrou') == 'required'" message="Quem cadastrou é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('quemCadastrou') == 'required'" message="Quien se registró es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div class="form-row">
@@ -550,7 +550,7 @@
               class="custom-control-input"
               id="somenteCarteira"
               formControlName="somenteCarteira">
-            <label class="custom-control-label" for="somenteCarteira">Cobrança somente carteira</label>
+            <label class="custom-control-label" for="somenteCarteira">Facturación solo en cartera</label>
           </div>
         </div>
       </div>
@@ -562,7 +562,7 @@
               class="custom-control-input"
               id="boletoDescontado"
               formControlName="boletoDescontado">
-            <label class="custom-control-label" for="boletoDescontado">Não aceita boleto descontado</label>
+            <label class="custom-control-label" for="boletoDescontado">No acepta boleto con descuento</label>
           </div>
         </div>
       </div>
@@ -574,7 +574,7 @@
               class="custom-control-input"
               id="somenteAVista"
               formControlName="somenteAVista">
-            <label class="custom-control-label" for="somenteAVista">Cliente somente à vista</label>
+            <label class="custom-control-label" for="somenteAVista">cliente solo efectivo</label>
           </div>
         </div>
       </div>
@@ -586,7 +586,7 @@
               class="custom-control-input"
               id="exigePesagem"
               formControlName="exigePesagem">
-            <label class="custom-control-label" for="exigePesagem">Exige pesagem</label>
+            <label class="custom-control-label" for="exigePesagem">Requiere pesaje</label>
           </div>
         </div>
       </div>

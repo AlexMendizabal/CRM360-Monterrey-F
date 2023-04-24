@@ -153,13 +153,13 @@ export class ComercialClientesCadastroComponent
     let descricao = '';
 
     if (route == 'dados-faturamento') {
-      descricao = 'Dados de faturamento';
+      descricao = 'Datos de facturación';
     } else if (route == 'enderecos') {
-      descricao = 'Endereços';
+      descricao = 'Direcciones';
     } else if (route == 'contatos') {
-      descricao = 'Contatos';
+      descricao = 'Contactos';
     } else if (route == 'dados-relacionamento') {
-      descricao = 'Dados de relacionamento';
+      descricao = 'Datos de la relación';
     } else if (route == 'potencial-compra') {
       descricao = 'Potencial de compra';
     } else if (route == 'anexos') {
@@ -167,11 +167,11 @@ export class ComercialClientesCadastroComponent
     } else if (route == 'filial') {
       descricao = 'Filial';
     } else if (route == 'travas') {
-      descricao = 'Travas';
+      descricao = 'Cerraduras';
     } else if (route == 'informacoes-financeiras') {
-      descricao = 'Informações financeiras';
+      descricao = 'Información financiera';
     } else if (route == 'informacoes-comerciais') {
-      descricao = 'Informações comerciais';
+      descricao = 'Información Comercial';
     }
 
     this.title = descricao;

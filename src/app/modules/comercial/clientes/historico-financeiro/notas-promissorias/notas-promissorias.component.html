@@ -2,7 +2,7 @@
   <div class="col">
     <div class="d-flex w-100" *ngIf="!notasPromissoriasLoaded">
       <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
-      <strong>Carregando notas promissórias...</strong>
+      <strong>Carga de pagarés...</strong>
     </div>
     <custom-table [config]="tableConfig">
       <ng-template #thead let-thead *ngIf="notasPromissorias.length > 0 && notasPromissoriasLoaded">

@@ -1,7 +1,7 @@
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
 <div class="row" *ngIf="potencialCompraLoaded">
   <div class="col">
-    <div class="mtc-title">Potencial de compra (mensal)</div>
+    <div class="mtc-title">Potencial de compra (mensual)</div>
     <div class="form-row" *ngIf="potencialCompra.length > 0">
       <div class="form-group col-md-6" *ngFor="let item of potencialCompra">
         <label>{{ item.descricao | capitalizeFirst }}</label>

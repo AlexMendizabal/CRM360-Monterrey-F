@@ -27,7 +27,7 @@
     (click)="onSubmit()"
     [hidden]="!showSubmitButton"
     [disabled]="loaderNavbar">
-    Salvar
+    Guardar
   </button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
@@ -50,7 +50,7 @@
             class="text-black text-decoration-none"
             [routerLink]="['dados-faturamento']"
             [routerLinkActive]="'font-weight-bolder'">
-            Dados de faturamento
+            Datos de facturación
           </a>
         </li>
         <li class="mb-2">
@@ -58,7 +58,7 @@
             class="text-black text-decoration-none"
             [routerLink]="['enderecos']"
             [routerLinkActive]="'font-weight-bolder'">
-            Endereços
+            Direcciones
           </a>
         </li>
         <li class="mb-2">
@@ -66,7 +66,7 @@
             class="text-black text-decoration-none"
             [routerLink]="['contatos']"
             [routerLinkActive]="'font-weight-bolder'">
-            Contatos
+            Contactos
           </a>
         </li>
         <li class="mb-2">
@@ -74,7 +74,7 @@
             class="text-black text-decoration-none"
             [routerLink]="['dados-relacionamento']"
             [routerLinkActive]="'font-weight-bolder'">
-            Dados de relacionamento
+            Datos de la relación
           </a>
         </li>
         <li class="mb-2">
@@ -101,22 +101,22 @@
             Filial
           </a>
         </li>
-        <li class="mb-2">
+        <!-- <li class="mb-2">
           <a
             class="text-decoration-none"
             [routerLink]="['travas']"
             [routerLinkActive]="'font-weight-bolder'"
             [ngClass]="{'text-black': travas == 0, 'text-danger font-weight-bold': travas > 0}">
-            Travas
+            Cerraduras
           </a>
           <span class="badge badge-danger" *ngIf="travas > 0">{{ travas }}</span>
-        </li>
+        </li> -->
         <li class="mb-2">
           <a
             class="text-black text-decoration-none"
             [routerLink]="['informacoes-financeiras']"
             [routerLinkActive]="'font-weight-bolder'">
-            Informações financeiras
+            Información financiera
           </a>
         </li>
         <li class="mb-0">
@@ -124,7 +124,7 @@
             class="text-black text-decoration-none"
             [routerLink]="['informacoes-comerciais']"
             [routerLinkActive]="'font-weight-bolder'">
-            Informações comerciais
+            Información comercial
           </a>
         </li>
       </ul>

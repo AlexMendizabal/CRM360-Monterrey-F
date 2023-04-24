@@ -2,7 +2,7 @@
   <div class="col">
     <div class="d-flex w-100" *ngIf="!pedidosLoaded">
       <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
-      <strong>Carregando duplicatas...</strong>
+      <strong>Carga de duplicados...</strong>
     </div>
     <div *ngIf="pedidos.length > 0 && pedidosLoaded">
       <div class="row justify-content-between">
@@ -10,7 +10,7 @@
           <div class="d-flex">
             <div class="legend green">
               <div class="square"></div>
-              <div class="text">EM ABERTO</div>
+              <div class="text">ABIERTO</div>
             </div>
             <div class="legend blue">
               <div class="square"></div>
@@ -22,7 +22,7 @@
             </div>
             <div class="legend red">
               <div class="square"></div>
-              <div class="text">PROTESTO</div>
+              <div class="text">PROTESTA</div>
             </div>
           </div>
         </div>
@@ -45,12 +45,12 @@
         <ng-template #thead let-thead>
           <tr>
             <th scope="col" class="text-center">Empresa</th>
-            <th scope="col" class="text-center">Faturamento</th>
+            <th scope="col" class="text-center">Facturamiento</th>
             <th scope="col" class="text-center">Núm. pedido</th>
-            <th scope="col" class="text-center">Duplicata</th>
-            <th scope="col" class="text-center">Vencto</th>
+            <th scope="col" class="text-center">Duplicar</th>
+            <th scope="col" class="text-center">Vencimiento</th>
             <th scope="col" class="text-center">Banco</th>
-            <th scope="col" class="text-center">Baixa</th>
+            <th scope="col" class="text-center">Baja</th>
             <th scope="col" class="text-center">Tipo</th>
             <th scope="col" class="text-center">Pré-datada</th>
             <th scope="col" class="text-center">Atraso</th>

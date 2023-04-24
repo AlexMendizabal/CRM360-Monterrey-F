@@ -26,14 +26,14 @@
                 class="btn btn-light active"
                 [ngClass]="{'active': tipoPessoa == 'F'}"
                 (click)="setType('F')">
-                <strong>Pessoa Física</strong>
+                <strong>Persona Fisica</strong>
               </button>
               <button
                 type="button"
                 class="btn btn-light"
                 [ngClass]="{'active': tipoPessoa == 'J'}"
                 (click)="setType('J')">
-                <strong>Pessoa Jurídica</strong>
+                <strong>Persona Jurídica</strong>
               </button>
             </div>
           </div>
@@ -82,7 +82,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-6" *ngIf="tipoPessoa == 'F'">
-            <label for="nome">Nome</label>
+            <label for="nome">Nombre</label>
             <input
               type="text"
               class="form-control"
@@ -94,7 +94,7 @@
             <invalid-form-control [show]="onFieldInvalid('nome') == 'maxlength'" [message]="maxLengthMessages.nome"></invalid-form-control>
           </div>
           <div class="form-group col-md-6" *ngIf="tipoPessoa == 'F'">
-            <label for="sobrenome">Sobrenome</label>
+            <label for="sobrenome">Apellido</label>
             <input
               type="text"
               class="form-control"
@@ -106,7 +106,7 @@
             <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'maxlength'" [message]="maxLengthMessages.sobrenome"></invalid-form-control>
           </div>
           <div class="form-group col-md-6" *ngIf="tipoPessoa == 'J'">
-            <label for="razaoSocial">Razão social</label>
+            <label for="razaoSocial">Razon social</label>
             <input
               type="text"
               class="form-control"
@@ -118,7 +118,7 @@
             <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'maxlength'" [message]="maxLengthMessages.razaoSocial"></invalid-form-control>
           </div>
           <div class="form-group col-md-6" *ngIf="tipoPessoa == 'J'">
-            <label for="nomeFantasia">Nome fantasia</label>
+            <label for="nomeFantasia">Nombre ficticio</label>
             <input
               type="text"
               class="form-control"
@@ -162,7 +162,7 @@
             <invalid-form-control [show]="onFieldInvalid('emailNfe') == 'maxlength'" [message]="maxLengthMessages.emailNfe"></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
-            <label for="telefone">Telefone</label>
+            <label for="telefone">Telefono</label>
             <input
               type="text"
               class="form-control"
@@ -194,7 +194,7 @@
 
 <ng-template #modalDetalhesCliente>
   <div class="modal-header">
-    <h4 class="modal-title">Oops! Esse cliente já está cadastrado</h4>
+    <h4 class="modal-title">Oops! Ese cliente ya esta registrado</h4>
     <button type="button" class="close" aria-label="Close" (click)="onCloseDetails()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -202,87 +202,87 @@
   <div class="modal-body">
     <div class="form-row">
       <div class="col">
-        <div class="mtc-title">Dados cadastrais</div>
+        <div class="mtc-title">Datos de registro</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col">
         <label>Código</label>
-        <div *ngIf="dadosCliente.codCliente == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.codCliente == null">Sin informacion</div>
         <div *ngIf="dadosCliente.codCliente != null">{{ dadosCliente.codCliente }}</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-lg-6" *ngIf="dadosCliente.tipo == 'F'">
         <label>CPF</label>
-        <div *ngIf="dadosCliente.cpf == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.cpf == null">Sin informacion</div>
         <div *ngIf="dadosCliente.cpf != null">{{ dadosCliente.cpf }}</div>
       </div>
       <div class="form-group col-lg-6" *ngIf="dadosCliente.tipo == 'J'">
         <label>CNPJ</label>
-        <div *ngIf="dadosCliente.cnpj == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.cnpj == null">Sin informacion</div>
         <div *ngIf="dadosCliente.cnpj != null">{{ dadosCliente.cnpj }}</div>
       </div>
       <div class="form-group col-lg-6">
         <label>Nome fantasia</label>
-        <div *ngIf="dadosCliente.nomeFantasia == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.nomeFantasia == null">Sin informacion</div>
         <div *ngIf="dadosCliente.nomeFantasia != null">{{ dadosCliente.nomeFantasia }}</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col">
         <label>Razão social</label>
-        <div *ngIf="dadosCliente.razaoSocial == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.razaoSocial == null">Sin informacion</div>
         <div *ngIf="dadosCliente.razaoSocial != null">{{ dadosCliente.razaoSocial }}</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col">
         <label>Endereço</label>
-        <div *ngIf="dadosCliente.endereco == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.endereco == null">Sin informacion</div>
         <div *ngIf="dadosCliente.endereco != null">{{ dadosCliente.endereco }}</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-lg-6">
         <label>Bairro</label>
-        <div *ngIf="dadosCliente.bairro == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.bairro == null">Sin informacion</div>
         <div *ngIf="dadosCliente.bairro != null">{{ dadosCliente.bairro }}</div>
       </div>
       <div class="form-group col-lg-6">
         <label>CEP</label>
-        <div *ngIf="dadosCliente.cep == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.cep == null">Sin informacion</div>
         <div *ngIf="dadosCliente.cep != null">{{ dadosCliente.cep }}</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-lg-6">
         <label>Cidade</label>
-        <div *ngIf="dadosCliente.cidade == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.cidade == null">Sin informacion</div>
         <div *ngIf="dadosCliente.cidade != null">{{ dadosCliente.cidade }}</div>
       </div>
       <div class="form-group col-lg-6">
         <label>Estado</label>
-        <div *ngIf="dadosCliente.uf == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.uf == null">Sin informacion</div>
         <div *ngIf="dadosCliente.uf != null">{{ dadosCliente.uf }}</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col">
         <label>Segurado</label>
-        <div *ngIf="dadosCliente.segurado != ''">SIM</div>
-        <div *ngIf="dadosCliente.segurado == ''">NÃO</div>
+        <div *ngIf="dadosCliente.segurado != ''">SI</div>
+        <div *ngIf="dadosCliente.segurado == ''">NO</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-lg-6">
         <label>Vendedor</label>
-        <div *ngIf="dadosCliente.vendedor == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.vendedor == null">Sin informacion</div>
         <div *ngIf="dadosCliente.vendedor != null">{{ dadosCliente.vendedor }}</div>
       </div>
       <div class="form-group col-lg-6">
         <label>Escritório</label>
-        <div *ngIf="dadosCliente.escritorio == null">NÃO INFORMADO</div>
+        <div *ngIf="dadosCliente.escritorio == null">Sin informacion</div>
         <div *ngIf="dadosCliente.escritorio != null">{{ dadosCliente.escritorio }}</div>
       </div>
     </div>

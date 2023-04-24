@@ -1,18 +1,18 @@
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
 <div class="row" *ngIf="!loaderFullScreen">
   <div class="col">
-    <div class="mtc-title">Editar dados de relacionamento</div>
+    <div class="mtc-title">Editar datos de relación</div>
     <form [formGroup]="form" autocomplete="off">
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="tipoAtendimento">Tipo de atendimento</label>
+          <label for="tipoAtendimento">Tipo de servicio</label>
           <select
             class="form-control"
             id="tipoAtendimento"
             formControlName="tipoAtendimento"
             (change)="onInput()"
             [ngClass]="onFieldError('tipoAtendimento') + ' ' + onFieldRequired('tipoAtendimento')">
-            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option value="">SELECCIONE UNA OPCION</option>
             <option *ngFor="let item of tiposAtendimento" [value]="item.id">{{ item.descricao }}</option>
           </select>
           <invalid-form-control [show]="onFieldInvalid('tipoAtendimento')" message="Tipo de atendimento é obrigatório."></invalid-form-control>
@@ -25,16 +25,16 @@
             formControlName="periodo"
             (change)="onInput()"
             [ngClass]="onFieldError('periodo') + ' ' + onFieldRequired('periodo')">
-            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option value="">SELECCIONE UNA OPCION</option>
             <option *ngFor="let item of periodos" [value]="item.id">{{ item.descricao }}</option>
           </select>
-          <invalid-form-control [show]="onFieldInvalid('periodo')" message="Períodos é obrigatório."></invalid-form-control>
+          <invalid-form-control [show]="onFieldInvalid('periodo')" message="Períodos es obligatorio."></invalid-form-control>
         </div>
       </div>
       <div formGroupName="diasContato">
         <div class="form-row">
           <div class="form-group col">
-            <label>Melhores dias para contato</label>
+            <label>Mejores dias para contactar</label>
             <div class="form-row">
               <div class="form-group col-auto">
                 <div class="custom-control custom-checkbox">
@@ -43,7 +43,7 @@
                     class="custom-control-input"
                     id="segunda"
                     formControlName="segunda">
-                  <label class="custom-control-label" for="segunda">Segunda-feira</label>
+                  <label class="custom-control-label" for="segunda">Lunes</label>
                 </div>
               </div>
               <div class="form-group col-auto">
@@ -53,7 +53,7 @@
                     class="custom-control-input"
                     id="terca"
                     formControlName="terca">
-                  <label class="custom-control-label" for="terca">Terça-feira</label>
+                  <label class="custom-control-label" for="terca">Martes</label>
                 </div>
               </div>
               <div class="form-group col-auto">
@@ -63,7 +63,7 @@
                     class="custom-control-input"
                     id="quarta"
                     formControlName="quarta">
-                  <label class="custom-control-label" for="quarta">Quarta-feira</label>
+                  <label class="custom-control-label" for="quarta">Miercoles</label>
                 </div>
               </div>
               <div class="form-group col-auto">
@@ -73,7 +73,7 @@
                     class="custom-control-input"
                     id="quinta"
                     formControlName="quinta">
-                  <label class="custom-control-label" for="quinta">Quinta-feira</label>
+                  <label class="custom-control-label" for="quinta">Jueves</label>
                 </div>
               </div>
               <div class="form-group col-auto">
@@ -83,7 +83,7 @@
                     class="custom-control-input"
                     id="sexta"
                     formControlName="sexta">
-                  <label class="custom-control-label" for="sexta">Sexta-feira</label>
+                  <label class="custom-control-label" for="sexta">Viernes</label>
                 </div>
               </div>
               <div class="form-group col-auto">
@@ -109,20 +109,20 @@
             formControlName="frequenciaContato"
             (change)="onInput()"
             [ngClass]="onFieldError('frequenciaContato') + ' ' + onFieldRequired('frequenciaContato')">
-            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option value="">SELECCIONE UNA OPCION</option>
             <option *ngFor="let item of frequenciaContatos" [value]="item.id">{{ item.descricao }}</option>
           </select>
           <invalid-form-control [show]="onFieldInvalid('frequenciaContato')" message="Frequência de contatos é obrigatório."></invalid-form-control>
         </div>
         <div class="form-group col-md-6">
-          <label for="frequenciaVisita">Frequência de visitas</label>
+          <label for="frequenciaVisita">Frecuencia de visitas</label>
           <select
             class="form-control"
             id="frequenciaVisita"
             formControlName="frequenciaVisita"
             (change)="onInput()"
             [ngClass]="onFieldError('frequenciaVisita') + ' ' + onFieldRequired('frequenciaVisita')">
-            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option value="">SELECCIONE UNA OPCION</option>
             <option *ngFor="let item of frequenciaVisitas" [value]="item.id">{{ item.descricao }}</option>
           </select>
           <invalid-form-control [show]="onFieldInvalid('frequenciaVisita')" message="Períodos é obrigatório."></invalid-form-control>
@@ -130,14 +130,14 @@
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="origemContato">Origem do contato</label>
+          <label for="origemContato">Fuente de contacto</label>
           <select
             class="form-control"
             id="origemContato"
             formControlName="origemContato"
             (change)="onInput()"
             [ngClass]="onFieldError('origemContato') + ' ' + onFieldRequired('origemContato')">
-            <option value="">SELECIONE UMA OPÇÃO</option>
+            <option value="">SELECCIONE UNA OPCION</option>
             <option *ngFor="let item of origensContato" [value]="item.id">{{ item.descricao }}</option>
           </select>
         </div>
@@ -154,7 +154,7 @@
       </div>
       <div class="form-row">
         <div class="form-group col">
-          <label for="obsPropostas">Observações (propostas)</label>
+          <label for="obsPropostas">Observaciones (propustas)</label>
           <textarea
             class="form-control"
             id="obsPropostas"

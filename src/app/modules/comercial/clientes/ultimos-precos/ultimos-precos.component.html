@@ -13,7 +13,7 @@
         <form [formGroup]="form" autocomplete="off">
           <div class="form-row">
             <div class="form-group col-lg-2">
-              <label for="dataInicial">Data inicial</label>
+              <label for="dataInicial">Fecha inicial</label>
               <input
                 class="form-control"
                 id="dataInicial"
@@ -25,7 +25,7 @@
                 <invalid-form-control [show]="onFieldInvalid('dataInicial') == 'required'" message="Data Inicial é obrigatório."></invalid-form-control>
             </div>
             <div class="form-group col-lg-2">
-              <label for="dataFinal">Data final</label>
+              <label for="dataFinal">Fecha final</label>
               <input
                 class="form-control"
                 id="dataFinal"
@@ -48,12 +48,12 @@
           <tr>
             <th scope="col">Cod. Material</th>
             <th scope="col">Material</th>
-            <th scope="col">Linha / Classe</th>
+            <th scope="col">Línea / Clase</th>
             <th scope="col">Ton. Vendidas</th>
             <th scope="col">Nota Fiscal</th>
             <th scope="col">Dt. Ultima Compra</th>
-            <th scope="col">Preço Unitário</th>
-            <th scope="col">Preço Total</th>
+            <th scope="col">Precio Unitário</th>
+            <th scope="col">Precio Total</th>
           </tr>
         </ng-template>
         <ng-template #tbody let-tbody>
