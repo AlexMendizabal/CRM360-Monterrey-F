@@ -28,7 +28,7 @@
         <div class="col-md-3">
           <card-button
             icon="fas fa-folder-open"
-            text="Dados cadastrais"
+            text="Datos de registro"
             [routerLink]="['../../cadastro', cliente.codCliente, 'dados-faturamento']">
           </card-button>
         </div>
@@ -73,7 +73,7 @@
         <div class="col-md-3">
           <card-button
             icon="fas fa-tasks"
-            text="Propostas / Pedidos"
+            text="Propuestas / Pedidos"
             [routerLink]="['../../../tid-software/11']"
             [queryParams]="{ codCliente: cliente.codCliente, sistema: 'vendas', modulo: 3 }">
           </card-button>
@@ -81,7 +81,7 @@
         <div class="col-md-3">
           <card-button
             icon="fas fa-list"
-            text="Ultimos Preços"
+            text="Últimos precios"
             [routerLink]="['../../../clientes/ultimos-precos', cliente.codCliente]">
           </card-button>
         </div>

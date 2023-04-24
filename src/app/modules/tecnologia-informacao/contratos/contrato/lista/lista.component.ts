@@ -22,7 +22,7 @@ import { Subscription, EMPTY } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 //modelos
-import { ITecnologiaInformacaoTipoContrato } from './../../tipo-Contrato/models/tipoContrato';
+import { ITecnologiaInformacaoTipoContrato } from './../../tipo-contrato/models/tipoContrato';
 import { Subtitles } from './../../../../../shared/modules/subtitles/subtitles';
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { ITecnologiaInformacaoItem } from './../../item/models/item';

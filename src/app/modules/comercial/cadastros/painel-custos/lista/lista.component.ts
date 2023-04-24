@@ -2,7 +2,7 @@ import { DateService } from 'src/app/shared/services/core/date.service';
 import { object } from '@amcharts/amcharts4/core';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
-import { Custos } from './../models/PainelCustos';
+import { Custos } from './../models/painelcustos';
 import { ComercialCadastroPainelCustosService } from './../painel-custos.service';
 import { CustomTableConfig } from './../../../../../shared/templates/custom-table/models/config';
 import { finalize } from 'rxjs/operators';
@@ -36,7 +36,7 @@ export class ComercialCadastroPainelCustosListaComponent
   loaderNavbar: boolean = false;
   dados: Array<Custos> = [];
 
-  
+
 
   appTitle = 'Painel de Custos';
 

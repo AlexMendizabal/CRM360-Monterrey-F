@@ -2,7 +2,7 @@
   <div class="col">
     <div class="d-flex w-100" *ngIf="!debitosLoaded">
       <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
-      <strong>Carregando débitos em aberto...</strong>
+      <strong>Carga de débitos pendientes...</strong>
     </div>
     <custom-table *ngIf="debitos.length > 0 && debitosLoaded">
       <ng-template #thead let-thead>
@@ -41,11 +41,11 @@
         <div class="d-flex justify-content-around">
           <div class="legend green">
             <div class="square"></div>
-            <div class="text">DÉBITO COM NOTA</div>
+            <div class="text">DÉBITO CON NOTA</div>
           </div>
           <div class="legend blue">
             <div class="square"></div>
-            <div class="text">DÉBITO SEM NOTA</div>
+            <div class="text">DÉBITO CON NOTA</div>
           </div>
         </div>
       </div>

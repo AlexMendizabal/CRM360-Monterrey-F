@@ -2,7 +2,7 @@
   <div class="col">
     <div class="d-flex w-100" *ngIf="!duplicataLoaded">
       <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
-      <strong>Carregando informações da duplicata...</strong>
+      <strong>Carga de duplicados...</strong>
     </div>
     <tabset *ngIf="duplicataLoaded">
       <tab heading="Principal">
@@ -10,7 +10,7 @@
           <div class="row mb-4">
             <div class="col">
               <div class="bg-light rounded p-4">
-                <div class="mtc-title">Duplicata</div>
+                <div class="mtc-title">Duplicar</div>
                 <div class="row">
                   <div class="col-md-4">
                     <p><strong>Núm. NF:</strong> {{ principal.duplicata.notaSaida }}</p>
@@ -18,7 +18,7 @@
                   </div>
                   <div class="col-md-4">
                     <p><strong>Data:</strong> {{ principal.duplicata.data }}</p>
-                    <p class="mb-0"><strong>Linha:</strong> {{ principal.duplicata.linhaNota }}</p>
+                    <p class="mb-0"><strong>Línea:</strong> {{ principal.duplicata.linhaNota }}</p>
                   </div>
                   <div class="col-md-4">
                     <p><strong>Cliente:</strong> {{ principal.duplicata.razaoSocial }}</p>
@@ -34,10 +34,10 @@
                 <ng-template #thead let-thead>
                   <tr>
                     <th scope="col" class="text-center">Código</th>
-                    <th scope="col" class="text-center">Descrição</th>
+                    <th scope="col" class="text-center">Descripción</th>
                     <th scope="col" class="text-center">Sit. Tributária</th>
                     <th scope="col" class="text-center">Qtde.</th>
-                    <th scope="col" class="text-center">Valor unidade</th>
+                    <th scope="col" class="text-center">Valor unidades</th>
                     <th scope="col" class="text-center">Valor total</th>
                     <th scope="col" class="text-center">Alíquota ICMS</th>
                   </tr>
@@ -64,16 +64,16 @@
           <div class="row mb-4">
             <div class="col-md-6">
               <div class="bg-light rounded p-4">
-                <div class="mtc-title">Condições de pagamento</div>
+                <div class="mtc-title">Condiciones de pago</div>
                 <p class="mb-0"><strong></strong>{{ principal.materiais[0]['condicaoPagamento'] }}</p>
               </div>
             </div>
             <div class="col-md-6">
               <div class="bg-light rounded p-4">
-                <div class="mtc-title">Total dos produtos</div>
+                <div class="mtc-title">Total productos</div>
                 <div class="row">
                   <div class="col-md-6">
-                    <p class="mb-0"><strong>Quantidade:</strong> {{ principal.total.peso | number:'1.3-3' }} TON</p>
+                    <p class="mb-0"><strong>Cantidad:</strong> {{ principal.total.peso | number:'1.3-3' }} TON</p>
                   </div>
                   <div class="col-md-6">
                     <p class="mb-0"><strong>Valor:</strong> {{ principal.total.valor | currency:'BRL':'symbol':'1.2-2' }}</p>
@@ -85,14 +85,14 @@
           <div class="row">
             <div class="col">
               <div class="bg-light rounded p-4">
-                <div class="mtc-title">Local de entrega</div>
+                <div class="mtc-title">Lugar de entrega</div>
                 <div class="row">
                   <div class="col-md-6">
-                    <p><strong>Referência:</strong> {{ principal.entrega.referencia }}</p>
+                    <p><strong>Referencia:</strong> {{ principal.entrega.referencia }}</p>
                     <p class="mb-0"><strong>Endereço:</strong> {{ principal.entrega.logradouro }}</p>
                   </div>
                   <div class="col-md-4">
-                    <p><strong>Cidade:</strong> {{ principal.entrega.cidade }}</p>
+                    <p><strong>Ciudad:</strong> {{ principal.entrega.cidade }}</p>
                     <p class="mb-0"><strong>Bairro:</strong> {{ principal.entrega.bairro }}</p>
                   </div>
                   <div class="col-md-2">
@@ -109,7 +109,7 @@
           <div class="row mb-4">
             <div class="col">
               <div class="bg-light rounded p-4">
-                <div class="mtc-title">Duplicata</div>
+                <div class="mtc-title">Duplicar</div>
                 <div class="row">
                   <div class="col-md-4">
                     <p><strong>Núm. NF:</strong> {{ principal.duplicata.notaSaida }}</p>
@@ -132,9 +132,9 @@
               <custom-table *ngIf="historicoCobrancas.length > 0">
                 <ng-template #thead let-thead>
                   <tr>
-                    <th scope="col" class="text-center">Núm. Lançamento</th>
-                    <th scope="col" class="text-center">Situação</th>
-                    <th scope="col" class="text-center">Data</th>
+                    <th scope="col" class="text-center">Num. Lanzamiento</th>
+                    <th scope="col" class="text-center">Situación</th>
+                    <th scope="col" class="text-center">Fecha</th>
                     <th scope="col" class="text-center">Usuário</th>
                     <th scope="col" class="text-center">Comentário</th>
                   </tr>
@@ -158,13 +158,13 @@
           <div class="row">
             <div class="col-md-6">
               <div class="bg-light rounded p-4">
-                <div class="mtc-title">Empresa cobrança</div>
+                <div class="mtc-title">Colección de la empresa</div>
                 <div class="row">
                   <div class="col-md-6">
                     <p class="mb-0"><strong>Código:</strong> Nenhuma informação</p>
                   </div>
                   <div class="col-md-6">
-                    <p class="mb-0"><strong>Descrição:</strong> Nenhuma informação</p>
+                    <p class="mb-0"><strong>Descripcion:</strong> Nenhuma informação</p>
                   </div>
                 </div>
               </div>
@@ -174,7 +174,7 @@
                 <div class="mtc-title">Vencimento original</div>
                 <div class="row">
                   <div class="col">
-                    <p class="mb-0">Nenhuma informação</p>
+                    <p class="mb-0">No hay información</p>
                   </div>
                 </div>
               </div>
@@ -187,7 +187,7 @@
           <div class="row mb-4">
             <div class="col">
               <div class="bg-light rounded p-4">
-                <div class="mtc-title">Duplicata</div>
+                <div class="mtc-title">Duplicar</div>
                 <div class="row">
                   <div class="col-md-4">
                     <p><strong>Núm. NF:</strong> {{ principal.duplicata.notaSaida }}</p>
@@ -226,7 +226,7 @@
                 </ng-template>
               </custom-table>
               <empty-result
-                message="Nenhuma informação encontrada"
+                message="No hay información encontrada"
                 *ngIf="ocorrenciasDuplicatas.length == 0">
               </empty-result>
             </div>
@@ -281,7 +281,7 @@
                 </ng-template>
               </custom-table>
               <empty-result
-                message="Nenhuma informação encontrada"
+                message="No hay información encontrada"
                 *ngIf="ocorrenciasComerciais.length == 0">
               </empty-result>
             </div>

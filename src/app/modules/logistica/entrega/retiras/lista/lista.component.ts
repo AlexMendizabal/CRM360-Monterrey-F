@@ -47,7 +47,7 @@ import { XlsxService } from 'src/app/shared/services/core/xlsx.service';
   styleUrls: ['./lista.component.scss'],
 })
 export class LogisticaEntregaRetirasListaComponent implements OnInit {
-  
+
   appTitle = 'Retiras';
 
   public MASKS = MASKS;
@@ -212,7 +212,7 @@ export class LogisticaEntregaRetirasListaComponent implements OnInit {
   }
 
   getPedidos(romaneio: ILogisticaEntregaFormacaoCargaRomaneio) {
-    
+
     if(romaneio["pedidos"]){
       this.pedidos = romaneio["pedidos"];
       return
@@ -440,7 +440,7 @@ export class LogisticaEntregaRetirasListaComponent implements OnInit {
     this.getPedidos(romaneio);
     /* this.openModal(template); */
   }
-  
+
   setItensPerPage(itemsPerPage): number {
     this.itemsPerPage = itemsPerPage;
     this.end = itemsPerPage;
