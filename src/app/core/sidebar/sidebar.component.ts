@@ -138,15 +138,28 @@ export class SidebarComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         response => {
-          
+
           if(response.status !== 200){
             this.pnotifyService.error('Você não tem permissão para isso.');
             this.authService.logout();
             return
           }
           this.atividadesError = false;
-          const data = response.body["data"];
-          this.atividades = data; 
+          let data:object[] = response.body["data"];
+          console.log( {...response.body["data"]} )
+          let idx1 = data.findIndex((val) => val["id"] === 89)
+          data.splice(idx1, 1);
+          let idx2 = data.findIndex((val) => val["id"] === 28)
+          data.splice(idx2, 1);
+          let idx3 = data.findIndex((val) => val["id"] === 30)
+          data.splice(idx3, 1);
+          let idx4 = data.findIndex((val) => val["id"] === 25)
+          data.splice(idx4, 1);
+
+          let idx5 = data.findIndex((val) => val["id"] === 29)
+          data[idx5]["nome"] = "BÚSQUEDA DE CLIENTES"
+
+          this.atividades = data;
           this.routerLinkHome = data[0]["moduloRota"];
         },
         (error: any) => {
