@@ -105,7 +105,7 @@
               [items]="formasContato"
               formControlName="codFormaContato"
               [virtualScroll]="false"
-              bindLabel="nomeFormaContato"
+              bindLabel="descricao"
               bindValue="codFormaContato"
               [ngClass]="onFieldError('codFormaContato') + ' ' + onFieldRequired('codFormaContato')">
             </ng-select>
@@ -119,8 +119,8 @@
               [items]="origensContato"
               formControlName="codOrigemContato"
               [virtualScroll]="false"
-              bindLabel="nomeOrigemContato"
-              bindValue="codOrigemContato"
+              bindLabel="DS_MEIO_CONT"
+              bindValue="ID_MEIO_CONT"
               [ngClass]="onFieldError('codOrigemContato') + ' ' + onFieldRequired('codOrigemContato')">
             </ng-select>
             <invalid-form-control [show]="onFieldInvalid('codOrigemContato')" message="Origem do contato é obrigatório."></invalid-form-control>

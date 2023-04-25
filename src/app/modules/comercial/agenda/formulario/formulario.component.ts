@@ -316,6 +316,7 @@ export class ComercialAgendaFormularioComponent
             codFormaContato: null,
             nomeFormaContato: '',
           });
+
         } else {
           this.handleLoadDependenciesError();
         }
