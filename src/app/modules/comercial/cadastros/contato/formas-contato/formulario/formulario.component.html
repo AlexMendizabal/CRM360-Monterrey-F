@@ -33,20 +33,7 @@
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-lg-6">
-            <label for="codReferenteErp">Descrição do ERP</label>
-            <ng-select
-              [searchable]="true"
-              [clearable]="false"
-              [items]="descFormasERP"
-              formControlName="codReferenteErp"
-              labelForId="codReferenteErp"
-              bindLabel="descricao"
-              bindValue="codFormaContato"
-              [ngClass]="onFieldError('codReferenteErp') + ' ' + onFieldRequired(form.controls.codReferenteErp)">
-            </ng-select>
-          </div>
-          <div class="form-group col-lg-6">
+          <div class="form-group col">
             <label for="codSituacao">Situação</label>
             <select
               class="form-control custom-select"

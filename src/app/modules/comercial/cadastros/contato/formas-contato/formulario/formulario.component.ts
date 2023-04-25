@@ -108,7 +108,6 @@ export class ComercialCadastrosContatoFormasContatoFormularioComponent
         ],
         codReferenteErp:[
           detalhes.codReferenteErp,
-          [Validators.required],
         ],
         codSituacao: [detalhes.codSituacao, [Validators.required]],
       });
