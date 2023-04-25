@@ -86,6 +86,10 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
             this.setFormFilter();
             this.escritorios = response[0]['result'];
 
+            console.log(this.escritorios)
+            this.escritorios[0] = "Sucursal 1"
+            this.escritorios[1] = "Sucursal 2"
+            this.escritorios[2] = "Sucursal 3"
             if (this.escritorios.length > 1 && this.showAll === true) {
               this.escritorios.unshift({
                 id: 0,
@@ -98,7 +102,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
 
           if (response[0]['responseCode'] === 200) {
             this.vendedores = response[1]['result'];
-
+            this.filteredVendedores = this.vendedores;
             if (this.showAll === true) {
               this.filteredVendedores.unshift({
                 id: 0,
