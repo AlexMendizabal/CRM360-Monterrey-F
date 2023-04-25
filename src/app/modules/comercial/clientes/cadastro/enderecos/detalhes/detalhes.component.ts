@@ -97,11 +97,11 @@ export class ComercialClientesCadastroEnderecosDetalhesComponent
     let tipoEndereco: string;
 
     if (endereco['principal'] == 1) {
-      tipoEndereco = 'Endereço principal';
+      tipoEndereco = 'Dirección principal';
     } else if (endereco['cobranca'] == 1) {
-      tipoEndereco = 'Endereço de cobrança';
+      tipoEndereco = 'Dirección de cobranza';
     } else if (endereco['entrega'] == 1) {
-      tipoEndereco = 'Endereço de entrega';
+      tipoEndereco = 'Dirección de entrega';
 
       if (endereco['titulo'] != null && endereco['titulo'].length > 0) {
         tipoEndereco = `${tipoEndereco} (${endereco['titulo']})`;
