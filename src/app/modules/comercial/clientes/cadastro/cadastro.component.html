@@ -3,6 +3,7 @@
 <app-header [appTitle]="title">
   <button
     type="button"
+    style="display: none;"
     (click)="onEdit()"
     [hidden]="!showEditButton"
     [disabled]="loaderNavbar">
@@ -10,6 +11,7 @@
   </button>
   <button
     type="button"
+    style="display: none;"
     (click)="onAdd()"
     [hidden]="!showAddButton"
     [disabled]="loaderNavbar">
@@ -17,6 +19,7 @@
   </button>
   <button
     type="button"
+    style="display: none;"
     (click)="onCancel()"
     [hidden]="!showCancelButton"
     [disabled]="loaderNavbar">
@@ -24,6 +27,7 @@
   </button>
   <button
     type="button"
+    style="display: none;"
     (click)="onSubmit()"
     [hidden]="!showSubmitButton"
     [disabled]="loaderNavbar">
@@ -77,7 +81,7 @@
             Datos de la relación
           </a>
         </li>
-        <li class="mb-2">
+        <li class="mb-2 hidden">
           <a
             class="text-black text-decoration-none"
             [routerLink]="['potencial-compra']"
@@ -119,7 +123,7 @@
             Información financiera
           </a>
         </li>
-        <li class="mb-0">
+        <li class="mb-0 hidden">
           <a
             class="text-black text-decoration-none"
             [routerLink]="['informacoes-comerciais']"
