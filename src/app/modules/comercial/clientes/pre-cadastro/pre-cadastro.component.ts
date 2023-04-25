@@ -183,7 +183,7 @@ export class ComercialClientesPreCadastroComponent
     }
 
     this.form = this.formBuilder.group({
-      cpf: [cpf, [Validators.required, NgBrazilValidators.cpf]],
+      cpf: [cpf, [Validators.nullValidator]],
       nome: [
         null,
         [Validators.required, Validators.maxLength(this.maxLengthRules.nome)],
