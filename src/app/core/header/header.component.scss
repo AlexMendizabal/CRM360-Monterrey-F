@@ -11,7 +11,9 @@
     // #logo-manetoni{
     //   background-color: $orangeMtCorp;
     // }
-
+    .version{
+      color: white;
+    }
     .nav-item {
       margin: 0px 5px;
       .nav-link {
@@ -34,6 +36,7 @@
           outline: unset;
         }
       }
+      
       .btn-group {
         border: unset !important;
         border-radius: unset !important;
