@@ -51,7 +51,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
 
   ngOnInit() {
     this.registrarAcesso();
-    this.titleService.setTitle('Detalhes do compromisso');
+    this.titleService.setTitle('Detalles del compromiso');
 
     const detalhes = this.activatedRoute.snapshot.data['detalhes']['result'];
     const inicio = new Date(detalhes['start']);

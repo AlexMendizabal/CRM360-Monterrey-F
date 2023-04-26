@@ -1,4 +1,4 @@
-<app-header appTitle="Detalhes do compromisso">
+<app-header appTitle="Detalles del compromiso">
   <button
     type="button"
     (click)="onEdit(detalhes)">
@@ -27,32 +27,32 @@
       <div class="form-row">
         <div class="form-group col">
           <label>Cliente</label>
-          <div *ngIf="!detalhes.client">NÃO INFORMADO</div>
+          <div *ngIf="!detalhes.client">Sin informacion</div>
           <div *ngIf="detalhes.client">{{ detalhes.client }}</div>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-sm-6">
-          <label>Forma contato</label>
-          <div *ngIf="!detalhes.formContactDesc">NÃO INFORMADO</div>
+          <label>FORMA DE CONTACTO</label>
+          <div *ngIf="!detalhes.formContactDesc">Sin informacion</div>
           <div *ngIf="detalhes.formContactDesc">{{ detalhes.formContactDesc }}</div>
         </div>
         <div class="form-group col-sm-6">
-          <label>Origem contato</label>
-          <div *ngIf="!detalhes.typeContactDesc">NÃO INFORMADO</div>
+          <label>Contacto de origen</label>
+          <div *ngIf="!detalhes.typeContactDesc">Sin informacion</div>
           <div *ngIf="detalhes.typeContactDesc">{{ detalhes.typeContactDesc }}</div>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col">
-          <label>Data</label>
+          <label>Fecha</label>
           <div>{{ detalhes.fullDate | uppercase }}</div>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col">
-          <label>Observação</label>
-          <div *ngIf="!detalhes.description">NÃO INFORMADO</div>
+          <label>Observación</label>
+          <div *ngIf="!detalhes.description">Sin informacion</div>
           <div *ngIf="detalhes.description" [innerHTML]="detalhes.description | uppercase"></div>
         </div>
       </div>

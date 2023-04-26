@@ -2,9 +2,9 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { registerLocaleData } from '@angular/common';
-import localePt from '@angular/common/locales/pt';
+import LocalBO from '@angular/common/locales/es-BO';
 
-registerLocaleData(localePt, 'pt-BR');
+registerLocaleData(LocalBO, 'es-BO');
 
 // Angular Calendar
 import { FlatpickrModule } from 'angularx-flatpickr';
@@ -59,6 +59,6 @@ import { ComercialAgendaFormularioComponent } from './formulario/formulario.comp
     TemplatesModule.forRoot(),
     ComercialTemplatesModule
   ],
-  providers: [FormDeactivateGuard, { provide: LOCALE_ID, useValue: 'pt-BR' }]
+  providers: [FormDeactivateGuard, { provide: LOCALE_ID, useValue: 'es-BO' }]
 })
 export class ComercialAgendaModule {}
