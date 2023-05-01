@@ -48,7 +48,7 @@ const routes: Routes = [
         (m) => m.ComercialModule
       ),
     canActivate: [AuthGuard, ComercialGuard],
-  },
+      },
   {
     path: 'controladoria',
     loadChildren: () =>

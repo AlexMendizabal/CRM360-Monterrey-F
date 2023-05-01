@@ -17,7 +17,7 @@ export class CorteDobraDashboardService {
 
   private readonly API_URL_MT: string = `https://crm360.monterrey.com.bo/api`;
 
-  //API_URL: string = 'http://localhost:3000';
+  //API_URL: string = 'https://crm360.monterrey.com.bo';
   //API_URL_MT:string = '/api/';
 
   constructor(
