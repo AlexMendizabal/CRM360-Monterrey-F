@@ -44,12 +44,12 @@
         </ul>
       </div>
     </li>
-    <li class="nav-item" placement="bottom" tooltip="Reserva de Salas" *ngIf="checkTipoAcessoUser()">
+    <li class="nav-item" placement="bottom" tooltip="Reserva de Salas" *ngIf="checkTipoAcessoUser()" style="display: none;">
       <a class="nav-link" [routerLink]="['/home/reserva-salas']">
         <i class="fas fa-calendar-alt"></i>
       </a>
     </li>
-    <li class="nav-item" placement="bottom" tooltip="Contatos" *ngIf="checkTipoAcessoUser()">
+    <li class="nav-item" placement="bottom" tooltip="Contatos" *ngIf="checkTipoAcessoUser()" style="display: none;">
       <a class="nav-link" [routerLink]="['/home/contatos']">
         <i class="fas fa-id-card"></i>
       </a>

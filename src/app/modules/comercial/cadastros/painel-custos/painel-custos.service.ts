@@ -12,7 +12,7 @@ import { take } from 'rxjs/operators';
 })
 export class ComercialCadastroPainelCustosService {
    private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/painel-custos`;
-   /*private readonly API = `http://localhost:3000`;*/
+   /*private readonly API = `https://crm360.monterrey.com.bo`;*/
 
   constructor(protected http: HttpClient) {}
 
