@@ -1,5 +1,5 @@
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
-<app-header appTitle="Pesquisa de clientes">
+<app-header appTitle="Busqueda de clientes">
   <button
     type="button"
     [routerLink]="['../pre-cadastro']">
@@ -10,6 +10,9 @@
     (click)="onFilter()">
     Filtrar
   </button>
+    
+  
+  
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
   <div class="row justify-content-center mb-2">
@@ -91,7 +94,7 @@
             class="form-control custom-select"
             id="buscarPor"
             formControlName="buscarPor">
-            <option value="1">Código, nombre ficticio o razon social</option>
+            <option value="1">Código, nombre de fantasia o razon social</option>
             <option value="2">CPF o CNPJ</option>
             <option value="3">Ciudad</option>
             <option value="4">Código SAP</option>
@@ -120,7 +123,7 @@
           </select>
         </div>
         <div class="form-group col-lg-3">
-          <label for="setorAtividade">Sector de actividades</label>
+          <label for="setorAtividade">Sector empresarial</label>
           <ng-select
             [searchable]="true"
             [clearable]="false"

@@ -24,7 +24,7 @@ export class ComercialClientesDetalhesComponent implements OnInit {
       routerLink: '/comercial/home'
     },
     {
-      descricao: 'Pesquisa de clientes',
+      descricao: 'Busqueda de clientes',
       routerLink: '/comercial/clientes/lista'
     },
     {
@@ -53,7 +53,7 @@ export class ComercialClientesDetalhesComponent implements OnInit {
     } else if (
       this.activatedRoute.snapshot.data['response']['responseCode'] === 403
     ) {
-      this.pnotifyService.notice('Esse cliente não faz parte da sua carteira.');
+      this.pnotifyService.notice('Este cliente no pertenece a su cartera');
       this.router.navigate(['/comercial/home']);
     } else {
       this.pnotifyService.error();

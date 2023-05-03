@@ -59,7 +59,7 @@ export class ComercialClientesPreCadastroComponent
       routerLink: '/comercial/home',
     },
     {
-      descricao: 'Pesquisa de clientes',
+      descricao: 'Busqueda de clientes',
       routerLink: '/comercial/clientes',
     },
     {
@@ -466,7 +466,7 @@ export class ComercialClientesPreCadastroComponent
         relativeTo: this.activatedRoute,
       });
     } else {
-      this.pnotifyService.notice('Esse cliente não faz parte da sua carteira.');
+      this.pnotifyService.notice('Este cliente no pertenece a su cartera');
     }
   }
 

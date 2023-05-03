@@ -38,7 +38,7 @@ export class ComercialAknaContatosClientesComponent implements OnInit {
       routerLink: '/comercial/home',
     },
     {
-      descricao: 'Pesquisa de clientes',
+      descricao: 'Busqueda de clientes',
     },
   ];
 
@@ -119,7 +119,7 @@ export class ComercialAknaContatosClientesComponent implements OnInit {
     this.onEventSubscription();
     this.getFormFilters();
     this.setFormFilter();
-    this.titleService.setTitle('Pesquisa de clientes');
+    this.titleService.setTitle('Busqueda de clientes');
   }
 
   registrarAcesso(): void {

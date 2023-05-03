@@ -29,11 +29,11 @@
               class="form-control custom-select"
               id="tipoData"
               formControlName="tipoData">
-              <option value="1">Data de lançamento</option>
+              <option value="1">Fecha de publicacion</option>
             </select>
           </div>
           <div class="form-group col-lg-2">
-            <label for="dataInicial">Data inicial</label>
+            <label for="dataInicial">Fecha inicial</label>
             <input
               class="form-control"
               id="dataInicial"
@@ -43,7 +43,7 @@
               formControlName="dataInicial">
           </div>
           <div class="form-group col-lg-2">
-            <label for="dataFinal">Data final</label>
+            <label for="dataFinal">Fecha final</label>
             <input
               class="form-control"
               id="dataFinal"
@@ -53,7 +53,7 @@
               formControlName="dataFinal">
           </div>
           <div class="form-group col-lg-3">
-            <label for="codStatus">Situação</label>
+            <label for="codStatus">Situacion</label>
             <ng-select
               type='text'
               [items]="situacoes"
@@ -142,8 +142,8 @@
               id="statusCliente"
               formControlName="statusCliente">
               <option>TODOS</option>
-              <option value="Ativo">ATIVO</option>
-              <option value="Inativo">INATIVO</option>
+              <option value="Ativo">ACTIVO</option>
+              <option value="Inativo">INACTIVO</option>
             </select>
           </div>
           <div class="form-group " [ngClass]="{'col-lg-2': !filtroCotacoes , 'col-lg-1': filtroCotacoes}">
@@ -197,7 +197,7 @@
               </thead-sorter>
             </th>
             <th scope="col" [hidden]="showDetailPanel">Empresa</th>
-            <th scope="col" [hidden]="showDetailPanel">Vendedor Carteira</th>
+            <th scope="col" [hidden]="showDetailPanel">Cartera de vendedor</th>
           </tr>
         </ng-template>
         <ng-template #tbody let-tbody>
@@ -205,7 +205,7 @@
             <td class="text-center" [ngStyle]="styleStatusBorder(pedido)">
               <span class="d-inline-flex">
               <ng-template #tooltipLiberacao>
-                <p class="mb-2">AGUARDANDO LIBERAÇÃO:</p><br>
+                <p class="mb-2">ESPERANDO LIBERACION:</p><br>
                 <div *ngIf="pedido.travas.length > 0">
                   <dl>
                     <ng-container *ngFor="let trava of pedido.travas">
@@ -216,11 +216,11 @@
               </ng-template>
 
               <ng-template #tooltipLiberacaoAberto>
-                <p class="mb-2">AGUARDANDO LIBERAÇÃO:</p><br>
+                <p class="mb-2">ESPERANDO LIBERACION:</p><br>
                 <div>
                   <dl>
                     <ng-container>
-                      <dd><i class="fas fa-exclamation-triangle small mr-1"></i> PEDIDO EM ABERTO</dd>
+                      <dd><i class="fas fa-exclamation-triangle small mr-1"></i> PEDIDO EN ABIERTO</dd>
                     </ng-container>
                   </dl>
                 </div>
@@ -330,16 +330,16 @@
               </button>
               <ul *dropdownMenu class="dropdown-menu">
                 <li>
-                  <href="/comercial/clientes/historico-financeiro/{{ nrCliente }}">
+                  <!--href="/comercial/clientes/historico-financeiro/{{ nrCliente }}">
                   <a class="dropdown-item hover" target="_blank" (click)="navegarDashboard()">
-                    <i class="fas fa-chart-pie"></i>
+                    <i class="fas fa-chart-pie"></i-->
                     <span class="text-uppercase">Dashboard</span>
                   </a>
                 </li>
                 <li>
                   <a class="dropdown-item hover" target="_blank" (click)="navegarHistorico()" >
                     <i class="fas fa-chart-bar"></i>
-                    <span class="text-uppercase">Histórico financeiro</span>
+                    <span class="text-uppercase">Histórico financiero</span>
                   </a>
                 </li>
                 <li>
@@ -357,7 +357,7 @@
                     href="javascript:void(0)"
                     (click)="onHistoricoExclusao()">
                     <i class="fas fa-trash"></i>
-                    <span class="text-uppercase">Histórico exclusão</span>
+                    <span class="text-uppercase">Exclusión histórica</span>
                   </a>
                 </li>
                 <li>
@@ -366,13 +366,13 @@
                     href="javascript:void(0)"
                     (click)="onConsultarLiberacao()">
                     <i class="fas fa-search"></i>
-                    <span class="text-uppercase">Consultar liberação</span>
+                    <span class="text-uppercase">Consultar liberacion</span>
                   </a>
                 </li>
                 <li>
                   <a class="dropdown-item hover" target="_blank" (click)="navegarEstoque()">
                     <i class="fas fa-boxes"></i>
-                    <span class="text-uppercase">Consultar estoque</span>
+                    <span class="text-uppercase">Consultar Stock</span>
                   </a>
                 </li>
                 <li *ngIf="pedidoTransferido == 0">
@@ -382,7 +382,7 @@
                     (click)="onTrocarEmpresa()"
                     >
                     <i class="fas fa-building"></i>
-                    <span class="text-uppercase">Trocar empresa</span>
+                    <span class="text-uppercase">Cambiar empresa</span>
                   </a>
                 </li>
                 <li *ngIf="pedidoTransferido == 1">
@@ -392,7 +392,7 @@
                     (click)="onTrocarEmpresa()"
                    >
                     <i class="fas fa-building"></i>
-                    <span class="text-uppercase">Trocar empresa</span>
+                    <span class="text-uppercase">Cambiar empresa</span>
                   </a>
                 </li>
                 <li>
@@ -421,7 +421,7 @@
                     href="javascript:void(0)"
                     >
                     <i class="fas fa-print"></i>
-                    <span class="text-uppercase">Imprimir Separação</span>
+                    <span class="text-uppercase">Imprimir separacion</span>
                   </a>
                 </li>
                 <!-- <li *ngIf="pedidoTransferido == 1 && pedidoFaturado == 1">
@@ -450,15 +450,15 @@
         <div class="row">
           <div class="col"><hr></div>
         </div>
-        <div class="mtc-title">Contatos da proposta</div>
+        <div class="mtc-title">Contatos de propuesta</div>
         <div class="row">
           <div class="col">
             <div *ngIf="contatosLoaded && !contatosEmpty">
               <custom-table>
                 <ng-template #thead let-thead>
                   <tr>
-                    <th scope="col" class="text-center">Data</th>
-                    <th scope="col" class="text-center">Tipo contato</th>
+                    <th scope="col" class="text-center">Fecha</th>
+                    <th scope="col" class="text-center">Tipo de contacto</th>
                     <th scope="col">Operador</th>
                   </tr>
                 </ng-template>
@@ -477,7 +477,7 @@
                 <div class="form-group col">
                   <label>Nota Fiscal</label>
                   <div *ngIf="activeCotacao.nrNotaFiscal == null || activeCotacao.nrNotaFiscal == ''">
-                    NÃO EMITIDA
+                    NO EMITIDA
                   </div>
                   <div *ngIf="activeCotacao.nrNotaFiscal != null && activeCotacao.nrNotaFiscal != ''">
                     {{ activeCotacao.nrNotaFiscal }}
@@ -486,7 +486,7 @@
                 <div class="form-group col">
                   <label>Data Faturamento</label>
                   <div *ngIf="!detalhes.dataFaturamento">
-                    NÃO FATURADA
+                    NO FACTURADA
                   </div>
                   <div *ngIf="detalhes.dataFaturamento">
                     {{ detalhes.dataFaturamento | date: 'dd/MM/yyyy' }}
@@ -504,9 +504,9 @@
               </div>
               <div class="form-row">
                 <div class="form-group col">
-                  <label>Observações</label>
+                  <label>Observaciones</label>
                   <div *ngIf="contatoSelected.observacao == null || contatoSelected.observacao == ''">
-                    NÃO INFORMADO
+                    NO INFORMADO
                   </div>
                   <div *ngIf="contatoSelected.observacao != null && contatoSelected.observacao != ''">
                     {{ contatoSelected.observacao }}
@@ -530,12 +530,12 @@
 
         <div class="row" *ngIf="contatosLoaded && !contatosEmpty">
           <div class="col">
-            <div class="mtc-title">Endereço de entrega</div>
+            <div class="mtc-title">Direccion de entrega</div>
             <div class="form-row mt-3">
               <div class="form-group col">
-                <label>TÍTULO DO LOCAL DE ENTREGA</label>
+                <label>NOMBRE DEL LUGAR DE ENTREGA</label>
                 <div *ngIf="activeCotacao.tituloEntrega == null || activeCotacao.tituloEntrega == ''">
-                  NÃO INFORMADO
+                  NO INFORMADO
                 </div>
                 <div *ngIf="activeCotacao.tituloEntrega != null && activeCotacao.tituloEntrega != ''">
                   {{ activeCotacao.tituloEntrega }}
@@ -544,7 +544,7 @@
               <div class="form-group col mb-0">
                 <label>Endereço Completo</label>
                 <div *ngIf="activeCotacao.enderecoEntrega == null || activeCotacao.enderecoEntrega == ''">
-                  NÃO INFORMADO
+                  NO INFORMADO
                 </div>
                 <div *ngIf="activeCotacao.enderecoEntrega != null && activeCotacao.enderecoEntrega != ''">
                   <div>{{ activeCotacao.enderecoEntrega }}</div>
@@ -562,14 +562,14 @@
         </div>
         <div class="row">
           <div class="col">
-            <div class="mtc-title">Itens da proposta</div>
+            <div class="mtc-title">Elementos de propuesta</div>
             <custom-table *ngIf="itensLoaded && !itensEmpty">
               <ng-template #thead let-thead>
                 <tr>
                   <th scope="col" class="text-center">Item</th>
                   <th scope="col" class="text-truncate">Material</th>
                   <th scope="col" class="text-center">Qtde. (Ton)</th>
-                  <th scope="col" class="text-center">Qtde. (Itens)</th>
+                  <th scope="col" class="text-center">Qtde. (Items)</th>
                   <th scope="col" class="text-center">Total</th>
                 </tr>
               </ng-template>
@@ -597,7 +597,7 @@
             </div>
             <div class="d-flex w-100" *ngIf="!itensLoaded">
               <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
-              <strong>Carregando itens...</strong>
+              <strong>Cargando items...</strong>
             </div>
           </div>
         </div>
@@ -609,7 +609,7 @@
   </div>
   <ng-template #addCotacao>
     <div class="modal-header">
-      <h4 class="modal-title pull-left">Selecione a empresa da cotação</h4>
+      <h4 class="modal-title pull-left">Seleccione la empresa de la cotización</h4>
       <div class="d-flex justify-content-center align-items-center">
         <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
           <span aria-hidden="true">&times;</span>
