@@ -30,7 +30,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
       routerLink: `/comercial/agenda/compromissos`
     },
     {
-      descricao: 'Detalhes do compromisso'
+      descricao: 'Detalles de cita'
     }
   ];
 
@@ -51,7 +51,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
 
   ngOnInit() {
     this.registrarAcesso();
-    this.titleService.setTitle('Detalles del compromiso');
+    this.titleService.setTitle('Detalles de cita');
 
     const detalhes = this.activatedRoute.snapshot.data['detalhes']['result'];
     const inicio = new Date(detalhes['start']);
@@ -74,7 +74,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
         inicio,
         fim,
         false
-      )} (dia inteiro)`;
+      )} (Dia completo)`;
     } else {
       if (this.dateService.sameDay(inicio, fim)) {
         this.detalhes.fullDate = this.dateService.getFullDate(inicio, fim);
@@ -101,9 +101,9 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
 
   onDelete(detalhes: any) {
     let confirm$ = this.confirmModalService.showConfirm(
-      'delete',
-      'Confirmar exclusão',
-      'Deseja realmente prosseguir com a exclusão do compromisso?',
+      'Borrar',
+      'Confirmar borrado',
+      'Desea realmente borrar la cita?',
       'Cancelar',
       'Confirmar'
     );
@@ -125,7 +125,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
         },
         error: (error) => {
           this.pnotifyService.error(
-            'Erro ao excluir compromisso. Tente novamente!'
+            'Error al borrar, intente nuevamente!'
           );
         }
       });

@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title pull-left">Pesquisa de Clientes</h4>
+  <h4 class="modal-title pull-left">Busqueda de clientes</h4>
   <div class="d-flex justify-content-center align-items-center">
     <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingClientes">
       <span class="sr-only">Loading...</span>
@@ -19,12 +19,12 @@
             class="form-control custom-select"
             formControlName="buscarPor"
           >
-            <option value="NM_CLIE" selected>Código, nome fantasia ou razão social</option>
+            <option value="NM_CLIE" selected>Código, nombre de fantasía o razón social</option>
           </select>
         </div>
 
         <div class="form-group col-8">
-          <label>Termo de Pesquisa</label>
+          <label>Términos de búsqueda</label>
           <div class="input-group">
             <input
               type="text"
@@ -56,8 +56,8 @@
     <ng-template #thead let-thead>
       <tr>
         <th>Cód Cliente </th>
-        <th>Nome Fantasia</th>
-        <th>Razão Social </th>
+        <th>Nombre de Fantasia</th>
+        <th>Razon Social </th>
         <th></th>
       </tr>
     </ng-template>

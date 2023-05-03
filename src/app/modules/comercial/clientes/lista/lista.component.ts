@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
+
+
 // ngx-bootstrap
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
@@ -34,7 +36,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       routerLink: '/comercial/home',
     },
     {
-      descricao: 'Pesquisa de clientes',
+      descricao: 'Busqueda de clientes',
     },
   ];
 
@@ -111,7 +113,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.registrarAcesso();
     this.getFormFilters();
     this.setFormFilter();
-    this.titleService.setTitle('Pesquisa de clientes');
+    this.titleService.setTitle('Busqueda de clientes');
     this.onDetailPanelEmitter();
   }
 
@@ -352,7 +354,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
   viewRegister(cliente: any): void {
     if (cliente['podeAcessar'] == 0) {
-      this.pnotifyService.notice('Esse cliente não faz parte da sua carteira.');
+      this.pnotifyService.notice('Este cliente no pertenece a su cartera');
     } else {
       this.router.navigate(['../detalhes', cliente.codCliente], {
         relativeTo: this.activatedRoute,

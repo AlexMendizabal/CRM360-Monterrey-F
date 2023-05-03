@@ -101,7 +101,7 @@ export class ComercialClientesPropostaAnaliseCreditoComponent
         routerLink: '/comercial/home'
       },
       {
-        descricao: 'Pesquisa de clientes',
+        descricao: 'Busqueda de clientes',
         routerLink: '/comercial/clientes/lista'
       },
       {
