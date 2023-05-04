@@ -1,0 +1,85 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      <form [formGroup]="form">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="cnae">
+              <span class="mr-1">Cnae</span>
+              <ng-template #tooltipLabelCnaeTemplate>
+                <p class="text-nowrap mb-0">Código do Cnae</p>
+                <p class="text-nowrap mb-0">sem pontuação</p>
+              </ng-template>
+              <i class="far fa-question-circle" [tooltip]="tooltipLabelCnaeTemplate" container="body"></i>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="cnae"
+              formControlName="cnae"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('cnae') + ' ' + onFieldRequired(form.controls.cnae)">
+            <invalid-form-control [show]="onFieldInvalid('cnae')" message="Cnae é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="descricao">Descrição do Cnae</label>
+            <input
+              type="text"
+              class="form-control"
+              id="descricao"
+              formControlName="descricao"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('descricao') + ' ' + onFieldRequired(form.controls.descricao)">
+            <invalid-form-control [show]="onFieldInvalid('descricao')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <!-- <div class="form-group col-lg-6">
+            <label for="codParametroERP">Código TID</label>
+            <input
+              type="text"
+              class="form-control"
+              id="codParametroERP"
+              formControlName="codParametroERP"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('codParametroERP') + ' ' + onFieldRequired(form.controls.codParametroERP)">
+          </div> -->
+          <div class="form-group col-lg-6">
+            <label for="codSituacao">Situação</label>
+            <select
+              class="form-control custom-select"
+              id="codSituacao"
+              formControlName="codSituacao"
+              [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
+              <option value="1">Ativo</option>
+              <option value="2">Inativo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>
+

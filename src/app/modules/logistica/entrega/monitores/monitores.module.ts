@@ -1,0 +1,65 @@
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+import ptBr from '@angular/common/locales/pt';
+import { defineLocale, ptBrLocale } from 'ngx-bootstrap';
+registerLocaleData(ptBr);
+defineLocale('pt-br', ptBrLocale);
+
+// ngx-bootstrap
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+
+// ng-select
+import { NgSelectModule } from '@ng-select/ng-select';
+
+import { SharedModule } from 'src/app/shared/modules/shared.module';
+import { PipesModule } from 'src/app/shared/pipes/pipes.module';
+import { TemplatesModule } from 'src/app/shared/templates/templates.module';
+import { ModuleWrapperModule } from 'src/app/core/module-wrapper/module-wrapper.module';
+import { NotFoundModule } from 'src/app/core/not-found/not-found.module';
+
+//masks
+import { NgBrazil } from 'ng-brazil';
+import { TextMaskModule } from 'angular2-text-mask';
+
+import { LogisticaEntregaMonitoresRoutingModule } from './monitores-routing.module';
+
+import { LogisticaEntregaMonitoresRavexComponent } from './ravex/ravex.component';
+import { LogisticaEngregasMonitoresFusionManetoniPedidosComponent } from './fusion/manetoni/pedidos.component';
+
+
+@NgModule({
+  declarations: [
+    LogisticaEngregasMonitoresFusionManetoniPedidosComponent,
+    LogisticaEntregaMonitoresRavexComponent
+  ],
+  imports: [
+    CommonModule,
+    LogisticaEntregaMonitoresRoutingModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgSelectModule,
+    PaginationModule.forRoot(),
+    TooltipModule.forRoot(),
+    TabsModule.forRoot(),
+    TimepickerModule.forRoot(),
+    BsDatepickerModule.forRoot(),
+    ModalModule.forRoot(),
+    PipesModule,
+    NotFoundModule,
+    ModuleWrapperModule,
+    SharedModule,
+    TemplatesModule,
+    NgBrazil,
+    TextMaskModule,
+  ]
+})
+export class LogisticaEntregaMonitoresModule { }

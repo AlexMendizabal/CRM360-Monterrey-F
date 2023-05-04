@@ -1,0 +1,148 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    (click)="postCadastraInventario()"
+    [disabled]="form.status  == 'INVALID' || !tipoInventario">
+    Cadastrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col">
+      <form autocomplete="off" [formGroup]="form">
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-3">
+            <label for="tipo">Tipo de Inventário</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipoInventario"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="descNome"
+              bindValue="codigo"
+              placeholder="Selecione um Tipo"
+              formControlName="tipoInventario"
+              [ngClass]="onFieldError('tipoInventario') + ' ' + onFieldRequired('tipoInventario')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('tipoInventario')"
+              message="Tipo de inventário é obrigatório.">
+            </invalid-form-control>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="empresa">Empresa</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="empresas"
+              [virtualScroll]="true"
+              labelForId="empresa"
+              bindLabel="nomeFantasia"
+              bindValue="codigoEmpresa"
+              placeholder="Selecione uma empresa"
+              formControlName="cdEmpresa"
+              (change) ="getDepositos()"
+              (focus) ="resetForm('depositos')"
+              [ngClass]="onFieldError('cdEmpresa') + ' ' + onFieldRequired('cdEmpresa')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('cdEmpresa')"
+              message="Empresa é obrigatório.">
+            </invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-3">
+            <label for="depositos">Depósito</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="depositos"
+              [virtualScroll]="true"
+              labelForId="deposito"
+              bindLabel="depositoDescricao"
+              bindValue="depositoId"
+              placeholder="Selecione um deposito"
+              formControlName="cdDeposito"
+              (focus) ="resetForm('linhas')"
+              [ngClass]="onFieldError('cdDeposito') + ' ' + onFieldRequired('cdDeposito')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('cdDeposito')"
+              message="Despósito é obrigatório.">
+            </invalid-form-control>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="linhas">Linha</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="linhas"
+              [virtualScroll]="true"
+              labelForId="linha"
+              bindLabel="linha"
+              bindValue="linha"
+              placeholder="Selecione uma linha"
+              formControlName="linhas"
+              (change) = "getClasses(); getMateriais(linhas, '')"
+              (focus) ="resetForm('classes')"
+              [ngClass]="onFieldError('linhas') + ' ' + onFieldRequired('linhas')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('linhas')"
+              message="Linha é obrigatório.">
+            </invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-2">
+            <label for="classes">Classe</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="classes"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [virtualScroll]="true"
+              labelForId="classes"
+              bindLabel="classeDescricao"
+              bindValue="classeId"
+              placeholder="Selecione uma classe"
+              formControlName="classes"
+              (change) = "getMateriais(linhas, classes)"
+              [ngClass]="onFieldError('classes')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('classes')"
+              message="Classe é obrigatório.">
+            </invalid-form-control>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="materiais">Material</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="materiais"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [virtualScroll]="true"
+              labelForId="materiais"
+              bindLabel="codigoDescricaoMaterial"
+              bindValue="codigoMaterial"
+              placeholder="Selecione um material"
+              formControlName="materiais"
+            >
+            </ng-select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

@@ -1,0 +1,116 @@
+<div class="modal-header">
+  <h4>Pesquisa de Notas Fiscais</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="IN_STAT">Situação</label>
+          <select
+            class="form-control custom-select"
+            formControlName="IN_STAT"
+          >
+            <option value="1">Ativo</option>
+            <option value="0">Inativo</option>
+            <option value="">Exibir Todos</option>
+          </select>
+        </div>
+        <div class="form-group col-3">
+          <label for="cdItem">BUSCAR POR</label>
+          <select
+            class="form-control custom-select"
+            formControlName="buscarPor"
+          >
+          <option value="ID_MATE">ID</option>
+          <option value="NR_NOTA_FISC" selected>Nota Fiscal</option>
+          <option value="DS_LOTE">Lote</option>
+          <option value="NM_MATE">Material</option>
+          <option value="NM_FORN">Fornecedor</option>
+          </select>
+        </div>
+
+        <div class="form-group col-6">
+          <label>TERMO DE PESQUISA</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="pesquisa"
+              >
+              <div class="input-group-append">
+                <span 
+                  [tooltip]="form.valid == false ? 'Digite um termo de pesquisa':''"
+                  container="body"
+                  placement ="left"
+                >
+                  <button
+                  style="height: 25px;"
+                    [disabled]="form.valid == false"
+                    class="input-group-text hover"
+                    (click)="getNotasFiscais()"
+                    >
+                    <i class="fas fa-search"></i>
+                  </button>
+                </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="spinner-border" role="status" *ngIf="loading">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <custom-table *ngIf="!noNotasFiscais" class="text-center">
+    <ng-template #thead let-thead>
+      <tr>
+        <th>ID NF</th>
+        <th>Nota Fiscal</th>
+        <th>Lote</th>
+        <th>Nome Material</th>
+        <th>Total de Material</th>
+        <th>Fornecedor</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template #tbody let-tbody>
+      <tr *ngFor="let notas of notasFiscais">
+        <td>{{ notas.ID_LOGI_ENMA_NOFI }}</td>
+        <td>{{ notas.NR_NOTA_FISC }}</td>
+        <td >{{ notas.DS_LOTE || 'NÃO INFORMADO' }}</td>
+        <td>{{ notas.NM_MATE }}</td>
+        <td>{{ notas.TT_MATE_ORIG }} {{ notas.DS_UNID_MEDI }}</td>
+        <td>{{ notas.NM_FORN }} </td>
+        <td>
+          <button
+            class="btn-icon-sm"
+            tooltip="Salvar Informações"
+            container="body"
+            (click)="onSelect(notas)"
+          >
+            <i class="far fa-save"></i>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </custom-table>
+  <div *ngIf="totalItems > itemsPerPage" >
+    Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+    <pagination
+      [maxSize]="10"
+      [totalItems]="totalItems"
+      (pageChanged)="onPageChanged($event)"
+      [(itemsPerPage)]="itemsPerPage"
+      [boundaryLinks]="true"
+      [(ngModel)]="currentPage"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;">
+    </pagination>
+  </div>
+</div>

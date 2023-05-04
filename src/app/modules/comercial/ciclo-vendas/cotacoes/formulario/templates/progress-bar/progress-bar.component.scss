@@ -1,0 +1,20 @@
+::ng-deep {
+  comercial-ciclo-vendas-cotacoes-formulario-template-progress-bar {
+    .progress {
+      .progress-bar {
+        &.red {
+          background-color: #ff4343;
+        }
+        &.yellow {
+          background-color: #ffea00;
+        }
+        &.green {
+          background-color: #4dcc71;
+        }
+        &.avanco {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}

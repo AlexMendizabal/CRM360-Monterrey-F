@@ -1,0 +1,75 @@
+.custom {
+  &:focus {
+    outline: unset !important;
+  }
+  .ui-pnotify-shadow {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2) !important;
+  }
+  .ui-pnotify-container {
+    padding: 0;
+  }
+  .ui-pnotify-icon {
+    color: #ffffff;
+    padding: 0.8em;
+  }
+  .ui-pnotify-title {
+    border-top-right-radius: 0.25rem;
+    font-size: 14px;
+    margin-bottom: 0px;
+    margin-left: 42px !important;
+    padding: 0.6em 0.8em 0.2em 0.8em;
+  }
+  .ui-pnotify-text {
+    border-bottom-right-radius: 0.25rem;
+    color: #000000;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: -1px;
+    margin-left: 42px !important;
+    padding: 0 0.8em 0.8em 0.8em;
+  }
+  .ui-pnotify-closer {
+    padding: 0.8em;
+    &:focus {
+      outline: unset !important;
+    }
+  }
+  .alert {
+    border-radius: 0.25rem !important;
+    width: 380px !important;
+  }
+  .alert-success {
+    border-color: #7cbc77 !important;
+    background-color: #7cbc77 !important;
+    color: #7cbc77;
+    .ui-pnotify-title {
+      background-color: #f0f9ef;
+    }
+    .ui-pnotify-text {
+      background-color: #f0f9ef;
+    }
+  }
+  .alert-danger {
+    border-color: #f15a58 !important;
+    background-color: #f15a58 !important;
+    color: #f15a58;
+    .ui-pnotify-title {
+      background-color: #fbdede;
+    }
+    .ui-pnotify-text {
+      background-color: #fbdede;
+    }
+  }
+  .alert-warning {
+    border-color: #ffc937 !important;
+    background-color: #ffc937 !important;
+    color: #ffc937;
+    .ui-pnotify-title {
+      background-color: #fff9f0;
+    }
+    .ui-pnotify-text {
+      background-color: #fff9f0;
+    }
+  }
+}

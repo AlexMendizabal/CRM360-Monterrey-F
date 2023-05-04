@@ -1,0 +1,216 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="AÇÕES">
+  <button
+  type="button"
+  (click)="onReset()">
+  Limpar
+</button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-4 pl-0">
+              <label for="mensagens">Mensagem</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="mensagens"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                [loading]="loadingMensagens"
+                labelForId="TITULO"
+                bindLabel="TITULO"
+                bindValue="TITULO"
+                id="TITULO"
+                formControlName="TITULO">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-1">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0" [ngClass]="{'col': !showDetailPanel, 'col-5': showDetailPanel}">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" >ID </th>
+              <th scope="col">Código/Nº Série</th>
+              <th scope="col"[hidden]="showDetailPanel">Modelo</th>
+              <th scope="col"[hidden]="showDetailPanel">Tipo do Item</th>
+              <th scope="col"[hidden]="showDetailPanel">Responsável</th>
+              <th scope="col" style="width:120px"[hidden]="showDetailPanel"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let item of item; let i = index"  [class.table-active]="item?.ID_TECN_INFO_ITEM == acaoSelecionado?.ID_TECN_INFO_ITEM && showDetailPanel">
+              <td (click)="onDetails(item)"[ngClass]="classStatusBorder(item)">
+              {{item.ID_TECN_INFO_ITEM}}
+              </td>
+              <td (click)="onDetails(item)">{{ item.CD_ITEM }}</td>
+              <td (click)="onDetails(item)" [hidden]="showDetailPanel">{{ item.NM_MODE  | uppercase}}</td>
+              <td (click)="onDetails(item)" [hidden]="showDetailPanel">{{ item.NM_ITEM_TIPO | uppercase }}</td>
+              <td  *ngIf="item.NM_USUA != null && item.NM_USUA != ''" (click)="onDetails(item)" [hidden]="showDetailPanel">{{ item.NM_USUA | uppercase }}</td>
+              <td  *ngIf="item.NM_USUA != null && item.NM_USUA == ''" (click)="onDetails(item)" [hidden]="showDetailPanel">NENHUM RESPONSÁVEL</td>
+              <td  *ngIf="item.NM_USUA == null && item.NM_CCU != null" (click)="onDetails(item)" [hidden]="showDetailPanel">{{ item.NM_CCU | uppercase }}</td>
+              <td  *ngIf="item.NM_USUA == null && item.NM_CCU == null" (click)="onDetails(item)" [hidden]="showDetailPanel">NENHUM RESPONSÁVEL</td>
+              <td class="align-middle" [hidden]="showDetailPanel">
+                <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', item.ID_TECN_INFO_ITEM]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip=" Gerar Termo" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm" (click)="onTermo(item)">
+                    <i class="text-warning fas fa-file" *ngIf= "item.QT_DOCU > 0 "placement="right"></i>
+                    <i class="text-black fas fa-file" *ngIf="item.QT_DOCU == 0"  placement="right"></i>
+                  </button>
+                </span>
+                <span class="mr-3"  placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm">
+                    <i class="text-{{item.DS_COR_STAT_USUA}} fas fa-user" placement="right" *ngIf="item.CD_STAT_USUA == 7 && item.NM_USUA != null"  tooltip="Responsável {{item.DS_STAT_USUA}}"></i>
+                    <i class="text-{{item.DS_COR_STAT_USUA}} fas fa-user" placement="right" *ngIf="item.CD_STAT_USUA == 1 && item.NM_USUA != null"  tooltip="Responsável {{item.DS_STAT_USUA}}"></i>
+                    <i class="text-{{item.DS_COR_STAT_USUA}} fas fa-user" placement="right" *ngIf="item.CD_STAT_USUA != 1 && item.CD_STAT_USUA != 7 && item.NM_USUA != null " tooltip="Responsável {{item.DS_STAT_USUA}}"></i>
+                    <i class="text-black fas fa-hotel" placement="right" *ngIf="item.NM_USUA == null && item.NM_CCU != null" tooltip="Escritório"></i>
+                    <i class="text-black fas fa-times" placement="right" *ngIf="item.NM_USUA == null && item.NM_CCU == null" tooltip="Nenhum Responsável"></i>
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div>
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-7" [hidden]="!showDetailPanel">
+      <detail-panel>
+        <tabset>
+          <!-- <tab heading="Dados cadastrais">
+            <div class="border-right border-left border-bottom px-3 pt-3">
+              <div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Nome</label>
+                    <div *ngIf="acaoSelecionado?.NM_USUA == null">NÃO INFORMADO</div>
+                    <div *ngIf="acaoSelecionado?.NM_USUA == ''" >NÃO INFORMADO</div>
+                    <div *ngIf="acaoSelecionado?.NM_USUA != null && acaoSelecionado?.NM_USUA != ''">{{acaoSelecionado?.NR_MATR}} - {{ acaoSelecionado?.NM_USUA | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Código/Nº Série</label>
+                    <div *ngIf="acaoSelecionado?.CD_ITEM == null">NÃO INFORMADO</div>
+                    <div *ngIf="acaoSelecionado?.CD_ITEM != null">{{ acaoSelecionado?.CD_ITEM}}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Centro de Custo</label>
+                    <div *ngIf="acaoSelecionado?.CD_CCU == null">NÃO INFORMADO</div>
+                    <div *ngIf="acaoSelecionado?.CD_CCU != null"> {{acaoSelecionado?.CD_CCU}} - {{ acaoSelecionado?.NM_CCU | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Valor</label>
+                    <div *ngIf="acaoSelecionado?.VL_ITEM == null">NÃO INFORMADO</div>
+                    <div *ngIf="acaoSelecionado?.VL_ITEM != null">{{ acaoSelecionado?.VL_ITEM }}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Tipo de Item</label>
+                    <div *ngIf="acaoSelecionado?.ID_TECN_INFO_ITEM_TIPO == null">NÃO INFORMADO</div>
+                    <div *ngIf="acaoSelecionado?.ID_TECN_INFO_ITEM_TIPO != null">{{ acaoSelecionado?.NM_ITEM_TIPO | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Modelo do Item</label>
+                    <div *ngIf="acaoSelecionado?.ID_TECN_INFO_ITEM_MODE == null">NÃO INFORMADO</div>
+                    <div *ngIf="acaoSelecionado?.ID_TECN_INFO_ITEM_MODE != null">{{ acaoSelecionado?.NM_MODE | uppercase}}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Contrato</label>
+                    <div *ngIf="acaoSelecionado?.ID_TECN_INFO_CONT == null ">NÃO INFORMADO</div>
+                    <div *ngIf="acaoSelecionado?.ID_TECN_INFO_CONT != null ">{{ acaoSelecionado?.DS_CONT | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>OBSERVAÇÃO</label>
+                    <div *ngIf="acaoSelecionado?.DS_OBSE == null ">NÃO INFORMADO</div>
+                    <div *ngIf="acaoSelecionado?.DS_OBSE != null ">{{ acaoSelecionado?.DS_OBSE | uppercase}}</div>
+                  </div>
+                </div><hr>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Usuário Responsável Pelo Cadastro</label>
+                    <div>{{ acaoSelecionado?.NM_USUA_CADA | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Data do Cadastro</label>
+                    <div>{{ acaoSelecionado?.DT_INCL | date: 'dd/MM/yyyy' }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3" *ngIf="dadosCadastraisLoaded && dadosCadastraisEmpty">
+                <empty-result message="Nenhuma informação encontrada"></empty-result>
+              </div>
+            </div>
+          </tab> -->
+        </tabset>
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

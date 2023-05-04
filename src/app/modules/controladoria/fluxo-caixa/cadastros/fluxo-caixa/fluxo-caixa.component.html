@@ -1,0 +1,227 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    (click)="validaSalvar(template)"
+    [disabled]="form.status == 'INVALID'"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <!-- Início dos Filtros -->
+  <div class="row">
+    <div class="col">
+      <form autocomplete="off" [formGroup]="form">
+        <div class="form-row justify-content-center">
+          <div class="row col-6">
+            <div class="form-group col-md-6">
+              <label for="tipo"> Tipo </label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="tipos"
+                [virtualScroll]="true"
+                labelForId="tipo"
+                bindLabel="DESC_TIPO"
+                bindValue="COD_TIPO"
+                placeholder="Selecione..."
+                formControlName="COD_TIPO"
+                (change) ="getTiposFluxoCaixa($event)"
+                [ngClass]="onFieldError('COD_TIPO') + ' ' + onFieldRequired('COD_TIPO')"
+              >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalid('COD_TIPO')"
+                message="Tipo é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="tipoLancamentos"> Tipo de lançamentos </label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="tiposLancamentos"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                labelForId="tipoLancamentos"
+                bindLabel="DESC_TIPO_LANCAMENTO"
+                bindValue="COD_TIPO_LANCAMENTO"
+                placeholder="Selecione..."
+                formControlName="COD_TIPO_LANCAMENTO"
+                [ngClass]="onFieldError('COD_TIPO_LANCAMENTO') + ' ' + onFieldRequired('COD_TIPO_LANCAMENTO')"
+              >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalid('COD_TIPO_LANCAMENTO')"
+                message="Tipo de lançamento é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="datavenc"> Data vencimento </label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="far fa-calendar-alt"></i>
+                  </span>
+                </div>
+                <input
+                class="form-control"
+                id="datavenc"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="DATA_VENCIMENTO"
+                [ngClass]="onFieldError('DATA_VENCIMENTO') + ' ' + onFieldRequired('DATA_VENCIMENTO')"
+                >
+              </div>
+              <invalid-form-control
+                [show]="onFieldInvalid('DATA_VENCIMENTO')"
+                message="Data inicial é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-6">
+              <label *ngIf="tipo == 1" for="dataFlux"> Data recebimento </label>
+              <label *ngIf="tipo != 1" for="dataFlux"> Data pagamento </label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="far fa-calendar-alt"></i>
+                  </span>
+                </div>
+                <input
+                class="form-control"
+                id="dataFlux"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="DATA_EXECUCAO"
+                [ngClass]="onFieldError('DATA_EXECUCAO') + ' ' + onFieldRequired('DATA_EXECUCAO')"
+                >
+              </div>
+              <invalid-form-control
+                [show]="onFieldInvalid('DATA_EXECUCAO')"
+                message="Data final é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="empresaPagamento"> Empresa de lançamento </label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="empresas"
+                [virtualScroll]="true"
+                labelForId="empresaPagamento"
+                bindLabel="DESC_EMPR"
+                bindValue="COD_EMPR"
+                placeholder="Selecione..."
+                formControlName="COD_EMPR_LANCAMENTO"
+                [ngClass]="onFieldError('COD_EMPR_LANCAMENTO') + ' ' + onFieldRequired('COD_EMPR_LANCAMENTO')"
+              >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalid('COD_EMPR_LANCAMENTO')"
+                message="Tipo de documento é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div *ngIf="validaPagamento" class="form-group col-md-6">
+              <label for="empresaRecebimento"> Empresa de recebimento </label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="empresas"
+                [virtualScroll]="true"
+                labelForId="empresaRecebimento"
+                bindLabel="DESC_EMPR"
+                bindValue="COD_EMPR"
+                placeholder="Selecione..."
+                formControlName="COD_EMPR_RECEBIMENTO"
+                [ngClass]="onFieldError('COD_EMPR_RECEBIMENTO') + ' ' + onFieldRequired('COD_EMPR_RECEBIMENTO')"
+              >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalid('COD_EMPR_RECEBIMENTO')"
+                message="Tipo de documento é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="valor"> Valor </label>
+              <input
+                currencyMask
+                [options] = " {align: 'left', prefix: 'R$', thousands: '.', decimal: ','} "
+                id="valor"
+                type="text"
+                class="form-control"
+                placeholder="DIGITE..."
+                formControlName="VALOR"
+                [ngClass]="onFieldError('VALOR') + ' ' + onFieldRequired('VALOR')"
+              >
+              <invalid-form-control
+                [show]="onFieldInvalid('VALOR')"
+                message="Tipo de documento é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="banco"> Banco/Fundo </label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="bancos"
+                [virtualScroll]="true"
+                labelForId="banco"
+                bindLabel="DESC_BANCO"
+                bindValue="COD_BANCO"
+                placeholder="Selecione..."
+                formControlName="COD_BANCO"
+                [ngClass]="onFieldError('COD_BANCO') + ' ' + onFieldRequired('COD_BANCO')"
+              >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalid('COD_BANCO')"
+                message="Tipo de documento é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-12">
+              <label for="valor"> Observação </label>
+              <input
+                id="observacao"
+                type="text"
+                class="form-control"
+                placeholder="DIGITE..."
+                formControlName="OBSERVACAO"
+                [ngClass]="onFieldError('OBSERVACAO') + ' ' + onFieldRequired('OBSERVACAO')"
+              >
+              <invalid-form-control
+                [show]="onFieldInvalid('OBSERVACAO')"
+                message="Tipo de documento é obrigatório.">
+              </invalid-form-control>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <ng-template #template>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="modal-header">
+        <h6 for="JUSTIFICATIVA"> Justifique sua alteração! </h6>
+      </div>
+      <div class="modal-body">
+        <textarea name="" id="" cols="75" rows="10" formControlName="JUSTIFICATIVA" #JUSTIFICATIVA minlength="10"></textarea>
+        <div class="text-right">
+          <button  
+            type="button" class="btn btn-secondary mr-1" (click)="modalRef.hide()"
+            >
+            Cancelar 
+          </button>
+          <button  
+            type="button" class="btn btn-primary" (click)="postCadastrar(); modalRef.hide()"
+            [disabled]="form.get('JUSTIFICATIVA').status == 'INVALID' || !form.get('JUSTIFICATIVA').value"
+            >
+            Salvar 
+          </button>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+</app-body>

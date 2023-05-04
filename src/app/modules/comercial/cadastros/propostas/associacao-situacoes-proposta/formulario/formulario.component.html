@@ -1,0 +1,230 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row">
+    <div class="col-lg-6">
+      <form [formGroup]="form">
+        <div class="mtc-title">Associação de Situações das Propostas</div>
+        <div class="form-row">
+          <div class="form-group col-lg-8">
+            <label for="descLegenda">Legenda</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <div class="btn-group" dropdown>
+                    <button dropdownToggle type="button" class="color-dropdown dropdown-toggle" aria-controls="color-dropdown">
+                      <div [ngStyle]="{'backgroundColor': form.value.cor}"></div>
+                    </button>
+                    <ul id="color-dropdown" *dropdownMenu class="dropdown-menu">
+                      <li role="menuitem">
+                        <a
+                          class="dropdown-item"
+                          href="javascript:void(0)"
+                          *ngFor="let color of colors"
+                          (click)="onColorChange(color)">
+                          <div class="color-hex" [ngStyle]="{'backgroundColor': color.hex}"></div>
+                          <div>{{ color.descricao }}</div>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="descLegenda"
+                formControlName="descLegenda"
+                (input)="onInput()"
+                [ngClass]="onFieldError('descLegenda') + ' ' + onFieldRequired(form.controls.descLegenda)">
+              <invalid-form-control [show]="onFieldInvalid('descLegenda')" message="Legenda é obrigatória."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="ordemExibicao">Ord. exibição</label>
+            <select
+              class="form-control"
+              id="ordemExibicao"
+              formControlName="ordemExibicao"
+              (change)="onInput()"
+              [ngClass]="onFieldError('ordemExibicao') + ' ' + onFieldRequired(form.controls.ordemExibicao)">
+              <option value="">SELECIONE UMA OPÇÃO</option>
+              <option value="1">Primeira</option>
+              <option value="2">Segunda</option>
+              <option value="3">Terceira</option>
+              <option value="4">Quarta</option>
+              <option value="5">Quinta</option>
+              <option value="6">Sexta</option>
+              <option value="7">Sétima</option>
+              <option value="8">Oitava</option>
+              <option value="9">Nona</option>
+              <option value="10">Décima</option>
+            </select>
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="codSituacao">Situação</label>
+            <select
+              class="form-control"
+              id="codSituacao"
+              formControlName="codSituacao"
+              (change)="onInput()"
+              [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
+              <option value="">SELECIONE UMA OPÇÃO</option>
+              <option value="0">Inativo</option>
+              <option value="1">Ativo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col">
+            <hr>
+          </div>
+        </div>
+        <div formArrayName="assocSituacoes">
+          <div class="row mb-2">
+            <div class="col mt-auto">
+              <div class="mtc-title mb-0">Situações Similares</div>
+            </div>
+            <div class="col">
+              <div class="d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="onLimparAssociacoes()">
+                  <i class="fas fa-trash"></i>
+                  <span>Limpar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="showSituacoes && form.value.assocSituacoes.length > 0">
+            <div class="col">
+              <custom-table [config]="tableConfigAssocSituacoes">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th scope="col" style="width: 95%">Situação</th>
+                    <th scope="col" style="width: 5%"></th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let situacao of assocSituacoes.controls; let i = index" [formGroupName]="i">
+                    <td style="width: 95%">
+                      {{ form.value.assocSituacoes[i].codSituacaoProposta }} - {{ form.value.assocSituacoes[i].descSituacaoProposta | uppercase }}
+                    </td>
+                    <td class="text-center" style="width: 5%">
+                      <btn-icon
+                        icon="fas fa-trash"
+                        size="small"
+                        (click)="onDeleteSituacao(i)">
+                      </btn-icon>
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+            </div>
+          </div>
+          <div class="row" *ngIf="showSituacoes && form.value.assocSituacoes.length === 0">
+            <div class="col">
+              <message
+                icon="fas fa-exchange-alt"
+                text="Nenhuma associação encontrada">
+              </message>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-6 border-left">
+      <div *ngIf="situacoesLista.length > 0">
+        <div class="row mb-2">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Seleção de situações</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                (click)="onAssociarSituacoes()"
+                [disabled]="searching === true">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Associar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <custom-table [config]="tableConfigSituacoes">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="text-center"
+                    style="width: 5%">
+                    <btn-icon
+                      [icon]="toggleAll ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll()">
+                    </btn-icon>
+                  </th>
+                  <th scope="col" style="width: 95%">Situação</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let situacao of situacoesLista; let i = index;">
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="situacao.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onCheckSituacao(i, situacao)">
+                    </btn-icon>
+                  </td>
+                  <td
+                    class="hover"
+                    style="width: 95%"
+                    (click)="onCheckSituacao(i, situacao)">
+                    {{ situacao.situacaoProposta | uppercase}}
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="searching === true">
+        <div class="col">
+          <message
+            icon="fas fa-cog fa-spin"
+            text="Estamos pesquisando as situações para você...">
+          </message>
+        </div>
+      </div>
+      <div *ngIf="searching === false">
+        <div class="row" *ngIf="situacoesListaEmpty && situacoesListaLoaded">
+          <div class="col">
+            <message
+              icon="fas fa-box-open"
+              text="Nenhuma informação encontrada">
+            </message>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>

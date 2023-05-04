@@ -1,0 +1,345 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button 
+    [disabled]="loadingNavBar === true"
+    [routerLink]="['../../']"
+    >
+    Finalizar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col-lg-6">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="mtc-title">Dados da Etapa</div>
+        <div class="form-row">
+          <div class="form-group col pl-0">
+            <label for="etapas">Etapa</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="etapas"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              [loading]="loadingEtapas"
+              labelForId="etapas"
+              bindLabel="NM_ETAP"
+              bindValue="UUID_LOGI_YMS_ETAP"
+              id="etapas"
+              formControlName="UUID_LOGI_YMS_ETAP"
+              >
+            </ng-select>
+          </div>
+        </div>
+      </form>
+      <div class="row mb-4">
+        <div class="col mb-3">
+          <hr>
+        </div>
+      </div>
+      <div [hidden]="loadingSetores">
+        <div class="row mb-2 mt-4">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Setores associados a Etapa</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                (click)="onRemoverAssociacao()">
+                <i class="fas fa-trash"></i>
+                <span>Limpar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="!setoresAssociadosLoading && setoresAssociados.length > 0">
+          <div class="col">
+            <custom-table [config]="tableConfigSetoresAssociados">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="text-center"
+                    style="width: 5%">
+                    <btn-icon
+                      [icon]="toggle?.setoresAssociados ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll('setoresAssociados')">
+                    </btn-icon>
+                  </th>
+                  <th scope="col" style="width: 10%">Seq.</th>
+                  <th scope="col" style="width: 10%"></th>
+                  <th scope="col" style="width: 35%">Setores</th>
+                  <th scope="col" style="width: 35%">Tipo de setor</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of setoresAssociados" >
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="item.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="item.checked = !item.checked">
+                    </btn-icon>
+                  </td>
+                  <td 
+                    class="hover"
+                    style="width: 10%">
+                    {{ item.NR_SQNC  }}
+                  </td>
+                  <td
+                    class="hover text-center"
+                    style="width: 10%">
+                    <div [class]="item.DS_ICON"></div>
+                  </td>
+                  <td
+                    class="hover"
+                    style="width: 35%">
+                    {{ item.NM_SETO | uppercase }}
+                  </td>
+                  <td
+                    class="hover"
+                    style="width: 35%">
+                    {{ item.NM_SETO_TIPO | uppercase }}
+                  </td>
+                  <td class="text-center" width="5%" height="26px">
+                    <btn-icon
+                      icon="fas fa-trash"
+                      size="small"
+                      (click)="onRemoverAssociacao(item)"
+                      *ngIf="!item.loading"  
+                    >
+                    </btn-icon>
+                    <div class="text-primary small" *ngIf="item.loading">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+        <div class="row" *ngIf="!loadingSetores && setoresAssociados.length === 0">
+          <div class="col">
+            <message
+              icon="fas fa-exchange-alt"
+              text="Nenhuma associação encontrada">
+            </message>
+          </div>
+        </div>
+        <div class="row" *ngIf="loadingSetores">
+          <div class="col">
+            <message
+              icon="fas fa-cog fa-spin"
+              text="Estamos pesquisando os setores para você...">
+            </message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 border-left">
+      <form [formGroup]="formSetores" autocomplete="off">
+        <div class="row mb-2">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Pesquisa de Setores</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-secondary"
+                (click)="getSetores()">
+                <i class="fas fa-search"></i>
+                <span 
+                container="body"
+                placement ="left">Pesquisar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <advanced-filter>
+          <div class="form-row">
+              <div class="form-group col-md-6 pl-0">
+                <label for="tiposSetor">Tipo de Setor</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="true"
+                  [items]="tiposSetor"
+                  [virtualScroll]="true"
+                  placeholder="Selecione..."
+                  [loading]="loadingTiposSetor"
+                  labelForId="tiposSetor"
+                  (keydown.enter)="getSetores()"
+                  bindLabel="NM_SETO_TIPO"
+                  bindValue="UUID_LOGI_YMS_SETO_TIPO"
+                  id="tiposSetor"
+                  formControlName="UUID_LOGI_YMS_SETO_TIPO"
+                  (change)="getFilterSetores({'UUID_LOGI_YMS_SETO_TIPO': $event?.UUID_LOGI_YMS_SETO_TIPO || ''})">
+                </ng-select>
+              </div>
+              <div class="form-group col-md-6 pl-0">
+                <label for="filterSetores">Setor</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="true"
+                  [items]="filterSetores"
+                  [virtualScroll]="true"
+                  placeholder="Selecione..."
+                  [loading]="loadingFilterSetores"
+                  labelForId="filterSetores"
+                  (keydown.enter)="getSetores()"
+                  bindLabel="NM_SETO"
+                  bindValue="UUID_LOGI_YMS_SETO"
+                  id="filterSetores"
+                  formControlName="UUID_LOGI_YMS_SETO">
+                </ng-select>
+              </div>
+          </div>
+          <div class="form-row">
+              <div class="form-group col-md-12 pl-0">
+                <label for="filiais">Filial</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="true"
+                  [items]="filiais"
+                  [virtualScroll]="true"
+                  placeholder="Selecione..."
+                  (keydown.enter)="getSetores()"
+                  [loading]="loadingFiliais"
+                  labelForId="filiais"
+                  bindLabel="NM_FILI"
+                  bindValue="UUID_LOGI_FILI"
+                  id="filiais"
+                  formControlName="UUID_LOGI_FILI"
+                  >
+                </ng-select>
+              </div>
+          </div>
+        </advanced-filter>
+        <div *ngIf="setores.length > 0 && !setoresLoading">
+          <div class="row mb-2">
+            <div class="col mt-auto">
+              <div class="mtc-title mb-0">Seleção de Setor</div>
+            </div>
+            <div class="col">
+              <div class="d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  (click)="onAssociarSetores()"
+                  [disabled]="searching === true || formSetores.valid === false">
+                  <i class="fas fa-exchange-alt"></i>
+                  <span
+                    [tooltip]="form.valid == false ? 'Selecione uma Etapa':''"
+                    container="body"
+                    placement ="left">Associar
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <custom-table [config]="tableConfigSetores">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      class="text-center"
+                      style="width: 5%">
+                      <btn-icon
+                        [icon]="toggle?.setores ? 'fas fa-check-square' : 'far fa-square'"
+                        size="small"
+                        (click)="onToggleAll('setores')">
+                      </btn-icon>
+                    </th>
+                    <th scope="col" style="width: 10%" class="text-center">Seq.</th>
+                    <th scope="col" style="width: 10%"></th>
+                    <th scope="col" style="width: 35%">Setores</th>
+                    <th scope="col" style="width: 35%">Tipo de setor</th>
+                    <th style="width: 5%"></th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let item of setores">
+                    <td class="text-center" style="width: 5%">
+                      <btn-icon
+                        *ngIf = "item.NR_SQNC > 0 "
+                        [icon]="item.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                        size="small"
+                        (click)="item.checked = !item.checked;">
+                      </btn-icon>
+                    </td>
+                    <td
+                    class="hover"
+                    style="width: 10%"
+                    >
+                      <input
+                      type="number"
+                      class="form-control"
+                      min = "1"
+                      (change)="item.NR_SQNC = ($event.target.value);"
+                    />
+                    </td>
+                    <td 
+                      class="hover text-center"
+                      style="width: 10%">
+                      <div [class]="item.DS_ICON"></div>
+                    </td>
+                    <td
+                      class="hover"
+                      style="width: 35%"
+                      (click)="item.checked = !item.checked">
+                      {{ item.NM_SETO | uppercase }}
+                    </td>
+                    <td
+                      class="hover"
+                      style="width: 35%"
+                      (click)="item.checked = !item.checked">
+                      {{ item.NM_SETO_TIPO | uppercase }}
+                    </td>
+                    <td style="width: 5%; height: 26px">
+                      <div class="text-primary small" *ngIf="item.loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="setoresLoading">
+          <div class="col">
+            <message
+              icon="fas fa-cog fa-spin"
+              text="Estamos pesquisando os setores para você...">
+            </message>
+          </div>
+        </div>
+        <div>
+          <div class="row" *ngIf="(setores.length == 0) && !setoresLoading">
+            <div class="col">
+              <message
+                icon="fas fa-box-open"
+                text="Nenhuma informação encontrada">
+              </message>
+            </div>
+          </div>
+          <!-- <div class="row" *ngIf="setoresLista.length === 0 && !firstSearch">
+            <div class="col">
+              <message
+                icon="fas fa-search"
+                text="Preecha os campos acima para pesquisar setores">
+              </message>
+            </div>
+          </div> -->
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>
+

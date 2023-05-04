@@ -1,0 +1,180 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="MOVIMENTAÇÕES">
+  <button 
+    [disabled]="form.valid === false || loadingNavBar === true"
+    (click)="postMovimentacoes()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+        <legend>Dados da Movimentação</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md pl-0">
+            <label for="produtos">Produto</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="produtos"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              placeholder="Selecione..."
+              labelForId="ID_TEIN_ESTO_PROD"
+              bindLabel="NM_PROD"
+              bindValue="ID_TEIN_ESTO_PROD"
+              id="ID_TEIN_ESTO_PROD"
+              formControlName="ID_TEIN_ESTO_PROD"
+              (change)="validateFormProduto($event)"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('ID_TEIN_ESTO_PROD')" message="Produto é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md pl-0">
+            <label for="empresas">Empresa</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="empresas"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              placeholder="Selecione..."
+              labelForId="ID"
+              bindLabel="NM_FANT"
+              bindValue="ID"
+              id="ID"
+              formControlName="UUID_EMPR"
+              [ngClass]="onFieldRequired('TP_MOVI')"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('UUID_EMPR')" message="Empresa é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md pl-0">
+            <label for="TP_MOVI">Tipo de Movimentação</label>
+            <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="tipos"
+            [virtualScroll]="true"
+            labelForId="tipo"
+            bindLabel="nome"
+            bindValue="cod"
+            id="tipo"
+            formControlName="TP_MOVI"
+            placeholder="Selecione..."
+            [ngClass]="onFieldRequired('TP_MOVI')"
+          >
+            <ng-template ng-option-tmp let-item="item" let-index="index"> {{item.nome}}
+            </ng-template>
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('TP_MOVI')" message="Tipo de movimentação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-4 pl-0">
+            <label for="DS_UNID_MEDI">Unidade de Medida</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DS_UNID_MEDI"
+              formControlName="DS_UNID_MEDI"
+              placeholder="Selecione o Produto..."
+              disabled
+            >
+          </div>
+          <div class="form-group col-md-4 pl-0">
+            <label for="TT_PROD">Quantidade</label>
+            <input 
+              class="form-control" 
+              type="text"
+              placeholder="Digite..."
+              id="TT_PROD"
+              formControlName="TT_PROD"
+              [ngClass]="onFieldRequired('TT_PROD')"
+              currencyMask [options]="{ align: 'left', prefix: '' , thousands: '.', decimal: ',' , precision: precisao }"
+            />
+            <invalid-form-control [show]="onFieldInvalid('TT_PROD')" message="Quantidade é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-4 pl-0">
+            <label for="VL_UNIT">Valor Unitário</label>
+            <input
+              type="text"
+              class="form-control"
+              id="VL_UNIT"
+              formControlName="VL_UNIT"
+              placeholder="Digite..."
+              currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
+            />
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="CD_REFE">Código de Referência</label>
+            <input
+              type="text"
+              class="form-control"
+              id="CD_REFE"
+              formControlName="CD_REFE"
+              placeholder="Digite..."
+            />
+          </div>
+          <div class="form-group col-md-6 pl-0">
+            <label for="CD_PEDI">Número do Pedido</label>
+            <input
+              type="text"
+              class="form-control"
+              id="CD_PEDI"
+              formControlName="CD_PEDI"
+              placeholder="Digite..."
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6 pl-0" >
+            <label for="CD_ITEM">Informe o Número de Série</label>
+            <input
+              type="text"
+              class="form-control"
+              id="CD_ITEM"
+              formControlName="CD_ITEM"
+              placeholder="Digite..."
+              autocomplete="new-password"
+              [ngClass]="onFieldRequired('CD_ITEM')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('CD_ITEM')" message="Número de série é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pl-0" >
+            <label for="NR_NOTA_FISC">Informe Nota Fiscal</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NR_NOTA_FISC"
+              formControlName="NR_NOTA_FISC"
+              placeholder="Digite..."
+              autocomplete="new-password"
+            />
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+        <legend>Observação</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observação:</label>
+            <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

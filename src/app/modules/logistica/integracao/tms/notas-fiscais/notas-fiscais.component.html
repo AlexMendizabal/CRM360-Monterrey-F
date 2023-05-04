@@ -1,0 +1,197 @@
+<loader-spinner-full-screen [hidden]="!loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+    <button
+    type="button"
+    (click) = "onResetForm()"
+    >
+    Limpar
+  </button>
+  <button
+    [disabled]="form.status == 'INVALID'"
+    type="button"
+    (click) = "onSearch()"
+    >
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="DT_INIC">Data Inicial</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+            </div>
+            <input
+              class="form-control"
+              id="DT_INIC"
+              type="text"
+              bsDatepicker
+              placeholder="SELECIONE..."
+              [bsConfig]="bsConfig"
+              formControlName="DT_INIC">
+          </div>
+        </div>
+        <div class="form-group col">
+          <label for="DT_FINA">Data Final</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+            </div>
+            <input
+              class="form-control"
+              id="DT_FINA"
+              type="text"
+              bsDatepicker
+              placeholder="SELECIONE..."
+              [bsConfig]="bsConfig"
+              formControlName="DT_FINA">
+          </div>
+        </div>
+        <div class="form-group col">
+          <label for="NR_NOTA_FISC">Nota Fiscal</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-file-alt"></i></span>
+            </div>
+            <input
+              class="form-control"
+              id="NR_NOTA_FISC"
+              type="text"
+              formControlName="NR_NOTA_FISC"
+              placeholder="Digite..."
+              (keyup.enter)="onSearch()"
+              >
+          </div>
+        </div>
+        <div class="form-group col">
+          <label for="NR_CHAV_ACES">Chave de Acesso</label>
+          <input
+              class="form-control"
+              id="NR_CHAV_ACES"
+              type="text"
+              formControlName="NR_CHAV_ACES"
+              placeholder="Digite..."
+              (keyup.enter)="onSearch()"
+              >
+        </div>
+        <div class="form-group">
+          <label for="IN_IMPO">STATUS</label>
+          <select 
+            class="form-control custom-select"
+            formControlName="IN_IMPO"
+            >
+            <option value="">TODOS</option>
+            <option value="1">IMPORTADOS</option>
+            <option value="0">NÃO IMPORTADOS</option>
+          </select>
+        </div>
+        <div class="form-group col-1">
+          <label for="TT_REGI_PAGI">REGISTROS</label>
+          <select 
+            class="form-control custom-select"
+            formControlName="TT_REGI_PAGI"
+            (onchange)="setItemsPerPage()"
+            >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div [hidden]="loading || items.length == 0">
+    <table class="table table-sm table-hover border-left border-right border-bottom text-center table-fixed" style="width: 40%">
+      <tbody>
+        <tr>
+          <td><i class="fas fa-circle text-success"></i></td>
+          <td>Integrado</td>
+          <td>{{ qtItensIntegrados }}</td>
+          <td>{{ qtItensIntegrados / totalItems | percent : '1.0-0'}}</td>
+        </tr>
+        <tr>
+          <td><i class="fas fa-circle text-warning"></i></td>
+          <td>Não integrado</td>
+          <td>{{ qtItensNaoIntegrados }}</td>
+          <td>{{ qtItensNaoIntegrados / totalItems | percent : '1.0-0'}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex">
+      <div class="col p-0">
+        <custom-table [config]="tableConfig">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">
+                <thead-sorter
+                  value="Nota Fiscal"
+                  [active]="orderBy == 'NR_NOTA_FISC'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('NR_NOTA_FISC')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter
+                  value="Chave de acesso"
+                  [active]="orderBy == 'NR_CHAV_ACES'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('NR_CHAV_ACES')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter
+                  value="Empresa"
+                  [active]="orderBy == 'NM_EMPR'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('NM_EMPR')">
+                </thead-sorter>
+              </th>
+              <th scope="col" class="text-center">
+                <thead-sorter
+                  value="Importação para o TMS"
+                  [active]="orderBy == 'DT_IMPO'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('DT_IMPO')">
+                </thead-sorter>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let item of items ; let indice = index" >
+              <td [ngClass]="getBorder(item)" class="align-middle text-center">{{ item?.NR_NOTA_FISC }}</td>
+              <td>{{ item.NR_CHAV_ACES }}</td>
+              <td>{{ item.NM_EMPR }}</td>
+              <td class="text-center">
+                <span *ngIf="!item.DT_IMPO">-</span>
+                <span *ngIf="item.DT_IMPO">{{ item.DT_IMPO  | date : 'dd/MM/yyyy HH:mm:ss'  }}</span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+  <div [hidden]="loading || items.length > 0" class="d-flex justify-content-center align-items-center" style="width: 100%; height: 300px">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

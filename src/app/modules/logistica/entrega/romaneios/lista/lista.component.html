@@ -1,0 +1,556 @@
+<loader-spinner-full-screen [hidden]="!loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    (click)="getDadosRelatorio()"
+    >
+    Generar informe
+  </button>
+  <button
+    (click)="sincronizarRomaneiosFusion()"
+  >
+    Sincronizar
+    <i class="fas fa-sync"></i>
+  </button>
+  <button
+    (click)="onFilter()"
+    [disabled]="form.status  == 'INVALID'"
+    >
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter #scrollToFilter>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="dtInicial"> Comienzo </label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="inicioData"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="DT_INIC"
+            [ngClass]="onFieldError('DT_INIC') + ' ' + onFieldRequired('DT_INIC')"
+            >
+          </div>
+          <invalid-form-control
+            [show]="onFieldInvalid('DT_INIC')"
+            message="El inicio es obligatorio.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group  col-3">
+          <label for="dtFinal"> Final </label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="dtFinal"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="DT_FINA"
+            [ngClass]="onFieldError('DT_FINA') + ' ' + onFieldRequired('DT_FINA')"
+            >
+          </div>
+          <invalid-form-control
+            [show]="onFieldInvalid('DT_FINA')"
+            message="La final es obligatoria.">
+          </invalid-form-control>
+        </div>
+        <div class="form-group col-3">
+          <label for="filial">Subsidiaria</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [loading]="loadingFiliais"
+            [closeOnSelect]="false"
+            [items]="filiais"
+            [virtualScroll]="true"
+            dropdownPosition="bottom"
+            labelForId="filial"
+            bindLabel="nome"
+            bindValue="idFilial"
+            placeholder="SELECCIONE..."
+            formControlName="CD_FILI"
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-3">
+          <label for="cdRomaneio"> Ruta </label>
+          <input
+            id="cdRomaneio"
+            type="text"
+            class="form-control"
+            placeholder="Escribelo..."
+            formControlName="CD_ROMA"
+            (keyup.enter)="onFilter()">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="placa"> Placa del vehículo </label>
+          <input
+            id="placa"
+            type="text"
+            class="form-control"
+            placeholder="Escribelo..."
+            formControlName="PLAC"
+            (keyup.enter)="onFilter()"
+            >
+        </div>
+        <div class="form-group col-3">
+          <label for="motorista">Conductor</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="DS_MOTO"
+            placeholder="CPF OU NOME" 
+            (keyup.enter)="onFilter()" 
+          >
+        </div>
+        <div class="form-group col-3">
+          <label for="pedido">Orden de venta</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="CD_PEDI"
+            placeholder="Escribelo..."  
+            (keyup.enter)="onFilter()"
+          >
+        </div>
+        <div class="form-group col-3">
+          <label for="notaFiscal">Factura</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="NR_NOTA_FISC"
+            placeholder="Escribelo..."  
+            (keyup.enter)="onFilter()"
+          >
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="itemsPerPage">Cargando</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="situacaoCarregamento"
+            [virtualScroll]="true"
+            labelForId="situacaoCarregamento"
+            bindLabel="nome"
+            bindValue="id"
+            (change)="onFilter()"
+            formControlName="FINA_IN_STAT"
+            placeholder="SELECCIONE..."
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-3">
+          <label for="itemsPerPage">Inicio del viaje</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="inicioViagem"
+            [virtualScroll]="true"
+            labelForId="inicioViagem"
+            bindLabel="nome"
+            bindValue="id"
+            (change)="onFilter()"
+            formControlName="IN_VIAG_INIC"
+            placeholder="SELECCIONE..."
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-3">
+          <label for="situacao">Situación</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="situacao"
+            [virtualScroll]="true"
+            labelForId="situacao"
+            bindLabel="nome"
+            bindValue="id"
+            (change)="onFilter()"
+            formControlName="IN_STAT"
+            placeholder="SELECCIONE..."
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col-3">
+          <label for="itemsPerPage">Registros</label>
+          <select
+           class="form-control"
+            formControlName="TT_REGI_PAGI"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="d-flex">
+    <div [ngClass]="showDetailPanel ? 'col-4 px-0' : 'w-100'">
+      <custom-table [hidden] ="noResult" [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th
+              class="text-center align-middle"
+              scope="col"
+              [ngStyle]="{width: showDetailPanel ? '25%' : '13%' }"
+            >
+              <thead-sorter
+                value="Filial"
+                [active]="orderBy == 'CD_FILI'"
+                [sort]="orderType"
+                (click)="setOrderBy('CD_FILI')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-center align-middle"
+              scope="col"
+              [ngStyle]="{width: showDetailPanel ? '20%' : '08%' }"
+            >
+              <thead-sorter
+                value="Ruta"
+                [active]="orderBy == 'CD_ROMA'"
+                [sort]="orderType"
+                (click)="setOrderBy('CD_ROMA')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-left align-middle"
+              scope="col"
+              [ngStyle]="{width: showDetailPanel ? '15%' : '06%' }"
+            >
+              <thead-sorter
+                value="Placa"
+                [active]="orderBy == 'PLAC'"
+                [sort]="orderType"
+                (click)="setOrderBy('PLAC')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-left    align-middle"
+              scope="col"  style="width:12%"
+              *ngIf="!showDetailPanel"
+            >
+              <thead-sorter
+                value="Conductor"
+                [active]="orderBy == 'NM_MOTO'"
+                [sort]="orderType"
+                (click)="setOrderBy('NM_MOTO')">
+              </thead-sorter> 
+            </th>
+            <th
+              class="text-center  align-middle"
+              scope="col"
+              style="width:05%"
+              *ngIf="!showDetailPanel"
+            >
+              <thead-sorter
+                value="PESO"
+                [active]="orderBy == 'TT_PESO'"
+                [sort]="orderType"
+                (click)="setOrderBy('TT_PESO')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-center  align-middle"
+              scope="col"
+              style="width:08%"
+              *ngIf="!showDetailPanel"
+              >
+              <thead-sorter
+                value="Distancia"
+                [active]="orderBy == 'KM_PREV'"
+                [sort]="orderType"
+                (click)="setOrderBy('KM_PREV')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-center  align-middle"
+              scope="col"
+              style="width:10%"
+              *ngIf="!showDetailPanel"
+            >
+                <thead-sorter
+                value="Prev. Salida"
+                [active]="orderBy == 'DT_PREV_SAID'"
+                [sort]="orderType"
+                (click)="setOrderBy('DT_PREV_SAID')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-center  align-middle"
+              scope="col"
+              style="width:10%"
+              *ngIf="!showDetailPanel"
+            >
+              <thead-sorter
+                value="Salida Real"
+                [active]="orderBy == 'DT_VIAG_INIC'"
+                [sort]="orderType"
+                (click)="setOrderBy('DT_VIAG_INIC')">
+              </thead-sorter>
+            </th>
+            <th
+            class="text-left align-middle"
+            scope="col"
+            style="width:12%"
+            *ngIf="!showDetailPanel"
+            >
+              Fin de carga
+            </th>
+            <th
+              class="text-center align-middle"
+              scope="col"
+            >
+            </th>
+            <th
+              class="text-center align-middle"
+              scope="col"
+            >
+            </th>
+            <th
+              class="text-center align-middle"
+              scope="col"
+            >
+            </th>
+            <th
+              class="text-center align-middle"
+              scope="col"
+            >
+            </th>
+            <th
+              class="text-center  align-middle"
+              scope="col"
+            >
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let romaneio of romaneios; let i = index" [ngClass]="{'table-active': romaneio.selected == true}">
+            <td class="text-left align-middle text-truncate"  [ngClass]="romaneio.IN_STAT == 1 ? 'border-success' : 'border-danger'">({{romaneio.CD_FILI}})&nbsp; {{ romaneio.NM_FILI }}</td>
+            <td class="text-center align-middle">{{ romaneio.CD_ROMA }}</td>
+            <td class="text-left align-middle">
+              <span>{{ romaneio.PLAC | hifen}}</span>
+            </td>
+            <td class="text-left align-middle text-truncate" *ngIf="!showDetailPanel">
+              <span>{{ romaneio?.NM_MOTO | hifen}}</span>
+            </td>
+            <td class="text-center align-middle" *ngIf="!showDetailPanel">
+              <span >{{ romaneio?.TT_PESO | number:'0.3-3' | hifen}}</span>  
+            </td>
+            <td class="text-center align-middle" *ngIf="!showDetailPanel">
+              <span>{{ romaneio?.KM_PREV  | number: '0.0-0' | hifen}}</span>
+            </td>
+            <td class="text-center align-middle" *ngIf="!showDetailPanel">{{ romaneio?.DT_PREV_SAID | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td class="text-center align-middle" *ngIf="!showDetailPanel">{{ romaneio?.DT_VIAG_INIC | date: 'dd/MM/yyyy HH:mm' | hifen }}</td>
+            <td class="text-left" *ngIf="!showDetailPanel">
+              <div *ngIf="!romaneio?.loadingFinalizando">
+                <button
+                  (click)="onFinalizaRomaneio(romaneio);"
+                  [disabled]="!onPodeFinalizarRomaneio(romaneio)"
+                  style="font-size: 1.25em;"  
+                >
+                  <i *ngIf="romaneio.FINA_IN_STAT == 0" class="fas fa-toggle-off"></i>
+                  <i *ngIf="romaneio.FINA_IN_STAT == 1" class="fas fa-toggle-on text-success"></i>
+                </button>
+                <span *ngIf="!showDetailPanel">{{ romaneio.DT_FINA | date: 'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+              <div *ngIf="romaneio?.loadingFinalizando" class="font-weight-bold text-muted">Finalizando...</div>
+            </td>
+            <td class="font-weight-bold text-center">
+              <span
+                [tooltip]="romaneio.TT_PEDI_ENTR + ' pedidos entregados de ' + romaneio.TT_PEDI"
+                container="body"
+                placement="left"  
+              >
+                {{ romaneio.TT_PEDI_ENTR }}/{{ romaneio.TT_PEDI }}
+              </span>
+            </td>
+            <td class="text-right align-middle">
+              <button
+                tooltip="Sincronizar con Fusion"
+                placement="left"
+                container="body"
+                (click)="putRomaneio(romaneio)"
+              >
+                <i class="fas fa-sync" *ngIf="!romaneio.syncFusion"></i>
+                <div
+                  class="spinner-border spinner-border-sm text-primary"
+                  role="status"
+                  *ngIf="romaneio.syncFusion"
+                >
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </button>
+            </td>
+            <td class="text-right align-middle">
+              <button
+                tooltip="Generar PDF"
+                placement="left"
+                container="body"
+                (click)="onPrint(romaneio)"
+              >
+                <i class="far fa-file-pdf"></i>
+              </button>
+            </td>
+            <td class="text-right align-middle">
+              <span
+                [tooltip]="romaneio?.DS_FATU"
+                placement="left"
+                container="body"
+              >
+                <button
+                  [disabled]="onInEnviarFaturamento(romaneio)"
+                  *ngIf="!romaneio.loadingFaturamento"
+                  (click)="enviarRomaneioParaFaturamento(romaneio)"
+                >
+                  <i class="far fa-paper-plane" [ngClass]="onCorFaturamento(romaneio)"></i>
+                </button>
+                <div
+                  class="spinner-border spinner-border-sm text-primary"
+                  role="status"
+                  *ngIf="romaneio.loadingFaturamento"
+                >
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </span>
+            </td>
+            <td class="text-right align-middle">
+              <button
+                tooltip="Detalles"
+                placement="left"
+                container="body"
+                (click)="viewDetails(romaneio)"
+              >
+                <i class="fas fa-search"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="mt-3 col p-0" [hidden]="noResult">
+        Demostración {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="5"
+          [totalItems]="totalItems"
+          [(itemsPerPage)]="itemsPerPage"
+          (pageChanged)="onPageChanged($event)"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-8 pr-0" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="detailPanelTitle">
+        <div>
+          <table>
+            <tbody>
+              <tr>
+                <th scope="col">Conductor:</th>
+                <td>{{ romaneio?.NM_MOTO | uppercase }}</td>
+              </tr>
+              <tr>
+                <th scope="col">Vehiculo:</th>
+                <td>{{ romaneio?.PLAC | uppercase}}</td>
+              </tr>
+              <tr>
+                <th scope="col">Peso:</th>
+                <td>
+                  <span *ngIf="!isChecked">{{romaneio?.TT_PESO | number:'0.3-3' | hifen }}</span>
+                  <span *ngIf="isChecked">{{romaneio?.FATU_TT_PESO | number:'0.3-3' | hifen }}</span>
+                </td>
+              </tr>
+              <tr>
+                <th scope="col">Flete estimado:</th>
+                <td>
+                  <span *ngIf="!isChecked">{{romaneio?.VL_FRET | currency:'Bs' | hifen }}</span>
+                  <span *ngIf="isChecked">{{romaneio?.FATU_VL_FRET | currency:'Bs' | hifen }}</span>
+                </td>
+              </tr>
+              <tr>
+                <th scope="col">Flete (sin impuestos):</th>
+                <td>
+                  <span>{{romaneio?.CTRC_VL_LIQD | currency:'Bs' | hifen }}</span>
+                </td>
+              </tr>
+              <tr>
+                <th scope="col">Flete (con impuestos):</th>
+                <td>
+                  <span>{{romaneio?.CTRC_VL_BRUT | currency:'Bs' | hifen }}</span>
+                </td>
+              </tr>
+              <tr>
+                <th>Distancia (KM):</th>
+                <td>
+                  <span *ngIf="!isChecked">{{romaneio?.KM_PREV | number: '0.0-0' | hifen}}</span>
+                  <span *ngIf="isChecked">{{romaneio?.FATU_KM_PREV | number: '0.0-0' | hifen}}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <hr>
+          <div class="custom-control custom-checkbox mb-2">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="customCheck"
+              name="example1"
+              [(ngModel)]="isChecked" 
+              (change)="getEntregasSomenteFaturamento(romaneio)"
+            >
+            <label class="custom-control-label" for="customCheck">Facturación solo entregas</label>
+          </div>
+          <div>
+            <div *ngIf="loadingEntregas">
+              <span>Cargando...</span>
+            </div>
+            <div *ngIf="!loadingEntregas">
+              <div *ngFor="let entrega of entregas">
+                <logistica-entrega-romaneios-pedidos
+                  [entrega]="entrega"
+                  >
+                </logistica-entrega-romaneios-pedidos>
+              </div>
+              <div [hidden]="loadingEntregas || (entregas.length != 0)" class="text-center d-flex justify-content-center align-items-center" style="height: 250px">
+                <empty-result message="No se encontró información"></empty-result>
+              </div>
+            </div>
+          </div>
+        </div>
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 250px">
+    <empty-result message="No se encontró información"></empty-result>
+  </div>
+  <logistica-entrega-romaneios-capa-romaneio></logistica-entrega-romaneios-capa-romaneio>
+</app-body>

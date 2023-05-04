@@ -1,0 +1,27 @@
+<div class="border rounded bg-white shadow-sm p-3 h-100">
+  <div class="d-flex justify-content-between">
+    <div class="mtc-title mb-0">
+      <i
+        class="far fa-question-circle p-2"
+        tooltip="Pedidos faturados no periodo em toneladas."
+        placement="right">
+      </i>
+      Faturamento
+    </div>
+  </div>
+  <div class="row align-items-center h-100">
+    <div class="col">
+      <div>
+        <div [hidden]="!loading || errorLoaded">
+          <div class="chartdiv amcharts" id="chartdiv-faturamento"></div>
+        </div>
+        <div class="d-flex align-items-center justify-content-center chartdiv" [hidden]="loading">
+          <div class="spinner-border text-dark"></div>
+        </div>
+        <div [hidden]="!loading || !errorLoaded" class="text-center chartdiv d-flex justify-content-center align-items-center">
+          <empty-result message="Nenhuma informação encontrada"></empty-result>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

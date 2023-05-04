@@ -1,0 +1,25 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Representantes"></app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <h5 class="pt-2 mb-4 text-center">Selecione uma atividade</h5>
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <div class="row justify-content-center">
+        <div class="col-md-3">
+          <card-button
+            icon="fas fa-chart-pie"
+            text="Programação de Pagamentos"
+            [routerLink]="['../../programacao-pagamentos']">
+          </card-button>
+        </div>
+        <div class="col-md-3">
+          <card-button
+            icon="fas fa-chart-pie"
+            text="Gestão de Comissionamentos"
+            [routerLink]="['../../gestao-comissionamentos']">
+          </card-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>

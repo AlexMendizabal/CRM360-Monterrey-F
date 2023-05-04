@@ -1,0 +1,45 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro de Marcas">
+  <button 
+    [disabled]="form.valid === false"
+    (click)="postMarcas()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+        <legend>Dados do Marca</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col pl-0">
+            <label for="NM_MRCA">Marca</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_MRCA"
+              formControlName="NM_MRCA"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_MRCA') + ' ' + onFieldRequired('NM_MRCA')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_MRCA')" message="Marcas é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+            <legend>Observação</legend>
+            <div class="form-row justify-content-center">
+              <div class="form-group col">
+                <label for="DS_OBSE" >Observação:</label>
+                <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+              </div>
+            </div>
+            <br>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

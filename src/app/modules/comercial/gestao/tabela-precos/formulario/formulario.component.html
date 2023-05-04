@@ -1,0 +1,517 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || !submittingForm || !submitAssocGrupo" >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row">
+    <div class="col-lg-6">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="mtc-title mb-2">Dados da tabela</div>
+        <hr>
+        <div class="form-row">
+          <div class="form-group col-lg-12">
+            <label for="nomePreco">Descrição da Tabela</label>
+            <input
+              class="form-control"
+              id="email"
+              type="text"
+              formControlName="nomePreco"
+              [ngClass]="onFieldError('nomePreco') + ' ' + onFieldRequired('nomePreco')">
+            <invalid-form-control [show]="onFieldInvalid('nomePreco')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="dataInicialVigencia">Dt Inicio Vigência</label>
+            <input
+              class="form-control"
+              id="dataInicialVigencia"
+              type="text"
+              formControlName="dataInicialVigencia"
+              bsDatepicker
+              [ngClass]="onFieldError('dataInicialVigencia') + ' ' + onFieldRequired('dataInicialVigencia')">
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="dataFinalVigencia">Dt Fim Vigência</label>
+            <input
+            class="form-control"
+            id="dataFinalVigencia"
+            type="text"
+            formControlName="dataFinalVigencia"
+            bsDatepicker
+            [ngClass]="onFieldError('dataFinalVigencia') + ' ' + onFieldRequired('dataFinalVigencia')">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="faixaDescontoComercial">Faixa de Desconto Comercial</label>
+            <input
+            class="form-control"
+            id="faixaDescontoComercial"
+            type="text"
+            formControlName="faixaDescontoComercial"
+            currencyMask
+            [options]="{ align: 'left', thousands: '.', decimal: ',', prefix: '', suffix: '%' }"
+            >
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="faixaDescontoGerencial">Faixa de Desconto Gerencial</label>
+            <input
+            class="form-control"
+            id="faixaDescontoGerencial"
+            type="text"
+            formControlName="faixaDescontoGerencial"
+            currencyMask
+            [options]="{ align: 'left', thousands: '.', decimal: ',', prefix: '', suffix: '%' }"
+            >
+          </div>
+        </div>
+
+        <hr>
+        <div class='mt-3' *ngIf="showGrupos && form.value.assocGrupos.length > 0" formArrayName="assocGrupos">
+          <div class="row">
+            <div class="col">
+              <div class="mtc-title">Grupos associados</div>
+              <custom-table [config]="tableConfigAssocGrupos">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th scope="col" style="width: 90%"></th>
+                    <th scope="col" style="width: 5%"></th>
+                    <th scope="col" style="width: 5%"></th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let item of assocGrupos.controls; let i = index" [formGroupName]="i" 
+                  onclick="var s = this.parentNode.querySelector('tr.table-active'); s && s.classList.remove('table-active'); this.classList.add('table-active');">
+                    <td style="width: 80%">
+                      {{ form.value.assocGrupos[i].codGrupo }} - {{ form.value.assocGrupos[i].nomeGrupo | uppercase }}
+                    </td>
+                    <td class="text-center" style="width: 5%" placement="left" tooltip="Alterar valores do grupo">
+                      <button type="button" class="btn-icon-sm" (click)="openModalPercent(percentmateriais, i, item)">
+                        <i class="fas fa-percent"></i>
+                      </button>
+                    </td>
+                    <td class="text-center" style="width: 5%" placement="left" tooltip="Materiais associados">
+                      <button type="button" class="btn-icon-sm" (click)="openModalMateriais(templatemateriais, i, item)">
+                        <i class="fas fa-question"></i>
+                      </button>
+                    </td>
+                    <td class="text-center" style="width: 5%" placement="left" tooltip="Editar">
+                      <button type="button" class="btn-icon-sm" (click)="openModal(template, i, item)">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                    </td>
+                    <td style="width: 5%">
+                      <button type="button" class="btn-icon-sm"  placement="left" (click)="onDeleteGrupo(i, item)" tooltip="Excluir">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+            </div>
+          </div>
+          <div class="row" *ngIf="showGrupos && form.value.assocGrupos.length === 0">
+            <div class="col">
+              <message
+                icon="fas fa-exchange-alt"
+                text="Nenhuma associação encontrada">
+              </message>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-6 border-left">
+      <div class="row mb-2">
+        <div class="col-lg-9">
+          <div class="mtc-title">Pesquisa grupos para associação</div>
+        </div>
+        <div class="col">
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              (click)="onFilter()"
+              [disabled]="searching === true">
+              <i class="fas fa-search"></i>
+              <span>Pesquisar</span>
+            </button>
+          </div>
+          <!-- <button type="button" class="btn btn-light" (click)='onFilter()'>Pesquisar</button> -->
+        </div>
+      </div>
+      <advanced-filter>
+        <form [formGroup]="formFilter">
+          <div class="form-row">
+            <div class="form-group col-lg-9">
+              <label for="grupo">Descrição do grupo</label>
+              <input
+                class="form-control"
+                id="idnomePreco"
+                type="text"
+                formControlName="grupo">
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="situacao">Situação</label>
+              <select
+                class="form-control custom-select"
+                id="codSituacao"
+                formControlName="situacao">
+                <option value="">Todos</option>
+                <option value="0">Inativo</option>
+                <option value="1">Ativo</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+
+      <div>
+        <div>
+          <div *ngIf="dados.length > 0">
+            <div class="row mb-2" >
+              <div class="col mt-auto">
+                <div class="mtc-title mb-0">Seleção de grupos</div>
+              </div>
+              <div class="col">
+                <div class="d-flex justify-content-end">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="onAssociarGrupos()"
+                    [disabled]="searching === true">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Associar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <custom-table [config]="tableConfigMateriais">
+                  <ng-template #thead let-thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        class="text-center"
+                        style="width: 5%">
+                        <btn-icon
+                          [icon]="toggleAll ? 'fas fa-check-square' : 'far fa-square'"
+                          size="small"
+                          (click)="onToggleAll()">
+                        </btn-icon>
+                      </th>
+                      <th scope="col" style="width: 95%">Grupo</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <tr *ngFor="let item of dados; let i = index;">
+                      <td class="text-center" style="width: 5%">
+                        <btn-icon
+                          [icon]="item.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                          size="small"
+                          (click)="onCheckGrupo(i, item)">
+                        </btn-icon>
+                      </td>
+                      <td
+                        class="hover"
+                        style="width: 95%"
+                        (click)="onCheckGrupo(i, item)">
+                        {{ item.nomeGrupo | uppercase }}
+                      </td>
+                    </tr>
+                  </ng-template>
+                </custom-table>
+              </div>
+            </div>
+          </div>
+            <div class="row" *ngIf="searching === true">
+              <div class="col">
+                <message
+                  icon="fas fa-cog fa-spin"
+                  text="Estamos pesquisando os materiais para você...">
+                </message>
+              </div>
+            </div>
+            <div *ngIf="searching === false">
+              <div class="row" *ngIf="dadosEmpty && dadosLoaded">
+                <div class="col">
+                  <message
+                    icon="fas fa-box-open"
+                    text="Nenhuma informação encontrada">
+                  </message>
+                </div>
+              </div>
+              <div class="row" *ngIf="dados.length === 0 && !firstSearch">
+                <div class="col">
+                  <message
+                    icon="fas fa-search"
+                    text="Preecha os campos acima para pesquisar materiais">
+                  </message>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+    </div>
+  </div>
+</app-body>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+    {{ this.codGrupo }} - {{ this.grupoNome }}
+    </h4>
+    <button type="button" class="close pull-right" (click)="closeModalUpdate(template)" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="form-row mb-2" [formGroup]="formPrecos" autocomplete="off">
+      <div class="form-group col-lg-6">
+        <label for="codEmpresa">Empresa</label>
+        <ng-select
+          type='text'
+          [searchable]="true"
+          [clearable]="false"
+          [items]="unidades"
+          [virtualScroll]="true"
+          [hideSelected]="true"
+          [closeOnSelect]="true"
+          placeholder="Selecione..."
+          bindLabel="nomeEmpresa"
+          bindValue="idEmpresa"
+          formControlName="codEmpresa"
+          >
+        </ng-select>
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="ufDestino">UF Destino</label>
+        <ng-select
+        type="text"
+        [searchable]="true"
+        [clearable]="false"
+        [items]="estados"
+        [virtualScroll]="true"
+        [hideSelected]="true"
+        [closeOnSelect]="true"
+        placeholder="Selecione..."
+        bindLabel="sigla"
+        bindValue="sigla"
+        formControlName="ufDestino"
+        >
+        </ng-select>
+      </div>
+      <div class="form-group col-lg-3">
+        <label for="valorMaterial">Valor</label>
+        <input
+          style="text-align: center;"
+          class="form-control"
+          type="text"
+          formControlName="valorMaterial"
+          currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }"
+          >
+      </div>
+      <div class="form-group col-lg-1 d-flex justify-content-center align-self-center mt-3">
+        <button type="button" class="btn-icon-sm d-flex justify-content-center align-middle" (click)="onAssociarPrecos()" tooltip="Adicionar Valor">
+        <i class="fas fa-plus"></i>
+        </button>
+      </div>
+    </form>
+    <custom-table [config]="tableConfigPrecos">
+      <ng-template #thead let-thead>
+        <tr>
+          <th scope="col" style="width: 40%">Empresa</th>
+          <th scope="col" style="width: 20%">UF Destino</th>
+          <th scope="col" style="width: 25%">Valor</th>
+          <th scope="col" style="width: 5%"></th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let item of precosEstado; let i = index">
+          <td style="width: 30%" >
+            {{ item.nomeEmpresa | uppercase }}
+          </td>
+          <td style="width: 20%">
+            {{ item.ufDestino | uppercase }}
+          </td>
+          <td style="width: 20%">
+            <span *ngIf="enableEditIndex != i || editMode == false">{{ item.valorMaterial | number:'1.2-2' }}</span>
+            <input *ngIf="editMode && enableEditIndex == i" [(ngModel)]="valorMaterialAlterado"
+            currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }" 
+            type="text" 
+            class="form-control" 
+            style="width: 100%">
+          </td>
+          <td>
+            <button *ngIf="enableEditIndex != i || editMode == false" type="button" class="btn-icon-sm" (click)="editMode = true;" (click)="enableEdition(i, item)" tooltip="Editar">
+              <i class="fas fa-edit"></i>
+            </button>
+          </td>
+          <td>
+            <button *ngIf="editMode && enableEditIndex == i" type="button" class="btn-icon-sm" (click)="onUpdateValor(item, i, valorMaterialAlterado); editMode = false" tooltip="Adicionar">
+              <i class="fas fa-check"></i>
+            </button>
+          </td>
+          <td>
+            <button *ngIf="editMode && enableEditIndex == i" type="button" class="btn-icon-sm" (click)="editMode = false" tooltip="Cancelar">
+              <i class="fas fa-times"></i>
+            </button>
+          </td>
+          <td>
+            <button type="button" class="btn-icon-sm" (click)="onDeleteValor(item, i)" tooltip="Excluir">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+    </custom-table>
+  </div>
+</ng-template>
+
+<ng-template #templatemateriais>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+    Materiais associados
+    </h4>
+    <button type="button" class="close pull-right" (click)="closeModal(templatemateriais)" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="height:350px; overflow-x: hidden; overflow-y: scroll;" (onClose)="select.handleClearClick()">
+    <label for="assocGrupos">Pesquisa:</label>
+    <ng-select
+        type="text"
+        [searchable]="true"
+        [clearable]="true"
+        [items]="materiaisAssoc"
+        [virtualScroll]="true"
+        [hideSelected]="false"
+        [closeOnSelect]="true"
+        (change)="changeFn(selection)" 
+        [(ngModel)]="selection"
+        placeholder="Selecione..."
+        bindLabel="nomeMaterial"
+        bindValue="codMaterial"
+        >
+        </ng-select>
+    <custom-table [config]="tableConfigPrecos" class="m-3">
+      <ng-template #thead let-thead>
+        <tr>
+          <th scope="col" style="width: 5%">Código</th>
+          <th scope="col" style="width: 50%">Material</th>
+          <th scope="col" style="width: 10%">Linha</th>
+          <th scope="col" style="width: 20%">Classe</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody *ngIf="!showMaterial">
+        <tr *ngFor="let item of materiaisAssoc; let i = index">
+          <td>
+            {{ item.codMaterial }}
+          </td>
+          <td style="width: 50%">
+            {{ item.nomeMaterial | uppercase }}
+          </td>
+          <td>
+            {{ item.nomeLinha | uppercase}}
+          </td>
+          <td style="width: 20%">
+            {{ item.nomeClasse | uppercase }}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody *ngIf="showMaterial">
+        <tr *ngFor="let item of materiaisAssoc2; let i = index">
+          <td>
+            {{ item.codMaterial }}
+          </td>
+          <td>
+            {{ item.nomeMaterial | uppercase }}
+          </td>
+          <td>
+            {{ item.nomeLinha | uppercase }}
+          </td>
+          <td>
+            {{ item.nomeClasse | uppercase }}
+          </td>
+        </tr>       
+      </ng-template>
+    </custom-table>    
+  </div>
+</ng-template>
+
+<ng-template #percentmateriais>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+    {{ this.codGrupo }} - {{ this.grupoNome }}
+    </h4>
+    <button type="button" class="close pull-right" (click)="closeModalUpdate(percentmateriais)" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="form-row mb-2" [formGroup]="formPrecos" autocomplete="off"> 
+      <div class="col-lg-3">
+      </div>      
+      <div class="form-group col-lg-6">
+        <label for="percent">Digite a porcentagem:</label>        
+        <input
+          #percent
+          formControlName="percentual"
+          style="text-align: center;"
+          class="form-control"
+          type="text"
+          placeholder="0.0%"
+          currencyMask [options]="{ align: 'center', prefix: '', suffix:'%', precision: 1, allowNegative: false }"
+          >
+      </div>
+      <div class="form-group col-lg-3 justify-content-center align-self-center mt-3">
+        <button type="button" class="btn-icon d-flex justify-content-center align-middle ml-1" (click)="onUpdatePercentagem(percent.value)" tooltip="Aumentar porcentagem de valor dos itens">
+        <i class="fas fa-redo"></i>
+        </button>
+      </div>      
+      <div class="col-lg-3"></div>
+    </form>   
+    <custom-table [config]="tableConfigPrecos">
+      <ng-template #thead let-thead>
+        <tr>
+          <th scope="col" style="width: 40%">Empresa</th>
+          <th scope="col" style="width: 20%">UF Destino</th>
+          <th scope="col" style="width: 25%">Valor</th>
+          <th scope="col" style="width: 5%"></th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let item of precosEstado; let i = index">
+          <td style="width: 30%" >
+            {{ item.nomeEmpresa | uppercase }}
+          </td>
+          <td style="width: 20%">
+            {{ item.ufDestino | uppercase }}
+          </td>
+          <td style="width: 20%">
+            <span>{{ item.valorMaterial | number:'1.2-2' }}</span>           
+          </td>          
+          <td></td>
+        </tr>
+      </ng-template>
+    </custom-table>        
+  </div>
+   
+</ng-template>

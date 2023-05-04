@@ -1,0 +1,102 @@
+<div  [hidden]="!isVisible" #scroll>
+  <div class="border rounded bg-white shadow-sm p-3">
+    <div class="col-12 d-flex justify-content-end">
+      <button
+      type="button"
+      class="btn-icon"
+      (click)="onClose()">
+      <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div [hidden]="loading" class="text-center dHeight d-flex justify-content-center align-items-center">
+      <div class="spinner-border text-dark"></div>
+    </div>
+    <div class="dHeight" [hidden]="!loading || noResult || !ocorrencia || transporte">
+      <div class="col-12 justify-content-between mb-3">
+        <div class="mtc-title mb-0">Ocorrências analítica</div>
+      </div>
+      <table class="table table-sm table-hover border-left border-right border-bottom text-center table-fixed">
+        <thead class="thead-light">
+          <tr>
+            <th class="align-middle">Número ocorrência</th>
+            <th class="align-middle">Data</th>
+            <th class="align-middle">Situação setor</th>
+            <th class="align-middle">Setor</th>
+            <th class="align-middle">Obra</th>
+            <th class="align-middle">Cliente</th>
+            <th class="align-middle">Descrição</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items | slice : begin : end; let i = index">
+            <td class="align-middle">{{ item?.NUMERO_OCORRENCIA }}</td>
+            <td class="align-middle">{{ item?.DATA }}</td>
+            <td class="align-middle">{{ item?.SITU_OCOR }}</td>
+            <td class="align-middle">{{ item?.NOME_SETOR }}</td>
+            <td class="align-middle">{{ item?.NOME_CLIENTE }}</td>
+            <td class="align-middle">{{ item?.NOME_OBRA }}</td>
+            <td class="align-middle">{{ item?.OCORRENCIA_DESC }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-center mt-3" *ngIf="!loading || !ocorrencia || transporte || items.length > itemsPerPage">
+        <pagination
+          [maxSize]="10"
+          [totalItems]="items?.length"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="dHeight" [hidden]="!loading || noResult || ocorrencia || !transporte">
+        <div class="col-12 justify-content-between mb-3">
+            <div class="mtc-title mb-0">Taxa de ocupação analítica</div>
+        </div>
+        <table class="table table-sm table-hover border-left border-right border-bottom text-center table-fixed">
+          <thead class="thead-light">
+            <tr>
+              <th class="align-middle">Número ficha</th>
+              <th class="align-middle">Data</th>
+              <th class="align-middle">Tipo de veículo</th>
+              <th class="align-middle">Placa</th>
+              <th class="align-middle">Motorista</th>
+              <th class="align-middle">Transportadora</th>
+              <th class="align-middle">Peso (t)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of items | slice : begin : end; let i = index">
+              <td class="align-middle">{{ item?.numeroFicha }}</td>
+              <td class="align-middle">{{ item?.dtFicha }}</td>
+              <td class="align-middle">{{ item?.tpVeiculo }}</td>
+              <td class="align-middle">{{ item?.placa }}</td>
+              <td class="align-middle">{{ item?.motorista }}</td>
+              <td class="align-middle">{{ item?.transportadora }}</td>
+              <td class="align-middle">{{ item?.peso }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-center mt-3" *ngIf=" !loading || !transporte || ocorrencia || items.length > itemsPerPage">
+          <pagination
+            [maxSize]="maxSize"
+            [totalItems]="items?.length"
+            (pageChanged)="onPageChanged($event)"
+            [(itemsPerPage)]="itemsPerPage"
+            [boundaryLinks]="true"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;">
+          </pagination>
+        </div>
+      </div>
+    <div [hidden]="!loading || !noResult" class="text-center dHeight d-flex justify-content-center align-items-center">
+      <empty-result message="Nenhuma informação encontrada"></empty-result>
+    </div>
+  </div>
+</div>

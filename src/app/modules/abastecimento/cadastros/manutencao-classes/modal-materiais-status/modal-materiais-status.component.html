@@ -1,0 +1,180 @@
+<div class="row mb-2 mt-2">
+  <div class="col-3">
+    <p style="font-size: 14px;">
+      <strong> CLASSE: </strong> {{ modal.NM_CLAS }}
+    </p>
+  </div>
+  <div class="col-4">
+    <p style="font-size: 14px;">
+      <strong> SUBLINHA: </strong> {{ modal.NM_SUB_LINH ? modal.NM_SUB_LINH : '-' }}
+    </p>
+  </div>
+  <div class="col-2">
+    <p style="font-size: 14px;">
+      <strong> LINHA: </strong> {{ modal.NM_LINH }}
+    </p>
+  </div>
+  <div class="col-2">
+    <p style="font-size: 14px;">
+      <strong> PER. INATIVO: </strong> 8
+    </p>
+  </div>
+</div>
+<div class="row">
+  <div
+    [ngClass]="{ 'col-12': !compressedTable, 'col-4 pr-0': compressedTable }"
+  >
+    <div class="table-responsive mt-2">
+      <custom-table subtitleBorder="true">
+        <ng-template #thead let-thead>
+          <tr>
+            <th nowrap (click)="sort('NM_EMPR_DEST')" class="hover text-center">
+              Tipo de Material
+              <span *ngIf="key == 'NM_EMPR_DEST'"><i [ngClass]="
+                    reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="key != 'NM_EMPR_DEST'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sort('NM_DEPO_DEST')" class="hover text-center">
+              Cód. Material
+              <span *ngIf="key == 'NM_DEPO_DEST'"><i [ngClass]="
+                    reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="key != 'NM_DEPO_DEST'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sort('NR_PEDI_ORIG')" class="hover text-center">
+              Desc. Material
+              <span *ngIf="key == 'NR_PEDI_ORIG'"><i [ngClass]="
+                    reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="key != 'NR_PEDI_ORIG'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sort('DT_PEDI_ORIG')" class="hover text-center" *ngIf="!compressedTable">
+              vol. Vendas
+              <span *ngIf="key == 'DT_PEDI_ORIG'"><i [ngClass]="
+                    reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="key != 'DT_PEDI_ORIG'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sort('DT_PREV_ENTR')" class="hover text-center" *ngIf="!compressedTable">
+              Est. Atual
+              <span *ngIf="key == 'DT_PREV_ENTR'"><i [ngClass]="
+                    reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="key != 'DT_PREV_ENTR'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sort('NM_FORN')" class="hover text-center" *ngIf="!compressedTable">
+              Carteira
+              <span *ngIf="key == 'NM_FORN'"><i [ngClass]="
+                    reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="key != 'NM_FORN'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap (click)="sort('TT_ITEM_PEDI_SOLI_TONE')" class="hover text-center" *ngIf="!compressedTable">
+              Plano de Corte
+              <span *ngIf="key == 'TT_ITEM_PEDI_SOLI_TONE'"><i [ngClass]="
+                    reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'
+                  "></i></span>
+              <span *ngIf="key != 'TT_ITEM_PEDI_SOLI_TONE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap  class="text-center" width="4%" *ngIf="!compressedTable"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dataModal | orderBy: key:reverse | slice: begin:end;">
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.NM_TIPO_MATE }}</td>
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.ID_MATE | number: '0.0'}}</td>
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.NM_MATE }}</td>
+            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.TT_VOLU_VEND | number: '0.3' }}</td>
+            <td nowrap class="text-center" *ngIf="!compressedTable">
+              {{ item.TT_ESTO_ATUA | number: '0.3' }}</td>
+            <td nowrap class="text-center" *ngIf="!compressedTable">
+              {{ item.TT_CART | number: '0.3' }}</td>
+            <td nowrap class="text-center" *ngIf="!compressedTable">
+              {{ item.TT_PLAN_CORT| number: '0.3' }}</td>
+            <td nowrap  class="text-center" width="4%" *ngIf="!compressedTable">
+              <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  tooltip="Detalhes"
+                  (click)="onDetail(item)"
+                  >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+  </div>
+  <div class="col-8">
+    <tabset [hidden]="!compressedTable">
+      <button
+        type="button"
+        class="btn-icon close position-absolute"
+        (click)="onCloseDetail()"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+      <tab heading="Detalhes">
+        <div
+          class="border-right border-left border-bottom px-3 pt-3"
+          style="overflow: auto; height: 338px;"
+        >
+          <custom-table>
+            <ng-template #thead let-thead>
+              <tr class="text-center">
+                <th scope="col">Empresa</th>
+                <th scope="col">Depósito</th>
+                <th scope="col">Vol. Vendas</th>
+                <th scope="col">Carteira</th>
+                <th scope="col">Plano de Corte</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let item of dataDetail">
+                <td nowrap class="text-center">{{ item.NM_EMPR }}</td>        
+                <td nowrap class="text-center">{{ item.NM_DEPO }}</td>        
+                <td nowrap class="text-center">{{ item.VOLU_VEND | number: '0.3' }}</td>         
+                <td nowrap class="text-center">{{ item.VOLU_CART | number: '0.3' }}</td>              
+                <td nowrap class="text-center">{{ item.PLAN_CORT | number: '0.3' }}</td>                  
+              </tr>
+              <tr>
+                <td nowrap class="text-center bg-dark text-white">TOTAL</td>        
+                <td nowrap class="text-center bg-dark text-white"></td>        
+                <td nowrap class="text-center bg-dark text-white">120,00</td>         
+                <td nowrap class="text-center bg-dark text-white">300,00</td>              
+                <td nowrap class="text-center bg-dark text-white">400,00</td>                  
+              </tr>
+            </ng-template>
+          </custom-table>
+          <div
+            *ngIf="noResultDetalhes"
+            class="text-center d-flex justify-content-center align-items-center p-5"
+            style="height: 80%;"
+          >
+            <empty-result
+              message="Nenhuma informação encontrada"
+            ></empty-result>
+          </div>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+  <div class="mt-2 mb-2" *ngIf="dataModal?.length > itemsPerPage">
+    Exibindo {{ begin + 1 }} a {{ end }} de
+    {{ dataModal?.length }}
+    <div class="d-flex">
+      <pagination [maxSize]="10" [totalItems]="dataModal?.length" (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+</div>
+<div *ngIf="noResultModal && !loadingDetalhesModal"
+  class="text-center d-flex justify-content-center align-items-center p-5" style="height: 80%;">
+  <empty-result message="Nenhuma informação encontrada"></empty-result>
+</div>

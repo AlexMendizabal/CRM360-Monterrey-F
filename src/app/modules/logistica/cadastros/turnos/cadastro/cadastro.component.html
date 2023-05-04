@@ -1,0 +1,153 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Turnos">
+  <button 
+    [disabled]="form.valid === false || loadingNavBar === true"
+    (click)="postTurnos()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-10 pt-2 mx-auto">
+        <legend>Dados do Turno</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-12 pl-0">
+            <label for="DS_TURN">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DS_TURN"
+              formControlName="DS_TURN"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('DS_TURN') + ' ' + onFieldRequired('DS_TURN')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('DS_TURN')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-12">
+            <div class="form-row justify-content-center">
+              <div class="col-auto d-flex pr-4">
+                <label class="my-auto mr-2">Horário mínimo</label>
+                <timepicker
+                  [showMeridian]="false"
+                  [showSpinners]="false"
+                  [mousewheel]="true"
+                  formControlName="HR_INIC"
+                  [ngClass]="onFieldError('HR_INIC') + ' ' + onFieldRequired('HR_INIC')"
+                  required
+                  >
+                </timepicker>
+              </div>
+              <div class="col-auto d-flex">
+                <label class="my-auto mr-2">Horário máximo</label>
+                <timepicker
+                  [showMeridian]="false"
+                  [showSpinners]="false"
+                  [mousewheel]="true"
+                  formControlName="HR_FINA"
+                  [ngClass]="onFieldError('HR_FINA') + ' ' + onFieldRequired('HR_FINA')"
+                  >
+                </timepicker>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group mx-4">
+            <div class="custom-control custom-checkbox my-auto">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="IN_SEGU"
+                formControlName="IN_SEGU"
+                (change)="onDias('IN_SEGU')">
+              <label class="custom-control-label" for="IN_SEGU"><strong>Segunda-feira</strong></label>
+            </div>
+          </div>
+          <div class="form-group mx-4">
+            <div class="custom-control custom-checkbox my-auto">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="IN_TERC"
+                formControlName="IN_TERC"
+                (change)="onDias('IN_TERC')">
+              <label class="custom-control-label" for="IN_TERC"><strong>Terça-feira</strong></label>
+            </div>
+          </div>
+          <div class="form-group mx-4">
+            <div class="custom-control custom-checkbox my-auto">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="IN_QUAR"
+                formControlName="IN_QUAR"
+                (change)="onDias('IN_QUAR')">
+              <label class="custom-control-label" for="IN_QUAR"><strong>Quarta-feira</strong></label>
+            </div>
+          </div>
+          <div class="form-group mx-4">
+            <div class="custom-control custom-checkbox my-auto">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="IN_QUIN"
+                formControlName="IN_QUIN"
+                (change)="onDias('IN_QUIN')">
+              <label class="custom-control-label" for="IN_QUIN"><strong>Quinta-feira</strong></label>
+            </div>
+          </div>
+          <div class="form-group mx-4">
+            <div class="custom-control custom-checkbox my-auto">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="IN_SEXT"
+                formControlName="IN_SEXT"
+                (change)="onDias('IN_SEXT')">
+              <label class="custom-control-label" for="IN_SEXT"><strong>Sexta-feira</strong></label>
+            </div>
+          </div>
+          <div class="form-group mx-4">
+            <div class="custom-control custom-checkbox my-auto">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="IN_SABA"
+                formControlName="IN_SABA"
+                (change)="onDias('IN_SABA')">
+              <label class="custom-control-label" for="IN_SABA"><strong>Sábado</strong></label>
+            </div>
+          </div>
+          <div class="form-group mx-4">
+            <div class="custom-control custom-checkbox my-auto">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="IN_DOMI"
+                formControlName="IN_DOMI"
+                (change)="onDias('IN_DOMI')">
+              <label class="custom-control-label" for="IN_DOMI"><strong>Domingo</strong></label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-10 pt-2 mx-auto">
+        <legend>Observação</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observação:</label>
+            <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

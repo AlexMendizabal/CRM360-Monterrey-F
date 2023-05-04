@@ -1,0 +1,59 @@
+<loader-spinner-full-screen *ngIf="redirectTo"></loader-spinner-full-screen>
+<div *ngIf="!redirectTo">
+  <div id="background-login"></div>
+  <div id="login" class="container">
+    <div class="row justify-content-center h-100">
+      <div class="my-auto">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="form-row justify-content-center mb-4">
+            <img [src]="srcLogoCliente" (error)="onLogoClienteError($event)" height="35">
+          </div>
+          <div class="form-row text-center mb-5">
+            <div class="col-12 mb-2">
+              <h4>{{ 'login.title' | translate }}</h4>
+            </div>
+            <div class="col-12">
+              <h6>{{ 'login.text' | translate }}</h6>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <input
+                type="text"
+                class="form-control"
+                id="usuario"
+                placeholder="{{ 'login.form.user' | translate }}"
+                formControlName="usuario">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group input-group col">
+              <input
+                [type]="passwordType"
+                class="form-control"
+                id="senha"
+                placeholder="{{ 'login.form.password' | translate }}"
+                formControlName="senha">
+              <div class="input-group-append">
+                <span class="input-group-text hover" (click)="onChangePasswordType()">
+                  <i id="password-icon" [ngClass]="passwordIconClass()"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <button
+                type="submit"
+                class="btn  btn-block"
+                [disabled]="!form.valid || waitingLoginResponse">
+                <span *ngIf="!waitingLoginResponse">{{ 'login.form.button' | translate }}</span>
+                <div class="spinner-border text-light" *ngIf="waitingLoginResponse"></div>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

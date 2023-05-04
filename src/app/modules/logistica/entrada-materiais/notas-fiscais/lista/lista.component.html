@@ -1,0 +1,728 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="NOTAS FISCAIS">
+  <button
+  type="button"
+  (click)="getExport()">
+  Exportar
+</button>
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="ID_LOGI_ENMA_NOFI">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_LOGI_ENMA_NOFI"
+                formControlName="ID_LOGI_ENMA_NOFI"
+                (keydown.enter)="onFilter()"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="NR_NOTA_FISC">NOTA FISCAL</label>
+              <input
+                type="text"
+                class="form-control"
+                id="NR_NOTA_FISC"
+                formControlName="NR_NOTA_FISC"
+                (keydown.enter)="onFilter()"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-md-5 pl-0">
+              <label for="NM_FORN">Fornecedor</label>
+              <input
+                type="text"
+                class="form-control"
+                id="NM_FORN"
+                formControlName="NM_FORN"
+                (keydown.enter)="onFilter()"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (keydown.enter)="onFilter()"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-md-1 pl-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                (keydown.enter)="onFilter()"
+                formControlName="TT_REGI_PAGI"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="DS_LOTE">Lote</label>
+              <input
+                type="text"
+                class="form-control"
+                id="DS_LOTE"
+                formControlName="DS_LOTE"
+                (keydown.enter)="onFilter()"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="CD_MATE">CÓDIGO DO MATERIAL</label>
+              <input
+                type="text"
+                class="form-control"
+                id="CD_MATE"
+                formControlName="CD_MATE"
+                (keydown.enter)="onFilter()"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-md-8 pl-0">
+              <label for="NM_MATE">MATERIAL</label>
+              <input
+                type="text"
+                class="form-control"
+                id="NM_MATE"
+                formControlName="NM_MATE"
+                (keydown.enter)="onFilter()"
+                placeholder="Digite..."
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="TP_DATA_INIC">Tipo Data Inicial</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tiposData"
+              [virtualScroll]="true"
+              labelForId="tipoData"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipoData"
+              formControlName="TP_DATA_INIC"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="TP_DATA_FINA">Tipo Data Final</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tiposData"
+              [virtualScroll]="true"
+              labelForId="tipoData"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipoData"
+              formControlName="TP_DATA_FINA"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-md-5 pl-0">
+              <label for="empresas">Empresa</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="empresas"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="loadingEmpresas"
+                labelForId="UUID_EMPR"
+                bindLabel="NM_FANT"
+                bindValue="ID"
+                id="UUID_EMPR"
+                formControlName="UUID_EMPR"
+                (change)="getDepositos({'ID_EMPR': $event?.ID || ''})"
+              >
+              </ng-select>
+            </div>
+            <div class="form-group col-md-3 pl-0">
+              <label for="statusRecebimento">Status de Recebimento</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="statusRecebimento"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                (keydown.enter)="onFilter()"
+                placeholder="Selecione..."
+                [loading]="loadingStatusRecebimento"
+                labelForId="ID_LOGI_ENMA_NOFI_STAT"
+                bindLabel="NM_STAT"
+                bindValue="ID_LOGI_ENMA_NOFI_STAT"
+                id="ID_LOGI_ENMA_NOFI_STAT"
+                formControlName="ID_LOGI_ENMA_NOFI_STAT">
+              </ng-select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="DT_INIC">Data Inicial</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="DT_INIC"
+                type="text"
+                (keydown.enter)="onFilter()"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="DT_INIC"
+                >
+              </div>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="DT_FINA">Data Final</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="DT_FINA"
+                type="text"
+                (keydown.enter)="onFilter()"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="DT_FINA"
+                >
+              </div>
+            </div>
+            <div class="form-group col-md-5 pl-0">
+              <label for="depositos">Deposito</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="depositos"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="loadingDepositos"
+                labelForId="UUID_DEPO"
+                bindLabel="NM_DEPO"
+                bindValue="ID"
+                id="UUID_DEPO"
+                formControlName="UUID_DEPO"
+              >
+              </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row" >
+    <div class="col-md-4 mb-4 mb-md-0">
+      <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+        <div class="bg-primary rounded-circle text-white icon-40 my-auto"><i class="fas fa-file"></i></div>
+        <div class="text-right" [hidden]="!cardsLoading || notasEmpty" >
+          <h5
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="notas"
+          [countFrom]="0"
+          [duration]="2"
+          (countoChange)="countoNotas = $event">
+          {{ countoNotas | number:'1.0-0' }}
+          </h5>
+          <div class="text-muted small font-weight-bold">TOTAL DE NOTAS FISCAIS ENCONTRADAS</div>
+        </div>
+        <div class="text-right" *ngIf="notasEmpty">
+          <h5 class="font-weight-bolder mb-1">0</h5>
+          <div class="text-muted small font-weight-bold">TOTAL DE NOTAS FISCAIS ENCONTRADAS</div>
+        </div>
+        <div class="text-right my-auto" *ngIf="!cardsLoading && !notasEmpty">
+          <div class="spinner-border text-dark"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4 mb-md-0">
+      <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3" (click)="fichasNaoConformeChange()">
+        <div class="bg-orange rounded-circle text-white icon-40 my-auto"><i class="fas fa-file-excel"></i></div>
+        <div class="text-right" [hidden]="!cardsLoading || fichasNaoConformeEmpty">
+          <h5
+            class="font-weight-bolder mb-1"
+            counto
+            [step]="30"
+            [countTo]="fichasNaoConforme"
+            [countFrom]="0"
+            [duration]="2"
+            (countoChange)="countoFichasNaoConforme = $event">
+            {{ countoFichasNaoConforme | number:'1.0-0' }}
+          </h5>
+          <div class="text-muted small font-weight-bold">TOTAL DE NOTAS FISCAIS COM FNC</div>
+        </div>
+        <div class="text-right" *ngIf="fichasNaoConformeEmpty">
+          <h5 class="font-weight-bolder mb-1">0</h5>
+          <div class="text-muted small font-weight-bold">TOTAL DE NOTAS FISCAIS COM FNC</div>
+        </div>
+        <div class="text-right my-auto" *ngIf="!cardsLoading && !fichasNaoConformeEmpty">
+          <div class="spinner-border text-dark"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4 mb-md-0">
+      <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3" (click)="openModalDuplicadas(modalDuplicadas)">
+        <div class="bg-warning rounded-circle text-white icon-40 my-auto"><i class="fas fa-exclamation"></i></div>
+        <div class="text-right" [hidden]="!cardsLoading || duplicadosEmpty">
+          <h5
+            class="font-weight-bolder mb-1"
+            counto
+            [step]="30"
+            [countTo]="duplicados"
+            [countFrom]="0"
+            [duration]="2"
+            (countoChange)="countoDuplicados = $event">
+            {{ countoDuplicados | number:'1.0-0' }}
+          </h5>
+          <div class="text-muted small font-weight-bold">TOTAL DE LOTES DUPLICADAS</div>
+        </div>
+        <div class="text-right" *ngIf="duplicadosEmpty">
+          <h5 class="font-weight-bolder mb-1">0</h5>
+          <div class="text-muted small font-weight-bold">TOTAL DE LOTES DUPLICADAS</div>
+        </div>
+        <div class="text-right my-auto" *ngIf="!cardsLoading && !duplicadosEmpty">
+          <div class="spinner-border text-dark"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0 col-md-12" >
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('ID_LOGI_ENMA_NOFI')">
+                <thead-sorter value="ID" [active]="ORDE_BY == 'ID_LOGI_ENMA_NOFI'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('NR_NOTA_FISC_REFE')">
+                <thead-sorter value="Nota Fiscal" [active]="ORDE_BY == 'NR_NOTA_FISC_REFE'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('SG_ORIG')">
+                <thead-sorter value="Origem" [active]="ORDE_BY == 'SG_ORIG'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('NM_FORN')">
+                <thead-sorter value="Fornecedor" [active]="ORDE_BY == 'NM_FORN'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('NM_STAT')">
+                <thead-sorter value="Status" [active]="ORDE_BY == 'NM_STAT'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('NM_EMPR')">
+                <thead-sorter value="Empresa" [active]="ORDE_BY == 'NM_EMPR'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('NM_DEPO')">
+                <thead-sorter value="Depósito" [active]="ORDE_BY == 'NM_DEPO'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('DT_EMIS_NOTA_FISC')">
+                <thead-sorter value="Data de Emissão" [active]="ORDE_BY == 'DT_EMIS_NOTA_FISC'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th scope="col" style="width:140px"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let nota of notasFiscais" >
+              <td  [ngClass]="nota.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+              {{nota.ID_LOGI_ENMA_NOFI }}
+              </td>
+              <td >
+                <span *ngIf="nota?.NR_NOTA_FISC_REFE">{{ nota.NR_NOTA_FISC_REFE }}</span>
+                <span *ngIf="!nota?.NR_NOTA_FISC_REFE">{{ nota.NR_NOTA_FISC }}</span>
+              </td>
+              <td >{{ nota.SG_ORIG | uppercase }}</td>
+              <td >{{ nota.NM_FORN | uppercase }}</td>
+              <td >{{ nota.NM_STAT | uppercase }}</td>
+              <td >{{ nota.NM_EMPR | uppercase }}</td>
+              <td >{{ nota.NM_DEPO | uppercase }}</td>
+              <td >{{ nota.DT_EMIS_NOTA_FISC | date: 'dd/MM/yyyy' }}</td>
+              <td class="align-middle">
+                <span class="mx-2" [tooltip]="nota.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="changeType(nota)">
+                    <i [ngClass]="nota.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                  </button>
+                </span>
+                <span class="mx-2" tooltip="Gerar FNC"  placement="left" container="body">
+                  <button 
+                    type="button" 
+                    [ngClass]="nota.IN_FHNC == '1' ? 'btn-icon-sm buttonGerarFicha' : 'btn-icon-sm'"
+                    (click)="gerarFicha(nota.ID_LOGI_ENMA_NOFI)"
+                  >
+                    <i class="fas fa-file-excel " ></i>
+                  </button>
+                </span>
+                <span class="mx-2" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', nota.ID_LOGI_ENMA_NOFI]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+                <span class="mx-2"  tooltip="Detalhe da Nota" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm" (click)="openModalDetalhes(detalhesNotaFiscal, nota)">
+                    <i class="fas fa-search"></i>                  
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div *ngIf="totalItems > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+  <ng-template #detalhesNotaFiscal >
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Detalhes da Nota Fiscal  -  Nº {{notaFiscalSelecionada?.NR_NOTA_FISC}}</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingMateriais || loadingAlteracoes">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModalDetalhes()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body" >
+      <tabset>
+        <tab heading="Dados cadastrais">
+          <div class="border-right border-left border-bottom px-3 pt-3">
+            <div class="modal-body" >
+              <div>
+                <div class="form-row">
+                  <div class="form-group col-lg-2">
+                    <label>ID</label>
+                    <div *ngIf="notaFiscalSelecionada?.ID_LOGI_ENMA_NOFI == null">NÃO INFORMADO</div>
+                    <div *ngIf="notaFiscalSelecionada?.ID_LOGI_ENMA_NOFI != null">{{notaFiscalSelecionada?.ID_LOGI_ENMA_NOFI}}</div>
+                  </div>
+                  <div class="form-group col-lg-2">
+                    <label>Nota Fiscal de Remessa</label>
+                    <div *ngIf="notaFiscalSelecionada?.NR_NOTA_FISC_REFE == null">NÃO INFORMADO</div>
+                    <div *ngIf="notaFiscalSelecionada?.NR_NOTA_FISC_REFE != null">{{notaFiscalSelecionada?.NR_NOTA_FISC_REFE}}</div>
+                  </div>
+                  <div class="form-group col-lg-3">
+                    <label>Status de Recebimento</label>
+                    <div *ngIf="notaFiscalSelecionada?.NM_STAT == null">NÃO INFORMADO</div>
+                    <div *ngIf="notaFiscalSelecionada?.NM_STAT != null"> {{notaFiscalSelecionada?.NM_STAT | uppercase }}</div>
+                  </div>
+                  <div class="form-group col-lg-5">
+                    <label>Fornecedor</label>
+                    <div *ngIf="notaFiscalSelecionada?.NM_FORN == null">NÃO INFORMADO</div>
+                    <div *ngIf="notaFiscalSelecionada?.NM_FORN != null">{{ notaFiscalSelecionada?.NM_FORN}}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-2">
+                    <label>Data de Emissão</label>
+                    <div *ngIf="notaFiscalSelecionada?.DT_EMIS_NOTA_FISC == null">NÃO INFORMADO</div>
+                    <div *ngIf="notaFiscalSelecionada?.DT_EMIS_NOTA_FISC != null">{{ notaFiscalSelecionada?.DT_EMIS_NOTA_FISC | date: 'dd/MM/yyyy' }}</div>
+                  </div>
+                  <div class="form-group col-lg-2">
+                    <label>Data de Recebimento</label>
+                    <div *ngIf="notaFiscalSelecionada?.DT_RECE == null">NÃO INFORMADO</div>
+                    <div *ngIf="notaFiscalSelecionada?.DT_RECE != null">{{ notaFiscalSelecionada?.DT_RECE | date: 'dd/MM/yyyy' }}</div>
+                  </div>
+                  <div class="form-group col-lg-3">
+                    <label>Data de Entrada</label>
+                    <div *ngIf="notaFiscalSelecionada?.DT_ENTR == null">NÃO INFORMADO</div>
+                    <div *ngIf="notaFiscalSelecionada?.DT_ENTR != null">{{ notaFiscalSelecionada?.DT_ENTR | date: 'dd/MM/yyyy' }}</div>
+                  </div>
+                  <div class="form-group col-lg-2">
+                    <label>Empresa</label>
+                    <div *ngIf="notaFiscalSelecionada?.NM_EMPR == null">NÃO INFORMADO</div>
+                    <div *ngIf="notaFiscalSelecionada?.NM_EMPR != null">{{ notaFiscalSelecionada?.NM_EMPR }}</div>
+                  </div>
+                  <div class="form-group col-lg-3">
+                    <label>Depósito</label>
+                    <div *ngIf="notaFiscalSelecionada?.NM_DEPO == null">NÃO INFORMADO</div>
+                    <div *ngIf="notaFiscalSelecionada?.NM_DEPO != null">{{ notaFiscalSelecionada?.NM_DEPO }}</div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div [hidden]="!loadingMateriais" class="col-lg-12 text-muted ">
+                <p><strong>Buscando os materiais da Nota Fiscal...</strong></p>
+              </div>
+              <custom-table class="text-center" *ngIf="!loadingMateriais && !noMateriais">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th>ID </th>
+                    <th>Sequência</th>
+                    <th>Lote</th>
+                    <th>Cód. Material</th>
+                    <th>Material</th>
+                    <th>Classe</th>
+                    <th>Unidade de Medida</th>
+                    <th>Quantidade</th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let item of materiais">
+                    <td>{{item.ID_MATE}}</td>
+                    <td>{{item.SEQU_MATE}}</td>
+                    <td *ngIf="item.DS_LOTE != null" >{{item.DS_LOTE}}</td>
+                    <td *ngIf="item.DS_LOTE == null" >NÃO INFORMADO</td>
+                    <td>{{item.CD_MATE}}</td> 
+                    <td>{{item.NM_MATE}}</td>
+                    <td>{{item.NM_CLAS}}</td>
+                    <td>{{item.DS_UNID_MEDI}}</td>
+                    <td>{{item.TT_MATE | number:'1.3-3' }}</td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+              <br><hr>
+              <div class="form-row">
+                <div class="form-group col">
+                  <label>Usuário Responsável Pelo Cadastro</label>
+                  <div *ngIf="notaFiscalSelecionada?.NR_MATR == null">NÃO INFORMADO</div>
+                  <div *ngIf="notaFiscalSelecionada?.NR_MATR != null">{{notaFiscalSelecionada?.NR_MATR}} - {{ notaFiscalSelecionada?.NM_USUA }}</div>
+                </div>
+                <div class="form-group col">
+                  <label>Data do Cadastro</label>
+                  <div *ngIf="notaFiscalSelecionada?.DT_INCL == null">NÃO INFORMADO</div>
+                  <div *ngIf="notaFiscalSelecionada?.DT_INCL != null">{{ notaFiscalSelecionada?.DT_INCL | date: 'dd/MM/yyyy HH:mm'}}</div>
+                </div>
+                <div class="form-group col">
+                  <label>Origem</label>
+                  <div *ngIf="notaFiscalSelecionada?.SG_ORIG == null">NÃO INFORMADO</div>
+                  <div *ngIf="notaFiscalSelecionada?.SG_ORIG != null">{{ notaFiscalSelecionada?.SG_ORIG }}</div>
+                </div>
+              </div>
+              <div [hidden]="loadingMateriais || !noMateriais" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+                <empty-result message="Nenhum material encontrado"></empty-result>
+              <br>
+              </div>
+            </div>
+          </div>
+        </tab>
+        <tab heading="Alterações da Nota Fiscal">
+          <div class="border-right border-left border-bottom px-3 pt-3" >
+            <div [hidden]="!loadingAlteracoes" class="col-lg-12 text-muted ">
+              <p><strong>Buscando as alterações da Nota Fiscal...</strong></p>
+            </div>
+            <div class="ScrollHistorico">
+              <accordion  *ngFor="let alteracao of alteracoes" [hidden]="loadingAlteracoes || noAlteracoes">
+                <accordion-group class="mb-2" [heading]="titleHistorico(alteracao)" >
+                  <div class="form-row">
+                    <div *ngIf="typeChange(alteracao)" class="col-lg-12 text-muted ">
+                      <p><strong>Alteração realizada apenas nos materiais</strong></p>
+                    </div>
+                    <div class="form-group col-md-3" *ngIf="alteracao.NR_NOTA_FISC != null">
+                      <label>NOTA FISCAL</label>
+                      <div >{{ alteracao.NR_NOTA_FISC }}</div>
+                    </div>
+                    <div class="form-group col-md-3" *ngIf="alteracao.NR_NOTA_FISC_REFE != null">
+                      <label>NOTA FISCAL REMESSA</label>
+                      <div >{{ alteracao.NR_NOTA_FISC_REFE }}</div>
+                    </div>
+                    <div class="form-group col-md-6" *ngIf="alteracao.NM_STAT != null">
+                      <label>STATUS DE RECEBIMENTO</label>
+                      <div >{{ alteracao.NM_STAT }}</div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6" *ngIf="alteracao.NM_EMPR != null">
+                      <label>EMPRESA</label>
+                      <div>{{ alteracao.NM_EMPR }}</div>
+                    </div>
+                    <div class="form-group col-md-6" *ngIf="alteracao.NM_FORN != null">
+                      <label>FORNECEDOR</label>
+                      <div>{{ alteracao.NM_FORN }}</div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6" *ngIf="alteracao.DT_EMIS_NOTA_FISC != null">
+                      <label>DATA DE EMISSÃO</label>
+                      <div>{{ alteracao.DT_EMIS_NOTA_FISC | date: 'dd/MM/yyyy HH:mm'}}</div>
+                    </div>
+                    <div class="form-group col-md-6" *ngIf="alteracao.IN_STAT != null">
+                      <label>SITUAÇÃO</label>
+                      <div *ngIf="alteracao.IN_STAT == 0" class="text-danger">INATIVO</div>
+                      <div *ngIf="alteracao.IN_STAT != 0" class="text-success">ATIVO</div>
+                    </div>
+                  </div>
+                  <div class="form-row" *ngIf="alteracao.DS_OBSE != null">
+                    <div class="form-group col-md-12" >
+                      <label>OBSERVAÇÃO</label>
+                      <textarea class="form-control" [value]="alteracao.DS_OBSE" disabled>
+                      </textarea><br>
+                    </div>
+                  </div>
+                </accordion-group>
+              </accordion>
+              <div [hidden]="loadingAlteracoes || !noAlteracoes" class="text-center d-flex justify-content-center align-items-center mb-2" style="height: 80%">
+                <empty-result message="Nenhuma alteração encontrada"></empty-result>
+              </div>
+            </div>
+          </div>
+        </tab>
+        <tab heading="Alterações dos Materiais">
+          <div class="border-right border-left border-bottom px-3 pt-3" >
+            <div [hidden]="!loadingHistoricoMateriais" class="col-lg-12 text-muted ">
+              <p><strong>Buscando as alterações da Nota Fiscal...</strong></p>
+            </div>
+            <div class="ScrollHistorico">
+              <accordion  *ngFor="let alteracaoMateriais of historicoMateriais" [hidden]="loadingHistoricoMateriais || hasHistoricoMateriais()">
+                <accordion-group class="mb-2" [heading]="titleHistorico(alteracaoMateriais)" >
+                  <custom-table class="text-center" *ngIf="!hasHistoricoMateriais()">
+                    <ng-template #thead let-thead>
+                      <tr *ngIf="alteracaoMateriais.SEQU_MATE">
+                        <th>ID </th>
+                        <th>Sequência</th>
+                        <th>Lote</th>
+                        <th>Material</th>
+                        <th>Classe</th>
+                        <th>Unidade de Medida</th>
+                        <th>Quantidade</th>
+                      </tr>
+                      <tr *ngIf="!alteracaoMateriais.SEQU_MATE">
+                        <th>MATERIAL REMOVIDO DA NOTA FISCAL</th>
+                        <th>Lote</th>
+                        <th>Classe</th>
+                        <th>Unidade de Medida</th>
+                        <th>Quantidade</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template #tbody let-tbody>
+                      <tr *ngIf="alteracaoMateriais.SEQU_MATE">
+                        <td>{{alteracaoMateriais.ID_MATE}}</td>
+                        <td>{{alteracaoMateriais.SEQU_MATE}}</td>
+                        <td>{{alteracaoMateriais.DS_LOTE}}</td>
+                        <td>{{alteracaoMateriais.CD_MATE}} - {{alteracaoMateriais.NM_MATE}}</td>
+                        <td>{{alteracaoMateriais.NM_CLAS}}</td>
+                        <td>{{alteracaoMateriais.DS_UNID_MEDI}}</td>
+                        <td>{{alteracaoMateriais.TT_MATE | number:'1.3-3' }}</td>
+                      </tr>
+                      <tr *ngIf="!alteracaoMateriais.SEQU_MATE">
+                        <td>{{alteracaoMateriais.CD_MATE}} - {{alteracaoMateriais.NM_MATE}}</td>
+                        <td>{{alteracaoMateriais.DS_LOTE}}</td>
+                        <td>{{alteracaoMateriais.NM_CLAS}}</td>
+                        <td>{{alteracaoMateriais.DS_UNID_MEDI}}</td>
+                        <td>{{alteracaoMateriais.TT_MATE | number:'1.3-3' }}</td>
+                      </tr>
+                    </ng-template>
+                  </custom-table>
+                </accordion-group>
+              </accordion>
+              <div [hidden]="loadingHistoricoMateriais || !hasHistoricoMateriais() " class="text-center d-flex justify-content-center align-items-center mb-2" style="height: 80%">
+                <empty-result message="Nenhuma alteração encontrada"></empty-result>
+              </div>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+  </ng-template>
+  <ng-template #modalDuplicadas >
+    <div class="modal-header" >
+      <h4 class="modal-title pull-left">Lotes Duplicados</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModalDuplicadas()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <logistica-entrada-materiais-notas-fiscais-duplicadas>
+
+    </logistica-entrada-materiais-notas-fiscais-duplicadas>
+  </ng-template>
+</app-body>

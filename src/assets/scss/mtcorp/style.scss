@@ -1,0 +1,121 @@
+@import '../colors';
+@import 'backgrounds';
+@import 'buttons';
+@import 'core';
+@import 'types';
+
+body {
+  background-color: $white;
+  color: $black;
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  margin: 0;
+  overflow-y: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+b {
+  font-weight: 500 !important;
+}
+strong {
+  font-weight: 700 !important;
+}
+
+button {
+  &:focus {
+    outline: unset !important;
+  }
+}
+
+.hover {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.legend {
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  display: flex;
+  margin-right: 5px;
+  padding: 4px;
+  &.active.green {
+    border-color: $green;
+  }
+  &.active.blue {
+    border-color: $blue;
+  }
+  &.active.yellow {
+    border-color: $golden;
+  }
+  &.active.red {
+    border-color: $red;
+  }
+  &.active.gray {
+    border-color: $medium-gray;
+  }
+  .square {
+    border-radius: 0.25rem;
+    height: 15px;
+    margin-bottom: auto;
+    margin-top: auto;
+    width: 15px;
+  }
+  .text {
+    line-height: 15px;
+    margin-top: auto;
+    margin-left: 5px;
+    margin-bottom: auto;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  &.green {
+    .square {
+      background-color: $green;
+    }
+    .text {
+      color: $green;
+    }
+  }
+  &.blue {
+    .square {
+      background-color: $blue;
+    }
+    .text {
+      color: $blue;
+    }
+  }
+  &.yellow {
+    .square {
+      background-color: $golden;
+    }
+    .text {
+      color: $golden;
+    }
+  }
+  &.red {
+    .square {
+      background-color: $red;
+    }
+    .text {
+      color: $red;
+    }
+  }
+  &.gray {
+    .square {
+      background-color: $medium-gray;
+    }
+    .text {
+      color: $medium-gray;
+    }
+  }
+}
+
+.icon-40 {
+  align-items: center;
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  width: 40px;
+}

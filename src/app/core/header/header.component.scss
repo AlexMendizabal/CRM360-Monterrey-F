@@ -1,0 +1,60 @@
+::ng-deep {
+  @import '../../../assets/scss/colors';
+  @import '../../../assets/scss/variables';
+
+  #navbar {
+    background-color: $purpleMtCorp;
+    height: $navbar-size;
+    padding: 0.4rem 1rem 0.4rem 3.5rem;
+    z-index: 1091;
+
+    // #logo-manetoni{
+    //   background-color: $orangeMtCorp;
+    // }
+    .version{
+      color: white;
+    }
+    .nav-item {
+      margin: 0px 5px;
+      .nav-link {
+        align-items: center;
+        background-color: transparent;
+        border: unset;
+        border-radius: 50%;
+        color: rgba($orangeMtCorp, 0.75) !important;
+        display: flex;
+        font-size: 1rem;
+        justify-content: center;
+        height: 35px;
+        padding: 0px !important;
+        width: 35px;
+        &:hover {
+          background-color: rgba($white, 0.1);
+          color: $white !important;
+        }
+        &:focus {
+          outline: unset;
+        }
+      }
+      
+      .btn-group {
+        border: unset !important;
+        border-radius: unset !important;
+      }
+    }
+    #spinner {
+      display: flex;
+      margin-right: 1.25rem;
+      .spinner-border {
+        border-width: 0.2rem;
+        color: rgba($white, 0.75);
+        margin-top: auto;
+        margin-bottom: auto;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+
+}

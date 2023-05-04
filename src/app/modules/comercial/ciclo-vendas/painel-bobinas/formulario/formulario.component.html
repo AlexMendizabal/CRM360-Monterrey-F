@@ -1,0 +1,318 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro de Materiais">
+  <button 
+    [disabled]="form.valid === false || form.value.codCliente == null"
+    (click)="postPainelBobinas()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div >
+    <blockquote class="blockquote mx-4 text-center" >
+      <p class="text-primary mb-0" [hidden] ="tipoForm != 1">BOBINA</p>
+      <p class="text-primary mb-0" [hidden] ="tipoForm != 2">CORTE ESPECIAL</p>
+      <p class="text-primary mb-0" [hidden] ="tipoForm != 3">REBAIXAMENTO</p>
+    </blockquote>
+  </div>
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-12">
+        <legend>Materiais</legend>
+        <custom-table  [config]="tableConfig" class="text-center">
+          <ng-template #thead let-thead>
+            <tr>
+              <th>Lote</th>
+              <th>Material</th>
+              <th>Empresa</th>
+              <th>Data de Entrada do Lote</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let material of materiaisSelecionados">
+              <td [ngClass]="material.situacao == 'Disponível' ? 'border-success' : 'border-danger'">{{ material.descLote | uppercase }}</td>
+              <td>{{ material.codMaterial }} - {{ material.nomeMaterial | uppercase }}</td>
+              <td>{{ material.nomeEmpresa | uppercase }}</td>
+              <td>{{ material.dataEntradaLote | date:'dd/MM/yyyy HH:mm' }}</td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-12">
+        <legend>Dados do Cliente</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-5 pl-0">
+            <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+              <label class="my-auto" for="nomeCliente">Cliente</label>
+              <div class="my-auto text-uppercase" style="font-size: 10px" >
+                <a
+                  class="text-primary"
+                  href="javascript:void(0)"
+                  (click)="openModal(selecionarCliente)">
+                  <strong>Selecionar</strong>
+                </a>
+              </div>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              id="nomeCliente"
+              formControlName="nomeCliente"
+              placeholder="SELECIONE"
+              [ngClass]="onFieldError('nomeCliente') + ' ' + onFieldRequired('nomeCliente')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('nomeCliente')" message="Cliente é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-2 pl-0 ">
+            <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+              <label class="my-auto" for="codContato">Contato responsável</label>
+              <div class="my-auto text-uppercase" style="font-size: 11px" *ngIf="form.value.codCliente != null">
+                <a
+                  class="text-secondary"
+                  href="javascript:void(0)"
+                  
+                  (click)="onDetalhesContato()">
+                  <strong>Detalle</strong>
+                </a>
+              </div>
+            </div>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="contatos"
+              formControlName="codContato"
+              [virtualScroll]="true"
+              bindLabel="nomeContato"
+              bindValue="codContato"
+              [loading]="loadingContato"
+              loadingText="Carregando..."
+              >
+            </ng-select>
+          </div>
+          <div class="form-group col-lg-5 pl-0 ">
+            <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+              <label class="my-auto" for="codEndereco">Local de entrega</label>
+              <div class="my-auto text-uppercase" style="font-size: 11px" *ngIf="form.value.codCliente != null">
+                <a 
+                  class="text-secondary"
+                  href="javascript:void(0)"
+                  (click)="onDetalhesLocalEntrega()">
+                  <strong>Detalle</strong>
+                </a>
+              </div>
+            </div>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="locaisEntrega"
+              formControlName="codEndereco"
+              [virtualScroll]="true"
+              bindLabel="descricao"
+              bindValue="codEndereco"
+              [loading]="locaisEntregaLoader"
+              loadingText="Carregando..."
+              groupBy="tipo"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-lg-5 pl-0 ">
+            <label for="codTransportadora">Transportadora</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="transportadoras"
+              formControlName="codTransportadora"
+              [virtualScroll]="true"
+              [loading]="loadingTransportadora"
+              bindLabel="nomeTransportadora"
+              bindValue="codTransportadoraTid"
+              [ngClass]="onFieldError('codTransportadora') + ' ' + onFieldRequired('codTransportadora')">
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('codTransportadora')" message="Transportadora é obrigatório."></invalid-form-control>
+          </div>
+          <!-- <div class="form-group col-md-5 pl-0">
+            <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+              <label class="my-auto" for="NM_TRAS">Trasportadora</label>
+              <div class="my-auto text-uppercase" style="font-size: 10px" >
+                <a
+                  class="text-primary"
+                  href="javascript:void(0)"
+                  (click)="openModal(selecionarNotaFiscal)">
+                  <strong>Selecionar</strong>
+                </a>
+              </div>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_TRAS"
+              formControlName="NM_TRAS"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_TRAS') + ' ' + onFieldRequired('NM_TRAS')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_TRAS')" message="Trasportadora é obrigatório."></invalid-form-control>
+          </div> -->
+          <div class="form-group col-md-2 pl-0">
+            <label for="nfMae">Nota Fiscal Mãe</label>
+            <select 
+            class="form-control custom-select"
+            id="nfMae"
+            formControlName="nfMae"
+            [ngClass]="onFieldError('nfMae') + ' ' + onFieldRequired('nfMae')"
+          >
+            <option value ='1' >Sim</option>
+            <option value ='0'>Não</option>
+          </select>
+          <invalid-form-control [show]="onFieldInvalid('nfMae')" message="Nota fiscal mãe é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-2 pl-0">
+            <label for="formasPagamento">Forma de Pagamento</label>
+            <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="formasPagamento"
+            [loading]="loadingFormasPagamento"
+            formControlName="codFormaPagamento"
+            [virtualScroll]="true"
+            bindLabel="descricao"
+            bindValue="codFormaPagamento"
+            [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired('codFormaPagamento')">
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')" message="Forma de pagamento é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-1 pl-0">
+            <label for="aliquotaIcms">Aliquota ICMS</label>
+            <input
+              type="text"
+              class="form-control"
+              id="aliquotaIcms"
+              formControlName="aliquotaIcms"
+              currencyMask [options]="{ align: 'left', suffix: ' %' , thousands: '.', decimal: ',', precision: 2, prefix: '' }"
+              [ngClass]="onFieldError('aliquotaIcms') + ' ' + onFieldRequired('aliquotaIcms')"
+            >
+          <invalid-form-control [show]="onFieldInvalid('valorMaterial')" message="Aliquota é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-2 pl-0">
+            <label for="valorMaterial">Preço do Material</label>
+            <input
+              type="text"
+              class="form-control"
+              id="valorMaterial"
+              formControlName="valorMaterial"
+              currencyMask [options]="{ align: 'left', prefix: 'R$ ' , thousands: '.', decimal: ',' }"
+              [ngClass]="onFieldError('valorMaterial') + ' ' + onFieldRequired('valorMaterial')"
+            >
+          <invalid-form-control [show]="onFieldInvalid('valorMaterial')" message="Preço é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </fieldset>
+    </fieldset>
+  </form>
+  <ng-template #selecionarCliente>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Busqueda de clientes</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingClientes">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <advanced-filter>
+        <form [formGroup]="formClientes">
+          <div class="form-row">
+            <div class="form-group col-3">
+              <label for="situacao">Situação</label>
+              <select
+                class="form-control custom-select"
+                formControlName="situacao"
+              >
+                <option value="Ativo">Ativo</option>
+                <option value="Inativo">Inativo</option>
+                <option value="Potenci">Potencial</option>
+                <option value="Arquivo">Arquivado</option>
+              </select>
+            </div>
+            <div class="form-group col-4">
+              <label for="cdItem">BUSCAR POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="1">CÓDIGO, NOME FANTASIA OU RAZÃO SOCIAL</option>
+                <option value="2" selected>CNPJ</option>
+              </select>
+            </div>
+
+            <div class="form-group col-5">
+              <label>TERMO DE PESQUISA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  >
+                  <div class="input-group-append">
+                    <span 
+                      [tooltip]="formClientes.valid == false ? 'Digite um termo de pesquisa':''"
+                      container="body"
+                      placement ="left"
+                    >
+                      <button
+                      style="height: 25px;"
+                        [disabled]="formClientes.valid == false"
+                        class="input-group-text hover"
+                        (click)="getClientes()"
+                        >
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <custom-table *ngIf="!noClientes" class="text-center">
+        <ng-template #thead let-thead>
+          <tr>
+            <th>Cód. Cliente</th>
+            <th>Razão Social</th>
+            <th>CNPJ</th>
+            <th>TIPO</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let cliente of clientes">
+            <td>{{ cliente.codCliente }}</td>
+            <td>{{ cliente.razaoSocial }}</td>
+            <td *ngIf="!cliente.cnpj">NÃO INFORMADO</td>
+            <td *ngIf="cliente.cnpj">{{ cliente.cnpj }}</td>
+            <td *ngIf="cliente.tipo == 'J' ">JURÍDICA</td>
+            <td *ngIf="cliente.tipo == 'F' ">FISÍCA</td>
+            <td>
+              <button
+                class="btn-icon-sm"
+                tooltip="Salvar Informações"
+                container="body"
+                (click)="setCliente(cliente);modalRef.hide()"
+              >
+                <i class="far fa-save"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      
+    </div>
+  </ng-template>
+</app-body>

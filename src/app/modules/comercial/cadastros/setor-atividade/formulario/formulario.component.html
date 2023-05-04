@@ -1,0 +1,69 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      <form [formGroup]="form">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="situacaoProposta">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              id="setorAtividade"
+              formControlName="setorAtividade"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('setorAtividade') + ' ' + onFieldRequired(form.controls.setorAtividade)">
+            <invalid-form-control [show]="onFieldInvalid('setorAtividade')" message="Setor de Atividade é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="codParametroSetorAtividade">Descrição TID</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="setorAtividadesTid"
+              [virtualScroll]="true"
+              labelForId="codParametroSetorAtividade"
+              bindLabel="setorAtividade"
+              bindValue="codSetorAtividade"
+              formControlName="codParametroSetorAtividade"
+              [ngClass]="onFieldError('codParametroSetorAtividade') + ' ' + onFieldRequired(form.controls.codParametroSetorAtividade)">
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="codSituacao">Situação</label>
+            <select
+              class="form-control custom-select"
+              id="codSituacao"
+              formControlName="codSituacao"
+              [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
+              <option value="1">Ativo</option>
+              <option value="2">Inativo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>
+

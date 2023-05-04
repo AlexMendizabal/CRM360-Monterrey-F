@@ -1,0 +1,23 @@
+.modal-header{
+  height: 48px;
+}
+
+legend{
+  font-size: 1em;
+  text-transform: uppercase;
+  padding-left: 0.25em;
+}
+
+ul{
+  list-style: none;
+}
+
+.no-drop{
+  cursor: no-drop;
+}
+
+button[disabled] > a {
+  text-decoration: none;
+  cursor: no-drop;
+  color: #cccccc;
+}

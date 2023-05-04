@@ -1,0 +1,353 @@
+<!-- <loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen> -->
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro de Contratos">
+  <button 
+    [disabled]="form.valid === false"
+    (click)="postContrato()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" >
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-7 pt-2 mx-auto">
+        <legend>Dados do Contrato</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="DS_CONT">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DS_CONT"
+              formControlName="DS_CONT"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('DS_CONT') + ' ' + onFieldRequired('DS_CONT')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('DS_CONT')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pl-0">
+            <label for="tipoContrato">Tipo de Contrato</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipoContrato"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              [loading]="loadingTipoContrato"
+              labelForId="ID_TECN_INFO_CONT_TIPO"
+              bindLabel="NM_CONT_TIPO"
+              bindValue="ID_TECN_INFO_CONT_TIPO"
+              id="ID_TECN_INFO_CONT_TIPO"
+              formControlName="ID_TECN_INFO_CONT_TIPO"
+              [ngClass]="onFieldRequired('ID_TECN_INFO_CONT_TIPO')">
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('ID_TECN_INFO_CONT_TIPO')" message="Tipo de Contrato é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="DT_INIC">Inicio do Contrato</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+              </div>
+              <input
+              class="form-control"
+              id="DT_INIC"
+              type="text"
+              bsDatepicker
+              placeholder="Selecione..."
+              [bsConfig]="bsConfig"
+              formControlName="DT_INIC"
+                [ngClass]="onFieldError('DT_INIC') + ' ' + onFieldRequired('DT_INIC')">
+              <invalid-form-control [show]="onFieldInvalid('DT_INIC')" message="Data de inicio do contrato é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-group col-md-6 pl-0">
+            <label for="DT_VENC">Fim do Contrato</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+              </div>
+              <input
+              class="form-control"
+              id="DT_VENC"
+              type="text"
+              placeholder="Selecione..."
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              formControlName="DT_VENC"
+                [ngClass]="onFieldError('DT_VENC') + ' ' + onFieldRequired('DT_VENC')">
+              <invalid-form-control [show]="onFieldInvalid('DT_VENC')" message="Data de fim do contrato é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <invalid-form-control
+          [show]="comparaData()"
+          message="Data final deve ser maior que data inicial">
+        </invalid-form-control>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="PRAZ_CANC">Prazo de Cancelamento</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+              </div>
+              <input
+                class="form-control"
+                id="PRAZ_CANC"
+                type="text"
+                placeholder="Selecione..."
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="PRAZ_CANC"
+                [ngClass]="onFieldError('PRAZ_CANC') + ' ' + onFieldRequired('PRAZ_CANC')"
+              >
+            </div>
+          </div>
+          <div class="form-group col-md-6 pl-0">
+            <label for="MULT_CANC">Multa de Cancelamento</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Digite..."
+              id="MULT_CANC"
+              formControlName="MULT_CANC"
+              autocomplete="new-password"
+              currencyMask [options]="{ align: 'left', thousands: '.', decimal: ',', prefix: prefixoMoeda }"
+            >
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="indices">Índice de reajuste</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="indices"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              [loading]="loadingIndices"
+              labelForId="ID_INDI"
+              bindLabel="SG_INDI"
+              bindValue="ID_INDI"
+              id="ID_INDI"
+              formControlName="ID_INDI">
+            </ng-select>
+          </div>
+          <div class="form-group col-md-6 pl-0">
+            <label for="INTE_REAJ">Intervalo de reajuste (meses) </label>
+            <input
+              type="text"
+              class="form-control"
+              id="INTE_REAJ"
+              formControlName="INTE_REAJ"
+              placeholder="Digite..."
+            />
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-8 pl-0">
+            <label for="contratoPai">Associar a um contrato pai</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="contratos"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              placeholder="Selecione..."
+              [loading]="loadingMoeda"
+              labelForId="ID_TECN_INFO_CONT_REFE"
+              bindValue="ID_TECN_INFO_CONT"
+              id="contratoPai"
+              formControlName="ID_TECN_INFO_CONT_REFE"
+            >
+              <ng-template ng-option-tmp let-item="item" let-index="index">
+                ({{item.ID_TECN_INFO_CONT | number: '3.0-0'}}) - {{ item.DS_CONT }} - {{ item.NM_CONT_TIPO }}
+              </ng-template>
+              <ng-template ng-label-tmp let-item="item">
+                ({{item.ID_TECN_INFO_CONT | number: '3.0-0'}}) - {{ item.DS_CONT }} - {{ item.NM_CONT_TIPO }}
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="form-group col-md-4 pl-0">
+            <label for="IN_STAT">Situação</label>
+            <select
+              class="form-control custom-select"
+              id="IN_STAT"
+              formControlName="IN_STAT"
+              [ngClass]="onFieldRequired('IN_STAT')">
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('IN_STAT')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-4 pl-0">
+            <label for="IN_VL_VARI">Tipo de Valor (Variável/Fixo)</label>
+            <select
+              class="form-control custom-select"
+              id="IN_VL_VARI"
+              formControlName="IN_VL_VARI"
+              [ngClass]="onFieldRequired('IN_VL_VARI')">
+              <option value="1">Variável</option>
+              <option value="0">Fixo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('IN_VL_VARI')" message="Tipo de valor é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-4 pl-0">
+            <label for="ID_MOED">Moeda</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="moedas"
+              [virtualScroll]="true"
+              dropdownPosition="bottom"
+              placeholder="Selecione..."
+              [loading]="loadingMoeda"
+              labelForId="ID_MOED"
+              bindLabel="SG_MOED"
+              bindValue="ID"
+              id="ID_MOED"
+              formControlName="ID_MOED"
+              (change)="setPrefixoMoeda($event?.PREF_MOED)"  
+            >
+              <ng-template ng-option-tmp let-item="item">
+                {{item.SG_MOED}} - {{ item.NM_MOED }}
+              </ng-template>
+              <ng-template ng-label-tmp let-item="item">
+                {{item.SG_MOED}} - {{ item.NM_MOED }}
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="form-group col-md-4 pl-0">
+            <label for="VL_CONT">Valor</label>
+            <input
+              type="text"
+              class="form-control"
+              id="VL_CONT"
+              formControlName="VL_CONT"
+              placeholder="Digite..."
+              autocomplete="new-password"
+              currencyMask [options]="{ align: 'left', thousands: '.', decimal: ',', prefix: prefixoMoeda }"
+              [ngClass]="onFieldError('VL_CONT') + ' ' + onFieldRequired('VL_CONT')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('VL_CONT')" message="Valor do Contrato é obrigatório."></invalid-form-control>
+          </div>
+        </div><br>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="IN_ITEM_COMP"
+                formControlName="IN_ITEM_COMP">
+              <label class="custom-control-label" for="IN_ITEM_COMP">Aquisição de Produtos</label>
+            </div>
+          </div>
+          <div class="form-group col-md-6 pl-0"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4 pl-0" [hidden]="form.get('IN_ITEM_COMP').value == 0">
+            <label for="VL_ITEM_COMP">Valor para aquisição do produto</label>
+            <input
+              type="text"
+              class="form-control"
+              id="VL_ITEM_COMP"
+              formControlName="VL_ITEM_COMP"
+              placeholder="Digite..."
+              autocomplete="new-password"
+              currencyMask [options]="{ align: 'left', thousands: '.', decimal: ',', prefix: prefixoMoeda }"
+              [ngClass]="onFieldError('VL_ITEM_COMP') + ' ' + onFieldRequired('VL_ITEM_COMP')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('VL_ITEM_COMP')" message="Valor do Contrato é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pl-0"></div>
+        </div>
+        
+
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-7 pt-2 mx-auto">
+        <legend>Associação de Empresas</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-12 pl-0">
+            <label for="filiais">Empresas</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="filiais"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              [hideSelected]="true"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [loading]="loadingFiliais"
+              bindLabel="DS_FILIAL"
+              bindValue="RAW"
+              id="CD_EMPR"
+              formControlName="CD_EMPR">
+            </ng-select>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-7 pt-2 mx-auto">
+        <legend>Observação</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observação:</label>
+            <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-7 pt-2 pb-2 mx-auto">
+        <legend>Anexos</legend>
+        <div class="form-group border rounded p-1">
+          <div>
+            <label for="documento" class="w-100 d-flex justify-content-between align-items-center m-0 py-1" style="cursor: pointer;">
+              <span>Novo Documento</span>
+            </label>
+            <input
+              id="documento"
+              type="file"
+              (change)="appendFile($event.target.files)"
+              class="d-none"
+              >
+          </div>
+        </div>
+        <ul>
+          <li class="d-flex justify-content-between" *ngFor="let item of documentos">
+            <div>{{ item.NM_DOCU | uppercase }}</div>
+            <div [hidden]="!item.ID_TECN_INFO_CONT_DOCU">
+              <a
+                [href]="item.LINK"
+                target="_blank"
+                class="btn-icon-sm mx-2 text-black"
+                tooltip="visualizar"
+              >
+                <i class="far fa-eye"></i>
+              </a>
+              <button
+                class="btn-icon-sm mx-2 hover"
+                tooltip="excluir"
+                (click)="onRemove(item)"
+                >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

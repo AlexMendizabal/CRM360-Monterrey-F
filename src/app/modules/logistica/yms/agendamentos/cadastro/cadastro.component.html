@@ -1,0 +1,479 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Agendamentos">
+  <button 
+    [disabled]="form.valid === false || loadingNavBar === true"
+    (click)="postAgendamentos()"
+    >
+    Avançar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="sobrepor" *ngIf="sobrepor"></div>
+      <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+        <div class="mtc-title">Dados do Agendamento</div>
+        <div class="form-row ">
+          <div class="form-group col-md-8">
+            <label for="DS_AGEN">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              id="DS_AGEN"
+              formControlName="DS_AGEN"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('DS_AGEN') + ' ' + onFieldRequired('DS_AGEN')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('DS_AGEN')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-4 ">
+            <label for="DT_INIC">Previsão de chegada</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+              </div>
+              <input
+              class="form-control"
+              id="DT_INIC_PREV"
+              type="text"
+              bsDatepicker
+              placeholder="Selecione..."
+              [bsConfig]="bsConfig"
+              formControlName="DT_INIC_PREV"
+                [ngClass]="onFieldError('DT_INIC_PREV') + ' ' + onFieldRequired('DT_INIC_PREV')">
+              <invalid-form-control [show]="onFieldInvalid('DT_INIC_PREV')" message="Data prevista de chegada é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+        </div>
+        <div class="form-row ">
+          <div class="form-group col-md-6">
+            <label for="filiais">Filial</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="filiais"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              [loading]="loadingFiliais"
+              labelForId="ID_LOGI_FILI"
+              bindLabel="NM_FILI"
+              bindValue="ID_LOGI_FILI"
+              id="ID_LOGI_FILI"
+              formControlName="ID_LOGI_FILI"
+              [ngClass]="onFieldError('ID_LOGI_FILI') + ' ' + onFieldRequired('ID_LOGI_FILI')"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('ID_LOGI_FILI')" message="Filial é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="tiposCircuito">Tipo de Circuito</label>
+            <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="tiposCircuito"
+            [virtualScroll]="true"
+            placeholder="Selecione..."
+            [loading]="loadingTiposCircuito"
+            labelForId="ID_LOGI_YMS_CIRC_TIPO"
+            bindLabel="NM_CIRC_TIPO"
+            bindValue="ID_LOGI_YMS_CIRC_TIPO"
+            id="ID_LOGI_YMS_CIRC_TIPO"
+            formControlName="ID_LOGI_YMS_CIRC_TIPO"
+            [ngClass]="onFieldError('ID_LOGI_YMS_CIRC_TIPO') + ' ' + onFieldRequired('ID_LOGI_YMS_CIRC_TIPO')"
+            >
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('ID_LOGI_YMS_CIRC_TIPO')" message="Tipo de circuito é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <fieldset class="border-top pt-2 mt-4">
+          <legend 
+          class="text-center mb-0"
+          style="font-size: larger; width: auto;">Dados do Veículo</legend>
+          <div class="form-row ">
+            <div class="form-group col-md-6 ">
+              <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+                <label class="my-auto" for="PLAC">Placa</label>
+                <div class="my-auto text-uppercase" style="font-size: 11px" >
+                  <a
+                    class="text-primary"
+                    href="javascript:void(0)"
+                    (click)="openModal(modalVeiculos)">
+                    <strong *ngIf="!this.form.get('PLAC').value">Selecionar</strong>
+                    <strong *ngIf="this.form.get('PLAC').value">Trocar</strong>
+                  </a>
+                </div>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="PLAC"
+                formControlName="PLAC"
+                placeholder="Selecione..."
+                [ngClass]="onFieldError('PLAC') + ' ' + onFieldRequired('PLAC')"
+              />
+              <invalid-form-control [show]="onFieldInvalid('PLAC')" message="Veículo é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-md-6">
+              <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+                <label class="my-auto" for="ID_LOGI_VEIC_TIPO">Tipo de Veículo</label>
+                <div class="my-auto text-uppercase" style="font-size: 11px" *ngIf="!this.form.get('ID_LOGI_VEIC_TIPO').value && this.form.get('PLAC').value">
+                  <a
+                    class="text-primary"
+                    href="javascript:void(0)"
+                    [routerLink]="[getLinkAddTipoVeiculo()]"
+                    target="_blank">
+                    <strong>Adicionar</strong>
+                  </a>
+                  <span class="mx-2">|</span>
+                  <btn-icon
+                  icon="fas fa-redo-alt"
+                  size="small"
+                  class="mr-2"
+                  tooltip="Recarregar"
+                  (click)="onReloadContatos()">
+                </btn-icon>
+                </div>
+              </div>
+              <input
+              type="text"
+              class="form-control"
+              id="NM_VEIC_TIPO"
+              readonly
+              formControlName="NM_VEIC_TIPO"
+              placeholder="Selecione..."
+              [ngClass]="onFieldError('NM_VEIC_TIPO') + ' ' + onFieldRequired('NM_VEIC_TIPO')"
+            />
+              <invalid-form-control [show]="onFieldInvalid('NM_VEIC_TIPO')" message="Tipo de veículo é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-row ">
+            <div class="form-group col-md ">
+              <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+                <label class="my-auto" for="NM_MOTO">Motorista</label>
+                <div class="my-auto text-uppercase" style="font-size: 11px"  *ngIf="this.form.get('PLAC').value">
+                  <a
+                    class="text-primary"
+                    href="javascript:void(0)"
+                    (click)="openModal(modalMotoristas)">
+                    <strong *ngIf="this.form.get('NM_MOTO').value">Trocar</strong>
+                    <strong *ngIf="!this.form.get('NM_MOTO').value">Selecionar</strong>
+                  </a>
+                  <span class="mx-2" *ngIf="this.form.get('NM_MOTO').value">|</span>
+                  <a
+                    class="text-secondary"
+                    href="javascript:void(0)"
+                    (click)="onDetalhesMotorista()"
+                    *ngIf="this.form.get('NM_MOTO').value">
+                    <strong>Detalhes</strong>
+                  </a>
+                </div>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="NM_MOTO"
+                formControlName="NM_MOTO"
+                readonly
+                placeholder="Selecione..."
+                [ngClass]="onFieldError('NM_MOTO') + ' ' + onFieldRequired('NM_MOTO')"
+              />
+              <invalid-form-control [show]="onFieldInvalid('NM_MOTO')" message="Motorista é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-row ">
+            <div class="form-group col-md ">
+              <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+                <label class="my-auto" for="NM_TRAN">Transportadora</label>
+                <div class="my-auto text-uppercase" style="font-size: 11px" *ngIf="this.form.get('PLAC').value" >
+                  <a
+                    class="text-primary"
+                    href="javascript:void(0)"
+                    (click)="openModal(modalTransportadoras)">
+                    <strong *ngIf="this.form.get('NM_TRAN').value">Trocar</strong>
+                    <strong *ngIf="!this.form.get('NM_TRAN').value">Selecionar</strong>
+                  </a>
+                  <span class="mx-2" *ngIf="this.form.get('NM_TRAN').value">|</span>
+                  <a
+                    class="text-secondary"
+                    href="javascript:void(0)"
+                    (click)="onDetalhesTransportadora()"
+                    *ngIf="this.form.get('NM_TRAN').value">
+                    <strong>Detalhes</strong>
+                  </a>
+                </div>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="NM_TRAN"
+                formControlName="NM_TRAN"
+                readonly
+                placeholder="Selecione..."
+                [ngClass]="onFieldError('NM_TRAN') + ' ' + onFieldRequired('NM_TRAN')"
+              />
+              <invalid-form-control [show]="onFieldInvalid('NM_TRAN')" message="Transportadora é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="border-top pt-2 mt-4">
+          <legend 
+          class="text-center mb-0"
+          style="font-size: larger; width: auto;">Materiais</legend>
+          <div class="row" *ngIf="loadingMateriais">
+            <div class="col">
+              <message
+                icon="fas fa-cog fa-spin"
+                text="Estamos pesquisando os materiais para você...">
+              </message>
+            </div>
+          </div>
+          <div formArrayName="materiais">
+            <div class="form-row">
+              <div class="form-group col mb-0 d-flex justify-content-between">
+                <div class="mtc-title"></div>
+                <div>
+                  <a
+                    class="text-secondary"
+                    (click)="onAddMaterial()"
+                    href="javascript:void(0)">
+                    <b>Adicionar</b>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="form-row"  *ngFor="let item of formMateriais.controls; let i = index" [formGroupName]="i">
+              <div class="form-group col mb-0">
+                <div class="form-row">
+                  <div class="form-group col-md-3 ">
+                    <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+                      <label class="my-auto" for="NR_NOTA_FISC">Nota Fiscal</label>
+                      <div class="my-auto text-uppercase" style="font-size: 10px" >
+                        <a
+                          class="text-primary"
+                          href="javascript:void(0)"
+                          (click)="openModal(modalNotasFiscais, i)">
+                          <strong>Selecionar</strong>
+                        </a>
+                      </div>
+                    </div>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="NR_NOTA_FISC"
+                      formControlName="NR_NOTA_FISC"
+                      placeholder="Digite..."
+                      [ngClass]="onNestedFieldError('materiais', i, 'NR_NOTA_FISC') + ' ' + onNestedFieldRequired('materiais', i, 'NR_NOTA_FISC')"
+                    />
+                  </div>
+                  <div class="form-group col-md-5 ">
+                    <label for="NR_PEDI">Pedido</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Digite..."
+                      id="NR_PEDI"
+                      formControlName="NR_PEDI"
+                      [ngClass]="onNestedFieldError('materiais', i, 'NR_PEDI') + ' ' + onNestedFieldRequired('materiais', i, 'NR_PEDI')">
+                  </div>
+                  <div class="form-group col-md-3 ">
+                    <label for="DS_UNID_MEDI">Unidade de Medida</label>
+                    <select 
+                    class="form-control custom-select"
+                    id="DS_UNID_MEDI"
+                    formControlName="DS_UNID_MEDI"
+                    [ngClass]="onNestedFieldError('materiais', i, 'DS_UNID_MEDI') + ' ' + onNestedFieldRequired('materiais', i, 'DS_UNID_MEDI')"
+                  >
+                    <option >KG</option>
+                    <option >TON</option>
+                    <option >PC</option>
+                    <option >UN</option>
+                  </select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-3 ">
+                    <label for="TT_MATE">Quantidade</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="TT_MATE"
+                      formControlName="TT_MATE"
+                      currencyMask [options]="{ align: 'right', prefix: '' , thousands: '.', decimal: ',' , precision: 3 }"
+                      [ngClass]="onNestedFieldError('materiais', i, 'TT_MATE') + ' ' + onNestedFieldRequired('materiais', i, 'TT_MATE')">
+                  </div>
+                  <div class="form-group col-md-8 ">
+                    <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
+                      <label class="my-auto" for="NM_MATE">Material</label>
+                      <div class="my-auto text-uppercase" style="font-size: 10px">
+                        <a
+                          class="text-primary"
+                          href="javascript:void(0)"
+                          (click)="openModal(modalMateriais, i)">
+                          <strong>Selecionar</strong>
+                        </a>
+                      </div>
+                    </div>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="NM_MATE"
+                      formControlName="NM_MATE"
+                      [ngClass]="onNestedFieldError('materiais', i, 'NM_MATE') + ' ' + onNestedFieldRequired('materiais', i, 'NM_MATE')">
+                  </div>
+                  <div class="col-1 my-auto pt-3 d-flex justify-content-center">
+                    <button
+                      type="button"
+                      class="btn-icon"
+                      (click)="onDeleteMaterial(i)">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+                <hr class="w-100">
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <div class="row ">
+          <div class="form-group col mb-0">
+            <button
+              type="button"
+              class="btn btn-block btn-outline-secondary mt-auto"
+              (click)="onSearchTime()"
+              [disabled]="loadingCalculo">
+              <div *ngIf="!loadingCalculo">
+                <i class="fas fa-search"></i>
+                <span>Buscar horários disponíveis</span>
+              </div>
+              <div *ngIf="loadingCalculo">
+                <i class="fas fa-cog fa-spin"></i>
+                <span>Aguarde</span>
+              </div>
+            </button>
+          </div> 
+        </div>
+        <div class="row" *ngIf="loadingCalculo" >
+          <div class="col">
+            <message
+              icon="fas fa-cog fa-spin"
+              text="Estamos pesquisando os horários disponíveis para você...">
+            </message>
+          </div>
+        </div>
+        <div class="row m-auto">
+          <div class="form-group col-2 mb-0">
+            <button 
+              type="button" 
+              class="btn btn-block btn-outline-secondary mt-2 p-2"
+              (click)="onSetTime($event)"
+              >
+              <span aria-hidden="true">
+              <i class="fas fa-clock"></i>
+              </span>12:00
+            </button>
+          </div>
+        </div>
+        <!-- <div class="form-row justify-content-center">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observação:</label>
+            <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div> -->
+      </form>
+    </div>
+    <div class="col-lg-6 border-left">
+      <div class="row"  *ngIf="noCircuito">
+        <div class="col">
+          <message
+            icon="fas fa-file"
+            text="Preecha os campos ao lado para que possamos montar o seu circuito">
+          </message>
+        </div>
+      </div>
+      <div id="scrollDetalhes" class="d-flex">
+        <div class="row w-100">
+          <div class="col-6">
+            <div class="mtc-title">Dados do Circuito</div>
+            <div *ngFor="let etapa of circuitos; let last = last; let first = first" [ngClass]="fist ? 'mt-4' : ''">
+              <div class="d-flex w-100" [tooltip]="etapa?.descricao" placement="left">
+                <div class="rounded-circle text-white icon-40" [ngClass]="etapa?.check == 0 ? 'bg-secondary' : 'bg-primary'">
+                  <i [class]="etapa?.icone"></i>
+                </div>
+                <strong class="my-auto ml-3 text-truncate" [ngClass]="etapa?.check == 1 ? 'text-primary' : ''">
+                  {{ etapa?.descricao }}
+                </strong>
+              </div>
+              <div class="my-1" *ngIf="!last">
+                <div class="ml-1">
+                  <div class="border-left border-secondary ml-3 p-2">
+                    <div *ngIf="etapa?.check === 1"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 text-right">
+            <button
+            type="button"
+            class="btn-icon-sm mx-3"
+            tooltip="Download"
+            container="body"
+            (click)="onDownload()"
+            [disabled] = "loadingMateriais"
+          >
+            <i class="far fa-save"></i>
+          </button>
+          <button
+            type="button"
+            class="btn-icon-sm mr-3"
+            tooltip="Imprimir"
+            container="body"
+            [disabled] = "loadingMateriais" 
+            (click)="onPrint()"
+          >
+            <i class="fas fa-print"></i>
+          </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #modalVeiculos>
+    <logistica-yms-agendamentos-modais-veiculos
+    (select)="onVeiculo($event)"
+    (close)="modalRef.hide()"
+    >
+    </logistica-yms-agendamentos-modais-veiculos>
+  </ng-template>
+  <ng-template #modalMotoristas>
+    <logistica-veiculos-modais-motoristas
+      (select)="onMotorista($event)"
+      (close)="modalRef.hide()"
+    >
+    </logistica-veiculos-modais-motoristas>
+  </ng-template>
+  <ng-template #modalTransportadoras>
+    <logistica-veiculos-modais-transportadoras
+      (select)="onTransportadora($event)"
+      (close)="modalRef.hide()"
+    >
+    </logistica-veiculos-modais-transportadoras>
+  </ng-template>
+  <ng-template #modalMateriais>
+    <logistica-yms-agendamentos-modais-materiais
+    (select)="onMaterial($event)"
+    (close)="modalRef.hide()"
+    >
+    </logistica-yms-agendamentos-modais-materiais>
+  </ng-template>
+  <ng-template #modalNotasFiscais>
+    <logistica-yms-agendamentos-modais-notas-fiscais
+    (select)="onNotasFiscais($event)"
+    (close)="modalRef.hide()"
+    >
+    </logistica-yms-agendamentos-modais-notas-fiscais>
+  </ng-template>
+</app-body>

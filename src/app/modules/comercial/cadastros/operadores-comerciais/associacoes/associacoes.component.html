@@ -1,0 +1,197 @@
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="form-row">
+      <div class="form-group col"><hr></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col mb-3 d-flex justify-content-between">
+        <div class="mtc-title mb-0">Associação de operadores</div>
+        <div>
+          <div *ngIf="!showLoader">
+            <a
+              class="text-primary mr-3"
+              href="javascript:void(0)"
+              (click)="onHistorico()"
+              *ngIf="associacoes.length > 0 && !associacoesEmpty">
+              <strong>Histórico</strong>
+            </a>
+            <a
+              class="text-secondary"
+              href="javascript:void(0)"
+              (click)="onAdd()">
+              <strong>Adicionar</strong>
+            </a>
+          </div>
+          <div class="d-flex w-100" *ngIf="showLoader">
+            <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+            <strong>Aguarde...</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <custom-table *ngIf="associacoes.length > 0 && !associacoesEmpty">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col">Nome do operador</th>
+              <th scope="col">Motivo</th>
+              <th scope="col" class="text-center">Início</th>
+              <th scope="col" class="text-center">Término</th>
+              <th scope="col"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let associacao of associacoes">
+              <td>{{ associacao.nomeOperadorAssociacao | uppercase }}</td>
+              <td>{{ associacao.motivo | uppercase }}</td>
+              <td class="text-center">{{ associacao.dataInicialAssociacao | date: 'dd/MM/yyyy' }}</td>
+              <td class="text-center">{{ associacao.dataFinalAssociacao | date: 'dd/MM/yyyy' }}</td>
+              <td class="text-right">
+                <span class="mr-3" tooltip="Inativar" placement="left" container="body">
+                  <button
+                    type="button"
+                    class="btn-icon-sm"
+                    [disabled]="showLoader"
+                    (click)="onDelete(associacao)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+        <empty-result
+          message="Nenhuma informação encontrada"
+          class="my-3"
+          *ngIf="associacoesEmpty">
+        </empty-result>
+        <div class="mt-2 d-flex w-100" *ngIf="!associacoesLoaded">
+          <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+          <strong>Carregando associações...</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #modalAssociacoes>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Associação de operadores</h4>
+    <button
+      type="button"
+      class="close pull-right"
+      [disabled]="submittingForm"
+      (click)="hideModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="operadores">Selecione os operadores</label>
+          <ng-select
+            [items]="operadores"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            labelForId="operadores"
+            bindValue="codOperador"
+            bindLabel="nomeCompleto"
+            formControlName="operadores"
+            [ngClass]="onFieldError('operadores') + ' ' + onFieldRequired(form.controls.operadores)">
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('operadores')" message="Selecione pelo menos um operador."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="motivoAssociacao">Motivo da associação</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="motivosAssociacao"
+            formControlName="motivoAssociacao"
+            [virtualScroll]="true"
+            bindLabel="motivoAssociacao"
+            bindValue="codMotivoAssociacao"
+            [ngClass]="onFieldError('motivoAssociacao') + ' ' + onFieldRequired(form.controls.motivoAssociacao)">
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('motivoAssociacao')" message="Motivo da associação é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-6">
+          <label for="dataInicio">Início</label>
+          <input
+            class="form-control"
+            id="dataInicio"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="dataInicio"
+            [ngClass]="onFieldError('dataInicio') + ' ' + onFieldRequired(form.controls.dataInicio)">
+          <invalid-form-control [show]="onFieldInvalid('dataInicio')" message="Início da associação é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="dataTermino">Término</label>
+          <input
+            class="form-control"
+            id="dataTermino"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="dataTermino">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      [disabled]="submittingForm"
+      (click)="hideModal()">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="submittingForm"
+      (click)="onSubmit()">
+      <span *ngIf="!submittingForm">Salvar</span>
+      <span *ngIf="submittingForm">Aguarde</span>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalHistoricoAssociacoes>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Histórico de associações</h4>
+    <button
+      type="button"
+      class="close pull-right"
+      [disabled]="submittingForm"
+      (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <custom-table *ngIf="historicoAssociacoes.length > 0">
+      <ng-template #thead let-thead>
+        <tr>
+          <th scope="col" class="text-center">Data</th>
+          <th scope="col">Usuário</th>
+          <th scope="col">Alteração</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let historico of historicoAssociacoes">
+          <td class="text-center">{{ historico.dataLog | date: 'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ historico.nomeUsuario | uppercase }}</td>
+          <td>{{ historico.mensagem | uppercase }}</td>
+        </tr>
+      </ng-template>
+    </custom-table>
+  </div>
+</ng-template>

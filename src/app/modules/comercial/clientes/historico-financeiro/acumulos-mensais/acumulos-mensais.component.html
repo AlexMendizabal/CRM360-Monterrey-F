@@ -1,0 +1,60 @@
+<div class="row">
+  <div class="col">
+    <div class="d-flex w-100" *ngIf="!acumulosMensaisLoaded">
+      <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+      <strong>Carga de acumulaciones mensuales...</strong>
+    </div>
+    <tabset *ngIf="acumulosMensaisLoaded">
+      <tab heading="Principal">
+        <div class="border-left border-right border-bottom p-3">
+          <custom-table *ngIf="acumulosMensais.principal.length > 0">
+            <ng-template #thead let-thead>
+              <tr>
+                <th scope="col" class="text-center">Período</th>
+                <th scope="col" class="text-center">Valor acumulado</th>
+                <th scope="col" class="text-center">Média atraso</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let acumulo of acumulosMensais.principal">
+                <td class="text-center">{{ acumulo.periodo }}</td>
+                <td class="text-center">{{ acumulo.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
+                <td class="text-center">{{ acumulo.atraso }} dias</td>
+              </tr>
+            </ng-template>
+          </custom-table>
+          <empty-result
+            message="Nenhuma informação encontrada"
+            *ngIf="acumulosMensais.principal.length == 0">
+          </empty-result>
+        </div>
+      </tab>
+      <tab heading="Maior fatura">
+        <div class="border-left border-right border-bottom p-3">
+          <custom-table *ngIf="acumulosMensais.maiorFatura.length > 0">
+            <ng-template #thead let-thead>
+              <tr>
+                <th scope="col" class="text-center">Núm. Pedido</th>
+                <th scope="col" class="text-center">Data</th>
+                <th scope="col" class="text-center">Empresa</th>
+                <th scope="col" class="text-center">Valor</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let acumulo of acumulosMensais.maiorFatura">
+                <td class="text-center">{{ acumulo.numPedido }}</td>
+                <td class="text-center">{{ acumulo.data }}</td>
+                <td class="text-center">{{ acumulo.empresa }}</td>
+                <td class="text-center">{{ acumulo.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
+              </tr>
+            </ng-template>
+          </custom-table>
+          <empty-result
+            message="Nenhuma informação encontrada"
+            *ngIf="acumulosMensais.maiorFatura.length == 0">
+          </empty-result>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+</div>

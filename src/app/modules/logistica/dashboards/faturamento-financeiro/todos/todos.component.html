@@ -1,0 +1,167 @@
+<div class="row">
+  <div class="col text-right">
+    <div class="mtc-title">
+      <a
+        class="text-primary"
+        href="javascript:void(0)"
+        (click)="changeViewCte($event)"
+      >
+        <strong *ngIf="viewCte == 0">Visualizar CTe Complementar</strong>
+        <strong *ngIf="viewCte == 1">Desavistar CTe Complementar</strong>
+      </a>
+      <span class="mx-2">|</span>
+      <a>
+        <span *ngIf="info">{{ info | uppercase }}</span>
+      </a>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="viewCte == 0">
+  <div class="col-9 border-right pr-2">
+    <div class="row justify-content-between">
+      <div class="mtc-title p-0 mx-3 h-100 w-100 text-center border" style="background: lightgray;">Faturamento Por Clientes</div>
+      <div id="pieChart" class="amcharts p-0 m-3"  [hidden]="loadingPieChart" style="position: relative; height: 200px"></div>
+      <div class="spinner-border align-items-center" role="status" style="margin-inline: auto;" *ngIf="loadingPieChart">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="border rounded bg-white shadow-sm d-flex p-3 m-3 w-100 justify-content-between">
+        <div class="text-center" *ngIf="aperam" style="width:20%" >
+          <h6
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="aperam"
+          [countFrom]="0"
+          [duration]="2"
+          (countoChange)="countoAperam = $event">
+          {{ countoAperam | number }}
+          </h6>
+          <h6
+          class="text-muted mb-1"
+          counto
+          [step]="30"
+          [countTo]="aperamPerc"
+          [countFrom]="0"
+          [duration]="2"
+          (countoChange)="countoAperamPerc = $event">
+          {{ countoAperamPerc | number }} %
+          </h6>
+          <div class="text-muted small font-weight-bold">APERAM</div>
+        </div>
+        <div class="text-center" *ngIf="arcelor" style="width:20%" >
+          <h6
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="arcelor"
+          [countFrom]="0"
+          [duration]="2"
+          (countoChange)="countoArcelor = $event">
+          {{ countoArcelor | number }}
+          </h6>
+          <h6
+          class="text-muted mb-1"
+          counto
+          [step]="30"
+          [countTo]="arcelorPerc"
+          [countFrom]="0"
+          [duration]="2"
+          (countoChange)="countoArcelorPerc = $event">
+          {{ countoArcelorPerc | number }} %
+          </h6>
+          <div class="text-muted small font-weight-bold">ARCELORMITTAL</div>
+        </div>
+        <div class="text-center" *ngIf="manetoni" style="width:20%" >
+          <h6
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="manetoni"
+          [countFrom]="0"
+          [duration]="2"
+          (countoChange)="countoManetoni = $event">
+          {{ countoManetoni | number }}
+          </h6>
+          <h6
+          class="text-muted mb-1"
+          counto
+          [step]="30"
+          [countTo]="manetoniPerc"
+          [countFrom]="0"
+          [duration]="2"
+          (countoChange)="countoManetoniPerc = $event">
+          {{ countoManetoniPerc | number }} %
+          </h6>
+          <div class="text-muted small font-weight-bold">MANETONI</div>
+        </div>
+        <div class="text-center" *ngIf="novos" style="width:20%" >
+          <h6
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="novos"
+          [countFrom]="0"
+          [duration]="2"
+          (countoChange)="countoNovos = $event">
+          {{ countoNovos | number }} 
+          </h6>
+          <h6
+          class="text-muted mb-1"
+          counto
+          [step]="30"
+          [countTo]="novosPerc"
+          [countFrom]="0"
+          [duration]="2"
+          (countoChange)="countoNovosPerc = $event">
+          {{ countoNovosPerc | number }} %
+          </h6>
+          <div class="text-muted small font-weight-bold">NOVOS NEGÓCIOS</div>
+        </div>
+        <div class="text-center" *ngIf="vallourec" style="width:20%" >
+          <h6
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="vallourec"
+          [countFrom]="0"
+          [duration]="2"
+          (countoChange)="countoVallourec = $event">
+          {{ countoVallourec | number }}
+          </h6>
+          <h6
+          class="text-muted mb-1"
+          counto
+          [step]="30"
+          [countTo]="vallourecPerc"
+          [countFrom]="0"
+          [duration]="2"
+          (countoChange)="countoVallourecPerc = $event">
+          {{ countoVallourecPerc | number }} %
+          </h6>
+          <div class="text-muted small font-weight-bold">VALLOUREC</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col p-0 pr-3 pl-2" >
+    <div class="mtc-title p-0 w-100 text-center border" style="background: lightgray;">Mês Atual</div>
+    <div id="clusteredChartMesAtual" class="amcharts" [hidden]="loadingClusteredChartAtual" style="min-height: 370px"></div>
+    <div class="spinner-border" role="status" style="margin-left: 46%;" *ngIf="loadingClusteredChartAtual">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</div>
+<div class="row" [hidden]="viewCte == 1" >
+  <div class="mtc-title p-0 mx-3 h-100 w-100 text-center border" style="background: lightgray;">faturamento Mensal</div>
+  <div id="clusteredChartFatuMensal" class="amcharts p-0 mx-3" [hidden]="loadingClusteredChartMensal" style="position: relative; height: 400px"></div>
+  <div class="spinner-border align-items-center" role="status" style="margin-inline: auto;" *ngIf="loadingClusteredChartMensal">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<div class="row" [hidden]="viewCte == 0" >
+  <div class="mtc-title p-0 mx-3 h-100 w-100 text-center border" style="background: lightgray;">Cte Complementar Clientes</div>
+  <div id="clusteredChartCteComplementar" class="amcharts p-0 mx-3" [hidden]="loadingClusteredChartCteComp" style="position: relative; height: 400px"></div>
+  <div class="spinner-border align-items-center" role="status" *ngIf="loadingClusteredChartCteComp" style="margin-inline: auto;">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>

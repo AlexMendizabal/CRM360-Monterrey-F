@@ -1,0 +1,31 @@
+::ng-deep {
+  @import '../../../../assets/scss/colors';
+  @import '../../../../assets/scss/variables';
+
+  empty-result {
+    display: block;
+    .empty-result {
+      display: flex;
+      &.left {
+        justify-content: start;
+      }
+      &.center {
+        justify-content: center;
+      }
+      &.right {
+        justify-content: end;
+      }
+      #img {
+        height: 40px;
+        margin-right: $gutter;
+      }
+      #message {
+        color: $medium-gray;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 0.25px;
+        line-height: 40px;
+      }
+    }
+  }
+}

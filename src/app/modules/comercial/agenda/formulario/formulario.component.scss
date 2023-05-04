@@ -1,0 +1,48 @@
+::ng-deep {
+  .input-group {
+    .custom-select,
+    .form-control {
+      &:not(:last-child) {
+        border-top-right-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
+      }
+    }
+  }
+  .color-dropdown {
+    background-color: transparent;
+    border: unset;
+    display: flex;
+    padding: 0px;
+    div {
+      border-radius: 50%;
+      content: '';
+      height: 15px;
+      width: 15px;
+    }
+    &::after {
+      margin-top: 4px;
+      margin-left: 5px !important;
+    }
+    &:focus {
+      outline: unset;
+    }
+  }
+  ul#color-dropdown {
+    li {
+      a.dropdown-item {
+        display: flex;
+        .color-hex {
+          border-radius: 50%;
+          content: '';
+          height: 15px;
+          margin-right: 8px;
+          margin-top: 4px;
+          width: 15px;
+        }
+      }
+    }
+  }
+  .custom-mt {
+    margin: -1px;
+  }
+}

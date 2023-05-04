@@ -1,0 +1,239 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row">
+    <div class="col-lg-6">
+      <form [formGroup]="form">
+        <div >
+          <div class="row mb-3">
+            <div class="col mt-auto">
+              <div class="mtc-title mb-0">Dados do Contrato</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-12">
+              <label for="nomeContrato">Nome Contrato</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Digite..."
+                id="nomeContrato"
+                formControlName="nomeContrato"
+                autocomplete="new-password"
+                [ngClass]="onFieldError('nomeContrato') + ' ' + onFieldRequired(form.controls.nomeContrato)">
+                <invalid-form-control [show]="onFieldInvalid('nomeContrato')" message="Nome do contrato é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label for="clientes">Clientes</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="clientes"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                [hideSelected]="true"
+                [multiple]="true"
+                [closeOnSelect]="false"
+                bindLabel="razaoSocial"
+                bindValue="codCliente"
+                id="codCliente"
+                formControlName="codCliente" 
+                [ngClass]="onFieldError('codCliente') + ' ' + onFieldRequired(form.controls.codCliente)">
+                <invalid-form-control [show]="onFieldInvalid('codCliente')" message="Cliente é obrigatório."></invalid-form-control>
+              </ng-select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="dataInicial">Data Inicial</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="dataInicial"
+                type="text"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="dataInicial"
+                [ngClass]="onFieldError('dataInicial') + ' ' + onFieldRequired(form.controls.dataInicial)">
+                <invalid-form-control [show]="onFieldInvalid('dataInicial')" message="Data Inicial obrigatório."></invalid-form-control>
+              </div>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="dataFinal">Data Final</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="dataFinal"
+                type="text"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="dataFinal"
+                [ngClass]="onFieldError('dataFinal') + ' ' + onFieldRequired(form.controls.dataFinal)">
+                <invalid-form-control [show]="onFieldInvalid('dataFinal')" message="Data Final é obrigatório."></invalid-form-control>
+              </div>
+              <invalid-form-control
+                [show]="comparaData()"
+                message="A data inicial está maior que a data final">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="codStatus">Status</label>
+              <select
+                class="form-control custom-select"
+                id="codStatus"
+                formControlName="codStatus"
+                [ngClass]="onFieldError('codStatus') + ' ' + onFieldRequired(form.controls.codStatus)">
+                <option value="0">Reprovado</option>
+                <option value="1">Aprovado</option>
+                <option value="2">Aguardando Aprovação</option>
+              </select>
+              <invalid-form-control [show]="onFieldInvalid('codStatus')" message="Status é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-8">
+              <label for="quantidade">Qtde.</label>
+              <input
+                type="text"
+                class="form-control"
+                id="quantidade"
+                placeholder="Digite..."
+                formControlName="quantidade"
+                (input)="onInput()"
+                autocomplete="new-password"
+                currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 3 }"
+                [ngClass]="onFieldError('quantidade') + ' ' + onFieldRequired(form.controls.quantidade)">
+              <invalid-form-control [show]="onFieldInvalid('quantidade')" message="Quantidade é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="codSituacao">Situação</label>
+              <select
+                class="form-control custom-select"
+                id="codSituacao"
+                formControlName="codSituacao"
+                [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
+                <option value="0">Inativo</option>
+                <option value="1">Ativo</option>
+              </select>
+              <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-row" [hidden]="form.get('codStatus').value != 0">
+            <div class="form-group col-lg-12">
+              <div class="form-group">
+                <label for="motivo" >Motivo:</label>
+                <textarea class="form-control" id="motivo" formControlName="motivo" rows="3"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr>
+        </div>
+
+        <div formArrayName="assocMateriais">
+          <div class="row" *ngIf="showMateriais && form.value.assocMateriais.length > 0">
+            <div class="col">
+              <div class="mtc-title">Materiais associados ao Contrato</div>
+              <custom-table [config]="tableConfigAssocMateriais">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th scope="col" style="width: 55%">Material</th>
+                    <th scope="col" class="text-center" style="width: 20%">Valor Un.</th>
+                    <th scope="col" class="text-center" style="width: 20%">Qtde.</th>
+                    <th scope="col" style="width: 5%"></th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let material of assocMateriais.controls; let i = index" [formGroupName]="i">
+                    <td style="width: 55%">
+                      {{ form.value.assocMateriais[i].codMaterial }} - {{ form.value.assocMateriais[i].nomeMaterial | uppercase }}
+                    </td>
+                    <td style="width: 20%">
+                      <input
+                        type="text"
+                        id="valor"
+                        class="form-control text-center"
+                        formControlName="valor"
+                        currencyMask [options]="{ align: 'left', thousands: '.', decimal: ',', prefix: 'R$ ' }">
+                    </td>
+                    <td style="width: 20%">
+                      <input
+                        type="text"
+                        id="quantidade"
+                        class="form-control text-center"
+                        formControlName="quantidade"
+                        currencyMask [options]="{ align: 'left', prefix: 'ton  ', thousands: '.', decimal: ',', precision: 3 }">
+                    </td>
+                    <td class="text-center" style="width: 5%">
+                      <btn-icon
+                        icon="fas fa-trash"
+                        size="small"
+                        (click)="onDeleteMaterial(i)">
+                      </btn-icon>
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+            </div>
+          </div>
+          <div class="row" *ngIf="showMateriais && form.value.assocMateriais.length === 0">
+            <div class="col">
+              <message
+                icon="fas fa-exchange-alt"
+                text="Nenhuma associação encontrada">
+              </message>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- <div [hidden]="form.getRawValue().codMaterial != null">
+        <comercial-cadastros-materiais-templates-material-principal
+          [linhas]="linhas"
+          [classes]="classes"
+          [limparMaterialSelecionado]="limparMaterialPrincipal"
+          (loaderNavbar)="onLoaderNavbar($event)"
+          (materialPrincipal)="materialPrincipal($event)">
+        </comercial-cadastros-materiais-templates-material-principal>
+
+        <div class="row">
+          <div class="col">
+            <hr>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <div class="col-lg-6 border-left">
+      <comercial-cadastros-materiais-templates-associacoes
+        [linhas]="linhas"
+        [classes]="classes"
+        [linhaSelecionada]="form.value.codLinha"
+        [classeSelecionada]="form.value.codClasse"
+        (loaderNavbar)="onLoaderNavbar($event)"
+        (materialAssociado)="materialAssociado($event)">
+      </comercial-cadastros-materiais-templates-associacoes>
+    </div>
+  </div>
+</app-body>

@@ -1,0 +1,203 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Programação de Pagamentos">
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg">
+              <label for="dataInicial">Data inicial</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                  class="form-control"
+                  id="dataInicial"
+                  type="text"
+                  bsDatepicker
+                  [bsConfig]="bsConfig"
+                  formControlName="dataInicial">
+              </div>
+            </div>
+            <div class="form-group col-lg">
+              <label for="dataFinal">Data final</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                  class="form-control"
+                  id="dataFinal"
+                  type="text"
+                  bsDatepicker
+                  [bsConfig]="bsConfig"
+                  formControlName="dataFinal">
+              </div>
+            </div>
+            <div class="form-group col-lg-5">
+              <label for="codGerente">Gerente</label>
+              <ng-select
+                [items]="gerentes"
+                labelForId="codGerente"
+                formControlName="codGerente"
+                bindValue="matricula"
+                bindLabel="nome"
+                [virtualScroll]="true">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="situacao">Situação</label>
+              <select
+                class="form-control custom-select"
+                id="situacao"
+                formControlName="situacao">
+                <option value="">Todos</option>
+                <option value="1">Pago</option>
+                <option value="0">PROGRAMADO</option>
+                <option value="2">AGUARDANDO PROGRAMAÇÃO</option>
+              </select>
+            </div>
+            <div class="form-group col-lg-1">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="dadosPagination.length > 0 && !dadosEmpty">
+      </subtitles>
+    </div>
+  </div>
+  <div class="row text-center justify-content-center">
+    <div class="col">
+      <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col">Cod. Vendedor</th>
+            <th scope="col">Vendedor</th>
+            <th scope="col">Gerente</th>
+            <th scope="col">Valor da Comissão</th>
+            <th scope="col">Data Programada</th>
+            <th scope="col"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let lista of dadosPagination; let i = index" [class.table-active]="lista.codVendedor == comissaoSelecionada.codVendedor">
+            <td [ngClass]="classStatusBorder(lista)">
+              {{ lista.codVendedor}}
+            </td>
+            <td>
+              {{ lista.nomeVendedor | uppercase }}
+            </td>
+            <td>
+              {{ lista.nomeGerente | uppercase }}
+            </td>
+            <td>
+              {{ lista.valorComissao | currency:'BRL':'symbol':'1.2-2' }} 
+            </td>
+            <td>
+              {{ lista.dataProg | uppercase }}
+            </td>
+            <td class="row text-center justify-content-center">
+              <button type="button" class="btn btn-sm" *ngIf="lista.situacao == 2" (click)="openModal(programarPag, lista)">
+                Programar
+              </button>
+              <button type="button" class="btn btn-sm" *ngIf="lista.situacao == 0" (click)="onPagar(i, lista)">
+                Confirmar
+              </button>
+              <button type="button" tooltip="Comissão Paga" class="btn btn-sm btn-outline-success disabled" *ngIf="lista.situacao == 1">
+                <span><i class="far fa-check-circle green"></i></span>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty">
+      </empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && dadosLoaded">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+  <ng-template #programarPag>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Digite a data do pagamento do vendedor #{{comissaoSelecionada?.codVendedor}} - {{comissaoSelecionada?.nomeVendedor}} </h4>
+      <div class="d-flex">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="col-12 ">
+        <div class="row d-flex justify-content-center">
+          <form [formGroup]="formData" autocomplete="off" [hidden] ="comissaoSelecionada.situacao != 2">
+            <div class="form-group col-lg-12">
+              <label for="dataProg">Data Programada</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                  class="form-control"
+                  id="dataProg"
+                  type="text"
+                  bsDatepicker
+                  [bsConfig]="bsConfig"
+                  formControlName="dataProg">
+              </div>
+            </div>
+          </form>
+        </div><br>
+        <div  class="form-row justify-content-center" [hidden] ="comissaoSelecionada.situacao != 2">
+          <button 
+            type="button" 
+            class="btn btn-sm mb-3"
+            (click)="onProgramar(comissaoSelecionada)"
+            
+            >
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</app-body>

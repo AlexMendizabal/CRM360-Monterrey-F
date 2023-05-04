@@ -1,0 +1,208 @@
+<loader-spinner-full-screen *ngIf="!dataLoaded"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle">
+  <button
+    (click)="onFilter()"
+    [disabled]="form.status === 'INVALID'"
+    >
+    Filtrar
+  </button>
+  <!-- *ngIf="permission" -->
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form id="form-logistica-dashboard" [formGroup]="form" class="row">
+      <div class="form-group col-3">
+        <label for="empresa">Empresa</label>
+        <ng-select
+          [searchable]="true"
+          [clearable]="false"
+          [items]="empresas"
+          [virtualScroll]="true"
+          [multiple]="true"
+          [closeOnSelect]	="false"
+          labelForId="empresa"
+          bindLabel="nome"
+          bindValue="idFilial"
+          [loading]="loading"
+          id="empresa"
+          [ngClass]="onFieldRequired('projeto')"
+          formControlName="projeto"
+        >
+        </ng-select>
+        <invalid-form-control [show]="onFieldInvalid('projeto')" message="La Empresa es Obligatoria."></invalid-form-control>
+      </div>
+      <div class="form-group col-3">
+        <label for="empresa"> La Fecha de Inicio </label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+          </div>
+          <input
+            class="form-control"
+            id="dataInicial"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            [ngClass]="onFieldRequired('dataInicial')"
+            formControlName="dataInicial">
+          <invalid-form-control [show]="onFieldInvalid('dataInicial')" message="La Fecha de Inicio es Obligatoria."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-group col-3">
+        <label for="empresa">La Fecha Final</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+          </div>
+          <input
+          class="form-control"
+          id="dataFinal"
+          type="text"
+          bsDatepicker
+          [bsConfig]="bsConfig"
+          [ngClass]="onFieldRequired('dataFinal')"
+          formControlName="dataFinal">
+          <invalid-form-control [show]="onFieldInvalid('dataFinal')" message="La Fecha de Finalización es Obligatoria."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-group col-3">
+        <label for="origem">Origen</label>
+        <select name="origem" id="origem" class="form-control" formControlName="origem">
+          <!-- <option value="TMS">TMS</option> -->
+          <option value="Fusion">Fusion</option>
+        </select>
+      </div>
+    </form>
+  </advanced-filter>
+  <div [hidden]="!filtered">
+    <div class="row">
+      <logistica-dashboard-frete-line-chart
+        [data]="data.conjunto01.data"
+        [loading]="data.conjunto01.loading"
+        [show]="data.conjunto01.show"
+        [empty]="data.conjunto01.empty"
+        [labels]="rotulos"
+        selectedKey="reaisTon"
+        graphId="grafico01"
+        [ngClass]="config?.grafico01 ? config?.grafico01 : 'col-6'"
+        (size)="onConfig('grafico01', $event)"
+      >
+      </logistica-dashboard-frete-line-chart>
+      <logistica-dashboard-frete-line-chart
+        [data]="data.conjunto01.data"
+        [loading]="data.conjunto01.loading"
+        [show]="data.conjunto01.show"
+        [empty]="data.conjunto01.empty"
+        [labels]="rotulos"
+        selectedKey="reaisKM"
+        graphId="grafico02"
+        (size)="onConfig('grafico02', $event)"
+        [ngClass]="config?.grafico02 ? config?.grafico02 : 'col-6'"
+      >
+      </logistica-dashboard-frete-line-chart>
+    </div>
+    <div class="row" #scroll>
+      <logistica-dashboard-frete-line-chart
+        [data]="data.conjunto01.data"
+        [loading]="data.conjunto01.loading"
+        [show]="data.conjunto01.show"
+        [empty]="data.conjunto01.empty"
+        [labels]="rotulos"
+        selectedKey="freteReceita"
+        graphId="grafico03"
+        (size)="onConfig('grafico03', $event)"
+        [ngClass]="config?.grafico03 ? config?.grafico03 : 'col-6'"
+      >
+      </logistica-dashboard-frete-line-chart>
+      <logistica-dashboards-frete-barh-chart
+        [data]="data.conjunto02.data"
+        [loading]="data.conjunto02.loading"
+        [show]="data.conjunto02.show"
+        [empty]="data.conjunto02.empty"
+        [labels]="rotulos"
+        selectedKey="taxaOcupacao"
+        graphId="grafico04"
+        (size)="onConfig('grafico04', $event)"
+        [ngClass]="config?.grafico04 ? config?.grafico04 : 'col-6'"
+        #teste
+      >
+      </logistica-dashboards-frete-barh-chart>
+    </div>
+    <div class="row">
+      <logistica-dashboards-frete-barh-chart
+        [data]="data.conjunto04.data"
+        [loading]="data.conjunto04.loading"
+        [show]="data.conjunto04.show"
+        [empty]="data.conjunto04.empty"
+        [labels]="rotulos"
+        selectedKey="totalVeiculos"
+        graphId="grafico05"
+        class="col-6"
+        >
+      </logistica-dashboards-frete-barh-chart>
+      <logistica-dashboards-frete-pie-chart
+        [data]="data.conjunto04.data"
+        [loading]="data.conjunto04.loading"
+        [show]="data.conjunto04.show"
+        [empty]="data.conjunto04.empty"
+        [labels]="rotulos"
+        selectedKey="totalVeiculos"
+        graphId="grafico06"
+        class="col-6"
+        >
+      </logistica-dashboards-frete-pie-chart>
+    </div>
+    <div class="row mt-2">
+      <logistica-dashboard-frete-card
+        class="col"
+        [value]="data?.conjunto03?.data['entregasViagem']"
+        selectedKey = 'entregasViagem'
+        [show]="data.conjunto03.show"
+        [empty]="data.conjunto03.empty"
+        [loading]="data.conjunto03.loading"
+        [label]="rotulos['entregasViagem']"
+      >
+      </logistica-dashboard-frete-card>
+      <logistica-dashboard-frete-card
+        class="col"
+        [value]="data?.conjunto03?.data['ticketMedioEntrega']"
+        selectedKey='ticketMedioEntrega'
+        [show]="data.conjunto03.show"
+        [empty]="data.conjunto03.empty"
+        [loading]="data.conjunto03.loading"
+        [label]="rotulos['ticketMedioEntrega']"
+      >
+      </logistica-dashboard-frete-card>
+      <logistica-dashboard-frete-card
+        class="col"
+        [value]="data?.conjunto03?.data['pesoMedioViagem']"
+        selectedKey='pesoMedioViagem'
+        [show]="data.conjunto03.show"
+        [empty]="data.conjunto03.empty"
+        [loading]="data.conjunto03.loading"
+        [label]="rotulos['pesoMedioViagem']"
+      >
+      </logistica-dashboard-frete-card>
+      <logistica-dashboard-frete-card
+        class="col"
+        [value]="data?.conjunto03?.data['taxaOcupacao']"
+        selectedKey='taxaOcupacao'
+        [show]="data.conjunto03.show"
+        [empty]="data.conjunto03.empty"
+        [loading]="data.conjunto03.loading"
+        [label]="rotulos['taxaOcupacao']"
+      >
+      </logistica-dashboard-frete-card>
+      <logistica-dashboard-frete-card
+        class="col"
+        [value]="data?.conjunto03?.data['totalClientes']"
+        selectedKey='totalClientes'
+        [show]="data.conjunto03.show"
+        [empty]="data.conjunto03.empty"
+        [loading]="data.conjunto03.loading"
+        [label]="rotulos['totalClientes']"
+      >
+      </logistica-dashboard-frete-card>
+    </div>
+  </div>
+</app-body>

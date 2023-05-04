@@ -1,0 +1,355 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button 
+    (click)="onSearch()"
+    >
+    Pesquisar
+  </button>
+  <button 
+    (click)="openOcorrencias(idInventario)"
+    *ngIf="ativNotaFiscal"
+    >
+    Ocorrências
+  </button>
+  <button 
+    (click)="openNotaFiscal(idInventario)"
+    *ngIf="ativNotaFiscal"
+    >
+    Notas Fiscais
+  </button>
+  <button 
+    (click)="exportarExcel()"
+    [disabled]="!info || noResult"
+    *ngIf="ativExport"
+    >
+    Exportar
+  </button>
+  <button
+    class="hover" 
+    (click)="cancelar(template, 1)"
+    *ngIf="ativCancelar"
+    >
+    Cancelar
+  </button>
+  <button 
+    (click)="habilitaCampos()"
+    [disabled]="(habilita && !info) || inativBotoes || noResult"
+    *ngIf="ativEditar"
+    >
+    Editar
+  </button>
+  <button 
+    (click)="postSalvar()"
+    [disabled]="info || inativBotoes || noResult"
+    *ngIf="ativSalvar"
+    >
+    Salvar
+  </button>
+  <button 
+    (click)="finalizar(template)"
+    *ngIf="ativFinaliza"
+    >
+    Finalizar
+  </button>
+  <button 
+    (click)="atualizarInventario('',1)"
+    *ngIf="ativReabrir"
+    >
+    Reabrir
+  </button>
+  <button
+    class="hover" 
+    (click)="atualizarInventario('',5)"
+    [disabled]="!ativAprovar"
+    *ngIf="ativAprovar"
+    >
+    Aprovar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="d-flex justify-content-between align-items-center col-12 p-0" [hidden]="noResult || spinnerFullScreen">
+    <div>
+      <strong style="font-size: 1.25rem">Código do Inventário: {{ idInventario | number : '6.0-0'}} - {{ tipoInventario | uppercase }}</strong>
+      <div 
+        class="d-flex justify-content-start align-items-center" 
+        style="cursor: pointer; font-size: 1rem"
+        *ngIf="disabledBotoes.editar"
+        >
+          <i [ngClass]="{'fa-toggle-off': considerarMaterialSemEstoque == 1, 'fa-toggle-on': considerarMaterialSemEstoque == 0}" 
+          class="fas pr-1" 
+          (click)="onToggleListaMateriais();" 
+          >
+        </i> Considerar materiais sem estoque
+      </div>
+    </div>
+    <form class="col-4 p-0" [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col-12">
+          <label for="dsMaterial">Material</label>
+          <ng-select
+              [items]= "listaMateriaisFiltro"
+              [closeOnSelect]="true"
+              [hideSelected]="true"
+              bindLabel="dsMaterial"
+              bindValue="cdMaterial"
+              placeholder="Pesquise por um material"
+              formControlName="cdMaterial"
+          >
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row mb-3" [hidden]="spinnerFullScreen">
+    <div class="col-lg-12">
+      <div class="border shadow-sm">
+        <div class="row">
+          <div class="col">
+            <div
+              id="filter-header"
+              class="hover w-100 d-flex justify-content-between"
+              [ngClass]="{'shadow-sm border-bottom': showAdvancedFilter}"
+              (click)="onAdvancedFilter()">
+              <div class="mtc-title mb-0 pl-2 pt-1"> Totalizador </div>
+              <button
+                type="button"
+                class="btn-icon-sm my-auto mr-1">
+                <i class="fas fa-chevron-down" [hidden]="showAdvancedFilter"></i>
+                <i class="fas fa-chevron-up" [hidden]="!showAdvancedFilter"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="filter-body" [hidden]="showAdvancedFilter">
+          <custom-table [config]="tableFilterConfig">
+            <ng-template #thead let-thead>
+              <tr>
+                <th scope="col" class="text-center" style="border-top: none"></th>
+                <th scope="col" class="text-center" style="border-top: none"></th>
+                <th scope="col" class="text-center" style="border-top: none"></th>
+                <th scope="col" class="text-center" style="border-top: none"></th>
+                <th scope="col" class="text-center" style="border-top: none"></th>
+                <th scope="col" class="text-center" style="border-top: none"></th>
+                <th scope="col" class="text-center" style="border-top: none"></th>
+                <th scope="col" class="text-center" style="border-top: none"></th>
+                <th scope="col" class="text-center" style="border-top: none"></th>
+                <th scope="col" class="text-center" style="border-top: none"></th>
+                <th scope="col" class="text-center" style="border-top: none"></th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr>
+                <td style="border-top: none"><h6>Total Estoque (tons)</h6></td>
+                <td style="border-top: none"><h6>=</h6></td>
+                <td style="border-top: none"><h6>{{ listaInfo.qtPesoEstoque | number: '1.3-3' }}</h6></td>
+                <td style="border-top: none"><h6></h6></td>
+                <td style="border-top: none"><h6>Total geral da contagem</h6></td>
+                <td style="border-top: none"><h6>=</h6></td>
+                <td style="border-top: none"><h6>{{ listaInfo.saldoEstoqueLancamento | number: '1.3-3' }}</h6></td>
+                <td style="border-top: none"><h6></h6></td>
+                <td style="border-top: none"><h6>Total inventário rotativo</h6></td>
+                <td style="border-top: none"><h6>=</h6></td>
+                <td style="border-top: none"><h6></h6></td>
+              </tr>
+              <tr>
+                <td style="border-top: none"><h6>Total qtd. peças</h6></td>
+                <td style="border-top: none"><h6>=</h6></td>
+                <td style="border-top: none"><h6>{{ listaInfo.qtPecaLancamento }}</h6></td>
+                <td style="border-top: none"><h6></h6></td>
+                <td style="border-top: none"><h6>Total notas fiscais</h6></td>
+                <td style="border-top: none"><h6>=</h6></td>
+                <td style="border-top: none"><h6>{{ listaInfo.qtTotalNf | number: '1.3-3' }}</h6></td>
+                <td style="border-top: none"><h6></h6></td>
+                <td style="border-top: none"><h6>Total valor unitário</h6></td>
+                <td style="border-top: none"><h6>=</h6></td>
+                <td style="border-top: none"><h6>{{ listaInfo.precoMinimo | currency:'BRL' }}</h6></td>
+              </tr>
+              <tr>
+                <td style="border-top: none"><h6>Total peso físico (tons)</h6></td>
+                <td style="border-top: none"><h6>=</h6></td>
+                <td style="border-top: none"><h6>{{ listaInfo.qtPesoLancamento | number: '1.3-3' }}</h6></td>
+                <td style="border-top: none"><h6></h6></td>
+                <td style="border-top: none"><h6>Total saldo inventário</h6></td>
+                <td style="border-top: none"><h6>=</h6></td>
+                <td style="border-top: none"><h6>{{ listaInfo.saldoEstoque | number: '1.3-3' }}</h6></td>
+                <td style="border-top: none"><h6></h6></td>
+                <td style="border-top: none"><h6>Total resultado inventário</h6></td>
+                <td style="border-top: none"><h6>=</h6></td>
+                <td style="border-top: none"><h6></h6></td>
+              </tr>
+              <tr>
+                <td style="border-top: none"></td>
+                <td style="border-top: none"></td>
+                <td style="border-top: none"></td>
+                <td style="border-top: none"></td>
+                <td style="border-top: none"><h6>Total notas fiscais R.O.</h6></td>
+                <td style="border-top: none"><h6>=</h6></td>
+                <td style="border-top: none"><h6></h6></td>
+                <td style="border-top: none"><h6></h6></td>
+                <td style="border-top: none"><h6>Total resultado monetário</h6></td>
+                <td style="border-top: none"><h6>=</h6></td>
+                <td style="border-top: none"><h6>{{ listaInfo.saldoFinanceiro | currency:'BRL' }}</h6></td>
+              </tr>  
+            </ng-template>
+          </custom-table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-8 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig" [hidden]="noResult || spinnerFullScreen">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" style="width: 150px;" class="text-center" [hidden]="showDetailPanel">Classe</th>
+            <th scope="col" style="width: 150px;" class="text-center">Cod. material</th>
+            <th scope="col" style="width: 350px;" class="text-center">Material</th>
+            <th scope="col" style="width: 150px;" class="text-center">Estoque (tons)</th>
+            <th scope="col" style="width: 150px;" class="text-center" [hidden]="showDetailPanel">Qtd. peças</th>
+            <th scope="col" style="width: 150px;" class="text-center">Peso físico (tons)</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr class="hover" *ngFor="let lista of listas | slice : begin : end; let i = index" (click)='onDetailPanel(i)'>
+            <td class="text-center" [hidden]="showDetailPanel"> {{ lista?.dsClasse | uppercase }}</td>
+            <td class="text-center">{{ lista.cdMaterial }}</td>
+            <td class="text-center" style="width: 350px;">{{ lista.dsMaterial | uppercase }}</td>
+            <td class="text-center" [hidden]="showDetailPanel">{{ lista.qtPesoEstoque | number: '1.3-3'}}</td>
+            <td class="text-center">
+              <div class="input-group">
+                <input 
+                  class="form-control form-control-sm" 
+                  type="text" 
+                  [(ngModel)]="lista.qtPecaContagem"
+                  [disabled]="info">
+              </div>
+            </td>
+            <td class="align-middle">
+              <div class="input-group">
+                <input 
+                  class="form-control form-control-sm" 
+                  type="text"
+                  [(ngModel)]="lista.qtPesoContagem"
+                  [disabled]="info"
+                  currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 3 }">
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="row" [hidden]="noResult || spinnerFullScreen">
+        <div class="mt-3 col">
+            Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+          <pagination
+            [maxSize]="10"
+            [totalItems]="totalItems"
+            (pageChanged)="onPageChanged($event)"
+            [(itemsPerPage)]="itemsPerPage"
+            [boundaryLinks]="true"
+            [(ngModel)]="currentPage"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;">
+          </pagination>
+        </div>
+      </div>
+    </div>
+    <div class="col-4" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="appTitleInventario">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label>Classe</label>
+                  <div class="text-nowrap">{{ totalInventario.dsClasse | uppercase }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label>Endereço</label>
+                  <div class="text-nowrap">{{ totalInventario.enderecoPatio | uppercase }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label>Estoque (tons)</label>
+                  <div class="text-nowrap">{{ totalInventario.qtPesoEstoque | number: '1.3-3'}}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label>Peso por peça (Kg)</label>
+                  <div class="text-nowrap">{{ totalInventario.pesoPeca | number: '1.3-3' }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label>Total da contagem</label>
+                  <div class="text-nowrap">{{ totalInventario.totalContagem | number: '1.3-3' }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label>Notas fiscais</label>
+                  <div class="text-nowrap">{{ totalInventario.qtMaterialNotaFiscal | number: '1.3-3' }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label>Saldo inventário</label>
+                  <div class="text-nowrap">{{ totalInventario.saldoInventario | number: '1.3-3' }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label>Soma inventário rotativo</label>
+                  <div class="text-nowrap">{{ totalInventario.somaInventarioRotativo }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label>Valor unitário</label>
+                  <div class="text-nowrap">{{ totalInventario.precoMinimo | currency:'BRL' }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label>Resultado inventário</label>
+                  <div class="text-nowrap">{{ totalInventario.resultadoInventario | number: '1.3-3' }}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label>Resultado monetário</label>
+                  <div class="text-nowrap">{{ totalInventario.resultadoMonetario | currency:'BRL' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </detail-panel>
+    </div>
+    <div class="d-flex align-items-center justify-content-center" style="width: 100%; height: 70%;" [hidden]="!noResult">
+      <empty-result message="Não há materiais cadastrados para este inventário"></empty-result>
+    </div>
+  </div>
+  <ng-template #template>
+    <div class="modal-header">
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <textarea name="" id="" cols="63" rows="10" #justificativa></textarea>
+      <button  
+        type="button" 
+        class="btn btn-primary justify-content-end " 
+        style="margin-left: 51vh"
+        (click)="atualizarInventario(justificativa.value, 3); modalRef.hide()"> Finalizar </button>
+    </div>
+  </ng-template>
+</app-body>
+

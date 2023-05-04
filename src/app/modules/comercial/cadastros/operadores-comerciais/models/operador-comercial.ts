@@ -1,0 +1,37 @@
+export interface OperadorComercial {
+  codOperador: number;
+  nomeOperador: string;
+  sobrenomeOperador: string;
+  nomeCompleto: string;
+  codTipoOperador: number;
+  codSituacao: number;
+  situacao: string;
+  codEquipe: number;
+  nomeEquipe: string;
+  codEscritorio: number;
+  nomeEscritorio: string;
+  tipoPessoa: string;
+  cpf: string;
+  cnpj: string;
+  cpfCnpj: string;
+  rg: string;
+  ie: string;
+  rgIe: string;
+  telefone: string;
+  celular: string;
+  email: string;
+  cep: string;
+  logradouro: string;
+  numero: string;
+  complemento: string;
+  referencia: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+  banco: string;
+  agencia: string;
+  contaCorrente: string;
+  dataInicioContrato: string;
+  dataFinalContrato: string;
+  dataCadastro: string;
+}

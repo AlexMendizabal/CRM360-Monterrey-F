@@ -1,0 +1,240 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Contratos">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <!-- <div class="form-group col-lg-2">
+              <label for="codLinha">Linha</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="linhas"
+                formControlName="codLinha"
+                [virtualScroll]="true"
+                labelForId="codLinha"
+                bindLabel="descricao"
+                bindValue="id"
+                (change)="onChangeLinha($event.id, true)">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="codClasse">Classe</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="filteredClasses"
+                formControlName="codClasse"
+                [virtualScroll]="true"
+                labelForId="codClasse"
+                bindLabel="nomeClasse"
+                bindValue="idClasse"
+                (change)="onChangeClasse($event.idClasse, true, 'application')">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="codMaterial">Material</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="materiais"
+                formControlName="codMaterial"
+                [virtualScroll]="true"
+                labelForId="codMaterial"
+                bindLabel="codigoDescricaoMaterial"
+                bindValue="codigoMaterial"
+                [loading]="materiaisLoader"
+                loadingText="Carregando...">
+              </ng-select>
+            </div> -->
+            <div class="form-group col-lg-2">
+              <label for="codContrato">Cód. Contrato</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Digite..."
+                id="codContrato"
+                formControlName="codContrato"
+                autocomplete="new-password"
+              >
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="nomeContrato">Nome Contrato</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Digite..."
+                id="nomeContrato"
+                formControlName="nomeContrato"
+                autocomplete="new-password"
+              >
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="codStatus">Status</label>
+              <select
+                class="form-control custom-select"
+                id="codStatus"
+                formControlName="codStatus"
+                >
+                <option value="" >Todos</option>
+                <option value="0">Reprovado</option>
+                <option value="1">Aprovado</option>
+                <option value="2">Aguardando Aprovação</option>
+              </select>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="codSituacao">Situação</label>
+              <select
+                class="form-control custom-select"
+                id="codSituacao"
+                formControlName="codSituacao">
+                <option value="">Todos</option>
+                <option value="0">Inativos</option>
+                <option value="1">Ativos</option>
+              </select>
+            </div>
+            <div class="form-group col-lg-1">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-5 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig" *ngIf="dados.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center hover">
+              <thead-sorter
+                value="Código"
+                [active]="orderBy == 'codContrato'"
+                [sort]="orderType"
+                (click)="setOrderBy('codContrato')">
+              </thead-sorter>
+            </th>
+            <th scope="col" class="hover">
+              <thead-sorter
+                value="Nome Contrato"
+                [active]="orderBy == 'nomeContrato'"
+                [sort]="orderType"
+                (click)="setOrderBy('nomeContrato')">
+              </thead-sorter>
+            </th>
+            <th scope="col" class="text-center">Quantidade</th>
+            <th scope="col" [hidden]="showDetailPanel">Usuário cadastro</th>
+            <th scope="col"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr
+            *ngFor="let contrato of dados; let i = index;"
+            [class.table-active]="contrato.codContrato == contratoSelecionado.codContrato && showDetailPanel">
+            <td
+              class="text-center hover"
+              [ngClass]="classStatusBorder(contrato)"
+              (click)="onDetails(contrato)">
+              {{ contrato.codContrato }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(contrato)">
+              {{ contrato.nomeContrato | uppercase }}
+            </td>
+            <td
+              class="text-center hover"
+              (click)="onDetails(contrato)">
+              {{ contrato.quantidade | number:'1.3-3' }} TON
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(contrato)"
+              [hidden]="showDetailPanel">
+              <span *ngIf="contrato.nomeUsuario === null">NÃO INFORMADO</span>
+              <span *ngIf="contrato.nomeUsuario !== null">
+                {{ contrato.nomeUsuario | uppercase }}
+              </span>
+            </td>
+            <td class="text-right">
+              <span *ngIf="contrato.codSituacao == 0" class="mr-3" tooltip="Ativar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onActivate(i, contrato)">
+                  <i class="fas fa-toggle-off"></i>
+                </button>
+              </span>
+              <span *ngIf="contrato.codSituacao == 1" class="mr-3" tooltip="Inativar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onInactivate(i, contrato)">
+                  <i class="fas fa-toggle-on"></i>
+                </button>
+              </span>
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onEdit(contrato)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && dadosLoaded"></empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-7" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="detailPanelTitle">
+        <custom-table [config]="tableConfigMateriais" *ngIf="materiaisAssociados.length > 0">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">Código</th>
+              <th scope="col">Material</th>
+              <th scope="col" class="text-center">Qtde.</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let material of materiaisAssociados">
+              <td class="text-center">{{ material.codContrato }}</td>
+              <td>{{ material.nomeContrato | uppercase }}</td>
+              <td class="text-center">{{ material.quantidade | number:'1.3-3' }} {{ material.unidade | uppercase }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+</app-body>

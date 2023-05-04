@@ -1,0 +1,309 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row" *ngIf="dadosFaturamentoLoaded">
+  <div class="col">
+    <div class="mtc-title">Datos de facturación</div>
+    <div *ngIf="dadosFaturamento.tipoPessoa == 'F'">
+      <!-- <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>CPF</label>
+          <div *ngIf="dadosFaturamento.cpf == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.cpf != null">{{ dadosFaturamento.cpf }}</div>
+        </div>
+        <div class="form-group col-md-6">
+          <label>RG</label>
+          <div *ngIf="dadosFaturamento.rg == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.rg != null">{{ dadosFaturamento.rg }}</div>
+        </div>
+      </div> -->
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Nombre</label>
+          <div *ngIf="dadosFaturamento.nome == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.nome != null">{{ dadosFaturamento.nome }}</div>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Apellido</label>
+          <div *ngIf="dadosFaturamento.sobrenome == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.sobrenome != null">{{ dadosFaturamento.sobrenome }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <!-- <div class="form-group col-md-6">
+          <label>Tipo de registro</label>
+          <div *ngIf="dadosFaturamento.descTipoCadastro == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.descTipoCadastro != null">{{ dadosFaturamento.descTipoCadastro }}</div>
+        </div> -->
+        <!-- <div class="form-group col-md-6">
+          <label>Registro del productor rural</label>
+          <div *ngIf="dadosFaturamento.inscricaoProdRural == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.inscricaoProdRural != null">{{ dadosFaturamento.inscricaoProdRural }}</div>
+        </div> -->
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Contribuyente</label>
+          <div *ngIf="dadosFaturamento.descContribuinte == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.descContribuinte != null">{{ dadosFaturamento.descContribuinte }}</div>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Sector de actividad</label>
+          <div *ngIf="dadosFaturamento.descSetorAtividade == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.descSetorAtividade != null">{{ dadosFaturamento.descSetorAtividade }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Limite de crédito</label>
+          <div *ngIf="dadosFaturamento.limiteCredito == 0">R$ 0,00</div>
+          <div *ngIf="dadosFaturamento.limiteCredito > 0">{{ dadosFaturamento.limiteCredito | currency:'BRL':'symbol':'1.2-2' }}</div>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Limite de crédito (seguradora)</label>
+          <div *ngIf="dadosFaturamento.creditoSeguradora == 0">R$ 0,00</div>
+          <div *ngIf="dadosFaturamento.creditoSeguradora > 0">{{ dadosFaturamento.creditoSeguradora | currency:'BRL':'symbol':'1.2-2' }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Fecha de inclusión</label>
+          <div *ngIf="dadosFaturamento.dataInclusao == null">Sin informacion</div>
+          <div *ngIf="dadosFaturamento.dataInclusao != null">{{ dadosFaturamento.dataInclusao }}</div>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Próximo análisis del crédito en</label>
+          <div *ngIf="dadosFaturamento.proximaAnaliseCredito == null">R$ 0,00</div>
+          <div *ngIf="dadosFaturamento.proximaAnaliseCredito != null">{{ dadosFaturamento.proximaAnaliseCredito }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Quien registro</label>
+          <div *ngIf="dadosFaturamento.quemCadastrou == null">Sin informacion</div>
+          <div *ngIf="dadosFaturamento.quemCadastrou != null">{{ dadosFaturamento.quemCadastrou }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label class="d-flex">
+            <div class="mr-2">
+              <i class="fas fa-times-circle text-danger" *ngIf="dadosFaturamento.somenteCarteira == 0"></i>
+              <i class="fas fa-check-circle text-success" *ngIf="dadosFaturamento.somenteCarteira == 1"></i>
+            </div>
+            <span>Facturación solo de cartera</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label class="d-flex">
+            <div class="mr-2">
+              <i class="fas fa-times-circle text-danger" *ngIf="dadosFaturamento.boletoDescontado == 0"></i>
+              <i class="fas fa-check-circle text-success" *ngIf="dadosFaturamento.boletoDescontado == 1"></i>
+            </div>
+            <span>No acepta boleto con descuento</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label class="d-flex">
+            <div class="mr-2">
+              <i class="fas fa-times-circle text-danger" *ngIf="dadosFaturamento.somenteAVista == 0"></i>
+              <i class="fas fa-check-circle text-success" *ngIf="dadosFaturamento.somenteAVista == 1"></i>
+            </div>
+            <span>cliente solo efectivo</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label class="d-flex">
+            <div class="mr-2">
+              <i class="fas fa-times-circle text-danger" *ngIf="dadosFaturamento.exigePesagem == 0"></i>
+              <i class="fas fa-check-circle text-success" *ngIf="dadosFaturamento.exigePesagem == 1"></i>
+            </div>
+            <span>Requiere pesaje</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="dadosFaturamento.tipoPessoa == 'J'">
+      <div class="form-row">
+        <div class="form-group col-md-6 offset-md-6">
+          <label>Nota de Cliente</label>
+          <div *ngIf="dadosFaturamento.notaCliente == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.notaCliente >=1 && dadosFaturamento.notaCliente <2"><i class="fas fa-star"></i></div>
+          <div *ngIf="dadosFaturamento.notaCliente >=2 && dadosFaturamento.notaCliente <3"><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <div *ngIf="dadosFaturamento.notaCliente >=3 && dadosFaturamento.notaCliente <4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <div *ngIf="dadosFaturamento.notaCliente >=4 && dadosFaturamento.notaCliente <5"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <div *ngIf="dadosFaturamento.notaCliente >= 5"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <!-- <div class="form-group col-md-6">
+          <label>CNPJ</label>
+          <div *ngIf="dadosFaturamento.cnpj == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.cnpj != null">{{ dadosFaturamento.cnpj }}</div>
+        </div> -->
+        <div class="form-group col-md-6">
+          <label>Razon Social</label>
+          <div *ngIf="dadosFaturamento.razaoSocial == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.razaoSocial != null">{{ dadosFaturamento.razaoSocial }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Nombre ficticio</label>
+          <div *ngIf="dadosFaturamento.nomeFantasia == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.nomeFantasia != null">{{ dadosFaturamento.nomeFantasia }}</div>
+        </div>
+        <!-- <div class="form-group col-md-6">
+          <label>Tipo de registro</label>
+          <div *ngIf="dadosFaturamento.descTipoCadastro == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.descTipoCadastro != null">{{ dadosFaturamento.descTipoCadastro }}</div>
+        </div> -->
+      </div>
+      <!-- <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Régimen fiscal</label>
+          <div *ngIf="dadosFaturamento.descTributacao == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.descTributacao != null">{{ dadosFaturamento.descTributacao }}</div>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Contribuyente</label>
+          <div *ngIf="dadosFaturamento.descContribuinte == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.descContribuinte != null">{{ dadosFaturamento.descContribuinte }}</div>
+        </div>
+      </div> -->
+      <div class="form-row">
+        <!-- <div class="form-group col-md-6">
+          <label>Inscripción Estatal</label>
+          <div *ngIf="dadosFaturamento.inscricaoEstadual == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.inscricaoEstadual != null">{{ dadosFaturamento.inscricaoEstadual }}</div>
+        </div> -->
+        <div class="form-group col-md-6">
+          <label>Sector de actividades</label>
+          <div *ngIf="dadosFaturamento.descSetorAtividade == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.descSetorAtividade != null">{{ dadosFaturamento.descSetorAtividade }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <!-- <div class="form-group col-md-6">
+          <label>Propósito del material</label>
+          <div *ngIf="dadosFaturamento.descFinalidadeMaterial == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.descFinalidadeMaterial != null">{{ dadosFaturamento.descFinalidadeMaterial }}</div>
+        </div> -->
+      </div>
+      <div class="form-row">
+        <!-- <div class="form-group col">
+          <label>CNAE (atividade principal)</label>
+          <div *ngIf="dadosFaturamento.descCnae == null">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.descCnae != null">
+            {{ dadosFaturamento.descCnae | uppercase }}
+          </div>
+        </div> -->
+      </div>
+      <!-- <div class="form-row">
+        <div class="form-group col mb-3">
+          <label>Actividades secundarias</label>
+          <div *ngIf="dadosFaturamento.atividadesSecundarias.length == 0">SIN INFORMACION</div>
+          <div *ngIf="dadosFaturamento.atividadesSecundarias.length > 0">
+            <ul class="list-unstyled mb-0">
+              <li
+                class="mb-1"
+                *ngFor="let item of dadosFaturamento.atividadesSecundarias">
+                {{ item.descCnae | uppercase }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div> -->
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Limite de crédito</label>
+          <div *ngIf="dadosFaturamento.limiteCredito == 0">R$ 0,00</div>
+          <div *ngIf="dadosFaturamento.limiteCredito > 0">{{ dadosFaturamento.limiteCredito | currency:'BRL':'symbol':'1.2-2' }}</div>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Limite de crédito (seguradora)</label>
+          <div *ngIf="dadosFaturamento.creditoSeguradora == 0">R$ 0,00</div>
+          <div *ngIf="dadosFaturamento.creditoSeguradora > 0">{{ dadosFaturamento.creditoSeguradora | currency:'BRL':'symbol':'1.2-2' }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Fecha de inclusión</label>
+          <div *ngIf="dadosFaturamento.dataInclusao == null">Sin informacion</div>
+          <div *ngIf="dadosFaturamento.dataInclusao != null">{{ dadosFaturamento.dataInclusao }}</div>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Próximo análisis de crédito en</label>
+          <div *ngIf="dadosFaturamento.proximaAnaliseCredito == null">R$ 0,00</div>
+          <div *ngIf="dadosFaturamento.proximaAnaliseCredito != null">{{ dadosFaturamento.proximaAnaliseCredito }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Quien registro</label>
+          <div *ngIf="dadosFaturamento.quemCadastrou == null">Sin informacion</div>
+          <div *ngIf="dadosFaturamento.quemCadastrou != null">{{ dadosFaturamento.quemCadastrou }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label class="d-flex">
+            <div class="mr-2">
+              <i class="fas fa-times-circle text-danger" *ngIf="dadosFaturamento.somenteCarteira == 0"></i>
+              <i class="fas fa-check-circle text-success" *ngIf="dadosFaturamento.somenteCarteira == 1"></i>
+            </div>
+            <span>Facturación solo en cartera</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label class="d-flex">
+            <div class="mr-2">
+              <i class="fas fa-times-circle text-danger" *ngIf="dadosFaturamento.boletoDescontado == 0"></i>
+              <i class="fas fa-check-circle text-success" *ngIf="dadosFaturamento.boletoDescontado == 1"></i>
+            </div>
+            <span>No acepta boleto con descuento</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label class="d-flex">
+            <div class="mr-2">
+              <i class="fas fa-times-circle text-danger" *ngIf="dadosFaturamento.somenteAVista == 0"></i>
+              <i class="fas fa-check-circle text-success" *ngIf="dadosFaturamento.somenteAVista == 1"></i>
+            </div>
+            <span>cliente solo efectivo</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label class="d-flex">
+            <div class="mr-2">
+              <i class="fas fa-times-circle text-danger" *ngIf="dadosFaturamento.exigePesagem == 0"></i>
+              <i class="fas fa-check-circle text-success" *ngIf="dadosFaturamento.exigePesagem == 1"></i>
+            </div>
+            <span>Requiere pesaje</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col mb-md-0">
+          <label class="d-flex">
+            <div class="mr-2">
+              <i class="fas fa-times-circle text-danger" *ngIf="dadosFaturamento.marca == 0"></i>
+              <i class="fas fa-check-circle text-success" *ngIf="dadosFaturamento.marca == 1"></i>
+            </div>
+            <span>Marca</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

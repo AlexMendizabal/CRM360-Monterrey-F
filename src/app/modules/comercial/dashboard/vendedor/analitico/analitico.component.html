@@ -1,0 +1,167 @@
+<div class="row">
+  <div class="col" #scroll>
+    <div class="d-flex justify-content-between mb-3">
+      <div class="mtc-title mb-0">{{ tableTitle }}</div>
+      <button
+        type="button"
+        class="btn-icon"
+        (click)="onClose()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <custom-table *ngIf="tableConfig == 'registroOcorrencias'">
+      <ng-template #thead let-thead>
+        <tr>
+          <th scope="col" class="text-center">Código</th>
+          <th scope="col">Razão social</th>
+          <th scope="col" class="text-center">Núm. ocorrência</th>
+          <th scope="col" class="text-center">NF de saída</th>
+          <th scope="col" class="text-center">Situação</th>
+          <th scope="col" class="text-center">Unidade</th>
+          <th scope="col" class="text-center">Data</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let item of tableDataReturned">
+          <td class="text-center">{{ item.codCliente }}</td>
+          <td>{{ item.razaoSocial }}</td>
+          <td class="text-center">{{ item.numOcorrencia }}</td>
+          <td class="text-center">{{ item.numNotaFiscal }}</td>
+          <td class="text-center">{{ item.situacao }}</td>
+          <td class="text-center">{{ item.unidade }}</td>
+          <td class="text-center">{{ item.dataAberta }}</td>
+        </tr>
+      </ng-template>
+    </custom-table>
+    <custom-table *ngIf="tableConfig == 'clientesA' || tableConfig == 'clientesB' || tableConfig == 'clientesC' || tableConfig == 'clientesD'">
+      <ng-template #thead let-thead>
+        <tr>
+          <th scope="col" class="text-center">Código</th>
+          <th scope="col">Razão social</th>
+          <th scope="col" class="text-center" *ngIf="tableConfig == 'clientesB'">Toneladas</th>
+          <th scope="col" class="text-center" *ngIf="tableConfig == 'clientesB'">R$</th>
+          <th scope="col" class="text-center" *ngIf="tableConfig == 'clientesC' || tableConfig == 'clientesD'">Última compra</th>
+          <th scope="col" class="text-center" *ngIf="tableConfig == 'clientesD'">Inativação em</th>
+          <th scope="col" class="text-center">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let item of tableDataReturned">
+          <td class="text-center">{{ item.codCliente }}</td>
+          <td>{{ item.razaoSocial }}</td>
+          <td class="text-center" *ngIf="tableConfig == 'clientesB'">{{ item.ton | number:'1.3-3' }}t</td>
+          <td class="text-center" *ngIf="tableConfig == 'clientesB'">{{ item.valor | currency:'BRL' }}</td>
+          <td class="text-center" *ngIf="tableConfig == 'clientesC' || tableConfig == 'clientesD'">{{ item.data }}</td>
+          <td class="text-center" *ngIf="tableConfig == 'clientesD'">{{ item.inativacaoEm }}</td>
+          <td class="text-center">
+            <a
+              class="btn-icon-sm mr-4"
+              tooltip="Detalhes"
+              container="body"
+              [routerLink]="['/comercial/clientes/detalhes/', item.codCliente]"
+              target="_blank">
+              <i class="fas fa-user"></i>
+            </a>
+            <a
+              class="btn-icon-sm"
+              tooltip="Agendar"
+              container="body"
+              [routerLink]="['/comercial/agenda/novo/', item.codCliente]"
+              target="_blank">
+              <i class="far fa-calendar-alt"></i>
+            </a>
+          </td>
+        </tr>
+      </ng-template>
+    </custom-table>
+    <custom-table *ngIf="tableConfig == 'financeiro'">
+      <ng-template #thead let-thead>
+        <tr>
+          <th scope="col" class="text-center">Código</th>
+          <th scope="col">Razão social</th>
+          <th scope="col" class="text-center">R$</th>
+          <th scope="col" class="text-center">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let item of tableDataReturned">
+          <td class="text-center">{{ item.codCliente }}</td>
+          <td>{{ item.razaoSocial }}</td>
+          <td class="text-center">{{ item.total | currency:'BRL' }}</td>
+          <td class="text-center">
+            <a
+              class="btn-icon-sm mr-4"
+              tooltip="Histórico financeiro"
+              container="body"
+              [routerLink]="['/comercial/clientes/historico-financeiro/', item.codCliente, 'resumo']"
+              target="_blank">
+              <i class="fas fa-search-dollar"></i>
+            </a>
+            <a
+              class="btn-icon-sm"
+              tooltip="Agendar"
+              container="body"
+              [routerLink]="['/comercial/agenda/novo/', item.codCliente]"
+              target="_blank">
+              <i class="far fa-calendar-alt"></i>
+            </a>
+          </td>
+        </tr>
+      </ng-template>
+    </custom-table>
+    <custom-table *ngIf="tableConfig == 'desempenhoCliente'">
+      <ng-template #thead let-thead>
+        <tr>
+          <th scope="col" class="text-center">Código</th>
+          <th scope="col">Razão social</th>
+          <th scope="col" class="text-center">Toneladas</th>
+          <th scope="col" class="text-center">R$</th>
+          <th scope="col" class="text-center">Representação</th>
+          <th scope="col" class="text-center">Acumulado</th>
+          <th scope="col" class="text-center">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let item of tableDataReturned">
+          <td class="text-center">{{ item.codCliente }}</td>
+          <td>{{ item.razaoSocial }}</td>
+          <td class="text-center">{{ item.ton | number:'1.3-3' }}t</td>
+          <td class="text-center">{{ item.valor | currency:'BRL' }}</td>
+          <td class="text-center">{{ item.percentual | number:'1.2-2' }}%</td>
+          <td class="text-center">{{ item.representacaoAcumulada | number:'1.2-2' }}%</td>
+          <td class="text-center">
+            <a
+              class="btn-icon-sm mr-4"
+              tooltip="Histórico financeiro"
+              container="body"
+              [routerLink]="['/comercial/clientes/historico-financeiro/', item.codCliente, 'resumo']"
+              target="_blank">
+              <i class="fas fa-search-dollar"></i>
+            </a>
+            <a
+              class="btn-icon-sm"
+              tooltip="Agendar"
+              container="body"
+              [routerLink]="['/comercial/agenda/novo/', item.codCliente]"
+              target="_blank">
+              <i class="far fa-calendar-alt"></i>
+            </a>
+          </td>
+        </tr>
+      </ng-template>
+    </custom-table>
+    <div class="d-flex justify-content-center mt-3" *ngIf="tableData.length > itemsPerPage">
+      <pagination
+        [maxSize]="maxSize"
+        [totalItems]="tableData.length"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+</div>

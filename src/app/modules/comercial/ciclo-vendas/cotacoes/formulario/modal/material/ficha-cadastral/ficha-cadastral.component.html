@@ -1,0 +1,20 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">FICHA CADASTRAL</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row py-5" *ngIf="material">
+      <div class="col-6">
+        <img class="border rounded img-fluid" [src]="material.imgMaterial">
+      </div>
+      <div class="col-6 my-auto">
+        <div class="mtc-title">{{ material.nomeMaterial | uppercase }}</div>
+        <div class="mtc-title my-4">{{ material.codMaterial }}</div>
+        <div style="white-space: pre-line;">{{ material.descMaterial }}</div>
+      </div>
+    </div>
+  </div>
+</div>

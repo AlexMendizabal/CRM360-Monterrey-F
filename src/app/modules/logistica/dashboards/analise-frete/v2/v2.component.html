@@ -1,0 +1,644 @@
+<loader-spinner-full-screen *ngIf="!dataLoaded"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loading"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    (click)="onExport()"
+    *ngIf="permission"
+    [disabled]="form.status === 'INVALID' && !isFiltered"
+  >
+    Exportar
+  </button>
+  <button
+    (click)="onFilter()"
+    *ngIf="permission"
+    [disabled]="form.status === 'INVALID' && !isFiltered"
+  >
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form id="form-logistica-dashboard" [formGroup]="form" class="row">
+      <div class="form-group col-3">
+        <label for="empresa">Empresa</label>
+        <ng-select
+          [searchable]="true"
+          [clearable]="false"
+          [items]="empresas"
+          [virtualScroll]="true"
+          [multiple]="true"
+          [closeOnSelect]	="false"
+          labelForId="empresa"
+          bindLabel="dsEmpresa"
+          bindValue="dsEmpresa"
+          id="empresa"
+          formControlName="projeto"
+        >
+        </ng-select>
+      </div>
+      <div class="form-group col-3">
+        <label for="empresa">Data Inicial</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+          </div>
+          <input
+            class="form-control"
+            id="dataInicial"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            [ngClass]="onFieldRequired('dataInicial')"
+            formControlName="dataInicial">
+          <invalid-form-control [show]="onFieldInvalid('dataInicial')" message="Data Inicial é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-group col-3">
+        <label for="empresa">Data Final</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+          </div>
+          <input
+          class="form-control"
+          id="dataFinal"
+          type="text"
+          bsDatepicker
+          [bsConfig]="bsConfig"
+          [ngClass]="onFieldRequired('dataFinal')"
+          formControlName="dataFinal">
+          <invalid-form-control [show]="onFieldInvalid('dataFinal')" message="Data Final é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-group col-3">
+        <label>UF</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="uf"
+          (keyup.enter)="onFilter()"
+          >
+      </div>
+      <div class="form-group col-3">
+        <label>Contrato de Frete</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="contratoFrete"
+          (keyup.enter)="onFilter()"
+        >
+      </div>
+      <div class="form-group col-3">
+        <label>Tipo de Veículo</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="tipoVeiculo"
+          (keyup.enter)="onFilter()"  
+        >
+      </div>
+      <div class="form-group col-3">
+        <label for="">Segmentação</label>
+        <ng-select
+          [searchable]="true"
+          [clearable]="false"
+          [multiple]="true"
+          [items]="segmentacao"
+          placeholder="Selecione uma opção"
+          bindLabel="nome"
+          bindValue="nome"
+          formControlName="parametrizacao"
+          (change)="prepareData($event);"
+          >
+        </ng-select>
+      </div>
+      <div class="form-group col-3">
+        <label for="origem">Origem</label>
+        <select
+          name="origem"
+          id="origem"
+          class="form-control"
+          formControlName="origem"
+          (change)="onFilter()"  
+        >
+          <option value="TMS">TMS</option>
+          <option value="Fusion">Fusion</option>
+        </select>
+      </div>
+    </form>
+  </advanced-filter>
+  <div>
+    <div *ngIf="show">
+      <div class="mb-4">
+        <custom-table class="text-center" >
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" *ngIf="columns['Ano']">
+                <thead-sorter
+                  value="Ano"
+                  [active]="orderBy == 'Ano'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('Ano')">
+                </thead-sorter>
+              </th>
+              <th scope="col" *ngIf="columns['Mês']">
+                <thead-sorter
+                  value="Mês"
+                  [active]="orderBy == 'Mês'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('Mês')">
+                </thead-sorter>
+              </th>
+              <th scope="col" *ngIf="columns['UF']">
+                <thead-sorter
+                  value="UF"
+                  [active]="orderBy == 'UF'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('UF')">
+                </thead-sorter>
+              </th>
+              <th scope="col" *ngIf="columns['Contrato de Frete']">
+                <thead-sorter
+                  value="Contrato de Frete"
+                  [active]="orderBy == 'Contrato de Frete'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('Contrato de Frete')">
+                </thead-sorter>
+              </th>
+              <th scope="col" *ngIf="columns['Tipo de Veículo']">
+                <thead-sorter
+                  value="Tipo de Veículo"
+                  [active]="orderBy == 'Tipo de Veículo'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('Tipo de Veículo')">
+                </thead-sorter>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Custo de Frete"
+                    [active]="orderBy == 'Custo de Frete'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Custo de Frete')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Custo de Frete']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Peso Total Transportado"
+                    [active]="orderBy == 'Peso Total Transportado'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Peso Total Transportado')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Peso Total Transportado']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="KM Total"
+                    [active]="orderBy == 'KM Total'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('KM Total')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['KM Total']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Valor Nota Fiscal"
+                    [active]="orderBy == 'Valor Nota Fiscal'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Valor Nota Fiscal')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Valor Nota Fiscal']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Capacidade de Transporte"
+                    [active]="orderBy == 'Capacidade de Transporte'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Capacidade de Transporte')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Capacidade de Transporte']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let item of data">
+              <td *ngIf="columns['Ano']">{{item['Ano'] | hifen}}</td>
+              <td *ngIf="columns['Mês']">{{item['Mês'] | hifen}}</td>
+              <td *ngIf="columns['UF']">{{item['UF'] | hifen}}</td>
+              <td *ngIf="columns['Contrato de Frete']">{{item['Contrato de Frete'] | hifen}}</td>
+              <td *ngIf="columns['Tipo de Veículo']">{{item['Tipo de Veículo'] | hifen}}</td>
+              <td>{{item['Custo de Frete'] | currency: 'BRL'}}</td>
+              <td>{{item['Peso Total Transportado'] | number: '1.0-0'}}</td>
+              <td>{{item['KM Total'] | number: '1.0-0'}}</td>
+              <td>{{item['Valor Nota Fiscal'] | currency: 'BRL'}}</td>
+              <td>{{item['Capacidade de Transporte'] | number: '1.0-0'}}</td>
+            </tr>
+            <tr>
+              <td class="bg-dark text-white" *ngIf="columns['Ano']">-</td>
+              <td class="bg-dark text-white" *ngIf="columns['Mês']">-</td>
+              <td class="bg-dark text-white" *ngIf="columns['UF']">-</td>
+              <td class="bg-dark text-white" *ngIf="columns['Contrato de Frete']">-</td>
+              <td class="bg-dark text-white" *ngIf="columns['Tipo de Veículo']">-</td>
+              <td class="bg-dark text-white"><strong>{{total['Custo de Frete'] | currency: 'BRL'}}</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Peso Total Transportado'] | number: '1.0-0'}}</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['KM Total'] | number: '1.0-0'}}</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Valor Nota Fiscal'] | currency: 'BRL'}}</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Capacidade de Transporte'] | number: '1.0-0'}}</strong></td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </div>
+      <div class="mb-4">
+        <custom-table class="text-center">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" *ngIf="columns['Ano']">
+                <thead-sorter
+                  value="Ano"
+                  [active]="orderBy == 'Ano'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('Ano')">
+                </thead-sorter>
+              </th>
+              <th scope="col" *ngIf="columns['Mês']">
+                <thead-sorter
+                  value="Mês"
+                  [active]="orderBy == 'Mês'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('Mês')">
+                </thead-sorter>
+              </th>
+              <th scope="col" *ngIf="columns['UF']">
+                <thead-sorter
+                  value="UF"
+                  [active]="orderBy == 'UF'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('UF')">
+                </thead-sorter>
+              </th>
+              <th scope="col" *ngIf="columns['Contrato de Frete']">
+                <thead-sorter
+                  value="Contrato de Frete"
+                  [active]="orderBy == 'Contrato de Frete'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('Contrato de Frete')">
+                </thead-sorter>
+              </th>
+              <th scope="col" *ngIf="columns['Tipo de Veículo']">
+                <thead-sorter
+                  value="Tipo de Veículo"
+                  [active]="orderBy == 'Tipo de Veículo'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('Tipo de Veículo')">
+                </thead-sorter>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Reais x Ton"
+                    [active]="orderBy == 'Boliviano x Ton'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Reais x Ton')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Boliviano x Ton']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Reais x KM"
+                    [active]="orderBy == 'Reais x KM'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Reais x KM')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Reais x KM']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Frete x Receita"
+                    [active]="orderBy == 'Frete x Receita'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Frete x Receita')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Frete x Receita']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Taxa de Ocupação"
+                    [active]="orderBy == 'Taxa de Ocupação'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Taxa de Ocupação')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Taxa de Ocupação']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Ticket Médio Por Entrega"
+                    [active]="orderBy == 'Ticket Médio Por Entrega'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Ticket Médio Por Entrega')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Ticket Médio Por Entrega']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let item of data">
+              <td *ngIf="columns['Ano']">{{item['Ano'] | hifen}}</td>
+              <td *ngIf="columns['Mês']">{{item['Mês'] | hifen}}</td>
+              <td *ngIf="columns['UF']">{{item['UF'] | hifen}}</td>
+              <td *ngIf="columns['Contrato de Frete']">{{item['Contrato de Frete'] | hifen}}</td>
+              <td *ngIf="columns['Tipo de Veículo']">{{item['Tipo de Veículo'] | hifen}}</td>
+              <td>{{item['Reais x Ton'] | currency: 'BRL'}}</td>
+              <td>{{item['Reais x KM'] | currency: 'BRL'}}</td>
+              <td>{{item['Frete x Receita']| number: '1.2-2': 'pt-BR'}}%</td>
+              <td>{{item['Taxa de Ocupação'] | number: '1.2-2': 'pt-BR'}}%</td>
+              <td>{{item['Ticket Médio Por Entrega']  | number: '1.3-3': 'pt-BR'}}</td>
+            </tr>
+            <tr>
+              <td class="bg-dark text-white" *ngIf="columns['Ano']"><strong>-</strong></td>
+              <td class="bg-dark text-white" *ngIf="columns['Mês']"><strong>-</strong></td>
+              <td class="bg-dark text-white" *ngIf="columns['UF']"><strong>-</strong></td>
+              <td class="bg-dark text-white" *ngIf="columns['Contrato de Frete']"><strong>-</strong></td>
+              <td class="bg-dark text-white" *ngIf="columns['Tipo de Veículo']"><strong>-</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Reais x Ton'] | currency: 'BRL'}}</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Reais x KM'] | currency: 'BRL'}}</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Frete x Receita']  | number: '1.2-2'}}%</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Taxa de Ocupação']  | number: '1.2-2'}}%</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Ticket Médio Por Entrega'] | number: '1.3-3'}}</strong></td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </div>
+      <div class="mb-4"> 
+        <custom-table class="text-center">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" *ngIf="columns['Ano']">
+                <thead-sorter
+                  value="Ano"
+                  [active]="orderBy == 'Ano'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('Ano')">
+                </thead-sorter>
+              </th>
+              <th scope="col" *ngIf="columns['Mês']">
+                <thead-sorter
+                  value="Mês"
+                  [active]="orderBy == 'Mês'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('Mês')">
+                </thead-sorter>
+              </th>
+              <th scope="col" *ngIf="columns['UF']">
+                <thead-sorter
+                  value="UF"
+                  [active]="orderBy == 'UF'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('UF')">
+                </thead-sorter>
+              </th>
+              <th scope="col" *ngIf="columns['Contrato de Frete']">
+                <thead-sorter
+                  value="Contrato de Frete"
+                  [active]="orderBy == 'Contrato de Frete'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('Contrato de Frete')">
+                </thead-sorter>
+              </th>
+              <th scope="col" *ngIf="columns['Tipo de Veículo']">
+                <thead-sorter
+                  value="Tipo de Veículo"
+                  [active]="orderBy == 'Tipo de Veículo'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('Tipo de Veículo')">
+                </thead-sorter>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Total de Clientes"
+                    [active]="orderBy == 'Total de Clientes'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Total de Clientes')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Total de Clientes']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Total de Viagens"
+                    [active]="orderBy == 'Total de Viagens'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Total de Viagens')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Total de Viagens']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex"> 
+                  <thead-sorter
+                    value="Total de Entregas"
+                    [active]="orderBy == 'Total de Entregas'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Total de Entregas')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                      class="far fa-question-circle"
+                      [tooltip]="rotulos['Total de Entregas']['descricao']"
+                      placement="right"
+                      container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Entregas x Viagem"
+                    [active]="orderBy == 'Entregas x Viagem'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Entregas x Viagem')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Entregas x Viagem']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" width="12%">
+                <div class="d-flex">
+                  <thead-sorter
+                    value="Peso Médio x Viagem"
+                    [active]="orderBy == 'Peso Médio x Viagem'"
+                    [sort]="orderType"
+                    (click)="setOrderBy('Peso Médio x Viagem')">
+                  </thead-sorter>
+                  <div>
+                    <i
+                    class="far fa-question-circle"
+                    [tooltip]="rotulos['Peso Médio x Viagem']['descricao']"
+                    placement="right"
+                    container="body"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let item of data">
+              <td *ngIf="columns['Ano']">{{item['Ano'] | hifen}}</td>
+              <td *ngIf="columns['Mês']">{{item['Mês'] | hifen}}</td>
+              <td *ngIf="columns['UF']">{{item['UF'] | hifen}}</td>
+              <td *ngIf="columns['Contrato de Frete']">{{item['Contrato de Frete'] | hifen}}</td>
+              <td *ngIf="columns['Tipo de Veículo']">{{item['Tipo de Veículo'] | hifen}}</td>
+              <td>{{item['Total de Clientes'] | number: '1.0-0'}}</td>
+              <td>{{item['Total de Viagens'] | number: '1.0-0'}}</td>
+              <td>{{item['Total de Entregas'] | number: '1.0-0'}}</td>
+              <td>{{item['Entregas x Viagem'] | number: '1.3-3': 'pt-BR'}}</td>
+              <td>{{item['Peso Médio x Viagem'] | number: '1.3-3': 'pt-BR'}}</td>
+            </tr>
+            <tr>
+              <td class="bg-dark text-white" *ngIf="columns['Ano']"><strong>-</strong></td>
+              <td class="bg-dark text-white" *ngIf="columns['Mês']"><strong>-</strong></td>
+              <td class="bg-dark text-white" *ngIf="columns['UF']"><strong>-</strong></td>
+              <td class="bg-dark text-white" *ngIf="columns['Contrato de Frete']"><strong>-</strong></td>
+              <td class="bg-dark text-white" *ngIf="columns['Tipo de Veículo']"><strong>-</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Total de Clientes'] | number: '1.0-0': 'pt-BR'}}</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Total de Viagens']  | number: '1.0-0'}}</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Total de Entregas'] | number: '1.0-0': 'pt-BR'}}</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Entregas x Viagem'] | number: '1.3-3': 'pt-BR'}}</strong></td>
+              <td class="bg-dark text-white"><strong>{{total['Peso Médio x Viagem'] | number: '1.3-3': 'pt-BR'}}</strong></td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </div>
+    </div>
+    <div *ngIf="empty" class="text-center h-50 my-auto d-flex justify-content-center align-items-center">
+      <empty-result message="No se encontró información "></empty-result>
+    </div>
+  </div>
+</app-body>

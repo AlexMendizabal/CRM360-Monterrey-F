@@ -1,0 +1,21 @@
+::ng-deep {
+  @import '../../../../../assets/scss/colors';
+  @import '../../../../../assets/scss/variables';
+
+  loader-spinner-full-screen {
+    .loader-spinner {
+      background-color: rgba($dark-gray, 0.5);
+      display: flex;
+      height: calc(100vh + #{$sidebar-size});
+      left: 0;
+      position: fixed;
+      top: -$navbar-size;
+      width: 100%;
+      z-index: 1090;
+      .spinner-border {
+        align-self: center;
+        margin: auto;
+      }
+    }
+  }
+}

@@ -1,0 +1,200 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro">
+  <button
+    type="button"
+    (click)="onSave()"
+    [disabled]="form.status == 'INVALID' || !validatorsSave()"
+  >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="container">
+    <div class="col-md-12">
+      <div class="row justify-content-md-center mt-3">
+        <div class="col-md-7">
+          <div class="row">
+            <div class="col-md-3">
+              <p class="pFont">
+                <strong>CÓDIGO</strong><br />
+                {{ idErpMaterial }}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p class="pFont">
+                <strong>MATERIAL</strong><br />
+                {{ descMaterial }}
+              </p>
+            </div>
+            <div class="col-md-3">
+              <p class="pFont">
+                <strong>TIPO DE MATERIAL</strong><br />
+                {{ tipoMaterial }}
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <p class="pFont">
+                <strong>LINHA</strong><br />
+               {{ linha }}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p class="pFont">
+                <strong>SUBLINHA</strong><br />
+               {{ subLinha ? subLinha : "-"}}
+              </p>
+            </div>
+            <div class="col-md-3">
+              <p class="pFont">
+                <strong>CLASSE</strong><br />
+                {{ classe }}
+              </p>
+            </div>
+          </div>
+          <form [formGroup]="form" autocomplete="off">
+            <div class="form-row">
+              <div class="form-group col-lg-6 mb-lg-0">
+                <label for="deposito">Depósitos</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="true"
+                  [multiple]="true"
+                  [items]="depositos"
+                  [virtualScroll]="true"
+                  [hideSelected]="true"
+                  [closeOnSelect]="false"
+                  placeholder="Selecione..."
+                  bindLabel="NM_DEPO"
+                  bindValue="ID_DEPO"
+                  formControlName="deposito"
+                  [ngClass]="
+                  onFieldError('deposito') + ' ' + onFieldRequired('deposito')
+                "
+                >
+                </ng-select>
+                <invalid-form-control
+                  [show]="onFieldInvalid('deposito')"
+                  message="É necessário inserir depósito"
+                >
+                </invalid-form-control>
+              </div>
+              <div class="form-group col-lg-6 mb-lg-0">
+                <label for="estoqueMinimo">Estoque mínimo</label>
+                <input
+                  class="form-control"
+                  currencyMask [options]="ton" placeholder="0,000"
+                  formControlName="volumeMinimo"
+                  [ngClass]="
+                  onFieldError('volumeMinimo') + ' ' + onFieldRequired('volumeMinimo')
+                "
+                />
+                <invalid-form-control
+                  [show]="onFieldInvalid('volumeMinimo')"
+                  message="É necessário inserir volume mínimo"
+                >
+                </invalid-form-control>
+                <invalid-form-control
+                  [show]="compareValues('volumeMinimo')"
+                  message="Deve ser menor que volume máximo ou segurança"
+                  >
+                </invalid-form-control>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-lg-6 mb-lg-0">
+                <label for="estoqueSeguranca">Estoque segurança</label>
+                <input
+                  class="form-control"
+                  currencyMask [options]="ton" placeholder="0,000"
+                  formControlName="volumeSeguranca"
+                  [ngClass]="
+                  onFieldError('volumeSeguranca') + ' ' + onFieldRequired('volumeSeguranca')
+                "
+                />
+                <invalid-form-control
+                  [show]="onFieldInvalid('volumeSeguranca')"
+                  message="É necessário inserir volume segurança"
+                >
+                </invalid-form-control>
+                <invalid-form-control
+                  [show]="compareValues('volumeSeguranca')"
+                  message="Deve ser menor que máximo ou maior que mínimo"
+                  >
+                </invalid-form-control>
+              </div>
+              <div class="form-group col-lg-6 mb-lg-0">
+                <label for="estoqueMaximo">Estoque máximo</label>
+                <input
+                  class="form-control"
+                  currencyMask [options]="ton" placeholder="0,000"
+                  formControlName="volumeMaximo"
+                  [ngClass]="
+                  onFieldError('volumeMaximo') + ' ' + onFieldRequired('volumeMaximo')
+                "
+                />
+                <invalid-form-control
+                  [show]="onFieldInvalid('volumeMaximo')"
+                  message="É necessário inserir vulume máximo"
+                >
+                </invalid-form-control>
+                <invalid-form-control
+                  [show]="compareValues('volumeMaximo')"
+                  message="Deve ser maior que mínimo ou segurança"
+                >
+                </invalid-form-control>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div
+        class="row justify-content-md-center mt-3"
+        *ngIf="!noResult"
+        >
+        <div class="form-group col-md-7">
+          <label for="depositosVinculados">Níveis de Estoques por Deposíto</label>
+          <custom-table>
+            <ng-template #thead let-thead>
+              <tr class="text-center">
+                <th scope="col">Empresa</th>
+                <th scope="col">Depósito</th>
+                <th scope="col">Diponível</th>
+                <th scope="col">Mínimo</th>
+                <th scope="col">Segurança</th>
+                <th scope="col">Máximo</th>
+                <th scope="col" class="hover"></th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let item of dadosNiveisEstoquesCadastrados">
+                <td>{{item.NM_EMPR}}</td>
+                <td>{{item.NM_DEPO}}</td>
+                <td>{{item.TT_ESTO_DISP | number: '0.3' }}</td>
+                <td>{{item.TT_ESTO_MINI | number: '0.3' }}</td>
+                <td>{{item.TT_ESTO_SEGU | number: '0.3' }}</td>
+                <td>{{item.TT_ESTO_MAXI | number: '0.3' }}</td>
+                <td class="text-center">
+                  <div>
+                    <button
+                      type="button"
+                      class="btn-icon-sm"
+                      placement="left"
+                      tooltip="Ativar/Desativar"
+                      container="body"
+                     (click)="onUpdate(item)"
+                    >
+                      <i [ngClass]="item.IN_STAT == 1 ? 'fas fa-toggle-on text-success' : 'fas fa-toggle-off'"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </custom-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>

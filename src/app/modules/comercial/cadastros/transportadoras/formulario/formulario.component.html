@@ -1,0 +1,315 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row justify-content-center">
+    <div class="col-lg-5">
+      <form [formGroup]="form">
+        <div class="mtc-title">Dados principais</div>
+        <div class="form-row">
+          <div class="form-group col">
+            <div class="btn-group btn-group-sm">
+              <button
+                type="button"
+                class="btn btn-light active"
+                [ngClass]="{'active': form.value['tipoPessoa'] == 'F'}"
+                (click)="setType('F')">
+                <strong>Pessoa Física</strong>
+              </button>
+              <button
+                type="button"
+                class="btn btn-light"
+                [ngClass]="{'active': form.value['tipoPessoa'] == 'J'}"
+                (click)="setType('J')">
+                <strong>Pessoa Jurídica</strong>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="form-row" *ngIf="form.value['tipoPessoa'] == 'F'">
+          <div class="form-group col-lg-6">
+            <label for="cpf">CPF</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cpf"
+              formControlName="cpf"
+              (input)="onInput()"
+              cpf [textMask]="{ mask: MASKS.cpf.textMask }">
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="rg">RG</label>
+            <input
+              type="text"
+              class="form-control"
+              id="rg"
+              formControlName="rg"
+              (input)="onInput()">
+          </div>
+        </div>
+        <div class="form-row" *ngIf="form.value['tipoPessoa'] == 'J'">
+          <div class="form-group col-lg-6">
+            <label for="cnpj">CNPJ</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cnpj"
+              formControlName="cnpj"
+              (input)="onInput()"
+              cnpj [textMask]="{ mask: MASKS.cnpj.textMask }">
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="inscricaoEstadual">Inscrição estadual</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inscricaoEstadual"
+              formControlName="inscricaoEstadual"
+              (input)="onInput()">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="nome">Nome da transportadora</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nome"
+              formControlName="nome"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('nome') + ' ' + onFieldRequired(form.controls['nome'])">
+            <invalid-form-control [show]="onFieldInvalid('nome')" message="Nome da transportadora é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row" formGroupName="veiculo">
+          <div class="form-group col-lg-6">
+            <label for="placa">Placa do veículo</label>
+            <input
+              type="text"
+              class="form-control"
+              id="placa"
+              formControlName="placa"
+              (input)="onInput()">
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="placa">UF do veículo</label>
+            <select
+              class="form-control"
+              id="uf"
+              formControlName="uf"
+              (change)="onInput()">
+              <option value="">SELECIONE UMA OPÇÃO</option>
+              <option *ngFor="let item of estados" [value]="item.sigla">{{ item.descricao }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="freteConta">Frete por conta</label>
+            <select
+              class="form-control"
+              id="freteConta"
+              formControlName="freteConta"
+              (change)="onInput()">
+              <option value="">SELECIONE UMA OPÇÃO</option>
+              <option>Destinatário</option>
+              <option>Emitente</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row mt-2">
+          <div class="form-group col">
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="consideraEntregue"
+                formControlName="consideraEntregue">
+              <label class="custom-control-label" for="consideraEntregue">Considera como entregue</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="recebeCotacaoFrete"
+                formControlName="recebeCotacaoFrete">
+              <label class="custom-control-label" for="recebeCotacaoFrete">Recebe cotação de frete</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="autorizaDownloadXml"
+                formControlName="autorizaDownloadXml">
+              <label class="custom-control-label" for="autorizaDownloadXml">Autoriza download de XML</label>
+            </div>
+          </div>
+        </div>
+        <div formGroupName="endereco">
+          <div class="form-row">
+            <div class="col"><hr></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col mb-3">
+              <div class="mtc-title mb-0">Localização</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="logradouro">Endereço</label>
+              <input
+                type="text"
+                class="form-control"
+                id="logradouro"
+                formControlName="logradouro"
+                (input)="onInput()"
+                autocomplete="new-password"
+                [ngClass]="onFieldError('endereco.logradouro') + ' ' + onFieldRequired(form.controls['endereco'], 'logradouro')">
+              <invalid-form-control [show]="onFieldInvalid('endereco.logradouro')" message="Endereço é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label for="cidade">Cidade</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="cidades"
+                [virtualScroll]="true"
+                labelForId="cidade"
+                bindLabel="descricao"
+                bindValue="descricao"
+                formControlName="cidade"
+                (change)="onInput() + ' ' + onChangeCidade($event)"
+                [ngClass]="onFieldError('endereco.cidade') + ' ' + onFieldRequired(form.controls['endereco'], 'cidade')">
+              </ng-select>
+              <invalid-form-control [show]="onFieldInvalid('endereco.cidade')" message="Cidade é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-6">
+              <label for="uf">UF</label>
+              <select
+                class="form-control"
+                id="uf"
+                formControlName="uf"
+                (change)="onInput() + ' ' + onChangeEstado()"
+                [ngClass]="onFieldError('endereco.uf') + ' ' + onFieldRequired(form.controls['endereco'], 'uf')">
+                <option *ngFor="let item of estados" [value]="item.sigla">{{ item.descricao }}</option>
+              </select>
+              <invalid-form-control [show]="onFieldInvalid('endereco.uf')" message="UF é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+        </div>
+        <div formArrayName="contatos">
+          <div class="form-row">
+            <div class="col"><hr></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col mb-3 d-flex justify-content-between">
+              <div class="mtc-title mb-0">Contatos</div>
+              <div class="my-auto">
+                <a
+                  class="text-secondary"
+                  (click)="onAddContato()"
+                  href="javascript:void(0)">
+                  <b>Adicionar</b>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="contatos.controls.length > 0">
+            <div class="border rounded shadow-sm p-3 mb-3" *ngFor="let item of contatos.controls; let i = index" [formGroupName]="i">
+              <div class="row">
+                <div class="col-lg-11">
+                  <div class="form-row">
+                    <div class="form-group col">
+                      <label for="nome">Nome do contato</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="nome"
+                        formControlName="nome"
+                        (input)="onInput()"
+                        [ngClass]="onNestedFieldError('contatos', i, 'nome') + ' ' + onNestedFieldRequired('contatos', i, 'nome')">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-lg-6">
+                      <label for="tipo">Tipo</label>
+                      <select
+                        class="form-control"
+                        id="tipo"
+                        formControlName="tipo"
+                        (change)="onInput() + ' ' + onChangeTipoContato(i)"
+                        [ngClass]="onNestedFieldError('contatos', i, 'tipo') + ' ' + onNestedFieldRequired('contatos', i, 'tipo')">
+                        <option>Telefone</option>
+                        <option>Celular</option>
+                        <option>Fax</option>
+                        <option>E-mail</option>
+                        <option>E-mail cotação</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-lg-6">
+                      <label for="conteudo">Conteúdo</label>
+                      <div *ngIf="showConteudo(i, 'telefone')">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="conteudo"
+                          formControlName="conteudo"
+                          (input)="onInput()"
+                          telefone [textMask]="{ mask: MASKS.telefone.textMaskFunction }"
+                          [ngClass]="onNestedFieldError('contatos', i, 'conteudo') + ' ' + onNestedFieldRequired('contatos', i, 'conteudo')">
+                      </div>
+                      <div *ngIf="showConteudo(i, 'email')">
+                        <input
+                          type="email"
+                          class="form-control"
+                          id="conteudo"
+                          formControlName="conteudo"
+                          (input)="onInput()"
+                          [ngClass]="onNestedFieldError('contatos', i, 'conteudo') + ' ' + onNestedFieldRequired('contatos', i, 'conteudo')">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-1 d-flex justify-content-center pl-lg-0">
+                  <button
+                    type="button"
+                    class="btn-icon my-auto"
+                    (click)="onDeleteContato(i)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="my-3" *ngIf="contatos.controls.length == 0">
+            <empty-result message="Nenhuma informação encontrada"></empty-result>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

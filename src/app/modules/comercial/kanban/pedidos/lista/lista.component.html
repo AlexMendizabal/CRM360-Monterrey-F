@@ -1,0 +1,279 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Pedidos">
+  <button
+    type="button"
+    (click)= 'onRefresh();'>
+    Atualizar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" >
+  <div class="row">
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="dataInicial">Data Inicial</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="dataInicial"
+                type="text"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="dataInicial"
+                [ngClass]="onFieldError('dataInicial') + ' ' + onFieldRequired(form.controls.dataInicial)">
+                <invalid-form-control [show]="onFieldInvalid('dataInicial')" message="Data Inicial é obrigatória"></invalid-form-control>
+              </div>
+            </div>
+
+            <div class="form-group col-md-2 pl-0">
+              <label for="dataFinal">Data final</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="dataFinal"
+                type="text"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="dataFinal"
+                [ngClass]="onFieldError('dataFinal') + ' ' + onFieldRequired(form.controls.dataFinal)">
+                <invalid-form-control [show]="onFieldInvalid('dataFinal')" message="Data Final é obrigatória"></invalid-form-control>
+              </div>
+            </div>
+
+            <div class="form-group col-md-5 pl-0">
+              <label for="cliente">Cliente</label>
+              <input
+                class="form-control"
+                id="codLinha"
+                type="text"
+                formControlName="cliente"
+              >
+            <invalid-form-control [show]="onFieldInvalid('cliente')" message="Descrição é obrigatório."></invalid-form-control>
+            </div>
+
+            <div class="form-group col-md-2 pl-0">
+              <label for="codLinha">Linha</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="linhas"
+                formControlName="codLinha"
+                [virtualScroll]="true"
+                labelForId="codLinha"
+                bindLabel="descricao"
+                bindValue="id"
+                value=''>
+              </ng-select>
+            </div>
+
+            <div class="form-group col-md-2 pl-0">
+              <label for="codGerencia">gerência</label>
+              <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="coordenadores"
+                  [virtualScroll]="true"
+                  placeholder="Selecione..."
+                  bindLabel="nomeEscritorio"
+                  bindValue="codEscritorio"
+                  formControlName="codGerencia"
+                  (change)="onChangeEscritorio($event.id, true)"
+                >
+              </ng-select>
+            </div>
+
+            <div class="form-group col-md-4 pl-0">
+              <label for="codVendedor">vendedor</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                type='text'
+                [items]="vendedores"
+                placeholder="Selecione..."
+                bindLabel="nome"
+                bindValue="id"
+                formControlName="codVendedor"
+              >
+                  <invalid-form-control
+                  [show]="onFieldInvalid('codVendedor')"
+                  message="Descrição é obrigatório.">
+                  </invalid-form-control>
+              </ng-select>
+            </div>
+
+            <div class="form-group col-md-3 pl-0">
+              <label for="codEmpresa">Empresa</label>
+                    <ng-select
+                      [searchable]="true"
+                      [clearable]="false"
+                      type='text'
+                      [items]="empresa"
+                      [virtualScroll]="true"
+                      placeholder="Selecione..."
+                      bindLabel="nomeEmpresa"
+                      bindValue="idEmpresa"
+                      formControlName="codEmpresa"
+                    >
+
+                    <invalid-form-control
+                    [show]="onFieldInvalid('codEmpresa')"
+                    message="Empresa é obrigatório.">
+                    </invalid-form-control>
+                    </ng-select>
+                </div>
+
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+
+  <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && dadosLoaded"></empty-result>
+
+  <div class="row mt-4" *ngIf="!dadosEmpty && dadosLoaded">
+    <div class="col-1"></div>
+    <div class="col-2">
+      <h6 >EM ABERTO</h6>
+    <div
+      class=" mb-1 em-aberto"
+      *ngFor="let item of emAberto"
+      [tooltip]="tooltipAutoScrollTemplate">
+        <div class="card-body cartao-em-aberto" >
+          <strong >#{{ item.nrPedido }} - {{ item.razaoSocial }}</strong><br>
+          <span>{{ item.nomeLinha }}</span><br>
+          <span>{{ item.valorPedido | currency:'BRL':'symbol':'1.2-2' }} - {{ item.peso }}kg </span><br>
+          <span>{{ item.nomeVendedor }}</span><br>
+          <span>{{ item.nomeEmpresa }}</span>
+        </div>
+        <ng-template #tooltipAutoScrollTemplate>
+          <p class="mt-1 mb-1"><b>TEMPO DO STATUS:</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.ano > 0" ><b>{{ item.tempo.ano }} ano(s),</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.mes > 0" ><b>{{ item.tempo.mes }} mês(es),</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.dia > 0"><b>{{ item.tempo.dia }} dia(s),</b></p>
+          <p class="mt-0 mb-0"><b>{{ item.tempo.hora }} hora(s) e {{ item.tempo.min }} minuto(s)</b></p>
+          <p class="text-nowrap mb-0"><br></p>
+        </ng-template>
+    </div>
+  </div>
+
+  <div class="col-2">
+    <h6 class='text-center'>TRANSFERIDOS</h6>
+    <div
+      class="mb-1  transferidos"
+      *ngFor="let item of transferidos"
+      [tooltip]="tooltipAutoScrollTemplate">
+        <div class="card-body cartao-transferidos" >
+          <strong >#{{ item.nrPedido }} - {{ item.razaoSocial }}</strong><br>
+          <span>{{ item.nomeLinha }}</span><br>
+          <span>{{ item.valorPedido | currency:'BRL':'symbol':'1.2-2' }} - {{ item.peso }}kg </span><br>
+          <span>{{ item.nomeVendedor }}</span><br>
+          <span>{{ item.nomeEmpresa }}</span>
+        </div>
+        <ng-template #tooltipAutoScrollTemplate>
+          <p class="mt-1 mb-1"><b>TEMPO DO STATUS:</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.ano > 0" ><b>{{ item.tempo.ano }} ano(s),</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.mes > 0" ><b>{{ item.tempo.mes }} mês(es),</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.dia > 0"><b>{{ item.tempo.dia }} dia(s),</b></p>
+          <p class="mt-0 mb-0"><b>{{ item.tempo.hora }} hora(s) e {{ item.tempo.min }} minuto(s)</b></p>
+          <p class="text-nowrap mb-0"><br></p>
+          <p class="mb-0" *ngIf="item.retira == 1"><b>RETIRA</b></p>
+          <p class="mb-0" *ngIf="item.entregaForaEstado == 1"><b>ENTREGA FORA DO ESTADO</b></p>
+          <p class="mb-0" *ngIf="item.preFaturado == 1"><b>PRÉ-FATURADO</b></p>
+          <p class="text-nowrap mb-0"><br><br></p>
+        </ng-template>
+    </div>
+  </div>
+
+  <div class="col-2 ">
+    <h6 class='text-center '>EM LIBERAÇÂO</h6>
+    <div
+      class="mb-1 em-liberacao"
+      *ngFor="let item of emLiberacao"
+      [tooltip]="tooltipAutoScrollTemplate">
+        <div class="card-body cartao-em-liberacao" >
+          <strong >#{{ item.nrPedido }} - {{ item.razaoSocial }}</strong><br>
+          <span>{{ item.nomeLinha }}</span><br>
+          <span>{{ item.valorPedido | currency:'BRL':'symbol':'1.2-2' }} - {{ item.peso }}kg </span><br>
+          <span>{{ item.nomeVendedor }}</span><br>
+          <span>{{ item.nomeEmpresa }}</span>
+        </div>
+        <ng-template #tooltipAutoScrollTemplate>
+          <p class="mt-1 mb-1"><b>TEMPO DO STATUS:</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.ano > 0" ><b>{{ item.tempo.ano }} ano(s),</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.mes > 0" ><b>{{ item.tempo.mes }} mês(es),</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.dia > 0"><b>{{ item.tempo.dia }} dia(s),</b></p>
+          <p class="mt-0 mb-0"><b>{{ item.tempo.hora }} hora(s) e {{ item.tempo.min }} minuto(s)</b></p>
+          <p class="text-nowrap mb-0"><br></p>
+          <p class="mb-0"><b>LIBERAÇÃO - {{ item.departamentoLiberacao }}</b></p>
+          <p class="text-nowrap mb-0"><br><br></p>
+        </ng-template>
+    </div>
+  </div>
+
+  <div class="col-2">
+    <h6 class='text-center '>AGUARD. FATURAMENTO</h6>
+    <div
+      class="mb-1 aguard-faturamento"
+      *ngFor="let item of aguardandoFaturamento"
+      [tooltip]="tooltipAutoScrollTemplate">
+        <div class="card-body cartao-aguard-faturamento" >
+          <strong >#{{ item.nrPedido }} - {{ item.razaoSocial }}</strong><br>
+          <span>{{ item.nomeLinha }}</span><br>
+          <span>{{ item.valorPedido | currency:'BRL':'symbol':'1.2-2' }} - {{ item.peso }}kg </span><br>
+          <span>{{ item.nomeVendedor }}</span><br>
+          <span>{{ item.nomeEmpresa }}</span>
+        </div>
+        <ng-template #tooltipAutoScrollTemplate>
+          <p class="mt-1 mb-1"><b>TEMPO DO STATUS:</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.ano > 0" ><b>{{ item.tempo.ano }} ano(s),</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.mes > 0" ><b>{{ item.tempo.mes }} mês(es),</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.dia > 0"><b>{{ item.tempo.dia }} dia(s),</b></p>
+          <p class="mt-0 mb-0"><b>{{ item.tempo.hora }} hora(s) e {{ item.tempo.min }} minuto(s)</b></p>
+          <p class="text-nowrap mb-0"><br></p>
+        </ng-template>
+    </div>
+  </div>
+
+  <div class="col-2">
+    <h6 class='text-center '>AGUARD. ENTREGA</h6>
+    <div
+      class="mb-1 aguard-entrega"
+      *ngFor="let item of aguardandoEntrega"
+      [tooltip]="tooltipAutoScrollTemplate">
+          <div class="card-body cartao-aguard-entrega" >
+          <strong >#{{ item.nrPedido }} - {{ item.razaoSocial }}</strong><br>
+          <span>{{ item.nomeLinha }}</span><br>
+          <span>{{ item.valorPedido | currency:'BRL':'symbol':'1.2-2' }} - {{ item.peso }}kg </span><br>
+          <span>{{ item.nomeVendedor }}</span><br>
+          <span>{{ item.nomeEmpresa }}</span>
+        </div>
+        <ng-template #tooltipAutoScrollTemplate>
+          <p class="mt-1 mb-1"><b>TEMPO DO STATUS:</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.ano > 0" ><b>{{ item.tempo.ano }} ano(s),</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.mes > 0" ><b>{{ item.tempo.mes }} mês(es),</b></p>
+          <p class="mt-0 mb-0" *ngIf="item.tempo.dia > 0"><b>{{ item.tempo.dia }} dia(s),</b></p>
+          <p class="mt-0 mb-0"><b>{{ item.tempo.hora }} hora(s) e {{ item.tempo.min }} minuto(s)</b></p>
+          <p class="text-nowrap mb-0" *ngIf="item.descSituacao != ''"><br></p>
+          <p class="mb-0" *ngIf="item.descSituacao != ''"><b>{{ item.descSituacao }}</b></p>
+          <p class="text-nowrap mb-0"><br></p>
+        </ng-template>
+    </div>
+  </div>
+  <div class="col-1"></div>
+

@@ -1,0 +1,151 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button type="button" (click)="onReset()">Limpiar</button>
+  <button type="button" (click)="onFilter()">Filtrar</button>
+  <button type="button" [routerLink]="['./novo']">Agregar</button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="id">Id</label>
+          <input
+            id="id"
+            type="text"
+            class="form-control"
+            placeholder="Ingresse..."
+            formControlName="id"
+            (keyup.enter)="onFilter()"
+          >
+        </div>
+        <div class="form-group col-3">
+          <label for="nome">Nombre</label>
+          <input
+            id="nome"
+            type="text"
+            class="form-control"
+            placeholder="Ingresse..."
+            formControlName="nome"
+            (keyup.enter)="onFilter()"
+          >
+        </div>
+        <div class="form-group col-3">
+          <label for="matricula">Registro</label>
+          <input
+            id="matricula"
+            type="text"
+            class="form-control"
+            placeholder="Ingresse..."
+            formControlName="matricula"
+            (keyup.enter)="onFilter()"
+          >
+        </div>
+        <div class="form-group col-md-3">
+          <label for="perfil">Perfil</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="perfis"
+            multiple="true"
+            [virtualScroll]="true"
+            [loading]="loadingPerfis"
+            labelForId="perfil"
+            bindLabel="nome"
+            bindValue="id"
+            id="perfil"
+            (change)="onFilter()"
+            formControlName="perfilId"
+            placeholder="Seleccione..."
+          >
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              ({{item.id | number : '3.0-0'}}) {{item.nome}}
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col-2">
+          <label for="situacao">Situación</label>
+          <select
+            name="situacao"
+            id="situacao"
+            class="form-control"
+            formControlName="situacao"
+          >
+            <option value="">Todos</option>
+            <option value="1">Activo</option>
+            <option value="0">Inactivo</option>
+          </select>
+        </div>
+        <div class="form-group col-2">
+          <label for="registrosPorPagina">Datos</label>
+          <select
+            name="registrosPorPagina"
+            id="registrosPorPagina"
+            formControlName="registrosPorPagina"
+            class="form-control"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="col-12 p-0" [hidden]="loading || noResult">
+    <div>
+      <table class="table table-sm table-hover custom-border border-left border-right border-bottom text-center table-fixed">
+        <thead class="thead-light">
+          <tr>
+            <th style="width:100px">Id</th>
+            <th>Nombre</th>
+            <th>Registro</th>
+            <th class="align-middle" style="width:70px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of data; let i = index">
+            <td class="text-truncate" [ngClass]="item.situacao == 1 ? 'border-success' : 'border-danger'">
+              {{ item.id | number:'6.0-0' }}
+            </td>
+            <td> {{ item.nome }} </td>
+            <td> {{ item.matricula }} </td>
+            <td class="align-middle">
+              <button
+                class="btn-icon-sm"
+                tooltip="Editar"
+                container="body"
+              >
+                <a [routerLink]="['./', item.id]">
+                  <i class="fas fa-edit"></i>
+                </a>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Visualización {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="No se encontró información"></empty-result>
+  </div>
+</app-body>

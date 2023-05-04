@@ -1,0 +1,241 @@
+<loader-spinner-full-screen *ngIf="spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-3">
+              <label for="de">
+                <span class="mr-1">De</span>
+                <ng-template #tooltipLabelDeTemplate>
+                  <p class="mb-0">Código do Material no TID</p>
+                </ng-template>
+                <i class="far fa-question-circle" [tooltip]="tooltipLabelDeTemplate" container="body"></i>
+              </label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="codigoMaterial"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="para">
+                <span class="mr-1">Para</span>
+                <ng-template #tooltipLabelParaTemplate>
+                  <p class="text-nowrap mb-0">Código do Material no Dagda</p>
+                </ng-template>
+                <i class="far fa-question-circle" [tooltip]="tooltipLabelParaTemplate" container="body"></i>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="cdDagda"
+                (input)="disableForm()"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="linhas">Linhas</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="linhas"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                [loading]="loadingLinhas"
+                labelForId="linhas"
+                bindLabel="NM_LINH"
+                bindValue="ID"
+                id="linhas"
+                formControlName="ID_LINH"
+                (change) ="getClasses()"
+                [ngClass]="onFieldError('ID_LINH') + ' ' + onFieldRequired('ID_LINH')"
+                >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalid('ID_LINH')"
+                message="Linha é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="classes">Classes</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="classes"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                [loading]="loadingClasses"
+                labelForId="classes"
+                bindLabel="NM_CLAS"
+                bindValue="ID"
+                id="classes"
+                formControlName="ID_CLAS"
+                [ngClass]="onFieldError('ID_CLAS') + ' ' + onFieldRequired('ID_CLAS')"
+                >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalid('ID_CLAS')"
+                message="Classe é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-3">
+							<label for="status"> Situação </label>
+							<ng-select
+								[searchable]="true"
+								[clearable]="true"
+								[items]="situacao"
+								[virtualScroll]="true"
+								labelForId="status"
+								bindLabel="ds"
+								bindValue="cd"
+								placeholder="Selecione..."
+								formControlName="status"
+								[ngClass]="onFieldError('status') + ' ' + onFieldRequired('status')"
+							>
+							</ng-select>
+							<invalid-form-control
+								[show]="onFieldInvalid('status')"
+								message="Situação é obrigatório.">
+							</invalid-form-control>
+						</div>
+            <div class="form-group col-md-3">
+							<label for="registros"> Registros </label>
+							<ng-select
+								[searchable]="true"
+								[clearable]="true"
+								[items]="reg"
+								[virtualScroll]="true"
+								labelForId="registros"
+								bindLabel="ds"
+								bindValue="cd"
+								placeholder="Selecione..."
+								formControlName="registros"
+								[ngClass]="onFieldError('registros') + ' ' + onFieldRequired('registros')"
+							>
+							</ng-select>
+							<invalid-form-control
+								[show]="onFieldInvalid('registros')"
+								message="Registros é obrigatório.">
+							</invalid-form-control>
+						</div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+	<div class="row">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-7 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig" [hidden] = "!noResult">
+        <ng-template #thead let-thead>
+          <tr>
+						<th></th>
+            <th class="text-nowrap" (click)="setOrderBy('ID_MATE_TID')">
+              <thead-sorter value="Cod. TID" [active]="orderBy == 'ID_MATE_TID'" [sort]="orderType"></thead-sorter>
+            </th>
+						<th (click)="setOrderBy('NM_MATE_TID')">
+							<thead-sorter value="Material" [active]="orderBy == 'NM_MATE_TID'" [sort]="orderType"></thead-sorter>
+						</th>
+						<th class="text-left"> Usuário Cadastro</th>
+            <th [hidden]="showDetailPanel"></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody >
+          <tr *ngFor="let lista of listas | slice : begin : end; let i = index" [tooltip]="lista.IN_STAT == 0 ? 'Editar' : ''"
+               class="hover">
+						<td [ngClass]="{ 
+                'border-success' : lista.IN_STAT == 1, 
+                'border-danger'  : lista.IN_STAT == 0
+              }">
+            </td>
+            <td class="text-center" (click)="onDetailPanel(lista)">{{ lista.ID_MATE_TID }}</td>
+            <td class="text-left" style="width: 50rem" (click)="onDetailPanel(lista)">{{ lista.NM_MATE_TID | uppercase }}</td>
+            <td class="text-left" style="width: 15rem" (click)="onDetailPanel(lista)">{{ lista.NR_MATR }}</td>
+            <td  style="width: 10rem" [hidden]="showDetailPanel" (click)="onDetailPanel(lista)"></td>
+            <td class="text-right px-0" style="width: 10rem">
+              <span class="" [tooltip]="lista.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" [style]="lista.IN_STAT == 1 ? 'color: green;' : 'color: red;'" (click)="onEditStatus(lista)" [disabled]="lista.IN_STAT == null">
+                  <i [ngClass]="lista.IN_STAT == 1 ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                </button>
+              </span>
+            </td>
+            <td class="text-center px-0" style="width: 4rem">
+              <span tooltip="Editar" placement="left" container="body">
+                <button class="btn-icon-sm" style="color: blue;" (click)="onEdit(lista)" [disabled]="lista.IN_STAT == 0">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="mt-3" [hidden]="!noResult">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          [(itemsPerPage)]="itemsPerPage"
+          (pageChanged)="onPageChanged($event)"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty">
+      </empty-result>
+    </div>
+    <div class="col-5" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="panelTitle">
+        <custom-table [hidden]="dadosEmptyDetalhes">
+          <ng-template #thead let-thead>
+            <tr>
+              <th class="text-center">Cod. Dagda</th>
+              <th class="text-center">Material</th>
+              <th></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let detalhe of detalhes let i = index">
+              <td class="text-center">{{ detalhe.ID_MATE_DAGD }}</td>
+              <td class="text-center nowrap">{{ detalhe.DS_MATE }}</td>
+              <td class="text-left px-0">
+                <span class="" tooltip="Excluir Associação" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" style="color: red;" (click)="deleteAssociacao(i, detalhe)">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+        <empty-result
+          message="Nenhuma informação encontrada"
+          class="my-3"
+          *ngIf="dadosEmptyDetalhes">
+        </empty-result>
+      </detail-panel>
+    </div>
+  </div>
+</app-body>
+

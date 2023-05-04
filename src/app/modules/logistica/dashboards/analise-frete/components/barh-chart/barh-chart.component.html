@@ -1,0 +1,42 @@
+<div class="border rounded bg-white shadow-sm my-2">
+  <div class="d-flex justify-content-between my-2">
+    <div class="mtc-title mb-0">
+      <i
+        class="far fa-question-circle p-2"
+        [tooltip]="descricao"
+        placement="right"
+        container="body"
+      >
+      </i>
+      {{ nome }}
+    </div>
+    <div class="col-6 p-0 pr-2 d-flex align-items-center">
+      <div class="form-group m-0 w-100">
+        <ng-select
+          [searchable]="true"
+          [clearable]="false"
+          [items]="labels"
+          bindLabel="nome"
+          dropdownPosition="bottom"
+          placeholder="Selecione uma opção"
+          [(ngModel)]="selectedKey"
+          (change)="onRender($event.sigla)"
+        >
+      </ng-select>
+      </div>
+      <button class="btn-icon-sm ml-2" (click)="onResize()">
+        <i *ngIf="maximized" class="far fa-window-maximize"></i>
+        <i *ngIf="!maximized" class="far fa-window-restore"></i>
+      </button>
+    </div>
+  </div>
+  <div class="amcharts-container position-relative">
+    <div [hidden]="!show" [id]="graphId" class="amcharts"></div>
+    <div *ngIf="loading" class="text-center h-100 my-auto d-flex justify-content-center align-items-center">
+      <div class="spinner-border text-dark"></div>
+    </div>
+    <div *ngIf="empty" class="text-center h-100 my-auto d-flex justify-content-center align-items-center">
+      <empty-result message="No se encontró información"></empty-result>
+    </div>
+  </div>
+</div>

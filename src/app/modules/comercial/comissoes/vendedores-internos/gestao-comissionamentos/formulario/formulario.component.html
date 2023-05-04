@@ -1,0 +1,386 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<!-- <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen> -->
+<app-header appTitle="Tela de criação e detalhes da tabela de comissionamento">
+
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" >
+  <div class="row" >
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg">
+              <label for="periodo">Período</label>
+              <input
+            class="form-control"
+            id="periodo"
+            type="text"
+            formControlName="periodo"
+            >
+            </div>
+            <div class="form-group col-lg">
+              <label for="descTabela">Descrição da tabela</label>
+              <input
+            class="form-control"
+            id="descTabela"
+            type="text"
+            formControlName="descTabela"
+            >
+            </div>
+            <div class="form-group col-lg">
+              <label for="escritorio">Gerente</label>
+              <ng-select
+                [items]="escritorios"
+                labelForId="escritorio"
+                formControlName="escritorio"
+                bindValue="matricula"
+                bindLabel="nome"
+                [virtualScroll]="true">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg">
+              <label for="vendedor">Vendedor</label>
+              <ng-select
+                [items]="vendedores"
+                labelForId="vendedor"
+                formControlName="vendedor"
+                bindValue="id"
+                bindLabel="nome"
+                [virtualScroll]="true">
+              </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+
+  <div class="vendedoresInternos">
+    <custom-table [config]="tableConfig" *ngIf="dados.length > 0 && !dadosEmpty">
+      <ng-template #thead let-thead>
+        <tr>
+          <th style="width: 45%">
+            <div style="text-transform: uppercase; font-weight: bold;">
+                Vendedor: {{ dados[0].vendedor[0].nomeVendedor }}
+            </div>
+          </th>
+          <!-- aprovar/reprovar -->
+          <th style="width: 5%">
+            <!-- Analista de Marketing -->
+            <btn-icon
+                *ngIf="profile.analistaMarketing && aprovarAnalista && reprovarAnalista"
+                icon="fas fa-check"
+                size="medium"
+                tooltip="Aprovar"
+                id="aprovado"
+                (click)="onAprovarAnalista()">
+            </btn-icon>
+            <btn-icon
+                *ngIf="profile.analistaMarketing && aprovarAnalista && reprovarAnalista"
+                icon="fas fa-times"
+                size="medium"
+                tooltip="Reprovar"
+                id="reprovado"
+                (click)="openModalAnalista(analista)">
+            </btn-icon>
+            <btn-icon
+                *ngIf="(profile.analistaMarketing || profile.gerenteEscritorio) && (aprovarAnalista && !reprovarAnalista)"
+                icon="fas fa-times"
+                size="medium"
+                tooltip="Reprovado"
+                id="reprovado">
+            </btn-icon>
+            <btn-icon
+                *ngIf="(profile.analistaMarketing || profile.gerenteFiscal) && (!aprovarAnalista && reprovarAnalista)"
+                icon="fas fa-check"
+                size="medium"
+                tooltip="Aprovado"
+                id="aprovado">
+            </btn-icon>
+
+            <!-- Gerente de Marketing -->
+            <btn-icon
+                *ngIf="profile.gerenteMarketing && aprovarGerente && reprovarGerente"
+                icon="fas fa-check"
+                size="medium"
+                tooltip="Aprovar"
+                id="aprovado"
+                (click)="onAprovarGerente()">
+            </btn-icon>
+            <btn-icon
+            *ngIf="profile.gerenteMarketing && aprovarGerente && reprovarGerente"
+                icon="fas fa-times"
+                size="medium"
+                tooltip="Reprovar"
+                id="reprovado"
+                (click)="openModalGerente(gerente)">
+            </btn-icon>
+            <btn-icon
+                *ngIf="(profile.gerenteMarketing || profile.gerenteEscritorio) && (aprovarGerente && !reprovarGerente)"
+                icon="fas fa-times"
+                size="medium"
+                tooltip="Reprovado"
+                id="reprovado">
+            </btn-icon>
+            <btn-icon
+                *ngIf="(profile.gerenteMarketing || profile.gerenteFiscal) && (!aprovarGerente && reprovarGerente)"
+                icon="fas fa-check"
+                size="medium"
+                tooltip="Aprovado"
+                id="aprovado">
+            </btn-icon>
+
+            <!-- Diretor Comercial -->
+            <btn-icon
+                *ngIf="profile.diretorComercial && aprovarDiretor && reprovarDiretor"
+                icon="fas fa-check"
+                size="medium"
+                tooltip="Aprovar"
+                id="aprovado"
+                (click)="onAprovarDiretor()">
+            </btn-icon>
+            <btn-icon
+                *ngIf="profile.diretorComercial && aprovarDiretor && reprovarDiretor"
+                icon="fas fa-times"
+                size="medium"
+                tooltip="Reprovar"
+                id="reprovado"
+                (click)="openModalDiretor(diretor)">
+            </btn-icon>
+            <btn-icon
+                *ngIf="(profile.diretorComercial || profile.gerenteEscritorio) && (aprovarDiretor && !reprovarDiretor)"
+                icon="fas fa-times"
+                size="medium"
+                tooltip="Reprovado"
+                id="reprovado">
+            </btn-icon>
+            <btn-icon
+                *ngIf="(profile.diretorComercial || profile.gerenteFiscal) && (!aprovarDiretor && reprovarDiretor)"
+                icon="fas fa-check"
+                size="medium"
+                tooltip="Aprovado"
+                id="aprovado">
+            </btn-icon>
+          </th>
+        </tr>
+      </ng-template>
+    </custom-table>
+    <custom-table [config]="tableConfig" *ngIf="dados.length > 0 && !dadosEmpty">
+      <ng-template #thead let-thead>
+        <tr style="text-align: center;" >
+          <th scope="col">Fixo</th>
+          <th scope="col">KPI's</th>
+          <th scope="col">% Ganho</th>
+          <th scope="col">Meta</th>
+          <th scope="col">Total Realizado</th>
+          <th scope="col">% Alcançado</th>
+          <th scope="col">Potencial de Ganho</th>
+          <th scope="col">Ganho Efetivo</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr style="text-align: center;">
+            <!--*ngFor="let lista of dados[0].vendedor[0].kpi; let i = index" [class.table-active]="lista.codTabela == rankingSelecionado.codClassificacao-->
+          <td>
+            0,15 
+          </td>
+          <td >
+            {{ dados[0].vendedor[0].kpi[0].descKpi }}
+          </td>
+          <td >
+            {{ dados[0].vendedor[0].kpi[0].porcGanho }}
+          </td>
+          <td >
+            {{ dados[0].vendedor[0].kpi[0].meta }}
+          </td>
+          <td *ngIf="dados[0].vendedor[0].kpi[0].totalRealizado < dados[0].vendedor[0].kpi[0].meta" style="color: red;">
+            {{ dados[0].vendedor[0].kpi[0].totalRealizado }}
+          </td>
+          <td *ngIf="dados[0].vendedor[0].kpi[0].totalRealizado >= dados[0].vendedor[0].kpi[0].meta" style="color: green;">
+            {{ dados[0].vendedor[0].kpi[0].totalRealizado }}
+          </td>
+          <td >
+            {{ dados[0].vendedor[0].kpi[0].porcAlcancado  }}
+          </td>
+          <td> 
+            {{ dados[0].vendedor[0].kpi[0].potencialGanho }} 
+          </td>
+          <td >
+            {{ dados[0].vendedor[0].kpi[0].ganhoEfetivo }}
+          </td>
+        </tr>
+        <tr style="text-align: center;">
+          <td >
+            0,15 
+          </td>
+          <td >
+            {{ dados[0].vendedor[0].kpi[1].descKpi }}
+          </td>
+          <td >
+            {{ dados[0].vendedor[0].kpi[1].porcGanho }}
+          </td>
+          <td >
+            {{ dados[0].vendedor[0].kpi[1].meta }}
+          </td>
+          <td *ngIf="dados[0].vendedor[0].kpi[1].totalRealizado < dados[0].vendedor[0].kpi[1].meta" style="color: red;">
+            {{ dados[0].vendedor[0].kpi[0].totalRealizado }}
+          </td>
+          <td *ngIf="dados[0].vendedor[0].kpi[1].totalRealizado >= dados[0].vendedor[0].kpi[1].meta" style="color: green;" >
+            {{ dados[0].vendedor[0].kpi[1].totalRealizado }}
+          </td>
+          <td >
+            {{ dados[0].vendedor[0].kpi[1].porcAlcancado }}
+          </td>
+          <td >
+            {{ dados[0].vendedor[0].kpi[1].potencialGanho }}
+          </td>
+          <td >
+            {{ dados[0].vendedor[0].kpi[1].ganhoEfetivo }}
+          </td>
+        </tr>
+        <!-- <tr><td colspan="8"></td></tr>
+        <tr style="text-align: center;">
+          <td rowspan="2">
+            Total Faturado (R$)
+          </td>
+          <td>
+            Manetoni
+          </td>
+          <td colspan="3" style="text-align: end;">
+            R$ 68.412,63
+          </td>
+          <td rowspan="2">
+            R$ 102,62
+          </td>
+        </tr>
+      
+        <tr style="text-align: center;">
+          <td>
+            DBA
+          </td>
+          <td colspan="3" style="text-align: end;">
+            -
+          </td>
+        </tr>
+        <tr style="text-align: center;">
+          <td>
+            0,3
+          </td>
+          <td>
+            Corte e Dobra
+          </td>
+          <td>
+            -
+          </td>
+          <td>
+            0,3
+          </td>
+          <td>
+            -
+          </td>
+          <td>
+            R$ 32.396,60
+          </td>
+          <td>
+            CD
+          </td>
+          <td>
+            R$ 97,19
+          </td>
+        </tr>
+        <tr style="text-align: center;">
+          <td>
+            0,3
+          </td>
+          <td >
+            Cercas
+          </td>
+          <td>
+            -
+          </td>
+          <td>
+            0,3
+          </td>
+          <td>
+            -
+          </td>
+          <td>
+            R$ 6.270,00
+          </td>
+          <td>
+            Cercas
+          </td>
+          <td>
+            R$ 18,81
+          </td>
+        </tr>
+        <tr style="text-align: center;">
+          <td rowspan="2" colspan="6"></td>
+          <td>
+            RO
+          </td>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr style="text-align: center;">
+          <td>
+            GANHO FINAL
+          </td>
+          <td style="background-color: green;">
+            R$ 218,62
+          </td>
+        </tr> -->
+      </ng-template>
+    </custom-table>
+  </div>
+  <hr>
+  <div class="total">
+    <custom-table [config]="tableConfig" >
+      <!-- *ngIf="dados.length > 0 && !dadosEmpty" -->
+      <ng-template #thead let-thead>
+        <tr>
+          <td class="hover ml-5" style="background: rgb(248, 176, 176)">
+
+          </td>
+          <td
+             style="background: rgb(248, 176, 176)">
+          </td>
+          <td
+            
+            style="background: rgb(248, 176, 176);
+            text-transform: uppercase;
+            font-weight: bold;">
+            Total Escritório
+          </td>
+          <td
+            
+            style="background: rgb(248, 176, 176);
+            font-weight: bold">
+            R$ 18.310,62
+          </td>
+        </tr>
+      </ng-template>
+    </custom-table>
+  </div>
+  <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
+    <pagination
+      [maxSize]="maxSize"
+      [(totalItems)]="totalItems"
+      (pageChanged)="onPageChanged($event)"
+      [(itemsPerPage)]="itemsPerPage"
+      [boundaryLinks]="true"
+      [(ngModel)]="currentPage"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;">
+    </pagination>
+  </div> 
+</app-body>
+

@@ -1,0 +1,61 @@
+<app-header appTitle="Detalles del compromiso">
+  <button
+    type="button"
+    (click)="onEdit(detalhes)">
+    Editar
+  </button>
+  <button
+    type="button"
+    (click)="onReschedule(detalhes)">
+    Reagendar
+  </button>
+  <button
+    type="button"
+    (click)="onDelete(detalhes)">
+    Excluir
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Título</label>
+          <div>{{ detalhes.title }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Cliente</label>
+          <div *ngIf="!detalhes.client">Sin informacion</div>
+          <div *ngIf="detalhes.client">{{ detalhes.client }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-sm-6">
+          <label>FORMA DE CONTACTO</label>
+          <div *ngIf="!detalhes.formContactDesc">Sin informacion</div>
+          <div *ngIf="detalhes.formContactDesc">{{ detalhes.formContactDesc }}</div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label>Contacto de origen</label>
+          <div *ngIf="!detalhes.typeContactDesc">Sin informacion</div>
+          <div *ngIf="detalhes.typeContactDesc">{{ detalhes.typeContactDesc }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Fecha</label>
+          <div>{{ detalhes.fullDate | uppercase }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Observación</label>
+          <div *ngIf="!detalhes.description">Sin informacion</div>
+          <div *ngIf="detalhes.description" [innerHTML]="detalhes.description | uppercase"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>

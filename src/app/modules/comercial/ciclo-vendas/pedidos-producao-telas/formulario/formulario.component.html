@@ -1,0 +1,322 @@
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<!-- <loader-spinner-full-screen [hidden]="!loaderFullScreen"></loader-spinner-full-screen> -->
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="materiais.length == 0 || pesoQtdade">
+    Finalizar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <form [formGroup]="form" autocomplete="off" #scrollToFormOnTop>
+    <div class="row">
+      <div class="col">
+        <hr class="mt-0 mb-4">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="mtc-title">Dados de lançamento</div>
+        <div class="form-row">
+          <div class="form-group col-lg-2">
+            <label>Data/Hora</label>
+            <p class="mb-0">
+              {{ dadosLancamento.data | date:'dd/MM/yyyy' }} às {{ dadosLancamento.data | date:'HH:mm' }}
+            </p>
+          </div>
+          <div class="form-group col-lg-3">
+            <label>Usuário</label>
+            <p class="mb-0">
+              #{{ dadosLancamento.codVendedor }} / {{ dadosLancamento.nomeVendedor | uppercase }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <hr class="mt-4 mb-5">
+      </div>
+    </div>
+    <div class="mtc-title">Dados do Pedido</div>
+    <div class="form-row">
+      <div class="form-group col-lg-2">
+        <label>Situação</label>
+        <select
+          class="form-control custom-select"
+          id="codSituacao"
+          placeholder="Selecione..."
+          formControlName="codSituacao"
+          (change)="changeSituacao();"
+          [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
+          <option value="1">Em aberto</option>
+          <option value="2">Produção</option>
+          <option value="3">Expedição</option>
+          <option value="4">Cancelado</option>
+        </select>
+      <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação da cotação é obrigatório."></invalid-form-control>
+      </div>
+
+      <div class="form-group col-lg-2">
+        <label class="mb-1" for="codPrioridade">Cód. Prioridade</label>
+        <input
+          type="number"
+          id="codPrioridade"
+          placeholder="Digite..."
+          class="form-control"
+          formControlName="codPrioridade">
+      </div>
+        <!-- <comercial-ciclo-vendas-cotacoes-formulario-template-clientes
+          [acessoClientes]="permissoesAcesso.acessoClientes"
+          [codCliente]="form.value.codCliente"
+          [asFormField]="true"
+          [setErrors]="codClientErrors"
+          (onChange)="onChangeCliente($event, 'user')"
+          (onLoad)="onLoadCliente($event)">
+        </comercial-ciclo-vendas-cotacoes-formulario-template-clientes> -->
+        <div class="form-group col-lg-8">
+          <div
+            class="mb-1 d-flex justify-content-between w-100"
+            style="height: 19px">
+            <label class="my-auto" for="codCliente">Cliente</label>
+            <div class="my-auto text-uppercase" style="font-size: 11px">
+              <a
+                class="text-primary mr-2"
+                href="javascript:void(0)"
+                (click)="openModal(selecionarCliente)">
+                <strong>Selecionar</strong>
+              </a>
+              <span class="mx-2" *ngIf="form.value.codCliente != null">|</span>
+              <a
+                *ngIf="form.value.codCliente != null"
+                class="text-primary mr-2"
+                href="javascript:void(0)"
+                (click)="onClienteDetalhes()">
+                <strong>Detalle</strong>
+              </a>
+            </div>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            id="codRazaoSocial"
+            formControlName="codRazaoSocial"
+            placeholder="Selecionar..."
+            [attr.disabled]="true"/>
+        </div>
+    </div>
+    <div class="form-row">
+      <!-- <div class="form-group col-lg-2">
+        <label for="codDeposito">Depósito</label>
+        <ng-select
+          [searchable]="true"
+          [clearable]="false"
+          [items]="filteredDepositos"
+          formControlName="codDeposito"
+          [virtualScroll]="true"
+          labelForId="codDeposito"
+          placeholder = "Selecione..."
+          bindLabel="nomeDeposito"
+          bindValue="idDeposito"
+          [ngClass]="onFieldError('codDeposito') + ' ' + onFieldRequired(form.controls.codDeposito)">
+        </ng-select>
+        <invalid-form-control [show]="onFieldInvalid('codDeposito')" message="Depósito é obrigatório."></invalid-form-control>
+      </div> -->
+      <div class="form-group col-lg-2">
+        <label>Localização do Estoque</label>
+        <select
+          class="form-control custom-select"
+          id="codDeposito"
+          formControlName="codDeposito"
+          [ngClass]="onFieldError('codDeposito') + ' ' + onFieldRequired(form.controls.codDeposito)">
+          <option value="">Todos</option>
+          <option value="1">Piracicaba</option>
+          <option value="2">Rio das Pedras</option>
+        </select>
+        <invalid-form-control [show]="onFieldInvalid('codDeposito')" message="Localização é obrigatório."></invalid-form-control>
+      </div>
+      <!-- <div class="form-group col-lg-2">
+        <label>Localização</label>
+        <select
+          class="form-control custom-select"
+          id="codLocalizacao"
+          placeholder="Selecione..."
+          formControlName="codLocalizacao">
+          <option value="">Todos</option>
+          <option value="1">Piracicaba</option>
+          <option value="2">Rio das Pedras-CD</option>
+          <option value="3">Rio das Pedras-Civil</option>
+          <option value="4">Retira</option>
+        </select>
+      </div> -->
+      <div class="form-group col-lg-2">
+        <label for="dataEntrega">Data de entrega</label>
+        <input
+          class="form-control"
+          id="dataEntrega"
+          type="text"
+          bsDatepicker
+          placeholder="Selecione..."
+          [bsConfig]="bsConfig"
+          formControlName="dataEntrega"
+          [ngClass]="onFieldError('dataEntrega') + ' ' + onFieldRequired(form.controls.dataEntrega)">
+        <invalid-form-control [show]="onFieldInvalid('dataEntrega')" message="Data de entrega é obrigatório."></invalid-form-control>
+      </div>
+      <div class="form-group col-lg-8">
+        <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
+          <label class="my-auto" for="codEndereco">Local de Entrega</label>
+          <div class="my-auto text-uppercase" style="font-size: 11px" *ngIf="form.value.codCliente != null">
+            <a
+              class="text-primary mr-2"
+              href="javascript:void(0)"
+              (click)="onDetalhesLocalEntrega()">
+              <strong>Detalle</strong> 
+            </a>
+            <!-- <span class="mx-2" *ngIf="form.value.codCliente != null">|</span> -->
+            <!-- <a
+              class="text-primary mr-2"
+              href="javascript:void(0)"
+              [routerLink]="[getLinkAddLocalEntrega()]"
+              target="_blank">
+              <strong>Adicionar</strong> 
+            </a> -->
+            <span class="mx-2" *ngIf="form.value.codCliente != null">|</span>
+            <a
+            class="text-primary mr-2"
+            href="javascript:void(0)"
+            tooltip="Recarregar"
+            (click)="onReloadLocalEntrega()"
+            >
+              <i class="fas fa-redo-alt text-dark"></i>
+            </a>
+            
+          </div>
+        </div>
+        <ng-select
+          [searchable]="true"
+          [clearable]="false"
+          [items]="locaisEntrega"
+          formControlName="codEndereco"
+          [virtualScroll]="true"
+          bindLabel="descricao"
+          bindValue="codEndereco"
+          placeholder = "Selecione..."
+          [loading]="locaisEntregaLoader"
+          loadingText="Carregando..."
+          groupBy="tipo"
+          [ngClass]="onFieldError('codEndereco') + ' ' + onFieldRequired(form.controls.codEndereco)">
+        </ng-select>
+        <invalid-form-control [show]="onFieldInvalid('codEndereco')" message="Local de entrega é obrigatório."></invalid-form-control>
+      </div>
+      
+      <!-- <div class="form-group col-lg-4">
+        <div class="form-row">
+          <div class="form-group col">
+            <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
+              <label class="my-auto" for="codFormaPagamento">Forma de Pagamento</label>
+              <div class="my-auto text-uppercase" style="font-size: 11px">
+                <a
+                  id="top-links"
+                  class="text-primary mr-2"
+                  href="javascript:void(0)"
+                  (click)="onVisualizarDuplicatas()">
+                  <strong>Visualizar duplicatas</strong> 
+                </a>
+              </div>
+            </div>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="formasPagamento"
+              formControlName="codFormaPagamento"
+              [virtualScroll]="true"
+              placeholder = "Selecione..."
+              bindLabel="descricao"
+              bindValue="codFormaPagamento"
+              [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)">
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')" message="Forma de pagamento é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col d-flex">
+            <div class="custom-control custom-checkbox mt-auto">
+              <input
+              type="checkbox"
+              class="custom-control-input"
+              id="duplicatas-somente-carteira"
+              formControlName="duplicatasSomenteCarteira"
+              [attr.disabled]="visualizar ? '' : null">
+              <label
+                class="custom-control-label"
+                for="duplicatas-somente-carteira">
+                Duplicatas somente carteira
+              </label>
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <div class="row">
+      <div class="col">
+        <hr class="mt-4 mb-5">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <comercial-ciclo-vendas-pedidos-producao-telas-formulario-materiais-lista
+          [codDeposito]="form.value.codDeposito"
+          [codCliente]="form.value.codCliente"
+          [codEndereco]="form.value.codEndereco"
+          [codFormaPagamento]="form.value.codFormaPagamento"
+          (loaderNavbar)="onLoaderNavbar($event)"
+          (loaderFullScreen)="onLoaderFullScreen($event)"
+          (scrollToFormOnTop)="onMateriaisScrollTop($event)"
+          (scrollToCarrinho)="onScrollToCarrinho($event)">
+        </comercial-ciclo-vendas-pedidos-producao-telas-formulario-materiais-lista>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <hr class="my-5">
+      </div>
+    </div>
+    <div class="row" #scrollToCarrinho>
+      <div class="col">
+        <comercial-ciclo-vendas-pedidos-producao-telas-formulario-carrinho
+          [idReservado]="idReservado"
+          [codCotacao]="codCotacao"
+          [codCliente]="form.value.codCliente"
+          [initialValue]="carrinho"
+          (loaderNavbar)="onLoaderNavbar($event)"
+          (hasError)="onCarrinhoError($event)"
+          (scrollTop)="onCarrinhoScrollTop($event)"
+          (carrinho)="onCarrinho($event)">
+        </comercial-ciclo-vendas-pedidos-producao-telas-formulario-carrinho>
+      </div>
+    </div>
+    <div #scrollToFormOnBottom *ngIf="dependenciesLoaded">
+      <div class="row justify-content-between">
+        <div class="col">
+          <!-- <div class="form-row">
+            <div class="form-group col">
+              <label for="observacoes">Observações</label>
+              <textarea
+                class="form-control"
+                id="observacoes"
+                formControlName="observacoes">
+              </textarea>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </form>
+  <ng-template #selecionarCliente>
+    <comercial-cliclo-vendas-pedidos-producao-telas-formulario-modal-selecionar
+      (fecharModal)="onFecharModal($event)"
+      (cliente)="onCliente($event)">
+    </comercial-cliclo-vendas-pedidos-producao-telas-formulario-modal-selecionar>
+  </ng-template>
+</app-body>

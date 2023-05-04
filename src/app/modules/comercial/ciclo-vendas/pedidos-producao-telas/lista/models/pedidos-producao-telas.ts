@@ -1,0 +1,33 @@
+export interface IComercialCicloVendasPedidosProducaoTelas {
+  codCliente: number;
+  codDeposito: number;
+  codEmpresa: number;
+  codSituacao: number;
+  codPrioridade: number;
+  codUsuarioLiberacaoComercial: number;
+  codUsuarioLiberacaoFinanceira: number;
+  codVendedor: number;
+  comentarioLiberacaoComercial: string;
+  comentarioLiberacaoFinanceira: string;
+  cor: string;
+  dataEncerramento: string;
+  dataLancamento: string;
+  dataLiberacaoComercial: string;
+  dataLiberacaoFinanceira: string;
+  dataTransferenciaComercial: string;
+  dataTransferenciaFinanceira: string;
+  descPedidoEmLiberacao: string;
+  nomeDeposito: string;
+  nomeEmpresa: string;
+  nomeFantasia: string;
+  nomeUsuarioLiberacaoComercial: string;
+  nomeUsuarioLiberacaoFinanceira: string;
+  nomeVendedor: string;
+  nrPedido: number;
+  pedidoEmLiberacao: number;
+  pedidoFaturado: number;
+  pedidoTransferido: number;
+  qtdeRegistros: number;
+  razaoSocial: string;
+  situacao: string;
+}

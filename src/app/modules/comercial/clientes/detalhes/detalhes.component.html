@@ -1,0 +1,91 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle= "Detalles"></app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col text-center">
+      <h5 class="pt-2 mb-4">{{ cliente.razaoSocial }}</h5>
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col d-flex justify-content-center w-100">
+      <h5 tooltip="Código do cliente">
+        <span class="badge badge-dark">CÓD.: {{ cliente.codCliente }}</span>
+      </h5>
+      <h5 *ngIf="cliente.nomeVendedor" class="ml-3" tooltip="Vendedor">
+        <span class="badge badge-light">{{ cliente.nomeVendedor | uppercase }}</span>
+      </h5>
+      <h5 class="ml-3" tooltip="Status">
+        <span class="badge" [ngClass]="classStatusBadge(cliente.status)">{{ cliente.status | uppercase }}</span>
+      </h5>
+      <h5 *ngIf="cliente.codClienteDBA" class="ml-3" tooltip="Código DBA do cliente">
+        <span class="badge badge-warning">CÓD. DBA: {{ cliente.codClienteDBA }}</span>
+      </h5>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <div class="row justify-content-center">
+        <div class="col-md-3">
+          <card-button
+            icon="fas fa-folder-open"
+            text="Datos de registro"
+            [routerLink]="['../../cadastro', cliente.codCliente, 'dados-faturamento']">
+          </card-button>
+        </div>
+         <div class="col-md-3">
+          <card-button
+            icon="fas fa-chart-pie"
+            text="Dashboard"
+            [routerLink]="['../../dashboard', cliente.codCliente]">
+          </card-button>
+        </div> 
+        <!-- <div class="col-md-3">
+          <card-button
+            icon="fas fa-chart-bar"
+            text="Histórico Financeiro"
+            [routerLink]="['../../historico-financeiro', cliente.codCliente, 'resumo']">
+          </card-button>
+        </div> -->
+        <!-- <div class="col-md-3">
+          <card-button
+            icon="fas fa-handshake"
+            text="Ficha PAC"
+            [routerLink]="['../../proposta-analise-credito', cliente.codCliente]">
+          </card-button>
+        </div>
+      </div> -->
+      <!-- <div class="row justify-content-center">
+        <div class="col-md-3">
+          <card-button
+            icon="fas fa-shopping-cart"
+            text="Vender"
+            [routerLink]="['../../../ciclo-vendas/139/cotacoes-pedidos/lista/']"
+            [queryParams]="{codCliente: cliente.codCliente}">
+          </card-button>
+        </div> -->
+        <div class="col-md-3">
+          <card-button
+            icon="far fa-calendar-alt"
+            text="Agendar"
+            [routerLink]="['../../../agenda/novo', cliente.codCliente]">
+          </card-button>
+        </div>
+        <!-- <div class="col-md-3">
+          <card-button
+            icon="fas fa-tasks"
+            text="Propuestas / Pedidos"
+            [routerLink]="['../../../tid-software/11']"
+            [queryParams]="{ codCliente: cliente.codCliente, sistema: 'vendas', modulo: 3 }">
+          </card-button>
+        </div> -->
+        <!-- <div class="col-md-3">
+          <card-button
+            icon="fas fa-list"
+            text="Últimos precios"
+            [routerLink]="['../../../clientes/ultimos-precos', cliente.codCliente]">
+          </card-button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</app-body>

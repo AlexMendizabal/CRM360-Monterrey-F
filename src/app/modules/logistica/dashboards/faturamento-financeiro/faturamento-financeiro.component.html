@@ -1,0 +1,121 @@
+<app-header appTitle="Faturamento Financeiro">
+  <button
+    type="button"
+    (click)="onFilter()"
+    [disabled]="form.valid === false">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="DT_INIC">Data Inicial</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="DT_INIC"
+                type="text"
+                (keydown.enter)="onFilter()"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="DT_INIC"
+                [ngClass]="onFieldError('DT_INIC') + ' ' + onFieldRequired('DT_INIC')"
+                >
+              </div>
+              <invalid-form-control [show]="onFieldInvalid('DT_INIC')" message="Data Inicial é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="DT_FINA">Data Final</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="DT_FINA"
+                type="text"
+                (keydown.enter)="onFilter()"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="DT_FINA"
+                [ngClass]="onFieldError('DT_FINA') + ' ' + onFieldRequired('DT_FINA')">
+              </div>
+              <invalid-form-control [show]="onFieldInvalid('DT_FINA')" message="Data Final é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-2 pl-0">
+              <label for="NM_CLIE">Cliente</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="status"
+              bindLabel="nome"
+              bindValue="cod"
+              id="status"
+              (change)="changeCliente($event.cod)"
+              formControlName="NM_CLIE"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="projetos">Projeto</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="projetos"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                [loading]="loadingProjetos"
+                labelForId="DS_PROJ"
+                bindLabel="DS_PROJ"
+                bindValue="DS_PROJ"
+                id="DS_PROJ"
+                formControlName="DS_PROJ"
+              >
+              </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row" *ngIf="modoView != 'todos'">
+    <div class="col text-right">
+      <div class="mtc-title">
+        <a>
+          <span *ngIf="info">{{ info | uppercase }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <logistica-dashboard-faturamento-financeiro-todos
+  [formFilter] = "formFilter" 
+  *ngIf="modoView == 'todos'">
+  </logistica-dashboard-faturamento-financeiro-todos>
+
+
+  <div *ngIf="modoView != undefined">
+    <logistica-dashboard-faturamento-financeiro-clientes
+      [formFilter] = "formFilter" 
+      *ngIf="modoView != 'todos' && modoView != 'novos negócios' ">
+    </logistica-dashboard-faturamento-financeiro-clientes>
+  </div>
+
+
+  <logistica-dashboard-faturamento-financeiro-novos
+  *ngIf="modoView == 'novos negócios'"
+  [formFilter] = "formFilter" >
+  </logistica-dashboard-faturamento-financeiro-novos>
+  
+</app-body>

@@ -1,0 +1,16 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row" *ngIf="infosFinanceirasLoaded">
+  <div class="col">
+    <div class="mtc-title">Información financiera</div>
+    <ul class="list-group" *ngIf="infosFinanceiras.length > 0">
+      <li class="list-group-item" *ngFor="let item of infosFinanceiras">
+        <b>{{ item.descricao }}</b>
+      </li>
+    </ul>
+    <div class="row py-5 my-5" *ngIf="infosFinanceiras.length == 0">
+      <div class="col">
+        <empty-result message="Nenhuma informação encontrada"></empty-result>
+      </div>
+    </div>
+  </div>
+</div>

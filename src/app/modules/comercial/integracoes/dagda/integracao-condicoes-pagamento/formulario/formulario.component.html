@@ -1,0 +1,151 @@
+<loader-spinner-full-screen
+  *ngIf="spinnerFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button type="button" (click)="onCancel()" [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!validForm || submittingForm"
+  >
+    Salvar
+  </button>
+</app-header>
+
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!spinnerFullScreen">
+  <form [formGroup]="form">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 d-flex flex-wrap">
+        <!-- Ng Select TID -->
+
+        <div class="col-lg-6">
+          <div [hidden]="form.getRawValue().codMaterial != null">
+            <div class="card">
+              <div class="card-body">
+                <label for="codigoTid"
+                  ><b>{{ 'Condição de Pagamento TID' | uppercase }}</b></label
+                >
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [virtualScroll]="true"
+                  labelForId="codigoTid"
+                  [items]="condicoesTid"
+                  [loading]="condicoesTid.length <= 0"
+                  placeholder="Selecione..."
+                  bindLabel="descricao"
+                  bindValue="codFormaPagamento"
+                  (change)="checkValidForm(); changeTid($event)"
+                  formControlName="codigoTid"
+                  [ngClass]="
+                    onFieldError('codigoTid') +
+                    ' ' +
+                    onFieldRequired('codigoTid')
+                  "
+                  [readonly]="isFieldValid"
+                >
+                </ng-select>
+                <invalid-form-control
+                  [show]="onFieldInvalid('codigoTid')"
+                  message="Código Tid é obrigatório."
+                >
+                </invalid-form-control>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ng Select DAGDA -->
+
+        <div class="col-lg-6 border-left">
+          <div [hidden]="form.getRawValue().codMaterial != null">
+            <div class="card">
+              <div class="card-body">
+                <label for="codigoDagda"
+                  ><b>{{ 'Condição de Pagamento Dagda' | uppercase }}</b></label
+                >
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [virtualScroll]="true"
+                  labelForId="codigoDagda"
+                  placeholder="Selecione..."
+                  [items]="condicoesDagda"
+                  [loading]="condicoesDagda.length <= 0"
+                  bindLabel="descricao"
+                  bindValue="codFormaPagamento"
+                  (change)="checkValidForm(); changeDagda($event)"
+                  formControlName="codigoDagda"
+                  [ngClass]="
+                    onFieldError('codigoDagda') +
+                    ' ' +
+                    onFieldRequired('codigoDagda')
+                  "
+                  [readonly]="isFieldValid"
+                >
+                </ng-select>
+                <invalid-form-control
+                  [show]="onFieldInvalid('codigoDagda')"
+                  message="Código Dagda é obrigatório."
+                >
+                </invalid-form-control>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Tabela de assosiacao -->
+  <div class="row justify-content-center mt-4">
+    <div class="col-lg-8 d-flex">
+      <div class="col-lg-12">
+        <div class="d-flex justify-content-end mt-1 mb-1">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary"
+            (click)="onAssociarCondicoesPagamento()"
+            [disabled]="!buttonAssosiarEnabled"
+          >
+            <i class="fas fa-exchange-alt"></i>
+            <span>Associar</span>
+          </button>
+        </div>
+
+        <custom-table [config]="tableConfig" [hidden]="!showTable">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="1">Código TID</th>
+              <th scope="5">Descrição TID</th>
+              <th scope="1">Código Dagda</th>
+              <th scope="4">Descrição Dagda</th>
+              <th scope="1"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr>
+              <td>{{ associacao.codTid }}</td>
+              <td>{{ associacao.descTid }}</td>
+              <td>{{ associacao.codDagda }}</td>
+              <td>{{ associacao.descDagda }}</td>
+              <td [hidden]="associacao.codDagda == null">
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  style="color: red"
+                  (click)="deleteAssosiacao()"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </div>
+    </div>
+  </div>
+</app-body>

@@ -1,0 +1,27 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row" *ngIf="travasLoaded">
+  <div class="col">
+    <div class="mtc-title">Travas</div>
+    <ul class="list-unstyled" *ngIf="travas.length > 0">
+      <li *ngFor="let trava of travas">
+        <div class="d-flex">
+          <div class="d-flex">
+            <h5 class="my-auto">
+              <i [ngClass]="iconClass(trava.situacao)"></i>
+            </h5>
+            <div class="ml-3">
+              <b class="d-block text-small text-secondary">{{ trava.data }}</b>
+              <strong class="d-block text-uppercase">{{ trava.descricao }}</strong>
+            </div>
+          </div>
+        </div>
+        <div><hr></div>
+      </li>
+    </ul>
+    <div class="row py-5 my-5" *ngIf="travas.length == 0">
+      <div class="col">
+        <empty-result message="Nenhuma informação encontrada"></empty-result>
+      </div>
+    </div>
+  </div>
+</div>

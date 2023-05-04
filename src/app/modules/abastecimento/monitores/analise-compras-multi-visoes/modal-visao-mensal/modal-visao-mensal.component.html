@@ -1,0 +1,357 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="border rounded bg-white shadow-sm p-3 h-100">
+      <div class="d-flex justify-content-between">
+        <div class="mtc-title mb-0">
+          <button
+            type="button"
+            class="btn-icon-sm"
+            [tooltip]="openRegistrosSelecionadosBool ? 'Clique para ocultar os dados' : 'Clique para expandir os dados'"
+            placement="right"
+            (click)="openRegistrosSelecionados()"
+          >
+            <i
+              [class]="openRegistrosSelecionadosBool ? 'far fa-eye' : 'far fa-eye-slash' "
+            >
+            </i>
+          </button>
+          Registros Selecionados
+        </div>
+      </div>
+      <div class="row justify-content-center mt-2" *ngIf="openRegistrosSelecionadosBool">
+        <div class="col-8">
+          <div class="table-responsive">
+            <custom-table>
+              <ng-template let-thead #thead>
+                <tr class="text-center">
+                  <th nowrap>Material</th>
+                  <th nowrap>Depósito</th>
+                </tr>
+              </ng-template>
+              <ng-template let-tbody #tbody>
+                <tr  *ngFor="let item of dataRegistros">  
+                  <td nowrap class="text-center">{{ item.NM_MATE }}</td>
+                  <td nowrap class="text-center">{{ item.NM_DEPO }}</td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+    </div>  
+  </div>
+</div>
+<div class="row mt-3">
+  <div class="col-lg-6">
+    <div class="border rounded bg-white shadow-sm p-3 h-100">
+      <div class="d-flex justify-content-between">
+        <div class="mtc-title mb-0">
+          <i
+            class="far fa-question-circle p-2"
+            tooltip="Valores de entradas(Suspenso, Comprometido, Atual, Disponível)"
+            placement="right">
+          </i>
+          Entradas
+        </div>
+      </div>
+      <div class="row align-items-center h-100">
+        <div class="col">
+          <div>
+            <div [hidden]="!loading">
+              <div class="chartdiv amcharts" id="chartdiv-entradas"></div>
+            </div>
+            <div class="d-flex align-items-center justify-content-center chartdiv" [hidden]="loading">
+              <div class="spinner-border text-dark"></div>
+            </div>
+            <!-- <div class="text-center chartdiv d-flex justify-content-center align-items-center">
+              <empty-result message="Nenhuma informação encontrada"></empty-result>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>  
+  </div>
+  <div class="col-lg-6">
+    <div class="border rounded bg-white shadow-sm p-3 h-100">
+      <div class="d-flex justify-content-between">
+        <div class="mtc-title mb-0">
+          <i
+            class="far fa-question-circle p-2"
+            tooltip="Valores de Saídas(Total)"
+            placement="right">
+          </i>
+          Saídas
+        </div>
+      </div>
+      <div class="row align-items-center h-100">
+        <div class="col">
+          <div>
+            <div [hidden]="!loading">
+              <div class="chartdiv amcharts" id="chartdiv-saidas"></div>
+            </div>
+            <div class="d-flex align-items-center justify-content-center chartdiv" [hidden]="loading">
+              <div class="spinner-border text-dark"></div>
+            </div>
+            <!-- <div class="text-center chartdiv d-flex justify-content-center align-items-center">
+              <empty-result message="Nenhuma informação encontrada"></empty-result>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+</div>
+<div class="row mt-3">
+  <div class="col-lg-12">
+    <div class="border rounded bg-white shadow-sm p-3">
+      <div class="row">
+        <div class="col-6">
+          <div class="d-flex justify-content-between">
+            <div class="mtc-title mb-0">
+              <i
+                class="far fa-question-circle p-2"
+                tooltip="Comparativo Mensal(Entradas, Saídas, Perdas)"
+                placement="right">
+              </i>
+              Comparativo Mensal
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn-icon"
+              tooltip="Exportar Excel"
+              placement="left"
+              (click)="excelExport()"
+            >
+              <i class="far fa-file-excel"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-3 border rounded bg-white shadow-sm p-3 text-center mr-3">
+          <strong>TOTAL ENTRADAS</strong>
+          <br/>
+          12.000,000 Tons
+        </div>
+        <div class="col-3 border rounded bg-white shadow-sm p-3 text-center mr-3">
+          <strong>TOTAL SAÍDAS</strong>
+          <br/>
+          4.000,000 Tons
+        </div>
+        <div class="col-3 border rounded bg-white shadow-sm p-3 text-center">
+          <strong>PERDAS</strong>
+          <br/>
+          1.000,000 Tons
+        </div>
+      </div>
+      <div class="row align-items-center h-100">
+        <div class="col">
+          <div>
+            <div [hidden]="!loading">
+              <div class="chartdiv amcharts" id="chart-comparativo-mensal"></div>
+            </div>
+            <div class="d-flex align-items-center justify-content-center chartdiv" [hidden]="loading">
+              <div class="spinner-border text-dark"></div>
+            </div>
+            <!-- <div class="text-center chartdiv d-flex justify-content-center align-items-center">
+              <empty-result message="Nenhuma informação encontrada"></empty-result>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+</div>
+<div class="row mt-3">
+  <div class="col-lg-12">
+    <div class="border rounded bg-white shadow-sm p-3 h-100">
+      <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn-icon"
+          tooltip="Exportar Excel"
+          placement="left"
+          (click)="excelExport()"
+        >
+          <i class="far fa-file-excel"></i>
+        </button>
+      </div>
+      <tabset>
+        <tab heading="GERAL">
+          <div class="border-right border-left border-bottom px-3 pt-3">
+            <div class="row">
+              <div class="table-responsive mt-2">
+                <custom-table>
+                  <ng-template #thead let-thead>
+                    <tr class="text-center">
+                      <th rowrap scope="col">COL 1</th>
+                      <th rowrap scope="col">COL 2</th>
+                      <th rowrap scope="col">COL 3</th>
+                      <th rowrap scope="col">COL 4</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                  </ng-template>
+                </custom-table>
+              </div>
+            </div>
+          </div>
+        </tab>
+        <tab heading="ENTRADAS">
+          <div class="border-right border-left border-bottom px-3 pt-3">
+            <div class="row">
+              <div class="table-responsive mt-2">
+                <custom-table>
+                  <ng-template #thead let-thead>
+                    <tr class="text-center">
+                      <th rowrap scope="col">COL 1</th>
+                      <th rowrap scope="col">COL 2</th>
+                      <th rowrap scope="col">COL 3</th>
+                      <th rowrap scope="col">COL 4</th>
+                      <th rowrap scope="col">COL 5</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                  </ng-template>
+                </custom-table>
+              </div>
+            </div>
+          </div>
+        </tab>
+        <tab heading="SAÍDAS">
+          <div class="border-right border-left border-bottom px-3 pt-3">
+            <div class="row">
+              <div class="table-responsive mt-2">
+                <custom-table>
+                  <ng-template #thead let-thead>
+                    <tr class="text-center">
+                      <th rowrap scope="col">COL 1</th>
+                      <th rowrap scope="col">COL 2</th>
+                      <th rowrap scope="col">COL 3</th>
+                      <th rowrap scope="col">COL 4</th>
+                      <th rowrap scope="col">COL 5</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                  </ng-template>
+                </custom-table>
+              </div>
+            </div>
+          </div>
+        </tab>
+        <tab heading="PERDAS">
+          <div class="border-right border-left border-bottom px-3 pt-3">
+            <div class="row">
+              <div class="table-responsive mt-2">
+                <custom-table>
+                  <ng-template #thead let-thead>
+                    <tr class="text-center">
+                      <th rowrap scope="col">COL 1</th>
+                      <th rowrap scope="col">COL 2</th>
+                      <th rowrap scope="col">COL 3</th>
+                      <th rowrap scope="col">COL 4</th>
+                      <th rowrap scope="col">COL 5</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                    <tr>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                      <td rowrap class="text-center">fdkshfhsk</td>
+                    </tr>
+                  </ng-template>
+                </custom-table>
+              </div>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<div #scroll></div>
+<div class="shadow-sm" *ngIf="config.showing">
+  <div id="panel-header" class="bg-light border w-100 d-flex justify-content-between">
+    <div class="mtc-title mb-0">{{ title }}</div>
+    <button
+      type="button"
+      class="btn-icon-sm my-auto"
+      (click)="onClose()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div id="panel-body" class="border-left border-right border-bottom">
+    <div>
+      <div *ngIf="config.loaded && !config.empty">
+        <ng-content></ng-content>
+      </div>
+      <div class="d-flex w-100" *ngIf="config.loading">
+        <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+        <strong>Carregando...</strong>
+      </div>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="!config.loading && config.empty">
+      </empty-result>
+    </div>
+  </div>
+</div>

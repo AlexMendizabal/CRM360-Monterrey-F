@@ -1,0 +1,152 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpiar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Añadir
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="ID_LOGI_VEIC">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_LOGI_VEIC"
+                placeholder="DIGITE..."
+                formControlName="ID_LOGI_VEIC"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col">
+              <label for="PLAC">Matrícula</label>
+              <input
+              type="text"
+              class="form-control"
+              id="PLAC"
+              formControlName="PLAC"
+              placeholder="DIGITE..."
+              (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="DS_VEIC">Descripción</label>
+              <input
+                type="text"
+                class="form-control"
+                id="DS_VEIC"
+                formControlName="DS_VEIC"
+                placeholder="DIGITE..."
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col">
+              <label for="IN_STAT">Status</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="tipos"
+                [virtualScroll]="true"
+                labelForId="tipo"
+                bindLabel="nome"
+                bindValue="cod"
+                id="tipo"
+                (change)="onFilter()"
+                formControlName="IN_STAT"
+                placeholder="Seleccione..."
+              >
+                <ng-template ng-option-tmp let-item="item" let-index="index"> {{item.nome}}
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="form-group">
+              <label>Registros</label>
+              <select
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="col-12 p-0" [hidden] = "loading || noResult">
+    <div>
+      <table  class="table table-sm table-hover custom-border border-left border-right border-bottom text-center table-fixed">
+        <thead class="thead-light">
+          <tr>
+            <th>ID </th>
+            <th>Nombre de fantasia</th>
+            <th>Razon social</th>
+            <th>Número de IVA</th>
+            <th style="width:80px" ></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let transportadora of transportadoras; let i = index">
+            <td [ngClass]="transportadora.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+            {{transportadora.ID_LOGI_TRAN | number : '6.0-0'}}
+            </td>
+            <td class="text-truncate">{{ transportadora.NM_FANT }} </td>
+            <td class="text-truncate">{{ transportadora.NM_RAZA_SOCI }}</td>
+            <td>{{ transportadora.NR_CNPJ | cnpj}}</td>
+            <td class="align-middle" style="width:70px">
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" [routerLink]="['./', transportadora?.ID_LOGI_TRAN]">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Mostrando {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Ningún informacion econtrada"></empty-result>
+  </div>
+</app-body>

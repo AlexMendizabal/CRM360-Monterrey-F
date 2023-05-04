@@ -1,0 +1,283 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="MANUTENÇÃO DE CLASSES">
+  <button
+    type="button"
+    (click)="onFilter()"
+    [disabled]="form.status == 'INVALID'"
+  >
+    Filtrar
+  </button>
+  <button
+    type="button"
+    (click)="OnExcel()"
+    [disabled]="true"
+  >
+    Exportar Excel
+  </button>
+  <button
+    type="button"
+    (click)="onSave()"
+    [disabled]="form.status == 'INVALID' || !loading"
+  >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-lg-2">
+          <label for="linhas">Linha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="linhas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            (change)="getSubLinhas() + '' + getClasses()"
+            placeholder="Selecione..."
+            bindLabel="NM_LINH"
+            bindValue="ID"
+            formControlName="ID_LINH"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="subLinhas">Sublinha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="subLinhas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            (change)="getClasses()"
+            placeholder="Selecione..."
+            bindLabel="NM_SUB_LINH"
+            bindValue="ID"
+            formControlName="ID_SUB_LINH"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="classes">Classe</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="classes"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            placeholder="Selecione..."
+            bindLabel="NM_CLAS"
+            bindValue="ID"
+            formControlName="ID_CLAS"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="situacoes">Situação</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="situations"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_SITU"
+            bindValue="ID"
+            formControlName="IN_STAT"
+            [ngClass]="
+              onFieldError('IN_STAT') + ' ' + onFieldRequired('IN_STAT')
+            "
+            >
+            <invalid-form-control
+              [show]="onFieldInvalid('IN_STAT')"
+              message="Situação é obrigatório."
+            >
+            </invalid-form-control>
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <subtitles [data]="subtitles" [show]="loading"> </subtitles>
+  <div class="table-responsive" *ngIf="loading">
+    <custom-table [config]="tableConfig">
+      <ng-template let-thead #thead>
+        <tr class="text-center">
+          <th nowrap scope="col" class="hover" (click)="sort('ID_REFE_ERP')">
+            Código
+            <span *ngIf="key == 'ID_REFE_ERP'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+            <span *ngIf="key != 'ID_REFE_ERP'"><i [ngClass]="'fas fa-sort'"></i></span>
+          </th>
+          <th nowrap scope="col" class="hover" (click)="sort('NM_CLAS')">
+            Classe
+            <span *ngIf="key == 'NM_CLAS'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+            <span *ngIf="key != 'NM_CLAS'"><i [ngClass]="'fas fa-sort'"></i></span>
+          </th>
+          <th nowrap scope="col" class="hover" (click)="sort('NM_SUB_LINH')">
+            Sublinha
+            <span *ngIf="key == 'NM_SUB_LINH'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+            <span *ngIf="key != 'NM_SUB_LINH'"><i [ngClass]="'fas fa-sort'"></i></span>
+          </th>
+          <th nowrap scope="col" class="hover" (click)="sort('NM_LINH')">
+            Linha
+            <span *ngIf="key == 'NM_LINH'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+            <span *ngIf="key != 'NM_LINH'"><i [ngClass]="'fas fa-sort'"></i></span>
+          </th>
+          <th nowrap scope="col" class="hover" (click)="sort('NM_LINH')">
+            Per. Inativação
+            <span *ngIf="key == 'NM_LINH'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+            <span *ngIf="key != 'NM_LINH'"><i [ngClass]="'fas fa-sort'"></i></span>
+          </th>
+          <th nowrap scope="col" class="hover" width="4%"></th>
+          <th nowrap scope="col" class="hover" width="4%"></th>
+          <th nowrap scope="col" class="hover" width="4%"></th>
+        </tr>
+      </ng-template>
+      <ng-template let-tbody #tbody>
+        <tr *ngFor="let item of data | orderBy: key:reverse | slice: begin:end">
+          <td nowrap class="text-center" [ngClass]="item.IN_STAT == 0 ? 'border-danger' : 'border-success'">{{ item.ID_REFE_ERP }}</td>        
+          <td nowrap class="text-center">{{ item.NM_CLAS }}</td>        
+          <td nowrap class="text-center">{{ item.NM_SUB_LINH ? item.NM_SUB_LINH : "-" }}</td>         
+          <td nowrap class="text-center">{{ item.NM_LINH }}</td>              
+          <td nowrap class="text-center">
+            <span *ngIf="!item.ON_EDIT_CELL">
+              0
+            </span>
+            <div class="d-flex align-items-center justify-content-center" *ngIf="item.ON_EDIT_CELL">
+              <input
+                style="max-width: 80px;"
+                type="text"
+                class="form-control form-control-sm"
+                placeholder="0"
+                [(ngModel)]="item.FORM_PERI_INAT"
+                #FORM_PERI_INAT_VALI="ngModel"
+                required
+                />
+                <!-- [ngClass]="{ 'is-invalid': FORM_PERI_VEND_VALI.invalid && (FORM_PERI_VEND_VALI.dirty || FORM_PERI_VEND_VALI.touched) }"  -->
+              <!-- name="toneladaEditado_{{i}}" -->
+            </div>
+          </td>              
+          <td nowrap class="text-center" width="4%">
+            <div>
+              <button
+                type="button"
+                class="btn-icon-sm"
+                tooltip="Editar"
+                (click)="abledEdit(item)"
+                >
+                <i class="fas fa-edit"></i>
+              </button>
+            </div>
+          </td>       
+          <td nowrap class="text-center" width="4%">
+            <div>
+              <button
+                type="button"
+                class="btn-icon-sm"
+                [tooltip]="item.IN_STAT == 0 ? 'Ativar' : 'Desativar'"
+                (click)="item.IN_STAT == 0 ? onEdit(item) :  openModal(template) + ' ' + getMateriaisStatusModal(item)"
+                >
+                <i [ngClass]="item.IN_STAT == 0 ? 'fas fa-toggle-off' : 'fas fa-toggle-on text-success'"></i>
+              </button>
+            </div>
+          </td>       
+          <td nowrap  class="text-center" width="4%">
+            <div>
+              <button
+                type="button"
+                class="btn-icon-sm"
+                tooltip="Logs"
+                (click)="getLogsModal(item) + ' ' + lgModal.show()"
+                >
+                <i class="fas fa-external-link-alt text-primary"></i>
+              </button>
+            </div>
+          </td>       
+        </tr>
+      </ng-template>
+    </custom-table>
+  </div>
+  <div class="col-12 mt-2" *ngIf="data.length > itemsPerPage && loading">
+    Exibindo {{ begin + 1 }} a {{ end }} de {{ data?.length }}
+    <div class="d-flex">
+      <pagination
+        [maxSize]="10"
+        [totalItems]="data?.length"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div
+    *ngIf="noResult"
+    class="text-center d-flex justify-content-center align-items-center p-5"
+    style="height: 80%;"
+  >
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>
+<div
+  bsModal
+  #lgModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dialog-sizes-name1"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+          {{ modal.title }}
+        </h4>
+        <button
+          type="button"
+          class="close pull-right"
+          (click)="lgModal.hide() + ' ' + onClose()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container" *ngIf="modalMaterialBool">
+          <abastecimento-cadastro-manutencao-classe-modal-materiais-status [item]=itemClasse>
+          </abastecimento-cadastro-manutencao-classe-modal-materiais-status>
+        </div>
+        <div class="container" *ngIf="modalLogsBool">
+          <abastecimento-cadastro-manutencao-classe-modal-logs [item]=itemClasse>
+          </abastecimento-cadastro-manutencao-classe-modal-logs>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Verificação</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Não é possivel realizar inativação da classe selecionada, pois a mesma possuí materiais em atividade.
+    <p class="text-info hover mt-1" (click)="lgModal.show() + '' + modalRef.hide()"><u>Clique aqui para saber mais.</u></p>
+  </div>
+</ng-template>

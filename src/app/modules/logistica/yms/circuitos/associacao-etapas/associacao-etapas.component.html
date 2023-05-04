@@ -1,0 +1,314 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button 
+    [disabled]="loadingNavBar === true"
+    [routerLink]="['../../']"
+    >
+    Finalizar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col-lg-6">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="mtc-title">Dados do Circuito</div>
+        <div class="form-row">
+          <div class="form-group col pl-0">
+            <label for="circuitos">Circuito</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="circuitos"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              [loading]="loadingCircuitos"
+              labelForId="circuitos"
+              bindLabel="NM_CIRC"
+              bindValue="UUID_LOGI_YMS_CIRC"
+              id="circuitos"
+              formControlName="UUID_LOGI_YMS_CIRC"
+              >
+            </ng-select>
+          </div>
+        </div>
+      </form>
+      <div class="row mb-4">
+        <div class="col mb-3">
+          <hr>
+        </div>
+      </div>
+      <div [hidden]="loadingEtapas">
+        <div class="row mb-2 mt-4">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Etapas associadas ao circuito</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                (click)="onRemoverAssociacao()">
+                <i class="fas fa-trash"></i>
+                <span>Limpar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="!etapasAssociadasLoading && etapasAssociadas.length > 0">
+          <div class="col">
+            <custom-table [config]="tableConfigEtapasAssociadas">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="text-center"
+                    style="width: 5%">
+                    <btn-icon
+                      [icon]="toggle?.etapasAssociadas ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll('etapasAssociadas')">
+                    </btn-icon>
+                  </th>
+                  <th scope="col" style="width: 10%">Seq.</th>
+                  <th scope="col" style="width: 40%">Etapas</th>
+                  <th scope="col" style="width: 40%">Tipo de Etapa</th>
+                  <th scope="col" style="width: 5%"></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of etapasAssociadas" >
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="item.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="item.checked = !item.checked">
+                    </btn-icon>
+                  </td>
+                  <td 
+                    class="hover"
+                    style="width: 10%">
+                    {{ item.NR_SQNC  }}
+                  </td>
+                  <td
+                    class="hover"
+                    style="width: 40%">
+                    {{ item.NM_ETAP | uppercase }}
+                  </td>
+                  <td
+                    class="hover"
+                    style="width: 40%">
+                    {{ item.NM_ETAP_TIPO | uppercase }}
+                  </td>
+                  <td class="text-center" width="5%" height="26px">
+                    <btn-icon
+                      icon="fas fa-trash"
+                      size="small"
+                      (click)="onRemoverAssociacao(item)"
+                      *ngIf="!item.loading"  
+                    >
+                    </btn-icon>
+                    <div class="text-primary small" *ngIf="item.loading">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+        <div class="row" *ngIf="!loadingEtapas && etapasAssociadas.length === 0">
+          <div class="col">
+            <message
+              icon="fas fa-exchange-alt"
+              text="Nenhuma associação encontrada">
+            </message>
+          </div>
+        </div>
+        <div class="row" *ngIf="loadingEtapas">
+          <div class="col">
+            <message
+              icon="fas fa-cog fa-spin"
+              text="Estamos pesquisando os etapas para você...">
+            </message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 border-left">
+      <form [formGroup]="formEtapas" autocomplete="off">
+        <div class="row mb-2">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Pesquisa de Etapas</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-secondary"
+                (click)="getEtapas()">
+                <i class="fas fa-search"></i>
+                <span 
+                container="body"
+                placement ="left">Pesquisar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <advanced-filter>
+          <div class="form-row">
+              <div class="form-group col-md-6 pl-0">
+                <label for="tiposEtapa">Tipo de Etapa</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="true"
+                  [items]="tiposEtapa"
+                  [virtualScroll]="true"
+                  placeholder="Selecione..."
+                  [loading]="loadingTiposEtapa"
+                  labelForId="tiposEtapa"
+                  (keydown.enter)="getEtapas()"
+                  bindLabel="NM_ETAP_TIPO"
+                  bindValue="UUID_LOGI_YMS_ETAP_TIPO"
+                  id="tiposEtapa"
+                  formControlName="UUID_LOGI_YMS_ETAP_TIPO"
+                  (change)="getFilterEtapas({'UUID_LOGI_YMS_ETAP_TIPO': $event?.UUID_LOGI_YMS_ETAP_TIPO || ''})">
+                </ng-select>
+              </div>
+              <div class="form-group col-md-6 pl-0">
+                <label for="filterEtapas">Etapa</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="true"
+                  [items]="filterEtapas"
+                  [virtualScroll]="true"
+                  placeholder="Selecione..."
+                  [loading]="loadingFilterEtapas"
+                  labelForId="filterEtapas"
+                  (keydown.enter)="getEtapas()"
+                  bindLabel="NM_ETAP"
+                  bindValue="UUID_LOGI_YMS_ETAP"
+                  id="filterEtapas"
+                  formControlName="UUID_LOGI_YMS_ETAP">
+                </ng-select>
+              </div>
+          </div>
+        </advanced-filter>
+        <div *ngIf="etapas.length > 0 && !etapasLoading">
+          <div class="row mb-2">
+            <div class="col mt-auto">
+              <div class="mtc-title mb-0">Seleção de Etapa</div>
+            </div>
+            <div class="col">
+              <div class="d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  (click)="onAssociarEtapas()"
+                  [disabled]="searching === true || formEtapas.valid === false">
+                  <i class="fas fa-exchange-alt"></i>
+                  <span
+                    [tooltip]="form.valid == false ? 'Selecione uma Circuito':''"
+                    container="body"
+                    placement ="left">Associar
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <custom-table [config]="tableConfigEtapas">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      class="text-center"
+                      style="width: 5%">
+                      <btn-icon
+                        [icon]="toggle?.etapas ? 'fas fa-check-square' : 'far fa-square'"
+                        size="small"
+                        (click)="onToggleAll('etapas')">
+                      </btn-icon>
+                    </th>
+                    <th scope="col" style="width: 10%" class="text-center">Seq.</th>
+                    <th scope="col" style="width: 40%">Etapas</th>
+                    <th scope="col" style="width: 40%">Tipo de Etapa</th>
+                    <th style="width: 5%"></th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let item of etapas">
+                    <td class="text-center" style="width: 5%">
+                      <btn-icon
+                        *ngIf = "item.NR_SQNC > 0 "
+                        [icon]="item.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                        size="small"
+                        (click)="item.checked = !item.checked;">
+                      </btn-icon>
+                    </td>
+                    <td
+                    class="hover"
+                    style="width: 10%"
+                    >
+                      <input
+                      type="number"
+                      class="form-control"
+                      min = "1"
+                      (change)="item.NR_SQNC = ($event.target.value);"
+                    />
+                    </td>
+                    <td
+                      class="hover"
+                      style="width: 40%"
+                      (click)="item.checked = !item.checked">
+                      {{ item.NM_ETAP | uppercase }}
+                    </td>
+                    <td
+                      class="hover"
+                      style="width: 40%"
+                      (click)="item.checked = !item.checked">
+                      {{ item.NM_ETAP_TIPO | uppercase }}
+                    </td>
+                    <td style="width: 5%; height: 26px">
+                      <div class="text-primary small" *ngIf="item.loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="etapasLoading">
+          <div class="col">
+            <message
+              icon="fas fa-cog fa-spin"
+              text="Estamos pesquisando os etapas para você...">
+            </message>
+          </div>
+        </div>
+        <div>
+          <div class="row" *ngIf="(etapas.length == 0) && !etapasLoading">
+            <div class="col">
+              <message
+                icon="fas fa-box-open"
+                text="Nenhuma informação encontrada">
+              </message>
+            </div>
+          </div>
+          <!-- <div class="row" *ngIf="etapasLista.length === 0 && !firstSearch">
+            <div class="col">
+              <message
+                icon="fas fa-search"
+                text="Preecha os campos acima para pesquisar etapas">
+              </message>
+            </div>
+          </div> -->
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>
+

@@ -1,0 +1,70 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    [disabled]="form.status == 'INVALID'"
+    (click) = "postSenha(form.value)"
+    >Salvar</button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" class="d-flex flex-column align-items-center" autocomplete="off" [hidden] = "loading">
+    <div class="form-group col-md-3">
+      <label for="usuario">Usuário</label>
+      <input
+        type="text"
+        class="form-control"
+        id="usuario"
+        formControlName="usuario"
+        placeholder="Digite..."
+        [ngClass]="onFieldRequired('DS_USUA')"
+        formControlName="DS_USUA"
+      />
+      <invalid-form-control [show]="onFieldInvalid('DS_USUA')" message="Usuário é obrigatório."></invalid-form-control>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="senha">Senha</label>
+      <input
+        type="text"
+        class="form-control"
+        id="senha"
+        formControlName="senha"
+        placeholder="Digite..."
+        [ngClass]="onFieldRequired('DS_SENH')"
+        formControlName="DS_SENH"
+      />
+      <invalid-form-control [show]="onFieldInvalid('DS_SENH')" message="Senha é obrigatória."></invalid-form-control>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="aplicacao">Aplicação</label>
+      <input
+        type="text"
+        class="form-control"
+        id="aplicacao"
+        formControlName="aplicacao"
+        placeholder="Digite..."
+        [ngClass]="onFieldRequired('DS_APLC')"
+        formControlName="DS_APLC"
+      />
+      <invalid-form-control [show]="onFieldInvalid('DS_SENH')" message="Senha é obrigatória."></invalid-form-control>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="status">Status</label>
+      <select name="status" class="form-control" id="status" formControlName="IN_STAT">
+        <option value="1">Ativo</option>
+        <option value="0">Inativo</option>
+      </select>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="observacao">Observação</label>
+      <textarea
+        id="observacao"
+        rows="10"
+        formControlName="observacao"
+        placeholder="Digite..."
+        class="form-control"
+        formControlName="DS_OBSE"
+        >
+      </textarea>
+    </div>
+  </form>
+</app-body>

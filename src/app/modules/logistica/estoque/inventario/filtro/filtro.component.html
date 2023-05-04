@@ -1,0 +1,201 @@
+<loader-spinner-full-screen *ngIf="spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<div class="row" id="application-header">
+  <div class="col-6">
+    <div id="title">
+      <h1>Painel de inventário</h1>
+    </div>
+  </div>
+  <div class="col-6 d-flex justify-content-end">
+    <div id="actions">
+      <button 
+        (click)="postCadastraInventario()"
+        [disabled]="form.status  == 'INVALID' || !tipoInventario">
+        Novo
+      </button>
+      <button 
+        (click)="onSearch()">
+        Pesquisar
+      </button>
+      <!-- <button (click)="onVideoLoaded()">
+        Video
+      </button> -->
+    </div>
+  </div>
+</div>
+<div class="row" id="application-body" [hidden]="loading">
+  <div class="container-fluid">
+    <breadcrumb [tree]="breadCrumbTree"></breadcrumb>
+    <div class="col-12 p-0">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-row justify-content-center">
+          <div class="col-6 justify-content-start">
+            <div class="form-group">
+              <div class="btn-group btn-group-sm w-100">
+                <button
+                  type="button"
+                  class="btn btn-light"
+                  [ngClass]="{'active': tipoInventario == 1}"
+                  (click)="setType( 1 ); resetForm(); mostrarCampos()">
+                  <strong>Inventário oficial</strong>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-light"
+                  [ngClass]="{'active': tipoInventario == 2}"
+                  (click)="setType( 2 ); resetForm(); mostrarCampos()">
+                  <strong>Inventário rotativo</strong>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row justify-content-center" *ngIf="ativarCampos">
+          <div class="form-group col-md-3">
+            <label for="empresa">Empresa</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="empresas"
+              [virtualScroll]="true"
+              labelForId="empresa"
+              bindLabel="nomeFantasia"
+              bindValue="codigoEmpresa"
+              placeholder="Selecione uma empresa"
+              formControlName="empresas"
+              (change) ="getDepositos()"
+              (focus) ="resetForm()"
+              [ngClass]="onFieldError('empresas') + ' ' + onFieldRequired('empresas')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('empresas')"
+              message="Empresa é obrigatório.">
+            </invalid-form-control>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="deposito">Depósito</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="depositos"
+              [virtualScroll]="true"
+              labelForId="deposito"
+              bindLabel="depositoDescricao"
+              bindValue="depositoId"
+              placeholder="Selecione um deposito"
+              formControlName="depositos"
+              [ngClass]="onFieldError('depositos') + ' ' + onFieldRequired('depositos')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('depositos')"
+              message="Despósito é obrigatório.">
+            </invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center" *ngIf="ativarCampos">
+          <div class="form-group col-md-3">
+            <label for="linha">Linha</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="linhas"
+              [virtualScroll]="true"
+              labelForId="linha"
+              bindLabel="linha"
+              bindValue="linha"
+              placeholder="Selecione uma linha"
+              formControlName="linhas"
+              (change) = "getClasses(); getMateriais(linhas, '')"
+              [ngClass]="onFieldError('linhas') + ' ' + onFieldRequired('linhas')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('linhas')"
+              message="Linha é obrigatório.">
+            </invalid-form-control>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="classe">Classe</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="classes"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [virtualScroll]="true"
+              labelForId="classe"
+              bindLabel="classeDescricao"
+              bindValue="classeId"
+              placeholder="Selecione uma classe"
+              formControlName="classes"
+              (change) = "getMateriais(linhas, classes)"
+              [ngClass]="onFieldError('classes')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('classes')"
+              message="Classe é obrigatório.">
+            </invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6">
+            <label for="material">Material</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="materiais"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [virtualScroll]="true"
+              labelForId="material"
+              bindLabel="codigoDescricaoMaterial"
+              bindValue="codigoMaterial"
+              placeholder="Selecione um material"
+              formControlName="materiais"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-row justify-content-center" *ngIf="ativarCampos">
+          <div class="form-group col-md-3">
+            <label for="empresa">Data inicial</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+              </div>
+              <input
+                class="form-control"
+                id="dataInicial"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                [ngClass]="onFieldRequired('dataInicial')"
+                formControlName="dataInicial">
+              <invalid-form-control [show]="onFieldInvalid('dataInicial')" message="Data inicial é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="empresa">Data final</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+              </div>
+              <input
+              class="form-control"
+              id="dataFinal"
+              type="text"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              [ngClass]="onFieldRequired('dataFinal')"
+              formControlName="dataFinal">
+              <invalid-form-control [show]="onFieldInvalid('dataFinal')" message="Data final é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

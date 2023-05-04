@@ -1,0 +1,157 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="Conductores">
+  <button
+  type="button"
+  (click)="onReset()">
+  Limpiar
+</button>
+  <button
+    type="button"
+    [routerLink]="['../cadastro']">
+    Añadir
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="ID_LOGI_MOTO">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_LOGI_MOTO"
+                formControlName="ID_LOGI_MOTO"
+                placeholder="DIGITE..."
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="NM_MOTO">Nombre del conductor</label>
+              <input
+                type="text"
+                class="form-control"
+                id="NM_MOTO"
+                formControlName="NM_MOTO"
+                placeholder="DIGITE..."
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col">
+              <label for="CPF">Seguro social</label>
+              <input
+                type="text"
+                class="form-control"
+                cpf [textMask]="{mask: MASKS.cpf.textMask}"
+                id="CPF"
+                formControlName="CPF"
+                placeholder="DIGITE..."
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col">
+              <label for="IN_STAT">Status</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="tipos"
+                [virtualScroll]="true"
+                labelForId="tipo"
+                bindLabel="nome"
+                bindValue="cod"
+                id="tipo"
+                (change)="onFilter()"
+                formControlName="IN_STAT"
+                placeholder="SELECCIONE..."
+              >
+                <ng-template ng-option-tmp let-item="item" let-index="index"> {{item.nome}}
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="form-group">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="col-12 p-0" [hidden] = "loading || noResult">
+    <div>
+      <table  class="table table-sm table-hover custom-border border-left border-right border-bottom text-center table-fixed">
+        <thead class="thead-light">
+          <tr>
+            <th>ID </th>
+            <th>Nombre del conductor</th>
+            <th>Seguro social</th>
+            <th style="width:80px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let motorista of motoristas; let i = index">
+            <td [ngClass]="motorista.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+            {{motorista.ID_LOGI_MOTO | number : '6.0-0'}}
+            </td>
+            <td>{{ motorista.NM_MOTO | uppercase }}</td>
+            <td>{{ motorista.CPF | cpf}} </td>
+            <td class="align-middle" style="width:70px">
+              <span class="mr-3" [tooltip]="motorista.IN_STAT == 1 ? 'Inactivar' : 'Activar'" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="changeType(motorista)">
+                  <i [ngClass]="motorista.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                </button>
+              </span>
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="openRegister(motorista)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Mostrando {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Ningún informacion econtrada"></empty-result>
+  </div>
+</app-body>

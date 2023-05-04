@@ -1,0 +1,84 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Prontuario de conductor">
+  <button 
+    [disabled]="form.valid === false"
+    (click)="postMotorista()"
+    >
+    Ahorrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="NM_MOTO">Nombre del conductor</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_MOTO"
+              formControlName="NM_MOTO"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_MOTO') + ' ' + onFieldRequired('NM_MOTO')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_MOTO')" message="Se requiere el nombre del conductor."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="tipoMotorista">Tipo de conductor</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="tipoMotorista"
+                [virtualScroll]="true"
+                placeholder="SELECCIONE..."
+                [loading]="loadingTipoMotorista"
+                labelForId="ID_LOGI_MOTO_TIPO"
+                bindLabel="NM_MOTO_TIPO"
+                bindValue="ID_LOGI_MOTO_TIPO"
+                id="ID_LOGI_MOTO_TIPO"
+                formControlName="ID_LOGI_MOTO_TIPO">
+              </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('ID_LOGI_MOTO_TIPO')" message="El tipo del conductor es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="CPF">Seguro social</label>
+            <input
+              type="text"
+              [textMask]="{mask: MASKS.cpf.textMask}"
+              class="form-control"
+              id="CPF"
+              formControlName="CPF"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('CPF') + ' ' + onFieldRequired('CPF')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('CPF')" message="El Seguro social del conductor es obligatorio."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="IN_STAT">Status</label>
+            <select
+              class="form-control custom-select"
+              id="IN_STAT"
+              formControlName="IN_STAT"
+              [ngClass]="onFieldRequired('IN_STAT')">
+              <option value="1">Activo</option>
+              <option value="0">Inactivo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('IN_STAT')" message="El status es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="DS_OBSE">Observacion:</label>
+            <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

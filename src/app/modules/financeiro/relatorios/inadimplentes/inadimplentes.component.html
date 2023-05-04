@@ -1,0 +1,289 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Relatório de inadimplentes">
+  <button
+    type="button"
+    (click)="onReload()"
+    [disabled]="loaderFullScreen">
+    Recarregar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row" *ngIf="!dadosEmpty">
+    <div class="col">
+      <div class="row">
+        <div class="col">
+          <p class="lead">Período de consulta de {{ periodo.de }} até {{ periodo.ate }}.</p>
+        </div>
+        <div class="col">
+          <p class="lead text-right">Consulta realizada às {{ periodo.geradoEm }}.</p>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-lg-4">
+          <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+            <div class="bg-blue rounded-circle text-white icon-40 my-auto"><i class="fas fa-percent"></i></div>
+            <div class="text-right">
+              <h5
+                class="font-weight-bolder mb-1"
+                counto
+                [step]="30"
+                [countTo]="detalhes.inadSobFat"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countTo.inadSobFat = $event">
+                {{ countTo.inadSobFat | number:'1.2-2' }}%
+              </h5>
+              <div class="text-muted small font-weight-bold">INADIMPLÊNCIA SOBRE FATURAMENTO</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+            <div class="bg-yellow rounded-circle text-white icon-40 my-auto"><i class="fas fa-calendar-times"></i></div>
+            <div class="text-right">
+              <h5
+                class="font-weight-bolder mb-1"
+                counto
+                [step]="30"
+                [countTo]="detalhes.totalPromissorias"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countTo.totalPromissorias = $event">
+                R$ {{ countTo.totalPromissorias | number:'1.2-2' }}
+              </h5>
+              <div class="text-muted small font-weight-bold">NOTAS PROMISSÓRIAS VENCIDAS</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+            <div class="bg-gray rounded-circle text-white icon-40 my-auto"><i class="fas fa-clock"></i></div>
+            <div class="text-right">
+              <h5
+                class="font-weight-bolder mb-1"
+                counto
+                [step]="30"
+                [countTo]="detalhes.totalEmAnalise"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countTo.totalEmAnalise = $event">
+                R$ {{ countTo.totalEmAnalise | number:'1.2-2' }}
+              </h5>
+              <div class="text-muted small font-weight-bold">EM ANÁLISE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-lg-4">
+          <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+            <div class="bg-purple rounded-circle text-white icon-40 my-auto"><i class="fas fa-times-circle"></i></div>
+            <div class="text-right">
+              <h5
+                class="font-weight-bolder mb-1"
+                counto
+                [step]="30"
+                [countTo]="detalhes.totalNaoSegurado"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countTo.totalNaoSegurado = $event">
+                R$ {{ countTo.totalNaoSegurado | number:'1.2-2' }}
+              </h5>
+              <div class="text-muted small font-weight-bold">TOTAL NÃO SEGURADO</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+            <div class="bg-green rounded-circle text-white icon-40 my-auto"><i class="fas fa-file-invoice-dollar"></i></div>
+            <div class="text-right">
+              <h5
+                class="font-weight-bolder mb-1"
+                counto
+                [step]="30"
+                [countTo]="detalhes.totalSegurado"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countTo.totalSegurado = $event">
+                R$ {{ countTo.totalSegurado | number:'1.2-2' }}
+              </h5>
+              <div class="text-muted small font-weight-bold">TOTAL SEGURADO</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+            <div class="bg-red rounded-circle text-white icon-40 my-auto"><i class="fas fa-dollar-sign"></i></div>
+            <div class="text-right">
+              <h5
+                class="font-weight-bolder mb-1"
+                counto
+                [step]="30"
+                [countTo]="detalhes.totalInadimplencia"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countTo.totalInadimplencia = $event">
+                R$ {{ countTo.totalInadimplencia | number:'1.2-2' }}
+              </h5>
+              <div class="text-muted small font-weight-bold">TOTAL DA DÍVIDA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-5">
+        <div class="col">
+          <div class="border rounded bg-white shadow-sm p-3">
+            <div class="mtc-title">Top 20 clientes inadimplentes</div>
+            <custom-table [config]="tableConfig">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th scope="col" class="text-center">Código</th>
+                  <th scope="col">Razão social</th>
+                  <th scope="col" class="text-center">Valor vencido</th>
+                  <th scope="col" class="text-center">Percentual</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let cliente of clientes.analitico">
+                  <td class="text-center">{{ cliente.codCliente }}</td>
+                  <td>{{ cliente.razaoSocial | uppercase }}</td>
+                  <td class="text-center">{{ cliente.valor | currency:'BRL':symbol:'1.2-2' }}</td>
+                  <td class="text-center">{{ cliente.percentual | number:'1.2-2' }}%</td>
+                </tr>
+                <tr>
+                  <td colspan="2" class="bg-dark text-white text-right"><b>Total</b></td>
+                  <td class="bg-dark text-white text-center"><b>{{ clientes.total.valor | currency:'BRL':symbol:'1.2-2' }}</b></td>
+                  <td class="bg-dark text-white text-center"><b>{{ clientes.total.percentual | number:'1.2-2' }}%</b></td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-5">
+        <div class="col">
+          <div class="border rounded bg-white shadow-sm p-3">
+            <div class="mtc-title">Inadimplência por escritório</div>
+            <custom-table>
+              <ng-template #thead let-thead>
+                <tr>
+                  <th scope="col">Gerência</th>
+                  <th scope="col" class="text-center">Valor vencido</th>
+                  <th scope="col" class="text-center">Percentual</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let escritorio of escritorios.analitico">
+                  <td
+                    class="hover"
+                    (click)="onDetalheEscritorio(escritorio, templateDetalheEscritorio)">
+                    {{ escritorio.nomeEscritorio | uppercase }}
+                  </td>
+                  <td
+                    class="text-center hover"
+                    (click)="onDetalheEscritorio(escritorio, templateDetalheEscritorio)">
+                    {{ escritorio.valor | currency:'BRL':symbol:'1.2-2' }}
+                  </td>
+                  <td
+                    class="text-center hover"
+                    (click)="onDetalheEscritorio(escritorio, templateDetalheEscritorio)">
+                    {{ escritorio.percentual | number:'1.2-2' }}%
+                  </td>
+                </tr>
+                <tr>
+                  <td class="bg-dark text-white text-right"><b>Total</b></td>
+                  <td class="bg-dark text-white text-center"><b>{{ escritorios.total.valor | currency:'BRL':symbol:'1.2-2' }}</b></td>
+                  <td class="bg-dark text-white text-center"><b>{{ escritorios.total.percentual | number:'1.2-2' }}%</b></td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-5">
+        <div class="col">
+          <div class="border rounded bg-white shadow-sm p-3">
+            <div class="mtc-title">Inadimplência por faixa de valores</div>
+            <custom-table [config]="tableConfig">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th scope="col">Faixa inadimplência</th>
+                  <th scope="col" class="text-center">Valor vencido</th>
+                  <th scope="col" class="text-center">Qtde.</th>
+                  <th scope="col" class="text-center">Percentual</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let faixaValor of faixaValores.analitico">
+                  <td>{{ faixaValor.nomeFaixaValor | uppercase }}</td>
+                  <td class="text-center">{{ faixaValor.valor | currency:'BRL':symbol:'1.2-2' }}</td>
+                  <td class="text-center">{{ faixaValor.quantidade | number:'1.0-0' }}</td>
+                  <td class="text-center">{{ faixaValor.percentual | number:'1.2-2' }}%</td>
+                </tr>
+                <tr>
+                  <td class="bg-dark text-white text-right"><b>Total</b></td>
+                  <td class="bg-dark text-white text-center"><b>{{ faixaValores.total.valor | currency:'BRL':symbol:'1.2-2' }}</b></td>
+                  <td class="bg-dark text-white text-center"><b>{{ faixaValores.total.quantidade | number:'1.0-0' }}</b></td>
+                  <td class="bg-dark text-white text-center"><b>{{ faixaValores.total.percentual | number:'1.2-2' }}%</b></td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="border rounded bg-white shadow-sm p-3">
+            <div class="mtc-title">Inadimplência por linha de material</div>
+            <custom-table [config]="tableConfig">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th scope="col">Linha do material</th>
+                  <th scope="col" class="text-center">Valor vencido</th>
+                  <th scope="col" class="text-center">Percentual</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let linha of linhas.analitico">
+                  <td>{{ linha.nomeLinha | uppercase }}</td>
+                  <td class="text-center">{{ linha.valor | currency:'BRL':symbol:'1.2-2' }}</td>
+                  <td class="text-center">{{ linha.percentual | number:'1.2-2' }}%</td>
+                </tr>
+                <tr>
+                  <td class="bg-dark text-white text-right"><b>Total</b></td>
+                  <td class="bg-dark text-white text-center"><b>{{ linhas.total.valor | currency:'BRL':symbol:'1.2-2' }}</b></td>
+                  <td class="bg-dark text-white text-center"><b>{{ linhas.total.percentual | number:'1.2-2' }}%</b></td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>
+<ng-template #templateDetalheEscritorio>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ detalhesEscritorio.nomeEscritorio | uppercase }}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <custom-table [config]="tableConfigModal">
+      <ng-template #thead let-thead>
+        <tr>
+          <th scope="col" width="70%">Vendedor</th>
+          <th scope="col" class="text-center" width="30%">Valor vencido</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let escritorio of detalhesEscritorio.analitico">
+          <td width="70%">{{ escritorio.nomeVendedor | uppercase }}</td>
+          <td class="text-center" width="30%">{{ escritorio.valor | currency:'BRL':symbol:'1.2-2' }}</td>
+        </tr>
+      </ng-template>
+    </custom-table>
+  </div>
+</ng-template>

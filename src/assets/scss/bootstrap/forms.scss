@@ -1,0 +1,100 @@
+@import '../colors';
+
+.form-group {
+  margin-bottom: 0.5rem;
+  label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+}
+
+textarea.form-control {
+  min-height: 100px;
+  resize: unset;
+}
+
+select.form-control {
+  padding: 2px 5px 2px 2px;
+  &.custom-select {
+    line-height: 20px;
+    padding: 2px 15px 2px 5px;
+    &:disabled {
+      color: $black;
+    }
+  }
+}
+
+.form-control {
+  box-shadow: inset 0 1px 2px rgba(27, 31, 35, 0.075);
+  background-color: #fafbfc;
+  border: 1px solid #d1d5da;
+  border-radius: 3px;
+  color: $black;
+  font-size: 13px;
+  font-weight: 500;
+  height: 25px;
+  line-height: 25px;
+  min-height: 25px;
+  padding: 2px 5px;
+  text-transform: uppercase;
+  &:focus {
+    background-color: $white;
+    border-color: $blue;
+    box-shadow: inset 0 1px 2px rgba($blue, 0.075), 0 0 0 0.2em rgba($blue, 0.3);
+    color: $black;
+    outline: none;
+  }
+  &[disabled] {
+    background-color: #e4e4e4;
+  }
+  &.form-control-sm {
+    font-size: 11px;
+  }
+  &[type='email'],
+  &[type='url'] {
+    text-transform: lowercase;
+  }
+  &.is-invalid {
+    background-image: unset;
+    border-color: $red !important;
+    padding: 2px 5px !important;
+  }
+  &.is-required {
+    border-right-color: $red;
+    border-right-width: 3px;
+  }
+  &.is-required[disabled] {
+    border-right-color: $green !important;
+    border-right-width: 3px !important;
+  }
+  &.is-required.ng-valid {
+    border-right-color: $green !important;
+    border-right-width: 3px !important;
+  }
+  &.is-invalid.is-required {
+    border-right-width: 1px;
+  }
+}
+.was-validated {
+  .form-control {
+    &:invalid {
+      background: unset;
+    }
+  }
+}
+
+.invalid-feedback {
+  color: $red !important;
+  font-size: 13px;
+}
+
+input:-webkit-autofill {
+  background-color: $white !important;
+}
+
+.input-group-text {
+  padding: 0.175rem 0.75rem;
+}

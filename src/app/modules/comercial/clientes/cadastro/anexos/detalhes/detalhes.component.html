@@ -1,0 +1,29 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row" *ngIf="anexosLoaded">
+  <div class="col">
+    <div class="mtc-title">Anexos</div>
+    <ul *ngIf="anexos.length > 0">
+      <li *ngFor="let anexo of anexos">
+        <div class="d-flex">
+          <div>
+            <i class="far fa-file-pdf text-danger"></i><strong class="ml-2">{{ anexo.nomeExibicao | capitalizeFirst }}</strong>
+          </div>
+          <div class="ml-4">
+            <a [href]="anexo.urlAnexo" target="_blank" class="btn-icon-sm">
+              <i class="fas fa-eye"></i>
+            </a>
+            <button type="button" class="btn-icon-sm ml-4" (click)="onDelete(anexo)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div><hr></div>
+      </li>
+    </ul>
+    <div class="row py-5 my-5" *ngIf="anexos.length == 0">
+      <div class="col">
+        <empty-result message="No se encontró información"></empty-result>
+      </div>
+    </div>
+  </div>
+</div>

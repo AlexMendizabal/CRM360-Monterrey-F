@@ -1,0 +1,276 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row">
+    <div class="col-lg-6">
+      <form [formGroup]="form">
+        <div class="mtc-title">Dados do grupo</div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="nomeGrupo">Nome</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nomeGrupo"
+              formControlName="nomeGrupo"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('nomeGrupo') + ' ' + onFieldRequired(form.controls.nomeGrupo)">
+            <invalid-form-control [show]="onFieldInvalid('nomeGrupo')" message="Nome é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="codSituacao">Situação</label>
+            <select
+              class="form-control"
+              id="codSituacao"
+              formControlName="codSituacao"
+              (change)="onInput()"
+              [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
+              <option value="">SELECIONE UMA OPÇÃO</option>
+              <option value="0">Inativo</option>
+              <option value="1">Ativo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col">
+            <hr>
+          </div>
+        </div>
+        <div formArrayName="assocMateriais">
+          <div class="row mb-2">
+            <div class="col mt-auto">
+              <div class="mtc-title mb-0">Materiais associados ao grupo</div>
+            </div>
+            <div class="col">
+              <div class="d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="onLimparAssociacoes(materiaisAssociados, true)">
+                  <i class="fas fa-trash"></i>
+                  <span>Limpar lista</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="showMateriais && materiaisAssociados.length > 0">
+            <div class="col">
+              <custom-table [config]="tableConfigAssocMateriais">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th scope="col" style="width: 95%">Material</th>
+                    <th scope="col" style="width: 5%"></th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let material of materiaisAssociados; let i = index">
+                    <td style="width: 95%">
+                      {{ material.codMaterial }} - {{ material.nomeMaterial | uppercase }}
+                    </td>
+                    <td class="text-center" style="width: 5%">
+                      <btn-icon
+                        icon="fas fa-trash"
+                        size="small"
+                        (click)="material.checked = !material.checked; onLimparAssociacoes([material])">
+                      </btn-icon>
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+            </div>
+          </div>
+          <div class="row" *ngIf="showMateriais && materiaisAssociados.length === 0">
+            <div class="col">
+              <message
+                icon="fas fa-exchange-alt"
+                text="Nenhuma associação encontrada">
+              </message>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-6 border-left">
+      <div class="row mb-2">
+        <div class="col mt-auto">
+          <div class="mtc-title mb-0">Pesquisa de materiais</div>
+        </div>
+        <div class="col">
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              (click)="onFilterMateriais()"
+              [disabled]="searching === true">
+              <i class="fas fa-search"></i>
+              <span>Pesquisar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <advanced-filter>
+        <form [formGroup]="formMateriais" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label for="codLinha">Linha</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="linhas"
+                formControlName="codLinha"
+                [virtualScroll]="true"
+                labelForId="codLinha"
+                bindLabel="descricao"
+                bindValue="id"
+                (change)="onChangeLinha($event.id)">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-6">
+              <label for="codClasse">Classe</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="filteredClasses"
+                formControlName="codClasse"
+                [virtualScroll]="true"
+                labelForId="codClasse"
+                bindLabel="nomeClasse"
+                bindValue="idClasse"
+                (change)="onChangeClasse($event.idClasse)">
+              </ng-select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-12">
+              <label for="codMaterial">Material</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="materiais"
+                formControlName="codMaterial"
+                [virtualScroll]="true"
+                labelForId="codMaterial"
+                bindLabel="codigoDescricaoMaterial"
+                bindValue="codigoMaterial"
+                [loading]="materiaisLoader"
+                loadingText="Carregando...">
+              </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <div *ngIf="materiaisLista.length > 0">
+        <div class="row mb-2">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Seleção de materiais</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                (click)="onAssociarMateriais()"
+                [disabled]="searching === true">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Associar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <custom-table [config]="tableConfigMateriais">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="text-center"
+                    style="width: 5%">
+                    <btn-icon
+                      [icon]="toggleAll ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll()">
+                    </btn-icon>
+                  </th>
+                  <th scope="col" style="width: 95%">Material</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let material of materiaisLista; let i = index;">
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [disabled]="material.inGrupoMaterialTabelaPreco == 1"
+                      [icon]="material.checked == 1 && material.inGrupoMaterialTabelaPreco == 0 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onCheckMaterial(material)">                      
+                    </btn-icon>
+                  </td>
+                  <td
+                    class="hover"
+                    style="width: 90%"
+                    (click)="onCheckMaterial(material)">
+                    {{ material.codigoDescricaoMaterial | uppercase }}
+                  </td>
+                  <td *ngIf="material.inGrupoMaterialTabelaPreco == 1" style="width: 5%;">
+                    <button type="button" class="btn-icon-sm" style="color: #a10">
+                      <i class="fas fa-exclamation-triangle" placement="left" tooltip="Este item está associado ao grupo {{ material.nomeGrupoMaterialTabelaPreco }}"></i>
+                    </button>
+                  </td>
+                  <td *ngIf="material.inGrupoMaterialTabelaPreco == 0" style="width: 5%; color:#a10;">
+                    <button type="button" class="btn-icon-sm" style="color: #090">
+                      <i class="fas fa-check-circle" placement="left" tooltip="Este item não possui associações"></i>
+                    </button>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="searching === true">
+        <div class="col">
+          <message
+            icon="fas fa-cog fa-spin"
+            text="Estamos pesquisando os materiais para você...">
+          </message>
+        </div>
+      </div>
+      <div *ngIf="searching === false">
+        <div class="row" *ngIf="materiaisListaEmpty && materiaisListaLoaded">
+          <div class="col">
+            <message
+              icon="fas fa-box-open"
+              text="Nenhuma informação encontrada">
+            </message>
+          </div>
+        </div>
+        <div class="row" *ngIf="materiaisLista.length === 0 && !firstSearch">
+          <div class="col">
+            <message
+              icon="fas fa-search"
+              text="Preecha os campos acima para pesquisar materiais">
+            </message>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>

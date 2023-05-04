@@ -1,0 +1,364 @@
+<div class="row mb-2 mt-2">
+  <div class="col-3">
+    <p style="font-size: 14px;">
+      <strong> CÓD. MATERIAL: </strong> {{ modal.codMaterial }}
+    </p>
+  </div>
+  <div class="col-4">
+    <p style="font-size: 14px;">
+      <strong> DESCRIÇÃO: </strong> {{ modal.descMaterial }}
+    </p>
+  </div>
+  <div class="col-2">
+    <p style="font-size: 14px;">
+      <strong> UN. MEDIDA: </strong> {{ modal.unidadeMedida }}
+    </p>
+  </div>
+  <div class="col-3 text-right">
+    <button
+      type="button"
+      (click)="onFilter()"
+      class="btn mr-2"
+       [disabled]="
+        comparaData() ||
+        comparaDataInicial() ||
+        comparaDataFinal()
+      "
+    >
+      Filtrar
+    </button>
+    <button
+      type="button"
+      (click)="excelExport()"
+      class="btn"
+      [disabled]="
+        comparaData() ||
+        comparaDataInicial() ||
+        comparaDataFinal()
+      "
+    >
+      Exportar Excel
+    </button>
+  </div>
+</div>
+<advanced-filter>
+  <form [formGroup]="form" autocomplete="off">   
+    <div class="form-row">
+      <div class="form-group col-lg-2">
+        <label for="dataNF">Data Inicial</label>
+        <input
+          class="form-control"
+          id="dataInicial"
+          type="text"
+          bsDatepicker
+          [bsConfig]="bsConfig"
+          formControlName="dataInicial"
+        >
+        <invalid-form-control
+          [show]="comparaDataInicial()"
+          message="Data inicial não pode ser maior que data atual"
+        >
+        </invalid-form-control>
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="dataFinal">Data Final</label>
+        <input
+          class="form-control"
+          id="dataFinal"
+          type="text"
+          bsDatepicker
+          [bsConfig]="bsConfig"
+          formControlName="dataFinal"
+        >
+        <invalid-form-control
+          [show]="comparaData()"
+          message="Data final deve ser maior que data inicial"
+        >
+        </invalid-form-control>
+        <invalid-form-control
+          [show]="comparaDataFinal()"
+          message="Data final não pode ser maior que data atual"
+        >
+        </invalid-form-control>
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="empresas">Empresas</label>
+        <input
+          class="form-control"
+          id="empresas"
+          type="text"
+          formControlName="empresas"
+        >
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="depositos">Depósito</label>
+        <input
+          class="form-control"
+          id="depositos"
+          type="text"
+          formControlName="depositos"
+        >
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="numeroNF">Número NF</label>
+        <input
+          class="form-control"
+          id="numeroNF"
+          type="text"
+          formControlName="numeroNF"
+        >
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="dataNF">Data NF</label>
+        <input
+          class="form-control"
+          id="dataNF"
+          type="text"
+          bsDatepicker
+          [bsConfig]="bsConfig"
+          formControlName="dataNF"
+        >
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-lg-2">
+        <label for="cliente">Cliente</label>
+        <input
+          class="form-control"
+          id="cliente"
+          type="text"
+          formControlName="cliente"
+        >
+      </div>
+      <div class="form-group col-lg-2">
+        <label for="vendedor">Vendedor</label>
+        <input
+          class="form-control"
+          id="vendedor"
+          type="text"
+          formControlName="vendedor"
+        >
+      </div>
+    </div>
+  </form>
+</advanced-filter>
+<div class="table-responsive" *ngIf="loadingDetalhesModal">
+  <custom-table subtitleBorder="true">
+    <ng-template #thead let-thead>
+      <tr>
+        <th
+          nowrap
+          (click)="sortA('NM_EMPR')"
+          class="hover text-center"
+        >
+          Empresa
+          <span *ngIf="keyA == 'NM_EMPR'"
+            ><i
+              [ngClass]="
+                reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "
+            ></i
+          ></span>
+          <span *ngIf="keyA != 'NM_EMPR'"
+            ><i [ngClass]="'fas fa-sort'"></i
+          ></span>
+        </th>
+        <th
+          nowrap
+          (click)="sortA('NM_DEPO')"
+          class="hover text-center"
+        >
+          Depósito
+          <span *ngIf="keyA == 'NM_DEPO'"
+            ><i
+              [ngClass]="
+                reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "
+            ></i
+          ></span>
+          <span *ngIf="keyA != 'NM_DEPO'"
+            ><i [ngClass]="'fas fa-sort'"></i
+          ></span>
+        </th>
+        <th
+          nowrap
+          (click)="sortA('NR_NOTA_FISC_SAID')"
+          class="hover text-center"
+        >
+          Número de NF
+          <span *ngIf="keyA == 'NR_NOTA_FISC_SAID'"
+            ><i
+              [ngClass]="
+                reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "
+            ></i
+          ></span>
+          <span *ngIf="keyA != 'NR_NOTA_FISC_SAID'"
+            ><i [ngClass]="'fas fa-sort'"></i
+          ></span>
+        </th>
+        <th
+          nowrap
+          (click)="sortA('DT_EMIS_NOTA_FISC_SAID')"
+          class="hover text-center"
+        >
+          Data de NF
+          <span *ngIf="keyA == 'DT_EMIS_NOTA_FISC_SAID'"
+            ><i
+              [ngClass]="
+                reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "
+            ></i
+          ></span>
+          <span *ngIf="keyA != 'DT_EMIS_NOTA_FISC_SAID'"
+            ><i [ngClass]="'fas fa-sort'"></i
+          ></span>
+        </th>
+        <th
+          nowrap
+          (click)="sortA('NM_CLIE')"
+          class="hover text-center"
+        >
+          Cliente
+          <span *ngIf="keyA == 'NM_CLIE'"
+            ><i
+              [ngClass]="
+                reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "
+            ></i
+          ></span>
+          <span *ngIf="keyA != 'NM_CLIE'"
+            ><i [ngClass]="'fas fa-sort'"></i
+          ></span>
+        </th>
+        <th
+          nowrap
+          (click)="sortA('NM_VEND')"
+          class="hover text-center"
+        >
+          Vendedor
+          <span *ngIf="keyA == 'NM_VEND'"
+            ><i
+              [ngClass]="
+                reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "
+            ></i
+          ></span>
+          <span *ngIf="keyA != 'NM_VEND'"
+            ><i [ngClass]="'fas fa-sort'"></i
+          ></span>
+        </th>
+        <th
+          nowrap
+          (click)="sortA('TT_ITEM_PEDI_TONE')"
+          class="hover text-center"
+          *ngIf="this.modal.unidadeMedida != 'TON'"
+        >
+          Quantidade(Ton)
+          <span *ngIf="keyA == 'TT_ITEM_PEDI_TONE'"
+            ><i
+              [ngClass]="
+                reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "
+            ></i
+          ></span>
+          <span *ngIf="keyA != 'TT_ITEM_PEDI_TONE'"
+            ><i [ngClass]="'fas fa-sort'"></i
+          ></span>
+        </th>
+        <th
+          nowrap
+          (click)="sortA('TT_ITEM_PEDI')"
+          class="hover text-center"
+        >
+          Quantidade
+          <span *ngIf="keyA == 'TT_ITEM_PEDI'"
+            ><i
+              [ngClass]="
+                reverseA ? 'fas fa-sort-down' : 'fas fa-sort-up'
+              "
+            ></i
+          ></span>
+          <span *ngIf="keyA != 'TT_ITEM_PEDI'"
+            ><i [ngClass]="'fas fa-sort'"></i
+          ></span>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template #tbody let-tbody>
+      <tr
+        *ngFor="
+          let item of dadosVendasRealDetalhesModal
+            | orderBy: keyA:reverseA
+            | slice: beginA:endA;
+          let i = index
+        "
+      >
+        <td nowrap>{{ item.NM_EMPR }}</td>
+        <td nowrap>{{ item.NM_DEPO }}</td>
+        <td nowrap class="text-center">
+          {{ item.NR_NOTA_FISC_SAID | number: '0.0' }}
+        </td>
+        <td nowrap class="text-center">
+          {{ item.DT_EMIS_NOTA_FISC_SAID | date: 'dd/MM/yyyy' }}
+        </td>
+        <td nowrap>{{ item.NM_CLIE }}</td>
+        <td nowrap>{{ item.NM_VEND }}</td>
+        <td nowrap class="text-right" *ngIf="this.modal.unidadeMedida != 'TON'">
+          {{ item.TT_ITEM_PEDI_TONE | number: '0.3' }}
+        </td>
+        <td nowrap class="text-right">
+          {{ this.modal.unidadeMedida != 'TON' ? (item.TT_ITEM_PEDI | number: '0.0') : (item.TT_ITEM_PEDI | number: '0.3') }}
+        </td>
+      </tr>
+      <tr>
+        <td nowrap class="bg-dark text-white">TOTAL</td>
+        <td nowrap class="bg-dark text-white text-center"></td>
+        <td nowrap class="bg-dark text-white text-center"></td>
+        <td nowrap class="bg-dark text-white text-center"></td>
+        <td nowrap class="bg-dark text-white text-center"></td>
+        <td nowrap class="bg-dark text-white text-center"></td>
+        <td nowrap class="bg-dark text-white text-right" *ngIf="this.modal.unidadeMedida != 'TON'">
+          {{ dadosVendasRealDetalhesModalTotal["TT_ITEM_PEDI_TONE"] | number: '0.3' }}
+        </td>
+        <td nowrap class="bg-dark text-white text-right">
+          {{this.modal.unidadeMedida != 'TON' ? (dadosVendasRealDetalhesModalTotal["TT_ITEM_PEDI"] | number: '0.0') : (dadosVendasRealDetalhesModalTotal["TT_ITEM_PEDI"] | number: '0.3')}}
+        </td>
+      </tr>
+    </ng-template>
+  </custom-table>
+</div>
+<div
+  class="mt-2 mb-2"
+  *ngIf="dadosVendasRealDetalhesModal?.length > itemsPerPage"
+>
+  Exibindo {{ beginA + 1 }} a {{ endA }} de
+  {{ dadosVendasRealDetalhesModal?.length }}
+  <div class="d-flex">
+    <pagination
+      [maxSize]="10"
+      [totalItems]="dadosVendasRealDetalhesModal?.length"
+      (pageChanged)="onPageChangedA($event)"
+      [(itemsPerPage)]="itemsPerPage"
+      [boundaryLinks]="true"
+      [(ngModel)]="currentPageA"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;"
+    >
+    </pagination>
+  </div>
+</div>
+<div class="text-center d-flex justify-content-center align-items-center p-5" *ngIf="loaderBody">
+  <div class="spinner-border">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<div
+  *ngIf="noResultModal && !loadingDetalhesModal"
+  class="text-center d-flex justify-content-center align-items-center p-5"
+  style="height: 80%;"
+  >
+  <empty-result message="Nenhuma informação encontrada"></empty-result>
+</div>

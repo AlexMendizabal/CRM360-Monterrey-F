@@ -1,0 +1,512 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Controle de entregas">
+  <button
+    type="button"
+    (click)="onResetForm()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter #scrollToFilter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="dataInicial">Data inicial</label>
+          <input
+            class="form-control"
+            id="dataInicial"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="DT_INIC"
+            [ngClass]="onFieldError('DT_INIC') + ' ' + onFieldRequired('DT_INIC')">
+        </div>
+        <div class="form-group col-3">
+          <label for="dataFinal">Data final</label>
+          <input
+            class="form-control"
+            id="dataFinal"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            formControlName="DT_FINA"
+            [ngClass]="onFieldError('DT_FINA') + ' ' + onFieldRequired('DT_FINA')">
+        </div>
+        <div class="form-group col">
+          <label for="cliente">Cliente</label>
+          <input
+            type="text"
+            class="form-control"
+            id="cliente"
+            formControlName="DS_CLIE"
+            (keydown.enter)="onFilter()">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="notaFiscal">Nota fiscal</label>
+          <input
+            type="text"
+            class="form-control"
+            id="notaFiscal"
+            formControlName="NOTA_FISC"
+            (keydown.enter)="onFilter()">
+        </div>
+        <div class="form-group col-3">
+          <label for="pedido">Pedido</label>
+          <input
+            type="text"
+            class="form-control"
+            id="pedido"
+            formControlName="CD_PEDI"
+            (keydown.enter)="onFilter()">
+        </div>
+        <div class="form-group col-3">
+          <label for="sigla">Sigla</label>
+          <input
+            type="text"
+            class="form-control"
+            id="sigla"
+            formControlName="SG_PEDI"
+            (keydown.enter)="onFilter()">
+        </div>
+        <div class="form-group col-3">
+          <label for="romaneio">Romaneio</label>
+          <input
+            type="text"
+            class="form-control"
+            id="romaneio"
+            formControlName="CD_ROMA"
+            (keydown.enter)="onFilter()">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-3 mb-2">
+          <label for="situacao">Situação
+            <i class="far fa-question-circle ml-1" [tooltip]="tooltipAutoScrollTemplate"></i>
+          </label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="situacoes"
+            formControlName="ENTR_SG_STAT"
+            [virtualScroll]="true"
+            labelForId="situacao"
+            bindLabel="ENTR_DS_STAT"
+            bindValue="ENTR_SG_STAT"
+            (change)="onFilter()"
+            >
+          </ng-select>
+          <ng-template #tooltipAutoScrollTemplate>
+            <p class="mb-0"><b>AGUARDANDO COMPOSIÇÃO: Aguardando composição de carga para região do cliente.</b></p>
+            <p class="text-nowrap mb-0"><br><br></p>
+            <p class="mb-0"><b>AGUARDANDO VEíCULO: Carga formada, aguardando definição do veículo.</b></p>
+            <p class="text-nowrap mb-0"><br><br></p>
+            <p class="mb-0"><b>AGUARDANDO SAÍDA: Veículo definido, aguardando carregamento e saída para entrega.</b></p>
+            <p class="text-nowrap mb-0"><br><br></p>
+            <p class="mb-0"><b>SAIU PARA ENTREGA: Viagem Iniciada.</b></p>
+            <p class="text-nowrap mb-0"><br><br></p>
+            <p class="mb-0"><b>RETIRADA: Retira Realizada.</b></p>
+            <p class="text-nowrap mb-0"><br><br></p>
+            <p class="mb-0"><b>ENTREGA ADIADA: Retorno para reprogramação.</b></p>
+            <p class="text-nowrap mb-0"><br><br></p>
+            <p class="mb-0"><b>ENTREGA DEVOLVIDA: Retorno para cancelamento.</b></p>
+            <p class="text-nowrap mb-0"><br><br></p>
+            <p class="mb-0"><b>ENTREGA REALIZADA: Entrega realizada.</b></p>
+          </ng-template>
+        </div>
+        <div class="form-group col-lg-3 mb-2">
+          <label for="vendedores">Vendedor</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="vendedores"
+            formControlName="CD_VEND"
+            [virtualScroll]="true"
+            labelForId="vendedores"
+            bindLabel="nome"
+            bindValue="id"
+            (change)="onFilter()"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col mb-2">
+          <label for="empresa">Empresa</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="filiais"
+            formControlName="CD_FILI"
+            [virtualScroll]="true"
+            labelForId="empresa"
+            bindLabel="NM_FILI"
+            bindValue="CD_FILI"
+            (change)="onFilter()"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2 mb-2">
+          <label for="registros">Registros</label>
+          <select
+            class="form-control"
+            id="registros"
+            formControlName="TT_REGI_PAGI"
+            (change)="onFilter()"
+            >
+            <option>25</option>
+            <option>50</option>
+            <option>100</option>
+            <option>200</option>
+            <option>300</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="row">
+    <div class="col-lg-12" *ngIf="!pedidosEmpty">
+      <ul
+        class="d-flex justify-content-between p-0"
+      >
+        <li
+          *ngFor="let column of columns | keyvalue : keepOriginalOrder; let index = index"
+          style="list-style: none;"
+        >
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              [id]="'column'+index"
+              [name]="'column'+index"
+              [checked]="column.value.active"
+              [(ngModel)]="column.value.active"
+              >
+            <label
+              class="custom-control-label"
+              [for]="'column'+index"
+            >
+              {{ column.value.name }}
+            </label>
+          </div>
+        </li>
+      </ul>
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th
+              class="text-center text-truncate hover"
+              width="11%"
+              *ngIf="columns.nomeEmpresa.active"
+            >
+              <thead-sorter
+                value="Empresa"
+                [active]="orderBy == 'nomeEmpresa'"
+                [sort]="orderType"
+                (click)="setOrderBy('nomeEmpresa')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-center text-truncate hover"
+              width="9%"
+              *ngIf="columns.romaneio.active"
+            >
+              <thead-sorter
+                value="Romaneio"
+                [active]="orderBy == 'romaneio'"
+                [sort]="orderType"
+                (click)="setOrderBy('romaneio')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-center text-truncate hover"
+              width="10%"
+              *ngIf="columns.dataPrev.active"
+            >
+              <thead-sorter
+                value="Data Prev Entrega"
+                [active]="orderBy == 'dataPrev'"
+                [sort]="orderType"
+                (click)="setOrderBy('dataPrev')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-center text-truncate hover"
+              width="10%"
+              *ngIf="columns.dataEntrega.active"
+            >
+              <thead-sorter
+                value="Data de Entrega"
+                [active]="orderBy == 'dataEntrega'"
+                [sort]="orderType"
+                (click)="setOrderBy('dataEntrega')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-truncate hover"
+              width="28%"
+              *ngIf="columns.nomeCliente.active"
+            >
+              <thead-sorter
+                value="Cliente"
+                [active]="orderBy == 'nomeCliente'"
+                [sort]="orderType"
+                (click)="setOrderBy('nomeCliente')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-center text-truncate"
+              width="5%"
+              *ngIf="columns.sequencia.active"
+            >Seq.</th>
+            <th
+              class="text-center text-truncate hover"
+              width="9%"
+              *ngIf="columns.pedido.active"
+            >
+              <thead-sorter
+                value="Pedido"
+                [active]="orderBy == 'pedido'"
+                [sort]="orderType"
+                (click)="setOrderBy('pedido')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-center text-truncate hover"
+              width="9%"
+              *ngIf="columns.notaFiscal.active"
+            >
+              <thead-sorter
+                value="Nota fiscal"
+                [active]="orderBy == 'notaFiscal'"
+                [sort]="orderType"
+                (click)="setOrderBy('notaFiscal')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-center text-truncate hover"
+              width="9%"
+              *ngIf="columns.dataEmissao.active"
+            >
+              <thead-sorter
+                value="Data de Emissão"
+                [active]="orderBy == 'dataEmissao'"
+                [sort]="orderType"
+                (click)="setOrderBy('dataEmissao')">
+              </thead-sorter>
+            </th>
+            <th
+              class="text-center text-truncate"
+              width="23%"
+              *ngIf="columns.nomeSituacao.active"
+            >
+              Situação</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of pedidos" (click)="viewDetails(item, modalDetalhes)">
+            <td
+              class="text-center text-truncate hover"
+              *ngIf="columns.nomeEmpresa.active"
+            >
+              ({{ item.CD_FILI }})&nbsp;{{ item.NM_FILI }}
+            </td>
+            <td
+              class="text-center text-truncate hover"
+              *ngIf="columns.romaneio.active"
+            >
+              {{ item.CD_ROMA }}
+            </td>
+            <td
+              class="text-center text-truncate hover"
+              *ngIf="columns.dataPrev.active"
+            >
+              {{ item.DT_SAID_PREV | date: 'dd/MM/yyyy' }}
+            </td>
+            <td
+              class="text-center text-truncate hover"
+              *ngIf="columns.dataEntrega.active"
+            >
+              {{ item.ENTR_DT_ENTR | date: 'dd/MM/yyyy' }}
+            </td>
+            <td
+              class="text-truncate hover"
+              *ngIf="columns.nomeCliente.active"
+              isEllipsed
+            >
+              ({{ item?.CD_CLIE }}) {{ item?.NM_CLIE }}
+            </td>
+            <td
+              class="text-center text-truncate hover"
+              *ngIf="columns.sequencia.active"
+            >
+              {{ item?.ENTR_NR_SQNC }}
+            </td>
+            <td
+              class="text-center text-truncate hover"
+              *ngIf="columns.pedido.active"
+            >
+              {{ item.CD_PEDI }}
+            </td>
+            <td
+              class="text-center text-truncate hover"
+              *ngIf="columns.notaFiscal.active"
+            >
+              {{ item.NR_NOTA_FISC }}
+            </td>
+            <td
+              class="text-center text-truncate hover"
+              *ngIf="columns.dataEmissao.active"
+            >
+              {{ item.DT_NOTA_FISC | date: 'dd/MM/yyyy' }}
+            </td>
+            <td
+              class="text-center text-truncate hover"
+              *ngIf="columns.nomeSituacao.active"
+            >
+              {{ item.ENTR_DS_STAT }}
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div *ngIf="!pedidosEmpty">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+        [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <empty-result message="Nenhuma informação encontrada" class="mx-auto mt-5" *ngIf="pedidosLoaded && pedidosEmpty"></empty-result>
+  </div>
+</app-body>
+<ng-template #modalDetalhes>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Detalle</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <tabset>
+      <tab heading="Entrega" class="border-right border-left border-bottom">
+        <div class="p-3">
+          <div class="form-row">
+            <div class="form-group col-lg-4">
+              <label>Cliente</label>
+              <div>({{ pedido?.CD_CLIE }}) {{ pedido?.NM_FANT }}</div>
+            </div>
+            <div class="form-group col-lg-3">
+              <label>Motorista</label>
+              <div *ngIf="pedido?.NM_MOTO">{{ pedido?.NM_MOTO }}</div>
+              <div *ngIf="!pedido?.NM_MOTO">NÃO INFORMADO</div>
+            </div>
+            <div class="form-group col-lg-3">
+              <label>Placa do veículo</label>
+              <div *ngIf="pedido?.PLAC">{{ pedido?.PLAC }}</div>
+              <div *ngIf="!pedido?.PLAC">NÃO INFORMADO</div>
+            </div>
+          </div>
+          <div id="scrollDetalhes" class="mt-2 d-flex">
+            <div class="col-4">
+              <div *ngFor="let detalhe of entrega; let last = last; let first = first" [ngClass]="fist ? 'mt-4' : ''">
+                <div class="d-flex w-100" [tooltip]="detalhe?.desricao" placement="left">
+                  <div class="rounded-circle text-white icon-40" [ngClass]="detalhe?.check == 0 ? 'bg-secondary' : 'bg-primary'">
+                    <i [class]="detalhe?.icone"></i>
+                  </div>
+                  <strong class="my-auto ml-3 text-truncate" [ngClass]="detalhe?.check == 1 ? 'text-primary' : ''" style="width: calc(100% - 40px)">
+                    {{ detalhe?.descricao }}
+                  </strong>
+                </div>
+                <div class="my-2" *ngIf="!last">
+                  <div class="ml-1">
+                    <div class="border-left border-secondary ml-3 p-2">
+                      <div *ngIf="detalhe?.check === 1"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-8 p-0 form-group">
+              <label>FOTO DO CANHOTO</label>
+              <div *ngIf="imageLoading">Carregando foto do canhoto...</div>
+              <div *ngIf="pedido?.ENTR_COMP_FOTO">
+                <img [hidden]="imageLoading" [src]="pedido?.ENTR_COMP_FOTO" class="border rounded shadow-sm w-100" (load)="onImageLoad()">
+              </div>
+              <empty-result message="Nehuma imagem encontrada" *ngIf="!pedido?.ENTR_COMP_FOTO && !imageLoading"></empty-result>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Romaneio" class="border-right border-left border-bottom">
+        <div class="px-3 pt-3" *ngIf="!detalhesRomaneioLoading && !detalhesRomaneioEmpty">
+          <div class="form-row">
+            <div class="form-group col-lg-3">
+              <label>Romaneio</label>
+              <div>{{ pedido?.CD_ROMA }}</div>
+            </div>
+            <!-- <div class="form-group col-lg-3">
+              <label>Região da entrega</label>
+              <div>{{ pedido }}</div>
+            </div> -->
+          </div>
+          <div class="row">
+            <div class="col">
+              <subtitles
+                [data]="subtitles"
+                [show]="!noResult">
+              </subtitles>
+            </div>
+          </div>
+          <custom-table [config]="tableConfig">
+            <ng-template #thead let-thead>
+              <tr>
+                <th>Cliente</th>
+                <th class="text-center">Seq.</th>
+                <th class="text-center">Nota fiscal</th>
+                <th class="text-center">Pedido</th>
+                <th class="text-center">Código</th>
+                <th>Material</th>
+                <th class="text-center">Peso</th>
+                <th>Endereço</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let item of detalhesRomaneio" [ngStyle]="getSelectedStyle(item)">
+                <td
+                  class="hover"
+                  [ngClass]="classStatusBorder(item)">
+                  ({{ item.CD_CLIE }}) {{ item.NM_FANT }}
+                </td>
+                <td class="text-center">{{ item.NR_SQNC }}</td>
+                <td class="text-center">{{ item.NOTA_FISC }}</td>
+                <td class="text-center">{{ item.CD_PEDI }}</td>
+                <td class="text-center">{{ item.CD_PROD }}</td>
+                <td>{{ item.NM_PROD }}</td>
+                <td class="text-center">{{ item.TT_PROD_PESO  | number: '0.3-3' }}</td>
+                <td>{{ item.DS_ENDE }}</td>
+              </tr>
+            </ng-template>
+          </custom-table>
+        </div>
+        <empty-result message="Nenhuma informação encontrada" *ngIf="detalhesRomaneioEmpty"></empty-result>
+        <div class="spinner-border text-primary" role="status" *ngIf="!detalhesRomaneioLoading && detalhesRomaneioEmpty">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+</ng-template>

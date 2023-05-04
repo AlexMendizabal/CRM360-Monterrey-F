@@ -1,0 +1,54 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row" *ngIf="!loaderFullScreen">
+  <div class="col">
+    <div class="mtc-title">Editar potencial de compra (mensual)</div>
+    <form [formGroup]="form" autocomplete="off">
+      <div formArrayName="linhas">
+        <div class="form-row" *ngFor="let item of linhas.controls; let i = index" [formGroupName]="i">
+          <div class="form-group col-md-2 d-flex">
+            <div class="my-auto">
+              <label>{{ item.value.descricao | capitalizeFirst }}</label>
+            </div>
+          </div>
+          <div class="form-group col-md-10">
+            <div class="form-row">
+              <div class="col-auto">
+                <div class="form-row">
+                  <div class="form-group col-4 mb-0 d-flex justify-content-end">
+                    <label class="my-auto mr-2" for="de">De (ton)</label>
+                  </div>
+                  <div class="form-group col-8 mb-0">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="de"
+                      formControlName="de"
+                      (input)="onInput()"
+                      currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 3 }">
+                  </div>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="form-row">
+                  <div class="form-group col-4 mb-0 d-flex justify-content-end">
+                    <label class="my-auto mr-2" for="ate">Até (ton)</label>
+                  </div>
+                  <div class="form-group col-8 mb-0">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="ate"
+                      formControlName="ate"
+                      (input)="onInput()"
+                      currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 3 }">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-12"><hr class="m-0"></div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

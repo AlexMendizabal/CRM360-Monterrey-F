@@ -1,0 +1,66 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Dashboard do cliente"></app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row mb-3">
+    <div class="col">
+      <h5 class="d-inline-block mb-0 mr-3" tooltip="Código do cliente">
+        <span class="badge badge-dark">CÓD.: {{ cliente.codCliente }}</span>
+      </h5>
+      <h6 class="d-inline-block mb-0">{{ cliente.razaoSocial }}</h6>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="row">
+        <div class="col mb-4">
+          <comercial-clientes-dashboard-faturamento-grafico></comercial-clientes-dashboard-faturamento-grafico>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col mb-4">
+          <comercial-clientes-dashboard-faturamento-mais-comprados></comercial-clientes-dashboard-faturamento-mais-comprados>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col mb-4">
+          <comercial-clientes-dashboard-propostas-grafico></comercial-clientes-dashboard-propostas-grafico>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="row">
+        <div class="col mb-4">
+          <comercial-clientes-dashboard-faturamento-linha-analitico></comercial-clientes-dashboard-faturamento-linha-analitico>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col mb-4">
+          <comercial-clientes-dashboard-faturamento-linha-comparativo></comercial-clientes-dashboard-faturamento-linha-comparativo>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col mb-4">
+          <comercial-clientes-dashboard-propostas-analitico></comercial-clientes-dashboard-propostas-analitico>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="mtc-title">Comercial</div>
+      <comercial-clientes-dashboard-comercial></comercial-clientes-dashboard-comercial>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="mtc-title">Financeiro</div>
+      <comercial-clientes-dashboard-financeiro></comercial-clientes-dashboard-financeiro>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="mtc-title">Registro de ocorrências</div>
+      <comercial-clientes-dashboard-registro-ocorrencias></comercial-clientes-dashboard-registro-ocorrencias>
+    </div>
+  </div>
+</app-body>

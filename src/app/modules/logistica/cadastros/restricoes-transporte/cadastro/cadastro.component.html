@@ -1,0 +1,294 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button 
+    [disabled]="loadingNavBar === true"
+    [routerLink]="['../']"
+    >
+    Regresar
+  </button>
+  <button
+    [disabled]="form.status == 'INVALID' || loadingNavBar === true"
+    (click) = "onSave()"
+    >Ahorrar</button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col-lg-6">
+      <form [formGroup]="form" class="d-flex flex-column align-items-center" autocomplete="off" [hidden] = "loading">
+        <div class="mtc-title">Datos de restricción de transporte</div>
+        <div class="form-group col">
+          <label for="nome">Nombre</label>
+          <input
+            type="text"
+            class="form-control"
+            id="nome"
+            formControlName="NM_REST_TRAN"
+            placeholder="Escribelo..."
+            [ngClass]="onFieldRequired('NM_REST_TRAN')"
+          />
+          <invalid-form-control [show]="onFieldInvalid('NM_REST_TRAN')" message="Nome é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-row col-12">
+          <div class="form-group col-md-6">
+            <label for="status">Status</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="status"
+              [virtualScroll]="true"
+              labelForId="status"
+              bindLabel="nome"
+              bindValue="id"
+              id="status"
+              formControlName="IN_STAT"
+              placeholder="Seleccione..."
+            >
+            </ng-select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="prioridade">Prioridad</label>
+            <input type="number" class="form-control" formControlName="NR_PRIO" min="1">
+          </div>
+        </div>
+        <div class="form-group col">
+          <label for="observacao">Observación</label>
+          <textarea
+            id="observacao"
+            rows="5"
+            formControlName="DS_OBSE"
+            placeholder="Escribelo..."
+            class="form-control"
+            >
+          </textarea>
+        </div>
+      </form>
+      <div class="row mb-4">
+        <div class="col mb-3">
+          <hr>
+        </div>
+      </div>
+      <message
+        *ngIf="materiaisAssociadosLoading"
+        icon="fas fa-cog fa-spin"
+        text="Buscamos información sobre la restricción de transporte seleccionada ...">
+      </message>
+      <div [hidden]="materiaisAssociadosLoading">
+        <div class="row mb-2 mt-4">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Materiales asociados con restricciones de transporte</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                (click)="onRemoverAssociacao()">
+                <i class="fas fa-trash"></i>
+                <span>Limpiar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="!materiaisAssociadosLoading && materiaisAssociados.length > 0">
+          <div class="col">
+            <custom-table [config]="tableConfigMateriaisAssociados">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="text-center"
+                    style="width: 5%">
+                    <btn-icon
+                      [icon]="toggle?.materiaisAssociados ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll('materiaisAssociados')">
+                    </btn-icon>
+                  </th>
+                  <th scope="col" width="20%">Código</th>
+                  <th scope="col" width="70%">Descripción</th>
+                  <th scope="col" width="5%"></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of materiaisAssociados" >
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="item.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="item.checked = !item.checked">
+                    </btn-icon>
+                  </td>
+                  <td width="20%">{{ item.ID_REFE_ERP }}</td>
+                  <td width="70%">
+                   {{ item.NM_MATE | uppercase }}
+                  </td>
+                  <td class="text-center" width="5%">
+                    <btn-icon
+                      icon="fas fa-trash"
+                      size="small"
+                      (click)="onRemoverAssociacao(item)"
+                      *ngIf="!item.loading"  
+                    >
+                    </btn-icon>
+                    <div class="text-primary small" *ngIf="item.loading">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+        <div class="row" *ngIf="!materiaisLoading && materiaisAssociados.length === 0">
+          <div class="col">
+            <message
+              icon="fas fa-exchange-alt"
+              text="No se encontró asociación">
+            </message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 border-left">
+      <div class="row mb-2">
+        <div class="col mt-auto">
+          <div class="mtc-title mb-0">Búsqueda de materiales</div>
+        </div>
+        <div class="col">
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              (click)="getMateriais()">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <advanced-filter>
+        <form [formGroup]="formMateriais" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-4">
+              <label for="buscarPor">BÚSQUEDA POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="ID_REFE_ERP">Código</option>
+                <option value="NM_MATE" selected>Descripción</option>
+                <option value="NM_CLAS" selected>Clase</option>
+                <option value="NM_LINH" selected>Línea</option>
+              </select>
+            </div>
+            <div class="form-group col-8">
+              <label>TÉRMINO DE BÚSQUEDA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  (keyup.enter)="getMateriais()"
+                >
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <div *ngIf="materiais.length > 0 && !materiaisLoading">
+        <div class="row mb-2">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Selección de material</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                (click)="onAssociarMateriais()"
+                [disabled]="!form.get('UUID')?.value">
+                <i class="fas fa-exchange-alt"></i>
+                <span
+                  [tooltip]="!form.get('UUID')?.value ? 'Seleccione una restricción de transporte':''"
+                  container="body"
+                  placement ="left">Conectar
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <custom-table [config]="tableConfigMateriais">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="text-center"
+                    style="width: 5%">
+                    <btn-icon
+                      [icon]="toggle?.materiais ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll('materiais')">
+                    </btn-icon>
+                  </th>
+                  <th scope="col" style="width: 90%">Materiales</th>
+                  <th style="width: 5%"></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of materiais">
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="item.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="item.checked = !item.checked">
+                    </btn-icon>
+                  </td>
+                  <td
+                    class="hover"
+                    style="width: 90%"
+                    (click)="item.checked = !item.checked">
+                    {{ item.ID_REFE_ERP }} - {{ item.NM_MATE | uppercase }}
+                  </td>
+                  <td style="width: 5%">
+                    <div class="text-primary small" *ngIf="item.loading">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="materiaisLoading">
+        <div class="col">
+          <message
+            icon="fas fa-cog fa-spin"
+            text="Estamos investigando los materiales para usted ...">
+          </message>
+        </div>
+      </div>
+      <div>
+        <div class="row" *ngIf="(materiais.length == 0) && !materiaisLoading">
+          <div class="col">
+            <message
+              icon="fas fa-box-open"
+              text="No se encontró información">
+            </message>
+          </div>
+        </div>
+        <!-- <div class="row" *ngIf="usuariosLista.length === 0 && !firstSearch">
+          <div class="col">
+            <message
+              icon="fas fa-search"
+              text="Preecha os campos acima para pesquisar usuarios">
+            </message>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</app-body>
+

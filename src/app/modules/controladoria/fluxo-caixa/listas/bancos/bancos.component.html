@@ -1,0 +1,58 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    [routerLink]="['./novo']"
+    >
+    Cadastrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <!-- <advanced-filter #scrollToFilter></advanced-filter> -->
+  <div class="row">
+    <div class="col">
+      <custom-table [config]="tableConfig" [hidden] = "!noResult">
+        <ng-template #thead let-thead>
+          <tr>
+            <th class="text-center" scope="col" style="width: 60px;"> Código Banco/Fundo </th>
+            <th class="text-center" scope="col" style="width: 100px;"> Nome </th>
+            <th class="align-middle" style="width:70px"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let banco of bancos | slice : begin : end; let i = index" class="text-center">
+            <td class="text-center">{{ banco.COD_BANCO }}</td>
+            <td class="text-center">{{ banco.DESC_BANCO | uppercase }}</td>
+            <td class="align-middle" style="width:70px">
+              <span tooltip="Editar" placement="left" container="body">
+                <button class="btn-icon-sm" [routerLink]="['./', banco.COD_BANCO]">
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="mt-3" [hidden]="!noResult">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          [(itemsPerPage)]="itemsPerPage"
+          (pageChanged)="onPageChanged($event)"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty">
+      </empty-result>
+    </div>
+  </div>
+</app-body>

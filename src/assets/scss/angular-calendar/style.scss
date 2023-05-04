@@ -1,0 +1,77 @@
+@import '../colors.scss';
+
+.cal-month-view {
+  .cal-header {
+    font-weight: 500;
+    .cal-cell {
+      background-color: $white !important;
+      font-weight: 700;
+    }
+  }
+  .cal-day-badge {
+    background-color: $red;
+  }
+  .cal-open-day-events {
+    background-color: $dark-gray;
+    box-shadow: unset;
+  }
+  .cal-event-title {
+    &:hover {
+      text-decoration: unset;
+    }
+  }
+  .cal-day-cell.cal-weekend {
+    .cal-day-number {
+      color: $red;
+    }
+  }
+  .cal-day-cell.cal-today {
+    background-color: $white !important;
+  }
+  .cal-cell-row {
+    .cal-cell {
+      &:hover {
+        background-color: $white !important;
+      }
+    }
+    .cal-cell.cal-weekend {
+      background-color: $white;
+      &:hover {
+        background-color: $white !important;
+      }
+    }
+    &:hover {
+      background-color: $white;
+    }
+  }
+  .cal-cell.cal-has-events.cal-open {
+    background-color: $white;
+  }
+  .cal-day-number {
+    color: $dark-gray;
+    float: left;
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 15px;
+    margin-right: 0px;
+    opacity: 1;
+  }
+  .cal-day-cell.cal-today {
+    .cal-day-number {
+      color: $blue;
+      font-size: 14px;
+      font-weight: 700;
+    }
+  }
+  .cal-day-badge {
+    margin-left: 0px;
+    margin-right: 15px;
+    float: right;
+  }
+}
+
+.cal-today {
+  .cal-cell-top {
+    border-top: 4px solid $blue;
+  }
+}

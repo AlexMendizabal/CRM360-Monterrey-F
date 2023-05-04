@@ -1,0 +1,14 @@
+@import '../colors';
+@import '../variables';
+
+.mtc-title {
+  color: $dark-gray;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  padding: 2px 0px;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}

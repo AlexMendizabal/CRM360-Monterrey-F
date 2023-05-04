@@ -1,0 +1,179 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<div class="row" id="application-header">
+  <div class="col-6">
+    <div id="title">
+      <back-button></back-button>
+      <h1>Consulta de inventários</h1>
+    </div>
+  </div>
+  <div class="col-6 d-flex justify-content-end">
+    <div id="actions">
+    </div>
+  </div>
+</div>
+<!-- Início dos Filtros -->
+<div class="row" id="application-body" [hidden]="spinnerFullScreen">
+  <div class="container-fluid">
+    <breadcrumb [tree]="breadCrumbTree"></breadcrumb>
+    <div class="row justify-content-between mb-2">
+      <div class="col-6 pt-4">
+        <div class="d-flex">
+          <div class="legend yellow hover" [ngClass]="{'active': sigla == 'LOGI_INVE_STAT_ABER' }" (click)="getInventario('LOGI_INVE_STAT_ABER')">
+            <div class="square"></div>
+            <div class="text">EM ABERTO</div>
+          </div>
+          <div class="legend red hover" [ngClass]="{'active': sigla == 'LOGI_INVE_STAT_CANC'}" (click)="getInventario('LOGI_INVE_STAT_CANC')">
+            <div class="square"></div>
+            <div class="text">CANCELADO</div>
+          </div>
+          <div class="legend gray hover" [ngClass]="{'active': sigla == 'LOGI_INVE_STAT_CANC_SIST'}" (click)="getInventario('LOGI_INVE_STAT_CANC_SIST')">
+            <div class="square"></div>
+            <div class="text">CANCELADO PELO SISTEMA</div>
+          </div>
+          <div class="legend green hover" [ngClass]="{'active': sigla == 'LOGI_INVE_STAT_FINA'}" (click)="getInventario('LOGI_INVE_STAT_FINA')">
+            <div class="square"></div>
+            <div class="text">FINALIZADO</div>
+          </div>
+          <div class="legend blue hover" [ngClass]="{'active': sigla == 'LOGI_INVE_STAT_APRO'}" (click)="getInventario('LOGI_INVE_STAT_APRO')">
+            <div class="square"></div>
+            <div class="text">APROVADO</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group col-md-3 justify-content-end">
+        <label for="cdInventario"> Código do inventário </label>
+        <input 
+          id="cdInventario"
+          type="text"
+          class="form-control"
+          placeholder="DIGITE..."
+          [(ngModel)]="cdInventario"
+          (keyup.enter)="getInventario()"
+        >
+      </div>
+    </div>
+    <div class="col-12 p-0" [hidden]="noResult" class="d-flex">
+      <div>
+        <div style="height: 55vh">
+          <table class="table table-sm table-hover custom-border border-left border-right border-bottom text-center table-fixed">
+            <thead class="thead-light">
+              <tr>
+                <th>Data</th>
+                <th>Código</th>
+                <th>Depósito</th>
+                <th [hidden]="compressedTable">Linha</th>
+                <th>Tipo</th>
+                <th style="width:250px" nowrap>Auditor</th>
+                <th class="align-middle" style="width:70px"></th>
+                <th class="align-middle" style="width:70px"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let inventario of inventarios let i = index" class="hover" 
+                    [ngClass]="inventario.status ? 'bgRowTable' : ''" (click)="getClassesInventario(inventario.idInventario, i); clickEvent(inventario)"
+              >
+                <td [ngClass]="{
+                  'border-primary'    : inventario.siglaStatusInventario == 'LOGI_INVE_STAT_APRO',
+                  'border-secondary'  : inventario.siglaStatusInventario == 'LOGI_INVE_STAT_CANC_SIST',
+                  'border-danger'     : inventario.siglaStatusInventario == 'LOGI_INVE_STAT_CANC',
+                  'border-success'    : inventario.siglaStatusInventario == 'LOGI_INVE_STAT_FINA',
+                  'border-warning'    : inventario.siglaStatusInventario == 'LOGI_INVE_STAT_ABER'
+                }"
+                > {{ inventario.dtInclusao  | date : 'dd/MM/yyyy HH:mm:ss'}} </td>
+                <td> {{ inventario.idInventario   | number:'6.0-0'}} </td>
+                <td> {{ inventario.dsDeposito | uppercase }} </td>
+                <td [hidden]="compressedTable"> {{ inventario.dsLinha | uppercase }} </td>
+                <td> {{ inventario.dsTipoInventario | uppercase }} </td>
+                <td style="width:250px" nowrap> {{ inventario.dsUsuario | uppercase }} </td> 
+                <td class="align-middle" style="width:70px">
+                  <span tooltip="Visualizar" placement="left" container="body">
+                    <button class="btn-icon-sm" (click)="abrirInventario(inventario.idInventario)">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </span>
+                </td>
+                <td class="align-middle" style="width:70px">
+                  <span tooltip="Imprimir" placement="left" container="body">
+                    <button class="btn-icon-sm" (click)="abrirRelatorio(inventario.idInventario)">
+                      <i class="fas fa-file-alt"></i>
+                    </button>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-3" [hidden]="noResult">
+            Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+          <pagination
+            [maxSize]="10"
+            [totalItems]="totalItems"
+            (pageChanged)="onPageChanged($event)"
+            [(itemsPerPage)]="itemsPerPage"
+            [boundaryLinks]="true"
+            [(ngModel)]="currentPage"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;">
+          </pagination>
+        </div>
+      </div>
+      <tabset class="col-3 pr-0 tabsetCustom" [hidden]="!compressedTable">          
+        <button type="button" class="btn-icon close position-absolute" (click)="onClose()">
+          <i class="fas fa-times"></i>
+        </button>
+        <tab heading="Detalhes - {{ infoIdInventario | number:'6.0-0' }}">
+          <div class="border-right border-left border-bottom border-top px-3 pt-3">
+            <div class="form-row" [hidden]="noLista">
+              <div class="form-group col-md-12">
+                <div class="text-nowrap">
+                  <table class="table table-sm table-hover text-left table-fixed">
+                    <thead class="thead-light">
+                      <tr>
+                        <th>Classe</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let infoClasse of infoClasses">
+                        <td class="border-top-0"> {{ infoClasse.dsClasse | uppercase }} </td>
+                      </tr>
+                    </tbody>
+                    <thead class="thead-light">
+                      <tr>
+                        <th>Linha</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="border-top-0"> {{ infoLinha | uppercase }} </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div
+            class="d-flex align-items-center justify-content-center"
+            style="width: 100%; height: 80%;"
+            [hidden]="!noResultado"
+            >
+              <empty-result message="Nenhuma informação encontrada"></empty-result>
+            </div>
+            <div class="spinner-border text-primary justify-content-end positionSpinner loaderTab" role="status" [hidden]="!loaderNavbar">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+    <div
+      class="d-flex align-items-center justify-content-center"
+      style="width: 100%; height: 80%;"
+      [hidden]="!noResult"
+      >
+      <empty-result message="Nenhuma informação encontrada"></empty-result>
+    </div>
+  </div>
+</div>

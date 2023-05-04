@@ -1,0 +1,267 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">DETALHES DO LOCAL DE ENTREGA</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row" *ngIf="endereco">
+      <div class="col">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>CEP</label>
+            <div *ngIf="endereco.cep == null">NÃO INFORMADO</div>
+            <div *ngIf="endereco.cep != null">{{ endereco.cep | cep }}</div>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Endereço</label>
+            <div *ngIf="endereco.endereco == null">NÃO INFORMADO</div>
+            <div *ngIf="endereco.endereco != null">{{ endereco.endereco }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Complemento</label>
+            <div *ngIf="endereco.complemento == null">NÃO INFORMADO</div>
+            <div *ngIf="endereco.complemento != null">{{ endereco.complemento }}</div>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Referência</label>
+            <div *ngIf="endereco.referencia == null">NÃO INFORMADO</div>
+            <div *ngIf="endereco.referencia != null">{{ endereco.referencia }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Bairro</label>
+            <div *ngIf="endereco.bairro == null">NÃO INFORMADO</div>
+            <div *ngIf="endereco.bairro != null">{{ endereco.bairro }}</div>
+          </div>
+          <div class="form-group col-md-6 mb-0">
+            <label>Cidade</label>
+            <div *ngIf="endereco.cidade == null">NÃO INFORMADO</div>
+            <div *ngIf="endereco.cidade != null">
+              {{ endereco.cidade }}<span *ngIf="endereco.uf != null"> / {{ endereco.uf }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6 mb-0" *ngIf="endereco.principal == 1">
+            <label>Região de atuação comercial</label>
+            <div *ngIf="endereco.descAtuacaoComercial == null">NÃO INFORMADO</div>
+            <div *ngIf="endereco.descAtuacaoComercial != null">{{ endereco.descAtuacaoComercial }}</div>
+          </div>
+        </div>
+        <div *ngIf="endereco.entrega == 1">
+          <div class="form-row">
+            <div class="col"><hr></div>
+          </div>
+          <div class="mtc-title">Dados de entrega</div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Título do local de entrega</label>
+              <div *ngIf="endereco.titulo == null">NÃO INFORMADO</div>
+              <div *ngIf="endereco.titulo != null">{{ endereco.titulo }}</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Região de entrega</label>
+              <div *ngIf="endereco.descRegiaoEntrega == null">NÃO INFORMADO</div>
+              <div *ngIf="endereco.descRegiaoEntrega != null">{{ endereco.descRegiaoEntrega }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label>Dias para realizar entregas</label>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="endereco.diasEntrega.segunda.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="endereco.diasEntrega.segunda.checked == 1"></i>
+                    </div>
+                    <span>Segunda-feira:</span>
+                  </div>
+                  <div *ngIf="endereco.diasEntrega.segunda.checked == 1">
+                    <div *ngIf="endereco.diasEntrega.segunda.minimo !== null && endereco.diasEntrega.segunda.maximo !== null">
+                      das {{ convertMysqlTime(endereco.diasEntrega.segunda.minimo) }} às {{ convertMysqlTime(endereco.diasEntrega.segunda.maximo) }}
+                    </div>
+                    <div *ngIf="endereco.diasEntrega.segunda.minimo == null || endereco.diasEntrega.segunda.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="endereco.diasEntrega.segunda.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="endereco.diasEntrega.terca.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="endereco.diasEntrega.terca.checked == 1"></i>
+                    </div>
+                    <span>Terça-feira:</span>
+                  </div>
+                  <div *ngIf="endereco.diasEntrega.terca.checked == 1">
+                    <div *ngIf="endereco.diasEntrega.terca.minimo !== null && endereco.diasEntrega.terca.maximo !== null">
+                      das {{ convertMysqlTime(endereco.diasEntrega.terca.minimo) }} às {{ convertMysqlTime(endereco.diasEntrega.terca.maximo) }}
+                    </div>
+                    <div *ngIf="endereco.diasEntrega.terca.minimo == null || endereco.diasEntrega.terca.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="endereco.diasEntrega.terca.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="endereco.diasEntrega.quarta.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="endereco.diasEntrega.quarta.checked == 1"></i>
+                    </div>
+                    <span>Quarta-feira:</span>
+                  </div>
+                  <div *ngIf="endereco.diasEntrega.quarta.checked == 1">
+                    <div *ngIf="endereco.diasEntrega.quarta.minimo !== null && endereco.diasEntrega.quarta.maximo !== null">
+                      das {{ convertMysqlTime(endereco.diasEntrega.quarta.minimo) }} às {{ convertMysqlTime(endereco.diasEntrega.quarta.maximo) }}
+                    </div>
+                    <div *ngIf="endereco.diasEntrega.quarta.minimo == null || endereco.diasEntrega.quarta.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="endereco.diasEntrega.quarta.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="endereco.diasEntrega.quinta.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="endereco.diasEntrega.quinta.checked == 1"></i>
+                    </div>
+                    <span>Quinta-feira:</span>
+                  </div>
+                  <div *ngIf="endereco.diasEntrega.quinta.checked == 1">
+                    <div *ngIf="endereco.diasEntrega.quinta.minimo !== null && endereco.diasEntrega.quinta.maximo !== null">
+                      das {{ convertMysqlTime(endereco.diasEntrega.quinta.minimo) }} às {{ convertMysqlTime(endereco.diasEntrega.quinta.maximo) }}
+                    </div>
+                    <div *ngIf="endereco.diasEntrega.quinta.minimo == null || endereco.diasEntrega.quinta.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="endereco.diasEntrega.quinta.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="endereco.diasEntrega.sexta.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="endereco.diasEntrega.sexta.checked == 1"></i>
+                    </div>
+                    <span>Sexta-feira:</span>
+                  </div>
+                  <div *ngIf="endereco.diasEntrega.sexta.checked == 1">
+                    <div *ngIf="endereco.diasEntrega.sexta.minimo !== null && endereco.diasEntrega.sexta.maximo !== null">
+                      das {{ convertMysqlTime(endereco.diasEntrega.sexta.minimo) }} às {{ convertMysqlTime(endereco.diasEntrega.sexta.maximo) }}
+                    </div>
+                    <div *ngIf="endereco.diasEntrega.sexta.minimo == null || endereco.diasEntrega.sexta.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="endereco.diasEntrega.sexta.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="endereco.diasEntrega.sabado.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="endereco.diasEntrega.sabado.checked == 1"></i>
+                    </div>
+                    <span>Sábado:</span>
+                  </div>
+                  <div *ngIf="endereco.diasEntrega.sabado.checked == 1">
+                    <div *ngIf="endereco.diasEntrega.sabado.minimo !== null && endereco.diasEntrega.sabado.maximo !== null">
+                      das {{ convertMysqlTime(endereco.diasEntrega.sabado.minimo) }} às {{ convertMysqlTime(endereco.diasEntrega.sabado.maximo) }}
+                    </div>
+                    <div *ngIf="endereco.diasEntrega.sabado.minimo == null || endereco.diasEntrega.sabado.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="endereco.diasEntrega.sabado.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col d-flex w-100 mb-1">
+                  <div class="d-flex mr-1">
+                    <div class="mr-1">
+                      <i class="fas fa-times-circle text-danger" *ngIf="endereco.diasEntrega.domingo.checked == 0"></i>
+                      <i class="fas fa-check-circle text-success" *ngIf="endereco.diasEntrega.domingo.checked == 1"></i>
+                    </div>
+                    <span>Domingo:</span>
+                  </div>
+                  <div *ngIf="endereco.diasEntrega.domingo.checked == 1">
+                    <div *ngIf="endereco.diasEntrega.domingo.minimo !== null && endereco.diasEntrega.domingo.maximo !== null">
+                      das {{ convertMysqlTime(endereco.diasEntrega.domingo.minimo) }} às {{ convertMysqlTime(endereco.diasEntrega.domingo.maximo) }}
+                    </div>
+                    <div *ngIf="endereco.diasEntrega.domingo.minimo == null || endereco.diasEntrega.domingo.maximo == null">
+                      horário não informado
+                    </div>
+                  </div>
+                  <strong *ngIf="endereco.diasEntrega.domingo.checked == 0">
+                    não aceita entregas
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Tipo de material</label>
+              <div *ngIf="endereco.dsTipoMaterial == null">NÃO INFORMADO</div>
+              <div *ngIf="endereco.dsTipoMaterial != null">{{ endereco.dsTipoMaterial | uppercase }}</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Tipo de descarga</label>
+              <div *ngIf="endereco.dsTipoDescarga == null">NÃO INFORMADO</div>
+              <div *ngIf="endereco.dsTipoDescarga != null">{{ endereco.dsTipoDescarga | uppercase }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Modo de descarga</label>
+              <div *ngIf="endereco.dsModoDescarga == null">NÃO INFORMADO</div>
+              <div *ngIf="endereco.dsModoDescarga != null">{{ endereco.dsModoDescarga | uppercase }}</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Tipos de veículo</label>
+              <div *ngIf="endereco.tiposVeiculosDesc == null">NÃO INFORMADO</div>
+              <div *ngIf="endereco.tiposVeiculosDesc != null">{{ endereco.tiposVeiculosDesc | uppercase }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+              <label>Dados especiais</label>
+              <div *ngIf="endereco.dadosEspeciaisDesc == null">NÃO INFORMADO</div>
+              <div *ngIf="endereco.dadosEspeciaisDesc != null">{{ endereco.dadosEspeciaisDesc | uppercase }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

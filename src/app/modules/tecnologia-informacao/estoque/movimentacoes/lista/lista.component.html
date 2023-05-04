@@ -1,0 +1,298 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="MOVIMENTAÇÕES">
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md pl-0">
+              <label for="produtosForm">Produto</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="produtosForm"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                [loading]="loadingProdutos"
+                placeholder="Selecione..."
+                labelForId="ID_TEIN_ESTO_PROD"
+                bindLabel="NM_PROD"
+                bindValue="ID_TEIN_ESTO_PROD"
+                id="ID_TEIN_ESTO_PROD"
+                formControlName="ID_TEIN_ESTO_PROD"
+                >
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-2 pl-0">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              placeholder="Selecione..."
+            >
+              <ng-template ng-option-tmp let-item="item" let-index="index"> {{item.nome}}
+              </ng-template>
+            </ng-select>
+            </div>
+            <div class="form-group col-lg-1 pl-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0" [ngClass]="{'col': !showDetailPanel, 'col-6': showDetailPanel}">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Produto</th>
+              <th scope="col"[hidden]="showDetailPanel">Unidade de Medida</th>
+              <th scope="col"[hidden]="showDetailPanel">Quantidade Atual</th>
+              <th scope="col" style="width:80px"[hidden]="showDetailPanel"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let produto of produtos"  [class.table-active]="produto?.ID_TEIN_ESTO_PROD == produtoSelecionado?.ID_TEIN_ESTO_PROD && showDetailPanel">
+              <td (click)="onDetails(produto)">
+              {{produto.ID_TEIN_ESTO_PROD }}
+              </td>
+              <td (click)="onDetails(produto)">{{ produto.NM_PROD | uppercase }}</td>
+              <td (click)="onDetails(produto)" [hidden]="showDetailPanel">{{ produto.DS_UNID_MEDI | uppercase }}</td>
+              <td (click)="onDetails(produto)" *ngIf="produto.TT_ESTO_ATUA != null " [hidden]="showDetailPanel">{{ produto.TT_ESTO_ATUA | numberInt:produto.DS_UNID_MEDI }} </td>
+              <td (click)="onDetails(produto)" *ngIf="produto.TT_ESTO_ATUA == null " [hidden]="showDetailPanel"> 0 </td>
+              <td class="align-middle" [hidden]="showDetailPanel">
+                <span class="mr-3" tooltip="Nova Movimentação" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', produto.ID_TEIN_ESTO_PROD]">
+                    <i class="fas fa-exchange-alt"></i>
+                  </button>
+                </span>
+                <span class="mr-3"  tooltip="Histórico" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm" (click)="openModal(historicoMovimentacoes, produto)">
+                    <i class="fas fa-search"></i>                  
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div>
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-6" [hidden]="!showDetailPanel">
+      <detail-panel>
+        <tabset>
+          <tab heading="Detalhes">
+            <div class="border-right border-left border-bottom px-3 pt-3">
+              <div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Produto</label>
+                    <div *ngIf="produtoSelecionado?.NM_PROD == null">NÃO INFORMADO</div>
+                    <div *ngIf="produtoSelecionado?.NM_PROD != null && produtoSelecionado?.NM_PROD != ''">{{produtoSelecionado?.ID_TEIN_ESTO_PROD}} - {{ produtoSelecionado?.NM_PROD | uppercase}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Quantidade Atual</label>
+                    <div *ngIf="produtoSelecionado?.TT_ESTO_ATUA == null" > 0 {{produtoSelecionado?.DS_UNID_MEDI}}</div>
+                    <div *ngIf="produtoSelecionado?.TT_ESTO_ATUA != null">{{ produtoSelecionado?.TT_ESTO_ATUA | numberInt:produtoSelecionado.DS_UNID_MEDI  }} {{produtoSelecionado?.DS_UNID_MEDI}}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Marca</label>
+                    <div *ngIf="produtoSelecionado?.NM_MRCA == null">NÃO INFORMADO</div>
+                    <div *ngIf="produtoSelecionado?.NM_MRCA != null && produtoSelecionado?.NM_MRCA != ''">{{produtoSelecionado?.NM_MRCA}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Tipo</label>
+                    <div *ngIf="produtoSelecionado?.NM_TIPO == null" >NÃO INFORMADO</div>
+                    <div *ngIf="produtoSelecionado?.NM_TIPO != null">{{ produtoSelecionado?.NM_TIPO}}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-12">
+                    <label>Modelo</label>
+                    <div *ngIf="produtoSelecionado?.NM_MODE == null">NÃO INFORMADO</div>
+                    <div *ngIf="produtoSelecionado?.NM_MODE != null && produtoSelecionado?.NM_MODE != ''">{{produtoSelecionado?.NM_MODE}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </tab>
+          <tab heading="Estoque por Empresa">
+            <div class="border-right border-left border-bottom px-3 pt-3" >
+              <div *ngIf="!loadingEstoque && !noEstoque" class="ScrollEstoque">
+                <table  class="table table-borderless text-center" >
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col" style="width:40px"></th>
+                        <th scope="col">Empresa</th>
+                        <th scope="col">Quantidade</th>
+                      </tr>
+                    </thead>
+                    <tbody >
+                      <tr *ngFor="let item of estoque; let i = index">
+                        <td class="d-flex">
+                          <i class="text-success fas fa-circle mr-3" *ngIf="item.IN_STAT == 1" tooltip="Ativo" ></i>
+                          <i class="text-danger  fas fa-circle mr-3" *ngIf="item.IN_STAT == 2" tooltip="Inativo"></i>
+                        </td>
+                        <td>{{ item.NM_EMPR }}</td>
+                        <td>{{ item.TT_PROD | numberInt:item.DS_UNID_MEDI }}</td>
+                      </tr>
+                    </tbody>
+                </table>
+              </div>
+              <div class="d-flex justify-content-center mb-3" *ngIf="loadingEstoque && noEstoque">
+                <div class="spinner-border text-dark"></div>
+              </div>
+              <div *ngIf="!loadingEstoque && noEstoque" class="d-flex justify-content-center mb-3">
+                <empty-result message="Nenhuma informação encontrada"></empty-result>
+              </div>
+            </div>
+          </tab>
+        </tabset>
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+  <ng-template #historicoMovimentacoes>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Histórico de Movimentações - {{produtoSelecionado.NM_PROD}} </h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingMovimentacoes">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <advanced-filter>
+        <form [formGroup]="formHistoricoMovimentacoes">
+          <div class="form-row">
+            <div class="form-group col-4">
+              <label for="cdItem">BUSCAR POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="CD_REFE" selected >Código de Referência</option>
+                <option value="NR_NOTA_FISC">Nota Fiscal</option>
+                <option value="CD_ITEM">Número de Série</option>
+                <option value="NM_USUA">Responsável</option>
+              </select>
+            </div>
+            <div class="form-group col-8">
+              <label>TERMO DE PESQUISA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  >
+                  <div class="input-group-append">
+                    <span 
+                      container="body"
+                      placement ="left"
+                    >
+                      <button
+                        style="height: 25px;"
+                        class="input-group-text hover"
+                        (click)="getMovimentacoes(produtoSelecionado.ID_TEIN_ESTO_PROD)"
+                        >
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <div class="ScrollHistorico">
+        <custom-table class="text-center" *ngIf="!loadingMovimentacoes && !noMovimentacoes">
+          <ng-template #thead let-thead>
+            <tr>
+              <th>Data</th>
+              <th>Tipo de Movimentação</th>
+              <th>Quantidade</th>
+              <th>Código de Referência</th>
+              <th>Nota Fiscal</th>
+              <th>Responsável</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody >
+            <tr  *ngFor="let movimentacao of movimentacoes">
+              <td>{{movimentacao.DT_INCL | date: 'dd/MM/yyyy HH:mm'}}</td>
+              <td>{{movimentacao.TP_MOVI | uppercase}}</td>
+              <td>{{movimentacao.TT_PROD | numberInt:movimentacao.DS_UNID_MEDI}}</td>
+              <td *ngIf="movimentacao.CD_REFE != 0">{{movimentacao.CD_REFE }}</td>
+              <td *ngIf="movimentacao.CD_REFE == 0">NÃO INFORMADO</td>
+              <td *ngIf="movimentacao.NR_NOTA_FISC != 0">{{movimentacao.NR_NOTA_FISC }}</td>
+              <td *ngIf="movimentacao.NR_NOTA_FISC == 0">NÃO INFORMADO</td>
+              <td>{{movimentacao.NM_USUA }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </div>
+    </div>
+  </ng-template>
+</app-body>

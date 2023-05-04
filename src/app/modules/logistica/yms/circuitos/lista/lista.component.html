@@ -1,0 +1,252 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="CIRCUITOS">
+  <button
+  type="button"
+  (click)="onExport()"
+  [disabled]="loadingNavBar || noResult">
+  Exportar
+</button>
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-5 pl-0">
+              <label for="filterCircuitos">Circuito</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="filterCircuitos"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                [loading]="loadingCircuitos"
+                labelForId="UUID_LOGI_YMS_CIRC"
+                bindLabel="NM_CIRC"
+                bindValue="UUID_LOGI_YMS_CIRC"
+                id="UUID_LOGI_YMS_CIRC"
+                formControlName="UUID_LOGI_YMS_CIRC">
+              </ng-select>
+            </div>
+            <div class="form-group col-md-4 pl-0">
+              <label for="filiais">Filial</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="filiais"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                [loading]="loadingFiliais"
+                labelForId="UUID_LOGI_FILI"
+                bindLabel="NM_FILI"
+                bindValue="UUID_LOGI_FILI"
+                id="UUID_LOGI_FILI"
+                formControlName="UUID_LOGI_FILI"
+                >
+              </ng-select>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="tipo"
+              bindLabel="nome"
+              bindValue="cod"
+              id="tipo"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              (keydown.enter)="onFilter()"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-md-1 p-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (keydown.enter)="onFilter()"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loading || noResult">
+    <div class="p-0" [ngClass]="{'col': !showDetailPanel, 'col-6': showDetailPanel}">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" >ID</th>
+              <th scope="col" >Descrição</th>
+              <th scope="col" >Filial</th>
+              <th scope="col" style="width:160px"[hidden]="showDetailPanel"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let circuito of circuitos"  [class.table-active]="circuito?.UUID_LOGI_YMS_CIRC == circuitoSelecionado?.UUID_LOGI_YMS_CIRC && showDetailPanel">
+              <td  [ngClass]="circuito.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+              {{circuito.UUID_LOGI_YMS_CIRC }}
+              </td>
+              <td >{{ circuito.NM_CIRC | uppercase}}</td>
+              <td >{{ circuito.NM_FILI | uppercase}}</td>
+              <td class="align-middle" [hidden]="showDetailPanel">
+                <span class="mr-3" [tooltip]="circuito.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="changeType(circuito)">
+                    <i [ngClass]="circuito.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" [routerLink]="['./../', circuito.UUID_LOGI_YMS_CIRC]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+                <span class="mr-3"  tooltip="Associar Etapas" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm"  [routerLink]="['./../etapas/', circuito.UUID_LOGI_YMS_CIRC]">
+                    <i class="fas fa-tasks"></i>                  
+                  </button>
+                </span>
+                <span class="mr-3"  tooltip="Detalhes" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm" (click)="onDetails(circuito)">
+                    <i class="fas fa-search"></i>                  
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div *ngIf="totalItems > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-6 pr-0" [hidden]="!showDetailPanel">
+      <detail-panel panelTitle="Detalhes">
+        <tabset>
+          <tab heading="Dados do Circuito">
+            <div class="border-right border-left border-bottom px-3 pt-3">
+              <div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>ID do Circuito</label>
+                    <div>{{ circuitoSelecionado?.UUID_LOGI_YMS_CIRC}}</div>
+                  </div>
+                  <div class="form-group col-lg-6">
+                    <label>Circuito</label>
+                    <div>{{ circuitoSelecionado?.NM_CIRC | uppercase}}</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-lg-6">
+                    <label>Tipo de Circuito</label>
+                    <div>{{ circuitoSelecionado?.NM_CIRC_TIPO | uppercase}}</div>
+                  </div>
+                </div>
+                <div class="form-row ">
+                  <div class="form-group col-lg-12">
+                    <label>Observação:</label>
+                    <div>{{ circuitoSelecionado?.DS_OBSE | uppercase}}</div>
+                  </div>
+                </div>
+                <hr>
+                <div class="form-row">
+                  <div class="form-group col">
+                    <label *ngIf="!circuitoSelecionado?.DT_ATUA == null">Usuário Responsável Pelo Cadastro</label>
+                    <label *ngIf="circuitoSelecionado?.DT_ATUA == null">Usuário Responsável Pela Atualização</label>
+                    <div>{{ circuitoSelecionado?.NM_USUA | uppercase }}</div>
+                  </div>
+                  <div class="form-group col">
+                    <label *ngIf="!circuitoSelecionado?.DT_ATUA == null">Data do Cadastro</label>
+                    <label *ngIf="circuitoSelecionado?.DT_ATUA == null">Data da Atualização</label>
+                    <div>{{(circuitoSelecionado?.DT_ATUA | date: 'dd/MM/yyyy HH:mm') || (circuitoSelecionado?.DT_INCL | date: 'dd/MM/yyyy HH:mm') }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </tab>
+          <tab  heading="Etapas Associadas">
+            <div class="border-right border-left border-bottom px-3 pt-3">
+              <div class="mb-3">
+                <custom-table  [config]="tableConfigAssocEtapas"  class="text-center" *ngIf="!loadingAssociacaoEtapas && !noAssocEtapas">
+                  <ng-template #thead let-thead>
+                    <tr>
+                      <th scope="col"  width="50%">Tipo de Etapa</th>
+                      <th scope="col"  width="50%">Etapa</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <tr *ngFor="let etapa of associacaoEtapas">
+                      <td  width="50%">{{ etapa?.NM_ETAP_TIPO | uppercase }}</td>
+                      <td  width="50%">{{ etapa?.NM_ETAP | uppercase }}</td>
+                    </tr>
+                  </ng-template>
+                </custom-table>
+                <message
+                  *ngIf="loadingAssociacaoEtapas"
+                  icon="fas fa-cog fa-spin"
+                  text="Estamos pesquisando as etapas para você...">
+                </message>
+                <div [hidden]="loadingAssociacaoEtapas || !noAssocEtapas" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+                  <empty-result message="Nenhuma informação encontrada"></empty-result>
+                </div>
+              </div>
+            </div>
+          </tab>       
+        </tabset> 
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

@@ -1,0 +1,74 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Turnos">
+  <button 
+    [disabled]="form.valid === false || loadingNavBar === true"
+    (click)="postTurnos()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-8 pt-2 mx-auto">
+        <legend>Dados do Turno</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-12 pl-0">
+            <label for="NM_TURN">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_TURN"
+              formControlName="NM_TURN"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_TURN') + ' ' + onFieldRequired('NM_TURN')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_TURN')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-12">
+            <div class="form-row justify-content-center">
+              <div class="col-auto d-flex pr-4">
+                <label class="my-auto mr-2">Horário mínimo</label>
+                <timepicker
+                  [showMeridian]="false"
+                  [showSpinners]="false"
+                  [mousewheel]="true"
+                  formControlName="HR_MIN"
+                  [ngClass]="onFieldError('HR_MIN') + ' ' + onFieldRequired('HR_MIN')"
+                  required
+                  >
+                </timepicker>
+              </div>
+              <div class="col-auto d-flex">
+                <label class="my-auto mr-2">Horário máximo</label>
+                <timepicker
+                  [showMeridian]="false"
+                  [showSpinners]="false"
+                  [mousewheel]="true"
+                  formControlName="HR_MAX"
+                  [ngClass]="onFieldError('HR_MAX') + ' ' + onFieldRequired('HR_MAX')"
+                  >
+                </timepicker>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-8 pt-2 mx-auto">
+        <legend>Observação</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observação:</label>
+            <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

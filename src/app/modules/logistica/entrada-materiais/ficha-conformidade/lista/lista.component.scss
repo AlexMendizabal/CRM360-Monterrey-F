@@ -1,0 +1,24 @@
+.scroll-ocorrencias {
+  height: 410px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@media print {
+  #ficha-pdf {
+      background-color: white;
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      margin: 0;
+      padding: 15px;
+      font-size: 14px;
+      line-height: 18px;
+  }
+}
+
+button[disabled]{
+  cursor: no-drop;
+}

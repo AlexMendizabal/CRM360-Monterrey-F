@@ -1,0 +1,569 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="Fichas de Não Conformidade">
+  <button
+  type="button"
+  (click)="getRelatorio()"
+  [disabled]="loadingNavBar || noResult">
+  Exportar
+</button>
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="ID_LOGI_ENMA_FHNC">ID FNC</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_LOGI_ENMA_FHNC"
+                formControlName="ID_LOGI_ENMA_FHNC"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="DT_INIC">Data Inicial</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="DT_INIC"
+                type="text"
+                (keydown.enter)="onFilter()"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="DT_INIC"
+                >
+              </div>
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="DT_FINA">Data Final</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="DT_FINA"
+                type="text"
+                (keydown.enter)="onFilter()"
+                bsDatepicker
+                placeholder="Selecione..."
+                [bsConfig]="bsConfig"
+                formControlName="DT_FINA"
+                >
+              </div>
+            </div>
+            <div class="form-group col-md-4 pl-0">
+              <label for="ID_LOGI_ENMA_FHNC_TIPO">Tipo de Não Conformidade</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="tiposConformidade"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="loadingTiposConformidade"
+                labelForId="ID_LOGI_ENMA_FHNC_TIPO"
+                bindLabel="NM_TIPO"
+                bindValue="ID_LOGI_ENMA_FHNC_TIPO"
+                id="ID_LOGI_ENMA_FHNC_TIPO"
+                formControlName="ID_LOGI_ENMA_FHNC_TIPO"
+              >
+            </ng-select>
+            </div>
+            <div class="form-group col-lg-2 pl-0">
+              <label for="IN_STAT">Situação</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="tipos"
+              [virtualScroll]="true"
+              labelForId="ficha"
+              bindLabel="nome"
+              bindValue="cod"
+              id="ficha"
+              (change)="onFilter()"
+              formControlName="IN_STAT"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-2 pl-0">
+              <label for="NR_NOTA_FISC">NOTA FISCAL</label>
+              <input
+                type="text"
+                class="form-control"
+                id="NR_NOTA_FISC"
+                formControlName="NR_NOTA_FISC"
+                (keydown.enter)="onFilter()"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-md-2 pl-0">
+              <label for="DS_LOTE">LOTE</label>
+              <input
+                type="text"
+                class="form-control"
+                id="DS_LOTE"
+                formControlName="DS_LOTE"
+                (keydown.enter)="onFilter()"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-lg-6 pl-0">
+              <label for="NM_MATE">Material</label>
+              <input
+                type="text"
+                class="form-control"
+                id="NM_MATE"
+                formControlName="NM_MATE"
+                (keydown.enter)="onFilter()"
+                placeholder="Digite..."
+              />
+            </div>
+            <div class="form-group col-lg-2 pl-0">
+              <label>Registros</label>
+              <select 
+                class="form-control custom-select"
+                formControlName="TT_REGI_PAGI"
+                (change)="setPageRegistros($event.target.value)"  
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-4 pl-0">
+              <label for="IN_CONC">STATUS DA OCORRÊNCIA</label>
+              <ng-select
+              [searchable]="false"
+              [clearable]="false"
+              [items]="status"
+              [virtualScroll]="true"
+              labelForId="ficha"
+              bindLabel="nome"
+              bindValue="cod"
+              id="status"
+              formControlName="IN_CONC"
+              placeholder="Selecione..."
+            >
+            </ng-select>
+            </div>
+            <div class="form-group col-lg-6 pl-0">
+              <label for="NM_FORN">Fornecedor</label>
+              <input
+                type="text"
+                class="form-control"
+                id="NM_FORN"
+                formControlName="NM_FORN"
+                (keydown.enter)="onFilter()"
+                placeholder="Digite..."
+              />
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex">
+    <div class="p-0 col-md-12">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noResult || loading">
+          <ng-template #thead let-thead>
+            <tr>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('ID_LOGI_ENMA_FHNC')">
+                <thead-sorter value="ID FNC" [active]="ORDE_BY == 'ID_LOGI_ENMA_FHNC'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('DT_INCL')">
+                <thead-sorter value="DATA DE ABERTURA DA FNC" [active]="ORDE_BY == 'DT_INCL'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('NM_TIPO')">
+                <thead-sorter value="TIPO DE NÃO CONFORMIDADE" [active]="ORDE_BY == 'NM_TIPO'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('IN_CONC')">
+                <thead-sorter value="STATUS DA OCORRÊNCIA" [active]="ORDE_BY == 'IN_CONC'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th scope="col" style="width:120px"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let ficha of fichasConformidade"  [class.table-active]="ficha?.ID_LOGI_ENMA_FHNC == motivoSelecionado?.ID_LOGI_ENMA_FHNC && showDetailPanel">
+              <td [ngClass]="ficha.IN_STAT == '1' ? 'border-success' : 'border-danger'">
+              {{ficha.ID_LOGI_ENMA_FHNC }}
+              </td>
+              <td>{{ ficha.DT_INCL | date: 'dd/MM/yyyy HH:mm'}}</td>
+              <td>{{ ficha.NM_TIPO | uppercase}}</td>
+              <td *ngIf="ficha.IN_CONC == 1">FINALIZADA</td>
+              <td *ngIf="ficha.IN_CONC != 1">EM ANDAMENTO</td>
+              <td class="align-middle">
+                <span class="mr-3" [tooltip]="ficha.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="changeType(ficha)">
+                    <i [ngClass]="ficha.IN_STAT == '1' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                  </button>
+                </span>
+                <span class="mr-3" tooltip="Editar"  placement="left" container="body">
+                  <button type="button" class="btn-icon-sm"  [disabled]="ficha.IN_RESP == 0 || ficha.IN_CONC == 1" [routerLink]="['./../', ficha.ID_LOGI_ENMA_FHNC]">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </span>
+                <span   tooltip="Detalhe da Ficha" placement="left" container="body" >
+                  <button type="button" class="btn-icon-sm">
+                    <i class="fas fa-search" (click)="openModal(detalhesFicha, ficha)"></i>                  
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div *ngIf="totalItems > itemsPerPage">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+  <ng-template #detalhesFicha >
+    <div class="modal-header" [hidden]="hiddenModal">
+      <h4 class="modal-title pull-left">Detalhes da FNC  -  ID {{fichaSelecionada?.ID_LOGI_ENMA_FHNC}}</h4>
+      <div>
+        <button
+          type="button"
+          class="btn-icon-sm mx-3"
+          tooltip="Download"
+          container="body"
+          (click)="onDownload(fichaSelecionada)"
+          [disabled] = "loadingMateriais"
+        >
+          <i class="far fa-save"></i>
+        </button>
+        <button
+          type="button"
+          class="btn-icon-sm mr-3"
+          tooltip="Imprimir"
+          container="body"
+          [disabled] = "loadingMateriais" 
+          (click)="onPrint()"
+        >
+          <i class="fas fa-print"></i>
+        </button>
+        <button
+          type="button"
+          class="btn-icon-sm"
+          tooltip="Fechar"
+          container="body"
+          (click)="hideModal()"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body" [hidden]="hiddenModal" id="ficha-pdf" >
+      <tabset>
+        <tab heading="Dados cadastrais">
+          <div class="border-right border-left border-bottom px-3 pt-3" >
+            <div >
+              <div class="form-row">
+                <div class="form-group col-lg-6">
+                  <label>ID FNC</label>
+                  <div *ngIf="fichaSelecionada?.ID_LOGI_ENMA_FHNC == null">NÃO INFORMADO</div>
+                  <div *ngIf="fichaSelecionada?.ID_LOGI_ENMA_FHNC != null">{{fichaSelecionada?.ID_LOGI_ENMA_FHNC}}</div>
+                </div>
+                <div class="form-group col-lg-6">
+                  <label>Tipo de Não Conformidade</label>
+                  <div *ngIf="fichaSelecionada?.NM_TIPO == null">NÃO INFORMADO</div>
+                  <div *ngIf="fichaSelecionada?.NM_TIPO != null">{{ fichaSelecionada?.NM_TIPO}}</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-lg-12">
+                  <label>Observação</label>
+                  <div *ngIf="fichaSelecionada?.DS_OBSE == null">NÃO INFORMADO</div>
+                  <div *ngIf="fichaSelecionada?.DS_OBSE != null">{{ fichaSelecionada?.DS_OBSE }}</div>
+                </div>
+              </div>
+              <hr>
+              <div class="form-row">
+                <div class="form-group col-lg-12">
+                  <label>Materiais</label>
+                </div>
+              </div>
+              <div [hidden]="!loadingMateriais" class="col-lg-12 text-muted ">
+                <p><strong>Buscando os materiais da ficha de não conformidade...</strong></p>
+              </div>
+              <custom-table class="text-center" *ngIf="!loadingMateriais && !noMateriais">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th>ID </th>
+                    <th>Nota Fiscal</th>
+                    <th>Classe</th>
+                    <th>Lote</th>
+                    <th>Material</th>
+                    <th>Un. Medida</th>
+                    <th>Quantidade Total</th>
+                    <th>Quantidade NC</th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let item of materiais">
+                    <td>{{item.ID_MATE}}</td>
+                    <td *ngIf="item.NR_NOTA_FISC != null">{{item.NR_NOTA_FISC}}</td>
+                    <td *ngIf="item.NR_NOTA_FISC == null">NÃO INFORMADO</td>
+                    <td>{{item.NM_CLAS}}</td>
+                    <td *ngIf="item.DS_LOTE != null" >{{item.DS_LOTE}}</td>
+                    <td *ngIf="item.DS_LOTE == null" >NÃO INFORMADO</td>
+                    <td>{{item.NM_MATE}}</td>
+                    <td>{{item.DS_UNID_MEDI}}</td>
+                    <td>{{item.TT_MATE_ORIG | number:'1.3-3' }}</td>
+                    <td>{{item.TT_MATE | number:'1.3-3' }}</td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+              <div [hidden]="loadingMateriais || !noMateriais" class="text-center d-flex justify-content-center align-items-center pb-3">
+                <empty-result message="Nenhum material encontrado"></empty-result>
+              </div>
+              <hr>
+              <div class="form-row">
+                <div class="form-group col">
+                  <label>Usuário Responsável Pelo Cadastro</label>
+                  <div *ngIf="fichaSelecionada?.NR_MATR == null">NÃO INFORMADO</div>
+                  <div *ngIf="fichaSelecionada?.NR_MATR != null">{{fichaSelecionada?.NR_MATR}} - {{ fichaSelecionada?.NM_USUA }}</div>
+                </div>
+                <div class="form-group col">
+                  <label>Data do Cadastro</label>
+                  <div *ngIf="fichaSelecionada?.DT_INCL == null">NÃO INFORMADO</div>
+                  <div *ngIf="fichaSelecionada?.DT_INCL != null">{{ fichaSelecionada?.DT_INCL | date: 'dd/MM/yyyy HH:mm'}}</div>
+                </div>
+                <div class="form-group col" *ngIf="fichaSelecionada?.DT_ATUA != null">
+                  <label>Data da Atualização</label>
+                  <div *ngIf="fichaSelecionada?.DT_ATUA == null">NÃO INFORMADO</div>
+                  <div *ngIf="fichaSelecionada?.DT_ATUA != null">{{ fichaSelecionada?.DT_ATUA | date: 'dd/MM/yyyy HH:mm'}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </tab>
+        <tab heading="Ocorrências">
+          <div class="border-right border-left border-bottom px-3 pt-3"  >
+            <div class="form-row">
+              <div class="form-group col justify-content-between text-center m-0" *ngIf="fichaSelecionada?.IN_CONC == 1">
+                <blockquote class="blockquote text-center m-0">
+                  <p class="mb-0 text-success"> FICHA CONCLUÍDA </p>
+                  <footer class="blockquote-footer">Essa ficha foi concluída, sendo assim não é permitido inserir novo parecer!</footer>
+                </blockquote>
+              </div>
+              <div class="form-group col-10 mb-0 d-flex justify-content-between" *ngIf="fichaSelecionada?.IN_CONC == 0">
+                <button 
+                  type="button" 
+                  class="btn btn-default btn-lg m-2 pull-right"
+                  (click)="finalizarFicha(fichaSelecionada)"
+                  [disabled]="fichaSelecionada?.IN_RESP == 0 || disabledButton == true"
+                >
+                <span aria-hidden="true">
+                  <i class=" text-primary fas fa-check"></i>
+                </span>Finalizar Ficha
+                </button>
+              </div>
+              <div class="form-group col mb-0 d-flex justify-content-between" *ngIf="fichaSelecionada?.IN_CONC == 0 ">
+                <button 
+                  type="button" 
+                  class="btn btn-default btn-lg m-2 pull-right"
+                  (click)="openModalOcorrencias(formOcorrencias)"
+                  [disabled]="fichaSelecionada?.IN_RESP == 0"
+                >
+                <span aria-hidden="true">
+                  <i class=" text-success fas fa-plus"></i>
+                </span>Adicionar Parecer
+                </button>
+              </div>
+            </div>
+            <hr>
+            <div *ngIf="loadingDocumentosOcorrencias || loadingResponsaveisOcorrencias" class="col-lg-12 text-muted ">
+              <p><strong>Buscando as ocorrências da ficha de não conformidade...</strong></p>
+            </div>
+            <div class="scroll-ocorrencias" *ngIf="!noOcorrencias">
+              <div class="col-md-12 mx-2 pb-3 " data-spy="scroll" *ngFor="let ocorrencia of ocorrencias" >
+                <div class="card mr-3" *ngIf="!loadingDocumentosOcorrencias && !loadingResponsaveisOcorrencias">
+                  <div class="card-body p-2">
+                    <h5 class="card-title mb-1" >{{ocorrencia.NR_SQNC}} - {{ocorrencia.NM_PARE}}</h5>
+                    <p class="card-text m-2"><strong> Código: </strong> {{ocorrencia.ID_LOGI_ENMA_FHNC_OCOR}}</p>
+                    <p class="card-text m-2"><strong> Descrição: </strong> {{ocorrencia.DS_OBSE}}</p>
+                    <ul class="pl-0">
+                      <li class="d-flex" *ngFor="let item of documentosOcorrencia[ocorrencia.ID_LOGI_ENMA_FHNC_OCOR];">
+                        <div class="d-flex">
+                          <div>
+                            <strong class="ml-2">{{ item.NM_DOCU }}</strong>
+                          </div>
+                          <div class="ml-4" *ngIf="item.TP_DOCU == 'DOCUMENTO'">
+                            <a href="{{ item.LINK }}" target="_blank" class="btn-icon-sm">
+                              <i class="fas fa-download"></i>
+                            </a>
+                          </div>
+                          <div class="ml-4" *ngIf="item.TP_DOCU == 'IMAGEM'">
+                            <a href="{{ item.LINK }}" target="_blank" class="btn-icon-sm">
+                              <i class="fas fa-eye"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                    <div>
+                      <ul class="pl-0 m-0">
+                        <li class="d-flex" *ngFor="let item of responsaveisOcorrencia[ocorrencia.ID_LOGI_ENMA_FHNC_OCOR];">
+                          <div class="d-flex">
+                            <div>
+                              <p class="card-text ml-2">{{ocorrencia.NM_USUA | name }} atribuiu a ficha de não conformidade para: <strong>{{ item.NR_MATR_RESP }} - {{ item.NM_RESP }}</strong></p>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <p class="text-right m-0"><small class="text-muted"><cite>{{ocorrencia.NR_MATR}} - {{ocorrencia.NM_USUA | uppercase}}</cite></small></p>
+                    <p class="text-right m-0"><small class="text-muted">{{ocorrencia.DT_INCL | date: 'dd/MM/yyyy HH:mm'}}</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div  *ngIf="noOcorrencias && !loadingOcorrencias" class="d-flex justify-content-center mb-3">
+              <empty-result message="Nenhuma ocorrência encontrada"></empty-result>
+            </div>
+          </div>
+        </tab>
+        <tab heading="Documentos">
+          <div class="border-right border-left border-bottom px-3 pt-3" >
+            <div *ngIf="totalImagens != 0">
+              <blockquote class="blockquote">
+                <p class="mb-0">Imagens</p>
+              </blockquote>
+              <div class="row ScrollImagem" >
+                <div class="col-md-4 mb-4" *ngFor="let imagem of imagens">
+                  <div class="card" >
+                    <img class="card-img-responsive" src="{{imagem.LINK}}" style="height: 150px;">
+                    <div class="card-body">
+                      <p class="card-text"><strong>{{imagem.NM_DOCU}}</strong></p>
+                      <p class="card-text mb-2">{{imagem.DT_INCL | date: 'dd/MM/yyyy HH:mm'}}</p>
+                      <p class="card-text mb-2">{{imagem.NM_USUA}}</p>
+                      <p class="card-text-right">
+                        <a
+                          [href]="imagem.LINK"
+                          target="_blank"
+                          class="btn-icon-sm text-black"
+                          tooltip="visualizar"
+                        >
+                          <i class="far fa-eye"></i>
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr *ngIf="totalImagens != 0 && totalDocumentos != 0 ">
+            <div  *ngIf="totalDocumentos != 0">
+              <blockquote class="blockquote">
+                <p class="mb-0">Documentos</p>
+              </blockquote>
+              <ul class=" pl-0">
+                <li class="d-flex justify-content-between" *ngFor="let documento of documentos;">
+                  <div>{{ documento.NM_DOCU | uppercase }}</div>
+                  <div>
+                    <a
+                      [href]="documento.LINK"
+                      target="_blank"
+                      class="btn-icon-sm mx-2 text-black"
+                      tooltip="Baixar"
+                    >
+                    <i class="fas fa-download"></i>
+                    </a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div [hidden]="totalImagens != 0 || totalDocumentos != 0" class="text-center d-flex justify-content-center align-items-center pb-4" style="height: 80%">
+              <empty-result message="Nenhuma informação encontrada"></empty-result>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+  </ng-template>
+  <ng-template #formOcorrencias>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Nova Ocorrência</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModalOcorrencias()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body" >
+      <logistica-entrada-materiais-ficha-conformidade-ocorrencias
+      [fichaId] = "fichaId"
+      (fecharModal)="onFecharModal($event)"
+      >
+      </logistica-entrada-materiais-ficha-conformidade-ocorrencias>
+    </div>
+  </ng-template>
+</app-body>

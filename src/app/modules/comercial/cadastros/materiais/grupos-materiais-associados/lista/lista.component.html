@@ -1,0 +1,179 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Grupos de materiais">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-3">
+              <label for="grupo">
+                <span class="mr-1">Grupo</span>
+                <ng-template #tooltipLabelGrupoTemplate>
+                  <p class="text-nowrap mb-0">Código ou nome do grupo</p>
+                </ng-template>
+                <i class="far fa-question-circle" [tooltip]="tooltipLabelGrupoTemplate" container="body"></i>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="grupo"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="material">
+                <span class="mr-1">Material</span>
+                <ng-template #tooltipLabelMaterialTemplate>
+                  <p class="text-nowrap mb-0">Código ou nome do material</p>
+                </ng-template>
+                <i class="far fa-question-circle" [tooltip]="tooltipLabelMaterialTemplate" container="body"></i>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="material"
+                (keydown.enter)="onFilter()">
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="codSituacao">Situação</label>
+              <select
+                class="form-control custom-select"
+                id="codSituacao"
+                formControlName="codSituacao">
+                <option value="">Todos</option>
+                <option value="0">Inativos</option>
+                <option value="1">Ativos</option>
+              </select>
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-5 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center hover">
+              <thead-sorter
+                value="Código"
+                [active]="orderBy == 'codGrupo'"
+                [sort]="orderType"
+                (click)="setOrderBy('codGrupo')">
+              </thead-sorter>
+            </th>
+            <th scope="col" class="hover">
+              <thead-sorter
+                value="Nome grupo"
+                [active]="orderBy == 'nomeGrupo'"
+                [sort]="orderType"
+                (click)="setOrderBy('nomeGrupo')">
+              </thead-sorter>
+            </th>
+            <th scope="col" [hidden]="showDetailPanel">Usuário cadastro</th>
+            <th scope="col"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let grupo of dadosPagination; let i = index;" [class.table-active]="grupo.codGrupo == grupoSelecionado.codGrupo && showDetailPanel">
+            <td
+              class="text-center hover"
+              [ngClass]="classStatusBorder(grupo)"
+              (click)="onDetails(grupo)">
+              {{ grupo.codGrupo }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(grupo)">
+              {{ grupo.nomeGrupo | uppercase }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(grupo)"
+              [hidden]="showDetailPanel">
+              <span *ngIf="grupo.nomeUsuario === null">NÃO INFORMADO</span>
+              <span *ngIf="grupo.nomeUsuario !== null">
+                {{ grupo.nomeUsuario | uppercase }}
+              </span>
+            </td>
+            <td class="text-right">
+              <span *ngIf="grupo.inSituacao == 0" class="mr-3" tooltip="Ativar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onActivate(i, grupo)">
+                  <i class="fas fa-toggle-off"></i>
+                </button>
+              </span>
+              <span *ngIf="grupo.inSituacao == 1" class="mr-3" tooltip="Inativar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onInactivate(i, grupo)">
+                  <i class="fas fa-toggle-on"></i>
+                </button>
+              </span>
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onEdit(grupo)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && dadosLoaded"></empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-7" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="detailPanelTitle">
+        <custom-table [config]="tableConfigMateriais" *ngIf="materiais.length > 0">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">Código</th>
+              <th scope="col">Material</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let material of materiais">
+              <td class="text-center">{{ material.codMaterial }}</td>
+              <td>{{ material.nomeMaterial | uppercase }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+</app-body>

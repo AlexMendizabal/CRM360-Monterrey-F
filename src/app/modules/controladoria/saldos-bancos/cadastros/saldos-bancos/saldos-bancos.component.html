@@ -1,0 +1,161 @@
+<loader-spinner-full-screen [hidden]="!spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    (click)="validaSalvar(template)"
+    [disabled]="form.status == 'INVALID'"
+    >
+    Cadastrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <!-- Início dos Filtros -->
+  <div class="row">
+    <div class="col">
+      <form autocomplete="off" [formGroup]="form">
+        <div class="form-row justify-content-center">
+          <div class="row col-6">
+            <div class="form-group col-md-6">
+              <label for="tipoLancamento"> Tipo Lançamento </label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="tiposLancamentos"
+                [virtualScroll]="true"
+                labelForId="tipoLancamento"
+                bindLabel="DS_BANC_TIPO"
+                bindValue="ID_BANC_TIPO"
+                placeholder="Selecione..."
+                formControlName="ID_BANC_TIPO"
+                [ngClass]="onFieldError('ID_BANC_TIPO') + ' ' + onFieldRequired('ID_BANC_TIPO')"
+              >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalid('ID_BANC_TIPO')"
+                message="Tipo é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="banco"> Banco </label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="bancos"
+                [virtualScroll]="true"
+                labelForId="banco"
+                bindLabel="DESC_BANCO"
+                bindValue="COD_BANCO"
+                placeholder="Selecione..."
+                formControlName="ID_LANC_BANC"
+                [ngClass]="onFieldError('ID_LANC_BANC') + ' ' + onFieldRequired('ID_LANC_BANC')"
+              >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalid('ID_LANC_BANC')"
+                message="Tipo de lançamento é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="dt_sald"> Data saldo </label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="far fa-calendar-alt"></i>
+                  </span>
+                </div>
+                <input
+                class="form-control"
+                id="dt_sald"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="DATA_SALD"
+                [ngClass]="onFieldError('DATA_SALD') + ' ' + onFieldRequired('DATA_SALD')"
+                >
+              </div>
+              <invalid-form-control
+                [show]="onFieldInvalid('DATA_SALD')"
+                message="Data final é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="empresa"> Empresa </label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="empresas"
+                [virtualScroll]="true"
+                labelForId="empresa"
+                bindLabel="DESC_EMPR"
+                bindValue="COD_EMPR"
+                placeholder="Selecione..."
+                formControlName="ID_LANC_EMPR"
+                [ngClass]="onFieldError('ID_LANC_EMPR') + ' ' + onFieldRequired('ID_LANC_EMPR')"
+              >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalid('ID_LANC_EMPR')"
+                message="Tipo de documento é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="vl_sald"> Valor </label>
+              <input
+                currencyMask
+                [options] = " {align: 'left', prefix: 'R$', thousands: '.', decimal: ','} "
+                id="vl_sald"
+                type="text"
+                class="form-control"
+                placeholder="DIGITE..."
+                formControlName="VL_LANC"
+                [ngClass]="onFieldError('VL_LANC') + ' ' + onFieldRequired('VL_LANC')"
+              >
+              <invalid-form-control
+                [show]="onFieldInvalid('VL_LANC')"
+                message="Tipo de documento é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-md-9">
+              <label for="valor"> Observação </label>
+              <input
+                id="observacao"
+                type="text"
+                class="form-control"
+                placeholder="DIGITE..."
+                formControlName="DS_LANC_OBSE"
+                [ngClass]="onFieldError('DS_LANC_OBSE') + ' ' + onFieldRequired('DS_LANC_OBSE')"
+              >
+              <invalid-form-control
+                [show]="onFieldInvalid('DS_LANC_OBSE')"
+                message="Tipo de documento é obrigatório.">
+              </invalid-form-control>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <ng-template #template>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="modal-header">
+        <h6 for="JUSTIFICATIVA"> Justifique sua alteração! </h6>
+      </div>
+      <div class="modal-body">
+        <textarea name="" id="" cols="75" rows="10" formControlName="JUSTIFICATIVA" #JUSTIFICATIVA minlength="10"></textarea>
+        <div class="text-right">
+          <button  
+            type="button" class="btn btn-secondary mr-1" (click)="modalRef.hide()"
+            >
+            Cancelar 
+          </button>
+          <button  
+            type="button" class="btn btn-primary" (click)="postCadastrar(); modalRef.hide()"
+            [disabled]="form.get('JUSTIFICATIVA').status == 'INVALID' || !form.get('JUSTIFICATIVA').value"
+            >
+            Salvar 
+          </button>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+</app-body>

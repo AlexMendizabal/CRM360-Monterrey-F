@@ -1,0 +1,172 @@
+<!--<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>-->
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off" >
+          <div class="form-row">
+            <div class="form-group col-lg-3">
+              <label for="ID_ITEM">Cod. Item</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ID_ITEM"
+                formControlName="ID_ITEM"
+              >
+            </div>
+            <div class="form-group col-md-3">
+              <label for="NM_LINH">Linha</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="NM_LINH"
+              >
+            </div>
+            <div class="form-group col-md-6">
+              <label for="NM_FAMI">Familia</label>
+              <input
+              type="text"
+              class="form-control"
+              formControlName="NM_FAMI"
+              >
+            </div>
+            <div class="form-group col-lg-6">
+              <label for="NM_ITEM">Material</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="NM_ITEM"
+              >
+            </div>
+            <div class="form-group col-md-3">
+							<label for="IN_STAT"> Situação </label>
+                <select formControlName="IN_STAT" class="form-control custom-select">
+                  <option value="">Todos</option>
+                  <option value="1">Ativos</option>
+                  <option value="0">Inativos</option>
+							  </select>
+						</div>
+            <div class="form-group col-md-3">
+							<label for="registros"> Registros </label>
+							<select formControlName="registros" class="form-control custom-select">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="250">250</option>
+              <option value="500">500</option>
+							>
+							</select>
+						</div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row" *ngIf="dadosfiltro">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-7 pr-0': showDetailPanel}">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr>
+            <th></th>
+            <th class="text-left">Cod. Item</th>
+            <th class="text-left">Material</th>
+						<th class="text-left">Linha</th>
+            <th class="text-left">Familia</th>
+            <th></th>
+            <th class="text-center">Situação</th>
+            <th class="text-center">Editar</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let lista of listas | slice : begin : end; let i = index" class="hover">
+						<td></td>
+            <td class="text-left" style="width: 10rem" (click)="showdetailPanel(lista)">{{lista.ID_ITEM}}</td>
+            <td class="text-left" style="width: 20rem" (click)="showdetailPanel(lista)">{{lista.NM_ITEM}}</td>
+            <td class="text-left" style="width: 20rem" (click)="showdetailPanel(lista)">{{lista.NM_LINH}}</td>
+            <td class="text-left" style="width: 20rem" (click)="showdetailPanel(lista)">{{lista.NM_FAMI}}</td>
+            <td></td>
+            <td class="text-center" style="width: 5rem">
+              <span tooltip="Situação" class="" placement="left" container="body">
+                <button type="button" (click)="altersituacao(lista)"  class="btn-icon-sm" [style]="lista.IN_STAT == 1 ? 'color: green;' : 'color: red;'">
+                  <i [ngClass]="lista.IN_STAT == 1 ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+                </button>
+              </span>
+            </td>
+            <td class="text-center" style="width: 5rem">
+              <span tooltip="Editar" placement="left" container="body">
+                <button class="btn-icon-sm" style="color: blue;" (click)="onEdit(lista)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+     <div class="d-flex justify-content-center mt-3">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          [(itemsPerPage)]="itemsPerPage"
+          (pageChanged)="onPageChanged($event)"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="listas < 1 && loaderFullScreen == false"
+      >
+      </empty-result>
+    </div>
+    <div class="col-5" [hidden]="!showDetailPanel">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr>
+            <th class="text-center">Cod. Item</th>
+            <th class="text-center">IPI</th>
+            <th class="text-center">ICMS</th>
+            <th class="text-center">ICMS_ST</th>
+            <th class="text-center">PIS</th>
+            <th class="text-center">COFINS</th>
+            <th class="text-center">FCP</th>
+            <button type="button" class="close" (click)="CloseshowdetailPanel()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let detail of details">
+            <td class="text-center">{{detail.ID_ITEM}}</td>
+            <td class="text-center">{{detail.AL_IPI}}</td>
+            <td class="text-center">{{detail.AL_ICMS}}</td>
+            <td class="text-center">{{detail.AL_ICMS_ST}}</td>
+            <td class="text-center">{{detail.AL_PIS}}</td>
+            <td class="text-center">{{detail.AL_COFI}}</td>
+            <td class="text-center">{{detail.AL_FCP}}</td>
+            <td></td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+  </div>
+</app-body>

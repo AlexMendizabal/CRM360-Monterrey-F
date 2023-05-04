@@ -1,0 +1,35 @@
+@import '../colors';
+
+.dropdown-menu {
+  box-shadow: 0 0.045rem 0.25rem rgba(0, 0, 0, 0.075);
+  font-size: 13px;
+  padding: 0.25rem 0;
+  &.left {
+    left: auto !important;
+    right: 0 !important;
+  }
+  a.dropdown-item {
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    i {
+      min-width: 15px;
+      text-align: center;
+    }
+    span {
+      margin-left: 0.75rem;
+    }
+    &:hover,
+    :active,
+    .active {
+      background-color: $blue;
+      color: $white;
+    }
+    &:focus {
+      outline: unset;
+    }
+  }
+}
+
+bs-dropdown-container {
+  z-index: 9999;
+}

@@ -1,0 +1,64 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Tipos de Circuito">
+  <button 
+    [disabled]="form.valid === false || loadingNavBar === true"
+    (click)="postTiposCircuito()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-8 pt-2 mx-auto">
+        <legend>Dados do Tipo de Circuito</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-8 pl-0">
+            <label for="NM_CIRC_TIPO">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_CIRC_TIPO"
+              formControlName="NM_CIRC_TIPO"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_CIRC_TIPO') + ' ' + onFieldRequired('NM_CIRC_TIPO')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_CIRC_TIPO')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-4 pl-0">
+            <label for="IN_STAT">Tipo de Circuito</label>
+            <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="tipos"
+            [virtualScroll]="true"
+            labelForId="tipo"
+            bindLabel="nome"
+            bindValue="cod"
+            id="tipo"
+            formControlName="SG_CIRC_TIPO"
+            placeholder="Selecione..."
+            [ngClass]="onFieldError('SG_CIRC_TIPO') + ' ' + onFieldRequired('SG_CIRC_TIPO')"
+          >
+          </ng-select>
+          <invalid-form-control [show]="onFieldInvalid('SG_CIRC_TIPO')" message="Tipo de circuito é obrigatório."></invalid-form-control>
+
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-8 pt-2 mx-auto">
+        <legend>Observação</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observação:</label>
+            <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

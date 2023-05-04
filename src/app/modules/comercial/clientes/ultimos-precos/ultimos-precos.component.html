@@ -1,0 +1,116 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Dias não úteis">
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2">
+              <label for="dataInicial">Fecha inicial</label>
+              <input
+                class="form-control"
+                id="dataInicial"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="dataInicial"
+                [ngClass]="onFieldError('dataInicial') + ' ' + onFieldRequired('dataInicial')">
+                <invalid-form-control [show]="onFieldInvalid('dataInicial') == 'required'" message="Data Inicial é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="dataFinal">Fecha final</label>
+              <input
+                class="form-control"
+                id="dataFinal"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="dataFinal"
+                [ngClass]="onFieldError('dataFinal') + ' ' + onFieldRequired('dataFinal')">
+                <invalid-form-control [show]="onFieldInvalid('dataFinal') == 'required'" message="Data Final é obrigatório."></invalid-form-control>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col">Cod. Material</th>
+            <th scope="col">Material</th>
+            <th scope="col">Línea / Clase</th>
+            <th scope="col">Ton. Vendidas</th>
+            <th scope="col">Nota Fiscal</th>
+            <th scope="col">Dt. Ultima Compra</th>
+            <th scope="col">Precio Unitário</th>
+            <th scope="col">Precio Total</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let ultimoPreco of dadosPagination; let i = index">
+            <td
+              class="hover">
+              {{ ultimoPreco.codMaterial }}
+            </td>
+            <td class="hover">
+              {{ ultimoPreco.nomeMaterial | uppercase }}
+            </td>
+            <td
+              class="hover">
+              {{ ultimoPreco.linha }} / {{ ultimoPreco.classe }}
+            </td>
+            <td
+              class="hover">
+              {{ ultimoPreco.qtdeToneladasVendidas | number:'1.3-3' }} ton 
+            </td>
+            <td
+              class="hover">
+              {{ ultimoPreco.nrNotaFiscal }}
+            </td>
+            <td
+              class="hover">
+              {{ ultimoPreco.dataUltimaCompra | date: 'dd/MM/yyyy' }}
+            </td>
+            <td
+              class="hover">
+              {{ ultimoPreco.precoUnitarioMaterial | currency:'BRL':'symbol':'1.2-2' }}
+            </td>
+            <td
+              class="hover">
+              {{ ultimoPreco.precoTotalMaterial | currency:'BRL':'symbol':'1.2-2' }}
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && dadosLoaded">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty">
+      </empty-result>
+    </div>
+  </div>
+</app-body>

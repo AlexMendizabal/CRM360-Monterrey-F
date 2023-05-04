@@ -1,0 +1,85 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Circuitos">
+  <button 
+    [disabled]="form.valid === false || loadingNavBar === true"
+    (click)="postCircuitos()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-8 pt-2 mx-auto">
+        <legend>Dados do Circuito</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-12 pl-0">
+            <label for="NM_CIRC">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_CIRC"
+              formControlName="NM_CIRC"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_CIRC') + ' ' + onFieldRequired('NM_CIRC')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_CIRC')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6 pl-0">
+            <label for="tiposCircuito">Tipo de Circuito</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tiposCircuito"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              [loading]="loadingTiposCircuito"
+              labelForId="tiposCircuito"
+              bindLabel="NM_CIRC_TIPO"
+              bindValue="UUID_LOGI_YMS_CIRC_TIPO"
+              id="tiposCircuito"
+              formControlName="UUID_LOGI_YMS_CIRC_TIPO"
+              [ngClass]="onFieldError('UUID_LOGI_YMS_CIRC_TIPO') + ' ' + onFieldRequired('UUID_LOGI_YMS_CIRC_TIPO')"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('UUID_LOGI_YMS_CIRC_TIPO')" message="Tipo de Circuito é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6 pl-0">
+            <label for="filiais">Filial</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="filiais"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              [loading]="loadingFiliais"
+              labelForId="UUID_LOGI_FILI"
+              bindLabel="NM_FILI"
+              bindValue="UUID_LOGI_FILI"
+              id="UUID_LOGI_FILI"
+              formControlName="UUID_LOGI_FILI"
+              [ngClass]="onFieldError('UUID_LOGI_FILI') + ' ' + onFieldRequired('UUID_LOGI_FILI')"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('UUID_LOGI_FILI')" message="Filial é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-8 pt-2 mx-auto">
+        <legend>Observação</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col">
+            <label for="DS_OBSE" >Observação:</label>
+            <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+          </div>
+        </div>
+        <br>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

@@ -1,0 +1,183 @@
+<div *ngIf="materiais.length > 0">
+  <div class="row" #scrollToCarrinho>
+    <div class="col">
+      <div class="mtc-title mb-3">Resumo da cotação</div>
+      <div class="row">
+        <div class="col">
+          <subtitles [data]="subtitles" [show]="true"></subtitles>
+        </div>
+        <div class="col">
+          <div class="d-flex justify-content-end">
+            <!-- <button
+              type="button"
+              class="btn btn-sm btn-primary mr-3"
+              (click)="onDescontoCarrinho()">
+              <i class="fas fa-percentage"></i>
+              <span>Desconto</span>
+            </button> -->
+            <button
+              type="button"
+              class="btn btn-sm btn-danger"
+              (click)="onLimparCarrinho()">
+              <i class="fas fa-trash"></i>
+              <span>Limpar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <form [formGroup]="form" autocomplete="off">
+        <custom-table [config]="tableHeadConfig">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center border-light" [ngStyle]="{ width: columSize('index') }">
+                <span class="ml-1">Item</span>
+              </th>
+              <th scope="col" [ngStyle]="{ width: columSize('nomeMaterial') }">Material</th>
+              <th scope="col" class="text-center" [ngStyle]="{ width: columSize('quantidade') }">Qtde.</th>
+              <th scope="col" class="text-center" [ngStyle]="{ width: columSize('quantidade') }">Peso</th>
+              <th scope="col" [ngStyle]="{ width: columSize('nomeDeposito') }">Depósito</th>
+              <th scope="col" [ngStyle]="{ width: columSize('buttons') }"></th>
+            </tr>
+          </ng-template>
+        </custom-table>
+        <custom-table [config]="tableBodyConfig" style="position: relative; top: -2px;">
+          <div formArrayName="materiais">
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let material of materiais.controls; let i = index" [formGroupName]="i">
+                <td
+                  class="align-middle text-center"
+                  [ngClass]="classStatusBorder(form.value.materiais[i])"
+                  [ngStyle]="{ width: columSize('index') }">
+                  {{ i + 1 }}
+                </td>
+                <td class="align-middle text-truncate" [ngStyle]="{ width: columSize('nomeMaterial') }">
+                  {{ form.value.materiais[i].codMaterial }} - {{ form.value.materiais[i].nomeMaterial | uppercase }}
+                </td>
+                <td class="align-middle text-center" [ngStyle]="{ width: columSize('quantidade') }">
+                  {{ form.value.materiais[i].quantidade }}
+                </td>
+                <td class="align-middle text-center" [ngStyle]="{ width: columSize('quantidade') }">
+                  {{ form.value.materiais[i].pesoEspecifico | number:'1.3-3' }} TON
+                </td>
+                <td width="20%" [ngStyle]="{ width: columSize('nomeDeposito') }">
+                  <ng-template #tooltipDescontoTemplate>
+                    <p class="text-left mb-0"><u>Empresa:</u></p>
+                    <p class="text-left text-nowrap mb-0">{{ form.value.materiais[i].nomeEmpresa | uppercase }}</p>
+                  </ng-template>
+                  <i class="far fa-question-circle" [tooltip]="tooltipDescontoTemplate" container="body"></i>
+                  <span class="ml-1">
+                    {{ form.value.materiais[i].nomeDeposito | uppercase }}
+                  </span>
+                </td>
+                <td class="align-middle text-right" [ngStyle]="{ width: columSize('buttons') }">
+                  <btn-icon
+                    icon="fas fa-th"
+                    class="mr-3"
+                    tooltip="Materiais associados"
+                    container="body"
+                    (click)="onAssocMaterial(form.value.materiais[i])"
+                    *ngIf="form.value.materiais[i].materialAssociado === 1">
+                  </btn-icon>
+                  <btn-icon
+                    icon="fas fa-calculator"
+                    class="mr-3"
+                    tooltip="Calcular quantidades"
+                    container="body"
+                    (click)="onCalcMaterial(i, form.value.materiais[i]);">
+                  </btn-icon>
+                  <btn-icon
+                    icon="fas fa-percentage"
+                    class="mr-3"
+                    tooltip="Aplicar desconto"
+                    container="body"
+                    (click)="onDescontoMaterial(i, form.value.materiais[i])">
+                  </btn-icon>
+                  <btn-icon
+                    icon="fas fa-trash"
+                    class="mr-3"
+                    tooltip="Remover"
+                    container="body"
+                    (click)="onDeleteMaterial(i, form.value.materiais[i])">
+                  </btn-icon>
+                </td>
+              </tr>
+              <tr>
+                <td class="border-white" [ngStyle]="{ width: columSize('index') }"></td>
+                <td [ngStyle]="{ width: columSize('nomeMaterial') }"></td>
+                <td class="text-center" [ngStyle]="{ width: columSize('quantidade') }">
+                  {{ total.quantidade }}
+                </td>
+                <td class="text-center" [ngStyle]="{ width: columSize('pesoEspecifico') }">
+                  {{ total.pesoEspecifico | number:'1.3-3' }} TON
+                </td>
+                <td [ngStyle]="{ width: columSize('codDeposito') }"></td>
+                <td [ngStyle]="{ width: columSize('buttons') }"></td>
+              </tr>
+            </ng-template>
+          </div>
+        </custom-table>
+      </form>
+    </div>
+  </div>
+  <!-- <div class="row pt-5">
+    <div class="col-lg-3">
+      <card-counter
+        icon="fas fa-industry"
+        color="bg-gray"
+        [counter]="total.valorIpi"
+        duration="2"
+        text="Valor total do IPI"
+        [config]="cardCounterConfig">
+      </card-counter>
+    </div>
+    <div class="col-lg-3">
+      <card-counter
+        icon="fas fa-truck-loading"
+        color="bg-blue"
+        [counter]="total.valorIcms"
+        duration="2"
+        text="Valor total do ICMS"
+        [config]="cardCounterConfig">
+      </card-counter>
+    </div>
+    <div class="col-lg-3">
+      <ng-template #tooltipDescontoTemplate>
+        <p
+          class="text-nowrap"
+          [ngClass]="{'mb-0': total.valorDescMaterial === 0}"
+          *ngIf="total.valorDescCarrinho - total.valorDescMaterial > 0">
+          <b><u>Carrinho:</u></b> {{ total.valorDescCarrinho - total.valorDescMaterial | currency:'BRL':'symbol':'1.2-2' }}
+        </p>
+        <p class="text-nowrap mb-0" *ngIf="total.valorDescMaterial > 0">
+          <b><u>Material:</u></b> {{ total.valorDescMaterial | currency:'BRL':'symbol':'1.2-2' }}
+        </p>
+      </ng-template>
+      <card-counter
+        icon="fas fa-percentage"
+        color="bg-red"
+        [counter]="total.valorDescCarrinho"
+        duration="2"
+        text="Valor total do desconto"
+        [config]="cardCounterConfig"
+        [isDisabled]="total.valorDescCarrinho === 0"
+        [tooltip]="tooltipDescontoTemplate"
+        container="body">
+      </card-counter>
+    </div>
+    <div class="col-lg-3">
+      <card-counter
+        icon="fas fa-dollar-sign"
+        color="bg-green"
+        [counter]="total.valorProposta"
+        duration="2"
+        text="Valor final da proposta"
+        [config]="cardCounterConfig">
+      </card-counter>
+    </div>
+  </div> -->
+  <div class="row">
+    <div class="col">
+      <hr class="my-5">
+    </div>
+  </div>
+</div>

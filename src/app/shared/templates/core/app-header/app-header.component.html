@@ -1,0 +1,13 @@
+<div class="row" id="application-header" *ngIf="show">
+  <div class="col-lg-4">
+    <div id="title">
+      <back-button *ngIf="backButton"></back-button>
+      <h1 class="text-truncate">{{ appTitle }}</h1>
+    </div>
+  </div>
+  <div class="col-lg-8 d-flex justify-content-end">
+    <div id="actions">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

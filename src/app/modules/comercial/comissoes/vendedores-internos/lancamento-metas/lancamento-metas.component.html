@@ -1,0 +1,290 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Lançamento de Metas">
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg">
+              <label for="dataInicial">Data inicial</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                  class="form-control"
+                  id="dataInicial"
+                  type="text"
+                  bsDatepicker
+                  [bsConfig]="bsConfig"
+                  formControlName="dataInicial">
+              </div>
+            </div>
+            <div class="form-group col-lg">
+              <label for="dataFinal">Data final</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                  class="form-control"
+                  id="dataFinal"
+                  type="text"
+                  bsDatepicker
+                  [bsConfig]="bsConfig"
+                  formControlName="dataFinal">
+              </div>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="codGerente">Escritorio</label>
+              <ng-select
+                [items]="escritorios"
+                labelForId="codGerente"
+                formControlName="codGerente"
+                bindValue="codEscritorio"
+                bindLabel="nomeEscritorio"
+                (change)="onChangeEscritorio($event.id, true)">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="codVendedor">Vendedor</label>
+              <ng-select
+                [items]="vendedores"
+                labelForId="codVendedor"
+                formControlName="codVendedor"
+                bindValue="id"
+                bindLabel="nome">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-1">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="dadosPagination.length > 0 && !dadosEmpty">
+      </subtitles>
+    </div>
+  </div>
+  <div class="row text-center justify-content-center">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-4 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col">Cod. Vendedor</th>
+            <th scope="col">Vendedor</th>
+            <th scope="col" [hidden]="showDetailPanel">Gerente</th>
+            <th scope="col" [hidden]="showDetailPanel"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let lista of dadosPagination; let i = index" [class.table-active]="lista.codVendedor == comissaoSelecionada.codVendedor">
+            <td
+              class="hover"
+              [ngClass]="classStatusBorder(lista)"
+              (click)="onDetails(lista)">
+              {{ lista.codVendedor}}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(lista)">
+              {{ lista.nomeVendedor | uppercase }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(lista)"
+              [hidden]="showDetailPanel">
+              {{ lista.nomeGerente | uppercase }}
+            </td>
+            <td class="text-right" [hidden]="showDetailPanel">
+              <span class="mr-3" tooltip="Visualizar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onDetails(lista)">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty">
+      </empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && dadosLoaded">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-8" [hidden]="!showDetailPanel">
+      <detail-panel panelTitle="Metas">
+        <custom-table *ngIf="metas.length > 0">
+          <ng-template #thead let-thead>
+            <tr>
+              <th></th>
+              <th scope="col" class="text-center">Ano passado</th>
+              <th scope="col" class="text-center">Mês passado</th>
+              <th scope="col" class="text-center">Atual</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr>
+              <td class="text-center"><strong>CLIENTES COM COMPRA</strong></td>
+              <td class="text-center">{{ metas[0].anoPassado[0].clientes.meta }}</td>
+              <td class="text-center">{{ metas[0].passado[0].clientes.meta }}</td>
+              <td class="text-center">{{ metas[0].corrente[0].clientes.meta }}</td>
+            </tr>
+            <tr>
+              <td class="text-center"><strong>CIVIL</strong></td>
+              <td class="text-center">{{ metas[0].anoPassado[1].extras.meta }}</td>
+              <td class="text-center">{{ metas[0].passado[1].extras.meta }}</td>
+              <td class="text-center">{{ metas[0].corrente[1].extras.meta }}</td>
+            </tr>
+            <tr>
+              <td class="text-center"><strong>FATURAMENTO TOTAL</strong></td>
+              <td class="text-center">{{ metas[0].anoPassado[2].toneladas.meta }}</td>
+              <td class="text-center">{{ metas[0].passado[2].toneladas.meta }}</td>
+              <td class="text-center">{{ metas[0].corrente[2].toneladas.meta }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+        <br>
+        <div *ngIf="!userMarketing" >
+          <div>
+            <strong><p>PREENCHER METAS ATUAIS</p></strong>
+            <form [formGroup]="form" autocomplete="off"> 
+              <div class="form-row">
+                <div class="form-group col-4">
+                  <label for="metaClientes">Clientes com compras</label>
+                  <br>
+                  <input type="text"
+                  id="metaClientes"
+                  formControlName="metaClientes">
+                </div>
+                <div class="form-group col-4">
+                  <label for="metaCivil">Civil</label>
+                  <br>
+                  <input type="text"
+                  id="metaCivil"
+                  formControlName="metaCivil">
+                </div>
+                <div class="form-group col-4">
+                  <label for="metaFaturamento">Faturamento total</label>
+                  <br>
+                  <input type="text"
+                  id="metaFaturamento"
+                  formControlName="metaFaturamento">
+                </div>
+              </div>
+            </form>
+          </div>
+          <br>
+          <div class="justify-content-center">
+            <button
+              type="button"
+              class="btn btn-sm mb-3"
+              (click)="onSalvar()">
+              Salvar
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="userMarketing">
+          <div class="row">
+            <div class="col justify-content-center">
+              <button
+              type="button"
+              (click)="onAprovar()"
+              class="btn btn-sm btn-outline-success mb-3"
+              >
+              Aprovar
+              </button>
+            </div>
+              <div class="col justify-content-center">
+              <button
+              type="button"
+              (click)="openModal(reprovarMeta, meta)"
+              class="btn btn-sm btn-outline-danger mb-3"
+              >
+              Reprovar
+              </button>
+            </div>
+          </div>
+        </div>
+      </detail-panel>
+    </div>
+  </div>
+  <ng-template #reprovarMeta>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Descrição de Reprovação #{{comissaoSelecionada?.codVendedor}}</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="col-12">
+        <form [formGroup]="form" autocomplete="off" [hidden] ="comissaoSelecionada.situacao != 2">
+          <div class="form-row justify-content-center">
+            <div class="form-group col pl-0">
+              <label for="descReprov" >Descrição:</label>
+              <textarea 
+                class="form-control" 
+                id="descReprov" 
+                formControlName="descReprov" 
+                rows="3"
+                [ngClass]="onFieldError('descReprov') + ' ' + onFieldRequired('descReprov')">
+              </textarea>
+              <invalid-form-control [show]="onFieldInvalid('descReprov')" message="Descrição é obrigatório e deve conter no mínimo 3 dígitos."></invalid-form-control>
+            </div>
+          </div>
+        </form>
+        <div  class="form-row justify-content-center text-center" [hidden] ="comissaoSelecionada.situacao != 2">
+          <button 
+            type="button" 
+            class="btn btn-sm btn-outline-danger mb-3"
+            (click)="onReprovar(comissaoSelecionada)"
+            [disabled]="form.valid === false || loadergNavBar === false"
+            >
+            Reprovar
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</app-body>

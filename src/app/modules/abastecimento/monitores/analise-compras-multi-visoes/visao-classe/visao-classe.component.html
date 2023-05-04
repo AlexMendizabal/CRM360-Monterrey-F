@@ -1,0 +1,173 @@
+<div class="table-responsive" *ngIf="!noResult">
+  <custom-table>
+    <ng-template let-thead #thead>
+      <tr class="text-center">
+        <th nowrap>Classe</th>
+        <th nowrap>Depósito</th>
+        <th nowrap [attr.colspan]="ableInformationEstoque ? colsEst : 1">
+          Estoque
+          <button class="btn-icon-sm" (click)="abledInfomationEstoque()">
+            <i [ngClass]="ableInformationEstoque ? 'fas fa-minus' : 'fas fa-plus'" title="Mostrar detalhes Estoque"
+              aria-hidden="true"></i>
+          </button>
+        </th>
+        <th nowrap>Saídas</th>
+        <th nowrap>Carteira</th>
+        <th nowrap>Perdas</th>
+      </tr>
+      <tr class="text-center">
+        <th nowrap (click)="sort('NM_DEPO')">
+          Descrição
+          <span *ngIf="key == 'NM_DEPO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+          <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th nowrap (click)="sort('NM_DEPO')">
+          Descrição
+          <span *ngIf="key == 'NM_DEPO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+          <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th nowrap (click)="sort('NM_DEPO')">
+          Disponível
+          <span *ngIf="key == 'NM_DEPO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+          <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th nowrap (click)="sort('NM_DEPO')" *ngIf="ableInformationEstoque">
+          Suspenso
+          <span *ngIf="key == 'NM_DEPO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+          <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th nowrap (click)="sort('NM_DEPO')" *ngIf="ableInformationEstoque">
+          Comprometido
+          <span *ngIf="key == 'NM_DEPO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+          <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+        </th>
+        <th nowrap>
+          <div class="d-flex justify-content-center align-items-center">
+            <div (click)="sort('NM_DEPO')">
+              Total
+              <span *ngIf="key == 'NM_DEPO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </div>
+            <div class="ml-1">
+              <button class="btn-icon-sm" (click)="lgModal.show()">
+                <i class="far fa-calendar-alt text-secondary" tooltip="Visão Mensal"
+                  aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </th>
+        <th nowrap (click)="sort('NM_DEPO')">
+          <div class="d-flex justify-content-center align-items-center">
+            <div (click)="sort('NM_DEPO')">
+              Total
+              <span *ngIf="key == 'NM_DEPO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </div>
+            <div class="ml-1">
+              <button class="btn-icon-sm" (click)="lgModal.show()">
+                <i class="far fa-calendar-alt text-secondary" tooltip="Visão Mensal"
+                  aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </th>
+        <th nowrap (click)="sort('NM_DEPO')">
+          <div class="d-flex justify-content-center align-items-center">
+            <div (click)="sort('NM_DEPO')">
+              Total
+              <span *ngIf="key == 'NM_DEPO'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NM_DEPO'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </div>
+            <div class="ml-1">
+              <button class="btn-icon-sm" (click)="lgModal.show()">
+                <i class="far fa-calendar-alt text-secondary" tooltip="Visão Mensal"
+                  aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template let-tbody #tbody>
+      <tr>
+        <td nowrap class="text-center">CA-50</td>
+        <td nowrap class="text-center">Tiete</td>
+        <td nowrap class="text-center">550,00</td>
+        <td nowrap class="text-center" *ngIf="ableInformationEstoque">550,00</td>
+        <td nowrap class="text-center" *ngIf="ableInformationEstoque">550,00</td>
+        <td nowrap class="text-center">1500,00</td>
+        <td nowrap class="text-center">600,00</td>
+        <td nowrap class="text-center">35,00</td>
+      </tr>
+      <tr>
+        <td nowrap class="text-center">CA-50</td>
+        <td nowrap class="text-center">Cajamar</td>
+        <td nowrap class="text-center">550,00</td>
+        <td nowrap class="text-center" *ngIf="ableInformationEstoque">550,00</td>
+        <td nowrap class="text-center" *ngIf="ableInformationEstoque">550,00</td>
+        <td nowrap class="text-center">1500,00</td>
+        <td nowrap class="text-center">600,00</td>
+        <td nowrap class="text-center">35,00</td>
+      </tr>
+      <tr>
+        <td nowrap class="text-center">CA-25</td>
+        <td nowrap class="text-center">Tiete</td>
+        <td nowrap class="text-center">550,00</td>
+        <td nowrap class="text-center" *ngIf="ableInformationEstoque">550,00</td>
+        <td nowrap class="text-center" *ngIf="ableInformationEstoque">550,00</td>
+        <td nowrap class="text-center">1500,00</td>
+        <td nowrap class="text-center">600,00</td>
+        <td nowrap class="text-center">35,00</td>
+      </tr>
+      <tr>
+        <td nowrap class="bg-dark text-center text-white">TOTAL</td>
+        <td nowrap class="bg-dark text-center text-white"></td>
+        <td nowrap class="bg-dark text-center text-white">3500,00</td>
+        <td nowrap class="bg-dark text-center text-white" *ngIf="ableInformationEstoque">3500,00</td>
+        <td nowrap class="bg-dark text-center text-white" *ngIf="ableInformationEstoque">3500,00</td>
+        <td nowrap class="bg-dark text-center text-white">4000,00</td>
+        <td nowrap class="bg-dark text-center text-white">8000,00</td>
+        <td nowrap class="bg-dark text-center text-white">1000,00</td>
+      </tr>
+    </ng-template>
+  </custom-table>
+</div>
+<div class="text-center d-flex justify-content-center align-items-center p-5" style="height: 80%;" *ngIf="noResult">
+  <!-- *ngIf="noResult && !loading" -->
+  <empty-result message="Nenhuma informação encontrada"></empty-result>
+</div>
+
+<div
+  bsModal
+  #lgModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dialog-sizes-name1"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+          Visão mensal
+        </h4>
+        <button
+          type="button"
+          class="close pull-right"
+          (click)="lgModal.hide()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container" >
+          <div class="text-center d-flex justify-content-center align-items-center p-5" style="height: 80%;">
+            <!-- *ngIf="noResult && !loading" -->
+            <empty-result message="Nenhuma informação encontrada"></empty-result>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

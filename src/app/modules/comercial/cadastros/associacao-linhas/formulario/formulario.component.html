@@ -1,0 +1,217 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row">
+    <div class="col-lg-6">
+      <form [formGroup]="form">
+        <div class="mtc-title">Dados da Linha</div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="NM_LINH">Nome Linha</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_LINH"
+              formControlName="NM_LINH"
+              autocomplete="new-password">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col">
+            <hr>
+          </div>
+        </div>
+        <div formArrayName="assocSetores">
+          <div class="row mb-2">
+            <div class="col mt-auto">
+              <div class="mtc-title mb-0">Setores associados a linha</div>
+            </div>
+            <div class="col">
+              <div class="d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="onLimparAssociacoes()">
+                  <i class="fas fa-trash"></i>
+                  <span>Limpar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="showSetores && form.value.assocSetores.length > 0">
+            <div class="col">
+              <custom-table [config]="tableConfigAssocSetores">
+                <ng-template #thead let-thead>
+                  <tr>
+                    <th scope="col" style="width: 95%">Setor</th>
+                    <th scope="col" style="width: 5%"></th>
+                  </tr>
+                </ng-template>
+                <ng-template #tbody let-tbody>
+                  <tr *ngFor="let setor of assocSetores.controls; let i = index" [formGroupName]="i">
+                    <td style="width: 95%">
+                      {{ form.value.assocSetores[i].ID_SETO_ATIV }} - {{ form.value.assocSetores[i].DESCRICAO | uppercase }}
+                    </td>
+                    <td class="text-center" style="width: 5%">
+                      <btn-icon
+                        icon="fas fa-trash"
+                        size="small"
+                        (click)="onDeleteSetor(i)">
+                      </btn-icon>
+                    </td>
+                  </tr>
+                </ng-template>
+              </custom-table>
+            </div>
+          </div>
+          <div class="row" *ngIf="showSetores && form.value.assocSetores.length === 0">
+            <div class="col">
+              <message
+                icon="fas fa-exchange-alt"
+                text="Nenhuma associação encontrada">
+              </message>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-6 border-left">
+      <div class="row mb-2">
+        <div class="col mt-auto">
+          <div class="mtc-title mb-0">Pesquisa de setores</div>
+        </div>
+        <div class="col">
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              (click)="onFilterSetores()">
+              <i class="fas fa-search"></i>
+              <span>Pesquisar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <advanced-filter>
+        <form [formGroup]="formSetores" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="setoresFilter">Setor de Atividade</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="setoresFilter"
+                [virtualScroll]="true"
+                dropdownPosition="bottom"
+                placeholder="Selecione..."
+                [loading]="setoresFilterLoaded"
+                labelForId="ID_SETO_ATIV"
+                bindLabel="DESCRICAO"
+                bindValue="ID_SETO_ATIV"
+                id="ID_SETO_ATIV"
+                formControlName="ID_SETO_ATIV"
+                >
+              </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <div *ngIf="setoresLista.length > 0">
+        <div class="row mb-2">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Seleção de setores</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                (click)="onAssociarSetores()"
+                [disabled]="searching === true">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Associar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <custom-table [config]="tableConfigSetores">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="text-center"
+                    style="width: 5%">
+                    <btn-icon
+                      [icon]="toggleAll ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll()">
+                    </btn-icon>
+                  </th>
+                  <th scope="col" style="width: 95%">Setor de Atividade</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let setor of setoresLista; let i = index;">
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="setor.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onCheckSetor(i, setor)">
+                    </btn-icon>
+                  </td>
+                  <td
+                    class="hover"
+                    style="width: 95%"
+                    (click)="onCheckSetor(i, setor)">
+                    {{ setor.DESCRICAO | uppercase }}
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="searching === true">
+        <div class="col">
+          <message
+            icon="fas fa-cog fa-spin"
+            text="Estamos pesquisando os setores para você...">
+          </message>
+        </div>
+      </div>
+      <div *ngIf="searching === false">
+        <div class="row" *ngIf="setoresListaEmpty && setoresListaLoaded">
+          <div class="col">
+            <message
+              icon="fas fa-box-open"
+              text="Nenhuma informação encontrada">
+            </message>
+          </div>
+        </div>
+        <div class="row" *ngIf="setoresLista.length === 0 && !firstSearch">
+          <div class="col">
+            <message
+              icon="fas fa-search"
+              text="Preecha o campo acima para filtrar o setor">
+            </message>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>

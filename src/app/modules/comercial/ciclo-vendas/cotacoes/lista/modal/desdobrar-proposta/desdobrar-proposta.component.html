@@ -1,0 +1,64 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">#{{ cotacao.nrPedido }} / DESDOBRAR PROPOSTA</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="mtc-title">Selecione os materiais que deseja desdobrar:</div>
+    <custom-table>
+      <ng-template #thead let-thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Material</th>
+          <th scope="col" class="text-center">Qtde.</th>
+          <th scope="col" class="text-center">Total</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let material of materiais; let i = index">
+          <td class="text-center">
+            <btn-icon
+              [icon]="material.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+              size="small"
+              (click)="onCheckMaterial(i, material)">
+            </btn-icon>
+          </td>
+          <td
+            class="hover"
+            (click)="onCheckMaterial(i, material)">
+            {{ material.codMaterial }} - {{ material.nomeMaterial | uppercase }}
+          </td>
+          <td
+            class="text-center hover"
+            (click)="onCheckMaterial(i, material)">
+            {{ material.quantidade | number:'1.3-3' }} {{ material.unidade }}
+          </td>
+          <td
+            class="text-center hover"
+            (click)="onCheckMaterial(i, material)">
+            {{ material.valorTotal | currency:'BRL' }}
+          </td>
+        </tr>
+      </ng-template>
+    </custom-table>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      [disabled]="submittingForm"
+      (click)="onClose()">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="submittingForm"
+      (click)="onSubmit()">
+      <span *ngIf="!submittingForm">Confirmar</span>
+      <span *ngIf="submittingForm">Aguarde</span>
+    </button>
+  </div>
+</div>

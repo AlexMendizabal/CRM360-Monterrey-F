@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-9 border-right">
+    <div class="row justify-content-between mt-0" >
+      <div class="col pr-2 scroll-projetos">
+        <div class="row justify-content-between ">
+          <div class="mtc-title p-0 mx-3 h-100 w-100 text-center border  " style="background: lightgray;">Faturamento por Projeto</div>
+          <div id="clientesProjetosSortedBarChart" class="amcharts" [hidden]="loadingFatuProjClie" style="min-height: 370px;"></div>
+          <div class="spinner-border" role="status" style="margin-inline: auto;" *ngIf="loadingFatuProjClie">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col p-0 pr-3 pl-2" >
+    <div class="mtc-title p-0 w-100 text-center border" style="background: lightgray;">Mês Atual</div>
+    <div id="clusteredChartMesAtual" class="amcharts"  [hidden]="loadingFatuAtualCliente" style="min-height: 370px"></div>
+    <div class="spinner-border" role="status" style="margin-left: 46%;" *ngIf="loadingFatuAtualCliente">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</div>
+<div class="row justify-content-between mt-3" >
+  <div class="mtc-title p-0 mx-3 h-100 w-100 text-center border" style="background: lightgray;">faturamento Mensal</div>
+  <div id="clusteredChartFatuMensalCliente" class="amcharts p-0 mx-3" [hidden]="loadingFatuMensClie" style="position: relative; height: 400px"></div>
+  <div class="spinner-border" role="status" style="margin-inline: auto;" *ngIf="loadingFatuMensClie">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>

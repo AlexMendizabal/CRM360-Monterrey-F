@@ -1,0 +1,90 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button (click)="onReset()">
+    Limpiar
+  </button>
+  <button (click)="onFilter()">
+    Filtrar
+  </button>
+  <button [routerLink]="['../novo']" >
+    Nuevo
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="nome">Nombre</label>
+          <input
+            id="nome" 
+            type="text" 
+            class="form-control" 
+            placeholder="DIGITE..." 
+            formControlName="NM_REST_TRAN" 
+            (keyup.enter)="onFilter()">
+        </div>
+        <div class="form-group col-3">
+          <label for="status">Status</label>
+          <select
+            name="status"
+            id="status"
+            class="form-control">
+            <option value="">Todos</option>
+            <option value="'1'">Activo</option>
+            <option value="'0'">Inactivo</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div  class="col-12 p-0 mt-3" [hidden] = "loading || noResult">
+    <div>
+      <table class="table table-sm table-hover custom-border border-left border-right border-bottom text-center table-fixed">
+        <thead class="thead-light">
+          <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Usuario</th>
+            <th width="70px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let restricao of restricoes; let i = index">
+            <td class="text-truncate"  [ngClass]="restricao.IN_STAT == 1 ? 'border-success' : 'border-danger'"> {{ restricao.UUID }} </td>  
+            <td class="text-truncate"> {{ restricao.NM_REST_TRAN }} </td>
+            <td class="text-truncate"> 
+              <span *ngIf="!restricao.DT_ATUA">[{{ restricao.DT_INCL | date : 'dd/MM/yyyy HH:mm' }}]&nbsp;</span>
+              <span *ngIf="restricao.DT_ATUA">[{{ restricao.DT_ATUA | date : 'dd/MM/yyyy HH:mm' }}]&nbsp;</span>
+              <span>({{ restricao.NR_MATR }})&nbsp; {{ restricao.NM_USUA }}</span>
+            </td>
+            <td class="align-middle">
+              <a class="btn-icon-sm" [routerLink]="['../', restricao.UUID]">
+                <i class="fas fa-edit"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 250px">
+    <empty-result message="No se encontró información"></empty-result>
+  </div>
+</app-body>

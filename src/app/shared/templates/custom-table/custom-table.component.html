@@ -1,0 +1,10 @@
+<div [class.table-responsive]="defaultConfig.isResponsive === true">
+  <table class="table mb-0" [ngClass]="tableClass()">
+    <thead [ngClass]="defaultConfig.theme.color">
+      <ng-container *ngTemplateOutlet="theadTmpl, context: { $implicit: theadTmpl }"></ng-container>
+    </thead>
+    <tbody [ngClass]="defaultConfig.theme.color" [ngStyle]="bodyHeight()">
+      <ng-container *ngTemplateOutlet="tbodyTmpl, context: { $implicit: tbodyTmpl }"></ng-container>
+    </tbody>
+  </table>
+</div>

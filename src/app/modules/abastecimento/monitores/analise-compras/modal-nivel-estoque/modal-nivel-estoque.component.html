@@ -1,0 +1,90 @@
+<div *ngIf="loadingDetalhesModal">
+  <div class="row mb-2 mt-2 text-center">
+    <div class="col-2">
+      <p style="font-size: 14px;">
+        <strong> CÓD. MATERIAL: </strong> {{ dadosDetalhesNivelEstoqueModal.ID_REFE_ERP | number: '0.0' }}
+      </p>
+    </div>
+    <div class="col-6">
+      <p style="font-size: 14px;">
+        <strong> DESCRIÇÃO: </strong> {{ dadosDetalhesNivelEstoqueModal.NM_MATE }}
+      </p>
+    </div>
+    <div class="col-2">
+      <p style="font-size: 14px;"><strong> LINHA: </strong>{{ dadosDetalhesNivelEstoqueModal.NM_LINH }} </p>
+    </div>
+    <div class="col-2">
+      <p style="font-size: 14px;"><strong> CLASSE: </strong>{{ dadosDetalhesNivelEstoqueModal.NM_CLAS }} </p>
+    </div>
+  </div>
+  <div class="row mb-2 mt-2 text-center">
+    <div class="col-4"><strong> ESTOQUE DIPONÍVEL: </strong> {{ (dadosDetalhesNivelEstoqueModal.TT_ESTO_DISP_TONE ? dadosDetalhesNivelEstoqueModal.TT_ESTO_DISP_TONE : 0) | number: '0.3'}} </div>
+    <div class="col-4"><strong> VENDAS REALIZADAS: </strong> {{ (dadosDetalhesNivelEstoqueModal.TT_VEND_REAL_TONE ? dadosDetalhesNivelEstoqueModal.TT_VEND_REAL_TONE : 0) | number: '0.3' }} </div>
+    <div class="col-4"><strong> DIAS ANALIZADOS: </strong>{{ (dadosDetalhesNivelEstoqueModal.NR_DIAS_PERI_ANAL ? dadosDetalhesNivelEstoqueModal.NR_DIAS_PERI_ANAL : 0) | number: '0.0' }}</div>
+  </div>
+  <div class="table-responsive mt-4">
+    <custom-table>
+      <ng-template #thead let-thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Volume</th>
+          <th>Giro</th>
+          <th>Diferença</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr>
+          <td><i class="fas fa-circle text-danger"></i> Mínimo</td>
+          <td>{{ (dadosDetalhesNivelEstoqueModal.TT_ESTO_MINI ? dadosDetalhesNivelEstoqueModal.TT_ESTO_MINI : 0) | number: '0.3'  }}</td>
+          <td>{{ (dadosDetalhesNivelEstoqueModal.NR_DIAS_GIRO_ESTO_MINI ? dadosDetalhesNivelEstoqueModal.NR_DIAS_GIRO_ESTO_MINI : 0) | number: '0.0'  }}</td>
+          <td>{{ (dadosDetalhesNivelEstoqueModal.TT_DIFE_ESTO_DISP_MINI ? dadosDetalhesNivelEstoqueModal.TT_DIFE_ESTO_DISP_MINI: 0) | number: '0.3'  }}</td>
+  
+        </tr>
+        <tr>
+          <td><i class="fas fa-circle text-warning"></i> Médio</td>
+          <td>{{ (dadosDetalhesNivelEstoqueModal.TT_ESTO_SEGU ? dadosDetalhesNivelEstoqueModal.TT_ESTO_SEGU : 0)| number: '0.3'  }}</td>
+          <td>{{ (dadosDetalhesNivelEstoqueModal.NR_DIAS_GIRO_ESTO_SEGU ? dadosDetalhesNivelEstoqueModal.NR_DIAS_GIRO_ESTO_SEGU : 0)| number: '0.0'  }}</td>
+          <td>{{ (dadosDetalhesNivelEstoqueModal.TT_DIFE_ESTO_DISP_SEGU ? dadosDetalhesNivelEstoqueModal.TT_DIFE_ESTO_DISP_SEGU : 0)| number: '0.3'  }}</td>
+        </tr>
+        <tr>
+          <td><i class="fas fa-circle text-success"></i> Máximo</td>
+          <td>{{ (dadosDetalhesNivelEstoqueModal.TT_ESTO_MAXI ? dadosDetalhesNivelEstoqueModal.TT_ESTO_MAXI : 0) | number: '0.3'  }}</td>
+          <td>{{ (dadosDetalhesNivelEstoqueModal.NR_DIAS_GIRO_ESTO_MAXI ? dadosDetalhesNivelEstoqueModal.NR_DIAS_GIRO_ESTO_MAXI : 0) | number: '0.0'  }}</td>
+          <td>{{ (dadosDetalhesNivelEstoqueModal.TT_DIFE_ESTO_DISP_MAXI ? dadosDetalhesNivelEstoqueModal.TT_DIFE_ESTO_DISP_MAXI : 0) | number: '0.3'  }}</td>
+        </tr>
+      </ng-template>
+    </custom-table>
+  </div>
+  <div class="table-responsive mt-4">
+    <custom-table>
+      <ng-template #thead let-thead>
+        <tr>
+          <th>Código Correspondente</th>
+          <th>Descrição</th>
+          <th>Sul Fluminense</th>
+          <th>Avançado</th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr>
+          <td>{{dadosDetalhesNivelEstoqueModal.ID_REFE_CORR_ERP | number: '0.0'}}</td>
+          <td>{{dadosDetalhesNivelEstoqueModal.DS_MATE_REFE_CORR_ERP}}</td>
+          <td>{{(dadosDetalhesNivelEstoqueModal.TT_ESTO_SUL_FLUM_TONE ? dadosDetalhesNivelEstoqueModal.TT_ESTO_SUL_FLUM_TONE : 0) | number: '0.3'}}</td>
+          <td>{{(dadosDetalhesNivelEstoqueModal.TT_ESTO_AVAN_TONE ? dadosDetalhesNivelEstoqueModal.TT_ESTO_AVAN_TONE : 0) | number: '0.3'}}</td>
+        </tr>
+      </ng-template>
+    </custom-table>
+  </div>
+</div>
+<div class="text-center d-flex justify-content-center align-items-center p-5" *ngIf="loaderBody">
+  <div class="spinner-border">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<div
+  *ngIf="noResultModal && !loadingDetalhesModal"
+  class="text-center d-flex justify-content-center align-items-center p-5"
+  style="height: 80%;"
+  >
+  <empty-result message="Nenhuma informação encontrada"></empty-result>
+</div>

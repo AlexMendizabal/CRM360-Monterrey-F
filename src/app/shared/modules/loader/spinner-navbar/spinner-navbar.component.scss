@@ -1,0 +1,16 @@
+::ng-deep {
+  @import '../../../../../assets/scss/colors';
+
+  loader-spinner-navbar {
+    right: 295px;
+    position: absolute;
+    top: 14px;
+    z-index: 1092;
+    .spinner-border {
+      color: rgba($white, 0.75);
+      border-width: 0.2rem;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}

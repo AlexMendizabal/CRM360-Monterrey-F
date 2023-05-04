@@ -1,0 +1,45 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Associação de coordenadores e escritórios">
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="loaderNavbar">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row justify-content-center" *ngIf="!loaderFullScreen">
+    <div class="col-4">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="coordenador">Coordenador</label>
+            <ng-select
+              [items]="coordenadores"
+              labelForId="coordenador"
+              bindValue="matricula"
+              bindLabel="nome"
+              formControlName="coordenador"
+              (change)="onChange()">
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="escritorios">Escritórios</label>
+            <ng-select
+              [items]="escritorios"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              labelForId="escritorios"
+              bindValue="id"
+              bindLabel="descricao"
+              formControlName="escritorios">
+            </ng-select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

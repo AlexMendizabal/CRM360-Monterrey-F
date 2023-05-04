@@ -1,0 +1,47 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro de classes">
+  <button 
+  (click)="onSave()"
+  [disabled] = "form.status == 'INVALID'"
+  >
+  Salvar
+  </button> 
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-4">
+            <label for="dsArcelorMittal">Classe  (Arcelor Mittal)</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="dsArcelorMittal">
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-4">
+            <label for="idManetoni">Classe  (Manetoni)</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              multiple = "true"
+              [closeOnSelect]="false"
+              [items]="classesMateriais"
+              [virtualScroll]="true"
+              placeholder="SELECIONE..."
+              labelForId="idManetoni"
+              bindLabel="nomeClasse"
+              bindValue="idClasse"
+              id="idManetoni"
+              formControlName="idManetoni"
+            >
+            </ng-select>
+          </div>
+        </div>        
+      </form>
+    </div>
+  </div>
+</app-body>

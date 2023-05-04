@@ -1,0 +1,116 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button (click)="onReset()">
+    Limpar
+  </button>
+  <button 
+  [disabled]="form.status == 'INVALID'"
+  (click)="onSearch()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="">Código</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="DIGITE..."
+            formControlName="CD_EMPR"
+            (keyup.enter)="onSearch()"
+          >
+        </div>
+        <div class="form-group col-3">
+          <label for="">Descrição</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="DIGITE..."
+            formControlName="DS_NOME_FANT"
+            (keyup.enter)="onSearch()"
+          >
+        </div>
+        <div class="form-group col-3">
+          <label for="">CNPJ</label>
+          <input
+            type="text"
+            class="form-control"
+            [textMask]="{mask: MASKS.cnpj.textMask}"
+            placeholder="DIGITE..."
+            formControlName="DS_CNPJ"
+            (keyup.enter)="onSearch()"
+          >
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noResult">
+      </subtitles>
+    </div>
+  </div>
+  <div  class="d-flex" [hidden] = "loading || noResult">
+    <div class="w-100">
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>CNPJ</th>
+            <th>Endereço</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>  
+          <tr
+            *ngFor="let item of empresas | slice : begin : end; let i = index"
+            [ngClass]="{'table-active': item.ACTI == true}"  
+          >
+            <td [ngClass]="item.IN_STAT == 1 ? 'border-success' : 'border-danger'">{{ item.CD_EMPR }}</td>
+            <td>{{ item.DS_NOME_FANT | hifen}}</td>
+            <td>{{ item.DS_CNPJ | cnpj | hifen}}</td>
+            <td>{{ item.DS_ENDE | hifen}}</td>
+            <td>
+              <button
+                class="btn-icon-sm hover"
+                (click)="onViewDetails(item)"
+              >
+                <i class="far fa-edit"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div>
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-5 pr-0" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="detailPanelTitle">
+        <controladoria-associacoes-pluser-empresas-centro-custo [setEmpresa]="empresa"></controladoria-associacoes-pluser-empresas-centro-custo>
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 250px">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

@@ -1,0 +1,281 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Etapas por Checklist">
+  <button 
+    [disabled]="loadingNavBar === true"
+    [routerLink]="['../']"
+    >
+    Voltar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col-lg-6">
+      <form [formGroup]="form">
+        <div class="mtc-title">Dados da Checklist</div>
+        <div class="form-row">
+          <div class="form-group col pl-0">
+            <label for="checklist">Checklist</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="checklist"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              [loading]="loadingChecklist"
+              labelForId="ID_LOGI_YMS_CHEC"
+              bindLabel="NM_CHEC"
+              bindValue="ID_LOGI_YMS_CHEC"
+              id="ID_LOGI_YMS_CHEC"
+              formControlName="ID_LOGI_YMS_CHEC" 
+              [ngClass]="onFieldError('ID_LOGI_YMS_CHEC') + ' ' + onFieldRequired('ID_LOGI_YMS_CHEC')"
+              >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('ID_LOGI_YMS_CHEC')" message="Checklist é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </form>
+      <div class="row mb-4">
+        <div class="col mb-3">
+          <hr>
+        </div>
+      </div>
+      <message
+        *ngIf="loadingConsulta"
+        icon="fas fa-cog fa-spin"
+        text="Estamos buscando informações da Checklist selecionada...">
+      </message>
+      <div [hidden]="loadingConsulta">
+        <div class="row mb-2 mt-4">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Etapas associadas a Checklist</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                (click)="onLimparAssociacoes()">
+                <i class="fas fa-trash"></i>
+                <span>Limpar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="showEtapas && etapasAssociadas.length > 0">
+          <div class="col">
+            <custom-table [config]="tableConfigAssocEtapas">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th scope="col" width="20%">ID</th>
+                  <th scope="col" width="75%">Etapa</th>
+                  <th scope="col" width="5%"></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let etapa of etapasAssociadas" >
+                  <td width="20%">{{ etapa.ID_LOGI_YMS_ETAP }}</td>
+                  <td width="75%">
+                   {{ etapa.NM_ETAP | uppercase }}
+                  </td>
+                  <td class="text-center" width="5%">
+                    <btn-icon
+                      icon="fas fa-trash"
+                      size="small"
+                      (click)="onDeleteEtapa(etapa)">
+                    </btn-icon>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+        <div class="row" *ngIf="showEtapas && etapasAssociadas.length === 0">
+          <div class="col">
+            <message
+              icon="fas fa-exchange-alt"
+              text="Nenhuma associação encontrada">
+            </message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 border-left">
+      <div class="row mb-2">
+        <div class="col mt-auto">
+          <div class="mtc-title mb-0">Pesquisa de etapas</div>
+        </div>
+        <div class="col">
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              (click)="getEtapas()"
+              [disabled]="searching === true || formEtapas.valid == false">
+              <i class="fas fa-search"></i>
+              <span 
+              [tooltip]="formEtapas.valid == false ? 'Digite um termo de pesquisa':''"
+              container="body"
+              placement ="left">Pesquisar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <advanced-filter>
+        <form [formGroup]="formEtapas" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-3">
+              <label for="cdItem">BUSCAR POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="ID_LOGI_YMS_ETAP">ID</option>
+                <option value="NM_ETAP" selected> Nome Etapa</option>
+              </select>
+            </div>
+
+            <div class="form-group col-9">
+              <label>TERMO DE PESQUISA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  (keydown.enter)="getEtapas()"
+                >
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <div *ngIf="etapasLista.length > 0">
+        <div class="row mb-2">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Seleção de etapas</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                (click)="onAssociarEtapas()"
+                [disabled]="searching === true || form.valid === false">
+                <i class="fas fa-exchange-alt"></i>
+                <span
+                  [tooltip]="form.valid == false ? 'Selecione uma Checklist':''"
+                  container="body"
+                  placement ="left">Associar
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <custom-table [config]="tableConfigEtapas">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="text-center"
+                    width="5%">
+                    <btn-icon
+                      [icon]="toggleAll ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll()">
+                    </btn-icon>
+                  </th>
+                  <th scope="col" width="85%">Etapas</th>
+                  <th scope="col" width="10%"></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let etapa of etapasLista; let i = index;">
+                  <td class="text-center" width="5%">
+                    <btn-icon
+                      [icon]="etapa.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onCheckEtapa(i, etapa)">
+                    </btn-icon>
+                  </td>
+                  <td
+                    class="hover"
+                    width="85%"
+                    (click)="onCheckEtapa(i, etapa)">
+                    {{ etapa.ID_LOGI_YMS_ETAP }} - {{ etapa.NM_MATE | uppercase }}
+                  </td>
+                  <td
+                  width="10%"
+                  class="hover">
+                    <div>
+                      <i
+                      class="far fa-question-circle"
+                      [tooltip]="tooltipDetalhesEtapa"
+                      placement="left"
+                      container="body"
+                      >
+                      </i>
+
+                      <ng-template #tooltipDetalhesEtapa>
+                        <table>
+                          <tbody>
+                            <tr>
+                              <th>Classe: </th>
+                              <td class="text-left">{{etapa.NM_CLAS || 'NENHUMA INFORMAÇÃO'}}</td>
+                            </tr>
+                            <tr>
+                              <th>Linha: </th>
+                              <td class="text-left">{{etapa.NM_LINH || 'NENHUMA INFORMAÇÃO'}}</td>
+                            </tr>
+                            <tr *ngIf = "etapa.IN_STAT == 1">
+                              <th><i class="far fa-check-circle text-success"></i></th>
+                              <td class="text-left">Etapa {{etapa.DS_STAT}}</td>
+                            </tr>
+                            <tr *ngIf = "etapa.IN_STAT != 1">
+                              <th><i class="fas fa-ban text-danger "></i></th>
+                              <td class="text-left">Etapa {{etapa.DS_STAT}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </ng-template>
+
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="searching === true">
+        <div class="col">
+          <message
+            icon="fas fa-cog fa-spin"
+            text="Estamos pesquisando os etapas para você...">
+          </message>
+        </div>
+      </div>
+      <div *ngIf="searching === false">
+        <div class="row" *ngIf="etapasListaEmpty && loadingEtapasLista">
+          <div class="col">
+            <message
+              icon="fas fa-box-open"
+              text="Nenhuma informação encontrada">
+            </message>
+          </div>
+        </div>
+        <div class="row" *ngIf="etapasLista.length === 0 && !firstSearch">
+          <div class="col">
+            <message
+              icon="fas fa-search"
+              text="Preecha os campos acima para pesquisar etapas">
+            </message>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>
+
+

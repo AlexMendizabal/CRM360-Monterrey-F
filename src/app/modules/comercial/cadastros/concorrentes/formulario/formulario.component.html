@@ -1,0 +1,63 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      <form [formGroup]="form">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="nomeConcorrente">Nome do concorrente</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nomeConcorrente"
+              formControlName="nomeConcorrente"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('nomeConcorrente') + ' ' + onFieldRequired(form.controls.nomeConcorrente)">
+            <invalid-form-control [show]="onFieldInvalid('nomeConcorrente')" message="Nome do concorrente é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="nomeMarcaAco">Nome da marca de aço</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nomeMarcaAco"
+              formControlName="nomeMarcaAco"
+              (input)="onInput()"
+              autocomplete="new-password">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="codSituacao">Situação</label>
+            <select
+              class="form-control custom-select"
+              id="codSituacao"
+              formControlName="codSituacao"
+              [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
+              <option value='1'>Ativo</option>
+              <option value='0'>Inativo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>

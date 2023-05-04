@@ -1,0 +1,416 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button 
+    (click)="onSave()"
+    [disabled] = "form.status == 'INVALID'"
+    >
+    Guardar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col-lg-6">
+      <form
+        [formGroup]="form"
+        class="d-flex flex-column"
+        autocomplete="off"
+        [hidden]="loading"
+      >
+        <div class="mtc-title">Datos del Usuario</div>
+        <div class="form-row">
+          <div class="form-group col-2">
+            <label for="matricula">Registro</label>
+            <input
+              id="matricula"
+              type="number"
+              class="form-control"
+              formControlName="matricula"
+              placeholder="Ingresse..."
+              [ngClass]="onFieldRequired('matricula')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('matricula')" message="Registro es obligatorio."></invalid-form-control>
+          </div>
+          <div class="form-group col">
+            <label for="nome">Nombre</label>
+            <input
+              id="nome"
+              type="text"
+              class="form-control"
+              formControlName="nome"
+              placeholder="Ingresse..."
+              [ngClass]="onFieldRequired('nome')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('nome')" message="Nombre es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="apelido">Abreviatura del Nombre</label>
+            <input 
+              id="apelido"
+              type="text"
+              class="form-control"
+              formControlName="apelido"
+              placeholder="Ingresse..."
+              [ngClass]="onFieldRequired('apelido')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('apelido')" message="Apellido es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="email">Correo Electrónico</label>
+            <input 
+              id="email"
+              type="email"
+              class="form-control"
+              formControlName="email"
+              placeholder="email@email.com"
+              [ngClass]="onFieldRequired('email')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('email')" message="Correo Electrónico es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="pessoaTipo">Tipo de persona</label>
+            <select
+              name="pessoaTipo"
+              id="pessoaTipo"
+              class="form-control"
+              [ngClass]="onFieldRequired('pessoaTipo')"
+              formControlName="pessoaTipo"
+            >
+              <option value="F">Física</option>
+              <option value="J">Jurídica</option>
+            </select>
+          </div>
+          <div class="form-group col-6">
+            <div class="form-group">
+              <label for="dataAniversario">Fecha de cumpleaños</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="far fa-calendar-alt"></i>
+                  </span>
+                </div>
+                <input
+                class="form-control"
+                id="dataAniversario"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                placeholder="Ingrese..."
+                formControlName="dataAniversario"
+              />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="empresa">Compañia</label>
+            <input 
+              id="empresa"
+              type="text"
+              class="form-control"
+              formControlName="empresa"
+              placeholder="Ingrese..."
+              [ngClass]="onFieldRequired('empresa')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('empresa')" message="Compañia es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="cargo">Puesto</label>
+            <input 
+              id="cargo"
+              type="text"
+              class="form-control"
+              formControlName="cargo"
+              placeholder="Ingrese..."
+              [ngClass]="onFieldRequired('cargo')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('cargo')" message="Puesto es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="departamento">Departamento</label>
+            <input 
+              id="departamento"
+              type="text"
+              class="form-control"
+              formControlName="departamento"
+              placeholder="Digite..."
+              [ngClass]="onFieldRequired('departamento')"
+            >
+            <invalid-form-control [show]="onFieldInvalid('departamento')" message="Departamento es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="senha">Contraseña</label>
+            <input 
+              id="senha"
+              type="text"
+              class="form-control"
+              formControlName="senha"
+              placeholder="Ingresse..."
+              style="text-transform: none !important;"
+            >
+          </div>
+          <div class="form-group col-6">
+            <label for="modulo">Modulo</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="modulos"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              labelForId="modulo"
+              bindLabel="nome"
+              bindValue="id"
+              id="modulo"
+              formControlName="moduloId"
+              [ngClass]="onFieldRequired('moduloId')"
+            >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('moduloId')" message="Modulo es obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="situacao">Situación</label>
+            <select
+              name="situacao"
+              id="situacao"
+              class="form-control"
+              formControlName="situacao"
+            >
+              <option value="1">Activo</option>
+              <option value="0">Inactivo</option>
+            </select>
+          </div>
+        </div>
+      </form>
+      <div class="row mb-4">
+        <div class="col mb-3">
+          <hr>
+        </div>
+      </div>
+      <message
+        *ngIf="perfisAssociadosLoading"
+        icon="fas fa-cog fa-spin"
+        text="Buscamos información del perfil seleccionado...">
+      </message>
+      <div [hidden]="perfisAssociadosLoading">
+        <div class="row mb-2 mt-4">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Perfiles asociados al perfil</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                (click)="onRemoverAssociacao()">
+                <i class="fas fa-trash"></i>
+                <span>Limpiar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="!perfisAssociadosLoading && perfisAssociados.length > 0">
+          <div class="col">
+            <custom-table [config]="tableConfigPerfisAssociados">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="text-center"
+                    style="width: 5%">
+                    <btn-icon
+                      [icon]="toggle?.perfisAssociados ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll('perfisAssociados')">
+                    </btn-icon>
+                  </th>
+                  <th scope="col" width="20%">Código</th>
+                  <th scope="col" width="70%">Descripción</th>
+                  <th scope="col" width="5%"></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of perfisAssociados" >
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="item.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="item.checked = !item.checked">
+                    </btn-icon>
+                  </td>
+                  <td width="20%">{{ item.id }}</td>
+                  <td width="70%">
+                   {{ item.nome | uppercase }}
+                  </td>
+                  <td class="text-center" width="5%">
+                    <btn-icon
+                      icon="fas fa-trash"
+                      size="small"
+                      (click)="onRemoverAssociacao(item)"
+                      *ngIf="!item.loading"  
+                    >
+                    </btn-icon>
+                    <div class="text-primary small" *ngIf="item.loading">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+        <div class="row" *ngIf="!perfisLoading && perfisAssociados.length === 0">
+          <div class="col">
+            <message
+              icon="fas fa-exchange-alt"
+              text="No se encontraron asociaciones">
+            </message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 border-left">
+      <div class="row mb-2">
+        <div class="col mt-auto">
+          <div class="mtc-title mb-0">Búsqueda de perfil</div>
+        </div>
+        <div class="col">
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              (click)="getPerfis()">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <advanced-filter>
+        <form [formGroup]="formPerfis" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-4">
+              <label for="buscarPor">BÚSQUEDA POR</label>
+              <select
+                class="form-control custom-select"
+                formControlName="buscarPor"
+              >
+                <option value="id">Id</option>
+                <option value="nome" selected>Nombre</option>
+              </select>
+            </div>
+            <div class="form-group col-8">
+              <label>TÉRMINO DE BÚSQUEDA</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pesquisa"
+                  (keyup.enter)="getPerfis()"
+                >
+              </div>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+      <div *ngIf="perfis.length > 0 && !perfisLoading">
+        <div class="row mb-2">
+          <div class="col mt-auto">
+            <div class="mtc-title mb-0">Selección de Perfiles</div>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                (click)="onAssociarPerfis()"
+                [disabled]="!form.get('id')?.value">
+                <i class="fas fa-exchange-alt"></i>
+                <span
+                  [tooltip]="!form.get('id')?.value ? 'Seleccionar un perfil':''"
+                  container="body"
+                  placement ="left">Conectar
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <custom-table [config]="tableConfigPerfis">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="text-center"
+                    style="width: 5%">
+                    <btn-icon
+                      [icon]="toggle?.perfis ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="onToggleAll('perfis')">
+                    </btn-icon>
+                  </th>
+                  <th scope="col" style="width: 90%">Perfiles</th>
+                  <th style="width: 5%"></th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of perfis">
+                  <td class="text-center" style="width: 5%">
+                    <btn-icon
+                      [icon]="item.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                      size="small"
+                      (click)="item.checked = !item.checked">
+                    </btn-icon>
+                  </td>
+                  <td
+                    class="hover"
+                    style="width: 90%"
+                    (click)="item.checked = !item.checked">
+                    ({{ item.id }}) {{ item.nome | uppercase }}
+                  </td>
+                  <td style="width: 5%">
+                    <div class="text-primary small" *ngIf="item.loading">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="perfisLoading">
+        <div class="col">
+          <message
+            icon="fas fa-cog fa-spin"
+            text="Estamos buscando los perfiles por ti...">
+          </message>
+        </div>
+      </div>
+      <div>
+        <div class="row" *ngIf="(perfis.length == 0) && !perfisLoading">
+          <div class="col">
+            <message
+              icon="fas fa-box-open"
+              text="No se encontró información">
+            </message>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>

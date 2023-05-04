@@ -1,0 +1,39 @@
+.border-left-green {
+  border-left-color: green !important;
+}
+
+.border-left-orange {
+  border-left-color: orange !important;
+}
+
+.modal-content {
+  position: absolute;
+  left: -50%;
+  width: 1000px;
+}
+
+.actions button {
+  background-color: transparent;
+  border: unset;
+  color: #586464;
+  font-weight: 500;
+  line-height: 35px;
+  padding: 0px 10px;
+}
+
+.bg-active {
+  background-color: #e9ecef;
+}
+
+tr:hover {
+  background-color: #f8fafb !important;
+}
+
+.actions button:hover {
+  color: #005fdc;
+}
+
+.positionSpinner {
+  margin-top: 19px;
+  right: -20%;
+}

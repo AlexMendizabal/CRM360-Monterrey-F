@@ -1,0 +1,279 @@
+<div class="modal-body">
+  <advanced-filter>
+    <form [formGroup]="formLotesDuplicados">
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="IN_DS_OBSE">Situação dos Lotes</label>
+          <select
+            class="form-control custom-select"
+            formControlName="IN_DS_OBSE"
+          >
+            <option value="1">Lotes Justificados</option>
+            <option value="0">Lotes não Justificados</option>
+            <option value="">Exibir Todos</option>
+          </select>
+        </div>
+        <div class="form-group col-3">
+          <label for="buscarPor">BUSCAR POR</label>
+          <select
+            class="form-control custom-select"
+            formControlName="buscarPor"
+          >
+            <option value="DS_LOTE" selected>Lote</option>
+            <option value="NR_NOTA_FISC" >Nota Fiscal</option>
+            <option value="NM_MATE">Material</option>
+          </select>
+        </div>
+
+        <div class="form-group col-6">
+          <label>TERMO DE PESQUISA</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="pesquisa"
+              >
+              <div class="input-group-append">
+                <span 
+                  container="body"
+                  placement ="left"
+                >
+                  <button
+                    style="height: 25px;"
+                    class="input-group-text hover"
+                    (click)="getLotesDuplicados()"
+                    >
+                    <i class="fas fa-search"></i>
+                  </button>
+                </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div [hidden]="!loadingDuplicadas" class="col-lg-12 text-muted ">
+    <p><strong>Buscando os lotes duplicados...</strong></p>
+  </div>
+  <div class="row" [hidden] = "loadingDuplicadas || noDuplicadas">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="!noDuplicadas">
+      </subtitles>
+    </div>
+  </div>
+  <div class="d-flex" [hidden] = "loadingDuplicadas || noDuplicadas">
+    <div class="p-0" [ngClass]="{'col': !showDetailPanel, 'col-5': showDetailPanel}">
+      <div class="w-100">
+        <custom-table  [config]="tableConfig" class="text-center" *ngIf="!noDuplicadas">
+          <ng-template #thead let-thead>
+            <tr>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('DS_LOTE')">
+                <thead-sorter value="Lote" [active]="ORDE_BY == 'DS_LOTE'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('NR_NOTA_FISC')">
+                <thead-sorter value="NF" [active]="ORDE_BY == 'NR_NOTA_FISC'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                [hidden]="showDetailPanel"
+                (click)="setOrderBy('SEQU_MATE')">
+                <thead-sorter value="Sequência" [active]="ORDE_BY == 'SEQU_MATE'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                [hidden]="showDetailPanel"
+                (click)="setOrderBy('CD_MATE')">
+                <thead-sorter value="Cód. Material" [active]="ORDE_BY == 'CD_MATE'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                [hidden]="showDetailPanel"
+                (click)="setOrderBy('NM_MATE')">
+                <thead-sorter value="Material" [active]="ORDE_BY == 'NM_MATE'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                [hidden]="showDetailPanel"
+                (click)="setOrderBy('DS_UNID_MEDI')">
+                <thead-sorter value="Un. Medida" [active]="ORDE_BY == 'DS_UNID_MEDI'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                [hidden]="showDetailPanel"
+                (click)="setOrderBy('NM_STAT')">
+                <thead-sorter value="Status de Recebimento" [active]="ORDE_BY == 'NM_STAT'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th
+                scope="col"
+                class="text-center hover"
+                [hidden]="showDetailPanel"
+                (click)="setOrderBy('DT_INCL')">
+                <thead-sorter value="Data justificativa" [active]="ORDE_BY == 'DT_INCL'" [sort]="ORDE_TYPE"></thead-sorter>
+              </th>
+              <th scope="col" style="width:40px"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr  *ngFor="let duplicada of duplicadas " [class.table-active]="duplicada?.ID_LOGI_ENMA_NOFI == duplicadaSelecionada?.ID_LOGI_ENMA_NOFI && showDetailPanel">
+              <td  [ngClass]="duplicada.IN_STAT == '1' ? 'border-success' : 'border-primary'">
+                {{duplicada.DS_LOTE }}
+              </td>
+              <td >{{ duplicada.NR_NOTA_FISC }}</td>
+              <td [hidden]="showDetailPanel" (click)="onDetails(duplicada)">{{ duplicada.SEQU_MATE | uppercase }}</td>
+              <td [hidden]="showDetailPanel" (click)="onDetails(duplicada)">{{ duplicada.CD_MATE }}</td>
+              <td [hidden]="showDetailPanel" (click)="onDetails(duplicada)">{{ duplicada.NM_MATE | uppercase }}</td>
+              <td [hidden]="showDetailPanel" (click)="onDetails(duplicada)">{{ duplicada.DS_UNID_MEDI | uppercase }}</td>
+              <td [hidden]="showDetailPanel" (click)="onDetails(duplicada)">{{ duplicada.NM_STAT | uppercase }}</td>
+              <td [hidden]="showDetailPanel" (click)="onDetails(duplicada)">{{ duplicada.DT_INCL | date: 'dd/MM/yyyy' }}</td>
+              <td class="align-middle">
+                <span class="mr-3" tooltip="Justificar" *ngIf="duplicada.IN_STAT != 1" placement="left" container="body">
+                  <button type="button" class="btn-icon-sm" (click)="openModal(formResolucao, duplicada)">
+                    <i class="fas fa-check"></i>
+                  </button>
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table><br>
+      </div>
+      <div>
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItemsDuplicadas ? totalItemsDuplicadas : currentPage*(itemsPerPage) }} de {{ totalItemsDuplicadas }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItemsDuplicadas"
+          (pageChanged)="onPageChangedDuplicadas($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-7" [hidden]="!showDetailPanel">
+      <detail-panel>
+        <div>
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label>ID</label>
+              <div *ngIf="duplicadaSelecionada?.ID_LOGI_ENMA_NFMA_LTDP == null">NÃO INFORMADO</div>
+              <div *ngIf="duplicadaSelecionada?.ID_LOGI_ENMA_NFMA_LTDP != null">{{duplicadaSelecionada?.ID_LOGI_ENMA_NFMA_LTDP}}</div>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>Lote</label>
+              <div *ngIf="duplicadaSelecionada?.DS_LOTE == null">NÃO INFORMADO</div>
+              <div *ngIf="duplicadaSelecionada?.DS_LOTE != null">{{ duplicadaSelecionada?.DS_LOTE}}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6">
+              <label>Nota Fiscal</label>
+              <div *ngIf="duplicadaSelecionada?.NR_NOTA_FISC == null">NÃO INFORMADO</div>
+              <div *ngIf="duplicadaSelecionada?.NR_NOTA_FISC != null">{{ duplicadaSelecionada?.NR_NOTA_FISC}}</div>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>Status de Recebimento</label>
+              <div *ngIf="duplicadaSelecionada?.NM_STAT == null">NÃO INFORMADO</div>
+              <div *ngIf="duplicadaSelecionada?.NM_STAT != null">{{ duplicadaSelecionada?.NM_STAT}}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-3">
+              <label>Sequência</label>
+              <div *ngIf="duplicadaSelecionada?.SEQU_MATE == null">NÃO INFORMADO</div>
+              <div *ngIf="duplicadaSelecionada?.SEQU_MATE != null">{{ duplicadaSelecionada?.SEQU_MATE  }}</div>
+            </div>
+            <div class="form-group col-lg-3">
+              <label>Cód. Material</label>
+              <div *ngIf="duplicadaSelecionada?.CD_MATE == null">NÃO INFORMADO</div>
+              <div *ngIf="duplicadaSelecionada?.CD_MATE != null">{{ duplicadaSelecionada?.CD_MATE  }}</div>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>Material</label>
+              <div *ngIf="duplicadaSelecionada?.NM_MATE == null">NÃO INFORMADO</div>
+              <div *ngIf="duplicadaSelecionada?.NM_MATE != null"> {{duplicadaSelecionada?.NM_MATE}}</div>
+            </div>
+          </div>
+          <hr>
+          <div class="form-row">
+            <div class="form-group col">
+              <label>Justificativa:</label>
+              <div *ngIf="duplicadaSelecionada?.DS_OBSE == null">NÃO INFORMADO</div>
+              <div *ngIf="duplicadaSelecionada?.DS_OBSE != null">{{ duplicadaSelecionada?.DS_OBSE  }}</div>
+            </div>
+          </div>
+          <hr>
+          <div class="form-row">
+            <div class="form-group col">
+              <label>Usuário Responsável Pela Justificativa</label>
+              <div *ngIf="duplicadaSelecionada?.NR_MATR == null">NÃO INFORMADO</div>
+              <div *ngIf="duplicadaSelecionada?.NR_MATR != null">{{duplicadaSelecionada?.NR_MATR}} - {{ duplicadaSelecionada?.NM_USUA }}</div>
+            </div>
+            <div class="form-group col">
+              <label>Data da Justificativa</label>
+              <div *ngIf="duplicadaSelecionada?.DT_INCL == null">NÃO INFORMADO</div>
+              <div *ngIf="duplicadaSelecionada?.DT_INCL != null">{{ duplicadaSelecionada?.DT_INCL | date: 'dd/MM/yyyy'}}</div>
+            </div>
+          </div>
+        </div>
+      </detail-panel>
+    </div>
+  </div>
+  <ng-template #formResolucao>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Descrição de Parecer #{{duplicadaSelecionada?.ID_APRO}}</h4>
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="col-12">
+        <form [formGroup]="formLotesDuplicados" autocomplete="off">
+          <div class="form-row justify-content-center">
+            <div class="form-group col pl-0">
+              <label for="DS_OBSE" >Descrição:</label>
+              <textarea 
+                class="form-control" 
+                id="DS_OBSE" 
+                formControlName="DS_OBSE" 
+                rows="3"
+                [ngClass]="onFieldError('DS_OBSE')"
+                >
+              </textarea>
+              <invalid-form-control [show]="onFieldInvalid('DS_OBSE')" message="Descrição é obrigatório com no mínimo {{numberDescricao}} caracteres."></invalid-form-control>
+            </div>
+          </div>
+        </form>
+        <div  class="form-row justify-content-center text-center" >
+          <button 
+            type="button" 
+            class="btn btn-default btn-lg m-2"
+            (click)="changeType()"
+            [disabled]="formLotesDuplicados.valid === false"
+          >
+          <span aria-hidden="true">
+            <i class=" text-primary fas fa-check"></i>
+           </span>Marcar como Justificado
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

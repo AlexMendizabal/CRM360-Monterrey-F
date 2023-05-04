@@ -1,0 +1,115 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button>
+    <label for="file" class="hover">Importar</label>
+    <input type="file" id="file" style="display: none;" (input)="getFile($event)">
+  </button>
+  <button
+    [disabled]="count === 0"
+    (click)="onSave()"  
+  >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div [hidden]="(files.length == 0)">
+    <custom-table [config]="tableConfig">
+      <ng-template #thead let-thead>
+        <tr>
+          <th
+            [ngClass]="file?.checked ? 'border-left-green' : 'border-left-orange'"
+            class="text-center"
+          >
+            <button
+              type="button"
+              (click)="onToggleCheckAll()"
+              class="btn-icon-sm"
+            >
+              <div
+                class="fa-square"
+                [ngClass]="checkAll ? 'fas text-success' : 'far'"
+                style="font-size: 13px;"
+              >
+              </div>
+            </button>
+          </th>
+          <th class="align-middle" style="font-size: 13px;">#</th>
+          <th class="align-middle">Data</th>
+          <th class="align-middle">Unidade</th>
+          <th class="align-middle">Nº Ficha</th>
+          <th class="align-middle">Tipo</th>
+          <th class="align-middle">Valor</th>
+          <th></th>
+          <th
+            style="width: 5%"
+            class="align-middle text-center"
+          >
+            <button
+              type="button"
+              (click)="deleteAllElements()"
+              tooltip="Excluir Todos"
+              placement="left"
+              container="body"
+              class="btn-icon-sm"
+            >
+              <i class="far fa-trash-alt text-danger"></i>
+            </button>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <tr *ngFor="let file of files | slice : begin : end; let i = index">
+          <td
+            [ngClass]="file?.checked ? 'border-left-green' : 'border-left-orange'"
+            style="width: 5%"
+            class="text-center"
+          >
+            <button
+              type="button"
+              class="btn-icon-sm"
+              (click)="onToggleCheck(file)"
+            >
+              <div
+                class="hover fa-square"
+                [ngClass]="file?.checked ? 'fas text-success' : 'far'"  
+              >
+              </div>
+            </button>
+          </td>
+          <td class="align-middle" style="width: 40px;"> {{ i + 1 }}</td>
+          <td class="align-middle">{{ file[0] | date : 'dd/MM/yyyy'}}</td>
+          <td class="align-middle">{{ file[1] }}</td>
+          <td class="align-middle">{{ file[2]}}</td>
+          <td class="align-middle">{{ file[3] }}</td>
+          <td class="align-middle">{{ file[4] | currency : 'BRL' : 'symbol' : '1.2-2'}}</td>
+          <td class="align-middle" style="width: 5%;">
+            <div
+              *ngIf="file?.status == 2"
+              tooltip="Integrado"
+              placement="left"
+              container="body"
+            >
+              <i class="far fa-check-circle text-success"></i>
+            </div>
+          </td>
+          <td class="align-middle text-center" style="width: 5%">  
+            <button
+              type="button"
+              class="btn-icon-sm"
+              tooltip="Excluir"
+              placement="left"
+              container="body"
+              (click)="deleteElement(i)"
+            >
+              <i class="far fa-trash-alt text-danger"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+    </custom-table>
+  </div>
+  <div [hidden]="files.length != 0 && !loading" class="d-flex justify-content-center align-items-center" style="width: 100%; height: 300px">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

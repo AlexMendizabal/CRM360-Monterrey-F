@@ -1,0 +1,26 @@
+.custom-checkbox {
+  .custom-control-label {
+    &::before,
+    &::after {
+      top: 2px !important;
+    }
+  }
+}
+.custom-radio {
+  .custom-control-label {
+    &::before,
+    &::after {
+      top: 2px !important;
+    }
+  }
+}
+.custom-control-label {
+  font-size: inherit !important;
+  font-weight: 400 !important;
+  margin-bottom: 0 !important;
+  text-transform: unset !important;
+}
+
+.custom-file-input:lang(en) ~ .custom-file-label::after {
+  content: 'Buscar';
+}

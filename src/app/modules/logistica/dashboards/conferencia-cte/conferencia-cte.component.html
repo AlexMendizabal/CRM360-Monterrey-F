@@ -1,0 +1,392 @@
+<loader-spinner-navbar *ngIf="loadingNavBar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<app-header appTitle="Conferência de CTEs">
+  <!-- <button
+    type="button"
+    (click)="getExport()">
+    Exportar
+  </button> -->
+  <button
+    type="button"
+    (click)="onReset()">
+    Limpar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loading">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-3">
+              <label for="empresa">Data Inicial</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                  class="form-control"
+                  id="dataInicial"
+                  type="text"
+                  bsDatepicker
+                  [bsConfig]="bsConfig"
+                  formControlName="DT_INIC">
+              </div>
+            </div>
+            <div class="form-group col-3">
+              <label for="empresa">Data Final</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input
+                class="form-control"
+                id="dataFinal"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="DT_FINA">
+              </div>
+            </div>
+            <div class="form-group col">
+              <label for="usuario">Usuário de emissão do cte</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="DS_USUA"
+                placeholder="Nome ou matrícula"
+                (keyup.enter)="onFilter()"
+              >
+            </div>
+          </div>
+          <!-- <div class="form-row">
+            <div class="form-group col">
+              <label for="cnpj">CNPJ's não considerados</label>
+              <input type="text" formControlName="DS_REMV_CNPJ" class="form-control" (keyup.enter)="onFilter()">
+            </div>
+          </div> -->
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row justify-content-between">
+    <div class="col-lg-7">
+      <div [ngClass]="modoViewIncorretas != 1 ? 'card border-primary w-100 mb-5' : 'card border-danger w-100 mb-5' ">
+        <div class="card-body" >
+          <div class="row">
+            <h5 [ngClass]="modoViewIncorretas != 1 ? 'card-title text-primary col' : 'card-title text-danger col' ">EMISSÕES INCORRETAS</h5>
+            <div class="col">
+              <div class="d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary mr-3"
+                  (click)="getRelatorio(relatorioModal, 'EMISSOES_INCORRETAS')"
+                  >
+                  <i class="fas fa-file-alt"></i>
+                  <span>Relatório</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div [hidden]="loading || !hasData('emissoesIncorretas')">
+            <custom-table
+              [config]="tableConfig"
+            >
+              <ng-template #thead let-thead>
+                <tr>
+                  <th width="20%">Tipo</th>
+                  <th class="text-center">Emitente</th>
+                  <th class="text-center">Destinatário</th>
+                  <th class="text-center">Tomador</th>
+                  <th class="text-center">Valor</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr>
+                <tr *ngFor="let item of dados?.emissoesIncorretas?.dados">
+                  <td class="border-right" width="20%"><strong>{{ item?.descricao }}</strong></td>
+                  <td class="text-center">{{item?.emitente || 0}}</td>
+                  <td class="text-center">{{item?.destinatario || 0}}</td>
+                  <td class="text-center">{{item?.pagador || 0}}</td>
+                  <td class="text-center">{{item?.valor || 0}}</td>
+                </tr>
+                <tr >
+                  <td class="bg-dark text-white text-center"><strong>TOTAL:</strong></td>
+                  <td class="bg-dark text-white text-center"><strong>{{dados?.emissoesIncorretas?.total?.emitente || 0}}</strong></td>
+                  <td class="bg-dark text-white text-center"><strong>{{dados?.emissoesIncorretas?.total?.destinatario || 0}}</strong></td>
+                  <td class="bg-dark text-white text-center"><strong>{{dados?.emissoesIncorretas?.total?.pagador || 0}}</strong></td>
+                  <td class="bg-dark text-white text-center"><strong>{{dados?.emissoesIncorretas?.total?.valor || 0}}</strong></td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+          <div *ngIf="loading || !hasData('emissoesIncorretas')" class="text-center d-flex justify-content-center align-items-center">
+            <empty-result message="Nenhuma informação encontrada"></empty-result>
+          </div>
+        </div>
+      </div>
+      <div class="card border-primary w-100 mb-5">
+        <div class="card-body">
+          <div class="row">
+            <h5 class="card-title text-primary col">NÃO EMITIDOS</h5>
+            <div class="col">
+              <div class="d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary mr-3"
+                  (click)="getRelatorio(relatorioModal, 'NAO_EMITIDO')"
+                  >
+                  <i class="fas fa-file-alt"></i>
+                  <span>Relatório</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div [hidden]="loading || !hasData('naoEmitidos')">
+            <custom-table [config]="tableConfig">
+              <ng-template #thead let-thead>
+                <tr>
+                  <th width="25%">Tipo</th>
+                  <th class="text-center">Quantidade</th>
+                  <th class="text-center">Valor</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of dados?.naoEmitidos?.dados">
+                  <td class="border-right"><strong>{{ item?.descricao }}</strong></td>
+                  <td class="text-center">{{item?.quantidade}}</td>
+                  <td class="text-center">{{item?.valor || 0 | currency: 'BRL'}}</td>
+                </tr>
+                <tr>
+                  <td class="bg-dark text-white" style="width:160px;"><strong>TOTAL:</strong></td>
+                  <td class="bg-dark text-white text-center"><strong>{{dados?.naoEmitidos?.total?.quantidade}}</strong></td>
+                  <td class="bg-dark text-white text-center"><strong>{{dados?.naoEmitidos?.total?.valor | currency : 'BRL'}}</strong></td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+          <div *ngIf="loading || !hasData('naoEmitidos')" class="text-center d-flex justify-content-center align-items-center">
+            <empty-result message="Nenhuma informação encontrada"></empty-result>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5 border-left">
+      <div class="card w-100 mb-5">
+        <div class="card-body">
+          <div class="row">
+            <h5 class="card-title col">DEMAIS EMISSÕES</h5>
+            <div class="col">
+              <div class="d-flex justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary mr-3"
+                  (click)="getRelatorio(relatorioModal, 'DEMAIS_EMISSOES')"
+                  >
+                  <i class="fas fa-file-alt"></i>
+                  <span>Relatório</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div [hidden]="loading || !hasData('demaisEmissoes')">
+            <custom-table [config]="tableConfig" >
+              <ng-template #thead let-thead>
+                <tr>
+                  <th>Filial</th>
+                  <th>Quantidade</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>  
+                <tr *ngFor="let item of dados?.demaisEmissoes?.dados">
+                  <td
+                    style="width:160px"
+                    class="border-right"
+                  >
+                    {{item?.descricao}}
+                  </td>
+                  <td>{{item?.quantidade}}</td>
+                </tr>
+                <tr >
+                  <td  class="bg-dark text-white" style="width:160px;"><strong>TOTAL:</strong></td>
+                  <td class="bg-dark text-white"><strong>{{dados?.demaisEmissoes?.total?.quantidade}}</strong></td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+          <div *ngIf="loading || !hasData('demaisEmissoes')" class="text-center d-flex justify-content-center align-items-center">
+            <empty-result message="Nenhuma informação encontrada"></empty-result>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-body>
+
+
+<ng-template #relatorioModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Relatorio</h4>
+    <div>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div>
+      <div class="mb-2 d-flex justify-content-between">
+        <div>
+          <span>Colunas</span>
+          <button
+            class="btn-icon-sm ml-2"
+            (click)="hideListColumns()"
+            >
+            <i class="fas" [ngClass]="{'fa-sort-up': !inColunas, 'fa-sort-down': inColunas}"></i>
+          </button>
+        </div>
+        <button
+          class="btn btn-outline-primary"
+          (click)="export()"
+          >
+          Exportar
+        </button>
+      </div>
+      <ul *ngIf="inColunas">
+        <li *ngFor="let item of colunas | keyvalue : keepOriginalOrder">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              [checked]="item.value"
+              (change)="setColumnState(item)"
+              [id]="item.key">
+            <label class="custom-control-label" [for]="item.key">{{item.key}}</label>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div style="display: block; overflow-x: auto;">
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th class="text-truncate" *ngIf="colunas['TIPO']">TIPO</th>
+            <th class="text-truncate" *ngIf="colunas['CNPJ_EMITENTE']">CNPJ_EMITENTE</th>
+            <th class="text-truncate" *ngIf="colunas['CNPJ_EMITENTE_CTRC']">CNPJ_EMITENTE_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['CNPJ_DESTINATARIO']">CNPJ_DESTINATARIO</th>
+            <th class="text-truncate" *ngIf="colunas['CNPJ_DESTINATARIO_CTRC']">CNPJ_DESTINATARIO_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['CNPJ_PAGADOR']">CNPJ_PAGADOR</th>
+            <th class="text-truncate" *ngIf="colunas['CNPJ_PAGADOR_CTRC']">CNPJ_PAGADOR_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['FRETE_PESO']">FRETE_PESO</th>
+            <th class="text-truncate" *ngIf="colunas['FRETE_PESO_ARCELOR']">FRETE_PESO_ARCELOR</th>
+            <th class="text-truncate" *ngIf="colunas['DATA_EMISSAO']">DATA_EMISSAO</th>
+            <th class="text-truncate" *ngIf="colunas['NOTA_FISCAL']">NOTA_FISCAL</th>
+            <th class="text-truncate" *ngIf="colunas['PESO_NF']">PESO_NF</th>
+            <th class="text-truncate" *ngIf="colunas['VALOR_NF']">VALOR_NF</th>
+            <th class="text-truncate" *ngIf="colunas['CHAVE_ACESSO_NF']">CHAVE_ACESSO_NF</th>
+            <th class="text-truncate" *ngIf="colunas['CUSTO_FRETE_NF']">CUSTO_FRETE_NF</th>
+            <th class="text-truncate" *ngIf="colunas['HORA_IMPORTACAO']">HORA_IMPORTACAO</th>
+            <th class="text-truncate" *ngIf="colunas['CODIGO_CTRC']">CODIGO_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['FILIAL_CTRC']">FILIAL_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['SERIE_CTRC']">SERIE_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['TIPOCTE']">TIPOCTE</th>
+            <th class="text-truncate" *ngIf="colunas['ALIQ_ICMS']">ALIQ_ICMS</th>
+            <th class="text-truncate" *ngIf="colunas['OBS_CTE']">OBS_CTE</th>
+            <th class="text-truncate" *ngIf="colunas['CIDADE_EMITENTE_CTRC']">CIDADE_EMITENTE_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['CIDADE_DESTINATARIO_CTRC']">CIDADE_DESTINATARIO_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['NOTA_FISCAL_CTRC']">NOTA_FISCAL_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['SERIE_NOTA_FISCAL_CTRC']">SERIE_NOTA_FISCAL_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['PESO_NOTA_FISCAL_CTRC']">PESO_NOTA_FISCAL_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['VALOR_NOTA_CTRC']">VALOR_NOTA_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['TRASNPORTE_CTRC']">TRASNPORTE_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['CNPJ_TRANSPORTADORA']">CNPJ_TRANSPORTADORA</th>
+            <th class="text-truncate" *ngIf="colunas['PESO_DESCARREGADO']">PESO_DESCARREGADO</th>
+            <th class="text-truncate" *ngIf="colunas['BRM']">BRM</th>
+            <th class="text-truncate" *ngIf="colunas['DATA_BRM']">DATA_BRM</th>
+            <th class="text-truncate" *ngIf="colunas['PAGADOR_FRETE']">PAGADOR_FRETE</th>
+            <th class="text-truncate" *ngIf="colunas['INCLUSAO_CTRC']">INCLUSAO_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['ENVIO_CTRC_ARCELOR']">ENVIO_CTRC_ARCELOR</th>
+            <th class="text-truncate" *ngIf="colunas['XML_CTRC']">XML_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['SITUACAO_CTRC']">SITUACAO_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['STATUS_ARCELOR']">STATUS_ARCELOR</th>
+            <th class="text-truncate" *ngIf="colunas['MENSAGEM']">MENSAGEM</th>
+            <th class="text-truncate" *ngIf="colunas['DATA_PAGAMENTO']">DATA_PAGAMENTO</th>
+            <th class="text-truncate" *ngIf="colunas['VALOR_FATURA']">VALOR_FATURA</th>
+            <th class="text-truncate" *ngIf="colunas['LOCAL_TRANSPORTE']">LOCAL_TRANSPORTE</th>
+            <th class="text-truncate" *ngIf="colunas['NOME_USUARIO_EMISSAO_CTRC']">NOME_USUARIO_EMISSAO_CTRC</th>
+            <th class="text-truncate" *ngIf="colunas['MATRICULA_USUARIO_EMISSAO_CTRC']">MATRICULA_USUARIO_EMISSAO_CTRC</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>  
+          <tr *ngFor="let item of relatorio | slice : begin : end;">
+            <td class="text-truncate" *ngIf="colunas['TIPO']">{{item?.TIPO}}</td>
+            <td class="text-truncate" *ngIf="colunas['CNPJ_EMITENTE']">{{item?.CNPJ_EMITENTE}}</td>
+            <td class="text-truncate" *ngIf="colunas['CNPJ_EMITENTE_CTRC']">{{item?.CNPJ_EMITENTE_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['CNPJ_DESTINATARIO']">{{item?.CNPJ_DESTINATARIO}}</td>
+            <td class="text-truncate" *ngIf="colunas['CNPJ_DESTINATARIO_CTRC']">{{item?.CNPJ_DESTINATARIO_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['CNPJ_PAGADOR']">{{item?.CNPJ_PAGADOR}}</td>
+            <td class="text-truncate" *ngIf="colunas['CNPJ_PAGADOR_CTRC']">{{item?.CNPJ_PAGADOR_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['FRETE_PESO']">{{item?.FRETE_PESO | currency:'BRL'}}</td>
+            <td class="text-truncate" *ngIf="colunas['FRETE_PESO_ARCELOR']">{{item?.FRETE_PESO_ARCELOR | currency:'BRL'}}</td>
+            <td class="text-truncate" *ngIf="colunas['DATA_EMISSAO']">{{item?.DATA_EMISSAO | date : 'dd/MM/yyyy HH:mm'}}</td>
+            <td class="text-truncate" *ngIf="colunas['NOTA_FISCAL']">{{item?.NOTA_FISCAL}}</td>
+            <td class="text-truncate" *ngIf="colunas['PESO_NF']">{{item?.PESO_NF | number:'0.3-3'}}</td>
+            <td class="text-truncate" *ngIf="colunas['VALOR_NF']">{{item?.VALOR_NF | currency:'BRL'}}</td>
+            <td class="text-truncate" *ngIf="colunas['CHAVE_ACESSO_NF']">{{item?.CHAVE_ACESSO_NF}}</td>
+            <td class="text-truncate" *ngIf="colunas['CUSTO_FRETE_NF']">{{item?.CUSTO_FRETE_NF | currency:'BRL'}}</td>
+            <td class="text-truncate" *ngIf="colunas['HORA_IMPORTACAO']">{{item?.HORA_IMPORTACAO}}</td>
+            <td class="text-truncate" *ngIf="colunas['CODIGO_CTRC']">{{item?.CODIGO_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['FILIAL_CTRC']">{{item?.FILIAL_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['SERIE_CTRC']">{{item?.SERIE_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['TIPOCTE']">{{item?.TIPOCTE}}</td>
+            <td class="text-truncate" *ngIf="colunas['ALIQ_ICMS']">{{item?.ALIQ_ICMS}}</td>
+            <td class="text-truncate" *ngIf="colunas['OBS_CTE']">{{item?.OBS_CTE}}</td>
+            <td class="text-truncate" *ngIf="colunas['CIDADE_EMITENTE_CTRC']">{{item?.CIDADE_EMITENTE_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['CIDADE_DESTINATARIO_CTRC']">{{item?.CIDADE_DESTINATARIO_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['NOTA_FISCAL_CTRC']">{{item?.NOTA_FISCAL_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['SERIE_NOTA_FISCAL_CTRC']">{{item?.SERIE_NOTA_FISCAL_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['PESO_NOTA_FISCAL_CTRC']">{{item?.PESO_NOTA_FISCAL_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['VALOR_NOTA_CTRC']">{{item?.VALOR_NOTA_CTRC | currency:'BRL'}}</td>
+            <td class="text-truncate" *ngIf="colunas['TRASNPORTE_CTRC']">{{item?.TRASNPORTE_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['CNPJ_TRANSPORTADORA']">{{item?.CNPJ_TRANSPORTADORA}}</td>
+            <td class="text-truncate" *ngIf="colunas['PESO_DESCARREGADO']">{{item?.PESO_DESCARREGADO}}</td>
+            <td class="text-truncate" *ngIf="colunas['BRM']">{{item?.BRM}}</td>
+            <td class="text-truncate" *ngIf="colunas['DATA_BRM']">{{item?.DATA_BRM}}</td>
+            <td class="text-truncate" *ngIf="colunas['PAGADOR_FRETE']">{{item?.PAGADOR_FRETE}}</td>
+            <td class="text-truncate" *ngIf="colunas['INCLUSAO_CTRC']">{{item?.INCLUSAO_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['ENVIO_CTRC_ARCELOR']">{{item?.ENVIO_CTRC_ARCELOR}}</td>
+            <td class="text-truncate" *ngIf="colunas['XML_CTRC']">{{item?.XML_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['SITUACAO_CTRC']">{{item?.SITUACAO_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['STATUS_ARCELOR']">{{item?.STATUS_ARCELOR}}</td>
+            <td class="text-truncate" *ngIf="colunas['MENSAGEM']">{{item?.MENSAGEM}}</td>
+            <td class="text-truncate" *ngIf="colunas['DATA_PAGAMENTO']">{{item?.DATA_PAGAMENTO}}</td>
+            <td class="text-truncate" *ngIf="colunas['VALOR_FATURA']">{{item?.VALOR_FATURA | currency:'BRL'}}</td>
+            <td class="text-truncate" *ngIf="colunas['LOCAL_TRANSPORTE']">{{item?.LOCAL_TRANSPORTE}}</td>
+            <td class="text-truncate" *ngIf="colunas['NOME_USUARIO_EMISSAO_CTRC']">{{item?.NOME_USUARIO_EMISSAO_CTRC}}</td>
+            <td class="text-truncate" *ngIf="colunas['MATRICULA_USUARIO_EMISSAO_CTRC']">{{item?.MATRICULA_USUARIO_EMISSAO_CTRC}}</td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="mt-3 col p-0" [hidden]="noResult">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="5"
+          [totalItems]="totalItems"
+          [(itemsPerPage)]="itemsPerPage"
+          (pageChanged)="onPageChanged($event)"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+  </div>
+</ng-template>

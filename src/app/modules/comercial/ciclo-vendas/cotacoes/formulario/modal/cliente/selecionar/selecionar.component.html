@@ -1,0 +1,82 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">BÚSQUEDA DE CLIENTES</h4>
+  <div class="d-flex justify-content-center align-items-center">
+    <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingClientes">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+<div class="modal-body">
+  <advanced-filter>
+    <form [formGroup]="formClientes">
+      <div class="form-row">
+        <div class="form-group col-4">
+          <label for="cdItem">Buscar por</label>
+          <select
+            class="form-control custom-select"
+            formControlName="buscarPor"
+          >
+            <option value="NM_CLIE" selected>Código, nome fantasia ou razão social</option>
+          </select>
+        </div>
+
+        <div class="form-group col-8">
+          <label>Termo de Pesquisa</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="pesquisa"
+              >
+              <div class="input-group-append">
+                <span 
+                  [tooltip]="formClientes.valid == false ? 'Digite um termo de pesquisa':''"
+                  container="body"
+                  placement ="left"
+                >
+                  <button
+                  style="height: 100%; margin-left: 10px;"
+                    [disabled]="formClientes.valid == false"
+                    class="input-group-text hover"
+                    (click)="getClientes()"
+                    >
+                    <i class="fas fa-search"></i>
+                  </button>
+                </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <custom-table *ngIf="!noClientes" class="text-center">
+    <ng-template #thead let-thead>
+      <tr>
+        <th>Cód Cliente </th>
+        <th>Nome Fantasia</th>
+        <th>Razão Social </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template #tbody let-tbody>
+      <tr *ngFor="let cliente of clientes | slice : begin : end; let i = index">
+        <td>{{ cliente.codCliente }}</td>
+        <td>{{ cliente.nomeCliente }}</td>
+        <td>{{ cliente.razaoSocial }}</td>
+        <td>
+          <button
+            class="btn-icon-sm"
+            tooltip="Salvar Informações"
+            container="body"
+            (click)="setCliente(cliente)"
+          >
+            <i class="far fa-save"></i>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </custom-table>
+</div>

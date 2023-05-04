@@ -1,0 +1,16 @@
+.sticky {
+  position: sticky;
+}
+
+.btn-xm {
+	padding: 0.05rem 0.15rem;
+    font-size: 0.7rem;
+    border-radius: 0.2rem;
+}
+
+.btn-open-modal:disabled {
+  color: #fff;
+  background-color: #66c0ce;
+  border-color: #66c0ce;
+  opacity: 1;
+}

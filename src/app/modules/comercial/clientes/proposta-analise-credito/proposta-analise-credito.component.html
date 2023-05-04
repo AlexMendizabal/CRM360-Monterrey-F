@@ -1,0 +1,639 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Proposta para análise de crédito">
+  <button
+    type="button"
+    *ngIf="tipoVisao == 'formulario'"
+    [disabled]="!form.valid"
+    (click)="onSubmit()">
+    Generar
+  </button>
+  <button
+    type="button"
+    *ngIf="tipoVisao == 'ficha'"
+    (click)="onCancel()">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    *ngIf="tipoVisao == 'ficha'"
+    (click)="onDownload()">
+    Download
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row justify-content-center" *ngIf="tipoVisao == 'formulario'">
+    <div class="col-6">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-row">
+          <div class="form-group col mb-0">
+            <div class="mtc-title">Datos del cliente</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="razaoSocial">Razon social</label>
+            <input
+              type="text"
+              class="form-control"
+              id="razaoSocial"
+              formControlName="razaoSocial">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="dataSolicitacao">Fecha de la solicitud</label>
+            <input
+              type="text"
+              class="form-control"
+              id="dataSolicitacao"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              formControlName="dataSolicitacao"
+              (input)="onInput()"
+              [ngClass]="onFieldError('dataSolicitacao') + ' ' + onFieldRequired('dataSolicitacao')">
+            <invalid-form-control [show]="onFieldInvalid('dataSolicitacao')" message="Data de solicitação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="codCliente">Código de cliente</label>
+            <input
+              type="text"
+              class="form-control"
+              id="codCliente"
+              formControlName="codCliente">
+          </div>
+          <div class="form-group col-md-4">
+            <label for="codClienteDBA">Código SAP</label>
+            <input
+              type="text"
+              class="form-control"
+              id="codClienteDBA"
+              formControlName="codClienteDBA">
+          </div>
+          <div class="form-group col-md-4">
+            <label for="limiteCreditoAtual">Limite de crédito atual</label>
+            <input
+              type="text"
+              class="form-control"
+              id="limiteCreditoAtual"
+              formControlName="limiteCreditoAtual"
+              currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
+              (input)="onInput()">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="setorAtividade">Setor de atividades</label>
+            <input
+              type="text"
+              class="form-control"
+              id="setorAtividade"
+              formControlName="setorAtividade">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="dataUltimaVisita">Fecha de la última visita</label>
+            <input
+              type="text"
+              class="form-control"
+              id="dataUltimaVisita"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              formControlName="dataUltimaVisita"
+              (input)="onInput()">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="instalacoes">Instalaciones</label>
+            <input
+              type="text"
+              class="form-control"
+              id="instalacoes"
+              formControlName="instalacoes"
+              (input)="onInput()">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="numFuncionarios">Número de empleados</label>
+            <input
+              type="text"
+              class="form-control"
+              id="numFuncionarios"
+              formControlName="numFuncionarios"
+              currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 0 }"
+              (input)="onInput()">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="limiteCreditoSolicitado">Limite de crédito solicitado</label>
+            <input
+              type="text"
+              class="form-control"
+              id="limiteCreditoSolicitado"
+              formControlName="limiteCreditoSolicitado"
+              currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
+              (input)="onInput()"
+              [ngClass]="onFieldError('limiteCreditoSolicitado') + ' ' + onFieldRequired('limiteCreditoSolicitado')">
+            <invalid-form-control [show]="onFieldInvalid('limiteCreditoSolicitado')" message="Limite de crédito solicitado é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="condicaoPagto">Condiciones de pago</label>
+            <input
+              type="text"
+              class="form-control"
+              id="condicaoPagto"
+              formControlName="condicaoPagto"
+              (input)="onInput()"
+              [ngClass]="onFieldError('condicaoPagto') + ' ' + onFieldRequired('condicaoPagto')">
+            <invalid-form-control [show]="onFieldInvalid('condicaoPagto')" message="Condição de pagamento é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col mb-0">
+            <hr class="mt-0">
+            <div class="mtc-title">Solicitud de datos</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="nomeVendedor">Vendedor(a)</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nomeVendedor"
+              formControlName="nomeVendedor">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="telefoneVendedor">Teléfono</label>
+            <input
+              type="text"
+              class="form-control"
+              id="telefoneVendedor"
+              formControlName="telefoneVendedor">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="gestorVendas">Jefe de ventas</label>
+            <input
+              type="text"
+              class="form-control"
+              id="gestorVendas"
+              formControlName="gestorVendas"
+              (input)="onInput()"
+              [ngClass]="onFieldError('gestorVendas') + ' ' + onFieldRequired('gestorVendas')">
+            <invalid-form-control [show]="onFieldInvalid('gestorVendas')" message="Gestor(a) de venda é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="nomeEscritorio">Oficina de ventas</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nomeEscritorio"
+              formControlName="nomeEscritorio">
+          </div>
+        </div>
+        <div formArrayName="fornecedores">
+          <div class="form-row">
+            <div class="form-group col mb-0">
+              <hr class="mt-0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col mb-0 d-flex justify-content-between">
+              <div class="mtc-title">Proveedores</div>
+              <div>
+                <a
+                  class="text-secondary"
+                  (click)="onAddFornecedor()"
+                  href="javascript:void(0)">
+                  <b>Adicionar</b>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="form-row" *ngFor="let item of fornecedores.controls; let i = index" [formGroupName]="i">
+            <div class="form-group col mb-0">
+              <div class="form-row">
+                <div class="form-group col-6">
+                  <label for="nome">Nobre</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="nome"
+                    formControlName="nome"
+                    (input)="onInput()"
+                    [ngClass]="onNestedFieldError('fornecedores', i, 'nome') + ' ' + onNestedFieldRequired('fornecedores', i, 'nome')">
+                </div>
+                <div class="form-group col-5">
+                  <label for="telefone">Telefono</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="telefone"
+                    formControlName="telefone"
+                    (input)="onInput()"
+                    telefone [textMask]="{ mask: MASKS.telefone.textMaskFunction }">
+                </div>
+                <div class="col-1 pt-4 mt-1 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon"
+                    (click)="onDeleteFornecedor(i)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div formArrayName="clientes">
+          <div class="form-row">
+            <div class="form-group col mb-0">
+              <hr class="mt-0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col mb-0 d-flex justify-content-between">
+              <div class="mtc-title">Clientes</div>
+              <div>
+                <a
+                  class="text-secondary"
+                  (click)="onAddCliente()"
+                  href="javascript:void(0)">
+                  <b>Adicionar</b>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="clientes.controls.length > 0">
+            <div class="form-row" *ngFor="let item of clientes.controls; let i = index" [formGroupName]="i">
+              <div class="form-group col mb-0">
+                <div class="form-row">
+                  <div class="form-group col-11">
+                    <label for="nome">Nombre</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="nome"
+                      formControlName="nome"
+                      (input)="onInput()">
+                  </div>
+                  <div class="col-1 pt-4 mt-1 d-flex justify-content-center">
+                    <button
+                      type="button"
+                      class="btn-icon"
+                      (click)="onDeleteCliente(i)">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3" *ngIf="clientes.controls.length == 0">
+            <empty-result message="Nenhuma informação encontrada"></empty-result>
+          </div>
+        </div>
+        <div formArrayName="bancos">
+          <div class="form-row">
+            <div class="form-group col mb-0">
+              <hr class="mt-0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col mb-0 d-flex justify-content-between">
+              <div class="mtc-title">Bancos</div>
+              <div>
+                <a
+                  class="text-secondary"
+                  (click)="onAddBanco()"
+                  href="javascript:void(0)">
+                  <b>Adicionar</b>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="form-row" *ngFor="let item of bancos.controls; let i = index" [formGroupName]="i">
+            <div class="form-group col mb-0">
+              <div class="form-row">
+                <div class="form-group col-3">
+                  <label for="nome">Nome</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="nome"
+                    formControlName="nome"
+                    (input)="onInput()"
+                    [ngClass]="onNestedFieldError('bancos', i, 'nome') + ' ' + onNestedFieldRequired('bancos', i, 'nome')">
+                </div>
+                <div class="form-group col-2">
+                  <label for="agencia">Agencia</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="agencia"
+                    formControlName="agencia"
+                    (input)="onInput()"
+                    [ngClass]="onNestedFieldError('bancos', i, 'agencia') + ' ' + onNestedFieldRequired('bancos', i, 'agencia')">
+                </div>
+                <div class="form-group col-3">
+                  <label for="contaCorrente">Cuenta corriente</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="contaCorrente"
+                    formControlName="contaCorrente"
+                    (input)="onInput()"
+                    [ngClass]="onNestedFieldError('bancos', i, 'contaCorrente') + ' ' + onNestedFieldRequired('bancos', i, 'contaCorrente')">
+                </div>
+                <div class="form-group col-3">
+                  <label for="telefone">Telefono</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="telefone"
+                    formControlName="telefone"
+                    telefone [textMask]="{ mask: MASKS.telefone.textMaskFunction }"
+                    (input)="onInput()"
+                    [ngClass]="onNestedFieldError('bancos', i, 'telefone') + ' ' + onNestedFieldRequired('bancos', i, 'telefone')">
+                </div>
+                <div class="col-1 pt-4 mt-1 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon"
+                    (click)="onDeleteBanco(i)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col mb-0">
+            <hr class="mt-0">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col mb-0">
+            <label>Ventas concentradas</label>
+            <div class="form-row">
+              <div class="form-group col">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input
+                    type="radio"
+                    id="vendasConcentradasSim"
+                    class="custom-control-input"
+                    formControlName="vendasConcentradas"
+                    value="Sim">
+                  <label class="custom-control-label" for="vendasConcentradasSim">Sim</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input
+                    type="radio"
+                    id="vendasConcentradasNao"
+                    class="custom-control-input"
+                    formControlName="vendasConcentradas"
+                    value="Não">
+                  <label class="custom-control-label" for="vendasConcentradasNao">Não</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="previsaoCompraTon">Compra mensual estimada (Ton)</label>
+            <input
+              type="text"
+              class="form-control"
+              id="previsaoCompraTon"
+              formControlName="previsaoCompraTon"
+              currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 3 }">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="previsaoCompraValor">Compra mensual estimada (R$)</label>
+            <input
+              type="text"
+              class="form-control"
+              id="previsaoCompraValor"
+              formControlName="previsaoCompraValor"
+              currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="faturamentoMedio">Facturación media mensual</label>
+            <input
+              type="text"
+              class="form-control"
+              id="faturamentoMedio"
+              formControlName="faturamentoMedio"
+              currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="parecerVendedor">Opinión del vendedor</label>
+            <textarea
+              class="form-control"
+              id="parecerVendedor"
+              formControlName="parecerVendedor"
+              (input)="onInput()"
+              [ngClass]="onFieldError('parecerVendedor') + ' ' + onFieldRequired('parecerVendedor')">
+            </textarea>
+            <invalid-form-control [show]="onFieldInvalid('parecerVendedor')" message="Parecer do vendedor é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row justify-content-center pt-5" id="impressao-ficha-pac" *ngIf="tipoVisao == 'ficha'">
+    <div class="col-9">
+      <h1>Propuesta de análisis de créditos (PAC)</h1>
+      <div class="jumbotron p-3 mb-3">
+        <div class="mtc-title">Dados do cliente</div>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Razon social:</strong>
+          <span *ngIf="dataFicha.razaoSocial == null">Sin informacion</span>
+          <span *ngIf="dataFicha.razaoSocial != null">{{ dataFicha.razaoSocial }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Fecha de la solicitud:</strong>
+          <span *ngIf="dataFicha.dataSolicitacao == null">Sin informacion</span>
+          <span *ngIf="dataFicha.dataSolicitacao != null">{{ dataFicha.dataSolicitacao }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Código de cliente (TID):</strong>
+          <span *ngIf="dataFicha.codCliente == null">Sin informacion</span>
+          <span *ngIf="dataFicha.codCliente != null">{{ dataFicha.codCliente }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Código de cliente (SAP):</strong>
+          <span *ngIf="dataFicha.codClienteDBA == null">Sin informacion</span>
+          <span *ngIf="dataFicha.codClienteDBA != null">{{ dataFicha.codClienteDBA }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Limite de crédito actual:</strong>
+          <span *ngIf="dataFicha.limiteCreditoAtual == null">Sin informacion</span>
+          <span *ngIf="dataFicha.limiteCreditoAtual == null">{{ dataFicha.limiteCreditoAtual | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Sector de actividade:</strong>
+          <span *ngIf="dataFicha.setorAtividade == null">Sin informacion</span>
+          <span *ngIf="dataFicha.setorAtividade != null">{{ dataFicha.setorAtividade }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Fecha de la última visita:</strong>
+          <span *ngIf="dataFicha.dataUltimaVisita == null">Sin informacion</span>
+          <span *ngIf="dataFicha.dataUltimaVisita != null">{{ dataFicha.dataUltimaVisita }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Instalaciones:</strong>
+          <span *ngIf="dataFicha.instalacoes == null">Sin informacion</span>
+          <span *ngIf="dataFicha.instalacoes != null">{{ dataFicha.instalacoes }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Número de funcionários:</strong>
+          <span *ngIf="dataFicha.numFuncionarios == null">Sin informacion</span>
+          <span *ngIf="dataFicha.numFuncionarios == null">{{ dataFicha.numFuncionarios }}</span>
+        </p>
+      </div>
+      <div class="jumbotron p-3 mb-3">
+        <div class="mtc-title">Propuestas</div>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Limite de crédito solicitado:</strong>
+          <span *ngIf="dataFicha.limiteCreditoSolicitado == null">Sin informacion</span>
+          <span *ngIf="dataFicha.limiteCreditoSolicitado != null">{{ dataFicha.limiteCreditoSolicitado | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Condiciones de pago:</strong>
+          <span *ngIf="dataFicha.condicaoPagto == null">Sin informacion</span>
+          <span *ngIf="dataFicha.condicaoPagto != null">{{ dataFicha.condicaoPagto }}</span>
+        </p>
+      </div>
+      <div class="jumbotron p-3 mb-3">
+        <div class="mtc-title">Datos del solicitante</div>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Vendedor(a):</strong>
+          <span *ngIf="dataFicha.condicaoPagto == null">Sin informacion</span>
+          <span *ngIf="dataFicha.condicaoPagto != null">{{ dataFicha.nomeVendedor }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Gestor(a):</strong>
+          <span *ngIf="dataFicha.gestorVendas == null">Sin informacion</span>
+          <span *ngIf="dataFicha.gestorVendas != null">{{ dataFicha.gestorVendas | uppercase }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Telefono:</strong>
+          <span *ngIf="dataFicha.gestorVendas == null">Sin informacion</span>
+          <span *ngIf="dataFicha.gestorVendas != null">{{ dataFicha.telefoneVendedor }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Oficina de ventas:</strong>
+          <span *ngIf="dataFicha.nomeEscritorio == null">Sin informacion</span>
+          <span *ngIf="dataFicha.nomeEscritorio != null">{{ dataFicha.nomeEscritorio }}</span>
+        </p>
+      </div>
+      <div class="jumbotron p-3 mb-3">
+        <div class="mtc-title">Principales proveedores</div>
+        <div *ngIf="dataFicha.fornecedores.length == 0">Sin informacion</div>
+        <div *ngIf="dataFicha.fornecedores.length > 0">
+          <div class="row mt-2" *ngFor="let item of dataFicha.fornecedores">
+            <div class="col-6">
+              <p class="mt-2 mb-0">
+                <strong class="mr-2">Nombre:</strong>
+                <span *ngIf="item.nome == null">Sin informacion</span>
+                <span *ngIf="item.nome != null">{{ item.nome | uppercase }}</span>
+              </p>
+            </div>
+            <div class="col-6">
+              <p class="mt-2 mb-0">
+                <strong class="mr-2">Telefono:</strong>
+                <span *ngIf="item.telefone == null">Sin informacion</span>
+                <span *ngIf="item.telefone != null">{{ item.telefone }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jumbotron p-3 mb-3">
+        <div class="mtc-title">Principales clientes</div>
+        <div *ngIf="dataFicha.clientes.length == 0">Sin informacion</div>
+        <div *ngIf="dataFicha.clientes.length > 0">
+          <div *ngFor="let item of dataFicha.clientes">
+            <p class="mt-2 mb-0">
+              <strong class="mr-2">Nome:</strong> {{ item.nome | uppercase }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="jumbotron p-3 mb-3">
+        <div class="mtc-title">Principaless bancos</div>
+        <div *ngIf="dataFicha.bancos.length == 0">Sin informacion</div>
+        <div *ngIf="dataFicha.bancos.length > 0">
+          <div class="row" *ngFor="let item of dataFicha.bancos">
+            <div class="col-3">
+              <p class="mt-2 mb-0">
+                <strong class="mr-2">Banco:</strong>
+                <span *ngIf="item.nome == null">Sin informacion</span>
+                <span *ngIf="item.nome != null">{{ item.nome | uppercase }}</span>
+              </p>
+            </div>
+            <div class="col-3">
+              <p class="mt-2 mb-0">
+                <strong class="mr-2">Agencia:</strong>
+                <span *ngIf="item.agencia == null">Sin informacion</span>
+                <span *ngIf="item.agencia != null">{{ item.agencia }}</span>
+              </p>
+            </div>
+            <div class="col-3">
+              <p class="mt-2 mb-0">
+                <strong class="mr-2">Cuenta corrinte:</strong>
+                <span *ngIf="item.contaCorrente == null">Sin informacion</span>
+                <span *ngIf="item.contaCorrente != null">{{ item.contaCorrente }}</span>
+              </p>
+            </div>
+            <div class="col-3">
+              <p class="mt-2 mb-0">
+                <strong class="mr-2">Telefono:</strong>
+                <span *ngIf="item.telefone == null">Sin informacion</span>
+                <span *ngIf="item.telefone != null">{{ item.telefone }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jumbotron p-3 mb-3">
+        <div class="mtc-title">Datos financieros</div>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Vendas concretadas:</strong>
+          <span *ngIf="dataFicha.vendasConcentradas == null">Sin informacion</span>
+          <span *ngIf="dataFicha.vendasConcentradas != null">{{ dataFicha.vendasConcentradas }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Previsión mensual de compras (Ton):</strong>
+          <span *ngIf="dataFicha.previsaoCompraTon == null">Sin informacion</span>
+          <span *ngIf="dataFicha.previsaoCompraTon != null">{{ dataFicha.previsaoCompraTon | number:'1.3-3' }}t</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Previsión mensual de compras (R$):</strong>
+          <span *ngIf="dataFicha.previsaoCompraValor == null">Sin informacion</span>
+          <span *ngIf="dataFicha.previsaoCompraValor != null">{{ dataFicha.previsaoCompraValor | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </p>
+        <p class="mt-2 mb-0">
+          <strong class="mr-2">Facturación media mensual (R$):</strong>
+          <span *ngIf="dataFicha.faturamentoMedio == null">Sin informacion</span>
+          <span *ngIf="dataFicha.faturamentoMedio != null">{{ dataFicha.faturamentoMedio | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </p>
+      </div>
+      <div class="jumbotron p-3 mb-0">
+        <div class="mtc-title">Opinión del vendedor</div>
+        <p class="mt-2 mb-0">
+          <span *ngIf="dataFicha.parecerVendedor == null">Sin informacion</span>
+          <span *ngIf="dataFicha.parecerVendedor != null">{{ dataFicha.parecerVendedor | uppercase }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</app-body>

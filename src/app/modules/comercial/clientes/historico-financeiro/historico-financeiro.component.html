@@ -1,0 +1,49 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Histórico financeiro">
+  <button
+    type="button"
+    routerLinkActive="active"
+    [routerLink]="['resumo']">
+    Resumen
+  </button>
+  <button
+    type="button"
+    routerLinkActive="active"
+    [routerLink]="['detalhes']">
+    Detalles
+  </button>
+  <button
+    type="button"
+    routerLinkActive="active"
+    [routerLink]="['acumulos-mensais']">
+    Acumulaciones mensuales
+  </button>
+  <button
+    type="button"
+    routerLinkActive="active"
+    [routerLink]="['notas-promissorias']">
+    Pagarés  </button>
+  <button
+    type="button"
+    routerLinkActive="active"
+    [routerLink]="['debitos']">
+    Débitos
+  </button>
+  <button
+    type="button"
+    routerLinkActive="active"
+    [routerLink]="['corte-dobra']">
+    Corte Doblado
+  </button>
+</app-header>
+<app-body [show]="!loaderFullScreen" [breadCrumbTree]="breadCrumbTree">
+  <div class="row mb-3">
+    <div class="col">
+      <h5 class="d-inline-block mb-0 mr-3" tooltip="Código do cliente">
+        <span class="badge badge-dark">CÓD.: {{ cliente.codCliente }}</span>
+      </h5>
+      <h6 class="d-inline-block mb-0">{{ cliente.razaoSocial }}</h6>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</app-body>

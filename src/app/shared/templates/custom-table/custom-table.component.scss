@@ -1,0 +1,135 @@
+::ng-deep {
+  @import '../../../../assets/scss/colors';
+
+  custom-table {
+    table {
+      font-size: 13px;
+      &.table-sm {
+        font-size: 13px;
+        thead {
+          font-size: 11px;
+        }
+      }
+      &.border {
+        th {
+          border-top: 1px solid #dee2e6;
+        }
+      }
+      &.no-select {
+        -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+      }
+      th {
+        border-top: unset !important;
+        text-transform: uppercase;
+      }
+      th, td {
+        vertical-align: middle !important;
+      }
+      thead {
+        &.light {
+          tr {
+            th {
+              background-color: $white;
+            }
+          }
+        }
+        &.white {
+          tr {
+            th {
+              background-color: $white;
+            }
+          }
+        }
+      }
+      tbody {
+        &.light {
+          tr {
+            td {
+              background-color: $ice;
+            }
+          }
+        }
+        &.white {
+          tr {
+            td {
+              background-color: $white;
+            }
+          }
+        }
+      }
+    }
+
+    table {
+      &.table-fixed-header {
+        width: 100%;
+        thead,
+        tbody,
+        thead > tr,
+        tbody > tr,
+        thead > tr > th,
+        tbody > td {
+          display: block;
+        }
+        thead > tr:after,
+        tbody > tr:after {
+          content: ' ';
+          display: block;
+          visibility: hidden;
+          clear: both;
+        }
+        tbody {
+          overflow-y: scroll;
+        }
+        thead {
+          overflow-y: scroll;
+          tr {
+            th {
+              min-height: 29px;
+              border-top: unset !important;
+              border-bottom: unset !important;
+            }
+          }
+        }
+        thead::-webkit-scrollbar {
+          background-color: inherit;
+        }
+        thead > tr > th:after,
+        tbody > tr > td:after {
+          content: ' ';
+          display: table-cell;
+          visibility: hidden;
+          clear: both;
+        }
+        thead tr th,
+        tbody tr td {
+          float: left;
+          word-wrap: break-word;
+        }
+      }
+    }
+
+    table {
+      thead {
+        tr {
+          th.sticky {
+            position: sticky;
+            z-index: 1010;
+          }
+        }
+      }
+      tbody {
+        tr {
+          td.sticky {
+            position: sticky;
+            z-index: 1010;
+          }
+        }
+      }
+    }
+  }
+}

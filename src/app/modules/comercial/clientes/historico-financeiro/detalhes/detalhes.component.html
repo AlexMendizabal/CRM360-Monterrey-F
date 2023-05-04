@@ -1,0 +1,113 @@
+<div class="row">
+  <div class="col">
+    <div class="d-flex w-100" *ngIf="!pedidosLoaded">
+      <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+      <strong>Carga de duplicados...</strong>
+    </div>
+    <div *ngIf="pedidos.length > 0 && pedidosLoaded">
+      <div class="row justify-content-between">
+        <div class="col-5">
+          <div class="d-flex">
+            <div class="legend green">
+              <div class="square"></div>
+              <div class="text">ABIERTO</div>
+            </div>
+            <div class="legend blue">
+              <div class="square"></div>
+              <div class="text">QUITADA</div>
+            </div>
+            <div class="legend yellow">
+              <div class="square"></div>
+              <div class="text">VENCIDA</div>
+            </div>
+            <div class="legend red">
+              <div class="square"></div>
+              <div class="text">PROTESTA</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-5">
+          <div class="form-group row">
+            <label for="filtro" class="col-2 text-right pb-0 pt-1 pr-2">Filtrar</label>
+            <div class="col-10 pl-0">
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="filtro"
+                placeholder="Número da duplicata"
+                #filtro
+                (input)="onFilter(filtro.value)">
+            </div>
+          </div>
+        </div>
+      </div>
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center">Empresa</th>
+            <th scope="col" class="text-center">Facturamiento</th>
+            <th scope="col" class="text-center">Núm. pedido</th>
+            <th scope="col" class="text-center">Duplicar</th>
+            <th scope="col" class="text-center">Vencimiento</th>
+            <th scope="col" class="text-center">Banco</th>
+            <th scope="col" class="text-center">Baja</th>
+            <th scope="col" class="text-center">Tipo</th>
+            <th scope="col" class="text-center">Pré-datada</th>
+            <th scope="col" class="text-center">Atraso</th>
+            <th scope="col" class="text-center">Entrega</th>
+            <th scope="col" class="text-center">Valor</th>
+            <th scope="col" class="text-center"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let pedido of pedidosPagination">
+            <td class="text-center" [ngClass]="classStatusBorder(pedido.situacao)">{{ pedido.empresa }}</td>
+            <td class="text-center">{{ pedido.dataFaturamento }}</td>
+            <td class="text-center">{{ pedido.numPedido }}</td>
+            <td class="text-center">{{ pedido.numDuplicata }}</td>
+            <td class="text-center">{{ pedido.dataVencimento }}</td>
+            <td class="text-center">{{ pedido.banco }}</td>
+            <td class="text-center">{{ pedido.dataBaixa }}</td>
+            <td class="text-center">{{ pedido.tipoBaixa }}</td>
+            <td class="text-center">{{ pedido.dataPreDatada }}</td>
+            <td class="text-center">{{ pedido.atraso }} dias</td>
+            <td class="text-center">{{ pedido.entrega }} dias</td>
+            <td class="text-center">{{ pedido.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
+            <td class="text-center">
+              <a
+                class="btn-icon-sm"
+                tooltip="Materiais da duplicata"
+                container="body"
+                [routerLink]="['../materiais-duplicata']"
+                [queryParams]="{
+                  codEmpresa: pedido.idEmpresa,
+                  numPedido: pedido.numPedido,
+                  sequencia: pedido.sequencia
+                }">
+                <i class="fas fa-search"></i>
+              </a>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="row" *ngIf="pedidosLoaded">
+        <div class="col">
+          <div class="d-flex justify-content-center mt-3" *ngIf="pedidosFiltered.length > itemsPerPage">
+            <pagination
+              [maxSize]="maxSize"
+              [totalItems]="pedidosFiltered.length"
+              (pageChanged)="onPageChanged($event)"
+              [(itemsPerPage)]="itemsPerPage"
+              [boundaryLinks]="true"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;">
+            </pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+    <empty-result message="Nenhuma informação encontrada" *ngIf="pedidos.length == 0 && pedidosLoaded"></empty-result>
+  </div>
+</div>

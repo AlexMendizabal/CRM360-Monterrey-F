@@ -1,0 +1,213 @@
+::ng-deep {
+  @import '../../../../../../../../assets/scss/colors';
+  @import '../../../../../../../../assets/scss/variables';
+
+  comercial-ciclo-vendas-cotacoes-formulario-materiais-relacionados {
+    #carousel-relacionados {
+      min-height: 195px;
+      carousel {
+        .carousel {
+          &:focus {
+            outline: unset;
+          }
+          .carousel-inner {
+            &:focus {
+              outline: unset;
+            }
+          }
+          .carousel-item {
+            margin-right: unset !important;
+            .item {
+              &:focus {
+                outline: unset;
+              }
+            }
+          }
+          .carousel-control-next,
+          .carousel-control-prev {
+            color: $dark-gray;
+            opacity: 1;
+            width: auto;
+            &:focus {
+              outline: unset;
+            }
+            &:hover {
+              cursor: pointer;
+            }
+          }
+          .carousel-control-prev {
+            left: -45px;
+            .carousel-control-prev-icon {
+              background: unset !important;
+              &::before {
+                content: '\f060';
+                font-family: 'Font Awesome 5 Free';
+                font-size: 30px;
+                font-weight: 700;
+                color: #5A607F;
+              }
+            }
+          }
+          .carousel-control-next {
+            right: -25px;
+            .carousel-control-next-icon {
+              background: unset !important;
+              &::before {
+                content: '\f061';
+                font-family: 'Font Awesome 5 Free';
+                font-size: 30px;
+                font-weight: 700;
+                color: #5A607F;
+              }
+            }
+          }
+        }
+        &.no-controls {
+          .carousel {
+            .carousel-control {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+
+    #carousel-gerais {
+      min-height: 195px;
+      carousel {
+        .carousel {
+          &:focus {
+            outline: unset;
+          }
+          .carousel-inner {
+            &:focus {
+              outline: unset;
+            }
+          }
+          .carousel-item {
+            margin-right: unset !important;
+            .item {
+              &:focus {
+                outline: unset;
+              }
+            }
+          }
+          .carousel-control-next,
+          .carousel-control-prev {
+            color: $dark-gray;
+            opacity: 1;
+            width: auto;
+            &:focus {
+              outline: unset;
+            }
+            &:hover {
+              cursor: pointer;
+            }
+          }
+          .carousel-control-prev {
+            left: -45px;
+            .carousel-control-prev-icon {
+              background: unset !important;
+              &::before {
+                content: '\f060';
+                font-family: 'Font Awesome 5 Free';
+                font-size: 30px;
+                font-weight: 700;
+                color: #5A607F;
+              }
+            }
+          }
+          .carousel-control-next {
+            right: -25px;
+            .carousel-control-next-icon {
+              background: unset !important;
+              &::before {
+                content: '\f061';
+                font-family: 'Font Awesome 5 Free';
+                font-size: 30px;
+                font-weight: 700;
+                color: #5A607F;
+              }
+            }
+          }
+        }
+        &.no-controls {
+          .carousel {
+            .carousel-control {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+
+    #carousel-cliente {
+      min-height: 195px;
+      carousel {
+        .carousel {
+          &:focus {
+            outline: unset;
+          }
+          .carousel-inner {
+            &:focus {
+              outline: unset;
+            }
+          }
+          .carousel-item {
+            margin-right: unset !important;
+            .item {
+              &:focus {
+                outline: unset;
+              }
+            }
+          }
+          .carousel-control-next,
+          .carousel-control-prev {
+            color: $dark-gray;
+            opacity: 1;
+            width: auto;
+            &:focus {
+              outline: unset;
+            }
+            &:hover {
+              cursor: pointer;
+            }
+          }
+          .carousel-control-prev {
+            left: -45px;
+            .carousel-control-prev-icon {
+              background: unset !important;
+              &::before {
+                content: '\f060';
+                font-family: 'Font Awesome 5 Free';
+                font-size: 30px;
+                font-weight: 700;
+                color: #5A607F;
+              }
+            }
+          }
+          .carousel-control-next {
+            right: -25px;
+            .carousel-control-next-icon {
+              background: unset !important;
+              &::before {
+                content: '\f061';
+                font-family: 'Font Awesome 5 Free';
+                font-size: 30px;
+                font-weight: 700;
+                color: #5A607F;
+              }
+            }
+          }
+        }
+        &.no-controls {
+          .carousel {
+            .carousel-control {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}

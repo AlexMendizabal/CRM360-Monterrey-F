@@ -1,0 +1,14 @@
+::ng-deep {
+  #metas {
+    height: 345px;
+    #past-gauge-chart-toneladas,
+    #past-gauge-chart-clientes,
+    #past-gauge-chart-extras,
+    #current-gauge-chart-toneladas,
+    #current-gauge-chart-clientes,
+    #current-gauge-chart-extras {
+      height: 300px;
+      max-width: 400px;
+    }
+  }
+}

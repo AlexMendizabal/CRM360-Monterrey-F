@@ -1,0 +1,73 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Cadastro de Tipo de Movimentação">
+  <button 
+    [disabled]="form.valid === false"
+    (click)="postTipoMovimentacoes()"
+    >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <form [formGroup]="form" autocomplete="off" [hidden] = "loading">
+    <fieldset  class="col-12">
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+        <legend>Dados do Tipo de Movimentação</legend>
+        <div class="form-row justify-content-center">
+          <div class="form-group col pl-0">
+            <label for="NM_MOVI_TIPO">Descrição de Movimentação</label>
+            <input
+              type="text"
+              class="form-control"
+              id="NM_MOVI_TIPO"
+              formControlName="NM_MOVI_TIPO"
+              placeholder="Digite..."
+              [ngClass]="onFieldError('NM_MOVI_TIPO') + ' ' + onFieldRequired('NM_MOVI_TIPO')"
+            />
+            <invalid-form-control [show]="onFieldInvalid('NM_MOVI_TIPO')" message="Tipo de Movimentação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-8 pl-0">
+            <label for="SG_MOVI_TIPO">Tipo de Movimentação</label>
+            <select
+              class="form-control custom-select"
+              id="SG_MOVI_TIPO"
+              formControlName="SG_MOVI_TIPO"
+              [ngClass]="onFieldRequired('SG_MOVI_TIPO')">
+              <option value="ENTR">Entrada</option>
+              <option value="SAID">Saída</option>
+              <option value="NAFE">Não afeta estoque</option>
+              <option value="ESTO">Estorno</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('SG_MOVI_TIPO')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-4 pl-0">
+            <label for="IN_STAT">Situação</label>
+            <select
+              class="form-control custom-select"
+              id="IN_STAT"
+              formControlName="IN_STAT"
+              [ngClass]="onFieldRequired('IN_STAT')">
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
+            </select>
+            <invalid-form-control [show]="onFieldInvalid('IN_STAT')" message="Situação é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </fieldset>
+      <br>
+      <br>
+      <fieldset class="border rounded shadow-sm col-6 pt-2 mx-auto">
+            <legend>Observação</legend>
+            <div class="form-row justify-content-center">
+              <div class="form-group col">
+                <label for="DS_OBSE" >Observação:</label>
+                <textarea class="form-control" id="DS_OBSE" formControlName="DS_OBSE" rows="3"></textarea>
+              </div>
+            </div>
+            <br>
+      </fieldset>
+    </fieldset>
+  </form>
+</app-body>

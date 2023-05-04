@@ -1,0 +1,13 @@
+@import '../colors';
+
+.amcharts {
+  width: 100%;
+  &::after {
+    background-color: $white;
+    bottom: 3px;
+    content: '';
+    height: 20px;
+    position: absolute;
+    width: 65px;
+  }
+}

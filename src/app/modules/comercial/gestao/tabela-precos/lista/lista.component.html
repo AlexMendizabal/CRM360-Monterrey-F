@@ -1,0 +1,234 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Tabela de Preços">
+  <!-- <button type="button" [routerLink]="['../exportar-csv']" style="color: #090;">
+    Exportar CSV
+  </button> -->
+  <button type="button" [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button type="button" (click)="onFilter()">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2">
+              <label for="descTabela">Descrição da Tabela</label>
+              <input class="form-control" id="descTabela" type="text" formControlName="descTabela">
+              <invalid-form-control [show]="onFieldInvalid('descTabela')" message="Descrição é obrigatório.">
+              </invalid-form-control>
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="dataInicialVigencia">Dt Inicio Vigência</label>
+              <input class="form-control" id="dataInicialVigencia" type="text" formControlName="dataInicialVigencia"
+                bsDatepicker
+                [ngClass]="onFieldError('dataInicialVigencia') + ' ' + onFieldRequired('dataInicialVigencia')">
+
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="dataFinalVigencia">Dt Fim Vigência</label>
+              <input class="form-control" id="dataFinalVigencia" type="text" formControlName="dataFinalVigencia"
+                bsDatepicker [ngClass]="onFieldError('dataFinalVigencia') + ' ' + onFieldRequired('dataFinalVigencia')">
+
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="codMaterial">Filtro de material</label>
+              <input class="form-control"type="text" id="codMaterial" formControlName="codMaterial">
+            </div>
+            <div class="form-group col-lg-1">
+              <label for="codSituacao">Situação</label>
+              <select class="form-control custom-select" id="codSituacao" formControlName="codSituacao">
+                <option value="0">Todos</option>
+                <option value="2">Inativos</option>
+                <option value="1">Ativos</option>
+              </select>
+            </div>
+            <div class="form-group col-lg-1">
+              <label for="registros">Registros</label>
+              <select class="form-control" id="registros" formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col" [ngClass]="{'col': !showDetailPanel, 'col-5 pr-0': showDetailPanel}">
+      <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center hover">
+              <thead-sorter value="Código" [active]="orderBy == 'codPreco'" [sort]="orderType"
+                (click)="setOrderBy('codPreco')">
+              </thead-sorter>
+            </th>
+            <th scope="col">Descrição</th>
+
+            <th scope="col">Dt Inicial</th>
+
+            <th scope="col">Dt Final</th>
+
+            <th scope="col" [hidden]="showDetailPanel">
+              Usuário
+            </th>
+
+            <th scope="col" [hidden]="showDetailPanel"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of dadosPagination; let i = index;"
+          onclick="var s = this.parentNode.querySelector('tr.table-active'); s && s.classList.remove('table-active'); this.classList.add('table-active');">
+            <td class="text-center hover" [ngClass]="classStatusBorder(item)">
+              {{ item.codPreco }}
+            </td>
+            <td class="hover" (click)="onDetails(item)">
+              {{ item.nomePreco | uppercase }}
+            </td>
+            <td class="hover" (click)="onDetails(item)">
+              {{ item.dataInicialVigencia | date: 'dd/MM/yyyy' }}
+            </td>
+            <td class="hover" (click)="onDetails(item)">
+              {{ item.dataFinalVigencia | date: 'dd/MM/yyyy' }}
+            </td>
+            <td class="hover" [hidden]="showDetailPanel" (click)="onDetails(item)">
+              {{ item.nomeUsuario | uppercase }}
+
+            </td>
+            <td class="text-right" [hidden]="showDetailPanel">
+              <!-- <span  class="mr-3" tooltip="Tabela Clonada, exibir detalhes." placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onActivate(i, item)">
+                  <i class="far fa-clone"></i>
+                </button>
+              </span> -->
+              <span *ngIf="item.codSituacao == 1" class="mr-3" tooltip="Importar CSV" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onCsv(item)">
+                  <i class="fas fa-table"></i>
+                </button>
+              </span>
+              <span *ngIf="item.codSituacao == 2" class="mr-3" tooltip="Ativar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onActivate(i, item)">
+                  <i class="fas fa-toggle-off"></i>
+                </button>
+              </span>
+              <span *ngIf="item.codSituacao == 1" class="mr-3" tooltip="Inativar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onInactivate(i, item)">
+                  <i class="fas fa-toggle-on"></i>
+                </button>
+              </span>
+              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onEdit(item)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+              <span class="mr-3" [tooltip]="tolTemplate" placement="left" container="body">
+                <ng-template #tolTemplate>
+                  <span *ngIf="!item.codTabelaClonada">
+                    <strong>Tabela não clonada</strong>
+                  </span>
+                  <span *ngIf="item.codTabelaClonada">
+                    <table>
+                      <thead>
+                        <tr>
+                          <td colspan="2">Tabela Clonada</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th class="text-left">Percentual de Acréscimo:&nbsp;</th>
+                          <td> {{ item.percentualAcrescimo / 100 | percent : '0.2-2' }}</td>
+                        </tr>
+                        <tr>
+                          <th class="text-left">Percentual de Desconto:&nbsp;</th>
+                          <td> {{ item.percentualDesconto / 100 | percent : '0.2-2' }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </span>
+                </ng-template>
+                <button type="button" class="btn-icon-sm">
+                  <i class="far fa-clone" [ngClass]="{'text-warning': item.codTabelaClonada}"></i>
+                </button>
+              </span>
+              <span class="mr-3" tooltip="Clonar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onClone(item, modalClone)">
+                  <i class="fas fa-clone"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>        
+      </custom-table>
+      <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && dadosLoaded"></empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && dadosLoaded">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-7" [hidden]="!showDetailPanel">
+      
+      <detail-panel [panelTitle]="detailPanelTitle">
+        <div class="d-flex w-100" *ngIf="otherDados2.length == 0">
+          <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+          <strong>Carregando itens...</strong>
+        </div>
+        <custom-table [config]="tableConfigMateriais" *ngIf="otherDados2.length > 0">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">Cód Grupo</th>
+              <th scope="col">Grupo</th>
+              <th scope="col" class="text-center">Cód Material</th>
+              <th scope="col">Material</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor='let item of otherDados2'>
+              <td class="text-center">{{ item.info.codGrupo }}</td>
+              <td>{{ item.info.nomeGrupo }}</td>
+              <td class="text-center">{{ item.info.codMaterial }}</td>
+              <td>{{ item.info.nomeMaterial }}</td>
+              <td>
+                <button type="button" class="btn-icon-sm">
+                  <i class="fas fa-money-bill-wave" placement="left" id="tooltip-preco"        
+                  [tooltip]="tooltip">
+                  <ng-template #tooltip>
+                  <div style="width: 100px;">
+                    <span *ngFor="let item2 of item.precos; let i = index;">
+                      {{ item2.ufDestino + ': R$ '}} {{  item2.valorMaterial | number:'1.2-2'  }}<br>
+                    </span>
+                  </div>
+                  </ng-template>
+                  </i>
+                </button>              
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </detail-panel>
+    </div>
+  </div>
+</app-body>
+
+<ng-template #modalClone>
+  <comercial-tabela-preco-clone (close)="modalRef.hide()" [formValue]="tabelaPreco"></comercial-tabela-preco-clone>
+</ng-template>

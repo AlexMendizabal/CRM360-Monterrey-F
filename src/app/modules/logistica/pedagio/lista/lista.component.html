@@ -1,0 +1,178 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button (click)="onReset()">
+    Limpar
+  </button>
+  <button 
+  [disabled]="form.status == 'INVALID'"
+  (click)="onSearch()">
+    Filtrar
+  </button>
+  <button [routerLink]="['./novo']">
+    Novo
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="dtInicial">Data inicial</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="dtInicial"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            placeholder="Digite..."
+            formControlName="DT_INIC"
+          />
+          </div>
+        </div>
+        <div class="form-group col">
+          <label for="dtFinal">Data Final</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </div>
+            <input
+            class="form-control"
+            id="dtFinal"
+            type="text"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+            placeholder="Digite..."
+            formControlName="DT_FINA"
+          />
+          </div>
+        </div>
+        <div class="form-group col">
+          <label for="empresa">Empresa</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="empresas"
+            [virtualScroll]="true"
+            labelForId="empresa"
+            bindLabel="NM_FANT"
+            bindValue="CD_EMPR"
+            id="empresa"
+            (change)="onSearch()"
+            formControlName="CD_EMPR"
+            placeholder="Selecione..."
+          >
+          </ng-select>
+        </div>
+        <div class="form-group col">
+          <label for="pedido">Código da ficha</label>
+          <input
+            id="pedido" 
+            type="text" 
+            class="form-control" 
+            placeholder="DIGITE..." 
+            formControlName="CD_FICH"
+            (keyup.enter)="onSearch()">
+        </div>
+        <div class="form-group col">
+          <label >Tipo do transporte</label>
+          <input
+            id="pedido" 
+            type="text" 
+            class="form-control" 
+            placeholder="DIGITE..." 
+            formControlName="DS_TIPO"
+            (keyup.enter)="onSearch()">
+        </div>
+        <div class="form-group col">
+          <label for="itensPorPagina">Registros</label>
+          <select
+            class="form-control custom-select"
+            (change)="setItensPerPage($event.target.value); onSearch()"
+            formControlName="TT_REGI_PAGI"
+            >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div  class="col-12 p-0" [hidden] = "loading || noResult">
+    <div>
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr>
+            <th class="text-center">Lançamento</th>
+            <th class="text-center">Código da Empresa</th>
+            <th class="text-center">Código da Ficha</th>
+            <th class="text-center">Valor</th>
+            <th class="text-center">Tipo do Transporte</th>
+            <th class="text-center">Data de referência</th>
+            <th class="text-center">Responsável</th>
+            <th class="text-center">Data do cadastro</th>
+            <th *ngIf="inAcessoExcluir"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>  
+          <tr *ngFor="let item of items; let i = index">
+            <td class="text-center">{{ item.ID | number: '3.0-0' }}</td>
+            <td class="text-center">{{ item.CD_EMPR }}</td>
+            <td class="text-center">{{ item.CD_FICH }}</td>
+            <td class="text-center">{{ item.VL_TOTA | currency : 'BRL' }}</td>
+            <td class="text-center">{{ item.DS_TIPO }}</td>
+            <td class="text-center">{{ item.DT_REFE | date : 'dd/MM/yyyy'}}</td>
+            <td class="text-center">{{ item.NM_USUA }}</td>
+            <td class="text-center">{{ item.DT_INCL | date : 'dd/MM/yyyy'}}</td>
+            <td
+              class="align-middle text-center"
+              style="width: 5%"
+              *ngIf="inAcessoExcluir"
+            >  
+              <button
+                type="button"
+                class="btn-icon-sm"
+                tooltip="Excluir"
+                placement="left"
+                container="body"
+                (click)="onConfirmDelete(item, i)"
+              >
+                <i class="far fa-trash-alt text-danger"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div>
+      Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 250px">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

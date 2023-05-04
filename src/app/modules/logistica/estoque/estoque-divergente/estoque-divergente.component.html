@@ -1,0 +1,163 @@
+<loader-spinner-full-screen *ngIf="spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<div class="row" id="application-header">
+  <div class="col-6">
+    <div id="title">
+      <h1>Painel de Estoque Divergente</h1>
+    </div>
+  </div>
+  <div class="col-6 d-flex justify-content-end">
+    <div id="actions">
+      <!-- acomodar botões -->
+      <button
+        (click)="getLista()"
+        [disabled]="form.status  == 'INVALID'"
+        >
+        Filtrar
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Início dos Filtros -->
+<div class="row" id="application-body">
+  <div class="container-fluid">
+    <breadcrumb [tree]="breadCrumbTree"></breadcrumb>
+    <div class="col-12 p-0">
+      <form [formGroup]="form">
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-3">
+            <label for="dataInicio">DATA INICIAL</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="far fa-calendar-alt"></i>
+                </span>
+              </div>
+              <input
+              class="form-control"
+              id="inicioData"
+              type="text"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              formControlName="dataInicio"
+              [ngClass]="onFieldError('dataInicio') + ' ' + onFieldRequired('dataInicio')"
+              >
+            </div>
+            <invalid-form-control
+              [show]="onFieldInvalid('dataInicio')"
+              message="Data Inicial é obrigatório.">
+            </invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-3">
+            <label for="empresa">EMPRESA</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="empresas"
+              [virtualScroll]="true"
+              labelForId="empresa"
+              bindLabel="nomeFantasia"
+              bindValue="codigoEmpresa"
+              placeholder="Selecione uma empresa"
+              formControlName="empresas"
+              (change) ="getDepositos(); getMateriais()"
+              (focus) ="resetForm()"
+              [ngClass]="onFieldError('empresas') + ' ' + onFieldRequired('empresas')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('empresas')"
+              message="Empresa é obrigatório.">
+            </invalid-form-control>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="deposito">DEPÓSITO</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="depositos"
+              [virtualScroll]="true"
+              labelForId="deposito"
+              bindLabel="depositoDescricao"
+              bindValue="depositoId"
+              formControlName="depositos"
+              [ngClass]="onFieldError('depositos') + ' ' + onFieldRequired('depositos')"
+              [placeholder]="placeholderDepositos"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('depositos')"
+              message="Despósito é obrigatório.">
+            </invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-3">
+            <label for="linha">LINHA</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="linhas"
+              [virtualScroll]="true"
+              labelForId="linha"
+              bindLabel="linha"
+              bindValue="linha"
+              placeholder="Selecione uma linha"
+              formControlName="linhas"
+              (change)="getClasses(); getMateriais()"
+              [ngClass]="onFieldError('linhas') + ' ' + onFieldRequired('linhas')"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('linhas')"
+              message="Linha é obrigatório.">
+            </invalid-form-control>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="classe">CLASSE</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="classes"
+              [multiple]="true"
+              [virtualScroll]="true"
+              labelForId="classe"
+              bindLabel="classeDescricao"
+              bindValue="classeId"
+              formControlName="classes"
+              (change)="getMateriais()"
+              [ngClass]="onFieldError('classes') + ' ' + onFieldRequired('classes')"
+              [placeholder]="placeholderClasses"
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('classes')"
+              message="Classe é obrigatório.">
+            </invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row justify-content-center">
+          <div class="form-group col-md-6">
+            <label for="material">MATERIAL</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="materiais"
+              [multiple]="true"
+              [closeOnSelect]="false"
+              [virtualScroll]="true"
+              labelForId="material"
+              bindLabel="codigoDescricaoMaterial"
+              bindValue="codigoMaterial"
+              formControlName="materiais"
+              [placeholder]="placeholderMateriais"
+            >
+            </ng-select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,114 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!navBarLoading"></loader-spinner-navbar>
+<app-header appTitle="Certificado de calidad">
+  <button 
+    (click)="onFilter()">
+    Filtrar
+  </button>
+  <button
+    (click)="onResetForm()">
+    Limpiar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form action="" [formGroup]="form" autocomplete="off">
+      <div class="form-row p-0 col-6">
+        <div class="form-group col">
+          <label for="no_lote">Lote</label>
+          <input id="no_lote" type="text" class="form-control" formControlName="no_lote" (keyup.enter)="onFilter()">
+        </div>
+        <div class="form-group col">
+          <label for="no_cq">Número de Certificado</label>
+          <input id="no_cq" type="text" class="form-control" formControlName="no_cq" (keyup.enter)="onFilter()">
+        </div>
+      </div>
+    </form>
+    <div class="d-flex flex-wrap mt-2">
+      <div *ngFor="let item of getValoresPesquisa(); let i = index" class="mb-2">
+        <div class="d-inline rounded-pill m-1 pl-2 pr-2 pt-1 pb-1 border border-dark"
+          *ngIf="item"
+          [ngClass]="validaCampoAtivo({'campo': 'no_lote', 'index': i}) ? 'bg-white text-black' : 'bg-black text-white'">
+          <input type="text" [value]="item" class="input-search text-uppercase" [attr.id]="'no_lote_' + i" autocomplete="off"
+            [ngClass]="validaCampoAtivo({'campo': 'no_lote', 'index': i}) ? 'text-black' : 'text-white'"
+            (input)="alteraValorPesquisa({'index': i, 'campo': 'no_lote', 'valor': $event.target.value})"
+            (focus)="setCampoAtivo({'campo': 'no_lote', 'index': i})"
+            (blur)="setCampoAtivo()"
+            (keyup.enter)="onFilter()">
+          <i
+            class="far fa-times-circle hover"
+            (click)="removeValoresPesquisa({'index': i, 'campo': 'no_lote'})"
+            tooltip="eliminar"
+            container="body"
+          ></i>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap mt-2">
+      <div *ngFor="let item of getValoresPesquisa({'campo': 'no_cq'}); let i = index" class="mb-2">
+        <div class="d-inline rounded-pill m-1 pl-2 pr-2 pt-1 pb-1" 
+          *ngIf="item"
+          [ngClass]="validaCampoAtivo({'campo': 'no_cq', 'index': i}) ? 'bg-white text-black border border-dark' : 'bg-black text-white'">
+          <input type="text" [value]="item" class="input-search text-uppercase" [attr.id]="'no_cq_' + i" autocomplete="off"
+            [ngClass]="validaCampoAtivo({'campo': 'no_cq', 'index': i}) ? 'text-black' : 'text-white'"
+            (input)="alteraValorPesquisa({'index': i, 'campo': 'no_cq', 'valor': $event.target.value})"
+            (focus)="setCampoAtivo({'campo': 'no_cq', 'index': i})"
+            (blur)="setCampoAtivo()"
+            (keyup.enter)="onFilter()">
+          <i
+            class="far fa-times-circle hover"
+            (click)="removeValoresPesquisa({'index': i, 'campo': 'no_cq'})"
+            tooltip="eliminar"
+            container="body"  
+          ></i>
+        </div>
+      </div>
+    </div>
+  </advanced-filter>
+  <div [hidden]="certificados.length === 0">
+    <div style="min-height: 50vh;">
+      <table class="table table-sm table-hover border-left border-right border-bottom text-center table-fixed">
+        <thead class="thead-light">
+          <tr>
+            <th class="align-middle">Producto</th>
+            <th class="align-middle">Lote</th>
+            <th class="align-middle">Número</th>
+            <th style="width: 5%;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let certificado of certificados; let i = index">
+            <td class="align-middle">{{ certificado?.nome }}</td>
+            <td class="align-middle">{{ certificado?.lote }}</td>
+            <td class="align-middle">{{ certificado?.noCq }}</td>
+            <td class="align-middle" style="width: 5%;" >
+              <span tooltip="Para ver" placement="left" container="body">
+                <a class="btn-icon-sm"  [href]="certificado.link" target="_blank" download>
+                  <i class="fas fa-external-link-alt"></i>
+                </a>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      Mostrando {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div [hidden]="certificados.length > 0 || loading" class="d-flex justify-content-center align-items-center" style="width: 100%; height: 250px">
+    <empty-result message="No se encontró información"></empty-result>
+  </div>
+</app-body>

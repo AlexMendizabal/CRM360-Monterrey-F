@@ -1,0 +1,38 @@
+<fieldset class="border rounded shadow-sm col-10 pt-2 pb-2 mx-auto">
+  <legend>Anexos</legend>
+  <div class="form-group border rounded p-1">
+    <div>
+      <label for="documento" class="w-100 d-flex justify-content-between align-items-center m-0 py-1" style="cursor: pointer;">
+        <span>Novo Documento</span>
+      </label>
+      <input
+        id="documento"
+        type="file"
+        (change)="appendFile($event.target.files)"
+        class="d-none"
+        >
+    </div>
+  </div>
+  <ul>
+    <li class="d-flex justify-content-between" *ngFor="let item of anexos">
+      <div>{{ item.NM_ANEX | uppercase }}</div>
+      <div [hidden]="!item.ID_LOGI_ENMA_ANEX">
+        <a
+          [href]="item.LINK"
+          target="_blank"
+          class="btn-icon-sm mx-2 text-black"
+          tooltip="visualizar"
+        >
+          <i class="far fa-eye"></i>
+        </a>
+        <button
+          class="btn-icon-sm mx-2 hover"
+          tooltip="excluir"
+          (click)="onRemove(item)"
+          >
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </li>
+  </ul>
+</fieldset>

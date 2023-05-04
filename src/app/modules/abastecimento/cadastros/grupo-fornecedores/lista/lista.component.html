@@ -1,0 +1,226 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Grupo e Fornecedores">
+  <button
+    type="button"
+    (click)="onFilter()"
+  >
+    Filtrar
+  </button>
+  <button
+    type="button"
+    (click)="excelExport()"
+  >
+    Exportar Excel
+  </button>
+  <button
+    type="button"
+    routerLink="../cadastro"
+    >
+    Adicionar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-lg-3">
+          <label for="integrador">Integrador</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="false"
+            [items]="integradores"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_APOI_INTE_PEDI"
+            bindValue="ID"
+            formControlName="integrador"
+            (change)="this.getGrupoFornecedores()"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-3">
+          <label for="grupoFornecedor">Grupo de Fornecedores</label>
+          <ng-select
+          [searchable]="true"
+          [clearable]="true"
+          [multiple]="false"
+          [items]="grupoFornecedores"
+          [virtualScroll]="true"
+          [hideSelected]="true"
+          [closeOnSelect]="true"
+          placeholder="Selecione..."
+          bindLabel="NM_GRUP_FORN"
+          bindValue="ID_GRUP_FORN"
+          formControlName="grupoFornecedor"
+          >
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <subtitles [data]="subtitles" [show]="loading"> </subtitles>
+  <div class="row">
+    <div
+      [ngClass]="{ 'col-12': !compressedTable, 'col-6 pr-0': compressedTable }"
+      *ngIf="loading"
+    >
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th scope="col" class="hover" (click)="sort('NM_LINH')">
+              Integrador
+              <span *ngIf="key == 'NM_LINH'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_LINH'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th scope="col" class="hover" (click)="sort('NM_APOI_TIPO_MATE')">
+              Grupo
+              <span *ngIf="key == 'NM_APOI_TIPO_MATE'"
+                ><i
+                  [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"
+                ></i
+              ></span>
+              <span *ngIf="key != 'NM_APOI_TIPO_MATE'"
+                ><i [ngClass]="'fas fa-sort'"></i
+              ></span>
+            </th>
+            <th scope="col" class="hover" [hidden]="compressedTable" width="5%"></th>
+            <th scope="col" class="hover" [hidden]="compressedTable" width="5%"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr
+            *ngFor="
+              let item of dados | orderBy: key:reverse | slice: begin:end;
+              let i = index
+            "
+          >
+            <td class="text-center" [ngClass]="[item.select ? 'bg-row-selected' : '', item.IN_STAT == 0 ? 'border-danger' : 'border-success']">{{ item.NM_APOI_INTE_PEDI }}</td>
+            <td
+              class="text-truncate text-center"
+              [ngClass]="item.select ? 'bg-row-selected' : ''"
+            >
+              {{ item.NM_GRUP_FORN }}
+            </td>
+            <td class="text-center" [hidden]="compressedTable" width="5%">
+              <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  tooltip="Editar"
+                  placement="left"
+                  container="body"
+                >
+                <i
+                  class="fas fa-edit"
+                  (click)="onAdd(item)" 
+                  >
+                </i>
+                </button>
+              </div>
+            </td>
+            <td class="text-center" [hidden]="compressedTable" width="5%">
+              <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  (click)="openTab(item)"
+                  tooltip="Detalhes"
+                  placement="left"
+                  container="body"
+                >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div class="col-6">
+      <tabset [hidden]="!compressedTable">
+        <button
+          type="button"
+          class="btn-icon close position-absolute"
+          (click)="onClose()"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+        <tab heading="Detalhes">
+          <div
+            class="border-right border-left border-bottom px-3 pt-3"
+            style="overflow: auto; height: 338px;"
+          >
+            <custom-table *ngIf="!noResultDetalhes && loadingDetalhes">
+              <ng-template #thead let-thead>
+                <tr class="text-center">
+                  <th scope="col">Cód.</th>
+                  <th scope="col">Razão social</th>
+                  <th scope="col">Nome fantasia</th>
+                  <th scope="col">CNPJ do Fornecedor</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of dadosDetalhes">
+                  <td class="text-center"> {{ item.ID_REFE_ERP }} </td>
+                  <td class="text-center"> {{ item.NM_RAZA_SOCI ? item.NM_RAZA_SOCI : '-' }} </td>
+                  <td class="text-center"> {{ item.NM_FANT }} </td>
+                  <td class="text-center"> {{ item.NR_CNPJ_CPF ? (item.NR_CNPJ_CPF | cnpj) : '-' }} </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+            <div
+              *ngIf="noResultDetalhes"
+              class="text-center d-flex justify-content-center align-items-center p-5"
+              style="height: 80%;"
+            >
+              <empty-result
+                message="Nenhuma informação encontrada"
+              ></empty-result>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+    <div
+      class="col-12 mb-2 ml-2"
+      *ngIf="!noResult && dados?.length > itemsPerPage"
+    >
+      Exibindo {{ begin + 1 }} a {{ end }} de {{ dados?.length }}
+      <div class="d-flex">
+        <pagination
+          [maxSize]="10"
+          [totalItems]="dados?.length"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="noResult"
+    class="text-center d-flex justify-content-center align-items-center p-5"
+    style="height: 80%;"
+  >
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>
+

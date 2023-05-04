@@ -1,0 +1,168 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<div class="row" *ngIf="!loaderFullScreen">
+  <div class="col">
+    <div class="mtc-title">Editar datos de relación</div>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="tipoAtendimento">Tipo de servicio</label>
+          <select
+            class="form-control"
+            id="tipoAtendimento"
+            formControlName="tipoAtendimento"
+            (change)="onInput()"
+            [ngClass]="onFieldError('tipoAtendimento') + ' ' + onFieldRequired('tipoAtendimento')">
+            <option value="">SELECCIONE UNA OPCION</option>
+            <option *ngFor="let item of tiposAtendimento" [value]="item.id">{{ item.descricao }}</option>
+          </select>
+          <invalid-form-control [show]="onFieldInvalid('tipoAtendimento')" message="Tipo de atendimento é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="periodo">Períodos</label>
+          <select
+            class="form-control"
+            id="periodo"
+            formControlName="periodo"
+            (change)="onInput()"
+            [ngClass]="onFieldError('periodo') + ' ' + onFieldRequired('periodo')">
+            <option value="">SELECCIONE UNA OPCION</option>
+            <option *ngFor="let item of periodos" [value]="item.id">{{ item.descricao }}</option>
+          </select>
+          <invalid-form-control [show]="onFieldInvalid('periodo')" message="Períodos es obligatorio."></invalid-form-control>
+        </div>
+      </div>
+      <div formGroupName="diasContato">
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Mejores dias para contactar</label>
+            <div class="form-row">
+              <div class="form-group col-auto">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    id="segunda"
+                    formControlName="segunda">
+                  <label class="custom-control-label" for="segunda">Lunes</label>
+                </div>
+              </div>
+              <div class="form-group col-auto">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    id="terca"
+                    formControlName="terca">
+                  <label class="custom-control-label" for="terca">Martes</label>
+                </div>
+              </div>
+              <div class="form-group col-auto">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    id="quarta"
+                    formControlName="quarta">
+                  <label class="custom-control-label" for="quarta">Miercoles</label>
+                </div>
+              </div>
+              <div class="form-group col-auto">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    id="quinta"
+                    formControlName="quinta">
+                  <label class="custom-control-label" for="quinta">Jueves</label>
+                </div>
+              </div>
+              <div class="form-group col-auto">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    id="sexta"
+                    formControlName="sexta">
+                  <label class="custom-control-label" for="sexta">Viernes</label>
+                </div>
+              </div>
+              <div class="form-group col-auto">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    id="sabado"
+                    formControlName="sabado">
+                  <label class="custom-control-label" for="sabado">Sábado</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="frequenciaContato">Frequência de contatos</label>
+          <select
+            class="form-control"
+            id="frequenciaContato"
+            formControlName="frequenciaContato"
+            (change)="onInput()"
+            [ngClass]="onFieldError('frequenciaContato') + ' ' + onFieldRequired('frequenciaContato')">
+            <option value="">SELECCIONE UNA OPCION</option>
+            <option *ngFor="let item of frequenciaContatos" [value]="item.id">{{ item.descricao }}</option>
+          </select>
+          <invalid-form-control [show]="onFieldInvalid('frequenciaContato')" message="Frequência de contatos é obrigatório."></invalid-form-control>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="frequenciaVisita">Frecuencia de visitas</label>
+          <select
+            class="form-control"
+            id="frequenciaVisita"
+            formControlName="frequenciaVisita"
+            (change)="onInput()"
+            [ngClass]="onFieldError('frequenciaVisita') + ' ' + onFieldRequired('frequenciaVisita')">
+            <option value="">SELECCIONE UNA OPCION</option>
+            <option *ngFor="let item of frequenciaVisitas" [value]="item.id">{{ item.descricao }}</option>
+          </select>
+          <invalid-form-control [show]="onFieldInvalid('frequenciaVisita')" message="Períodos é obrigatório."></invalid-form-control>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="origemContato">Fuente de contacto</label>
+          <select
+            class="form-control"
+            id="origemContato"
+            formControlName="origemContato"
+            (change)="onInput()"
+            [ngClass]="onFieldError('origemContato') + ' ' + onFieldRequired('origemContato')">
+            <option value="">SELECCIONE UNA OPCION</option>
+            <option *ngFor="let item of origensContato" [value]="item.id">{{ item.descricao }}</option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="website">Website</label>
+          <input
+            type="url"
+            class="form-control"
+            id="website"
+            formControlName="website"
+            (input)="onInput()"
+            [ngClass]="onFieldError('website') + ' ' + onFieldRequired('website')">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="obsPropostas">Observaciones (propustas)</label>
+          <textarea
+            class="form-control"
+            id="obsPropostas"
+            formControlName="obsPropostas"
+            (input)="onInput()">
+          </textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

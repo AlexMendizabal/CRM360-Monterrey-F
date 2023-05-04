@@ -1,0 +1,10 @@
+bs-datepicker-container,
+bs-daterangepicker-container {
+  z-index: 2000 !important;
+}
+
+.bs-datepicker {
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid #dee2e6;
+}

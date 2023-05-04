@@ -1,0 +1,397 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Contratos comerciais">
+  <button
+    type="button"
+    (click)= 'onRefresh();'>
+    Atualizar
+  </button>
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()"
+    [disabled]="!form.valid"
+  >
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter #scrollToFilter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2">
+              <label for="dataInicial">Data inicial vigência</label>
+              <input
+                class="form-control"
+                id="dataInicial"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="dataInicial"
+                [ngClass]="onFieldError('dataInicial') + ' ' + onFieldRequired('dataInicial')">
+                <invalid-form-control [show]="onFieldInvalid('dataInicial') == 'required'" message="Data Inicial é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="dataFinal">Data final vigência</label>
+              <input
+                class="form-control"
+                id="dataFinal"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="dataFinal"
+                [ngClass]="onFieldError('dataFinal') + ' ' + onFieldRequired('dataFinal')">
+                <invalid-form-control [show]="onFieldInvalid('dataFinal') == 'required'" message="Data Final é obrigatório."></invalid-form-control>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="nomeContrato">Nome Contrato</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nomeContrato"
+                formControlName="nomeContrato"
+                placeholder="DIGITE..."
+              >
+            </div>
+            <div class="form-group col-lg-3 mb-2 mb-md-0">
+              <label for="situacoes">Situação</label>
+              <ng-select
+                [closeOnSelect]="true"
+                [items]="situacoes"
+                [searchable]="true"
+                [clearable]="false"
+                formControlName="situacao"
+                labelForId="situacao"
+                bindLabel="nomeSituacao"
+                bindValue="codSituacao">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-1 mb-2 mb-md-0">
+              <label for="registros">Registros</label>
+              <select
+                class="form-control"
+                id="registros"
+                formControlName="registros">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>200</option>
+                <option>300</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-4">
+              <label for="cliente">Cliente</label>
+              <input
+                type="text"
+                class="form-control"
+                id="cliente"
+                formControlName="cliente"
+                placeholder="DIGITE..."
+                >
+              <!-- <comercial-ciclo-vendas-cotacoes-formulario-template-clientes
+                [acessoClientes]="permissoesAcesso.acessoClientes"
+                [codCliente]="form.value.codCliente"
+                [asFormField]="false"
+                [setErrors]="codClientErrors"
+                (onChange)="onChangeCliente($event, 'user')"
+                (onLoad)="onLoadCliente($event)">
+              </comercial-ciclo-vendas-cotacoes-formulario-template-clientes> -->
+            </div>
+            <div class="form-group col-lg-4 mb-lg-0">
+              <label for="carteira">Carteira</label>
+              <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="carteira"
+              formControlName="carteira"
+              [virtualScroll]="true"
+              labelForId="carteira"
+              bindLabel="nome"
+              bindValue="id"
+              [loading]="materiaisLoader"
+              loadingText="Carregando..."
+              [readonly]='profile.vendedor && !profile.gestor'>
+          </ng-select>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="codLinha">Linha</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [closeOnSelect]="true"
+                [items]="linhas"
+                formControlName="codLinha"
+                [virtualScroll]="true"
+                labelForId="codLinha"
+                bindLabel="descricao"
+                bindValue="id"
+                placeholder="SELECIONE..."
+                (change)="onChangeLinha($event.id)">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="codClasse">Classe</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [closeOnSelect]="true"
+                [items]="filteredClasses"
+                formControlName="codClasse"
+                [virtualScroll]="true"
+                labelForId="codClasse"
+                bindLabel="nomeClasse"
+                bindValue="idClasse"
+                placeholder="SELECIONE..."
+                (change)="onChangeClasse($event.idClasse)">
+              </ng-select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-4">
+              <label for="codMaterial">Material</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="materiais"
+                [closeOnSelect]="true"
+                formControlName="codMaterial"
+                [virtualScroll]="true"
+                labelForId="codMaterial"
+                bindLabel="codigoDescricaoMaterial"
+                bindValue="codigoMaterial"
+                placeholder="SELECIONE..."
+                [loading]="materiaisLoader"
+                loadingText="Carregando...">
+              </ng-select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <subtitles
+        [data]="subtitles"
+        [show]="dadosPagination.length > 0 && !dadosEmpty">
+      </subtitles>
+    </div>
+  </div>
+  <div class="row">
+    <div [ngClass]="{'col': !showDetailPanel, 'col-5 pr-0': showDetailPanel}">
+
+      <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th>Nome Contrato</th>
+            <th >Data Inicial</th>
+            <th >Data Final</th>
+            <th >Situação</th>
+            <th  [hidden]="showDetailPanel">Quem cadastrou</th>
+            <th  [hidden]="showDetailPanel">Total de toneladas</th>
+            <th ></th>
+            <th ></th>
+            <th ></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <!-- [class.table-active]="item.id == enderecoSelecionado.id" -->
+          <tr *ngFor="let item of dadosPagination; let i = index" >
+            <td
+              class="hover"
+              [ngClass]="classStatusBorder(item)"
+              (click)="onDetails(item)">
+              {{ item.nomeContrato | uppercase }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(item)">
+              {{ item.dataInicialVigencia | date: 'dd/MM/yyyy' }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(item)">
+              {{ item.dataFinalVigencia | date: 'dd/MM/yyyy' }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(item)">
+              {{ item.nomeSituacao | uppercase }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(item)"
+              [hidden]="showDetailPanel">
+              {{ item.nomeUsuario | uppercase }}
+            </td>
+            <td
+              class="hover"
+              (click)="onDetails(item)"
+              [hidden]="showDetailPanel">
+              {{ item.qtdeMaximaConsumo }} t
+            </td>
+            <td>
+              <!--  -->
+              <span class="mr-3" tooltip="Aprovar" placement="left" container="body" [hidden]="showDetailPanel" *ngIf="profile.gestor && profile.vendedor && item.codSituacao == 2"> <!-- <*ngIf="lista.codSituacao == 3"> -->
+                <button type="button" class="btn-icon-sm" (click)="onAprovar(item)">
+                  <i class=" text-success fas fa-thumbs-up"></i>
+                </button>
+              </span>
+            </td>
+            <td >
+              <!-- *ngIf="profile.gestor && profile.vendedor" -->
+              <span class="mr-3" tooltip="Reprovar" placement="left" container="body" [hidden]="showDetailPanel" *ngIf="profile.gestor && profile.vendedor && item.codSituacao == 2"> <!-- <*ngIf="lista.codSituacao == 3"> -->
+                <button type="button" class="btn-icon-sm" (click)="openModalReprovar(reprovar); setFormReprovar(item);">
+                  <i class=" text-danger fas fa-thumbs-down"></i>
+                </button>
+              </span>
+
+              <!-- <span class="mr-3" tooltip="Contrato Reprovado" placement="left" container="body" [hidden]="showDetailPanel" *ngIf="(!profile.gestor && profile.vendedor || profile.gestor && profile.vendedor) && item.codSituacao == 3">
+                <button type="button" class="btn-icon-sm" (click)="openModalReprovar(reprovar); setFormReprovar(item);">
+                  <i class=" text-danger fas fa-thumbs-down"></i>
+                </button>
+              </span> -->
+            </td>
+            <td>
+              <span class="mr-3" tooltip="Editar" placement="left" container="body" [hidden]="showDetailPanel" *ngIf="(item.codSituacao == 3 || item.codSituacao == 1) && profile.vendedor && profile.gestor">
+                <button type="button" class="btn-icon-sm" (click)="onEdit(item)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </span>
+
+              <span   tooltip="Visualizar" placement="left" container="body" [hidden]="showDetailPanel" *ngIf="item.codSituacao != 3 && item.codSituacao != 1">
+                <button type="button" class="btn-icon-sm" (click)="onEdit(item)">
+                  <i class="fas fa-search"></i>
+                </button>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result
+        message="Nenhuma informação encontrada"
+        class="my-3"
+        *ngIf="dadosEmpty">
+      </empty-result>
+      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && dadosLoaded">
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <div class="col-7" [hidden]="!showDetailPanel">
+      <detail-panel>
+        <custom-table
+        *ngIf="detailPanelCliente.length > 0"
+        >
+        <div class="mtc-title mb-2">Clientes</div>
+          <ng-template #thead let-thead >
+            <tr>
+              <th scope="col" class="text-center">Código Cliente</th>
+              <th scope="col" class="text-center">Razão Social</th>
+
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor='let item of detailPanelCliente'>
+              <td class="text-center">{{ item.codCliente}}</td>
+              <td class="text-center">{{ item.razaoSocial }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+
+        <custom-table
+        *ngIf="detailPanelMateriais.length > 0"
+        >
+        <div class="mtc-title mb-2">Materiais</div>
+          <ng-template #thead let-thead >
+            <tr>
+              <th scope="col" class="text-center">Código Material</th>
+              <th scope="col" class="text-center">Nome</th>
+              <th scope="col">Linha</th>
+              <th scope="col" class="text-center">Classe</th>
+              <th scope="col" class="text-center">Total Toneladas</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor='let item of detailPanelMateriais'>
+              <td class="text-center">{{ item.codMaterial }}</td>
+              <td class="text-center">{{ item.nomeMaterial }}</td>
+              <td class="text-center">{{ item.linha }}</td>
+              <td class="text-center">{{ item.classe }}</td>
+              <td class="text-center">{{ item.qtdeMaximaConsumo }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+
+        <div class="col-12" *ngFor='let item of detailPanelData'>
+          <div *ngIf = "item.codSituacao == 3">
+            <br>
+            <hr>
+            <div class="mtc-title mb-2 text-center">Motivo da Reprovação</div>
+              <p class="text-center"> {{ item.motivoReprovacao | uppercase }}</p>
+          </div>
+        </div>
+      </detail-panel>
+    </div>
+  </div>
+
+
+<ng-template #reprovar>
+
+  <div>
+    <div class="modal-body">
+
+        <button type="button" class="close pull-right" (click)="closeModal(reprovar)" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="mtc-title">Motivo da Reprovação</div>
+        <form [formGroup]="formReprovar" autocomplete="off" #scrollToFormOnTop>
+            <div class="form-group">
+              <textarea
+                class="form-control"
+                id="text-area"
+                rows="3"
+                formControlName="descMotivo"
+                [readonly]="!profile.gestor && profile.vendedor">
+            </textarea>
+            </div>
+          </form>
+        <div class="row mt-2">
+          <div class="col" style="text-align: center;" >
+
+          <button
+            *ngIf="profile.gestor && profile.vendedor"
+            type="button"
+            class="btn btn-success"
+            (click)="modalRef.hide(); onReprovar();"
+            >
+            Salvar
+          </button>
+
+        </div>
+      </div>
+
+  </div>
+</div>
+</ng-template>
+
+</app-body>
+

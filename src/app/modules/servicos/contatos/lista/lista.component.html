@@ -1,0 +1,169 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button (click)="onReset()">
+    Limpar
+  </button>
+  <button 
+  [disabled]="form.status == 'INVALID'"
+  (click)="onSearch()">
+    Filtrar
+  </button>
+</app-header>
+
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Matrícula</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="NR_MATR"
+            (keyup.enter)="onSearch()"
+            >
+        </div>
+        <div class="form-group col">
+          <label>Nome</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="NM_USUA"
+            (keyup.enter)="onSearch()"
+            >
+        </div>
+        <div class="form-group col">
+          <label>Telefone</label>
+          <input
+            type="text"
+            class="form-control col"
+            formControlName="TELE"
+            (keyup.enter)="onSearch()"
+            >
+        </div>
+        <div class="form-group col">
+          <label>E-mail</label>
+          <input
+            type="text"
+            class="form-control col"
+            formControlName="MAIL"
+            (keyup.enter)="onSearch()"
+            >
+        </div>
+        <div class="form-group col">
+          <label>Cargo</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="CARG"
+            (keyup.enter)="onSearch()"
+            >
+        </div>
+        <div class="form-group col">
+          <label>Registros</label>
+          <select
+            name=""
+            id=""
+            class="form-control"
+            formControlName="TT_REGI_PAGI"
+            (change)="onSearch()"
+          >
+            <option value="10">10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+   
+  <div class="col-12 p-0 d-flex" [hidden] = "loading || noResult">
+    <div class="w-100">
+      <custom-table>
+        <ng-template #thead let-thead>
+          <tr>
+            <th></th>
+            <th>Nome</th>
+            <th *ngIf="!showDetailPanel">Email</th>
+            <th *ngIf="!showDetailPanel">Telefone</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let contato of contatos">
+            <td>
+              <img src="data:image/png;base64,{{ contato.FOTO }}" class="rounded-circle" alt="" height="30px" *ngIf="contato.FOTO != null">
+              <i class="fas fa-user-circle text-muted" *ngIf="contato.FOTO == null || contato.FOTO == ''" style="font-size: 1.5rem;"></i>
+            </td>
+            <td>{{ contato.NM_USUA }}</td>
+            <td *ngIf="!showDetailPanel">{{ contato.MAIL }}</td>
+            <td *ngIf="!showDetailPanel">{{ contato.TELE }}</td>
+            <td>
+              <button
+                class="btn-icon-sm"
+                (click)="onViewDetails(contato)"  
+              >
+                <i class="fas fa-search"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+    <div class="col-5 pr-0" [hidden]="!showDetailPanel">
+      <detail-panel [panelTitle]="detailPanelTitle">
+        <div class="d-flex justify-content-between">
+          <div>
+            <img src="data:image/png;base64,{{ contato?.FOTO }}" class="rounded-circle" alt="" height="200px" *ngIf="contato?.FOTO != null">
+            <i class="fas fa-user-circle text-muted" *ngIf="contato?.FOTO == null || contato?.FOTO == ''" style="font-size: 8rem;"></i>
+          </div>
+          <div>
+            <div class="form-group">
+              <label>E-mail</label>
+              <span class="d-block">{{ contato?.MAIL }}</span>
+            </div>
+            <div class="form-group">
+              <label>Telefone</label>
+              <span class="d-block">{{ contato?.TELE }}</span>
+            </div>
+            <div class="form-group">
+              <label>Cargo</label>
+              <span class="d-block">{{ contato?.CARG }}</span>
+            </div>
+            <div class="form-group">
+              <label>Departamento</label>
+              <span class="d-block">{{ contato?.DEPA }}</span>
+            </div>
+            <div class="form-group">
+              <label>Aniversário</label>
+              <span class="d-block">{{ contato?.DT_NASC | date : 'd'}} &nbsp;de&nbsp; {{ contato?.DT_NASC | date : 'MMMM'}}</span>
+            </div>
+            <div class="form-group">
+              <label>Aniversário na Empresa</label>
+              <span class="d-block">{{ contato?.DT_INIC_EMPR | date : 'd' }} &nbsp;de&nbsp; {{ contato?.DT_INIC_EMPR | date : 'MMMM' }} </span>
+            </div>
+          </div>
+        </div>
+      </detail-panel>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

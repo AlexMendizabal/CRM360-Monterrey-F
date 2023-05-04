@@ -1,0 +1,344 @@
+<loader-spinner-full-screen [hidden]="!loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+    <button
+    type="button"
+    (click) = "onResetForm()"
+    >
+    Limpiar
+  </button>
+  <button
+    [disabled]="form.status == 'INVALID'"
+    type="button"
+    (click) = "onSearch()"
+    >
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="dtInicial">Data Inicial</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+            </div>
+            <input
+              class="form-control"
+              id="dtInicial"
+              type="text"
+              bsDatepicker
+              placeholder="DATA INICIAL"
+              [bsConfig]="bsConfig"
+              formControlName="DT_INIC">
+          </div>
+        </div>
+        <div class="form-group col">
+          <label for="dtFinal">Final</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+            </div>
+            <input
+              class="form-control"
+              id="dtFinal"
+              type="text"
+              bsDatepicker
+              placeholder="DATA FINAL"
+              [bsConfig]="bsConfig"
+              formControlName="DT_FINA">
+          </div>
+        </div>
+        <div class="form-group col">
+          <label for="nrManifesto">Manifesto</label>
+          <input
+            class="form-control"
+            id="nrManifesto"
+            type="text"
+            formControlName="NR_MANI"
+            placeholder="Escribelo..."
+            (keyup.enter)="onSearch()"
+            >
+        </div>
+        <div class="form-group col">
+          <label for="coleta">Coleta</label>
+          <input
+            class="form-control"
+            id="coleta"
+            type="text"
+            formControlName="NR_COLE"
+            placeholder="Escribelo..."
+            (keyup.enter)="onSearch()"
+            >
+        </div>
+        <div class="form-group col">
+          <label for="empresa">Empresa</label>
+          <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="empresas"
+              [virtualScroll]="true"
+              [loading]="loadingEmpresas"
+              placeholder="SELECCIONE..."
+              labelForId="empresa"
+              bindLabel="NM_FANT"
+              bindValue="CD_EMPR"
+              id="empresa"
+              formControlName="CD_EMPR"
+              (change)="onSearch()"
+            >
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              ({{item.CD_EMPR | number : '3.0-0'}}) {{item.NM_FANT}}
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col">
+          <label for="tipoTransporte">Tipo de Transporte</label>
+          <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="tipoTransporte"
+              [virtualScroll]="true"
+              [loading]="loadingTipoTransporte"
+              placeholder="SELECCIONE..."
+              labelForId="tipoTransporte"
+              bindLabel="DS_TRAN"
+              bindValue="CD_TRAN"
+              id="tipoTransporte"
+              (change)="onSearch()"
+              formControlName="CD_TRAN"
+            >
+          </ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Motorista</label>
+          <input type="text" class="form-control" placeholder="NOME OU CPF" (keyup.enter)="onSearch()" formControlName="NM_MOTO">
+        </div>
+        <div class="form-group col">
+          <label>Veículo</label>
+          <input type="text" class="form-control" placeholder="Escribelo..." (keyup.enter)="onSearch()" formControlName="CD_PLAC">
+        </div>
+        <div class="form-group col-2">
+          <label>Tipo da coleta</label>
+          <select
+            class="form-control"
+            formControlName="CD_TIPO_COLE"
+            (change)="onSearch()" 
+          >
+            <option value="0">Todos</option>
+            <option value="1">Deslocamento Vazio</option>
+            <option value="2">Manuteção</option>
+            <option value="3">Normal</option>
+          </select>
+        </div>
+        <div class="form-group col-2">
+          <label >Status</label>
+          <select
+            class="form-control"
+            formControlName="IN_INTE"
+            (change)="onSearch()" 
+          >
+            <option value="T">Todos</option>
+            <option value="I">Integrado</option>
+            <option value="P">Integrado parcialmente</option>
+            <option value="N">Não integrado</option>
+            <option value="E">Com erro</option>
+          </select>
+        </div>
+        <div class="form-group col-2">
+          <label for="itemsPerPage">Registros</label>
+          <select 
+            class="form-control"
+            (change)="setItensPerPage($event)"
+            formControlName="TT_REGI_PAGI"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div [hidden]="loading || items.length == 0">
+    <table class="table table-sm table-hover border-left border-right border-bottom text-center table-fixed" style="width: 50%">
+      <tbody>
+        <tr>
+          <td><i class="fas fa-circle text-success"></i></td>
+          <td>Integrado</td>
+          <td>{{ qtItensIntegrados }}</td>
+          <td>{{ qtItensIntegrados / totalItems | percent : '1.0-0'}}</td>
+        </tr>
+        <tr>
+          <td><i class="fas fa-circle text-muted"></i></td>
+          <td>Integrado parcialmente</td>
+          <td>{{ qtItensIntegradosParcialmente }}</td>
+          <td>{{ qtItensIntegradosParcialmente / totalItems | percent : '1.0-0'}}</td>
+        </tr>
+        <tr>
+          <td><i class="fas fa-circle text-warning"></i></td>
+          <td>Não integrado</td>
+          <td>{{ qtItensNaoIntegrados }}</td>
+          <td>{{ qtItensNaoIntegrados / totalItems | percent : '1.0-0'}}</td>
+        </tr>
+        <tr>
+          <td><i class="fas fa-circle text-danger"></i></td>
+          <td>Com erro</td>
+          <td>{{ qtItensComErro }}</td>
+          <td>{{ qtItensComErro / totalItems | percent : '1.0-0'}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-between w-100">
+      <div class="custom-control custom-checkbox" *ngFor="let item of grid | keyvalue:keepOriginalOrder ;let index = index">
+        <input type="checkbox" class="custom-control-input" [id]="'customCheckColeta' + index" [(ngModel)]="item.value.active">
+        <label class="custom-control-label" [for]="'customCheckColeta' + index">{{item.value.name}}</label>
+      </div>
+    </div>
+    <div class="d-flex">
+      <div class="col p-0">
+        <custom-table>
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center" *ngIf="grid.coleta.active">Coleta</th>
+              <th scope="col" class="text-center" *ngIf="grid.manifesto.active">Manifesto</th>
+              <th scope="col" class="text-center" *ngIf="grid.idRavex.active">Id Ravex</th>
+              <th scope="col" class="text-center" *ngIf="grid.tipoColeta.active     &&  !showDetailPanel">Tipo da coleta</th>
+              <th scope="col" class="text-center" *ngIf="grid.motorista.active      &&  !showDetailPanel">Motorista</th>
+              <th scope="col" class="text-center" *ngIf="grid.veiculo.active        &&  !showDetailPanel">Veículo</th>
+              <th scope="col" class="text-center" *ngIf="grid.emissao.active        &&  !showDetailPanel">Emissão</th>
+              <th scope="col" class="text-center" *ngIf="grid.saidaPrevista.active  &&  !showDetailPanel">Saída Prevista</th>
+              <th scope="col" class="text-center" *ngIf="grid.integracao.active     &&  !showDetailPanel">Integração</th>
+              <th scope="col" class="text-center"></th>
+              <th scope="col" class="text-center"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let item of items | slice : begin : end; let indice = index"  [ngClass]="{'table-active': item.selected == true}">
+              <td class="align-middle text-center" *ngIf="grid.coleta.active">({{ item.CD_EMPR }})&nbsp;{{ item.NR_COLE }}</td>
+              <td class="align-middle text-center" *ngIf="grid.manifesto.active">{{ item.NR_ORDE_CARR | hifen}}</td>
+              <td class="align-middle text-center" *ngIf="grid.idRavex.active">{{ item.ID_RAVX | hifen}}</td>
+              <td class="align-middle text-center" *ngIf="grid.tipoColeta.active     &&  !showDetailPanel">{{ item.DS_TIPO_COLE | hifen}}</td>
+              <td class="align-middle text-center" *ngIf="grid.motorista.active      &&  !showDetailPanel">{{ item.NM_MOTO | uppercase | hifen}}</td>
+              <td class="align-middle text-center" *ngIf="grid.veiculo.active        &&  !showDetailPanel">{{ item.CD_PLAC | hifen}}</td>
+              <td class="align-middle text-center" *ngIf="grid.emissao.active        &&  !showDetailPanel">{{ item.DT_EMIS_COLE | date : 'dd/MM/yyyy HH:mm:ss' }}</td>
+              <td class="align-middle text-center" *ngIf="grid.saidaPrevista.active  &&  !showDetailPanel">
+                <input
+                  type="datetime-local"
+                  class="form-control custom-input-datetime"
+                  [(ngModel)]="item.DT_PREV_SAID"
+                  style="background-color: transparent;"
+                >
+              </td>
+              <td class="align-middle text-center" *ngIf="grid.integracao.active     &&  !showDetailPanel">
+                <span *ngIf="item.DT_INTE">{{ item?.DT_INTE | date : 'dd/MM/yyyy HH:mm:ss' }}</span>
+                <span *ngIf="!item.DT_INTE">-</span>
+              </td>
+              <td class="align-middle text-center">
+                <button
+                  class="btn-icon-sm"
+                  tooltip="Integrar"
+                  placement="left"
+                  (click)="integrarViagem(item)"
+                  [hidden]="item.loading"
+                  [disabled]="eHUmaViagemIntegrada(item.IN_INTE)"
+                  >
+                    <i
+                      class="far fa-paper-plane" 
+                      [ngClass]="getCorIntegracao(item.IN_INTE)"></i>
+                </button>
+                <div class="spinner-border text-primary" role="status" [hidden]="!item.loading" style="height: 1rem; width: 1rem;">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </td>
+              <td class="text-right align-middle">
+                <button
+                  tooltip="Detalhes"
+                  placement="left"
+                  container="body"
+                  (click)="viewDetails(item)"
+                >
+                  <i class="fas fa-search"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+        Mostrando {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+      <div class="col-7 pr-0" [hidden]="!showDetailPanel">
+        <detail-panel [panelTitle]="detailPanelTitle">
+          <custom-table *ngIf="entregas.length > 0">
+            <ng-template #thead let-thead>
+              <tr>
+                <th>Cte</th>
+                <th>Endereço</th>
+                <th>Bairro</th>
+                <th>Cidade</th>
+                <th></th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let item of entregas">
+                <td>({{ item?.CD_EMPR }})&nbsp;{{ item?.NR_CTE }}</td>
+                <td>{{ item?.DS_LOCA_ENTR | hifen | uppercase }}</td>
+                <td>{{ item?.DS_BAIRR | hifen | uppercase }}</td>
+                <td>{{ item?.DS_CIDA | hifen | uppercase}}</td>
+                <td>
+                  <span
+                    [tooltip]="eHUmaViagemIntegrada(viagem.IN_INTE) ? '' : 'É necessário integrar a viagem'"
+                    container="body"
+                    placement="left"  
+                  >
+                    <button
+                      class="btn-icon-sm"
+                      tooltip="Integrar"
+                      placement="left"
+                      *ngIf="!item.loading"
+                      (click)="integrarEntregas(item, viagem)"
+                      [disabled]="!eHUmaViagemIntegrada(viagem.IN_INTE)"
+                      >
+                        <i class="far fa-paper-plane"  [ngClass]="getCorIntegracao(item.IN_INTE)"></i>
+                    </button>
+                    <div
+                      class="spinner-border spinner-border-sm text-primary"
+                      role="status"
+                      *ngIf="item.loading"
+                    >
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </span>
+                </td>
+              </tr>
+            </ng-template>
+          </custom-table>
+          <div [hidden]="loadingEntregas || entregas.length > 0" class="d-flex justify-content-center align-items-center w-100">
+            <empty-result message="No se encontró información"></empty-result>
+          </div>
+        </detail-panel>
+      </div>
+    </div>
+  </div>
+  <div [hidden]="loading || items.length > 0" class="d-flex justify-content-center align-items-center" style="width: 100%; height: 300px">
+    <empty-result message="No se encontró información"></empty-result>
+  </div>
+</app-body>

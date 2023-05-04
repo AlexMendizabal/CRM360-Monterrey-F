@@ -1,0 +1,281 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Reenvio de XML">
+  <button
+    type="button"
+    (click)="onReagendarEnvio()"
+    [disabled]="!showDetailPanel">
+    Reagendar
+  </button>
+  <button
+    type="button"
+    (click)="onFilter()"
+    [disabled]="!formFilter.valid">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row justify-content-center mb-2">
+    <div class="col-md-5">
+      <ul class="list-unstyled mb-0 d-flex justify-content-around">
+        <li class="text-center px-3">
+          <h6 class="text-muted font-weight-light">Total de envios</h6>
+          <div class="text-success">
+            <h4>
+              <strong
+                counto
+                [step]="30"
+                [countTo]="enviosTotal"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countoEnviosTotal = $event">
+                {{ handleCounter(countoEnviosTotal) }}
+              </strong>
+            </h4>
+          </div>
+        </li>
+        <li class="text-center px-3">
+          <h6 class="text-muted font-weight-light">Envios no mês</h6>
+          <div class="text-primary">
+            <h4>
+              <strong
+                counto
+                [step]="30"
+                [countTo]="mes"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countoMes = $event">
+                {{ handleCounter(countoMes) }}
+              </strong>
+            </h4>
+          </div>
+        </li>
+        <li class="text-center px-3">
+          <h6 class="text-muted font-weight-light">Último envio</h6>
+          <div class="text-secondary">
+            <h4 class="d-flex justify-content-center">
+              <strong
+                counto
+                [step]="30"
+                [countTo]="horaUltimoEnvio"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countoHoraUltimoEnvio = $event">
+                {{ handleCounterHorario(countoHoraUltimoEnvio) }}
+              </strong>
+              :
+              <strong
+                counto
+                [step]="30"
+                [countTo]="minutosUltimoEnvio"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countoMinutosUltimoEnvio = $event">
+                {{ handleCounterHorario(countoMinutosUltimoEnvio) }}
+              </strong>
+            </h4>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <advanced-filter>
+    <form [formGroup]="formFilter" autocomplete="new-password">
+      <div class="form-row">
+        <div class="form-group col-lg-2">
+          <label for="codEmpresa">Empresa</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="empresas"
+            formControlName="codEmpresa"
+            [virtualScroll]="true"
+            labelForId="codEmpresa"
+            bindLabel="nomeEmpresa"
+            bindValue="idEmpresa">
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="numNota">Número da NF</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="numNota"
+            autocomplete="new-password"
+            (keydown.enter)="onFilter()">
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="row">
+    <div [ngClass]="{'col-12': !showDetailPanel, 'col-7 pr-0': showDetailPanel}">
+      <custom-table *ngIf="notasFiscais.length > 0 && !dataEmpty">
+        <ng-template #thead let-thead>
+          <tr>
+            <th style="width: 5%;" scope="col"></th>
+            <th style="width: 15%;" scope="col" class="text-center" [hidden]="showDetailPanel">Unidade</th>
+            <th style="width: 10%;" scope="col" class="text-center" [hidden]="showDetailPanel">Enviado em</th>
+            <th style="width: 10%;" scope="col" class="text-center" [hidden]="showDetailPanel">Faturado em</th>
+            <th style="width: 15%;" scope="col" class="text-center">Pedido / Nota</th>
+            <th style="width: 20%;" scope="col" class="text-center">Cliente</th>
+            <th style="width: 25%;" scope="col" class="text-center">Vendedor</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let notaFiscal of notasFiscais" [class.table-active]="notaFiscal.pedido == pedido">
+            <td class="text-center">
+              <i
+                class="text-black-50 fas fa-envelope mr-3"
+                *ngIf="notaFiscal.enviado == 1"
+                tooltip="E-mail enviado"
+                placement="right">
+              </i>
+              <i
+                class="text-warning far fa-envelope mr-3"
+                *ngIf="notaFiscal.enviado == 0"
+                tooltip="E-mail reagendado"
+                placement="right">
+              </i>
+            </td>
+            <td
+              class="text-center hover"
+              (click)="viewDetails(notaFiscal)"
+              [hidden]="showDetailPanel">
+              {{ notaFiscal.empresa }}
+            </td>
+            <td
+              class="text-center hover"
+              (click)="viewDetails(notaFiscal)"
+              [hidden]="showDetailPanel">
+              {{ notaFiscal.dtEnvio | date: 'dd/MM/yyyy' }}
+            </td>
+            <td
+              class="text-center hover"
+              (click)="viewDetails(notaFiscal)"
+              [hidden]="showDetailPanel">
+              {{ notaFiscal.dtFaturamento | date: 'dd/MM/yyyy' }}
+            </td>
+            <td
+              class="text-center hover"
+              (click)="viewDetails(notaFiscal)">
+              {{ notaFiscal.pedido | number:'1.0-0' }} / {{ notaFiscal.numNfe | number:'1.0-0' }}
+            </td>
+            <td
+              class="text-center text-truncate hover"
+              (click)="viewDetails(notaFiscal)">
+              {{ notaFiscal.nomeFantasia }}
+            </td>
+            <td
+              class="text-center text-truncate hover"
+              (click)="viewDetails(notaFiscal)">
+              {{ notaFiscal.nomeVendedor }}
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+      <empty-result
+        class="my-3"
+        message="Nenhuma informação encontrada"
+        *ngIf="dataEmpty">
+      </empty-result>
+    </div>
+    <div class="col-5" [hidden]="!showDetailPanel">
+      <detail-panel panelTitle="Dados para envio">
+        <form [formGroup]="formReagendar" autocomplete="off">
+          <div class="border-right border-left border-bottom">
+            <div class="px-3 py-2">
+              <div class="form-row">
+                <div class="form-group col-10">
+                  <label for="email1">E-mail NFe</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email1"
+                    formControlName="email1">
+                </div>
+                <div class="col-1 pt-4 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon-sm"
+                    (click)="onEditEmail('email1')">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </div>
+                <div class="col-1 pt-4 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon-sm"
+                    (click)="onDeleteEmail('email1')">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col"><hr class="m-0"></div>
+            </div>
+            <div class="px-3 py-2">
+              <div class="form-row">
+                <div class="form-group col-10">
+                  <label for="email2">E-mail NFe</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email2"
+                    formControlName="email2">
+                </div>
+                <div class="col-1 pt-4 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon-sm"
+                    (click)="onEditEmail('email2')">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </div>
+                <div class="col-1 pt-4 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon-sm"
+                    (click)="onDeleteEmail('email2')">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col"><hr class="m-0"></div>
+            </div>
+            <div class="px-3 py-2">
+              <div class="form-row">
+                <div class="form-group col-10">
+                  <label for="email3">E-mail NFe</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email3"
+                    formControlName="email3">
+                </div>
+                <div class="col-1 pt-4 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon-sm"
+                    (click)="onEditEmail('email3')">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </div>
+                <div class="col-1 pt-4 d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn-icon-sm"
+                    (click)="onDeleteEmail('email3')">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </detail-panel>
+    </div>
+  </div>
+</app-body>

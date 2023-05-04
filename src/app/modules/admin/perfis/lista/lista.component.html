@@ -1,0 +1,105 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
+<app-header appTitle="Lista de Perfis">
+  <button type="button" (click)="onReset()">Limpar</button>
+  <button type="button" (click)="onFilter()">Filtrar</button>
+  <button type="button" [routerLink]="['../novo']">Adicionar</button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <advanced-filter>
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col-3">
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" class="form-control" placeholder="DIGITE..." formControlName="nome" (keyup.enter)="onFilter()">
+        </div>
+        <div class="form-group col-3">
+          <label for="matricula">Sigla</label>
+          <input id="matricula" type="text" class="form-control" placeholder="DIGITE..." formControlName="sigla" (keyup.enter)="onFilter()">
+        </div>
+        <div class="form-group col-3">
+          <label for="situacao">Situação</label>
+          <select
+            class="form-control custom-select"
+            formControlName="situacao"  
+            (change)="onFilter()"
+          >
+            <option value="1">Ativo</option>
+            <option value="0">Inativo</option>
+            <option value="''">Todos</option>
+          </select>
+        </div>
+        <div class="form-group col-1">
+          <label for="registrosPorPagina">Registros</label>
+          <select
+            class="custom-select form-control"
+            (change)="onFilter()"
+            formControlName="registrosPorPagina"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <div class="col-12 p-0" [hidden]="loading || noResult">
+    <div>
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th style="width:100px">Id</th>
+            <th>Nome</th>
+            <th>Sigla</th>
+            <th class="align-middle" style="width:70px"></th>
+            <!-- <th class="align-middle" style="width:70px"></th> -->
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of data; let i = index">
+            <td class="text-truncate" [ngClass]="item.situacao == 1 ? 'border-success' : 'border-danger'">
+              {{ item.id | number:'6.0-0' }}
+            </td>
+            <td>
+              {{ item.nome }}
+            </td>
+            <td> {{ item.sigla }} </td>
+            <td class="align-middle">
+              <button
+                class="btn-icon-sm"
+                tooltip="Editar"
+                container="body"
+              >
+                <a [routerLink]="['./', item.id]">
+                  <i class="fas fa-edit"></i>
+                </a>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+    <div>
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+      <pagination
+        [maxSize]="10"
+        [totalItems]="totalItems"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>

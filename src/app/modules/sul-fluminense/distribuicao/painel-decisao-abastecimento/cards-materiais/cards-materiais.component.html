@@ -1,0 +1,155 @@
+<loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
+<div class="row justify-content-between mb-3" [hidden]="!viewLegend">
+  <div class="col-6">
+    <div class="d-flex" *ngIf="materiaisID.length > 0">
+      <div *ngFor="let item of nivelCritico">
+        <div
+          class="legend hover"
+          [tooltip]="item.Descricao"
+          (click)="filterPipe(item.Codigo)"
+          [class.active]="filterUnidade === item.Codigo"
+          [ngClass]="item.Cor">
+          <div class="square"></div>
+          <div class="text">{{ item.Nome | uppercase }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #itemTemplate let-item="item">
+  <div>
+    <div class="card-body">
+      <div [ngClass]="item.value.MensagemErro != null ? 'alert alert-danger' : 'bg-light2'" class="rounded" [tooltip]="item.value.MensagemErro" >
+        <div class="row">
+          <div class="col-md-2 ml-3">
+            <strong>Cod:</strong> {{item.value.CodigoMaterial}}
+          </div>
+          <div class="col-md-3 text-truncate">
+            <strong>Desc:</strong> {{item.value.DescricaoMaterial}}
+          </div>
+          <div class="col-md-2">
+            <strong>Linha:</strong> {{item.value.DescricaoLinha}}
+          </div>
+          <div class="col-md-2">
+            <strong>Classe:</strong> {{item.value.DescricaoClasse}}
+          </div>
+        </div>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th class="icone-sem-borda"></th>
+            <th scope="col" class="hover" (click)="sortItems(item, 'DescricaoUnidadeAbastecimento')" >Unidade de abastecimento
+              <span *ngIf="item.campoVisivel =='DescricaoUnidadeAbastecimento'"><i [ngClass]="item.sort ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="item.campoVisivel !='DescricaoUnidadeAbastecimento'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th scope="col" class="hover" (click)="sortItems(item,'ValorDemanda')">Demanda
+              <span *ngIf="item.campoVisivel =='ValorDemanda'"><i [ngClass]="item.sort ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="item.campoVisivel !='ValorDemanda'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th scope="col" class="hover" (click)="sortItems(item,'EmEnvio')"><span tooltip="Peso em toneladas do material em envio">Em envio</span>&nbsp;
+              <span *ngIf="item.campoVisivel =='EmEnvio'"><i [ngClass]="item.sort ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="item.campoVisivel !='EmEnvio'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th scope="col" class="hover" (click)="sortItems(item,'EmTransferencia')"><span tooltip="Peso em toneladas do material em transferência">Em transferência</span>&nbsp;
+              <span *ngIf="item.campoVisivel =='EmTransferencia'"><i [ngClass]="item.sort ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="item.campoVisivel !='EmTransferencia'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th scope="col" class="hover" (click)="sortItems(item,'ValorAtendido')">Atendido
+              <span *ngIf="item.campoVisivel =='ValorAtendido'"><i [ngClass]="item.sort ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="item.campoVisivel !='ValorAtendido'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th scope="col" class="hover" (click)="sortItems(item,'ValorSaldo')"><span tooltip="Cálculo: Demanda - (Em envio + Em transferência + Atendido)">Saldo</span>&nbsp; 
+              <span *ngIf="item.campoVisivel =='ValorSaldo'"><i [ngClass]="item.sort ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="item.campoVisivel !='ValorSaldo'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th scope="col" class="hover" (click)="sortItems(item,'ValorEstoqueDisponivel')">Estoque Disponível
+              <span *ngIf="item.campoVisivel =='ValorEstoqueDisponivel'"><i [ngClass]="item.sort ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="item.campoVisivel !='ValorEstoqueDisponivel'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th scope="col" class="hover" (click)="sortItems(item,'MediaVendas')">Média de Vendas
+              <span *ngIf="item.campoVisivel =='MediaVendas'"><i [ngClass]="item.sort ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="item.campoVisivel !='MediaVendas'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th scope="col" class="hover" (click)="sortItems(item,'Giro')">Giro
+              <span *ngIf="item.campoVisivel =='Giro'"><i [ngClass]="item.sort ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="item.campoVisivel !='Giro'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let unidade of item.value.Unidades | filter: filterUnidade; let index = index" [ngClass]="{'bg-info2': unidade.Detalhes}">
+            <th  class="icone-sem-borda hover">
+              <div (click)="alteraIcone(unidade, item, index)">
+                <i [ngClass]="iconClass(unidade.Detalhes)"></i>
+              </div>
+            </th>
+            <td class="text-truncate" [ngClass]="{
+            'border-danger1' : unidade.CodigoNivelCritico == 1, 
+            'border-warning1' : unidade.CodigoNivelCritico == 2, 
+            'border-success1' : unidade.CodigoNivelCritico == 3, 
+            'border-primary1' : unidade.CodigoNivelCritico == 4
+            }">
+              {{ unidade.DescricaoUnidadeAbastecimento}}
+            </td>
+            <td>{{ unidade.ValorDemanda | number: '0.3-3'}}</td>
+            <td>{{ unidade.EmEnvio | number: '0.3-3' }}</td>
+            <td>{{ unidade.EmTransferencia | number: '0.3-3' }}</td>
+            <td>{{ unidade.ValorAtendido | number: '0.3-3' }}</td>
+            <td>{{ unidade.ValorSaldo | number: '0.3-3' }}</td>
+            <td>
+              <span *ngIf="item.value.PesoEspecifico > 0">{{ unidade.ValorEstoqueDisponivel | number: '0.3-3' }}</span>
+              <span *ngIf="item.value.PesoEspecifico == 0">-</span>
+            </td>
+            <td>
+              <span *ngIf="item.value.PesoEspecifico > 0">{{ unidade.MediaVendas | number: '0.3-3' }}</span>
+              <span *ngIf="item.value.PesoEspecifico == 0">-</span>
+            </td>
+            <td>
+                <span *ngIf="item.value.PesoEspecifico > 0">{{ unidade.Giro | number: '0.0-0' }}</span>
+                <span *ngIf="item.value.PesoEspecifico == 0">-</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-sm" *ngIf="index == item.id && itemDetalhes">
+        <thead class="thead-color">
+          <tr>
+            <th scope="col" class="bg-info2">Pedido Pai</th>
+            <th scope="col" class="bg-info2"> Item</th>
+            <th scope="col" class="bg-info2">Pedido Remessa</th>
+            <th scope="col" class="bg-info2">Item</th>
+            <th scope="col" class="bg-info2">Demanda</th>
+            <th scope="col" class="bg-info2">Em envio</th>
+            <th scope="col" class="bg-info2">Em transferência</th>
+            <th scope="col" class="bg-info2">Atendido</th>
+            <th scope="col" class="bg-info2">Saldo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let materialDetalhe of this.materiaisDetalhes">
+            <td>{{ materialDetalhe.NumeroPedidoPai | number: '0.0-0' }}</td>
+            <td>{{ materialDetalhe.ItemPedidoPai | number: '0.0-0' }}</td>
+            <td>{{ materialDetalhe.NumeroPedidoRemessa | number: '0.0-0' }}</td>
+            <td>{{ materialDetalhe.ItemPedidoRemessa | number: '0.0-0' }}</td>
+            <td>{{ materialDetalhe.Demanda | number: '0.3-3' }}</td>
+            <td>{{ materialDetalhe.EmEnvio | number: '0.3-3' }}</td>
+            <td>{{ materialDetalhe.EmTransferencia | number: '0.3-3' }}</td>
+            <td>{{ materialDetalhe.Atendido | number: '0.3-3' }}</td>
+            <td>{{ materialDetalhe.Saldo | number: '0.3-3' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>
+<bs-sortable
+  [(ngModel)]="materiaisID"
+  [itemTemplate]="itemTemplate"
+  itemClass="card mb-3"
+  itemActiveClass="border-card bg-info2 shadow"
+  wrapperClass="sortable-wrapper"
+></bs-sortable>
+<div *ngIf="emptyMateriais"class="text-center d-flex justify-content-center align-items-center p-5" style="height: 80%">
+  <empty-result message="Nenhuma informação encontrada"></empty-result>
+</div>

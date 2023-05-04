@@ -1,0 +1,414 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="MANUTENÇÃO DE Materiais">
+  <button
+    type="button"
+    (click)="onFilter()"
+    [disabled]="form.status == 'INVALID'"
+  >
+    Filtrar
+  </button>
+  <button
+    type="button"
+    (click)="OnExcel()"
+    [disabled]="true"
+  >
+    Exportar Excel
+  </button>
+  <button
+    type="button"
+    (click)="onSave()"
+    [disabled]="form.status == 'INVALID' || !loading"
+  >
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-lg-2">
+          <label for="ID_TIPO_MATE">Tipo Material</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="tiposMateriais"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            placeholder="Selecione..."
+            bindLabel="NM_APOI_TIPO_MATE"
+            bindValue="ID"
+            formControlName="ID_TIPO_MATE"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="linhas">Linha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="linhas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            (change)="getSubLinhas() + '' + getClasses()"
+            placeholder="Selecione..."
+            bindLabel="NM_LINH"
+            bindValue="ID"
+            formControlName="ID_LINH"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="subLinhas">Sublinha</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="subLinhas"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            (change)="getClasses()"
+            placeholder="Selecione..."
+            bindLabel="NM_SUB_LINH"
+            bindValue="ID"
+            formControlName="ID_SUB_LINH"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="classes">Classe</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [multiple]="true"
+            [items]="classes"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            placeholder="Selecione..."
+            bindLabel="NM_CLAS"
+            bindValue="ID"
+            formControlName="ID_CLAS"
+            >
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="situacoes">Situação</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="situations"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_SITU"
+            bindValue="ID"
+            formControlName="IN_STAT"
+            (change)="setActivedPerfil($event)"
+            [ngClass]="
+              onFieldError('IN_STAT') + ' ' + onFieldRequired('IN_STAT')
+            "
+            >
+            <invalid-form-control
+              [show]="onFieldInvalid('IN_STAT')"
+              message="Situação é obrigatório."
+            >
+            </invalid-form-control>
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-2">
+          <label for="ID_PERFI_INAT">Perfil de Inativação</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="unactivatedPerfil"
+            [virtualScroll]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="true"
+            placeholder="Selecione..."
+            bindLabel="NM_PERFI_INAT"
+            bindValue="ID"
+            formControlName="ID_PERFI_INAT"
+            [ngClass]="
+              onFieldError('ID_PERFI_INAT') + ' ' + onFieldRequired('ID_PERFI_INAT')
+            "
+            >
+            <invalid-form-control
+              [show]="onFieldInvalid('ID_PERFI_INAT')"
+              message="Perfil de inativação é obrigatório."
+            >
+            </invalid-form-control>
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </advanced-filter>
+  <subtitles [data]="subtitles" [show]="loading"> </subtitles>
+  <div class="row">
+    <div
+      [ngClass]="{ 'col-12': !compressedTable, 'col-6 pr-0': compressedTable }"
+    >
+    <div class="table-responsive" *ngIf="loading">
+      <custom-table [config]="tableConfig">
+        <ng-template let-thead #thead>
+          <tr class="text-center">
+            <th nowrap scope="col" class="hover" width="4%" *ngIf="!compressedTable">
+              <div [formGroup]="formCheck"
+                class="custom-control custom-checkbox mr-sm-2 hover"
+                >
+                <input
+                  type="checkbox"
+                  class="custom-control-input hover"
+                  id="itemMass"
+                  formControlName="ITEM_MASS"
+                  [checked]="false"
+                  (change)="onEditMass()"
+                >
+                <label class="custom-control-label hover" for="itemMass"></label>
+              </div>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('DS_TIPO_MATE')">
+              Tipo Material
+              <span *ngIf="key == 'DS_TIPO_MATE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DS_TIPO_MATE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NM_LINH')">
+              Linha
+              <span *ngIf="key == 'NM_LINH'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NM_LINH'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NM_SUB_LINH')">
+              Sublinha
+              <span *ngIf="key == 'NM_SUB_LINH'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NM_SUB_LINH'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('NM_CLAS')">
+              Classe
+              <span *ngIf="key == 'NM_CLAS'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'NM_CLAS'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('CODE_MATE')">
+              Cod. Material
+              <span *ngIf="key == 'CODE_MATE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'CODE_MATE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('DS_MATE')">
+              Material
+              <span *ngIf="key == 'DS_MATE'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'DS_MATE'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('VOL_VENDA')" *ngIf="!compressedTable">
+              Volume Vendas
+              <span *ngIf="key == 'VOL_VENDA'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'VOL_VENDA'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('ESTO_ATUAL')" *ngIf="!compressedTable">
+              Est. Atual
+              <span *ngIf="key == 'ESTO_ATUAL'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'ESTO_ATUAL'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('TT_CART')" *ngIf="!compressedTable">
+              Carteira
+              <span *ngIf="key == 'TT_CART'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'TT_CART'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" (click)="sort('TT_PLAN_CORT')" *ngIf="!compressedTable">
+              Plano de Corte
+              <span *ngIf="key == 'TT_PLAN_CORT'"><i [ngClass]="reverse ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i></span>
+              <span *ngIf="key != 'TT_PLAN_CORT'"><i [ngClass]="'fas fa-sort'"></i></span>
+            </th>
+            <th nowrap scope="col" class="hover" width="4%" *ngIf="!compressedTable"></th>
+            <th nowrap scope="col" class="hover" width="4%" *ngIf="!compressedTable"></th>
+            <th nowrap scope="col" class="hover" width="4%" *ngIf="!compressedTable"></th>
+          </tr>
+        </ng-template>
+        <ng-template let-tbody #tbody>
+          <tr *ngFor="let item of data | orderBy: key:reverse | slice: begin:end">
+            <td nowrap class="text-center" [ngClass]="[item.IN_STAT == 0 ? 'border-danger' : 'border-success', item.select ? 'bg-row-selected' : '']">
+              <div
+                class="custom-control custom-checkbox mr-sm-2 hover">
+                <input
+                  type="checkbox"
+                  class="custom-control-input hover"
+                  [id]="'item' + item.ID"
+                  [checked]="item.IN_STAT"
+                  (change)="onEdit(item)"
+                >
+                <label class="custom-control-label hover" [for]="'item' + item.ID"></label>
+              </div>
+            </td>    
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.DS_TIPO_MATE }}</td>    
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.NM_LINH }}</td>              
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.NM_SUB_LINH ? item.NM_SUB_LINH : "-" }}</td>         
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.NM_CLAS }}</td>        
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.CODE_MATE | number: '0.0' }}</td>        
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.DS_MATE }}</td>        
+            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.VOL_VENDA | number: '0.3'}}</td>        
+            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.ESTO_ATUAL | number: '0.3'}}</td>        
+            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.TT_CART | number: '0.3'}}</td>        
+            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.TT_PLAN_CORT | number: '0.0'}}</td>         
+            <td nowrap class="text-center" width="4%" *ngIf="!compressedTable">
+              <span><i [ngClass]="setIconUnabled(item)" [tooltip]="item.DS_PERF_INAT" ></i></span>
+            </td>            
+            <!-- <td nowrap class="text-center" width="4%" *ngIf="!compressedTable"> -->
+
+              <!-- <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  [tooltip]="item.IN_STAT == 0 ? 'Ativar' : 'Desativar'"
+                  (click)="onEdit(item)"
+                  >
+                  <i [ngClass]="item.IN_STAT == 0 ? 'fas fa-toggle-off' : 'fas fa-toggle-on text-success'"></i>
+                </button>
+              </div> -->
+            <!-- </td>        -->
+            <td nowrap  class="text-center" width="4%" *ngIf="!compressedTable">
+              <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  tooltip="Logs"
+                  (click)="getLogsModal(item) + ' ' + lgModal.show()"
+                  >
+                  <i class="fas fa-external-link-alt text-primary"></i>
+                </button>
+              </div>
+            </td>       
+            <td nowrap  class="text-center" width="4%" *ngIf="!compressedTable">
+              <div>
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  tooltip="Detalhes"
+                  (click)="onDetail(item)"
+                  >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </td>       
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+  </div>
+    <div class="col-6">
+      <tabset [hidden]="!compressedTable">
+        <button
+          type="button"
+          class="btn-icon close position-absolute"
+          (click)="onCloseDetail()"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+        <tab heading="Detalhes">
+          <div
+            class="border-right border-left border-bottom px-3 pt-3"
+            style="overflow: auto; height: 338px;"
+          >
+            <custom-table>
+              <ng-template #thead let-thead>
+                <tr class="text-center">
+                  <th scope="col">Empresa</th>
+                  <th scope="col">Depósito</th>
+                  <th scope="col">Vol. Vendas</th>
+                  <th scope="col">Carteira</th>
+                  <th scope="col">Plano de Corte</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of dataDetail">
+                  <td nowrap class="text-center">{{ item.NM_EMPR }}</td>        
+                  <td nowrap class="text-center">{{ item.NM_DEPO }}</td>        
+                  <td nowrap class="text-center">{{ item.VOLU_VEND | number: '0.3' }}</td>         
+                  <td nowrap class="text-center">{{ item.VOLU_CART | number: '0.3' }}</td>              
+                  <td nowrap class="text-center">{{ item.PLAN_CORT | number: '0.3' }}</td>                  
+                </tr>
+                <tr>
+                  <td nowrap class="text-center bg-dark text-white">TOTAL</td>        
+                  <td nowrap class="text-center bg-dark text-white"></td>        
+                  <td nowrap class="text-center bg-dark text-white">120,00</td>         
+                  <td nowrap class="text-center bg-dark text-white">300,00</td>              
+                  <td nowrap class="text-center bg-dark text-white">400,00</td>                  
+                </tr>
+              </ng-template>
+            </custom-table>
+            <div
+              *ngIf="noResultDetalhes"
+              class="text-center d-flex justify-content-center align-items-center p-5"
+              style="height: 80%;"
+            >
+              <empty-result
+                message="Nenhuma informação encontrada"
+              ></empty-result>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+  </div>
+  <div class="col-12 mt-2" *ngIf="data.length > itemsPerPage && loading">
+    Exibindo {{ begin + 1 }} a {{ end }} de {{ data?.length }}
+    <div class="d-flex">
+      <pagination
+        [maxSize]="10"
+        [totalItems]="data?.length"
+        (pageChanged)="onPageChanged($event)"
+        [(itemsPerPage)]="itemsPerPage"
+        [boundaryLinks]="true"
+        [(ngModel)]="currentPage"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;">
+      </pagination>
+    </div>
+  </div>
+  <div
+    *ngIf="noResult"
+    class="text-center d-flex justify-content-center align-items-center p-5"
+    style="height: 80%;"
+  >
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+</app-body>
+<div
+  bsModal
+  #lgModal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dialog-sizes-name1"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">
+          {{ modal.title }}
+        </h4>
+        <button
+          type="button"
+          class="close pull-right"
+          (click)="lgModal.hide()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container" *ngIf="modalLogsBool">
+          <abastecimento-cadastro-manutencao-materiais-modal-logs [item]=itemMaterial>
+          </abastecimento-cadastro-manutencao-materiais-modal-logs>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

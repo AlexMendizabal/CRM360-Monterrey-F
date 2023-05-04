@@ -1,0 +1,8 @@
+<nav aria-label="breadcrumb" *ngIf="tree.length > 0">
+  <ol class="breadcrumb custom">
+    <li class="breadcrumb-item" [ngClass]="{'active': !item.routerLink}" *ngFor="let item of tree">
+      <a [routerLink]="[item.routerLink]" *ngIf="item.routerLink">{{ item.descricao }}</a>
+      <span *ngIf="!item.routerLink">{{ item.descricao }}</span>
+    </li>
+  </ol>
+</nav>

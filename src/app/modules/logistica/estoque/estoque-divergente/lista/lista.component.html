@@ -1,0 +1,136 @@
+<loader-spinner-full-screen *ngIf="spinnerFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Painel de Estoque Divergente"></app-header>
+<app-body [breadCrumbTree]="breadCrumbTree">
+  <div class="row">
+    <div [ngClass]="{'col-12': !compressedTable, 'col-10 pr-0': compressedTable}" *ngIf="listas.length > 0">
+      <table class="table table-sm">
+        <thead class="thead-light">
+          <tr>
+            <th class="text-center" scope="col">Cod. Material</th>
+            <th class="text-center" scope="col">Material</th>
+            <th class="text-center" scope="col">Empresa</th>
+            <th class="text-center" scope="col">Unidade</th>
+            <th class="text-center" scope="col">Tipo</th>
+            <th class="text-center" scope="col">Estoque Anterior</th>
+            <th class="text-center" scope="col">Estoque Atual</th>
+            <th class="text-center" scope="col">Estoque Lote</th>
+            <th class="text-center" scope="col" [hidden]="compressedTable">Entradas</th>
+            <th class="text-center" scope="col" [hidden]="compressedTable">Saídas</th>
+            <th class="text-center" scope="col" [hidden]="compressedTable">Divergência Estoque</th>
+          </tr>
+        </thead>
+        <tbody class="hover">
+          <tr *ngFor="let lista of listas | slice : begin : end; let i = index" class="hover"
+              [ngClass]="lista.status ? 'bgRowTable' : ''" (click)="openTab(i); clickEvent(lista)">
+            <td class="text-center">{{ lista.CD_MATE }}</td>
+            <td class="text-center">{{ lista.DS_MATE }}</td>
+            <td class="text-center">{{ lista.DS_EMPR }}</td>
+            <td class="text-center">{{ lista.UNID_MEDI }}</td>
+            <td class="text-center">{{ lista.DS_TIPO }}</td>
+            <td class="text-center">{{ lista.ESTO_ANTE }}</td>
+            <td class="text-center">{{ lista.ESTO_ATUA }}</td>
+            <td class="text-center">{{ lista.ESTO_TOTA_LOTE }}</td>
+            <td class="text-center" [hidden]="compressedTable">{{ lista.ENTR }}</td>
+            <td class="text-center" [hidden]="compressedTable">{{ lista.SAID }}</td>
+            <td class="text-center" [hidden]="compressedTable">{{ lista.DIVE_ESTO }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt-3">
+        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <pagination
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          [(itemsPerPage)]="itemsPerPage"
+          (pageChanged)="onPageChanged($event)"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
+      </div>
+    </div>
+    <tabset class="col-2 tabsetCustom" [hidden]="!compressedTable">
+      <button type="button" class="btn-icon close position-absolute" (click)="onClose()">
+        <i class="fas fa-times"></i>
+      </button>
+      <tab heading="Detalhes">
+        <div class="border-right border-left border-bottom border-top px-3 pt-3">
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label>Divergência Estoque</label>
+              <div class="text-nowrap">{{ divergenciaEstoque }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label>Entradas</label>
+              <div class="text-nowrap">{{ entradas }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label>Saídas</label>
+              <div class="text-nowrap">{{ saidas }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label>Data Movimentação</label>
+              <div class="text-nowrap">{{ dataMovimentacao | date }}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label>Linha</label>
+              <div class="text-nowrap">{{ dsLinha }}</div>
+            </div>
+          </div>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+  <div [hidden]="spinnerFullScreen || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 250px">
+    <empty-result message="Nenhuma informação encontrada"></empty-result>
+  </div>
+
+
+  <!-- <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="col-6">
+            <div id="title">
+              <h6>Data da divergência</h6>
+            </div>
+          </div>
+          <div class="actions w-100 justify-content-end d-flex">
+            <button (click)="hideChildModal()">
+              Fechar
+            </button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="border-right border-left border-bottom border-top px-3 pt-3">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Data divengência</label>
+                <div class="text-nowrap">{{ dtDivergencia | date }}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-10">
+                <label>Divergência</label>
+                <div class="text-nowrap">{{ divergencia }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+
+</app-body>

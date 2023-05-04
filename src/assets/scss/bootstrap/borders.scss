@@ -1,0 +1,21 @@
+@import '../colors';
+
+.border-light {
+  border-color: #dee2e6 !important;
+}
+
+.border-success {
+  border-color: $green !important;
+}
+.border-primary {
+  border-color: $blue !important;
+}
+.border-warning {
+  border-color: $golden !important;
+}
+.border-danger {
+  border-color: $red !important;
+}
+.border-secondary {
+  border-color: $medium-gray !important;
+}

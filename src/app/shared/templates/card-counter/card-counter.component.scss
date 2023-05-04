@@ -1,0 +1,19 @@
+::ng-deep {
+  @import '../../../../assets/scss/colors';
+
+  card-counter {
+    #box {
+      padding: 10px 15px;
+      #icon {
+        align-items: center;
+        border-radius: 50%;
+        color: $white;
+        display: flex;
+        font-size: 18px;
+        height: 45px;
+        justify-content: center;
+        width: 45px;
+      }
+    }
+  }
+}

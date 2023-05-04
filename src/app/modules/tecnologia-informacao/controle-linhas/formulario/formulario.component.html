@@ -1,0 +1,275 @@
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="!form.valid || submittingForm">
+    Salvar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" >
+  <div class="row justify-content-center">
+    <div class="col-lg-5">
+      <form [formGroup]="form">
+        <div class="form-row">
+          <div class="form-group col-lg-12">
+            <label for="nomeUsuario">Usuário</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nomeUsuario"
+              formControlName="nomeUsuario"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('nomeUsuario') + ' ' + onFieldRequired(form.controls.nomeUsuario)"
+              >
+            <invalid-form-control [show]="onFieldInvalid('nomeUsuario')" message="Usuário é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="nomeEmpresa">Empresa</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nomeEmpresa"
+              formControlName="nomeEmpresa"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('nomeEmpresa') + ' ' + onFieldRequired(form.controls.nomeEmpresa)"
+              >
+            <invalid-form-control [show]="onFieldInvalid('nomeEmpresa')" message="Empresa é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="nomeEscritorio">Escritório</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nomeEscritorio"
+              formControlName="nomeEscritorio"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('nomeEscritorio') + ' ' + onFieldRequired(form.controls.nomeEscritorio)" 
+              >
+            <invalid-form-control [show]="onFieldInvalid('nomeEscritorio')" message="Escritório é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="numLinha">Número da Linha</label>
+            <input
+            telefone [textMask]="{ mask: MASKS.telefone.textMaskFunction }"
+              type="text"
+              class="form-control"
+              id="numLinha"
+              formControlName="numLinha"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('numLinha') + ' ' + onFieldRequired(form.controls.numLinha)" >
+            <invalid-form-control [show]="onFieldInvalid('numLinha')" message="Numero da Linha é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="dsSituacao">Situação</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="situacoes"
+              [virtualScroll]="true"
+              [loading]="loadingSituacoes"
+              labelForId="dsSituacao"
+              bindLabel="dsSituacao"
+              bindValue="dsSituacao"
+              id="dsSituacao"
+              formControlName="dsSituacao">
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="descricao">Modelo do Aparelho</label>
+            <input
+              type="text"
+              class="form-control"
+              id="descricao"
+              formControlName="descricao"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('descricao') + ' ' + onFieldRequired(form.controls.descricao)">
+            <invalid-form-control [show]="onFieldInvalid('descricao')" message="Descrição é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="gestorFun">Gestor Responsável</label>
+            <input
+              type="text"
+              class="form-control"
+              id="gestorFun"
+              formControlName="gestorFun"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('gestorFun') + ' ' + onFieldRequired(form.controls.gestorFun)">
+            <invalid-form-control [show]="onFieldInvalid('gestorFun')" message="Gestor é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="plano">Plano</label>
+            <input
+              type="text"
+              class="form-control"
+              id="plano"
+              formControlName="plano"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('plano') + ' ' + onFieldRequired(form.controls.plano)">
+            <invalid-form-control [show]="onFieldInvalid('plano')" message="Plano é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="dados">Dados</label>
+            <input
+              type="text"
+              class="form-control"
+              id="dados"
+              formControlName="dados"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('dados') + ' ' + onFieldRequired(form.controls.dados)">
+            <invalid-form-control [show]="onFieldInvalid('dados')" message="Dados é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="numConta">Nº Conta</label>
+            <input
+              type="text"
+              class="form-control"
+              id="numConta"
+              formControlName="numConta"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('numConta') + ' ' + onFieldRequired(form.controls.numConta)">
+            <invalid-form-control [show]="onFieldInvalid('numConta')" message="Nº Conta é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="codChip">Cód Chip</label>
+            <input
+              type="text"
+              class="form-control"
+              id="codChip"
+              formControlName="codChip"
+              (input)="onInput()"
+              pattern="[0-9]+$"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('codChip') + ' ' + onFieldRequired(form.controls.codChip)">
+            <invalid-form-control [show]="onFieldInvalid('codChip')" message="Cód CHIP é obrigatório com 20 números "></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="numContrato">Núm. contrato</label>
+            <input
+              type="text"
+              class="form-control"
+              id="numContrato"
+              formControlName="numContrato"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('numContrato') + ' ' + onFieldRequired(form.controls.numContrato)">
+            <invalid-form-control [show]="onFieldInvalid('numContrato')" message="Número do contrato é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="dataVencimentoContrato">Vencimento Contrato</label>
+            <input
+              class="form-control"
+              id="dataVencimentoContrato"
+              type="text"
+              bsDatepicker
+              [bsConfig]="bsConfig"
+              formControlName="dataVencimentoContrato"
+              [ngClass]="onFieldError('dataVencimentoContrato') + ' ' + onFieldRequired(form.controls.dataVencimentoContrato)">
+            <invalid-form-control [show]="onFieldInvalid('dataVencimentoContrato')" message="Vencimento é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="conta">Conta Gmail</label>
+            <input
+              type="text"
+              class="form-control"
+              id="conta"
+              formControlName="conta"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('conta') + ' ' + onFieldRequired(form.controls.conta)">
+            <invalid-form-control [show]="onFieldInvalid('conta')" message="Conta é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="senha">Senha Gmail</label>
+            <input
+              type="text"
+              class="form-control"
+              id="senha"
+              formControlName="senha"
+              (input)="onInput()"
+              autocomplete="new-password"
+              [ngClass]="onFieldError('senha') + ' ' + onFieldRequired(form.controls.senha)">
+            <invalid-form-control [show]="onFieldInvalid('senha')" message="Senha é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label for="valor">Valor</label>
+            <input
+              type="text"
+              class="form-control"
+              id="valor"
+              formControlName="valor"
+              (input)="onInput()"
+              autocomplete="new-password"
+              currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"
+              [ngClass]="onFieldError('valor') + ' ' + onFieldRequired(form.controls.valor)">
+            <invalid-form-control [show]="onFieldInvalid('valor')" message="Valor é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-6">
+            <div lass="form-group">
+              <label for="documento">Documento</label>
+              <input
+                id="documento"
+                type="file"
+                (change)="onFile($event.target.files)"
+                >
+            </div>
+          </div>
+        </div><br>
+        <div class="form-row">
+          <div class="form-group col-lg-12">
+            <div class="mtc-title">Anexos</div>
+            <ul >
+              <li *ngFor="let item of documentos">
+                <div class="d-flex">
+                  <div>
+                    <i class="far fa-file-pdf text-danger"></i><strong class="ml-2">{{ item.nomeDocumento }}</strong>
+                  </div>
+                  <div class="ml-4">
+                    <a href="{{ item.link }}" target="_blank" class="btn-icon-sm">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <button type="button" class="btn-icon-sm ml-4" (click)="onDelete(item)">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+                <div><hr></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-body>
