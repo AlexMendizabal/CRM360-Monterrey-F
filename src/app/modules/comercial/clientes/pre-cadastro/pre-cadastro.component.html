@@ -26,8 +26,16 @@
                 class="btn btn-light active"
                 [ngClass]="{'active': tipoPessoa == 'F'}"
                 (click)="setType('F')">
-                <strong>Persona Fisica</strong>
+                <strong>Persona fisica</strong>
               </button>
+              
+              <button
+              type="button"
+              class="btn btn-light active"
+              [ngClass]="{'active': tipoPessoa == 'J'}"
+              (click)="setType('J')">
+              <strong>persona Juridica</strong>
+            </button>
 
             </div>
           </div>
@@ -45,7 +53,7 @@
             <invalid-form-control [show]="onFieldInvalid('cpf') == 'required'" message="Carnet inválido."></invalid-form-control>
           </div>
           <div class="form-group col-md-6" *ngIf="tipoPessoa == 'J'">
-            <label for="cnpj">CNPJ</label>
+            <label for="cnpj">NIT</label>
             <input
               type="text"
               class="form-control"
@@ -118,13 +126,13 @@
               formControlName="nomeFantasia"
               (input)="onInput()"
               [ngClass]="onFieldError('nomeFantasia') + ' ' + onFieldRequired('nomeFantasia')">
-            <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'required'" message="Nome fantasia é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'required'" message="Nombre de fantasia es obligatorio."></invalid-form-control>
             <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'maxlength'" [message]="maxLengthMessages.nomeFantasia"></invalid-form-control>
           </div>
         </div>
         <div class="form-row" *ngIf="tipoPessoa == 'J'">
           <div class="form-group col">
-            <label for="cnae">CNAE (atividade principal)</label>
+            <label for="cnae">CNAE (Actividad Economica)</label>
             <ng-select
               [searchable]="true"
               [clearable]="false"
@@ -211,19 +219,19 @@
         <div *ngIf="dadosCliente.cpf != null">{{ dadosCliente.cpf }}</div>
       </div>
       <div class="form-group col-lg-6" *ngIf="dadosCliente.tipo == 'J'">
-        <label>CNPJ</label>
+        <label>NIT</label>
         <div *ngIf="dadosCliente.cnpj == null">Sin informacion</div>
         <div *ngIf="dadosCliente.cnpj != null">{{ dadosCliente.cnpj }}</div>
       </div>
       <div class="form-group col-lg-6">
-        <label>Nome fantasia</label>
+        <label>Nombre fantasia</label>
         <div *ngIf="dadosCliente.nomeFantasia == null">Sin informacion</div>
         <div *ngIf="dadosCliente.nomeFantasia != null">{{ dadosCliente.nomeFantasia }}</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col">
-        <label>Razão social</label>
+        <label>Razon social</label>
         <div *ngIf="dadosCliente.razaoSocial == null">Sin informacion</div>
         <div *ngIf="dadosCliente.razaoSocial != null">{{ dadosCliente.razaoSocial }}</div>
       </div>

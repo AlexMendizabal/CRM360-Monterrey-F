@@ -226,14 +226,14 @@
               scope="col"
               class="hover"
               (click)="setOrderBy('nomeFantasia')">
-              <thead-sorter value="Nome fantasia" [active]="orderBy == 'nomeFantasia'" [sort]="orderType"></thead-sorter>
+              <thead-sorter value="Nombre de Fantasia" [active]="orderBy == 'nomeFantasia'" [sort]="orderType"></thead-sorter>
             </th>
             <th
               scope="col"
               class="hover"
               (click)="setOrderBy('razaoSocial')"
               *ngIf="!showDetailPanel">
-              <thead-sorter value="Razão social" [active]="orderBy == 'razaoSocial'" [sort]="orderType"></thead-sorter>
+              <thead-sorter value="Razon Social" [active]="orderBy == 'razaoSocial'" [sort]="orderType"></thead-sorter>
             </th>
             <th scope="col"></th>
           </tr>
@@ -314,15 +314,15 @@
                   </div>
                   <div class="form-row">
                     <div class="form-group col-lg-6">
-                      <label>Bairro</label>
+                      <label>Barrio</label>
                       <div *ngIf="dadosCadastrais.bairro == null">NO INFORMADO</div>
                       <div *ngIf="dadosCadastrais.bairro != null">{{ dadosCadastrais.bairro }}</div>
                     </div>
-                    <div class="form-group col-lg-6">
+                    <!-- <div class="form-group col-lg-6">
                       <label>CEP</label>
                       <div *ngIf="dadosCadastrais.cep == null">NO INFORMADO</div>
                       <div *ngIf="dadosCadastrais.cep != null">{{ dadosCadastrais.cep }}</div>
-                    </div>
+                    </div> -->
                   </div>
                   <div class="form-row">
                     <div class="form-group col-lg-6">
