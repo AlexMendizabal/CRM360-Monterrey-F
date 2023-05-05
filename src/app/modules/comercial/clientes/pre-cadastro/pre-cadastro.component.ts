@@ -63,7 +63,7 @@ export class ComercialClientesPreCadastroComponent
       routerLink: '/comercial/clientes',
     },
     {
-      descricao: 'Pré-cadastro',
+      descricao: 'Pre-Registro',
     },
   ];
 
