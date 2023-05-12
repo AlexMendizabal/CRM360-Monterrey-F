@@ -211,7 +211,7 @@
       </a>
     </div>
   </div>
-  <div class="row mt-3" *ngIf="dataLoaded && clientes.length > 0">
+  <div class="row mt-4" *ngIf="dataLoaded && clientes.length > 0">
     <div [ngClass]="{'col-12': !showDetailPanel, 'col-7 pr-0': showDetailPanel}">
       <custom-table [config]="tableConfig">
         <ng-template #thead let-thead>
@@ -220,14 +220,20 @@
             <th
               scope="col"
               class="text-center hover"
-              (click)="setOrderBy('codCliente')">
-              <thead-sorter value="Código" [active]="orderBy == 'codCliente'" [sort]="orderType"></thead-sorter>
+              (click)="setOrderBy('codigo_cliente')">
+              <thead-sorter value="Código Cliente" [active]="orderBy == 'codigo_cliente'" [sort]="orderType"></thead-sorter>
+            </th>
+            <th
+              scope="col"
+              class="text-center hover"
+              (click)="setOrderBy('cpf')">
+              <thead-sorter value="CI/NIT" [active]="orderBy == 'cpf'" [sort]="orderType"></thead-sorter>
             </th>
             <th
               scope="col"
               class="hover"
               (click)="setOrderBy('nomeFantasia')">
-              <thead-sorter value="Nombre" [active]="orderBy == 'nomeFantasia'" [sort]="orderType"></thead-sorter>
+              <thead-sorter value="Nombre y apelllido" [active]="orderBy == 'nomeFantasia'" [sort]="orderType"></thead-sorter>
             </th>
             <th
               scope="col"
@@ -240,14 +246,15 @@
           </tr>
         </ng-template>
         <ng-template #tbody let-tbody>
-          <tr *ngFor="let cliente of clientes" [class.table-active]="cliente.codCliente == clienteSelecionado">
+          <tr *ngFor="let cliente of clientes" [class.table-active]="cliente.codigo_cliente == clienteSelecionado">
             <td class="text-center hover" [ngClass]="classStatusBorder(cliente.situacao)" (click)="viewRegister(cliente)">
               <i class="text-black-50 far fa-check-square mr-3" *ngIf="cliente.segurado == 0" tooltip="Cliente no asegurado" placement="right"></i>
               <i class="text-warning fas fa-check-square mr-3" *ngIf="cliente.segurado > 0" tooltip="Cliente asegurado" placement="right"></i>
               <i class="text-black-50 far fa-folder-open" *ngIf="cliente.grupoEconomico == 0" tooltip="No hace parte de grupo economico" placement="right"></i>
               <i class="text-warning fas fa-folder-open" *ngIf="cliente.grupoEconomico > 0" tooltip="Pertenece a un grupo economico" placement="right"></i>
             </td>
-            <td class="text-center hover" (click)="viewRegister(cliente)">{{ cliente.codCliente }}</td>
+            <td class="text-center hover" (click)="viewRegister(cliente)">{{ cliente.codigo_cliente }}</td>
+            <td class="text-center hover" (click)="viewRegister(cpf)">{{ cliente.cpf }}</td>
             <td class="hover" (click)="viewRegister(cliente)">{{ cliente.nomeFantasia | uppercase }}</td>
             <td class="hover" (click)="viewRegister(cliente)" *ngIf="!showDetailPanel">{{ cliente.razaoSocial | uppercase }}</td>
             <td>

@@ -56,7 +56,7 @@
               id="codTitulo"
               formControlName="codTitulo">
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('codTitulo')" message="Título é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('codTitulo')" message="Título obligatorio."></invalid-form-control>
             </div>
           </div>
         </div>
@@ -73,7 +73,7 @@
                 <label
                   class="custom-control-label"
                   for="gerar-cotacao-pedido">
-                  Gerar cotação/pedido para este contato
+                  Generar presupuesto/solicitud para este contacto
                 </label>
               </div>
             </div>
@@ -109,7 +109,7 @@
               bindValue="codFormaContato"
               [ngClass]="onFieldError('codFormaContato') + ' ' + onFieldRequired('codFormaContato')">
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('codFormaContato')" message="Forma de contato é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('codFormaContato')" message="Forma de contacto es obligatorio."></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
             <label for="codOrigemContato">ORIGEN DE CONTACTO</label>
@@ -123,14 +123,14 @@
               bindValue="ID_MEIO_CONT"
               [ngClass]="onFieldError('codOrigemContato') + ' ' + onFieldRequired('codOrigemContato')">
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('codOrigemContato')" message="Origem do contato é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('codOrigemContato')" message="Origen de contacto es obligatorio."></invalid-form-control>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col">
             <div class="row">
               <div class="col">
-                <label for="inicioData">Início</label>
+                <label for="inicioData">Fecha Inicial</label>
               </div>
             </div>
             <div class="row">
@@ -168,7 +168,7 @@
                       formControlName="diaInteiro"
                       (input)="onInput()"
                       (change)="triggerAllDay()">
-                    <label class="custom-control-label" for="diaInteiro">Dia inteiro</label>
+                    <label class="custom-control-label" for="diaInteiro">Dia completo</label>
                   </div>
                 </div>
               </div>
@@ -179,7 +179,7 @@
           <div class="form-group col">
             <div class="row">
               <div class="col">
-                <label [ngClass]="{'required': !isDisabledTime}" for="terminoData">Término</label>
+                <label [ngClass]="{'required': !isDisabledTime}" for="terminoData">Fecha Final</label>
               </div>
             </div>
             <div class="row">
