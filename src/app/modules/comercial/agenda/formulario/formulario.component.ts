@@ -45,7 +45,7 @@ export class ComercialAgendaFormularioComponent
   colors = [
     {
       hex: '#FFFF01',
-      descricao: 'Amarelo',
+      descricao: 'Amarillo',
     },
     {
       hex: '#0033FF',
@@ -53,7 +53,7 @@ export class ComercialAgendaFormularioComponent
     },
     {
       hex: '#FB6602',
-      descricao: 'Laranja',
+      descricao: 'Naranja',
     },
     {
       hex: '#FF0087',
@@ -61,11 +61,11 @@ export class ComercialAgendaFormularioComponent
     },
     {
       hex: '#610069',
-      descricao: 'Roxo',
+      descricao: 'Rojo',
     },
     {
       hex: '#FA1100',
-      descricao: 'Vermelho',
+      descricao: 'Violeta',
     },
   ];
 
@@ -165,9 +165,9 @@ export class ComercialAgendaFormularioComponent
     let title: string;
 
     if (this.action == 'novo') {
-      title = 'Novo contato';
+      title = 'Nuevo Contacto';
     } else if (this.action == 'editar') {
-      title = 'Editar contato';
+      title = 'Editar contacto';
     } else if (this.action == 'reagendar') {
       title = 'Reagendar contato';
     }
@@ -261,7 +261,7 @@ export class ComercialAgendaFormularioComponent
           routerLink: `/comercial/agenda/compromissos`,
         },
         {
-          descricao: 'Novo contato',
+          descricao: 'Nuevo Contacto',
         },
       ];
     } else {
@@ -275,12 +275,12 @@ export class ComercialAgendaFormularioComponent
           routerLink: `/comercial/agenda/compromissos`,
         },
         {
-          descricao: 'Detalhes',
+          descricao: 'Detalles',
           routerLink: `/comercial/agenda/detalhes/${id}`,
         },
         {
           descricao:
-            this.action == 'editar' ? 'Editar contato' : 'Reagendar contato',
+            this.action == 'editar' ? 'Editar contacto' : 'Reagendar contacto',
         },
       ];
     }
@@ -427,7 +427,7 @@ export class ComercialAgendaFormularioComponent
 
   onSubmit(): void {
     if (!this.checkValidatorsDate()) {
-      this.pnotifyService.notice('Data de término deve ser maior que início.');
+      this.pnotifyService.notice('La fecha final debe ser mayor que la fecha inicial.');
       return;
     }
 
@@ -444,12 +444,12 @@ export class ComercialAgendaFormularioComponent
         terminoData: Date,
         terminoHorario: Date;
 
-      let msgSuccess = 'Seu contato foi criado.';
-      let msgError = 'Ocorreu um erro ao criar contato.';
+      let msgSuccess = 'Su contacto fue creado.';
+      let msgError = 'Ocurrio un error al crear contacto.';
 
       if (formValue.id) {
-        msgSuccess = 'Seu contato foi editado.';
-        msgError = 'Ocorreu um erro ao editar contato.';
+        msgSuccess = 'Su contacto fue editado.';
+        msgError = 'Ocurrio un error al editar contacto.';
       }
 
       if (formValue.cliente != '') {

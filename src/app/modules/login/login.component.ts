@@ -147,10 +147,12 @@ export class LoginComponent implements OnInit {
             response.result.matricula_tid != null
               ? response.result.matricula_tid
               : 1642;
+
           idVendedor =
-            response.result.matricula_vendedor != null
-              ? response.result.matricula_vendedor
+            response.result.id_vendedor != null
+              ? response.result.id_vendedor
               : 88;
+              console.log(response.result.id_vendedor)
           idEscritorio =
             response.result.id_escritorio != null
               ? response.result.id_escritorio

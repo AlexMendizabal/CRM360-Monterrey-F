@@ -73,9 +73,9 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
           if (this.showAll === true) {
             this.formValue.emit({
               idEscritorio: 0,
-              idVendedor: 0,
-              nomeVendedor: 'TODOS OS VENDEDORES',
-              nomeEscritorio: 'TODOS OS ESCRITÓRIOS'
+              // idVendedor: 0,
+              nomeVendedor: 'TODOS LOS VENDEDORES',
+              nomeEscritorio: 'TODOS LAS SUCURSALES'
             });
           }
         })
