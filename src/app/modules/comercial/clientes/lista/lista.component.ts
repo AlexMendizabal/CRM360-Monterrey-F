@@ -241,8 +241,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     for (let i = 0; i < status.length; i++) {
       if (status[i]['situacao'] == 'Ativo') {
         this.ativos = status[i]['quantidade'];
-      } else if (status[i]['situacao'] == 'Inativo') {
-        this.inativos = status[i]['quantidade'];
+      } else if (status[i]['situacao'] == 'Inativo'|| status[i]['situacao'] == null) {
+        this.inativos += status[i]['quantidade'];
       } else if (status[i]['situacao'] == 'Potenci') {
         this.potencial = status[i]['quantidade'];
       } else if (status[i]['situacao'] == 'Arquivo') {
