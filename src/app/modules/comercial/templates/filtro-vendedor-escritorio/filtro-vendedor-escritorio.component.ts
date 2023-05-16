@@ -87,13 +87,12 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
             this.escritorios = response[0]['result'];
 
             console.log(this.escritorios)
-            this.escritorios[0] = "Sucursal 1"
-            this.escritorios[1] = "Sucursal 2"
-            this.escritorios[2] = "Sucursal 3"
+            this.escritorios[0] = "Sucursal Central"
+            this.escritorios.splice(1, 2);
             if (this.escritorios.length > 1 && this.showAll === true) {
               this.escritorios.unshift({
                 id: 0,
-                nome: 'TODOS OS ESCRITÓRIOS'
+                nome: 'TODAS LAS SUCURSALES'
               });
             }
           } else {
@@ -106,7 +105,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
             if (this.showAll === true) {
               this.filteredVendedores.unshift({
                 id: 0,
-                nome: 'TODOS OS VENDEDORES'
+                nome: 'TODOS LOS VENDEDORES'
               });
             }
           } else {
@@ -174,7 +173,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
     if (this.form.valid) {
       if (this.adminOnly()) {
         if (this.form.value['idEscritorio'] === 0) {
-          this.form.get('nomeEscritorio').setValue('TODOS OS ESCRITÓRIOS');
+          this.form.get('nomeEscritorio').setValue('TODAS LAS SUCURSALES');
         } else {
           for (let i = 0; i < this.escritorios.length; i++) {
             if (this.form.value['idEscritorio'] === this.escritorios[i]['id']) {
@@ -186,7 +185,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
         }
 
         if (this.form.value['idVendedor'] === 0) {
-          this.form.get('nomeVendedor').setValue('TODOS OS VENDEDORES');
+          this.form.get('nomeVendedor').setValue('TODOS LOS VENDEDORES');
         } else {
           for (let i = 0; i < this.vendedores.length; i++) {
             if (this.form.value['idVendedor'] === this.vendedores[i]['id']) {
@@ -226,7 +225,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
       this.filteredVendedores = [
         {
           id: 0,
-          nome: 'TODOS OS VENDEDORES',
+          nome: 'TODOS LOS VENDEDORES',
           idEscritorio: 0
         }
       ];
@@ -240,7 +239,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
       if (this.filteredVendedores.length > 0 && this.showAll === true) {
         this.filteredVendedores.unshift({
           id: 0,
-          nome: 'TODOS OS VENDEDORES'
+          nome: ''
         });
       }
     }

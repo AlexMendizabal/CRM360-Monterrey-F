@@ -223,7 +223,7 @@
               [ngClass]="onFieldError('inicioData') + ' ' + onFieldRequired('inicioData')">
               <option *ngFor="let item of motivosReagendamento" [value]="item.id">{{ item.descricao }}</option>
             </select>
-            <invalid-form-control [show]="onFieldInvalid('motivoReagendamento')" message="Motivo do reagendamento é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('motivoReagendamento')" message="Motivo de reagendamiento."></invalid-form-control>
           </div>
         </div>
         <div class="form-row">
