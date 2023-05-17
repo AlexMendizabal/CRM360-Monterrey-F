@@ -86,7 +86,7 @@ export class ComercialHomeComponent implements OnInit {
         },
         error: (error: any) => {
           this.pnotifyService.notice(
-            'Ocorreu um erro ao carregar os compromissos.'
+            'Ocurrio un problema al cargar las citas.'
           );
         }
       });
