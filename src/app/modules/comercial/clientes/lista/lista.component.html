@@ -176,7 +176,7 @@
             class="form-control custom-select"
             id="carteira"
             formControlName="carteira">
-            <option value="S">Mi cartera</option>
+            <option value="S" selected>Mi cartera</option>
             <option value="T">Todos</option>
           </select>
         </div>
@@ -393,7 +393,7 @@
                     <div class="form-group col">
                       <label>{{ contato.tipoContato }}</label>
                       <div>
-                        <span *ngIf="contato.nomeContato.length > 1" class="mr-1">{{ contato.nomeContato }}:</span>
+                        <span *ngIf="contato.nomeContato.length > 1" class="mr-1">{{ contato.nomeContato }} :</span>
                         <span
                           *ngIf="(contato.tipoContato != 'Email NFe') &&
                                 (contato.tipoContato != 'E-mail NFe') &&

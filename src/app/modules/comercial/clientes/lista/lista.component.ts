@@ -183,7 +183,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       tipoPessoa: 'T',
       grupoEconomico: 'T',
       segurado: 'T',
-      carteira: 'T',
+      carteira: 'S',
       pagina: 1,
       registros: this.itemsPerPage,
     };
