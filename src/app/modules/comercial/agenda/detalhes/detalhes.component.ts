@@ -118,7 +118,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
       )
       .subscribe({
         next: (success) => {
-          this.pnotifyService.success('Compromisso excluído com sucesso!');
+          this.pnotifyService.success('Cita borrada con exito!');
           this.router.navigate(['../../compromissos'], {
             relativeTo: this.activatedRoute
           });
