@@ -165,7 +165,7 @@ export class ComercialAgendaFormularioComponent
     let title: string;
 
     if (this.action == 'novo') {
-      title = 'Novo contato';
+      title = 'Nuevo contacto';
     } else if (this.action == 'editar') {
       title = 'Editar contato';
     } else if (this.action == 'reagendar') {
@@ -261,7 +261,7 @@ export class ComercialAgendaFormularioComponent
           routerLink: `/comercial/agenda/compromissos`,
         },
         {
-          descricao: 'Novo contato',
+          descricao: 'Nuevo contacto',
         },
       ];
     } else {
@@ -275,7 +275,7 @@ export class ComercialAgendaFormularioComponent
           routerLink: `/comercial/agenda/compromissos`,
         },
         {
-          descricao: 'Detalhes',
+          descricao: 'Detalles',
           routerLink: `/comercial/agenda/detalhes/${id}`,
         },
         {
