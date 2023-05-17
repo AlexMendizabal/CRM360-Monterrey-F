@@ -162,9 +162,8 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   }
 
   dataFilter(event: any): void {
-    console.log(this.user.info);
     if (this.user.info.matricula == 1) {
-      this.idVendedor = 0;
+      this.idVendedor = event.idVendedor;
       this.nomeEscritorio = "TODOS LOS VENDEDORES";
     } else {
       this.idVendedor = this.user.info.matricula;
