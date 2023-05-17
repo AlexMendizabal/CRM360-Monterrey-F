@@ -162,6 +162,7 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   }
 
   dataFilter(event: any): void {
+    console.log(event)
     this.idVendedor = event.idVendedor;
     this.nomeEscritorio = this.user.info.nomeCompleto;
     this.idEscritorio = event.idEscritorio;
