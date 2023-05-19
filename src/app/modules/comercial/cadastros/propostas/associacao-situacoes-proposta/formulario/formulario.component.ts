@@ -61,7 +61,7 @@ export class ComercialCadastrosPropostasAssociacaoSituacoesPropostaFormularioCom
   colors = [
     {
       hex: '#FFFF01',
-      descricao: 'Amarelo',
+      descricao: 'Amarillo',
     },
     {
       hex: '#0033FF',
@@ -69,19 +69,19 @@ export class ComercialCadastrosPropostasAssociacaoSituacoesPropostaFormularioCom
     },
     {
       hex: '#FB6602',
-      descricao: 'Laranja',
+      descricao: 'Naranja',
     },
     {
       hex: '#FF0087',
-      descricao: 'Rosa',
+      descricao: 'Rosado',
     },
     {
       hex: '#610069',
-      descricao: 'Roxo',
+      descricao: 'Morado',
     },
     {
       hex: '#FA1100',
-      descricao: 'Vermelho',
+      descricao: 'Rojo',
     },
   ];
 
@@ -500,7 +500,7 @@ export class ComercialCadastrosPropostasAssociacaoSituacoesPropostaFormularioCom
 
   formCanDeactivate(): boolean {
     if (this.formChanged) {
-      if (confirm('Informações não salvas serão perdidas. Deseja continuar?')) {
+      if (confirm('Este cliente no forma parte de tu cartera?')) {
         return true;
       } else {
         return false;

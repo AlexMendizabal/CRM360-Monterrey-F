@@ -290,7 +290,7 @@ export class ComercialClientesCadastroComponent
         }
       },
       error: (error: any) => {
-        this.pnotifyService.error('Ocorreu um erro ao carregar as travas.');
+        this.pnotifyService.error('Ocurrio un error al cargar las deudas.');
         this.location.back();
       }
     });

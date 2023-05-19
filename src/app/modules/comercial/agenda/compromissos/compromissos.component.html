@@ -17,7 +17,7 @@
     mwlCalendarToday
     [(viewDate)]="viewDate"
     (viewDateChange)="fetchEvents()">
-    Hoje
+    Hoy
   </button>
   <button
     type="button"
@@ -86,7 +86,7 @@
     </div>
   </div>
   <permission-denied
-    message="Seu perfil não tem acesso a essa aplicação"
+    message="Su perfil no tiene permisos para acceder a esta aplicacion"
     *ngIf="showPermissionDenied">
   </permission-denied>
 </app-body>

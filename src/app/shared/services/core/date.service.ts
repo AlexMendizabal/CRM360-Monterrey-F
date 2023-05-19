@@ -5,27 +5,27 @@ import { Injectable } from '@angular/core';
 })
 export class DateService {
   months: Array<string> = [
-    'Janeiro',
-    'Fevereiro',
-    'Março',
+    'Enero',
+    'Febrero',
+    'Marzon',
     'Abril',
-    'Maio',
-    'Junho',
-    'Julho',
+    'Mayo',
+    'Junio',
+    'Julio',
     'Agosto',
-    'Setembro',
-    'Outubro',
-    'Novembro',
-    'Dezembro',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre',
   ];
 
   weeks: Array<string> = [
     'Domingo',
-    'Segunda-feira',
-    'Terça-feira',
-    'Quarta-feira',
-    'Quinta-feira',
-    'Sexta-feira',
+    'Lunes',
+    'Martes',
+    'Miercoles',
+    'Jueves',
+    'Viernes',
     'Sábado',
   ];
 
@@ -68,12 +68,12 @@ export class DateService {
       if (dateB) {
         const hourB = this.getHourMinute(dateB);
 
-        return `${this.weeks[weekDay]}, ${day} de ${this.months[month]} de ${year}, das ${hour} às ${hourB}`;
+        return `${this.weeks[weekDay]}, ${day} de ${this.months[month]} del ${year}, desde ${hour} hasta ${hourB}`;
       }
 
-      return `${this.weeks[weekDay]}, ${day} de ${this.months[month]} de ${year} às ${hour}`;
+      return `${this.weeks[weekDay]}, ${day} de ${this.months[month]} del ${year} hasta ${hour}`;
     } else {
-      return `${this.weeks[weekDay]}, ${day} de ${this.months[month]} de ${year}`;
+      return `${this.weeks[weekDay]}, ${day} de ${this.months[month]} del ${year}`;
     }
   }
 
@@ -161,7 +161,7 @@ export class DateService {
       const dateSplit = stringDateSplit[0].split('-');
       const timeSplit = stringDateSplit[1].split(':');
 
-      if (dateType == 'pt-br') {
+      if (dateType == 'latam') {
         date = new Date(
           dateSplit[2],
           parseInt(dateSplit[1]) - 1,
@@ -183,7 +183,7 @@ export class DateService {
     } else {
       const dateSplit = stringDate.split('-');
 
-      if (dateType == 'pt-br') {
+      if (dateType == 'latam') {
         date = new Date(
           dateSplit[2],
           parseInt(dateSplit[1]) - 1,
@@ -205,7 +205,7 @@ export class DateService {
     const dateSplit = stringDate.split('-');
     let date: string;
 
-    if (dateType == 'pt-br') {
+    if (dateType == 'latam') {
       date = `${dateSplit[2]}/${dateSplit[1]}/${dateSplit[0]}`;
     } else if (dateType == 'usa') {
       date = `${dateSplit[1]}/${dateSplit[2]}/${dateSplit[0]}`;

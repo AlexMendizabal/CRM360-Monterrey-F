@@ -80,12 +80,15 @@ export class ComercialAgendaFormularioComponent
   submittingForm = false;
 
   clientes: any = [];
+  promotores: any = [];
   formasContato: any = [];
   origensContato: any = [];
   listarTitulosAgenda: any = [];
   motivosReagendamento: any = [];
 
   showInputClientes = true;
+  showInputVendedores = true;
+
 
   isDisabledTime = false;
 
@@ -136,7 +139,7 @@ export class ComercialAgendaFormularioComponent
   //   }
   // }
 
-    checkAcessos(): void {
+  checkAcessos(): void {
     const acessos = this.activatedRoute.snapshot.data.detalhes;
     if (acessos.responseCode === 200) {
 
@@ -165,7 +168,7 @@ export class ComercialAgendaFormularioComponent
     let title: string;
 
     if (this.action == 'novo') {
-      title = 'Novo contato';
+      title = 'Nuevo contacto';
     } else if (this.action == 'editar') {
       title = 'Editar contato';
     } else if (this.action == 'reagendar') {
@@ -210,6 +213,12 @@ export class ComercialAgendaFormularioComponent
         cliente: [
           {
             value: detalhes.codClient,
+            disabled: this.action == 'novo' ? false : true,
+          },
+        ],
+        promotor: [
+          {
+            value: detalhes.id_vendedor,
             disabled: this.action == 'novo' ? false : true,
           },
         ],
@@ -261,7 +270,7 @@ export class ComercialAgendaFormularioComponent
           routerLink: `/comercial/agenda/compromissos`,
         },
         {
-          descricao: 'Novo contato',
+          descricao: 'Nuevo contacto',
         },
       ];
     } else {
@@ -275,7 +284,7 @@ export class ComercialAgendaFormularioComponent
           routerLink: `/comercial/agenda/compromissos`,
         },
         {
-          descricao: 'Detalhes',
+          descricao: 'Detalles',
           routerLink: `/comercial/agenda/detalhes/${id}`,
         },
         {
@@ -301,6 +310,7 @@ export class ComercialAgendaFormularioComponent
         })
       )
       .subscribe((response: Array<JsonResponse>) => {
+        console.log(response)
         if (response[0].success === true) {
           this.clientes = response[0].data;
         } else if (response[0].success === false) {
@@ -342,6 +352,14 @@ export class ComercialAgendaFormularioComponent
           this.listarTitulosAgenda = response[4].data;
         } else {
           this.handleLoadDependenciesError();
+        }
+        // @ts-ignore: Ignorar error TS2339
+        if (response[5].responseCode == 200) {
+          console.log(response[5].data);
+          // @ts-ignore: Ignorar error TS2339
+          this.promotores = response[5].result;
+        } else {
+          this.showInputVendedores = false;
         }
       });
   }
@@ -437,25 +455,33 @@ export class ComercialAgendaFormularioComponent
       const formValue = this.form.getRawValue();
 
       let client: string,
-        formContactDesc: string,
-        typeContactDesc: string,
-        inicioData: Date,
-        inicioHorario: Date,
-        terminoData: Date,
-        terminoHorario: Date;
+      formContactDesc: string,
+      typeContactDesc: string,
+      inicioData: Date,
+      inicioHorario: Date,
+      terminoData: Date,
+      terminoHorario: Date;
 
-      let msgSuccess = 'Seu contato foi criado.';
-      let msgError = 'Ocorreu um erro ao criar contato.';
+      let promotor: string;
+      let msgSuccess = 'Su cita fue creada.';
+      let msgError = 'Ocurrio un error al crear cita.';
 
       if (formValue.id) {
-        msgSuccess = 'Seu contato foi editado.';
-        msgError = 'Ocorreu um erro ao editar contato.';
+        msgSuccess = 'Su cita fue editada.';
+        msgError = 'Ocurrio un error al editar cita.';
       }
 
       if (formValue.cliente != '') {
         for (let index = 0; index < this.clientes.length; index++) {
           if (this.clientes[index].id == formValue.cliente) {
             client = this.clientes[index].razaoSocial;
+          }
+        }
+      }
+      if (formValue.promotor != '') {
+        for (let index = 0; index < this.promotores.length; index++) {
+          if (this.promotores[index].id == formValue.promotor) {
+            promotor = this.promotores[index].nome;
           }
         }
       }
@@ -515,6 +541,7 @@ export class ComercialAgendaFormularioComponent
         // title: formValue.codTitulo,
         codTitulo: formValue.codTitulo,
         codClient: formValue.cliente,
+        idVendedor:formValue.promotor,
         client: client,
         formContactId: formValue.codFormaContato,
         formContactDesc: formContactDesc,
@@ -572,7 +599,7 @@ export class ComercialAgendaFormularioComponent
 
   formCanDeactivate(): boolean {
     if (this.formChanged) {
-      if (confirm('Informações não salvas serão perdidas. Deseja continuar?')) {
+      if (confirm('La información no guardada se perderá. ¿Desea continuar?')) {
         return true;
       } else {
         return false;
@@ -594,6 +621,10 @@ export class ComercialAgendaFormularioComponent
       if (this.form.value.cliente === null) {
         this.form.controls.cliente.markAsTouched();
         this.form.controls.cliente.setErrors({ incorrect: true });
+      }
+      if (this.form.value.promotor === null) {
+        this.form.controls.promotor.markAsTouched();
+        this.form.controls.promotor.setErrors({ incorrect: true });
       }
 
       if (this.form.value.codFormaContato === null) {

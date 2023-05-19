@@ -60,6 +60,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     this.detalhes.id = detalhes.id;
     this.detalhes.title = detalhes.title;
     this.detalhes.codClient = detalhes.codClient;
+    this.detalhes.motivo = detalhes.motivo;
     this.detalhes.client = detalhes.client;
     this.detalhes.formContactDesc = detalhes.formContactDesc;
     this.detalhes.typeContactDesc = detalhes.typeContactDesc;
@@ -118,7 +119,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
       )
       .subscribe({
         next: (success) => {
-          this.pnotifyService.success('Compromisso excluído com sucesso!');
+          this.pnotifyService.success('Cita borrada con exito!');
           this.router.navigate(['../../compromissos'], {
             relativeTo: this.activatedRoute
           });
