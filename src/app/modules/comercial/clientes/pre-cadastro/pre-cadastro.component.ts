@@ -63,7 +63,7 @@ export class ComercialClientesPreCadastroComponent
       routerLink: '/comercial/clientes',
     },
     {
-      descricao: 'PRE-REGISTRO',
+      descricao: 'Pre-Registro',
     },
   ];
 
@@ -100,7 +100,7 @@ export class ComercialClientesPreCadastroComponent
   }
 
   ngOnInit() {
-    this.titleService.setTitle('PRE-REGISTRO');
+    this.titleService.setTitle('Pré-cadastro');
     this.getFormFields();
     this.activatedRoute.queryParams.subscribe((queryParams: any) => {
       let documento = null;
@@ -414,7 +414,7 @@ export class ComercialClientesPreCadastroComponent
                 incorrect: true,
               });
               this.pnotifyService.notice(
-                'El C.I. ya está registrado'
+                'O CNPJ informado já está cadastrado.'
               );
 
               if (Object.keys(response.result.dadosCliente).length > 0) {
@@ -466,7 +466,7 @@ export class ComercialClientesPreCadastroComponent
         relativeTo: this.activatedRoute,
       });
     } else {
-      this.pnotifyService.notice('Ese cliente no forma parte de su cartera');
+      this.pnotifyService.notice('Este cliente no pertenece a su cartera');
     }
   }
 
@@ -545,7 +545,7 @@ export class ComercialClientesPreCadastroComponent
         .subscribe(
           (response: any) => {
             if (response.responseCode === 200) {
-              this.pnotifyService.success('El cliente ha sido registrado');
+              this.pnotifyService.success('O cliente foi cadastrado.');
               this.formChanged = false;
 
               /* this.postAkna(response.result); */
@@ -577,7 +577,7 @@ export class ComercialClientesPreCadastroComponent
 
   formCanDeactivate() {
     if (this.formChanged) {
-      if (confirm('La información no guardada se perderá. ¿Desea continuar?')) {
+      if (confirm('Este cliente no forma parte de tu cartera?')) {
         return true;
       } else {
         return false;

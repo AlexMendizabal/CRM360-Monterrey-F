@@ -18,7 +18,7 @@
           <invalid-form-control [show]="onFieldInvalid('cep') == 'required'" message="CEP é obrigatório."></invalid-form-control>
         </div>
         <div class="form-group" [ngClass]="{'col-md-10': action == 'novo', 'col-md-8': action == 'editar'}">
-          <label for="endereco">Dirección</label>
+          <label for="endereco">Endereço</label>
           <input
             type="text"
             class="form-control"
@@ -69,7 +69,7 @@
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="bairro">Barrio</label>
+          <label for="bairro">Bairro</label>
           <input
             type="text"
             class="form-control"
@@ -81,7 +81,7 @@
           <invalid-form-control [show]="onFieldInvalid('bairro') == 'maxlength'" [message]="maxLengthMessages.bairro"></invalid-form-control>
         </div>
         <div class="form-group col-md-6 ">
-          <label for="cidade">Ciudad</label>
+          <label for="cidade">Cidade</label>
           <input
             type="text"
             class="form-control"
@@ -128,7 +128,7 @@
               class="custom-control-input"
               id="principal"
               formControlName="principal">
-            <label class="custom-control-label" for="principal">Dirección principal</label>
+            <label class="custom-control-label" for="principal">Endereço principal</label>
           </div>
         </div>
         <div class="form-group col-auto mb-md-0">
@@ -138,7 +138,7 @@
               class="custom-control-input"
               id="cobranca"
               formControlName="cobranca">
-            <label class="custom-control-label" for="cobranca">Dirección de facturación</label>
+            <label class="custom-control-label" for="cobranca">Endereço de cobrança</label>
           </div>
         </div>
         <div class="form-group col-auto mb-md-0">
@@ -149,7 +149,7 @@
               id="entrega"
               formControlName="entrega"
               (change)="onEnderecoEntrega()">
-            <label class="custom-control-label" for="entrega">Dirección de entrega</label>
+            <label class="custom-control-label" for="entrega">Endereço de entrega</label>
           </div>
         </div>
       </div>
@@ -737,7 +737,7 @@
 
 <ng-template #pesquisaClientes>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">Busqueda de clientes</h4>
+    <h4 class="modal-title pull-left">Busqueda de Clientes</h4>
     <div class="d-flex justify-content-center align-items-center">
       <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingClientes">
         <span class="sr-only">Loading...</span>
@@ -757,7 +757,7 @@
               class="form-control custom-select"
               formControlName="buscarPor"
             >
-              <option value="NM_CLIE" selected>Código, nombre de fantasía o razón social</option>
+              <option value="NM_CLIE" selected>Código, nome fantasia ou razão social</option>
             </select>
           </div>
   
@@ -794,8 +794,8 @@
       <ng-template #thead let-thead>
         <tr>
           <th>Cód Cliente </th>
-          <th>Nombre de fantasía</th>
-          <th>Razón social</th>
+          <th>Nome Fantasia</th>
+          <th>Razão Social </th>
           <th></th>
         </tr>
       </ng-template>

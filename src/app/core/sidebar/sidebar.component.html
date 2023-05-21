@@ -18,7 +18,7 @@
           containerClass="sidebar-navbar-tooltip">
           <a
             [routerLinkActive]="['active']"
-            [routerLink]="routerLinkHome"
+            [routerLink]="['/comercial/home']"
             (click)="onHideMenu()">
             <i class="fas fa-home"></i>
             <span>Home</span>
@@ -106,7 +106,7 @@
           containerClass="sidebar-navbar-tooltip">
           <a class="hover" (click)="onReloadAtividades(); + ' ' + onHideMenu();">
             <i class="fas fa-redo-alt"></i>
-            <span>Recarregar</span>
+            <span>Recargar</span>
           </a>
         </li>
       </ul>
@@ -114,7 +114,7 @@
         <li>
           <a>
             <div class="spinner-border text-white"></div>
-            <span>Carregando atividades...</span>
+            <span>Cargando actividades...</span>
           </a>
         </li>
       </ul>

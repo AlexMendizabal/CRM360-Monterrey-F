@@ -217,7 +217,7 @@
         </div>
       </div>
     </div>
-    <empty-result message="No se ha encontrado información en los últimos 12 meses. Para periodos anteriores, vea Detalles" *ngIf="pedidos.length == 0 && pedidosLoaded"></empty-result>
+    <empty-result message="Nenhuma informação encontrada nos últimos 12 meses. Para períodos anteriores veja em Detalhes." *ngIf="pedidos.length == 0 && pedidosLoaded"></empty-result>
   </div>
   <div class="col-md-4">
     <div class="d-flex justify-content-between w-100 mb-2">
@@ -227,7 +227,7 @@
           <a
             href="javascript:void(0)"
             *ngIf="grupoEconomicoLoaded && grupoEconomico.length > 1"
-            (click)="onGrupoEconomico(modalGrupoEconomico)">(ver Detalles)
+            (click)="onGrupoEconomico(modalGrupoEconomico)">(ver detalhes)
           </a>
         </h6>
         <small class="form-text text-muted">VISÃO DO GRUPO ECONÔMICO NO HISTÓRICO FINANCEIRO</small>
@@ -269,8 +269,8 @@
       <a
         href="javascript:void(0)"
         (click)="showPendenciasDetalhes = !showPendenciasDetalhes">
-        <span *ngIf="!showPendenciasDetalhes"><i class="fas fa-chevron-up"></i> ver Detalles</span>
-        <span *ngIf="showPendenciasDetalhes"><i class="fas fa-chevron-down"></i> esconder Detalles</span>
+        <span *ngIf="!showPendenciasDetalhes"><i class="fas fa-chevron-up"></i> ver detalhes</span>
+        <span *ngIf="showPendenciasDetalhes"><i class="fas fa-chevron-down"></i> esconder detalhes</span>
       </a>
     </h6>
     <ul class="list-group" *ngIf="showPendenciasDetalhes">
@@ -431,7 +431,7 @@
         <tr>
           <th scope="col" class="text-center">Tipo</th>
           <th scope="col" class="text-center">Cód. cliente</th>
-          <th scope="col" class="text-center">Razón social</th>
+          <th scope="col" class="text-center">Razão social</th>
           <th scope="col" class="text-center"></th>
         </tr>
       </ng-template>

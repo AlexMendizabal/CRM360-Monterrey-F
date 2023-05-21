@@ -36,7 +36,7 @@ export class ComercialClientesCadastroComponent
   codCliente: number;
   cliente: any = {};
 
-  title: string = 'Datos de registro';
+  title: string = 'Dados cadastrais';
   showEditButton: boolean = false;
   showAddButton: boolean = false;
   showCancelButton: boolean = false;
@@ -75,7 +75,7 @@ export class ComercialClientesCadastroComponent
     } else if (
       this.activatedRoute.snapshot.data['response']['responseCode'] === 403
     ) {
-      this.pnotifyService.notice('Ese cliente no forma parte de su cartera');
+      this.pnotifyService.notice('Este cliente no pertenece a su cartera');
       this.router.navigate(['/comercial/home']);
     } else {
       this.pnotifyService.error();
@@ -140,7 +140,7 @@ export class ComercialClientesCadastroComponent
         routerLink: '/comercial/clientes/lista'
       },
       {
-        descricao: 'Detalhes',
+        descricao: 'Detalles',
         routerLink: `/comercial/clientes/detalhes/${id}`
       },
       {
@@ -290,7 +290,7 @@ export class ComercialClientesCadastroComponent
         }
       },
       error: (error: any) => {
-        this.pnotifyService.error('Ocorreu um erro ao carregar as travas.');
+        this.pnotifyService.error('Ocurrio un error al cargar las deudas.');
         this.location.back();
       }
     });

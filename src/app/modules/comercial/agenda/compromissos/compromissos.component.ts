@@ -79,7 +79,7 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
     private atividadesService: AtividadesService,
     private titleService: TitleService,
     private dateService: DateService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.registrarAcesso();
@@ -162,9 +162,10 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   }
 
   dataFilter(event: any): void {
-    this.idEscritorio = event.idEscritorio;
+    console.log(event)
     this.idVendedor = event.idVendedor;
-    this.nomeEscritorio = event.nomeEscritorio;
+    this.nomeEscritorio = this.user.info.nomeCompleto;
+    this.idEscritorio = event.idEscritorio;
     this.nomeVendedor = event.nomeVendedor;
   }
 

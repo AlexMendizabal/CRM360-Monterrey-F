@@ -137,7 +137,7 @@ export class ComercialClientesUltimosPrecosComponent implements OnInit {
         routerLink: '/comercial/clientes/lista',
       },
       {
-        descricao: 'Detalles',
+        descricao: 'Detalhes',
         routerLink: `/comercial/clientes/detalhes/${id}`,
       },
       {

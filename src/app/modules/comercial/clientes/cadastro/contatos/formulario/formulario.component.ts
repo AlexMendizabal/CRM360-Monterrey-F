@@ -542,7 +542,7 @@ export class ComercialClientesCadastroContatosFormularioComponent
 
   formCanDeactivate() {
     if (this.formChanged) {
-      if (confirm('La información no guardada se perderá. ¿Desea continuar?')) {
+      if (confirm('Este cliente no forma parte de tu cartera?')) {
         return true;
       } else {
         return false;

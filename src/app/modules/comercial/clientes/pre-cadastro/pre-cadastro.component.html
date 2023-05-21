@@ -1,6 +1,6 @@
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
-<app-header appTitle="PRE-REGISTRO">
+<app-header appTitle="Pre-Registro">
   <button
     type="button"
     (click)="onCancel()"
@@ -11,7 +11,7 @@
     type="button"
     (click)="onSubmit()"
     [disabled]="!form.valid || submittingForm">
-    Guardar
+    Salvar
   </button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
@@ -26,17 +26,16 @@
                 class="btn btn-light active"
                 [ngClass]="{'active': tipoPessoa == 'F'}"
                 (click)="setType('F')">
-                <strong>Privado</strong>
+                <strong>Persona fisica</strong>
               </button>
-
+              
               <button
               type="button"
               class="btn btn-light active"
               [ngClass]="{'active': tipoPessoa == 'J'}"
               (click)="setType('J')">
-              <strong>Social</strong>
+              <strong>persona Juridica</strong>
             </button>
-              
 
             </div>
           </div>
@@ -63,8 +62,8 @@
               (input)="onInput()"
               (blur)="validateCNPJ()"
               [ngClass]="onFieldError('cnpj') + ' ' + onFieldRequired('cnpj')"
-              cnpj [textMask]="{ mask: MASKS.cnpj.textMask }">
-            <invalid-form-control [show]="onFieldInvalid('cnpj') == 'required'" message="CNPJ inválido."></invalid-form-control>
+            >
+            <invalid-form-control [show]="onFieldInvalid('cnpj') == 'required'" message="NIT inválido."></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
             <label for="vendedor">Atribuir vendedor</label>
@@ -91,7 +90,7 @@
               formControlName="nome"
               (input)="onInput()"
               [ngClass]="onFieldError('nome') + ' ' + onFieldRequired('nome')">
-            <invalid-form-control [show]="onFieldInvalid('nome') == 'required'" message="El nombre es obligatorio"></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('nome') == 'required'" message="Nombre es obligatorio."></invalid-form-control>
             <invalid-form-control [show]="onFieldInvalid('nome') == 'maxlength'" [message]="maxLengthMessages.nome"></invalid-form-control>
           </div>
           <div class="form-group col-md-6" *ngIf="tipoPessoa == 'F'">
@@ -103,7 +102,7 @@
               formControlName="sobrenome"
               (input)="onInput()"
               [ngClass]="onFieldError('sobrenome') + ' ' + onFieldRequired('sobrenome')">
-            <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'required'" message="El apellido es obligatorio"></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'required'" message="Apellido es obligatorio."></invalid-form-control>
             <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'maxlength'" [message]="maxLengthMessages.sobrenome"></invalid-form-control>
           </div>
           <div class="form-group col-md-6" *ngIf="tipoPessoa == 'J'">
@@ -115,11 +114,11 @@
               formControlName="razaoSocial"
               (input)="onInput()"
               [ngClass]="onFieldError('razaoSocial') + ' ' + onFieldRequired('razaoSocial')">
-            <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'required'" message="El campo 'Razón social' es obligatorio"></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'required'" message="Razon social es obligatorio."></invalid-form-control>
             <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'maxlength'" [message]="maxLengthMessages.razaoSocial"></invalid-form-control>
           </div>
           <div class="form-group col-md-6" *ngIf="tipoPessoa == 'J'">
-            <label for="nomeFantasia">Nombre ficticio</label>
+            <label for="nomeFantasia">Nombre</label>
             <input
               type="text"
               class="form-control"
@@ -127,13 +126,13 @@
               formControlName="nomeFantasia"
               (input)="onInput()"
               [ngClass]="onFieldError('nomeFantasia') + ' ' + onFieldRequired('nomeFantasia')">
-            <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'required'" message="El campo 'nombre de fantasía' es obligatorio"></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'required'" message="Nombre es obligatorio."></invalid-form-control>
             <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'maxlength'" [message]="maxLengthMessages.nomeFantasia"></invalid-form-control>
           </div>
         </div>
         <div class="form-row" *ngIf="tipoPessoa == 'J'">
           <div class="form-group col">
-            <label for="cnae">CNAE (atividade economica)</label>
+            <label for="cnae">CNAE (Actividad Economica)</label>
             <ng-select
               [searchable]="true"
               [clearable]="false"
@@ -146,12 +145,12 @@
               (change)="onInput()"
               [ngClass]="onFieldError('cnae') + ' ' + onFieldRequired('cnae')">
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('cnae') == 'required'" message="CNAE é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('cnae') == 'required'" message="CNAE es obligatorio."></invalid-form-control>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="emailNfe">E-mail de facturación</label>
+            <label for="emailNfe">E-mail NFE</label>
             <input
               type="email"
               class="form-control"
@@ -159,7 +158,7 @@
               formControlName="emailNfe"
               (input)="onInput()"
               [ngClass]="onFieldError('emailNfe') + ' ' + onFieldRequired('emailNfe')">
-            <invalid-form-control [show]="onFieldInvalid('emailNfe') == 'required'" message="El E-mail de facturación es obligatorio"></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('emailNfe') == 'required'" message="E-mail NFE es obligatorio."></invalid-form-control>
             <invalid-form-control [show]="onFieldInvalid('emailNfe') == 'maxlength'" [message]="maxLengthMessages.emailNfe"></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
@@ -171,8 +170,16 @@
               formControlName="telefone"
               (input)="onInput()"
               [ngClass]="onFieldError('telefone') + ' ' + onFieldRequired('telefone')"
-              telefone [textMask]="{ mask: MASKS.telefone.textMaskFunction }">
-            <invalid-form-control [show]="onFieldInvalid('telefone') == 'required'" message="El teléfono es obligatorio"></invalid-form-control>
+            >
+            <invalid-form-control [show]="onFieldInvalid('telefone') == 'required'" message="Telefono es obligatorio."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6">
+            <!-- <label for="tipopessoa">Tipo de persona</label> -->
+            <!-- <select class="form-control" id="tipopessoa" formControlName="tipopessoa" (change)="onInput()">
+              <option value="F">Persona 1 </option>
+              <option value="J">Persona 2 </option>
+              <option value="J">Persona 3 </option>
+            </select> -->
           </div>
         </div>
         
@@ -221,33 +228,33 @@
         <div *ngIf="dadosCliente.cpf != null">{{ dadosCliente.cpf }}</div>
       </div>
       <div class="form-group col-lg-6" *ngIf="dadosCliente.tipo == 'J'">
-        <label>CNPJ</label>
+        <label>NIT</label>
         <div *ngIf="dadosCliente.cnpj == null">Sin informacion</div>
         <div *ngIf="dadosCliente.cnpj != null">{{ dadosCliente.cnpj }}</div>
       </div>
       <div class="form-group col-lg-6">
-        <label>Nombre de fantasía</label>
+        <label>Nombre fantasia</label>
         <div *ngIf="dadosCliente.nomeFantasia == null">Sin informacion</div>
         <div *ngIf="dadosCliente.nomeFantasia != null">{{ dadosCliente.nomeFantasia }}</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col">
-        <label>Razón social</label>
+        <label>Razon social</label>
         <div *ngIf="dadosCliente.razaoSocial == null">Sin informacion</div>
         <div *ngIf="dadosCliente.razaoSocial != null">{{ dadosCliente.razaoSocial }}</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col">
-        <label>Dirección</label>
+        <label>Endereço</label>
         <div *ngIf="dadosCliente.endereco == null">Sin informacion</div>
         <div *ngIf="dadosCliente.endereco != null">{{ dadosCliente.endereco }}</div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-lg-6">
-        <label>Barrio</label>
+        <label>Bairro</label>
         <div *ngIf="dadosCliente.bairro == null">Sin informacion</div>
         <div *ngIf="dadosCliente.bairro != null">{{ dadosCliente.bairro }}</div>
       </div>
@@ -259,7 +266,7 @@
     </div>
     <div class="form-row">
       <div class="form-group col-lg-6">
-        <label>Ciudad</label>
+        <label>Cidade</label>
         <div *ngIf="dadosCliente.cidade == null">Sin informacion</div>
         <div *ngIf="dadosCliente.cidade != null">{{ dadosCliente.cidade }}</div>
       </div>
@@ -294,7 +301,7 @@
         <div>{{ dadosCliente.codSAP }}</div>
       </div>
       <div class="form-group col-lg-4" *ngIf="dadosCliente.escritorioDba != '' && dadosCliente.escritorioDba != null">
-        <label>Escritório</label>
+        <label>Sucursal</label>
         <div>{{ dadosCliente.escritorioDba }}</div>
       </div>
       <div class="form-group col-lg-4" *ngIf="dadosCliente.ultimaCompraDba != '' && dadosCliente.ultimaCompraDba != null">
@@ -304,7 +311,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light" (click)="onCloseDetails()">Fecha</button>
+    <button type="button" class="btn btn-light" (click)="onCloseDetails()">Fechar</button>
     <button
       type="button"
       class="btn btn-primary"

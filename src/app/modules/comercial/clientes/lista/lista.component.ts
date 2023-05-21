@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
+
+
 // ngx-bootstrap
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
@@ -167,19 +169,27 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       carteira: [formValue['carteira'], Validators.required],
       pagina: [formValue['pagina']],
       registros: [formValue['registros'], Validators.required],
+      id_group_econ: [formValue['grupoEconomico'], Validators.required], // Se Agrega este campo
     });
   }
+  searchInputValue: string;
 
   checkRouterParams(): Object {
+    var aux_cartera;
+    if (this.matricula == 1){
+      aux_cartera ='T'
+    }else{
+      aux_cartera = 'S'
+    }
     let formValue = {
-      pesquisa: null,
+      pesquisa: this.searchInputValue, // aquí se actualizaría el valor de pesquisa
       buscarPor: 1,
       situacao: 'T',
       setorAtividade: 'T',
       tipoPessoa: 'T',
       grupoEconomico: 'T',
       segurado: 'T',
-      carteira: 'T',
+      carteira: aux_cartera,
       pagina: 1,
       registros: this.itemsPerPage,
     };
@@ -237,8 +247,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     for (let i = 0; i < status.length; i++) {
       if (status[i]['situacao'] == 'Ativo') {
         this.ativos = status[i]['quantidade'];
-      } else if (status[i]['situacao'] == 'Inativo') {
-        this.inativos = status[i]['quantidade'];
+      } else if (status[i]['situacao'] == 'Inativo'|| status[i]['situacao'] == null) {
+        this.inativos += status[i]['quantidade'];
       } else if (status[i]['situacao'] == 'Potenci') {
         this.potencial = status[i]['quantidade'];
       } else if (status[i]['situacao'] == 'Arquivo') {
@@ -351,12 +361,13 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   viewRegister(cliente: any): void {
-    if (cliente['podeAcessar'] == 0) {
-      this.pnotifyService.notice('Ese cliente no forma parte de su cartera');
-    } else {
+    if (cliente['podeAcessar'] == 1 || cliente['podeAcessar'] == 0) {
       this.router.navigate(['../detalhes', cliente.codCliente], {
         relativeTo: this.activatedRoute,
+        
       });
+    } else {
+      this.pnotifyService.notice('Esse cliente não faz parte da sua carteira.');
     }
   }
 

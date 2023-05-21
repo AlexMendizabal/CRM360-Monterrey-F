@@ -139,7 +139,7 @@ export class HeaderComponent implements OnInit {
         },
         (error: any) => {
           this.modulosError = true;
-          this.pnotifyService.error('Se ha producido un error al cargar los módulos.');
+          this.pnotifyService.error('Ocorreu um erro ao carregar os módulos.');
         }
       ); */
   }

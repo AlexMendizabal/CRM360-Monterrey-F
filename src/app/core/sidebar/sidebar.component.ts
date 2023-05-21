@@ -77,7 +77,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     );
   }
   handleGetModuloError() {
-    this.pnotifyService.notice('Ocorreu um erro ao carregar o módulo.');
+    this.pnotifyService.notice('Ocurrio un error al cargar el modulo.');
   }
   setAtividades(userModule: any) {
     this.getAtividades(userModule.id);
@@ -89,13 +89,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.atividadesError = false;
     const currentUser = localStorage.getItem('currentUser');
     if(!currentUser){
-      this.pnotifyService.error('Você não tem permissão para isso.');
+      this.pnotifyService.error('No tiene permiso para realizar eso.');
       this.authService.logout();
       return
     }
     const matricula = (JSON.parse(currentUser))?.info?.matricula;
     if(!matricula){
-      this.pnotifyService.error('Você não tem permissão para isso.');
+      this.pnotifyService.error('No tiene permiso para realizar eso.');
       this.authService.logout();
       return
     }
@@ -117,7 +117,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         response => {
           
           if(response.status !== 200){
-            this.pnotifyService.error('Você não tem permissão para isso.');
+            this.pnotifyService.error('No tiene permiso para realizar eso.');
             this.authService.logout();
             return
           }
@@ -127,7 +127,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
           let idx1 = data.findIndex((val) => val["id"] === 89)
           data.splice(idx1, 1);
           let idx2 = data.findIndex((val) => val["id"] === 28)
-          data[idx2]["nome"] = "DASHBOARD DE VENDEDOR"
+          data.splice(idx1, 1);
           let idx3 = data.findIndex((val) => val["id"] === 30)
           data.splice(idx3, 1);
           let idx4 = data.findIndex((val) => val["id"] === 25)
@@ -142,7 +142,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         (error: any) => {
           this.atividadesError = true;
           this.pnotifyService.error(
-            'Se ha producido un error al cargar las actividades.'
+            'Ocurrio un error al cargar actividades.'
           );
         }
       )
@@ -173,7 +173,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         (error: any) => {
           this.atividadesError = true;
           this.pnotifyService.error(
-            'Se ha producido un error al cargar las actividades.'
+            'Ocorreu um erro ao carregar as atividades.'
           );
         }
       ); */

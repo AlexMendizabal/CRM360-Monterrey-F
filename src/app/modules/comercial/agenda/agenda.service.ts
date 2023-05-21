@@ -39,20 +39,26 @@ export class ComercialAgendaService {
       .post(`${this.API}/compromisso/salvar`, record)
       .pipe(take(1), retry(2));
   }
+  private saveCompromisso2(record: any) {
+    return this.http
+      .post(`${this.API}/compromiso/actualizar`, record)
+      .pipe(take(1), retry(2));
+  }
 
   private updateCompromisso(record: any) {
     return this.http
-      .put(`${this.API}/compromisso/atualizar`, record)
+      .post(`${this.API}/compromiso/actualizar` , record)
       .pipe(take(1), retry(2));
   }
 
   private rescheduleCompromisso(record: any) {
     return this.http
-      .put(`${this.API}/compromisso/reagendar`, record)
+      .post(`${this.API}/compromisso/reagendar`, record)
       .pipe(take(1), retry(2));
   }
 
   save(action: string, record: any) {
+
     if (action == 'editar') {
       return this.updateCompromisso(record);
     } else if (action == 'reagendar') {
@@ -63,8 +69,10 @@ export class ComercialAgendaService {
   }
 
   deleteCompromisso(id: any) {
+    const record = { id: id };
     return this.http
-      .delete(`${this.API}/compromisso/excluir/${id}`)
+      .post(`${this.API}/compromiso/eliminar`, record)
       .pipe(take(1), retry(2));
   }
+  
 }

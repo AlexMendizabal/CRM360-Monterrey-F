@@ -43,7 +43,7 @@ export class ComercialClientesHistoricoFinanceiroComponent implements OnInit {
     } else if (
       this.activatedRoute.snapshot.data['response']['responseCode'] === 403
     ) {
-      this.pnotifyService.notice('Ese cliente no forma parte de su cartera');
+      this.pnotifyService.notice('Este cliente no pertenece a su cartera');
       this.router.navigate(['/comercial/home']);
     } else {
       this.pnotifyService.error();

@@ -66,7 +66,7 @@ export class AuthService {
 
       this.hasSession = false;
       this.resetCurrentUser();
-      this.pnotifyService.notice('Su sesión ha expirado. Por favor, conéctese de nuevo.');
+      this.pnotifyService.notice('Su sesión expiro intente nuevamente.');
       this.router.navigate(['/login'], {
         queryParams: queryParams
       })

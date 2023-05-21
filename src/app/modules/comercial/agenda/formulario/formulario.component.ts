@@ -165,7 +165,7 @@ export class ComercialAgendaFormularioComponent
     let title: string;
 
     if (this.action == 'novo') {
-      title = 'Novo contato';
+      title = 'Nuevo contacto';
     } else if (this.action == 'editar') {
       title = 'Editar contato';
     } else if (this.action == 'reagendar') {
@@ -261,7 +261,7 @@ export class ComercialAgendaFormularioComponent
           routerLink: `/comercial/agenda/compromissos`,
         },
         {
-          descricao: 'Novo contato',
+          descricao: 'Nuevo contacto',
         },
       ];
     } else {
@@ -275,7 +275,7 @@ export class ComercialAgendaFormularioComponent
           routerLink: `/comercial/agenda/compromissos`,
         },
         {
-          descricao: 'Detalhes',
+          descricao: 'Detalles',
           routerLink: `/comercial/agenda/detalhes/${id}`,
         },
         {
@@ -444,12 +444,12 @@ export class ComercialAgendaFormularioComponent
         terminoData: Date,
         terminoHorario: Date;
 
-      let msgSuccess = 'Seu contato foi criado.';
-      let msgError = 'Ocorreu um erro ao criar contato.';
+      let msgSuccess = 'Su cita fue creada.';
+      let msgError = 'Ocurrio un error al crear cita.';
 
       if (formValue.id) {
-        msgSuccess = 'Seu contato foi editado.';
-        msgError = 'Ocorreu um erro ao editar contato.';
+        msgSuccess = 'Su cita fue editada.';
+        msgError = 'Ocurrio un error al editar cita.';
       }
 
       if (formValue.cliente != '') {
@@ -572,7 +572,7 @@ export class ComercialAgendaFormularioComponent
 
   formCanDeactivate(): boolean {
     if (this.formChanged) {
-      if (confirm('Informações não salvas serão perdidas. Deseja continuar?')) {
+      if (confirm('La información no guardada se perderá. ¿Desea continuar?')) {
         return true;
       } else {
         return false;
