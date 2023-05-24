@@ -2,10 +2,15 @@
   <loader-spinner-full-screen></loader-spinner-full-screen>
 </ng-template>
 <app-header [appTitle]="appTitle(viewDate)">
+<<<<<<< HEAD
   <button type="button"
     *ngIf="showCalendar"
     (click)="refreshEvents()">Actualizar</button>
   <button type="button"
+=======
+  <button
+    type="button"
+>>>>>>> jimmy
     *ngIf="showCalendar"
     mwlCalendarPreviousView
     [view]="view"
@@ -13,14 +18,24 @@
     (viewDateChange)="fetchEvents()">
     Anterior
   </button>
+<<<<<<< HEAD
   <button type="button"
+=======
+  <button
+    type="button"
+>>>>>>> jimmy
     *ngIf="showCalendar"
     mwlCalendarToday
     [(viewDate)]="viewDate"
     (viewDateChange)="fetchEvents()">
     Hoy
   </button>
+<<<<<<< HEAD
   <button type="button"
+=======
+  <button
+    type="button"
+>>>>>>> jimmy
     *ngIf="showCalendar"
     mwlCalendarNextView
     [view]="view"
@@ -28,12 +43,22 @@
     (viewDateChange)="fetchEvents()">
     Próximo
   </button>
+<<<<<<< HEAD
   <button type="button"
+=======
+  <button
+    type="button"
+>>>>>>> jimmy
     *ngIf="showCalendar"
     [routerLink]="['../novo']">
     Adicionar
   </button>
+<<<<<<< HEAD
   <button type="button"
+=======
+  <button
+    type="button"
+>>>>>>> jimmy
     (click)="onFilter(showFilter)"
     *ngIf="enableFilterButton()"
     [disabled]="idEscritorio == null || idVendedor == null">
@@ -52,12 +77,19 @@
   </div>
   <div class="row" *ngIf="showCalendar">
     <div class="col">
+<<<<<<< HEAD
       <div class="row mb-3"
         *ngIf="(nomeEscritorio != null && nomeEscritorio.length > 0) || (nomeVendedor != null && nomeVendedor.length > 0)">
         <div class="col">
           <div class="d-flex">
             <h6 class="mb-0 mr-2"
               *ngIf="nomeVendedor != null && nomeEscritorio != null && nomeEscritorio.length > 0">
+=======
+      <div class="row mb-3" *ngIf="(nomeEscritorio != null && nomeEscritorio.length > 0) || (nomeVendedor != null && nomeVendedor.length > 0)">
+        <div class="col">
+          <div class="d-flex">
+            <h6 class="mb-0 mr-2" *ngIf="nomeVendedor != null && nomeEscritorio != null && nomeEscritorio.length > 0">
+>>>>>>> jimmy
               <span class="badge badge-secondary">{{ nomeEscritorio }}</span>
             </h6>
             <h6 class="mb-0" *ngIf="nomeVendedor.length > 0">
@@ -78,7 +110,10 @@
                 [activeDayIsOpen]="activeDayIsOpen"
                 (dayClicked)="dayClicked($event.day)"
                 (eventClicked)="eventClicked($event.event)">
+<<<<<<< HEAD
                 
+=======
+>>>>>>> jimmy
               </mwl-calendar-month-view>
             </div>
           </div>

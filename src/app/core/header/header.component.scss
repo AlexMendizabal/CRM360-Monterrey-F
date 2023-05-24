@@ -36,7 +36,11 @@
           outline: unset;
         }
       }
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> jimmy
       .btn-group {
         border: unset !important;
         border-radius: unset !important;
@@ -55,6 +59,15 @@
       }
     }
   }
+<<<<<<< HEAD
 
 
 }
+=======
+}
+@media (min-width: 400px) and (max-width: auto) {
+    .navbar{
+      padding: 0.4rem 1rem 0.4rem 3.5rem;
+    }
+ }
+>>>>>>> jimmy
