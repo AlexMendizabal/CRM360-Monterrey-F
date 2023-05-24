@@ -9,6 +9,15 @@
     [view]="view"
     [(viewDate)]="viewDate"
     (viewDateChange)="fetchEvents()">
+    Refresh
+  </button>
+  <button
+    type="button"
+    *ngIf="showCalendar"
+    mwlCalendarPreviousView
+    [view]="view"
+    [(viewDate)]="viewDate"
+    (viewDateChange)="fetchEvents()">
     Anterior
   </button>
   <button

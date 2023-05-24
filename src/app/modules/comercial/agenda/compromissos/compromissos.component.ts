@@ -56,6 +56,8 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   showCalendar = false;
   showPermissionDenied = false;
 
+  estado = 1;
+
   view = 'month';
   viewDate: Date = new Date();
   activeDayIsOpen = false;
@@ -279,12 +281,12 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
 
     this.events$ = this.agendaService.getCompromissos(paramsObj).pipe(
       map((compromissos: Compromisso[]) => {
-        if (compromissos['responseCode'] === 200) {
+        if (this.estado = 1) {
           return compromissos['result'].map((compromisso: Compromisso) => {
             return {
               id: compromisso.id,
               color: {
-                primary: compromisso.color
+                primary: '#FFFF00'
               },
               title: compromisso.title,
               codClient: compromisso.codClient,
@@ -300,8 +302,8 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
               draggable: false
             };
           });
-        } else {
-          return [];
+        }else {
+          return[];
         }
       }),
       finalize(() => {

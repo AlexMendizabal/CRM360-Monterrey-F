@@ -30,6 +30,13 @@ import { ComercialCadastrosTitulosAgendaService } from './../../cadastros/titulo
 import { IFormCanDeactivate } from 'src/app/guards/iform-candeactivate';
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { JsonResponse } from 'src/app/models/json-response';
+import { id } from 'date-fns/locale';
+import { Column3D } from '@amcharts/amcharts4/charts';
+import { titulo } from 'ng-brazil/titulo/validator';
+import { color } from '@amcharts/amcharts4/core';
+import { COLORS } from 'html2canvas/dist/types/css/types/color';
+
+
 
 @Component({
   selector: 'comercial-agenda-formulario',
@@ -42,10 +49,11 @@ export class ComercialAgendaFormularioComponent
     simuladorVendas: boolean;
   };
 
+
   colors = [
     {
       hex: '#FFFF01',
-      descricao: 'Amarelo',
+      descricao: 'Amarillo',
     },
     {
       hex: '#0033FF',
@@ -53,19 +61,19 @@ export class ComercialAgendaFormularioComponent
     },
     {
       hex: '#FB6602',
-      descricao: 'Laranja',
+      descricao: 'Naranja',
     },
     {
       hex: '#FF0087',
-      descricao: 'Rosa',
+      descricao: 'Rosado',
     },
     {
       hex: '#610069',
-      descricao: 'Roxo',
+      descricao: 'Morado',
     },
     {
       hex: '#FA1100',
-      descricao: 'Vermelho',
+      descricao: 'Rojo',
     },
   ];
 
@@ -88,11 +96,17 @@ export class ComercialAgendaFormularioComponent
 
   showInputClientes = true;
   showInputVendedores = true;
+  hideInputVendedores = true;
 
 
   isDisabledTime = false;
 
+  showFormulario = true;
+  hideFormulario = true;
+  color: string;
+
   bsConfig: Partial<BsDatepickerConfig>;
+  mostrarElemento: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -123,7 +137,10 @@ export class ComercialAgendaFormularioComponent
     this.checkAcessos();
     this.checkUrlParams();
     this.getFormFields();
+
   }
+
+
 
   registrarAcesso(): void {
     this.atividadesService.registrarAcesso().subscribe();
@@ -170,13 +187,16 @@ export class ComercialAgendaFormularioComponent
     if (this.action == 'novo') {
       title = 'Nuevo contacto';
     } else if (this.action == 'editar') {
-      title = 'Editar contato';
+      title = 'Editar contacto';
     } else if (this.action == 'reagendar') {
       title = 'Reagendar contato';
+    } else if (this.action == 'finalizar') {
+      title = 'Finalizar Contacto';
     }
 
     return title;
   }
+
 
   setFormBuilder(): void {
     if (this.activatedRoute.snapshot.data.detalhes.responseCode === 200) {
@@ -200,6 +220,7 @@ export class ComercialAgendaFormularioComponent
       }
 
       this.form = this.formBuilder.group({
+
         id: [detalhes.id],
         // codTitulosAgenda: [detalhes.codTitulosAgenda, [Validators.required]],
         cor: [detalhes.color.primary],
@@ -241,6 +262,9 @@ export class ComercialAgendaFormularioComponent
           },
         ],
       });
+
+      console.log('id')
+      console.log(detalhes.codTitulo)
 
       if (detalhes.allDay) {
         this.isDisabledTime = true;
@@ -298,6 +322,8 @@ export class ComercialAgendaFormularioComponent
       this.breadCrumbTree[this.breadCrumbTree.length - 1].descricao
     );
   }
+
+
 
   getFormFields(): void {
     this.loaderFullScreen = true;
@@ -371,6 +397,12 @@ export class ComercialAgendaFormularioComponent
 
   onColorChange(color: any): void {
     this.form.controls.cor.setValue(color.hex);
+  }
+
+  onCodTituloChange(): void {
+    const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
+    const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
+    this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
   }
 
   triggerAllDay(): void {

@@ -1,6 +1,11 @@
 <app-header appTitle="Detalles del compromiso">
   <button
     type="button"
+    (click)="onFinish(detalhes)">
+    Finalizar
+  </button>
+  <button
+    type="button"
     (click)="onEdit(detalhes)">
     Editar
   </button>
