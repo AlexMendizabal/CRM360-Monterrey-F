@@ -138,6 +138,7 @@ export class ComercialAgendaFormularioComponent
   //     this.permissoesAcesso.simuladorVendas = false;
   //   }
   // }
+  
     checkAcessos(): void {
     const acessos = this.activatedRoute.snapshot.data.detalhes;
     if (acessos.responseCode === 200) {

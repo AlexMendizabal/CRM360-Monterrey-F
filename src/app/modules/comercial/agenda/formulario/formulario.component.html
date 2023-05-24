@@ -54,12 +54,8 @@
               bindLabel="descricaoTitulo"
               bindValue="codTitulo"
               id="codTitulo"
-<<<<<<< HEAD
               formControlName="codTitulo"
               (change)="onCodTituloChange()">
-=======
-              formControlName="codTitulo">
->>>>>>> jimmy
             </ng-select>
             <invalid-form-control [show]="onFieldInvalid('codTitulo')" message="Título obligatorio."></invalid-form-control>
             </div>
@@ -92,11 +88,7 @@
                 [items]="clientes"
                 [virtualScroll]="true"
                 labelForId="cliente"
-<<<<<<< HEAD
                 bindLabel="nomeCliente"
-=======
-                bindLabel="codRazaoSocial"
->>>>>>> jimmy
                 bindValue="codCliente"
                 formControlName="cliente"
                 [ngClass]="onFieldError('cliente') + ' ' + onFieldRequired('cliente')"
