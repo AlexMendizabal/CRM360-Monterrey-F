@@ -68,12 +68,9 @@ export class ComercialAgendaFormularioComponent
       descricao: 'Vermelho',
     },
   ];
-<<<<<<< HEAD
   selectedColor: any; // Declaración en el componente
 
 
-=======
->>>>>>> jimmy
 
   loaderNavbar = false;
   loaderFullScreen = true;
@@ -141,11 +138,6 @@ export class ComercialAgendaFormularioComponent
   //     this.permissoesAcesso.simuladorVendas = false;
   //   }
   // }
-<<<<<<< HEAD
-  
-=======
-
->>>>>>> jimmy
     checkAcessos(): void {
     const acessos = this.activatedRoute.snapshot.data.detalhes;
     if (acessos.responseCode === 200) {
@@ -364,14 +356,11 @@ export class ComercialAgendaFormularioComponent
   onColorChange(color: any): void {
     this.form.controls.cor.setValue(color.hex);
   }
-<<<<<<< HEAD
   onCodTituloChange(): void {
     const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
     const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
     this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
   }
-=======
->>>>>>> jimmy
 
   triggerAllDay(): void {
     this.isDisabledTime = !this.isDisabledTime;
