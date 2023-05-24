@@ -114,8 +114,8 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
     this.registrarAcesso();
     this.getPerfil();
     this.titleService.setTitle('Agenda');
-    // Actualizar los eventos cada 1 hora
-  interval(20 * 1000) // 1 hora en milisegundos
+    // Actualizar los eventos cada 20 seg
+  interval(20 * 1000) // 20 seg en milisegundos
   .pipe(takeUntil(this.destroy$))
   .subscribe(() => {
   this.fetchEvents();

@@ -45,27 +45,26 @@ export class ComercialAgendaFormularioComponent
   colors = [
     {
       hex: '#FFFF01',
-      descricao: 'Amarelo',
+      descricao: 'Amarillo',
     },
     {
-      hex: '#0033FF',
       descricao: 'Azul',
     },
     {
       hex: '#FB6602',
-      descricao: 'Laranja',
+      descricao: 'Naranja',
     },
     {
       hex: '#FF0087',
-      descricao: 'Rosa',
+      descricao: 'Rosado',
     },
     {
       hex: '#610069',
-      descricao: 'Roxo',
+      descricao: 'Morado',
     },
     {
       hex: '#FA1100',
-      descricao: 'Vermelho',
+      descricao: 'Rojo',
     },
   ];
   selectedColor: any; // Declaración en el componente
