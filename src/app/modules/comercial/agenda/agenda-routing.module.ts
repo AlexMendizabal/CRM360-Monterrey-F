@@ -28,6 +28,16 @@ const routes: Routes = [
     },
     canDeactivate: [FormDeactivateGuard],
   },
+
+  {
+    path: 'finalizar/:id',
+    component: ComercialAgendaFormularioComponent,
+    resolve: {
+      detalhes: ComercialAgendaDetalhesResolverGuard,
+    },
+    canDeactivate: [FormDeactivateGuard],
+  },
+
   {
     path: 'novo',
     component: ComercialAgendaFormularioComponent,

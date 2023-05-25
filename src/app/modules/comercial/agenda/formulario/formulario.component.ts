@@ -48,6 +48,7 @@ export class ComercialAgendaFormularioComponent
       descricao: 'Amarillo',
     },
     {
+      hex: '#0076d4',
       descricao: 'Azul',
     },
     {
@@ -137,7 +138,7 @@ export class ComercialAgendaFormularioComponent
   //     this.permissoesAcesso.simuladorVendas = false;
   //   }
   // }
-  
+
     checkAcessos(): void {
     const acessos = this.activatedRoute.snapshot.data.detalhes;
     if (acessos.responseCode === 200) {
