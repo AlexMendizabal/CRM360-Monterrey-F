@@ -43,6 +43,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'reporte-agenda',
+        loadChildren: () =>
+          import('./reporte/reportes.module').then(
+            (m) => m.ComercialReportesModule
+          ),
+      },
+      {
         path: 'controle-entregas',
         loadChildren: () =>
           import('./controle-entregas/controle-entregas.module').then(
