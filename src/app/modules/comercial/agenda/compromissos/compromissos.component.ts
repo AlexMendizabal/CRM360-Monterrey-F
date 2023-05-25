@@ -81,8 +81,6 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   showCalendar = false;
   showPermissionDenied = false;
 
-  estado = 1;
-
   view = 'month';
   viewDate: Date = new Date();
   activeDayIsOpen = false;
@@ -323,10 +321,10 @@ ngOnDestroy(): void {
       map((compromissos: Compromisso[]) => {
         if (compromissos['responseCode'] === 200) {
           // Asigna el valor deseado a la variable estado
-    this.estado = 1;
-    
+    // this.estado = 1;
+
     return compromissos['result'].map((compromisso: Compromisso) => {
-      
+
       // Función para obtener el color en base a la variable estado
       // const getColorFromVariable = (): string => {
       //   switch (this.estado) {
@@ -340,7 +338,7 @@ ngOnDestroy(): void {
       //             return 'gray'; // Color por defecto en caso de otro valor
       //         }
       //       }
-    
+
             return {
               id: compromisso.id,
               color: {
@@ -360,7 +358,7 @@ ngOnDestroy(): void {
               draggable: false
             };
           });
-        }else {
+        }else{
           return[];
         }
       }),

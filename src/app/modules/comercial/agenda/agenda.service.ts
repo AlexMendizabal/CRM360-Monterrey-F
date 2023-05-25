@@ -62,8 +62,9 @@ export class ComercialAgendaService {
       .post(`${this.API}/compromiso/finalizar`, record)
       .pipe(take(1), retry(2));
   }
-  
+
   save(action: string, record: any) {
+
     if (action == 'editar' || action == 'finalizar') {
       return this.updateCompromisso(record);
     } else if (action == 'reagendar') {
@@ -80,5 +81,5 @@ export class ComercialAgendaService {
       .post(`${this.API}/compromiso/eliminar`, record)
       .pipe(take(1), retry(2));
   }
-  
+
 }

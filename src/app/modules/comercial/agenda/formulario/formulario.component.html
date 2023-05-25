@@ -23,7 +23,7 @@
             <label for="codTitulo">Título</label>
             <div class="input-group">
               <div class="input-group-prepend">
-                
+
               </div>
               <ng-select
               [searchable]="true"
@@ -70,6 +70,24 @@
                 [items]="clientes"
                 [virtualScroll]="true"
                 labelForId="cliente"
+                bindLabel="nomeCliente"
+                bindValue="codCliente"
+                formControlName="cliente"
+                [ngClass]="onFieldError('cliente') + ' ' + onFieldRequired('cliente')"
+                (change)="onInput()">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="direccion">direccion</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="direccion"
+                [virtualScroll]="true"
+                labelForId="direccion"
                 bindLabel="nomeCliente"
                 bindValue="codCliente"
                 formControlName="cliente"
@@ -257,6 +275,31 @@
             </textarea>
           </div>
         </div>
+
+        <div class="form-row" *ngIf="action == 'finalizar'">
+          <div class="form-group col">
+            <label for="Obsfinalizar">Observación al finalizar</label>
+            <textarea
+              class="form-control"
+              id="Obsfinalizar"
+              formControlName="Obsfinalizar"
+              (input)="onInput()">
+            </textarea>
+          </div>
+        </div>
+        <!-- <div class="form-row" *ngIf="action == 'finalizar'">
+          <div class="form-group col">
+            <label for="anexo">Archivo adjunto</label>
+            <div class="custom-file">
+              <input
+                type="file"
+                class="custom-file-input"
+                id="anexo"
+                [disabled]="false">
+              <label class="custom-file-label" for="anexo">Seleccionar archivo</label>
+            </div>
+          </div>
+        </div> -->
       </form>
     </div>
   </div>

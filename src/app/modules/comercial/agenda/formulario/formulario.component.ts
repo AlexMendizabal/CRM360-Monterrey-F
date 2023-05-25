@@ -105,6 +105,7 @@ export class ComercialAgendaFormularioComponent
   showInputVendedores = true;
   hideInputVendedores = true;
 
+  mostrarFormulario: boolean = true;
 
   isDisabledTime = false;
 
@@ -474,10 +475,10 @@ export class ComercialAgendaFormularioComponent
   // }
 
   onCodTituloChange(): void {
-    const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
-    const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
-    this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
-  }
+     const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
+     const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
+     this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
+   }
 
   triggerAllDay(): void {
     this.isDisabledTime = !this.isDisabledTime;
@@ -779,3 +780,4 @@ export class ComercialAgendaFormularioComponent
       });
   }
 }
+

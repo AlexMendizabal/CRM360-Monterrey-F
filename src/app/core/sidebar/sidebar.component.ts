@@ -138,6 +138,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
           this.atividades = data;
           this.routerLinkHome = data[0]["moduloRota"];
+          console.log(response)
         },
         (error: any) => {
           this.atividadesError = true;
