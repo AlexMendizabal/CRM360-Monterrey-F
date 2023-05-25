@@ -56,7 +56,6 @@ export class ComercialAgendaFormularioComponent
       descricao: 'Amarillo',
     },
     {
-      hex: '#0033FF',
       descricao: 'Azul',
     },
     {
@@ -76,6 +75,9 @@ export class ComercialAgendaFormularioComponent
       descricao: 'Rojo',
     },
   ];
+  selectedColor: any; // Declaración en el componente
+
+
 
   loaderNavbar = false;
   loaderFullScreen = true;

@@ -1,16 +1,66 @@
 <loader-spinner-full-screen *ngIf="!dataLoaded"></loader-spinner-full-screen>
 <div class="row" id="application-header">
-  <div class="col-6">
+  <div class="col-6 ms-6">
     <div id="title">
       <back-button></back-button>
       <h1>Dashboard</h1>
     </div>
   </div>
-  <div class="col-6 d-flex justify-content-end">
+  <div class="col-6 ms-6 d-flex justify-content-end">
     <div id="actions">
       <button type="button"[disabled]="form.status === 'INVALID'" (click)="onFilter()">
         Filtrar
       </button>
+    </div>
+  </div>
+</div>
+
+<div class="row" id="application-body">
+  <div class="col">
+    <div class="row justify-content-center" *ngIf="dataLoaded">
+      <div class="col-12 mb-4">
+        <div class="mtc-title text-center">Filtrar resultados</div>
+      </div>
+      <form id="form-corte-dobra-dashboard" [formGroup]="form">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="unidade">Unidade</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="unidades"
+              [virtualScroll]="true"
+              placeholder="Unidade"
+              labelForId="unidade"
+              bindLabel="nome"
+              bindValue="emp"
+              id="unidade"
+              formControlName="unidade"
+            >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('unidade')" message="Unidade é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="periodo">Período</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="periodos"
+              [virtualScroll]="true"
+              placeholder="Periodo"
+              labelForId="periodo"
+              bindLabel="nome"
+              bindValue="id"
+              id="periodo"
+              formControlName="periodo"
+            >
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('periodo')" message="Período é obrigatório."></invalid-form-control>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
