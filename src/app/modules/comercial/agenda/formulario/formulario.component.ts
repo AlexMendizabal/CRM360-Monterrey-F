@@ -98,6 +98,7 @@ export class ComercialAgendaFormularioComponent
   motivosReagendamento: any = [];
 
   attachedFiles: File[] = [];
+  adjunto: File = null;
 
   showInputClientes = true;
   showInputVendedores = true;
@@ -197,6 +198,32 @@ export class ComercialAgendaFormularioComponent
     fileInput.click();
   }
 
+  adjuntarArchivo() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.pdf, .doc, .docx'; // Agrega los tipos de archivo permitidos según tus requisitos
+
+    input.onchange = (event: any) => {
+      const files: FileList = event.target.files;
+      if (files.length > 0) {
+        this.adjunto = files[0];
+        // Actualiza el valor del campo 'adjunto' en el formulario
+        this.form.get('adjunto').setValue(this.adjunto);
+      }
+    };
+
+    input.click();
+  }
+
+  // agregarAdjunto() {
+  //   const archivo = this.form.get('adjunto').value;
+  //   if (archivo) {
+  //     this.attachedFiles.push(archivo);
+  //     // Borra el campo 'adjunto' para permitir agregar más archivos
+  //     this.form.get('adjunto').setValue(null);
+  //   }
+  // }
+
   appTitle(): string {
     let title: string;
 
@@ -217,7 +244,7 @@ export class ComercialAgendaFormularioComponent
   setFormBuilder(): void {
     if (this.activatedRoute.snapshot.data.detalhes.responseCode === 200) {
       const detalhes = this.activatedRoute.snapshot.data.detalhes.result;
-
+      const isFinalizarAction = this.action === 'finalizar';
       let inicioData: Date,
         inicioHorario: Date,
         terminoData: Date,
@@ -293,7 +320,7 @@ export class ComercialAgendaFormularioComponent
           },
         ],
         Obsfinalizar: [
-          { value: '', disabled: this.action != 'finalizar' },
+          { value: '', disabled: !isFinalizarAction},
         ],
       });
 
@@ -519,7 +546,7 @@ export class ComercialAgendaFormularioComponent
 
   onSubmit(): void {
     if (!this.checkValidatorsDate()) {
-      this.pnotifyService.notice('Data de término deve ser maior que início.');
+      this.pnotifyService.notice('La fecha de término debe ser mayor que la de inicio.');
       return;
     }
 
@@ -537,12 +564,13 @@ export class ComercialAgendaFormularioComponent
       terminoHorario: Date;
 
       let promotor: string;
+
       let msgSuccess = 'Su cita fue creada.';
-      let msgError = 'Ocurrio un error al crear cita.';
+      let msgError = 'Ocurrió un error al crear la cita.';
 
       if (formValue.id) {
         msgSuccess = 'Su cita fue editada.';
-        msgError = 'Ocurrio un error al editar cita.';
+        msgError = 'Ocurrió un error al editar la cita.';
       }
 
       if (formValue.cliente != '') {
@@ -624,6 +652,7 @@ export class ComercialAgendaFormularioComponent
         start: inicio,
         end: termino,
         allDay: formValue.diaInteiro,
+        adjunto: this.adjunto,
         rescheduleId: formValue.motivoReagendamento,
         description: formValue.observacao
           ? formValue.observacao.toUpperCase()
