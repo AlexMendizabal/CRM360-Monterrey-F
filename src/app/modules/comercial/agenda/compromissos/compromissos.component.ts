@@ -96,7 +96,7 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
 
   queryParamsChecked = false;
   // ...
-  estado: number;
+  // estado: number;
   // ...
   constructor(
     private router: Router,
@@ -107,8 +107,7 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
     private atividadesService: AtividadesService,
     private titleService: TitleService,
     private dateService: DateService
-
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.registrarAcesso();
@@ -322,7 +321,7 @@ ngOnDestroy(): void {
       map((compromissos: Compromisso[]) => {
         if (compromissos['responseCode'] === 200) {
           // Asigna el valor deseado a la variable estado
-    this.estado = 1;
+    // this.estado = 1;
 
     return compromissos['result'].map((compromisso: Compromisso) => {
 

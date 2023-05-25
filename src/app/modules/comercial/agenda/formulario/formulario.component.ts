@@ -189,6 +189,18 @@ export class ComercialAgendaFormularioComponent
     });
   }
 
+<<<<<<< HEAD
+=======
+  // agregarAdjunto() {
+  //   const archivo = this.form.get('adjunto').value;
+  //   if (archivo) {
+  //     this.attachedFiles.push(archivo);
+  //     // Borra el campo 'adjunto' para permitir agregar más archivos
+  //     this.form.get('adjunto').setValue(null);
+  //   }
+  // }
+  
+>>>>>>> cambiosandre
   appTitle(): string {
     let title: string;
 
@@ -233,7 +245,10 @@ export class ComercialAgendaFormularioComponent
       this.form = this.formBuilder.group({
 
         id: [detalhes.id],
+<<<<<<< HEAD
         // codTitulosAgenda: [detalhes.codTitulosAgenda, [Validators.required]],
+=======
+>>>>>>> cambiosandre
         cor: [detalhes.color.primary],
         codTitulo: [
           {
@@ -245,6 +260,15 @@ export class ComercialAgendaFormularioComponent
         cliente: [
           {
             value: detalhes.codClient,
+<<<<<<< HEAD
+=======
+            disabled: this.action != 'novo',
+          },
+        ],
+        promotor: [
+          {
+            value: detalhes.id_vendedor,
+>>>>>>> cambiosandre
             disabled: this.action == 'novo' ? false : true,
           },
         ],
@@ -263,10 +287,24 @@ export class ComercialAgendaFormularioComponent
           { value: inicioHorario, disabled: this.action == 'finalizar' || detalhes.allDay },
           [Validators.required],
         ],
+<<<<<<< HEAD
         terminoData: [{ value: terminoData, disabled: detalhes.allDay }],
         terminoHorario: [{ value: terminoHorario, disabled: detalhes.allDay }],
         diaInteiro: [detalhes.allDay],
         motivoReagendamento: [detalhes.rescheduleId],
+=======
+        terminoData: [
+          { value: terminoData, disabled: this.action == 'finalizar' || detalhes.allDay },
+        ],
+        terminoHorario: [
+          { value: terminoHorario, disabled: this.action == 'finalizar' || detalhes.allDay },
+        ],
+        diaInteiro: [{ value: detalhes.allDay, disabled: this.action == 'finalizar' }],
+        motivoReagendamento: [
+          { value: detalhes.rescheduleId, disabled: this.action == 'finalizar' },
+          this.action == 'reagendar' ? [Validators.required] : null,
+        ],
+>>>>>>> cambiosandre
         observacao: [
           {
             value: detalhes.description,
@@ -288,6 +326,16 @@ export class ComercialAgendaFormularioComponent
         ]);
         this.form.controls.motivoReagendamento.updateValueAndValidity();
       }
+<<<<<<< HEAD
+=======
+  
+      if (this.action == 'finalizar') {
+        this.form.controls.Obsfinalizar.setValidators([
+          Validators.required,
+        ]);
+        this.form.controls.Obsfinalizar.updateValueAndValidity();
+      }
+>>>>>>> cambiosandre
     } else {
       this.pnotifyService.error();
       this.location.back();
@@ -340,7 +388,11 @@ export class ComercialAgendaFormularioComponent
       this.breadCrumbTree[this.breadCrumbTree.length - 1].descricao
     );
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> cambiosandre
   getFormFields(): void {
     this.loaderFullScreen = true;
 
@@ -414,11 +466,25 @@ export class ComercialAgendaFormularioComponent
   onColorChange(color: any): void {
     this.form.controls.cor.setValue(color.hex);
   }
+<<<<<<< HEAD
   onCodTituloChange(): void {
     const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
     const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
     this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
   }
+=======
+  // onCodTituloChange(): void {
+  //   const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
+  //   const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
+  //   this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
+  // }
+
+  onCodTituloChange(): void {
+     const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
+     const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
+     this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
+   }
+>>>>>>> cambiosandre
 
   triggerAllDay(): void {
     this.isDisabledTime = !this.isDisabledTime;
@@ -508,10 +574,17 @@ export class ComercialAgendaFormularioComponent
         inicioHorario: Date,
         terminoData: Date,
         terminoHorario: Date;
+<<<<<<< HEAD
 
       let msgSuccess = 'Su cita fue creada.';
       let msgError = 'Ocurrio un error al crear cita.';
 
+=======
+  
+      let msgSuccess = 'Su cita fue creada.';
+      let msgError = 'Ocurrió un error al crear la cita.';
+  
+>>>>>>> cambiosandre
       if (formValue.id) {
         msgSuccess = 'Su cita fue editada.';
         msgError = 'Ocurrió un error al editar la cita.';
@@ -524,7 +597,11 @@ export class ComercialAgendaFormularioComponent
           }
         }
       }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> cambiosandre
       if (formValue.codFormaContato != '') {
         for (let index = 0; index < this.formasContato.length; index++) {
           if (
@@ -588,6 +665,10 @@ export class ComercialAgendaFormularioComponent
         start: inicio,
         end: termino,
         allDay: formValue.diaInteiro,
+<<<<<<< HEAD
+=======
+        adjunto: this.adjunto, // Agrega la propiedad 'adjunto' al objeto del formulario  
+>>>>>>> cambiosandre
         rescheduleId: formValue.motivoReagendamento,
         description: formValue.observacao
           ? formValue.observacao.toUpperCase()
