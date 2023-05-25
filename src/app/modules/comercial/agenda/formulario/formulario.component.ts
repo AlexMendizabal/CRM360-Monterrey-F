@@ -48,6 +48,7 @@ export class ComercialAgendaFormularioComponent
       descricao: 'Amarillo',
     },
     {
+      hex: '#0076d4',
       descricao: 'Azul',
     },
     {
@@ -86,6 +87,7 @@ export class ComercialAgendaFormularioComponent
   origensContato: any = [];
   listarTitulosAgenda: any = [];
   motivosReagendamento: any = [];
+  attachedFiles: File[] = [];
 
   showInputClientes = true;
 
@@ -162,7 +164,17 @@ export class ComercialAgendaFormularioComponent
       this.setFormBuilder();
     });
   }
-
+  openFileBrowser(): void {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.addEventListener('change', (event: Event) => {
+      const files = (event.target as HTMLInputElement).files;
+      // Aquí puedes procesar los archivos adjuntados
+    });
+    fileInput.click();
+  }
+  
+  
   appTitle(): string {
     let title: string;
 
@@ -173,6 +185,8 @@ export class ComercialAgendaFormularioComponent
     } else if (this.action == 'reagendar') {
       title = 'Reagendar contato';
     }
+    
+    
 
     return title;
   }
@@ -180,12 +194,12 @@ export class ComercialAgendaFormularioComponent
   setFormBuilder(): void {
     if (this.activatedRoute.snapshot.data.detalhes.responseCode === 200) {
       const detalhes = this.activatedRoute.snapshot.data.detalhes.result;
-
+  
       let inicioData: Date,
         inicioHorario: Date,
         terminoData: Date,
         terminoHorario: Date;
-
+  
       if (detalhes.start === null) {
         inicioData = new Date();
         inicioHorario = new Date();
@@ -197,59 +211,91 @@ export class ComercialAgendaFormularioComponent
         terminoData = new Date(detalhes.end);
         terminoHorario = new Date(detalhes.end);
       }
-
+  
       this.form = this.formBuilder.group({
         id: [detalhes.id],
-        // codTitulosAgenda: [detalhes.codTitulosAgenda, [Validators.required]],
         cor: [detalhes.color.primary],
         codTitulo: [
           {
             value: detalhes.codTitulo,
-            disabled: this.action == 'reagendar' ? true : false,
+            disabled: this.action == 'reagendar' || this.action == 'finalizar',
           },
           [Validators.required],
         ],
         cliente: [
           {
             value: detalhes.codClient,
-            disabled: this.action == 'novo' ? false : true,
+            disabled: this.action != 'novo',
           },
         ],
         gerarCotacaoPedido: [false],
-        codFormaContato: [detalhes.formContactId],
-        codOrigemContato: [detalhes.typeContactId],
-        inicioData: [inicioData, [Validators.required]],
-        inicioHorario: [
-          { value: inicioHorario, disabled: detalhes.allDay },
+        codFormaContato: [
+          { value: detalhes.formContactId, disabled: this.action == 'finalizar' },
+        ],
+        codOrigemContato: [
+          { value: detalhes.typeContactId, disabled: this.action == 'finalizar' },
+        ],
+        inicioData: [
+          { value: inicioData, disabled: this.action == 'finalizar' },
           [Validators.required],
         ],
-        terminoData: [{ value: terminoData, disabled: detalhes.allDay }],
-        terminoHorario: [{ value: terminoHorario, disabled: detalhes.allDay }],
-        diaInteiro: [detalhes.allDay],
-        motivoReagendamento: [detalhes.rescheduleId],
+        inicioHorario: [
+          { value: inicioHorario, disabled: this.action == 'finalizar' || detalhes.allDay },
+          [Validators.required],
+        ],
+        terminoData: [
+          { value: terminoData, disabled: this.action == 'finalizar' || detalhes.allDay },
+        ],
+        terminoHorario: [
+          { value: terminoHorario, disabled: this.action == 'finalizar' || detalhes.allDay },
+        ],
+        diaInteiro: [{ value: detalhes.allDay, disabled: this.action == 'finalizar' }],
+        motivoReagendamento: [
+          { value: detalhes.rescheduleId, disabled: this.action == 'finalizar' },
+          this.action == 'reagendar' ? [Validators.required] : null,
+        ],
         observacao: [
           {
             value: detalhes.description,
-            disabled: this.action == 'reagendar' ? true : false,
+            disabled: this.action == 'reagendar' || this.action == 'finalizar',
           },
         ],
+        Obsfinalizar: [
+          { value: '', disabled: this.action != 'finalizar' },
+        ],
       });
-
+  
       if (detalhes.allDay) {
         this.isDisabledTime = true;
       }
-
+  
       if (this.action == 'reagendar') {
         this.form.controls.motivoReagendamento.setValidators([
           Validators.required,
         ]);
         this.form.controls.motivoReagendamento.updateValueAndValidity();
       }
+  
+      if (this.action == 'finalizar') {
+        this.form.controls.Obsfinalizar.setValidators([
+          Validators.required,
+        ]);
+        this.form.controls.Obsfinalizar.updateValueAndValidity();
+      }
     } else {
       this.pnotifyService.error();
       this.location.back();
     }
   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   setBreadCrumb(action: string, id: number = null): void {
     if (action == 'novo') {
@@ -282,16 +328,20 @@ export class ComercialAgendaFormularioComponent
         },
         {
           descricao:
-            this.action == 'editar' ? 'Editar contato' : 'Reagendar contato',
+            this.action == 'editar'
+              ? 'Editar contato'
+              : this.action == 'reagendar'
+              ? 'Reagendar contato'
+              : 'Finalizar contato',
         },
       ];
     }
-
+  
     this.titleService.setTitle(
       this.breadCrumbTree[this.breadCrumbTree.length - 1].descricao
     );
   }
-
+  
   getFormFields(): void {
     this.loaderFullScreen = true;
 
@@ -356,11 +406,11 @@ export class ComercialAgendaFormularioComponent
   onColorChange(color: any): void {
     this.form.controls.cor.setValue(color.hex);
   }
-  onCodTituloChange(): void {
-    const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
-    const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
-    this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
-  }
+  // onCodTituloChange(): void {
+  //   const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
+  //   const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
+  //   this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
+  // }
 
   triggerAllDay(): void {
     this.isDisabledTime = !this.isDisabledTime;
