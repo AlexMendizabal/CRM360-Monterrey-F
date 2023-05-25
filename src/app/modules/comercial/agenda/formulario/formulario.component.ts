@@ -98,6 +98,7 @@ export class ComercialAgendaFormularioComponent
   showInputVendedores = true;
   hideInputVendedores = true;
 
+  mostrarFormulario: boolean = true;
 
   isDisabledTime = false;
 
@@ -262,9 +263,6 @@ export class ComercialAgendaFormularioComponent
           },
         ],
       });
-
-      console.log('id')
-      console.log(detalhes.codTitulo)
 
       if (detalhes.allDay) {
         this.isDisabledTime = true;

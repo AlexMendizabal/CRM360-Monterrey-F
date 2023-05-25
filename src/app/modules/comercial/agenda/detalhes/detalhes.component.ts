@@ -108,7 +108,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   }
 
    onFinish(detalhes:any){
-     this.router.navigate(['../../editar', detalhes.id], {
+     this.router.navigate(['../../finalizar', detalhes.id], {
        relativeTo: this.activatedRoute
      });
    }

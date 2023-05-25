@@ -59,6 +59,14 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'finalizar/:id',
+    component: ComercialAgendaFormularioComponent,
+    resolve: {
+      detalhes: ComercialAgendaDetalhesComponent,
+    },
+    canDeactivate: [FormDeactivateGuard],
+  },
+  {
     path: '**',
     component: NotFoundComponent,
   },
