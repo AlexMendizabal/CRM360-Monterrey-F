@@ -56,6 +56,7 @@ export class ComercialAgendaFormularioComponent
       descricao: 'Amarillo',
     },
     {
+      hex: '#0076d4',
       descricao: 'Azul',
     },
     {
@@ -712,3 +713,4 @@ export class ComercialAgendaFormularioComponent
       });
   }
 }
+

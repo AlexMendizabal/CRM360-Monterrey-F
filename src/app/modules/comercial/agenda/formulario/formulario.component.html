@@ -23,7 +23,7 @@
             <label for="codTitulo">Título</label>
             <div class="input-group">
               <div class="input-group-prepend">
-                
+
               </div>
               <ng-select
               [searchable]="true"
@@ -257,7 +257,22 @@
             </textarea>
           </div>
         </div>
-
+        <div class="form-row" *ngIf="action == 'finalizar'">
+          <div class="form-group col">
+            <label for="Obsfinalizar">Observación al finalizar</label>
+            <textarea
+              class="form-control"
+              id="Obsfinalizar"
+              formControlName="Obsfinalizar"
+              (input)="onInput()">
+            </textarea>
+          </div>
+        </div>
+        <div class="form-row" *ngIf="action == 'finalizar'">
+          <div class="form-group col">
+            <button class="btn btn-primary" [disabled]="!form.controls.Obsfinalizar.valid" (click)="openFileBrowser()">Anexo</button>
+          </div>
+        </div>
       </form>
     </div>
   </div>
