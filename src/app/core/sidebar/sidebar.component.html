@@ -24,7 +24,7 @@
             <span>Home</span>
           </a>
         </li>
-        
+
         <li
           placement="right"
           [tooltip]="atividade.nome"
@@ -76,7 +76,7 @@
             [routerLinkActive]="['active']"
             [routerLink]="[atividade.rota, atividade.id]"
             (click)="onHideMenu()"
-            *ngIf="atividade.renderizacao == 'ATIVIDADE_EXTERNA_RENDERIZADA_INTERNAMENTE'"  
+            *ngIf="atividade.renderizacao == 'ATIVIDADE_EXTERNA_RENDERIZADA_INTERNAMENTE'"
           >
             <!-- *ngIf="atividade.url != null && atividade.exibeNovaAba == 0" -->
             <i [class]="atividade.icone"></i>
@@ -96,11 +96,11 @@
             <span class="text-truncate">{{ atividade.nome }}</span>
           </a>
           <!-- Atividade externa com renderização externa -->
-          
+
         </li>
         <li
           placement="right"
-          tooltip="Home"
+          tooltip="reporte de agenda"
           container="body"
           [isDisabled]="tooltipDisabled"
           containerClass="sidebar-navbar-tooltip">
