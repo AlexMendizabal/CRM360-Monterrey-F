@@ -23,25 +23,7 @@
             <label for="codTitulo">Título</label>
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <div class="btn-group" dropdown>
-                    <button dropdownToggle type="button" class="color-dropdown dropdown-toggle" aria-controls="color-dropdown">
-                      <div [ngStyle]="{'backgroundColor': form.value.cor}"></div>
-                    </button>
-                    <ul id="color-dropdown" *dropdownMenu class="dropdown-menu">
-                      <li role="menuitem">
-                        <a
-                          class="dropdown-item"
-                          href="javascript:void(0)"
-                          *ngFor="let color of colors"
-                          (click)="onColorChange(color)">
-                          <div class="color-hex" [ngStyle]="{'backgroundColor': color.hex}"></div>
-                          <div>{{ color.descricao }}</div>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </span>
+
               </div>
               <ng-select
               [searchable]="true"
@@ -92,6 +74,42 @@
                 bindValue="codCliente"
                 formControlName="cliente"
                 [ngClass]="onFieldError('cliente') + ' ' + onFieldRequired('cliente')"
+                (change)="onInput()">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="showInputVendedores">
+          <div class="form-row" *ngIf="permissoesAcesso.simuladorVendas === true">
+            <div class="form-group col my-3">
+              <div class="custom-control custom-checkbox">
+                <input
+                 type="checkbox"
+                 class="custom-control-input"
+                 id="gerar-cotacao-pedido"
+                 formControlName="gerarCotacaoPedido"
+                 (change)="onGerarCotacaoPedido()">
+                <label
+                  class="custom-control-label"
+                  for="gerar-cotacao-pedido">
+                  Generar presupuesto/solicitud para este contacto
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="promotor">Promotor</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="promotores"
+                [virtualScroll]="true"
+                labelForId="promotor"
+                bindLabel="nome"
+                bindValue="id"
+                formControlName="promotor"
+                [ngClass]="onFieldError('promotor') + ' ' + onFieldRequired('promotor')"
                 (change)="onInput()">
               </ng-select>
             </div>
@@ -227,6 +245,7 @@
             <invalid-form-control [show]="onFieldInvalid('motivoReagendamento')" message="Motivo de reagendamiento."></invalid-form-control>
           </div>
         </div>
+
         <div class="form-row">
           <div class="form-group col">
             <label for="observacao">Observación</label>
@@ -238,6 +257,7 @@
             </textarea>
           </div>
         </div>
+
         <div class="form-row" *ngIf="action == 'finalizar'">
           <div class="form-group col">
             <label for="Obsfinalizar">Observación al finalizar</label>
@@ -262,7 +282,6 @@
             </div>
           </div>
         </div> -->
-        
       </form>
     </div>
   </div>

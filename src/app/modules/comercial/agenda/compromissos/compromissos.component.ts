@@ -107,7 +107,7 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
     private atividadesService: AtividadesService,
     private titleService: TitleService,
     private dateService: DateService
-    
+
   ) {}
 
   ngOnInit(): void {
@@ -323,9 +323,9 @@ ngOnDestroy(): void {
         if (compromissos['responseCode'] === 200) {
           // Asigna el valor deseado a la variable estado
     this.estado = 1;
-    
+
     return compromissos['result'].map((compromisso: Compromisso) => {
-      
+
       // Función para obtener el color en base a la variable estado
       // const getColorFromVariable = (): string => {
       //   switch (this.estado) {
@@ -339,7 +339,7 @@ ngOnDestroy(): void {
       //             return 'gray'; // Color por defecto en caso de otro valor
       //         }
       //       }
-    
+
             return {
               id: compromisso.id,
               color: {
@@ -359,8 +359,8 @@ ngOnDestroy(): void {
               draggable: false
             };
           });
-        } else {
-          return [];
+        }else{
+          return[];
         }
       }),
       finalize(() => {

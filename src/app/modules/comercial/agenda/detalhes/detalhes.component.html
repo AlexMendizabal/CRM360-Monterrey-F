@@ -14,11 +14,11 @@
     (click)="onDelete(detalhes)">
     Excluir
   </button>
-  <button 
-  type="button" 
+  <button
+  type="button"
   (click)="onFinish(detalhes)">
   Finalizado
-</button> <!-- Nuevo botón -->
+  </button> <!-- Nuevo botón -->
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
   <div class="row justify-content-center">
@@ -61,6 +61,13 @@
           <div *ngIf="detalhes.description" [innerHTML]="detalhes.description | uppercase"></div>
         </div>
       </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Reprogramación</label>
+          <div *ngIf="!detalhes.motivo">No reprogramado</div>
+          <div *ngIf="detalhes.motivo" [innerHTML]="detalhes.motivo | uppercase"></div>
+        </div>
+      </div>
     </div>
   </div>
 </app-body>

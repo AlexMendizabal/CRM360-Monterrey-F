@@ -36,6 +36,12 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
 
   detalhes: any = [];
 
+  //mostrarElemento: boolean = true;
+
+  //ocultarFormulario(){
+   // this.mostrarElemento = false;
+ // }
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private atividadesService: AtividadesService,
@@ -60,6 +66,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     this.detalhes.id = detalhes.id;
     this.detalhes.title = detalhes.title;
     this.detalhes.codClient = detalhes.codClient;
+    this.detalhes.motivo = detalhes.motivo;
     this.detalhes.client = detalhes.client;
     this.detalhes.formContactDesc = detalhes.formContactDesc;
     this.detalhes.typeContactDesc = detalhes.typeContactDesc;
@@ -87,10 +94,17 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     this.atividadesService.registrarAcesso().subscribe();
   }
 
+  onEliminar(detalhes: any) {
+    this.router.navigate(['../../eliminar', detalhes.id], {
+      relativeTo: this.activatedRoute
+    });
+  }
+
   onEdit(detalhes: any) {
     this.router.navigate(['../../editar', detalhes.id], {
       relativeTo: this.activatedRoute
     });
+
   }
 
   onReschedule(detalhes: any) {
