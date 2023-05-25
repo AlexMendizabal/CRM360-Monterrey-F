@@ -119,6 +119,12 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     });
   }
 
+  onFinish(detalhes: any) {
+    this.router.navigate(['../../finalizar', detalhes.id], {
+      relativeTo: this.activatedRoute
+    });
+  }
+
   onDelete(detalhes: any) {
     let confirm$ = this.confirmModalService.showConfirm(
       'Borrar',

@@ -2,8 +2,10 @@
   <loader-spinner-full-screen></loader-spinner-full-screen>
 </ng-template>
 <app-header [appTitle]="appTitle(viewDate)">
-  <button
-    type="button"
+  <button type="button"
+    *ngIf="showCalendar"
+    (click)="refreshEvents()">Actualizar</button>
+  <button type="button"
     *ngIf="showCalendar"
     mwlCalendarPreviousView
     [view]="view"
@@ -20,16 +22,14 @@
     (viewDateChange)="fetchEvents()">
     Anterior
   </button>
-  <button
-    type="button"
+  <button type="button"
     *ngIf="showCalendar"
     mwlCalendarToday
     [(viewDate)]="viewDate"
     (viewDateChange)="fetchEvents()">
     Hoy
   </button>
-  <button
-    type="button"
+  <button type="button"
     *ngIf="showCalendar"
     mwlCalendarNextView
     [view]="view"
@@ -37,14 +37,12 @@
     (viewDateChange)="fetchEvents()">
     Próximo
   </button>
-  <button
-    type="button"
+  <button type="button"
     *ngIf="showCalendar"
     [routerLink]="['../novo']">
     Adicionar
   </button>
-  <button
-    type="button"
+  <button type="button"
     (click)="onFilter(showFilter)"
     *ngIf="enableFilterButton()"
     [disabled]="idEscritorio == null || idVendedor == null">
@@ -63,10 +61,12 @@
   </div>
   <div class="row" *ngIf="showCalendar">
     <div class="col">
-      <div class="row mb-3" *ngIf="(nomeEscritorio != null && nomeEscritorio.length > 0) || (nomeVendedor != null && nomeVendedor.length > 0)">
+      <div class="row mb-3"
+        *ngIf="(nomeEscritorio != null && nomeEscritorio.length > 0) || (nomeVendedor != null && nomeVendedor.length > 0)">
         <div class="col">
           <div class="d-flex">
-            <h6 class="mb-0 mr-2" *ngIf="nomeVendedor != null && nomeEscritorio != null && nomeEscritorio.length > 0">
+            <h6 class="mb-0 mr-2"
+              *ngIf="nomeVendedor != null && nomeEscritorio != null && nomeEscritorio.length > 0">
               <span class="badge badge-secondary">{{ nomeEscritorio }}</span>
             </h6>
             <h6 class="mb-0" *ngIf="nomeVendedor.length > 0">
@@ -87,6 +87,7 @@
                 [activeDayIsOpen]="activeDayIsOpen"
                 (dayClicked)="dayClicked($event.day)"
                 (eventClicked)="eventClicked($event.event)">
+                
               </mwl-calendar-month-view>
             </div>
           </div>
