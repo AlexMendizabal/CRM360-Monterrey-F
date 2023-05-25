@@ -5,14 +5,6 @@
   <button type="button"
     *ngIf="showCalendar"
     (click)="refreshEvents()">Actualizar</button>
-  <button type="button"
-    *ngIf="showCalendar"
-    mwlCalendarPreviousView
-    [view]="view"
-    [(viewDate)]="viewDate"
-    (viewDateChange)="fetchEvents()">
-    Refresh
-  </button>
   <button
     type="button"
     *ngIf="showCalendar"
@@ -87,7 +79,7 @@
                 [activeDayIsOpen]="activeDayIsOpen"
                 (dayClicked)="dayClicked($event.day)"
                 (eventClicked)="eventClicked($event.event)">
-                
+
               </mwl-calendar-month-view>
             </div>
           </div>
