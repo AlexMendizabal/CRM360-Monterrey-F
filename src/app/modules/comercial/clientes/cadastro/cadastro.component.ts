@@ -145,7 +145,11 @@ export class ComercialClientesCadastroComponent
       },
       {
         descricao: this.breadCrumbConfig(currRoute)
-      }
+      },
+      {
+        descricao: 'reporte',
+        routerLink: '/comercial/reporte'
+      },
     ];
   }
 
