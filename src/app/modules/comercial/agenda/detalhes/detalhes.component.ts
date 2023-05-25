@@ -107,12 +107,6 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
 
   }
 
-   onFinish(detalhes:any){
-     this.router.navigate(['../../finalizar', detalhes.id], {
-       relativeTo: this.activatedRoute
-     });
-   }
-
   onReschedule(detalhes: any) {
     this.router.navigate(['../../reagendar', detalhes.id], {
       relativeTo: this.activatedRoute
