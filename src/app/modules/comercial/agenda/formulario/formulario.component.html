@@ -249,11 +249,19 @@
             </textarea>
           </div>
         </div>
-        <div class="form-row" *ngIf="action == 'finalizar'">
+        <!-- <div class="form-row" *ngIf="action == 'finalizar'">
           <div class="form-group col">
-            <button class="btn btn-primary" [disabled]="!form.controls.Obsfinalizar.valid" (click)="openFileBrowser()">Anexo</button>
+            <label for="anexo">Archivo adjunto</label>
+            <div class="custom-file">
+              <input
+                type="file"
+                class="custom-file-input"
+                id="anexo"
+                [disabled]="false">
+              <label class="custom-file-label" for="anexo">Seleccionar archivo</label>
+            </div>
           </div>
-        </div>
+        </div> -->
         
       </form>
     </div>
