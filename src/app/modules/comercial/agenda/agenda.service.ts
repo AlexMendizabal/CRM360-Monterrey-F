@@ -70,9 +70,10 @@ export class ComercialAgendaService {
     } else if (action == 'reagendar') {
       return this.rescheduleCompromisso(record);
     }
-
+  
     return this.saveCompromisso(record);
   }
+  
 
   deleteCompromisso(id: any) {
     const record = { id: id };
