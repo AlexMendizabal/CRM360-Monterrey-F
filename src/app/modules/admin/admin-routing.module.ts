@@ -38,8 +38,8 @@ const routes: Routes = [
         path: 'usuarios',
         loadChildren: () => import('./usuarios/usuarios.module').then(m => m.AdminUsuariosModule)
       }, 
-      /*
-      {
+      
+      /* {
         path: 'usuarios',
         children: [
           {
@@ -128,7 +128,7 @@ const routes: Routes = [
             pathMatch: 'full',
           },
         ],
-      }, */
+      },  */
       {
         path: '',
         redirectTo: 'home',

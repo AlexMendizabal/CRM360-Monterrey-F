@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { registerLocaleData } from '@angular/common';
 import LocalBO from '@angular/common/locales/es-BO';
-
+import { AgmCoreModule } from '@agm/core';
 registerLocaleData(LocalBO, 'es-BO');
 
 // Angular Calendar
@@ -23,29 +23,27 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormDeactivateGuard } from 'src/app/guards/form-deactivate.guard';
 
 // Modules
-import { ComercialAgendaRoutingModule } from './agenda-routing.module';
+import { ComercialRoutingLoteModule } from './lote-routing.module';
 import { NotFoundModule } from 'src/app/core/not-found/not-found.module';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
 import { TemplatesModule } from 'src/app/shared/templates/templates.module';
 import { ComercialTemplatesModule } from '../templates/templates.module';
 
 // Components
-import { ComercialAgendaCompromissosComponent } from './compromissos/compromissos.component';
+/* import { ComercialAgendaCompromissosComponent } from './compromissos/compromissos.component';
 import { ComercialAgendaDetalhesComponent } from './detalhes/detalhes.component';
-import { ComercialAgendaFormularioComponent } from './formulario/formulario.component';
-import { AgmCoreModule } from '@agm/core';
+import { ComercialAgendaFormularioComponent } from './formulario/formulario.component'; */
+import { ComercialLoteRutaComponent } from './ruta/ruta.component';
 
 @NgModule({
   declarations: [
-    ComercialAgendaCompromissosComponent,
-    ComercialAgendaDetalhesComponent,
-    ComercialAgendaFormularioComponent,
+    ComercialLoteRutaComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    ComercialAgendaRoutingModule,
+    ComercialRoutingLoteModule,
     FlatpickrModule.forRoot(),
     CalendarModule.forRoot({
       provide: DateAdapter,
@@ -62,7 +60,8 @@ import { AgmCoreModule } from '@agm/core';
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDl5b7STz9xYNDhybTTer2POVncX9FYqCc' // Reemplaza con tu propia clave de API de Google Maps
     }),
+    
   ],
   providers: [FormDeactivateGuard, { provide: LOCALE_ID, useValue: 'es-BO' }]
 })
-export class ComercialAgendaModule {}
+export class ComercialLoteModule {}

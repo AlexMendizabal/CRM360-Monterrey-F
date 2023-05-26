@@ -17,6 +17,11 @@ const routes: Routes = [
           import('./agenda/agenda.module').then((m) => m.ComercialAgendaModule),
       },
       {
+        path: 'lote',
+        loadChildren: () =>
+          import('./lote/lote.module').then((m) => m.ComercialLoteModule),
+      },
+      {
         path: 'akna/:idSubModulo',
         loadChildren: () =>
           import('./akna/akna.module').then((m) => m.ComercialAknaModule),

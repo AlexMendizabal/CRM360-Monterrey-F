@@ -1,0 +1,15 @@
+<app-header [appTitle]="appTitle(viewDate)">
+
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <advanced-filter>
+    <comercial-templates-filtro-vendedor-escritorio-date [profile]="profile" [showAll]="false"
+      (formValue)="dataFilter($event)">
+    </comercial-templates-filtro-vendedor-escritorio-date>
+  </advanced-filter>
+
+  <agm-map [latitude]="-16.6" [longitude]="-68.15" [zoom]="16" style="width: 500px; height: 400px;">
+    <!-- Puedes agregar marcadores, polígonos u otras capas dentro del mapa si lo deseas -->
+  </agm-map>
+
+</app-body>
