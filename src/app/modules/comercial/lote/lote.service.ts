@@ -16,12 +16,13 @@ export class ComercialLoteService {
     return this.http.get(`${this.API}/acessos`).pipe(take(1), retry(2));
   }
 
-/*   getRutaClientes(params: any) {
+getRutaClientes(params: any) {
+  console.log('ruta');
     return this.http.get(`${this.API}/ruta/clientes`, { params }).pipe(
       take(1),
       retry(2)
     );
-  } */
+  } 
   
  /*  getCompromissos(params: any) {
     let httpParams = new HttpParams();
@@ -76,4 +77,9 @@ export class ComercialLoteService {
       .delete(`${this.API}/compromisso/excluir/${id}`)
       .pipe(take(1), retry(2));
   } */
+  deleteCompromisso(id: any) {
+    return this.http
+      .delete(`${this.API}/compromisso/excluir/${id}`)
+      .pipe(take(1), retry(2));
+  } 
 }

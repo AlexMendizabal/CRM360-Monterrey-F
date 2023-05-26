@@ -9,7 +9,9 @@ import { forkJoin, Observable } from 'rxjs';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { ComercialService } from '../../comercial.service';
 import { ComercialVendedoresService } from '../../services/vendedores.service';
-import{ComercialLoteService} from '../../lote/lote.service';
+import { ComercialLoteService } from '../../lote/lote.service';
+import { ComercialLoteRutaComponent } from '../../lote/ruta/ruta.component';
+
 
 @Component({
   selector: 'comercial-templates-filtro-vendedor-escritorio-date',
@@ -33,17 +35,23 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
   ultima_visita = [];
 
   idVendedor: any;
+  idEscritorio: any;
+  idUltimaVisita: any;
+  idSucursal: any;
+  idEstado: any;
 
   form: FormGroup;
 
   constructor(
-    
+
     private location: Location,
     private comercialService: ComercialService,
     private vendedoresService: ComercialVendedoresService,
     private formBuilder: FormBuilder,
     private pnotifyService: PNotifyService,
-    private loteService: ComercialLoteService
+    private loteService: ComercialLoteService,
+    private rutaService: ComercialLoteRutaComponent
+
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -51,42 +59,49 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
   ngOnInit() {
     this.checkUserProfile();
     this.form = this.formBuilder.group({
-      sucursal_id: [0],
-      vendedor_id: [0],
-      visita_id: [0],
-      estado_id: [0]
+      sucursal_id: [],
+      vendedor_id: [],
+      visita_id: [],
+      estado_id: []
     });
     this.setFormFilter();
   }
+
+
+  setFormFilter(): void {
+    this.form = this.formBuilder.group({
+      sucursal_id: [null, Validators.required],
+      vendedor_id: [null, Validators.required],
+      visita_id: [null],
+      estado_id: [null]
+    });
+  }
+
   /* obtenerDatos() {
   } */
-  
+
   filtrarClientes() {
-    const idSucursal = this.form.controls['sucursal_id']?.value;
-    const idVendedor = this.form.controls['vendedor_id']?.value;
-    const idUltimaVisita = this.form.controls['visita_id']?.value;
-    const idEstado = this.form.controls['estado_id']?.value;
-  
-    if (idSucursal === undefined || idVendedor === undefined || idUltimaVisita === undefined || idEstado === undefined) {
-      // Manejar el caso cuando alguna propiedad del formulario es undefined
-      return;
-    }
-  
+
+    const idSucursal = this.form.get('sucursal_id').value;
+    const idVendedor = this.form.get('vendedor_id').value;
+    const idUltimaVisita = this.form.get('visita_id').value;
+    const idEstado = this.form.get('estado_id').value;
+
     const params = {
       idSucursal: idSucursal,
       idVendedor: idVendedor,
       idUltimaVisita: idUltimaVisita,
       idEstado: idEstado
-    }; 
-  
-  /*   this.loteService.getRutaClientes(params).subscribe(response => {
-      // Resto del código
-    }); */
+    };
+
+    this.rutaService.filtrarMapas(params);
+    
   }
-  
-  
-  
-  
+
+
+
+
+
 
   adminOnly(): boolean {
     if (this.profile.coordenador === true || this.profile.gestor === true) {
@@ -127,9 +142,16 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
             this.setFormFilter();
             this.escritorios = response[0]['result'];
 
-            console.log(this.escritorios)
-            this.escritorios[0] = "Sucursal Central"
-            this.escritorios.splice(1, 2);
+            const escritorioNoVacio = this.escritorios.find(item => item.nome !== null && item.nome !== '');
+
+            if (escritorioNoVacio) {
+              /*  // Se encontró un valor no vacío
+               console.log(escritorioNoVacio.nome); */
+            } else {
+              /*   // No se encontró ningún valor no vacío
+                console.log("No hay valores no vacíos en el array"); */
+            }
+
             if (this.escritorios.length > 1 && this.showAll === true) {
               this.escritorios.unshift({
                 id: 0,
@@ -139,6 +161,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
           } else {
             this.handleLoadDependenciesError();
           }
+
 
           if (response[0]['responseCode'] === 200) {
             this.vendedores = response[1]['result'];
@@ -214,7 +237,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
     this.location.back();
   }
 
-  setFormFilter(): void {
+  /* setFormFilter(): void {
     this.form = this.formBuilder.group({
       idEscritorio: [null, Validators.required],
       idVendedor: [null, Validators.required],
@@ -228,7 +251,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
     } else {
       this.form.controls['idEscritorio'].clearValidators();
     }
-  }
+  } */
 
   onInput(): void {
     if (this.form.valid) {

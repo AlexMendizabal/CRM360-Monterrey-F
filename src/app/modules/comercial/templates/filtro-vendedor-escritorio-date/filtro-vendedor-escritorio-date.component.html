@@ -4,7 +4,9 @@
   <div class="form-row">
     <div class="form-group col-lg-3">
       <label for="buscarPor">Sucursal</label>
-      <ng-select [(ngModel)]="form.value.sucursal_id" formControlName="sucursal_id" [items]="escritorios" bindLabel="nombre" bindValue="id"></ng-select>
+      <ng-select [searchable]="true" [clearable]="false" [items]="escritorios" [virtualScroll]="true"
+      labelForId="vendedor" bindLabel="nome" bindValue="id" (change)="filtrarClientes()" formControlName="sucursal_id">
+    </ng-select>
 
     </div>
     <div class="form-group col-lg-3">

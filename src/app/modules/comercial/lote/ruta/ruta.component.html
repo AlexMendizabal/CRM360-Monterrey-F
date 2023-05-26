@@ -7,9 +7,51 @@
       (formValue)="dataFilter($event)">
     </comercial-templates-filtro-vendedor-escritorio-date>
   </advanced-filter>
+  <div class="row">
 
-  <agm-map [latitude]="-16.6" [longitude]="-68.15" [zoom]="16" style="width: 500px; height: 400px;">
-    <!-- Puedes agregar marcadores, polígonos u otras capas dentro del mapa si lo deseas -->
-  </agm-map>
+    <div class="form-group col-md-6">
+      <div class="embed-responsive embed-responsive-16by9">
+        <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="16" class="embed-responsive-item"
+          (mapClick)="actualizarMarcador($event)">
+          <agm-marker [latitude]="latitud" [longitude]="longitud" (markerDragEnd)="actualizarDireccion($event)">
+          </agm-marker>
+        </agm-map>
+        <div id="map-zoom-control" class="map-control"> </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <custom-table [config]="tableConfigAtividades">
+        <ng-template #thead let-thead>
+          <tr>
+            <th class="text-center"> Cod. cliente</th>
+            <th class="text-center"> Nombre </th>
+            <th class="text-center"> Fecha visita</th>
+            <th  class="text-center">Direccion</th>
+            <th  class="text-center">Promotor</th>
+
+            <th class="text-center"> Mapa</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of atividades">
+            <td class="text-center" style="width: 5%">
+              <btn-icon [icon]="item.checked == 1 ? 'fas fa-check-square' : 'far fa-square'" size="small"
+                (click)="item.checked = !item.checked">
+              </btn-icon>
+            </td>
+            <td class="hover" style="width: 90%" (click)="item.checked = !item.checked">
+              ({{ item.moduloNome }}) ({{ item.id }}) {{ item.nome | uppercase }}
+            </td>
+            <td style="width: 5%">
+              <div class="text-primary small" *ngIf="item.loading">
+                <i class="fas fa-spinner fa-spin"></i>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+  </div>
+
 
 </app-body>

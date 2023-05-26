@@ -26,6 +26,7 @@ import { ComercialService } from '../../comercial.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { DateService } from 'src/app/shared/services/core/date.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 // Interfaces
 /* import { Compromisso } from '../models/compromisso'; */
@@ -74,23 +75,26 @@ export class ComercialLoteRutaComponent implements OnInit {
 
     queryParamsChecked = false;
 
+    form: FormGroup;
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private authService: AuthService,
         /* private agendaService: ComercialAgendaService, */
-        /* private loteService: ComercialLoteService, */
+        private loteService: ComercialLoteService,
         private comercialService: ComercialService,
         private atividadesService: AtividadesService,
         private titleService: TitleService,
         private dateService: DateService,
+        private formBuilder: FormBuilder,
+
 
     ) { }
 
     ngOnInit(): void {
         this.registrarAcesso();
         this.getEscritorios();
-       /*  this.getRutas(); */
+        /*  this.getRutas(); */
         this.getPerfil();
         this.titleService.setTitle('Rutas');
     }
@@ -127,136 +131,136 @@ export class ComercialLoteRutaComponent implements OnInit {
 
 
 
-        getPerfil(): void {
-            this.comercialService
-                .getPerfil()
-                .pipe(
-                    finalize(() => {
-                        this.loaderFullScreen = false;
-                    })
-                )
-                .subscribe({
-                    next: (response: any) => {
-                        if (response.responseCode === 200) {
-                            this.profile = response.result;
+    getPerfil(): void {
+        this.comercialService
+            .getPerfil()
+            .pipe(
+                finalize(() => {
+                    this.loaderFullScreen = false;
+                })
+            )
+            .subscribe({
+                next: (response: any) => {
+                    if (response.responseCode === 200) {
+                        this.profile = response.result;
 
-                            if (
-                                this.profile.coordenador === true ||
-                                this.profile.gestor === true ||
-                                (this.profile.vendedor === true &&
-                                    this.profile.coordenador === false &&
-                                    this.profile.gestor === false &&
-                                    this.profile.hasVinculoOperadores === true)
-                            ) {
-                                this.checkRouterParams();
-                            } else if (
-                                this.profile.vendedor === true &&
+                        if (
+                            this.profile.coordenador === true ||
+                            this.profile.gestor === true ||
+                            (this.profile.vendedor === true &&
                                 this.profile.coordenador === false &&
                                 this.profile.gestor === false &&
-                                this.profile.hasVinculoOperadores === false
-                            ) {
-                                this.fetchEvents();
-                                this.idVendedor = this.user.info.idVendedor;
-                                this.idEscritorio = this.user.info.idEscritorio;
-                                this.showCalendar = true;
-                            } else {
-                                this.showPermissionDenied = true;
-                            }
+                                this.profile.hasVinculoOperadores === true)
+                        ) {
+                            this.checkRouterParams();
+                        } else if (
+                            this.profile.vendedor === true &&
+                            this.profile.coordenador === false &&
+                            this.profile.gestor === false &&
+                            this.profile.hasVinculoOperadores === false
+                        ) {
+                            this.fetchEvents();
+                            this.idVendedor = this.user.info.idVendedor;
+                            this.idEscritorio = this.user.info.idEscritorio;
+                            this.showCalendar = true;
                         } else {
                             this.showPermissionDenied = true;
                         }
-                    },
-                    error: (error: any) => {
+                    } else {
                         this.showPermissionDenied = true;
                     }
-                });
-        }
-
-
-        enableFilterButton(): boolean {
-            if (
-                this.profile.coordenador === true ||
-                this.profile.gestor === true ||
-                (this.profile.vendedor === true &&
-                    this.profile.coordenador === false &&
-                    this.profile.gestor === false &&
-                    this.profile.hasVinculoOperadores === true)
-            ) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        dataFilter(event: any): void {
-            this.idEscritorio = event.idEscritorio;
-            this.idVendedor = event.idVendedor;
-            this.nomeEscritorio = event.nomeEscritorio;
-            this.nomeVendedor = event.nomeVendedor;
-        }
-
-        checkRouterParams(): void {
-            let formValue = {
-                idEscritorio: null,
-                idVendedor: null,
-                nomeEscritorio: null,
-                nomeVendedor: null
-            };
-
-            this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
-                (queryParams: any) => {
-                    if (Object.keys(queryParams).length > 0) {
-                        let params: any = atob(queryParams['q']);
-                        params = JSON.parse(params);
-
-                        this.idEscritorio = parseInt(params.idEscritorio);
-                        this.idVendedor = parseInt(params.idVendedor);
-                        this.nomeEscritorio = params.nomeEscritorio;
-                        this.nomeVendedor = params.nomeVendedor;
-
-                        this.showFilter = false;
-                        this.showCalendar = true;
-                        this.fetchEvents();
-
-                        Object.keys(formValue).forEach(formKey => {
-                            Object.keys(params).forEach(paramKey => {
-                                if (
-                                    formKey == paramKey &&
-                                    formValue[formKey] != params[paramKey]
-                                ) {
-                                    if (!isNaN(Number(params[paramKey]))) {
-                                        formValue[formKey] = Number(params[paramKey]);
-                                    } else {
-                                        formValue[formKey] = params[paramKey];
-                                    }
-                                }
-                            });
-                        });
-                    } else {
-                        this.showFilter = true;
-                        this.showCalendar = false;
-                    }
+                },
+                error: (error: any) => {
+                    this.showPermissionDenied = true;
                 }
-            );
-            this.activatedRouteSubscription.unsubscribe();
+            });
+    }
+
+
+    enableFilterButton(): boolean {
+        if (
+            this.profile.coordenador === true ||
+            this.profile.gestor === true ||
+            (this.profile.vendedor === true &&
+                this.profile.coordenador === false &&
+                this.profile.gestor === false &&
+                this.profile.hasVinculoOperadores === true)
+        ) {
+            return true;
+        } else {
+            return false;
         }
+    }
 
-        fetchEvents(): void {
-            const getStart: any = {
-                month: startOfMonth,
-                week: startOfWeek,
-                day: startOfDay
-            }[this.view];
+    dataFilter(event: any): void {
+        this.idEscritorio = event.idEscritorio;
+        this.idVendedor = event.idVendedor;
+        this.nomeEscritorio = event.nomeEscritorio;
+        this.nomeVendedor = event.nomeVendedor;
+    }
 
-            const getEnd: any = {
-                month: endOfMonth,
-                week: endOfWeek,
-                day: endOfDay
-            }[this.view];
+    checkRouterParams(): void {
+        let formValue = {
+            idEscritorio: null,
+            idVendedor: null,
+            nomeEscritorio: null,
+            nomeVendedor: null
+        };
 
-            let paramsObj = {};
+        this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
+            (queryParams: any) => {
+                if (Object.keys(queryParams).length > 0) {
+                    let params: any = atob(queryParams['q']);
+                    params = JSON.parse(params);
 
-            if(!this.queryParamsChecked) {
+                    this.idEscritorio = parseInt(params.idEscritorio);
+                    this.idVendedor = parseInt(params.idVendedor);
+                    this.nomeEscritorio = params.nomeEscritorio;
+                    this.nomeVendedor = params.nomeVendedor;
+
+                    this.showFilter = false;
+                    this.showCalendar = true;
+                    this.fetchEvents();
+
+                    Object.keys(formValue).forEach(formKey => {
+                        Object.keys(params).forEach(paramKey => {
+                            if (
+                                formKey == paramKey &&
+                                formValue[formKey] != params[paramKey]
+                            ) {
+                                if (!isNaN(Number(params[paramKey]))) {
+                                    formValue[formKey] = Number(params[paramKey]);
+                                } else {
+                                    formValue[formKey] = params[paramKey];
+                                }
+                            }
+                        });
+                    });
+                } else {
+                    this.showFilter = true;
+                    this.showCalendar = false;
+                }
+            }
+        );
+        this.activatedRouteSubscription.unsubscribe();
+    }
+
+    fetchEvents(): void {
+        const getStart: any = {
+            month: startOfMonth,
+            week: startOfWeek,
+            day: startOfDay
+        }[this.view];
+
+        const getEnd: any = {
+            month: endOfMonth,
+            week: endOfWeek,
+            day: endOfDay
+        }[this.view];
+
+        let paramsObj = {};
+
+        if (!this.queryParamsChecked) {
             this.activatedRoute.queryParams.subscribe((queryParams: any) => {
                 if (Object.keys(queryParams).length > 0) {
                     let params: any = atob(queryParams['q']);
@@ -303,6 +307,8 @@ export class ComercialLoteRutaComponent implements OnInit {
         this.queryParamsChecked = true;
         this.activeDayIsOpen = false;
 
+
+
         /* this.events$ = this.agendaService.getCompromissos(paramsObj).pipe(
           map((compromissos: Compromisso[]) => {
             if (compromissos['responseCode'] === 200) {
@@ -335,7 +341,11 @@ export class ComercialLoteRutaComponent implements OnInit {
           })
         ); */
     }
-
+    filtrarMapas(params) {
+        this.loteService.getRutaClientes(params).subscribe(response => {
+            console.log(response);
+        });
+    }
     /*   dayClicked({
         date,
         events
