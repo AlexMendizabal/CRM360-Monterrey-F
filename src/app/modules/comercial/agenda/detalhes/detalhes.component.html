@@ -68,6 +68,14 @@
           <div *ngIf="detalhes.motivo" [innerHTML]="detalhes.motivo | uppercase"></div>
         </div>
       </div>
+<div class="form-row">
+  <div class="form-group col">
+    <label>Estado</label>
+    <div *ngIf="!detalhes.status">Registrado</div>
+    <div *ngIf="detalhes.status" [innerHTML]="detalhes.status | uppercase"></div>
+  </div>
+</div>
+
     </div>
   </div>
 </app-body>

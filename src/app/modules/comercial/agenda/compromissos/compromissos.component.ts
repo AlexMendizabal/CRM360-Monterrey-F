@@ -47,6 +47,7 @@ export interface Compromisso {
   formContactDesc: string; // Nueva propiedad para la descripción del formulario de contacto
   typeContactId: string; // Nueva propiedad para el ID del tipo de contacto
   typeContactDesc: string; // Nueva propiedad para la descripción del tipo de contacto
+  statusnome : string;
 }
 
 
@@ -288,7 +289,8 @@ ngOnDestroy(): void {
             idEscritorio: params.idEscritorio,
             idVendedor: params.idVendedor,
             nomeEscritorio: params.nomeEscritorio,
-            nomeVendedor: params.nomeVendedor
+            nomeVendedor: params.nomeVendedor,
+            statusnome : params.statusnome
           };
         } else {
           this.viewDate = new Date();
@@ -299,7 +301,8 @@ ngOnDestroy(): void {
             idEscritorio: this.idEscritorio,
             idVendedor: this.idVendedor,
             nomeEscritorio: this.nomeEscritorio,
-            nomeVendedor: this.nomeVendedor
+            nomeVendedor: this.nomeVendedor,
+            
           };
         }
       });
@@ -311,6 +314,7 @@ ngOnDestroy(): void {
         idVendedor: this.idVendedor,
         nomeEscritorio: this.nomeEscritorio,
         nomeVendedor: this.nomeVendedor
+
       };
     }
 
@@ -320,31 +324,13 @@ ngOnDestroy(): void {
     this.events$ = this.agendaService.getCompromissos(paramsObj).pipe(
       map((compromissos: Compromisso[]) => {
         if (compromissos['responseCode'] === 200) {
-          // Asigna el valor deseado a la variable estado
-    // this.estado = 1;
-
-    return compromissos['result'].map((compromisso: Compromisso) => {
-
-      // Función para obtener el color en base a la variable estado
-      // const getColorFromVariable = (): string => {
-      //   switch (this.estado) {
-      //           case 1:
-      //             return 'blue'; // Color azul
-      //           case 2:
-      //             return 'yellow'; // Color amarillo
-      //           case 3:
-      //             return 'green'; // Color verde
-      //           default:
-      //             return 'gray'; // Color por defecto en caso de otro valor
-      //         }
-      //       }
-
+          return compromissos['result'].map((compromisso: Compromisso) => {
             return {
               id: compromisso.id,
               color: {
                 primary: compromisso.color, //getColorFromVariable()
               },
-              title: `${compromisso.title} - ${compromisso.client}`,
+              title: `${compromisso.title} - ${compromisso.client} - ${compromisso.statusnome}`,
               codClient: compromisso.codClient,
               client: compromisso.client,
               formContactId: compromisso.formContactId,
@@ -355,7 +341,8 @@ ngOnDestroy(): void {
               end: new Date(compromisso.end),
               allDay: compromisso.allDay,
               description: compromisso.description,
-              draggable: false
+              draggable: false,
+              statusnome : compromisso.statusnome
             };
           });
         }else{

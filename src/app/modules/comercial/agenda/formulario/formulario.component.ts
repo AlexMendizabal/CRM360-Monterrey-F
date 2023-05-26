@@ -295,8 +295,10 @@ export class ComercialAgendaFormularioComponent
           },
         ],
         Obsfinalizar: [
-          { value: '', disabled: !isFinalizarAction},
+          { value: '', disabled: !isFinalizarAction },
+          isFinalizarAction ? [Validators.required] : null,
         ],
+        
       });
   
       if (detalhes.allDay) {
@@ -354,13 +356,15 @@ export class ComercialAgendaFormularioComponent
           routerLink: `/comercial/agenda/detalhes/${id}`,
         },
         {
-          descricao:
-            this.action == 'editar'
-              ? 'Editar contato'
-              : this.action == 'reagendar'
-              ? 'Reagendar contato'
-              : 'Finalizar contato',
-        },
+          descricao: this.action === 'editar'
+            ? 'Editar contato'
+            : this.action === 'reagendar'
+            ? 'Reagendar contato'
+            : this.action === 'finalizar'
+            ? 'Finalizar contato'
+            : ''
+        }
+        
       ];
     }
   
@@ -448,11 +452,11 @@ export class ComercialAgendaFormularioComponent
   //   this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
   // }
 
-  onCodTituloChange(): void {
-     const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
-     const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
-     this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
-   }
+  // onCodTituloChange(): void {
+  //    const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
+  //    const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
+  //    this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
+  //  }
 
   triggerAllDay(): void {
     this.isDisabledTime = !this.isDisabledTime;
@@ -469,29 +473,28 @@ export class ComercialAgendaFormularioComponent
   }
 
   checkValidatorsDate(): boolean {
-    let validation = true,
-      inicioData: Date,
-      inicioHorario: Date,
-      terminoData: Date,
-      terminoHorario: Date;
+    let validation = true;
+    let inicioData: Date;
+    let inicioHorario: Date;
+    let terminoData: Date;
+    let terminoHorario: Date;
 
     if (!this.form.value.diaInteiro) {
       inicioData = this.form.value.inicioData;
       inicioHorario = this.form.value.inicioHorario;
       terminoData = this.form.value.terminoData;
       terminoHorario = this.form.value.terminoHorario;
-
-      inicioData.setHours(inicioHorario.getHours(), inicioHorario.getMinutes());
-      terminoData.setHours(
-        terminoHorario.getHours(),
-        terminoHorario.getMinutes()
-      );
-
-      if (inicioData.getTime() > terminoData.getTime()) {
-        validation = false;
+  
+      if (inicioData && inicioHorario && terminoData && terminoHorario) {
+        inicioData.setHours(inicioHorario.getHours(), inicioHorario.getMinutes());
+        terminoData.setHours(terminoHorario.getHours(), terminoHorario.getMinutes());
+  
+        if (inicioData.getTime() > terminoData.getTime()) {
+          validation = false;
+        }
       }
     }
-
+  
     return validation;
   }
 
@@ -530,11 +533,12 @@ export class ComercialAgendaFormularioComponent
       return;
     }
   
-    if (this.form.valid) {
+    if (this.form && this.form.valid) {
       this.loaderNavbar = true;
       this.submittingForm = true;
       const formValue = this.form.getRawValue();
-  
+      const obsFinalizar = this.form.get('Obsfinalizar');
+      const obsFinalizarValue = obsFinalizar ? obsFinalizar.value : '';
       let client: string,
         formContactDesc: string,
         typeContactDesc: string,
@@ -605,7 +609,7 @@ export class ComercialAgendaFormularioComponent
   
       const inicio = this.dateService.convert2PhpDate(inicioData);
       const termino = this.dateService.convert2PhpDate(terminoData);
-  
+
       let formObj = {
         id: formValue.id,
         color: {
@@ -621,12 +625,13 @@ export class ComercialAgendaFormularioComponent
         typeContactDesc: typeContactDesc,
         start: inicio,
         end: termino,
-        allDay: formValue.diaInteiro,
-        adjunto: this.adjunto, // Agrega la propiedad 'adjunto' al objeto del formulario  
+        allDay: formValue.diaInteiro, 
         rescheduleId: formValue.motivoReagendamento,
         description: formValue.observacao
           ? formValue.observacao.toUpperCase()
           : null,
+          Obsfinalizar: obsFinalizar.value
+                    
       };
   
       this.agendaService.save(this.action, formObj).subscribe({

@@ -34,7 +34,10 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     }
   ];
 
-  detalhes: any = [];
+  detalhes: any = {
+    status: null
+  };
+  
 
   //mostrarElemento: boolean = true;
 
@@ -62,6 +65,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     const detalhes = this.activatedRoute.snapshot.data['detalhes']['result'];
     const inicio = new Date(detalhes['start']);
     const fim = new Date(detalhes['end']);
+    this.detalhes.status = detalhes.status;
 
     this.detalhes.id = detalhes.id;
     this.detalhes.title = detalhes.title;
