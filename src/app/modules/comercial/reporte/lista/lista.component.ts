@@ -17,6 +17,7 @@ import { ComercialClientesCadastroDadosFaturamentoFormularioService } from '../.
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { DetailPanelService } from 'src/app/shared/templates/detail-panel/detal-panel.service';
 import { ComercialVendedoresService } from '../../services/vendedores.service';
+import { ComercialAgendaService } from 'src/app/modules/comercial/agenda/agenda.service';
 
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
@@ -25,7 +26,7 @@ import { JsonResponse } from 'src/app/models/json-response';
 import { dataLoader } from '@amcharts/amcharts4/core';
  // calendario
 @Component({
-  
+
   selector: 'comercial-clientes-lista',
   templateUrl: './lista.component.html',
   styleUrls: ['./lista.component.scss'],
@@ -285,7 +286,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   setSubmittedSearch(): void {
     this.searchSubmitted = true;
   }
-
   setRouterParams(params: any): void {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
@@ -294,6 +294,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     });
     this.setSubmittedSearch();
     this.search(params);
+    // console.log('a')
+    // console.log(JSON.stringify(params))
   }
 
   search(params: any): void {
