@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 
+
 // ngx-bootstrap
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
@@ -17,6 +18,9 @@ import { ComercialClientesCadastroDadosFaturamentoFormularioService } from '../.
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { DetailPanelService } from 'src/app/shared/templates/detail-panel/detal-panel.service';
 import { ComercialVendedoresService } from '../../services/vendedores.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EscritoriosService } from 'src/app/shared/services/requests/escritorios.service';
+import { ComercialCadastrosTitulosAgendaService } from 'src/app/modules/comercial/cadastros/titulos-agenda/titulos-agenda.service';
 
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
@@ -48,16 +52,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   };
 
   activatedRouteSubscription: Subscription;
-
   showDetailPanelSubscription: Subscription;
   showDetailPanel = false;
-
-/*   setorAtividades: any = [
-    {
-      id: 'T',
-      descricao: 'EXIBIR TODOS',
-    },
-  ]; */
   vendedores: any[];
   dataLoaded = false;
   dadosCadastraisLoaded = false;
@@ -66,39 +62,25 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   contatosEmpty = false;
   searchSubmitted = false;
   showAdvancedFilter = true;
-
   currentUser = JSON.parse(localStorage.getItem('currentUser'));
   matricula = this.currentUser['info']['matricula'];
-
-  ativos = 0;
-  inativos = 0;
-  potencial = 0;
-  arquivados = 0;
-
-  countoAtivos: number;
-  countoInativos: number;
-  countoPotencial: number;
-  countoArquivados: number;
-
   formFilter: FormGroup;
   buscandoPor: number;
   pesquisa: string;
   orderBy = 'codCliente';
   orderType = 'desc';
-
   maxSize = 10;
   itemsPerPage = 50;
   currentPage = 1;
   totalItems = 0;
-
   clientes: any = [];
   clientesPagination: any = [];
-
   clienteSelecionado: number;
   dadosCadastrais: any = {};
   contatos: any = [];
-
   filteredVendedores: any[] = [];
+  escritorios: any[] = [];
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -110,6 +92,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     private atividadesService: AtividadesService,
     private dadosFaturamentoService: ComercialClientesCadastroDadosFaturamentoFormularioService,
     private titleService: TitleService,
+    private escritoriosService: EscritoriosService,
     private detailPanelService: DetailPanelService
   ) {
     this.pnotifyService.getPNotify();
@@ -117,23 +100,39 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.registrarAcesso();
-    this.getFormFilters();
-
+    this.getVendedores();
     this.titleService.setTitle('Busqueda de clientes');
     this.onDetailPanelEmitter();
-    this.getVendedores(); // Obtener los vendedores al inicializar el componente
-    console.log()
+    this.setFormFilter(); // Agregar esta línea para inicializar el formulario
+    this.getEscritorios();
   }
+  
   getVendedores(): void {
     this.vendedoresService.getVendedores().subscribe(
       (response: any) => {
-        this.vendedores = response; // Asignar la lista de vendedores a la variable
+        console.log(response); // Verificar el tipo de datos de la respuesta
+        this.vendedores = response.result;
       },
       (error: any) => {
         // Manejar el error en caso de que ocurra
       }
     );
   }
+  getEscritorios(): void {
+    this.escritoriosService.getEscritorios().subscribe(
+      (response: any) => {
+        console.log(response); // Verificar la respuesta en la consola
+        this.escritorios = response.result;
+      },
+      (error: any) => {
+        // Manejar el error en caso de que ocurra
+      }
+    );
+  }
+  
+  
+  
+  
   ngOnDestroy(): void {
     this.showDetailPanelSubscription.unsubscribe();
   }
@@ -153,136 +152,48 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-  getFormFilters(): void {
-   /*  this.dadosFaturamentoService
-      .getSetorAtividades()
-      .pipe(
-        finalize(() => {
-          this.setorAtividades.unshift({
-            id: 'T',
-            descricao: 'EXIBIR TODOS',
-          });
-        })
-      )
-      .subscribe((response: any) => {
-        if (response['responseCode'] === 200) {
-          this.setorAtividades = response['result'];
-        }
-      }); */
-  }
-
   setFormFilter(): void {
     const formValue = this.checkRouterParams();
-
+  
     this.formFilter = this.formBuilder.group({
       pesquisa: [formValue['pesquisa']],
       buscarPor: [formValue['buscarPor'], Validators.required],
+      titulo: [formValue['titulo']], 
+      fechaInicial: [null, Validators.required],
+      fechaFinal: [null, Validators.required],
       vendedores: [formValue['vendedores'], Validators.required],
-      /* setorAtividade: [formValue['setorAtividade'], Validators.required], */
       tipoPessoa: [formValue['tipoPessoa'], Validators.required],
-      grupoEconomico: [formValue['grupoEconomico'], Validators.required],
-      segurado: [formValue['segurado'], Validators.required],
       carteira: [formValue['carteira'], Validators.required],
       pagina: [formValue['pagina']],
+      nombreVendedor: [''],  // Agrega esta línea para definir el control "nombreVendedor"
+      listaSucursales: this.formBuilder.control('') // Agrega el control listaSucursales aquí
     });
   }
+  
 
   checkRouterParams(): Object {
     let formValue = {
       pesquisa: null,
       buscarPor: 1,
       promotores: 'T',
-      /* setorAtividade: 'T', */
       tipoPessoa: 'T',
-      grupoEconomico: 'T',
-      segurado: 'T',
       carteira: 'T',
       pagina: 1,
     };
-
-    this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
-      (queryParams: any) => {
-        if (Object.keys(queryParams).length > 0) {
-          let params = atob(queryParams['q']);
-          params = JSON.parse(params);
-          this.setSubmittedSearch();
-          this.search(params);
-
-
-          Object.keys(formValue).forEach((formKey) => {
-            Object.keys(params).forEach((paramKey) => {
-              if (
-                formKey == paramKey &&
-                formValue[formKey] != params[paramKey]
-              ) {
-                if (!isNaN(Number(params[paramKey]))) {
-                  formValue[formKey] = Number(params[paramKey]);
-                } else {
-                  formValue[formKey] = params[paramKey];
-                }
-              }
-            });
-          });
-        } else {
-          this.listStatus();
-        }
-      }
-    );
-    this.activatedRouteSubscription.unsubscribe();
-
+  
+    if (this.activatedRouteSubscription) {
+      this.activatedRouteSubscription.unsubscribe();
+    }
+  
     return formValue;
   }
-
-  listStatus(): void {
-    this.clientesService.getStatus().subscribe({
-      next: (response: any) => {
-        if (response['responseCode'] === 200) {
-          this.setStatus(response['result']);
-        }
-      },
-      error: (error: any) => {
-        this.pnotifyService.error();
-      }
-    });
-  }
-
-  setStatus(status: any): void {
-    for (let i = 0; i < status.length; i++) {
-      if (status[i]['promotores'] == '1') {
-        this.ativos = status[i]['quantidade'];
-      } else if (status[i]['promotores'] == '2') {
-        this.inativos = status[i]['quantidade'];
-      } else if (status[i]['promotores'] == '3') {
-        this.potencial = status[i]['quantidade'];
-      } else if (status[i]['promotores'] == '4') {
-        this.arquivados = status[i]['quantidade'];
-      } else if (status[i]['promotores'] == '5') {
-        this.arquivados = status[i]['quantidade'];
-      }
-    }
-  }
-
-/*   setOrderBy(column: string): void {
-    if (this.orderBy === column) {
-      if (this.orderType == 'desc') {
-        this.orderType = 'asc';
-      } else if (this.orderType == 'asc') {
-        this.orderType = 'desc';
-      }
-    } else {
-      this.orderBy = column;
-      this.orderType = 'asc';
-    }
-    this.onFilter();
-  } */
-
+  
   onAdvancedFilter(): void {
     this.showAdvancedFilter = !this.showAdvancedFilter;
   }
 
   filterByStatus(status: string): void {
-    this.formFilter.get('promotores').setValue(status);
+    this.formFilter.get('vendedores').setValue(status);
     this.onFilter();
   }
 
@@ -317,7 +228,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       this.clientes = [];
       this.buscandoPor = params['buscarPor'];
       this.pesquisa = params['pesquisa'];
-
+      this.vendedores;
       this.clientesService
         .getClientes(params)
         .pipe(
@@ -326,63 +237,14 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
             this.dataLoaded = true;
           })
         )
-        .subscribe(
-          (response: any) => {
-            if (response['responseCode'] === 200) {
-              this.clientes = response['result']['analitico'].slice(
-                0,
-                this.itemsPerPage
-              );
-              this.totalItems = this.clientes[0]['total'];
-              this.setStatus(response['result']['sintetico']);
-            } else if (response['responseCode'] === 204) {
-              this.ativos = 0;
-              this.inativos = 0;
-              this.potencial = 0;
-              this.arquivados = 0;
-            }
-          },
-          (error: any) => {
-            this.pnotifyService.error();
-          }
-        );
+        
     }
   }
-
-  classStatusBorder(status: string): string {
-    let borderClass: string;
-
-    if (status == 'Ativo') {
-      borderClass = 'border-success';
-    } else if (status == 'Inativo') {
-      borderClass = 'border-danger';
-    } else if (status == 'Potenci') {
-      borderClass = 'border-primary';
-    } else if (status == 'Arquivo') {
-      borderClass = 'border-secondary';
-    }
-
-    return borderClass;
-  }
-
-/*   viewRegister(cliente: any): void {
-    if (cliente['podeAcessar'] == 0) {
-      this.pnotifyService.notice('Ese cliente no forma parte de su cartera');
-    } else {
-      this.router.navigate(['../detalhes', cliente.codCliente], {
-        relativeTo: this.activatedRoute,
-      });
-    }
-  } */
-
   viewDetails(cliente: any): void {
     this.detailPanelService.loadedFinished(false);
-
     this.clienteSelecionado = cliente.codCliente;
-
     this.dadosCadastraisLoaded = false;
     this.dadosCadastraisEmpty = false;
-
     this.contatosLoaded = false;
     this.contatosEmpty = false;
 
