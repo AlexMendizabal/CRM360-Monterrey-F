@@ -16,9 +16,7 @@
   "dependencies": {
     "@amcharts/amcharts4": "^4.8.9",
     "@angular/animations": "~10.1.5",
-
     "@angular/common": "^10.1.5",
-
     "@angular/compiler": "~10.1.5",
     "@angular/core": "~10.1.5",
     "@angular/forms": "~10.1.5",
@@ -37,7 +35,7 @@
     "angularx-flatpickr": "^6.2.0",
     "bootstrap": "^4.4.1",
     "date-fns": "^2.9.0",
-    "file-saver": "^2.0.2",
+    "file-saver": "^2.0.5",
     "flatpickr": "^4.6.3",
     "html2canvas": "^1.0.0-rc.5",
     "jquery": "^3.4.1",
@@ -61,7 +59,7 @@
     "text-mask-addons": "^3.8.0",
     "tslib": "^2.0.0",
     "web-animations-js": "^2.3.2",
-    "xlsx": "^0.15.5",
+    "xlsx": "^0.15.6",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {

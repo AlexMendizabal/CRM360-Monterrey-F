@@ -5,6 +5,7 @@ import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+import { writeFile } from 'xlsx';
 
 
 // ngx-bootstrap
@@ -21,7 +22,7 @@ import { ComercialVendedoresService } from '../../services/vendedores.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EscritoriosService } from 'src/app/shared/services/requests/escritorios.service';
 import { ComercialCadastrosTitulosAgendaService } from 'src/app/modules/comercial/cadastros/titulos-agenda/titulos-agenda.service';
-
+import { ComercialAgendaService } from 'src/app/modules/comercial/agenda/agenda.service';
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
@@ -80,7 +81,9 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   contatos: any = [];
   filteredVendedores: any[] = [];
   escritorios: any[] = [];
-
+  titulos: any[] = [];
+  estados : any[] = [];
+  compromissos: any[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -93,7 +96,9 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     private dadosFaturamentoService: ComercialClientesCadastroDadosFaturamentoFormularioService,
     private titleService: TitleService,
     private escritoriosService: EscritoriosService,
-    private detailPanelService: DetailPanelService
+    private detailPanelService: DetailPanelService,
+    private titulosAgendaService: ComercialCadastrosTitulosAgendaService,
+    private agendaService: ComercialAgendaService,
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -105,6 +110,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.onDetailPanelEmitter();
     this.setFormFilter(); // Agregar esta línea para inicializar el formulario
     this.getEscritorios();
+    this.getTitulosAgenda();
+    this.getCompromissos();
   }
   
   getVendedores(): void {
@@ -130,9 +137,62 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
   
+  getTitulosAgenda(): void {
+    this.titulosAgendaService.getListaTitulosAgenda({}).subscribe(
+      (response: any) => {
+        console.log(response); // Verificar el tipo de datos de la respuesta
+        this.estados = response.result;
+      },
+      (error: any) => {
+        // Manejar el error en caso de que ocurra
+      }
+    );
+  }
   
+  getEstados(): void {
+    this.agendaService.getEstado({}).subscribe(
+      (response: any) => {
+        console.log(response); // Verificar el tipo de datos de la respuesta
+        this.estados = response.result;
+      },
+      (error: any) => {
+        // Manejar el error en caso de que ocurra
+      }
+    );
+  }
   
-  
+  filterCompromissos(): void {
+    const params = {
+      // Agrega aquí los parámetros de filtro según tus necesidades
+    };
+
+    this.agendaService.getCompromissos(params).subscribe(
+      (response: any) => {
+        console.log(response); // Verifica la respuesta en la consola
+        this.compromissos = response.result;
+      },
+      (error: any) => {
+        // Maneja el error en caso de que ocurra
+      }
+    );
+  }
+  getCompromissos(): void {
+    const params = {
+      // Agrega aquí los parámetros iniciales de obtención de compromisos
+    };
+
+    this.agendaService.getCompromissos(params).subscribe(
+      (response: any) => {
+        console.log(response); // Verifica la respuesta en la consola
+        this.compromissos = response.result;
+      },
+      (error: any) => {
+        // Maneja el error en caso de que ocurra
+      }
+    );
+  }
+
+
   ngOnDestroy(): void {
     this.showDetailPanelSubscription.unsubscribe();
   }
@@ -322,6 +382,35 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   resetClienteSelecionado() {
     this.clienteSelecionado = null;
   }
+
+  exportToExcel(): void {
+    const dataToExport = this.compromissos.map((compromisso) => ({
+      'Nombre de Vendedor': compromisso.nombreVendedor,
+      Compromisso: compromisso.compromisso,
+      Cita: compromisso.cita,
+      Estado: compromisso.estado,
+    }));
+  
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Compromissos');
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+  
+    this.saveAsExcelFile(excelBuffer, 'compromissos');
+  }
+  
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type:
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
+    });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
+  }
+  
+  
 
 
   excelExport(): void {
