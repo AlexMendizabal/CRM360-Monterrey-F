@@ -59,7 +59,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       descricao: 'EXIBIR TODOS',
     },
   ]; */
-
+  vendedores: any[];
   dataLoaded = false;
   dadosCadastraisLoaded = false;
   dadosCadastraisEmpty = false;
@@ -99,6 +99,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   dadosCadastrais: any = {};
   contatos: any = [];
 
+  filteredVendedores: any[] = [];
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private vendedoresService: ComercialVendedoresService,
@@ -117,11 +119,22 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.registrarAcesso();
     this.getFormFilters();
-    this.setFormFilter();
+
     this.titleService.setTitle('Busqueda de clientes');
     this.onDetailPanelEmitter();
+    this.getVendedores(); // Obtener los vendedores al inicializar el componente
+    console.log()
   }
-
+  getVendedores(): void {
+    this.vendedoresService.getVendedores().subscribe(
+      (response: any) => {
+        this.vendedores = response; // Asignar la lista de vendedores a la variable
+      },
+      (error: any) => {
+        // Manejar el error en caso de que ocurra
+      }
+    );
+  }
   ngOnDestroy(): void {
     this.showDetailPanelSubscription.unsubscribe();
   }
@@ -166,7 +179,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.formFilter = this.formBuilder.group({
       pesquisa: [formValue['pesquisa']],
       buscarPor: [formValue['buscarPor'], Validators.required],
-      promotores: [formValue['promotores'], Validators.required],
+      vendedores: [formValue['vendedores'], Validators.required],
       /* setorAtividade: [formValue['setorAtividade'], Validators.required], */
       tipoPessoa: [formValue['tipoPessoa'], Validators.required],
       grupoEconomico: [formValue['grupoEconomico'], Validators.required],
