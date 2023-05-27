@@ -20,7 +20,7 @@ import { AdminModulosService } from '../admin/modulos/services/modulos.service';
 })
 export class LoginComponent implements OnInit {
   srcLogoCliente: string;
-
+  srcLogoInicio: string;
   form: FormGroup;
   waitingLoginResponse: boolean = false;
   redirectTo: boolean = false;
@@ -57,13 +57,17 @@ export class LoginComponent implements OnInit {
     this.setFormBuilder();
   }
 
+  getLogoInicio() {
+    this.srcLogoInicio = `src/assets/images/logo/Short-Degrade-Morado.png`;
+  }
+
   getClienteLogo() {
-    this.srcLogoCliente = `/assets/images/logo/clientes/${this.windowService.getHostnameLogo()}_colorido.png`;
+    this.srcLogoCliente = `/assets/images/logo/crm-360.png`;
     // this.srcLogoCliente = '/assets/images/logo/logo-roxo.png';
   }
 
   onLogoClienteError(event: any) {
-    this.srcLogoCliente = '/assets/images/logo/logo-azul.png';
+    this.srcLogoCliente = '/assets/images/logo/crm-360.png';
   }
 
   setFormBuilder() {
