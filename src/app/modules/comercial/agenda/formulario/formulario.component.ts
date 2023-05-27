@@ -412,13 +412,13 @@ export class ComercialAgendaFormularioComponent
           this.handleLoadDependenciesError();
         }
 
-        if (response[5].responseCode == 200) {
+       /*  if (response[5].responseCode == 200) {
           console.log(response[5].data);
           // @ts-ignore: Ignorar error TS2339
           this.promotores = response[5].result;
         } else {
           this.showInputVendedores = false;
-        }
+        } */
       });
   }
 

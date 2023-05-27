@@ -31,60 +31,73 @@
               </div>
             </agm-info-window>
           </agm-marker>
+
+          <div class="spinner-overlay" *ngIf="showSpinner">
+            <div class="spinner"></div>
+          </div>
         </agm-map>
+
 
         <div id="map-zoom-control" class="map-control"></div>
       </div>
     </div>
 
     <div class="col-md-6">
-      <h6 class="text-center">Asignar visitas a promotores</h6>
-      <div class="table-responsive">
-
-        <custom-table [config]="tableConfigAtividades">
-          <ng-template #thead let-thead>
-            <tr>
-              <th class="text-center">Cod. cliente</th>
-              <th class="text-center">Nombre</th>
-              <th class="text-center">Fecha visita</th>
-              <th class="text-center">Promotor</th>
-              <th class="text-center">Opciones</th>
-
-
-            </tr>
-          </ng-template>
-          <ng-template #tbody let-tbody>
-            <tr *ngFor="let item of atividades">
-              <td class="hover text-center" style="width: 35%" (click)="item.checked = !item.checked">
-                <span *ngIf="item.codigoCliente">{{ item.codigoCliente }}</span>
-                <span *ngIf="!item.codigoCliente">N/A</span>
-              </td>
-              <td class="hover text-center" style="width: 35%" (click)="item.checked = !item.checked">
-                <span *ngIf="item.nombre">{{ item.nombre }}</span>
-                <span *ngIf="!item.nombre">N/A</span>
-              </td>
-              <td class="hover text-center" style="width: 35%" (click)="item.checked = !item.checked">
-                <input type="datetime-local" class="form-control">
-
-              </td>
-
-              <td class="hover text-center" style="width: 35%" (click)="item.checked = !item.checked">
-                <ng-select [searchable]="true" [clearable]="false" [items]="filteredVendedores" [virtualScroll]="true"
-                  labelForId="vendedor" bindLabel="nome" bindValue="id" (change)="filtrarClientes()"
-                  formControlName="vendedor_id"></ng-select>
-              </td>
-              <td>
-                
-              </td>
-
-            </tr>
-          </ng-template>
-        </custom-table>
-      </div><br>
-      <div align="center">
+      <h6 align="center"> Agendar clientes </h6>
+      <custom-table [config]="tableConfigAtividades">
+        <ng-template #thead let-thead>
+          <tr>
+            <th class="text-center">Cod. cliente</th>
+            <th class="text-center">Nombre</th>
+            <th class="text-center">Fecha visita</th>
+            <th class="text-center">Promotor</th>
+            <th class="text-center">Gestión</th>
+            <th class="text-center">Opciones</th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let item of atividades">
+            <td class="hover text-center" style="width: 10%" (click)="item.checked = !item.checked">
+              <span *ngIf="item.codigoCliente">{{ item.codigoCliente }}</span>
+              <span *ngIf="!item.codigoCliente">N/A</span>
+            </td>
+            <td class="hover text-center" style="width: 35%" (click)="item.checked = !item.checked">
+              <span *ngIf="item.nombre">{{ item.nombre }}</span>
+              <span *ngIf="!item.nombre">N/A</span>
+            </td>
+            <td class="hover text-center" style="width: 10%" (click)="item.checked = !item.checked">
+              <input type="datetime-local" class="form-control">
+            </td>
+            <td class="hover text-center " style="width: 30%" (click)="item.checked = !item.checked">
+              <ng-select [searchable]="true" [clearable]="false" [items]="filteredVendedores" [virtualScroll]="true"
+                labelForId="vendedor" bindLabel="nome" bindValue="id" (change)="filtrarClientes()"
+                formControlName="vendedor_id" class="select-control">
+                <option value=""> Seleccionar</option>
+              </ng-select>
+            </td>
+            <td class="hover text-center " style="width: 35%" (click)="item.checked = !item.checked">
+              <ng-select [searchable]="true" [clearable]="false" [items]="filteredGestiones" [virtualScroll]="true"
+                labelForId="vendedor" bindLabel="descricaoTitulo" bindValue="codTitulo" 
+                formControlName="seleccion_id" class="select-control">
+                <option value=""> Seleccionar</option>
+              </ng-select>
+            </td>
+            <td class="hover text-center" style="width: 35%">
+              <button (click)="eliminarClienteTemporal(item)" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash-alt"></i> Eliminar
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="atividades.length === 0">
+            <td colspan="6" class="text-center">Sin datos registrados </td>
+          </tr>
+        </ng-template>
+      </custom-table> <br>
+      <div align="center" *ngIf="atividades.length > 0">
         <button class="btn btn-success"> Agendar </button>
       </div>
-    </div>
+    </div> <br>
+
 
   </div>
 </app-body>

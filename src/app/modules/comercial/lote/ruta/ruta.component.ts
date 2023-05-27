@@ -28,6 +28,7 @@ import { TitleService } from 'src/app/shared/services/core/title.service';
 import { DateService } from 'src/app/shared/services/core/date.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { ComercialVendedoresService } from '../../services/vendedores.service';
 
 
 // Interfaces
@@ -42,7 +43,6 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 export class ComercialLoteRutaComponent implements OnInit {
     private user = this.authService.getCurrentUser();
     profile: any = {};
-
 
     loaderFullScreen = true;
 
@@ -73,9 +73,13 @@ export class ComercialLoteRutaComponent implements OnInit {
     longitud: number = -63.18117;
     nomeVendedor: string;
     nomeEscritorio: string;
-
+    filteredVendedores: any[] = [];
+    filteredGestiones: any[] = [];
+    vendedor_id: any[];
+    seleccion_id: any[];
     /*   events$: Observable<Array<CalendarEvent<{ compromisso: Compromisso }>>>;
       eventSelected: Compromisso; */
+
 
     queryParamsChecked = false;
 
@@ -91,7 +95,11 @@ export class ComercialLoteRutaComponent implements OnInit {
         private titleService: TitleService,
         private dateService: DateService,
         private formBuilder: FormBuilder,
-        private datePipe: DatePipe
+        private datePipe: DatePipe,
+        private vendedoresService: ComercialVendedoresService,
+
+
+
 
 
     ) { }
@@ -102,6 +110,9 @@ export class ComercialLoteRutaComponent implements OnInit {
         /*  this.getRutas(); */
         this.getPerfil();
         this.titleService.setTitle('Rutas');
+        this.vendedores();
+        this.gestiones();
+
     }
 
     appTitle(date: Date): string {
@@ -406,10 +417,42 @@ export class ComercialLoteRutaComponent implements OnInit {
 
         this.atividades.push(nuevoCliente);
 
-/*         console.log(this.atividades[0].nombre);
- */    }
+    }
+    eliminarClienteTemporal(item: any) {
+        const index = this.atividades.indexOf(item);
+        if (index !== -1) {
+            this.atividades.splice(index, 1);
+        }
+    }
+    vendedores() {
+        this.vendedoresService.getVendedores().subscribe(
+            (response: any) => {
+                if (response['responseCode'] === 200) {
+
+                    this.filteredVendedores = response['result'];
+                } else {
+                    this.filteredVendedores = [];
+                }
+            }
+        );
 
 
+    }
+
+    gestiones() {
+        this.vendedoresService.getGestiones().subscribe(
+            (response: any) => {
+                if (response['success'] == true) {
+                    this.filteredGestiones = response['data'];
+                } else {
+                    this.filteredGestiones = [];
+                }
+            },
+            (error: any) => {
+                // Manejar el error de la petición si es necesario
+            }
+        );
+    }
 
 
 
