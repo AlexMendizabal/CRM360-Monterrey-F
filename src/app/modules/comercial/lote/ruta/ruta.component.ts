@@ -27,6 +27,8 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { DateService } from 'src/app/shared/services/core/date.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+
 
 // Interfaces
 /* import { Compromisso } from '../models/compromisso'; */
@@ -63,10 +65,12 @@ export class ComercialLoteRutaComponent implements OnInit {
     view = 'month';
     viewDate: Date = new Date();
     activeDayIsOpen = false;
-
+    mapas: any[] = [];
+    atividades: any[] = [];
     idEscritorio: number;
     idVendedor: number;
-
+    latitud: number = -17.78629;
+    longitud: number = -63.18117;
     nomeVendedor: string;
     nomeEscritorio: string;
 
@@ -87,6 +91,7 @@ export class ComercialLoteRutaComponent implements OnInit {
         private titleService: TitleService,
         private dateService: DateService,
         private formBuilder: FormBuilder,
+        private datePipe: DatePipe
 
 
     ) { }
@@ -341,11 +346,73 @@ export class ComercialLoteRutaComponent implements OnInit {
           })
         ); */
     }
-    filtrarMapas(params) {
-        this.loteService.getRutaClientes(params).subscribe(response => {
-            console.log(response);
-        });
+    selectedMarker: any; // Variable para almacenar el marcador seleccionado
+
+    // Función para manejar el evento de clic en el marcador
+    onMarkerClick(marker: any) {
+        this.selectedMarker = marker;
     }
+    filtrarMapas(params) {
+        this.loteService.getRutaClientes(params).pipe(
+            finalize(() => {
+                this.loaderFullScreen = false;
+            })
+        ).subscribe(
+            (response: any) => {
+                if (response && response.hasOwnProperty('data')) {
+                    this.mapas = response.data;
+
+                    // Asignar colores a los markers según el código del cliente
+                    this.mapas.forEach((mapa) => {
+                        // Crear el objeto 'markers' si no existe
+                        mapa.markers = {};
+
+                        // Asignar color basado en el código del cliente
+                        if (mapa.color === 1) {
+                            mapa.markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000'; // Rojo
+                        } else if (mapa.color === 2) {
+                            mapa.markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FC9F3A'; // Naranja
+                        } else if (mapa.color === 3) {
+                            mapa.markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00'; // Amarillo
+                        } else if (mapa.color === 4) {
+                            mapa.markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFFFF'; // Blanco
+                        } else {
+                            mapa.markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00'; // Verde
+                        }
+
+                    });
+                } else {
+                    this.mapas = null;
+                    this.latitud = this.latitud;
+                    this.longitud = this.longitud;
+                }
+            },
+            (error) => {
+                console.error(error);
+            }
+        );
+    }
+
+    agregarClienteTemporal(mapa: any) {
+        const nuevoCliente = {
+            checked: false,
+            codigoCliente: mapa.CODIGO_CLIENTE,
+            nombre: mapa.NOMBRE,
+            direccion: mapa.DIRECCION,
+            fechaVisita: mapa.FECHA_INICIO,
+            promotor: '', // Asigna el valor correspondiente al promotor
+            mapa: mapa.markers.icon
+        };
+
+        this.atividades.push(nuevoCliente);
+
+/*         console.log(this.atividades[0].nombre);
+ */    }
+
+
+
+
+
     /*   dayClicked({
         date,
         events

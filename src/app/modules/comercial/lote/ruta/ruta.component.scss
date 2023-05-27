@@ -1,0 +1,42 @@
+/* Estilos para el info window de los marcadores */
+.marker-info-window {
+    padding: 10px;
+    background-color: #fff;
+
+  }
+  
+  .marker-name {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  
+  .marker-info {
+    margin-bottom: 5px;
+  }
+  
+  .marker-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    background-color: #FC9F3A;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .marker-button:hover {
+    background-color: #FC9F3A;
+  }
+  
+  .map-control {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+  }
+  td{
+    font-size: 13px;
+  }

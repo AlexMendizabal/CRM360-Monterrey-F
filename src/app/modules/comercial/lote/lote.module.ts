@@ -29,6 +29,8 @@ import { SharedModule } from 'src/app/shared/modules/shared.module';
 import { TemplatesModule } from 'src/app/shared/templates/templates.module';
 import { ComercialTemplatesModule } from '../templates/templates.module';
 
+import { DatePipe } from '@angular/common';
+
 // Components
 /* import { ComercialAgendaCompromissosComponent } from './compromissos/compromissos.component';
 import { ComercialAgendaDetalhesComponent } from './detalhes/detalhes.component';
@@ -62,6 +64,6 @@ import { ComercialLoteRutaComponent } from './ruta/ruta.component';
     }),
     
   ],
-  providers: [FormDeactivateGuard, { provide: LOCALE_ID, useValue: 'es-BO' }]
+  providers: [FormDeactivateGuard, { provide: LOCALE_ID, useValue: 'es-BO' },  DatePipe,]
 })
 export class ComercialLoteModule {}
