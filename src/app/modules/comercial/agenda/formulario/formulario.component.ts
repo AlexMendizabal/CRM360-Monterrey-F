@@ -45,7 +45,7 @@ import { COLORS } from 'html2canvas/dist/types/css/types/color';
 })
 export class ComercialAgendaFormularioComponent
   implements OnInit, IFormCanDeactivate {
-    
+
   permissoesAcesso: {
     simuladorVendas: boolean;
   };
@@ -97,7 +97,7 @@ export class ComercialAgendaFormularioComponent
   origensContato: any = [];
   listarTitulosAgenda: any = [];
   motivosReagendamento: any = [];
-  
+
   attachedFiles: File[] = [];
   adjunto: File = null;
 
@@ -197,7 +197,7 @@ export class ComercialAgendaFormularioComponent
   //     this.form.get('adjunto').setValue(null);
   //   }
   // }
-  
+
   appTitle(): string {
     let title: string;
 
@@ -210,8 +210,8 @@ export class ComercialAgendaFormularioComponent
     } else if (this.action == 'finalizar') {
       title = 'Finalizar Contacto';
     }
-    
-    
+
+
 
     return title;
   }
@@ -225,7 +225,7 @@ export class ComercialAgendaFormularioComponent
         inicioHorario: Date,
         terminoData: Date,
         terminoHorario: Date;
-  
+
       if (detalhes.start === null) {
         inicioData = new Date();
         inicioHorario = new Date();
@@ -237,8 +237,8 @@ export class ComercialAgendaFormularioComponent
         terminoData = new Date(detalhes.end);
         terminoHorario = new Date(detalhes.end);
       }
-      
-  
+
+
       this.form = this.formBuilder.group({
 
         id: [detalhes.id],
@@ -298,20 +298,20 @@ export class ComercialAgendaFormularioComponent
           { value: '', disabled: !isFinalizarAction },
           isFinalizarAction ? [Validators.required] : null,
         ],
-        
+
       });
-  
+
       if (detalhes.allDay) {
         this.isDisabledTime = true;
       }
-  
+
       if (this.action == 'reagendar') {
         this.form.controls.motivoReagendamento.setValidators([
           Validators.required,
         ]);
         this.form.controls.motivoReagendamento.updateValueAndValidity();
       }
-  
+
       if (this.action == 'finalizar') {
         this.form.controls.Obsfinalizar.setValidators([
           Validators.required,
@@ -323,8 +323,8 @@ export class ComercialAgendaFormularioComponent
       this.location.back();
     }
   }
-  
-  
+
+
 
   setBreadCrumb(action: string, id: number = null): void {
     if (action == 'novo') {
@@ -364,15 +364,15 @@ export class ComercialAgendaFormularioComponent
             ? 'Finalizar contato'
             : ''
         }
-        
+
       ];
     }
-  
+
     this.titleService.setTitle(
       this.breadCrumbTree[this.breadCrumbTree.length - 1].descricao
     );
   }
-  
+
   getFormFields(): void {
     this.loaderFullScreen = true;
 
@@ -446,17 +446,11 @@ export class ComercialAgendaFormularioComponent
   onColorChange(color: any): void {
     this.form.controls.cor.setValue(color.hex);
   }
-  // onCodTituloChange(): void {
-  //   const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
-  //   const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
-  //   this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
-  // }
-
-  // onCodTituloChange(): void {
-  //    const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
-  //    const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
-  //    this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
-  //  }
+   onCodTituloChange(): void {
+     const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
+     const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
+     this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
+  }
 
   triggerAllDay(): void {
     this.isDisabledTime = !this.isDisabledTime;
@@ -484,17 +478,17 @@ export class ComercialAgendaFormularioComponent
       inicioHorario = this.form.value.inicioHorario;
       terminoData = this.form.value.terminoData;
       terminoHorario = this.form.value.terminoHorario;
-  
+
       if (inicioData && inicioHorario && terminoData && terminoHorario) {
         inicioData.setHours(inicioHorario.getHours(), inicioHorario.getMinutes());
         terminoData.setHours(terminoHorario.getHours(), terminoHorario.getMinutes());
-  
+
         if (inicioData.getTime() > terminoData.getTime()) {
           validation = false;
         }
       }
     }
-  
+
     return validation;
   }
 
@@ -532,7 +526,7 @@ export class ComercialAgendaFormularioComponent
       this.pnotifyService.notice('La fecha de término debe ser mayor que la de inicio.');
       return;
     }
-  
+
     if (this.form && this.form.valid) {
       this.loaderNavbar = true;
       this.submittingForm = true;
@@ -546,15 +540,15 @@ export class ComercialAgendaFormularioComponent
         inicioHorario: Date,
         terminoData: Date,
         terminoHorario: Date;
-  
+
       let msgSuccess = 'Su cita fue creada.';
       let msgError = 'Ocurrió un error al crear la cita.';
-  
+
       if (formValue.id) {
         msgSuccess = 'Su cita fue editada.';
         msgError = 'Ocurrió un error al editar la cita.';
       }
-  
+
       if (formValue.cliente != '') {
         for (let index = 0; index < this.clientes.length; index++) {
           if (this.clientes[index].id == formValue.cliente) {
@@ -562,7 +556,7 @@ export class ComercialAgendaFormularioComponent
           }
         }
       }
-  
+
       if (formValue.codFormaContato != '') {
         for (let index = 0; index < this.formasContato.length; index++) {
           if (
@@ -573,7 +567,7 @@ export class ComercialAgendaFormularioComponent
           }
         }
       }
-  
+
       if (formValue.codOrigemContato != '') {
         for (let index = 0; index < this.origensContato.length; index++) {
           if (
@@ -584,11 +578,11 @@ export class ComercialAgendaFormularioComponent
           }
         }
       }
-  
+
       if (formValue.diaInteiro) {
         inicioData = formValue.inicioData;
         terminoData = inicioData;
-  
+
         inicioData.setHours(0, 0, 0);
         terminoData.setHours(0, 0, 0);
       } else {
@@ -596,7 +590,7 @@ export class ComercialAgendaFormularioComponent
         inicioHorario = formValue.inicioHorario;
         terminoData = formValue.terminoData;
         terminoHorario = formValue.terminoHorario;
-  
+
         inicioData.setHours(
           inicioHorario.getHours(),
           inicioHorario.getMinutes()
@@ -606,7 +600,7 @@ export class ComercialAgendaFormularioComponent
           terminoHorario.getMinutes()
         );
       }
-  
+
       const inicio = this.dateService.convert2PhpDate(inicioData);
       const termino = this.dateService.convert2PhpDate(terminoData);
 
@@ -625,21 +619,21 @@ export class ComercialAgendaFormularioComponent
         typeContactDesc: typeContactDesc,
         start: inicio,
         end: termino,
-        allDay: formValue.diaInteiro, 
+        allDay: formValue.diaInteiro,
         rescheduleId: formValue.motivoReagendamento,
         description: formValue.observacao
           ? formValue.observacao.toUpperCase()
           : null,
           Obsfinalizar: obsFinalizar.value
-                    
+
       };
-  
+
       this.agendaService.save(this.action, formObj).subscribe({
         next: (response: any) => {
           if (response.responseCode === 200) {
             this.pnotifyService.success(msgSuccess);
             this.formChanged = false;
-  
+
             if (this.action == 'reagendar') {
               this.router.navigate(['../../compromissos'], {
                 relativeTo: this.activatedRoute,
@@ -664,17 +658,17 @@ export class ComercialAgendaFormularioComponent
       });
     }
   }
-  
+
   handleErrorOnSubmit(message: string): void {
     this.loaderNavbar = false;
     this.submittingForm = false;
     this.pnotifyService.error(message);
   }
-  
+
   onInput(): void {
     this.formChanged = true;
   }
-  
+
   formCanDeactivate(): boolean {
     if (this.formChanged) {
       if (confirm('La información no guardada se perderá. ¿Desea continuar?')) {
@@ -685,11 +679,11 @@ export class ComercialAgendaFormularioComponent
     }
     return true;
   }
-  
+
   onCancel(): void {
     this.location.back();
   }
-  
+
 
   onGerarCotacaoPedido(): void {
     if (this.form.value.gerarCotacaoPedido === true) {
