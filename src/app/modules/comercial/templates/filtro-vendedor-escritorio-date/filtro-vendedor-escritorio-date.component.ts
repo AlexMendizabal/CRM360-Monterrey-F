@@ -9,17 +9,19 @@ import { forkJoin, Observable } from 'rxjs';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { ComercialService } from '../../comercial.service';
 import { ComercialVendedoresService } from '../../services/vendedores.service';
+import { ComercialLoteService } from '../../lote/lote.service';
+import { ComercialLoteRutaComponent } from '../../lote/ruta/ruta.component';
+
 
 @Component({
-  selector: 'comercial-templates-filtro-vendedor-escritorio',
-  templateUrl: './filtro-vendedor-escritorio.component.html',
-  styleUrls: ['./filtro-vendedor-escritorio.component.scss']
+  selector: 'comercial-templates-filtro-vendedor-escritorio-date',
+  templateUrl: './filtro-vendedor-escritorio-date.component.html',
+  styleUrls: ['./filtro-vendedor-escritorio-date.component.scss']
 })
-export class ComercialTemplatesFiltroVendedorEscritorioComponent
+export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
   implements OnInit {
   @Input('profile') profile: any = {};
   @Input('showAll') showAll: boolean;
-
   @Output('formValue')
   formValue: EventEmitter<any> = new EventEmitter();
 
@@ -28,25 +30,81 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
   escritorios: any[];
   vendedores: any[];
   estados: any[];
-  diasVisita: any[];
+  /*  diasVisita: any[]; */
   filteredVendedores: any[] = [];
+  ultima_visita = [];
+
+  idVendedor: any;
+  idEscritorio: any;
+  idUltimaVisita: any;
+  idSucursal: any;
+  idEstado: any;
 
   form: FormGroup;
 
   constructor(
+
     private location: Location,
     private comercialService: ComercialService,
     private vendedoresService: ComercialVendedoresService,
     private formBuilder: FormBuilder,
-    private pnotifyService: PNotifyService
+    private pnotifyService: PNotifyService,
+    private loteService: ComercialLoteService,
+    private rutaService: ComercialLoteRutaComponent
+
   ) {
     this.pnotifyService.getPNotify();
   }
 
   ngOnInit() {
     this.checkUserProfile();
+    this.form = this.formBuilder.group({
+      sucursal_id: [],
+      vendedor_id: [],
+      visita_id: [],
+      estado_id: []
+    });
     this.setFormFilter();
   }
+
+
+  setFormFilter(): void {
+    this.form = this.formBuilder.group({
+      sucursal_id: [null, Validators.required],
+      vendedor_id: [null, Validators.required],
+      visita_id: [null],
+      estado_id: [null]
+    });
+  }
+
+  /* obtenerDatos() {
+  } */
+
+  filtrarClientes() {
+    
+    const idSucursal = this.form.get('sucursal_id').value;
+    const idVendedor = this.form.get('vendedor_id').value;
+    const idUltimaVisita = this.form.get('visita_id').value;
+    const idEstado = this.form.get('estado_id').value;
+
+    const params = {
+      idSucursal: idSucursal,
+      idVendedor: idVendedor,
+      idUltimaVisita: idUltimaVisita,
+      idEstado: idEstado
+    };
+
+    this.rutaService.filtrarMapas(params);
+
+  }
+
+  
+  
+
+
+
+
+
 
   adminOnly(): boolean {
     if (this.profile.coordenador === true || this.profile.gestor === true) {
@@ -61,10 +119,9 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
   }
 
   checkUserProfile(): void {
-    return this.adminOnly()
-      ? this.getEscritoriosVendedores()
-      : this.getVinculoOperadores();
+    this.getEscritoriosVendedores()
   }
+
 
   getEscritoriosVendedores(): void {
     this.loadEscritoriosVendedores()
@@ -88,9 +145,16 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
             this.setFormFilter();
             this.escritorios = response[0]['result'];
 
-            console.log(this.escritorios)
-            this.escritorios[0] = "Sucursal Central"
-            this.escritorios.splice(1, 2);
+            const escritorioNoVacio = this.escritorios.find(item => item.nome !== null && item.nome !== '');
+
+            if (escritorioNoVacio) {
+              /*  // Se encontró un valor no vacío
+               console.log(escritorioNoVacio.nome); */
+            } else {
+              /*   // No se encontró ningún valor no vacío
+              console.log("No hay valores no vacíos en el array"); */
+            }
+
             if (this.escritorios.length > 1 && this.showAll === true) {
               this.escritorios.unshift({
                 id: 0,
@@ -104,12 +168,12 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
           if (response[0]['responseCode'] === 200) {
             this.vendedores = response[1]['result'];
             this.filteredVendedores = this.vendedores;
-            if (this.showAll === true) {
+            /* if (this.showAll === true) { */
               this.filteredVendedores.unshift({
                 id: 0,
-                nome: 'TODOS LOS VENDEDORES'
+                nome: 'TODOS'
               });
-            }
+            /* } */
           } else {
             this.handleLoadDependenciesError();
           }
@@ -120,13 +184,33 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
       });
   }
 
-  
+
+
+  ultimaVisita = [
+    { id: 0, nombre: 'Todos' },
+    { id: 1, nombre: '>= 90 días' },
+    { id: 2, nombre: '>= 45 días' },
+    { id: 3, nombre: '>= 30 días' },
+    { id: 4, nombre: '>= 15 días' },
+    { id: 5, nombre: '<= 15 días' },
+  ];
+
+  estadoCliente = [
+    { id: 0, nombre: 'Todos' },
+    { id: 1, nombre: 'Activo' },
+    { id: 2, nombre: 'Inactivo' },
+  ];
+
+
+
   loadEscritoriosVendedores(): Observable<any> {
     const escritorios = this.comercialService.getEscritorios();
     const vendedores = this.vendedoresService.getVendedores();
 
     return forkJoin([escritorios, vendedores]).pipe(take(1));
   }
+
+
 
   getVinculoOperadores(): void {
     this.vendedoresService
@@ -156,7 +240,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
     this.location.back();
   }
 
-  setFormFilter(): void {
+  /* setFormFilter(): void {
     this.form = this.formBuilder.group({
       idEscritorio: [null, Validators.required],
       idVendedor: [null, Validators.required],
@@ -170,10 +254,9 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
     } else {
       this.form.controls['idEscritorio'].clearValidators();
     }
-  }
+  } */
 
   onInput(): void {
-   /*  alert(this.form.value['idVendedor']) */
     if (this.form.valid) {
       if (this.adminOnly()) {
         if (this.form.value['idEscritorio'] === 0) {
@@ -217,10 +300,10 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
     }
   }
 
-  onEscritorioChange(escritorio: any) {
-    this.filterVendedores(escritorio['id']);
-    this.form.get('idVendedor').setValue(0);
-  }
+  /*  onEscritorioChange(escritorio: any) {
+     this.filterVendedores(escritorio['id']);
+     this.form.get('idVendedor').setValue(0);
+   } */
 
   filterVendedores(idEscritorio: any) {
     this.form.controls['idVendedor'].setValue(null);

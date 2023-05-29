@@ -169,19 +169,21 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       carteira: [formValue['carteira'], Validators.required],
       pagina: [formValue['pagina']],
       registros: [formValue['registros'], Validators.required],
+      id_group_econ: [formValue['grupoEconomico'], Validators.required], // Se Agrega este campo
     });
   }
+  searchInputValue: string;
 
   checkRouterParams(): Object {
     let formValue = {
-      pesquisa: null,
+      pesquisa: this.searchInputValue, // aquí se actualizaría el valor de pesquisa
       buscarPor: 1,
       situacao: 'T',
       setorAtividade: 'T',
       tipoPessoa: 'T',
       grupoEconomico: 'T',
       segurado: 'T',
-      carteira: 'T',
+      carteira: 'S',
       pagina: 1,
       registros: this.itemsPerPage,
     };

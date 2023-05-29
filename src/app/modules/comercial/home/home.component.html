@@ -6,7 +6,7 @@
     <div class="col">
       <div class="row">
         <div class="col w-100 d-flex justify-content-lg-between">
-          <div class="mtc-title mb-0">Compromissos do dia</div>
+          <div class="mtc-title mb-0">Citas del dia</div>
           <strong class="my-auto">
             <a [routerLink]="['/comercial/agenda/compromissos']">
               <span class="mr-1">Agenda</span>
@@ -26,12 +26,12 @@
               </a>
             </li>
           </ul>
-          <div *ngIf="compromissos.length == 0" class="mt-2">Você não possui compromissos agendados para hoje.</div>
+          <div *ngIf="compromissos.length == 0" class="mt-2">Usted no tiene citas hoy.</div>
         </div>
       </div>
       <div class="mt-2 d-flex w-100" *ngIf="!compromissosLoaded">
         <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
-        <strong>Carregando compromissos...</strong>
+        <strong>Cargando citas...</strong>
       </div>
     </div>
   </div>

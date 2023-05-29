@@ -60,7 +60,8 @@ import { ComercialClientesUltimosPrecosComponent } from './ultimos-precos/ultimo
     TemplatesModule.forRoot(),
     ComercialClientesRoutingModule,
     ComercialClientesDashboardModule,
-    ComercialClientesHistoricoFinanceiroModule
+    ComercialClientesHistoricoFinanceiroModule,
+    
   ]
 })
 export class ComercialClientesModule {}
