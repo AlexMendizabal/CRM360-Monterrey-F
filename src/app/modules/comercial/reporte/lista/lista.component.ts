@@ -23,6 +23,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EscritoriosService } from 'src/app/shared/services/requests/escritorios.service';
 import { ComercialCadastrosTitulosAgendaService } from 'src/app/modules/comercial/cadastros/titulos-agenda/titulos-agenda.service';
 import { ComercialAgendaService } from 'src/app/modules/comercial/agenda/agenda.service';
+
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
@@ -124,8 +125,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       titulo: [''],
       estado: ['']
     });
-
-
+    this.reporteAgenda();
+    
 
   }
   
@@ -181,8 +182,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
   
-
   
+
   
   filterCompromissos(): void {
     const params = {
@@ -199,32 +200,26 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-  getCompromissos() {
-    const fechaInicial = this.formFilter.get('fechaInicial').value;
-    const fechaFinal = this.formFilter.get('fechaFinal').value;
-
-    if (!fechaInicial || !fechaFinal) {
-      // Manejar el caso en el que las fechas no estén seleccionadas
-      return;
-    }
-
-    const nombreVendedor = this.formFilter.get('nombreVendedor').value;
-    const listaSucursales = this.formFilter.get('listaSucursales').value;
-    const title = this.formFilter.get('titulo').value;
-    const estado = this.formFilter.get('estado').value;
-
-    const params = {
-      inicio: fechaInicial,
-      fim: fechaFinal,
-      idVendedor: nombreVendedor,
-      listaSucursales,
-      title,
-      estado
+  reporteAgenda(): void {
+    const data = {
+      // Proporciona los datos necesarios para generar el informe de la agenda
     };
-
+  
+    // Llamada al servicio reporteAgenda
+    this.agendaService.reporteAgenda(data).subscribe(
+      (response: any) => {
+        // Manejar la respuesta de texto en lugar de JSON
+        console.log(response);
+        // Realizar las acciones necesarias con la respuesta de texto
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
+    
     
   }
-
+  
 
   ngOnDestroy(): void {
     this.showDetailPanelSubscription.unsubscribe();
@@ -286,15 +281,14 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.showAdvancedFilter = !this.showAdvancedFilter;
   }
 
-  // filterByStatus(status: string): void {
-  //   this.formFilter.get('vendedores').setValue(status);
-  //   this.onFilter();
-  // }
+  filterByStatus(status: string): void {
+    this.formFilter.get('vendedores').setValue(status);
+    this.onFilter();
+  }
 
-  // onFilter() {
-  //   const filters = this.formFilter.value;
-  //   this.getCompromissos(filters);
-  // }
+  onFilter() {
+    const filters = this.formFilter.value;
+  }
 
   
 
@@ -395,17 +389,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     }
   }
 
-  onPreCadastroCpfCnpj() {
-    let pesquisa = this.pesquisa.replace(/\D/g, '');
-
-    if (pesquisa.length === 11) {
-      return { cpf: pesquisa };
-    } else if (pesquisa.length === 14) {
-      return { cnpj: pesquisa };
-    }
-
-    return {};
-  }
 
   handleCounter(value: any) {
     return value.toFixed(0);

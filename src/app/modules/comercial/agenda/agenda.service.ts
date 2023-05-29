@@ -33,6 +33,10 @@
         .get(`${this.API}/compromissos/detalhes/${id}`)
         .pipe(take(1), retry(2));
     }
+
+    reporteAgenda(data: any) {
+      return this.http.post(`${this.API}/reporte`, data).pipe(take(1), retry(2));
+    }
     
 
     private saveCompromisso(record: any) {
