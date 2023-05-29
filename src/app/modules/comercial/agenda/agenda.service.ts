@@ -33,11 +33,6 @@
         .get(`${this.API}/compromissos/detalhes/${id}`)
         .pipe(take(1), retry(2));
     }
-    getEstado(params: any) {
-      return this.http
-        .get(`${this.API}/compromissos/Estado`, { params })
-        .pipe(take(1), retry(2));
-    }
     
 
     private saveCompromisso(record: any) {

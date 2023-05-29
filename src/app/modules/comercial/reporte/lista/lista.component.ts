@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { saveAs } from 'file-saver';
@@ -81,10 +81,13 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   contatos: any = [];
   filteredVendedores: any[] = [];
   escritorios: any[] = [];
+  codSituacao: any[] = [];
+  statusList: any[] = [];
+  compromissos: any[];
   titulos: any[] = [];
-  estados : any[] = [];
-  compromissos: any[] = [];
-
+  estados: any[] = [];
+  
+  
   constructor(
     private activatedRoute: ActivatedRoute,
     private vendedoresService: ComercialVendedoresService,
@@ -99,6 +102,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     private detailPanelService: DetailPanelService,
     private titulosAgendaService: ComercialCadastrosTitulosAgendaService,
     private agendaService: ComercialAgendaService,
+    
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -111,7 +115,18 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.setFormFilter(); // Agregar esta línea para inicializar el formulario
     this.getEscritorios();
     this.getTitulosAgenda();
-    this.getCompromissos();
+    this.getEstados();
+    this.formFilter = this.formBuilder.group({
+      fechaInicial: [''],
+      fechaFinal: [''],
+      nombreVendedor: [''],
+      listaSucursales: [''],
+      titulo: [''],
+      estado: ['']
+    });
+
+
+
   }
   
   getVendedores(): void {
@@ -138,7 +153,24 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
   
   getTitulosAgenda(): void {
-    this.titulosAgendaService.getListaTitulosAgenda({}).subscribe(
+    // Llamada al servicio para obtener la lista de títulos
+    this.titulosAgendaService.getListaTitulosAgenda({ codSituacao: null }).subscribe(
+      (response: any) => {
+        this.titulos = response.data; // Asignar la lista de títulos a la variable "titulos"
+      },
+      (error: any) => {
+        // Manejar el error en caso de que ocurra
+      }
+    );
+  }
+  
+  getEstados(): void {
+    const params = {
+      codSituacao: null
+    };
+  
+    // Llamada al servicio para obtener la lista de estados
+    this.agendaService.getCompromissos(params).subscribe(
       (response: any) => {
         console.log(response); // Verificar el tipo de datos de la respuesta
         this.estados = response.result;
@@ -149,17 +181,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
   
-  getEstados(): void {
-    this.agendaService.getEstado({}).subscribe(
-      (response: any) => {
-        console.log(response); // Verificar el tipo de datos de la respuesta
-        this.estados = response.result;
-      },
-      (error: any) => {
-        // Manejar el error en caso de que ocurra
-      }
-    );
-  }
+
+  
   
   filterCompromissos(): void {
     const params = {
@@ -176,20 +199,30 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-  getCompromissos(): void {
+  getCompromissos() {
+    const fechaInicial = this.formFilter.get('fechaInicial').value;
+    const fechaFinal = this.formFilter.get('fechaFinal').value;
+
+    if (!fechaInicial || !fechaFinal) {
+      // Manejar el caso en el que las fechas no estén seleccionadas
+      return;
+    }
+
+    const nombreVendedor = this.formFilter.get('nombreVendedor').value;
+    const listaSucursales = this.formFilter.get('listaSucursales').value;
+    const title = this.formFilter.get('titulo').value;
+    const estado = this.formFilter.get('estado').value;
+
     const params = {
-      // Agrega aquí los parámetros iniciales de obtención de compromisos
+      inicio: fechaInicial,
+      fim: fechaFinal,
+      idVendedor: nombreVendedor,
+      listaSucursales,
+      title,
+      estado
     };
 
-    this.agendaService.getCompromissos(params).subscribe(
-      (response: any) => {
-        console.log(response); // Verifica la respuesta en la consola
-        this.compromissos = response.result;
-      },
-      (error: any) => {
-        // Maneja el error en caso de que ocurra
-      }
-    );
+    
   }
 
 
@@ -226,7 +259,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       carteira: [formValue['carteira'], Validators.required],
       pagina: [formValue['pagina']],
       nombreVendedor: [''],  // Agrega esta línea para definir el control "nombreVendedor"
-      listaSucursales: this.formBuilder.control('') // Agrega el control listaSucursales aquí
+      listaSucursales: this.formBuilder.control(''), // Agrega el control listaSucursales aquí
+      estado: new FormControl('')
     });
   }
   
@@ -252,19 +286,17 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.showAdvancedFilter = !this.showAdvancedFilter;
   }
 
-  filterByStatus(status: string): void {
-    this.formFilter.get('vendedores').setValue(status);
-    this.onFilter();
-  }
+  // filterByStatus(status: string): void {
+  //   this.formFilter.get('vendedores').setValue(status);
+  //   this.onFilter();
+  // }
 
-  onFilter(): void {
-    let params = this.formFilter.value;
-    params['orderBy'] = this.orderBy;
-    params['orderType'] = this.orderType;
+  // onFilter() {
+  //   const filters = this.formFilter.value;
+  //   this.getCompromissos(filters);
+  // }
 
-    this.currentPage = 1;
-    this.setRouterParams(params);
-  }
+  
 
   setSubmittedSearch(): void {
     this.searchSubmitted = true;
