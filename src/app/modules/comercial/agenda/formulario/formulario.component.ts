@@ -700,11 +700,6 @@ export class ComercialAgendaFormularioComponent
         end: termino,
         allDay: formValue.diaInteiro,
         rescheduleId: formValue.motivoReagendamento,
-        description: formValue.observacao
-          ? formValue.observacao.toUpperCase()
-          : null,
-          Obsfinalizar: obsFinalizar.value
-
         description: formValue.observacao,
         direccion: formValue.direccion,
         latitud: formValue.latitud_clie,

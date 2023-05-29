@@ -23,7 +23,6 @@ import { ComercialAgendaService } from 'src/app/modules/comercial/agenda/agenda.
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EscritoriosService } from 'src/app/shared/services/requests/escritorios.service';
 import { ComercialCadastrosTitulosAgendaService } from 'src/app/modules/comercial/cadastros/titulos-agenda/titulos-agenda.service';
-import { ComercialAgendaService } from 'src/app/modules/comercial/agenda/agenda.service';
 
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
