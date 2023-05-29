@@ -81,7 +81,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
   } */
 
   filtrarClientes() {
-
+    
     const idSucursal = this.form.get('sucursal_id').value;
     const idVendedor = this.form.get('vendedor_id').value;
     const idUltimaVisita = this.form.get('visita_id').value;
@@ -95,8 +95,11 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
     };
 
     this.rutaService.filtrarMapas(params);
-    
+
   }
+
+  
+  
 
 
 
@@ -149,7 +152,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
                console.log(escritorioNoVacio.nome); */
             } else {
               /*   // No se encontró ningún valor no vacío
-                console.log("No hay valores no vacíos en el array"); */
+              console.log("No hay valores no vacíos en el array"); */
             }
 
             if (this.escritorios.length > 1 && this.showAll === true) {
@@ -162,16 +165,15 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
             this.handleLoadDependenciesError();
           }
 
-
           if (response[0]['responseCode'] === 200) {
             this.vendedores = response[1]['result'];
             this.filteredVendedores = this.vendedores;
-            if (this.showAll === true) {
+            /* if (this.showAll === true) { */
               this.filteredVendedores.unshift({
                 id: 0,
-                nome: 'TODOS LOS VENDEDORES'
+                nome: 'TODOS'
               });
-            }
+            /* } */
           } else {
             this.handleLoadDependenciesError();
           }
@@ -181,6 +183,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
         }
       });
   }
+
 
 
   ultimaVisita = [

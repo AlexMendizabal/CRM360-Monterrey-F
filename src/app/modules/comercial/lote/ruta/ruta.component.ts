@@ -3,6 +3,7 @@ import { map, finalize } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AgmCoreModule } from '@agm/core';
+import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 
 
 // angular-calendar
@@ -29,6 +30,10 @@ import { DateService } from 'src/app/shared/services/core/date.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ComercialVendedoresService } from '../../services/vendedores.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+
 
 
 // Interfaces
@@ -77,6 +82,7 @@ export class ComercialLoteRutaComponent implements OnInit {
     filteredGestiones: any[] = [];
     vendedor_id: any[];
     seleccion_id: any[];
+
     /*   events$: Observable<Array<CalendarEvent<{ compromisso: Compromisso }>>>;
       eventSelected: Compromisso; */
 
@@ -97,6 +103,8 @@ export class ComercialLoteRutaComponent implements OnInit {
         private formBuilder: FormBuilder,
         private datePipe: DatePipe,
         private vendedoresService: ComercialVendedoresService,
+        private pnotifyService: PNotifyService,
+
 
 
 
@@ -405,8 +413,10 @@ export class ComercialLoteRutaComponent implements OnInit {
     }
 
     agregarClienteTemporal(mapa: any) {
-        const nuevoCliente = {
+/*         console.log(mapa);
+ */        const nuevoCliente = {
             checked: false,
+            codClient: mapa.id_cliente,
             codigoCliente: mapa.CODIGO_CLIENTE,
             nombre: mapa.NOMBRE,
             direccion: mapa.DIRECCION,
@@ -453,6 +463,66 @@ export class ComercialLoteRutaComponent implements OnInit {
             }
         );
     }
+    public mostrarSpinner = false;
+    private enviarDatosSubject = new Subject<void>();
+
+
+    enviarDatos() {
+        let msgSuccess = 'Cita creada exitosamente.';
+        let msgError = 'Ocurrio un error al agendar la cita.';
+        console.log(this.atividades);
+        const datos = this.atividades;
+
+        // Muestra el spinner
+        this.mostrarSpinner = true;
+
+        // Envía los datos al servicio utilizando el Subject
+        this.loteService.guardarRutas(datos)
+            .pipe(takeUntil(this.enviarDatosSubject))
+            .subscribe(
+                (response) => {
+                    this.pnotifyService.success(msgSuccess);
+                    this.mostrarSpinner = false;
+                    this.actualizarPagina();
+                },
+                (error) => {
+                    this.pnotifyService.error(msgError);
+                    this.mostrarSpinner = false;
+                }
+            );
+        this.limpiarDatos();
+    }
+    limpiarDatos() {
+
+        this.atividades = [];
+        this.filteredVendedores = [];
+        this.filteredGestiones = [];
+        this.latitud = this.latitud;
+        this.longitud = this.longitud;
+
+    }
+    actualizarPagina(){
+        location.reload();
+    }
+    // En caso de que el componente se destruya antes de completarse el envío de datos,
+    // se debe completar el Subject para evitar errores de memoria.
+    ngOnDestroy() {
+        this.enviarDatosSubject.next();
+        this.enviarDatosSubject.complete();
+    }
+    onVendedorChange(item: any, newValue: any) {
+        item.id_vendedor = newValue;
+    }
+
+    onGestionChange(item: any, newValue: any) {
+        item.codTitulo = newValue;
+    }
+    onFechaChange(item: any, newValue: any) {
+        item.fechaVisita = newValue;
+    }
+
+
+
 
 
 

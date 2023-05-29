@@ -8,7 +8,7 @@
   </advanced-filter>
 
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-sm-6">
       <div class="embed-responsive embed-responsive-16by9">
         <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="13" class="embed-responsive-item"
           (mapClick)="actualizarMarcador($event)">
@@ -42,46 +42,49 @@
       </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-sm-6">
       <h6 align="center"> Agendar clientes </h6>
       <custom-table [config]="tableConfigAtividades">
         <ng-template #thead let-thead>
           <tr>
-            <th class="text-center">Cod. cliente</th>
+            <!--             <th class="text-center">Cod. cliente</th>
+   -->
             <th class="text-center">Nombre</th>
-            <th class="text-center">Fecha visita</th>
             <th class="text-center">Promotor</th>
             <th class="text-center">Gestión</th>
+            <th class="text-center">Fecha visita</th>
             <th class="text-center">Opciones</th>
           </tr>
         </ng-template>
         <ng-template #tbody let-tbody>
           <tr *ngFor="let item of atividades">
-            <td class="hover text-center" style="width: 10%" (click)="item.checked = !item.checked">
-              <span *ngIf="item.codigoCliente">{{ item.codigoCliente }}</span>
-              <span *ngIf="!item.codigoCliente">N/A</span>
-            </td>
+            <!--  <td class="hover text-center" style="width: 10%" (click)="item.checked = !item.checked">
+                <span *ngIf="item.codigoCliente">{{ item.codigoCliente }}</span>
+                <span *ngIf="!item.codigoCliente">N/A</span>
+              </td> -->
             <td class="hover text-center" style="width: 35%" (click)="item.checked = !item.checked">
               <span *ngIf="item.nombre">{{ item.nombre }}</span>
               <span *ngIf="!item.nombre">N/A</span>
             </td>
-            <td class="hover text-center" style="width: 10%" (click)="item.checked = !item.checked">
-              <input type="datetime-local" class="form-control">
-            </td>
             <td class="hover text-center " style="width: 30%" (click)="item.checked = !item.checked">
               <ng-select [searchable]="true" [clearable]="false" [items]="filteredVendedores" [virtualScroll]="true"
-                labelForId="vendedor" bindLabel="nome" bindValue="id" (change)="filtrarClientes()"
-                formControlName="vendedor_id" class="select-control">
-                <option value=""> Seleccionar</option>
+                labelForId="vendedor" bindLabel="nome" bindValue="id" [(ngModel)]="item.vendedor_id"
+                (ngModelChange)="onVendedorChange(item, $event)" class="select-control">
+                <option value="">Seleccionar</option>
               </ng-select>
             </td>
             <td class="hover text-center " style="width: 35%" (click)="item.checked = !item.checked">
               <ng-select [searchable]="true" [clearable]="false" [items]="filteredGestiones" [virtualScroll]="true"
-                labelForId="vendedor" bindLabel="descricaoTitulo" bindValue="codTitulo" 
-                formControlName="seleccion_id" class="select-control">
-                <option value=""> Seleccionar</option>
+                labelForId="vendedor" bindLabel="descricaoTitulo" bindValue="codTitulo" [(ngModel)]="item.seleccion_id"
+                (ngModelChange)="onGestionChange(item, $event)" class="select-control">
+                <option value="">Seleccionar</option>
               </ng-select>
             </td>
+            <td class="hover text-center" style="width: 10%" (click)="item.checked = !item.checked">
+              <input type="datetime-local" class="form-control" [(ngModel)]="item.fecha"
+                (ngModelChange)="onFechaChange(item, $event)">
+            </td>
+
             <td class="hover text-center" style="width: 35%">
               <button (click)="eliminarClienteTemporal(item)" class="btn btn-danger btn-sm">
                 <i class="fas fa-trash-alt"></i> Eliminar
@@ -93,8 +96,15 @@
           </tr>
         </ng-template>
       </custom-table> <br>
+
       <div align="center" *ngIf="atividades.length > 0">
-        <button class="btn btn-success"> Agendar </button>
+        <button class="btn btn-success" (click)="enviarDatos()">Agendar</button>
+      </div>
+      <div *ngIf="mostrarSpinner" align="center">
+        <!-- Aquí puedes agregar el código HTML para mostrar el spinner -->
+        <!-- por ejemplo: -->
+        <div class="spinner-border text-primary" role="status">
+        </div>
       </div>
     </div> <br>
 
