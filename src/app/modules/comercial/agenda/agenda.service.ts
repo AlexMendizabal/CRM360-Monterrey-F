@@ -35,6 +35,7 @@
     }
 
     reporteAgenda(data: any) {
+      console.log('entro')
       return this.http.post(`${this.API}/reporte`, data).pipe(take(1), retry(2));
     }
     
