@@ -223,6 +223,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       fechaFinal: [null, Validators.required],
       vendedores: [formValue['vendedores'], Validators.required],
       tipoPessoa: [formValue['tipoPessoa'], Validators.required],
+      
       carteira: [formValue['carteira'], Validators.required],
       pagina: [formValue['pagina']],
       nombreVendedor: [''],  // Agrega esta línea para definir el control "nombreVendedor"
@@ -410,6 +411,22 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
   }
   
+
+  filtrar2() {
+    const promotor = this.formFilter.value['promotor'];
+    const sucursal = this.formFilter.value['sucursal'];
+    const titulo = this.formFilter.value['titulo'];
+    const Estado = this.formFilter.value['Estado'];
+
+    const params = {
+      promotor: promotor,
+      sucursal: sucursal,
+      titulo: titulo,
+      Estado: Estado
+    };
+   var filtrar= this.agendaService.reporte(params);
+   console.log(params)
+  }
   
 
 

@@ -87,4 +87,11 @@
         .pipe(take(1), retry(2));
     }
 
+    reporte(params: any) {
+      console.log(params);
+        return this.http.post(`${this.API}/reporte`, params ).pipe(
+          take(1),
+          retry(2)
+        );
+      }
   }

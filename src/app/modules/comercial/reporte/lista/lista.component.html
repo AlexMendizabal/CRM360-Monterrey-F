@@ -57,7 +57,7 @@
           <label for="titulo">Título</label>
           <select class="form-control custom-select" id="titulo" formControlName="titulo">
             <option value="">Seleccionar título</option>
-            <option *ngFor="let titulo of titulos" [value]="titulo.id">{{ titulo.nombre }}</option>
+            <option *ngFor="let titulo of titulos" [value]="titulo.codTitulo">{{ titulo.descricaoTitulo }}</option>
           </select>
         </div>
 
