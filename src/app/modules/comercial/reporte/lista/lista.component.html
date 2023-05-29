@@ -6,11 +6,8 @@
    Exportar a Excel
   </button>
 
-  <button
-    type="button"
-    (click)="onFilter()">
-    Filtrar
-  </button> 
+  <button type="button" (click)="reporteAgenda()" class="btn btn-primary">Filtrar</button>
+ 
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
   
@@ -48,26 +45,29 @@
           <select class="form-control custom-select" id="listaSucursales" formControlName="listaSucursales">
             <option value="">Seleccionar escritorio</option>
             <ng-container *ngFor="let escritorio of escritorios">
-              <option [value]="escritorio.nomeEscritorio" *ngIf="escritorio.nomeEscritorio">{{ escritorio.nomeEscritorio }}</option>
+              <option [value]="escritorio.nomeEscritorio" 
+              *ngIf="escritorio.nomeEscritorio">{{ escritorio.nomeEscritorio }}</option>
             </ng-container>
           </select>
         </div>  
         
         <div class="form-group col-lg-3">
           <label for="titulo">Título</label>
-          <select class="form-control custom-select" id="titulo" formControlName="titulo">
+          <select class="form-control custom-select" id="title" formControlName="titulo">
             <option value="">Seleccionar título</option>
-            <option *ngFor="let titulo of titulos" [value]="titulo.codTitulo">{{ titulo.descricaoTitulo }}</option>
+            <option *ngFor="let titulo of titulos" [value]="titulo.id">{{ titulo.nombre }}</option>
           </select>
         </div>
 
         <div class="form-group col-lg-3">
           <label for="estado">Estado</label>
           <select class="form-control custom-select" id="estado" formControlName="estado">
-            <option value="">Seleccionar título</option>
-            <option *ngFor="let estado of estados" [value]="estado.id">{{ estado.nombre }}</option>
+            <option value="">Seleccionar estado</option>
+            <option *ngFor="let estado of estados" [value]="estado.id_status">{{ estado.statusnome }}</option>
           </select>
         </div>
+        
+        
         
       </div>
       <div class="form-row">
@@ -88,23 +88,31 @@
             <th
               
               class="text-center hover">
-              <thead-sorter value="Código de clientes"></thead-sorter>
+              <thead-sorter value="Nombre de Vendedor"></thead-sorter>
             </th>
             <th
               scope="col"
               class="hover">
-              <thead-sorter value="Nombre" ></thead-sorter>
+              <thead-sorter value="Sucursal" ></thead-sorter>
             </th>
             <th
               scope="col"
               class="hover">
-              <thead-sorter value="Razón social" ></thead-sorter>
+              <thead-sorter value="Titulo" ></thead-sorter>
             </th>
             <th>
               <thead-sorter value="Estado"></thead-sorter>
             </th>
           </tr>
         </ng-template>
+        <div *ngIf="compromissos.length > 0">
+          <h3>Compromissos Filtrados</h3>
+          <ul>
+            <li *ngFor="let compromisso of compromissos">
+              <!-- Mostrar información relevante del compromisso -->
+            </li>
+          </ul>
+        </div>
         
       </custom-table>
       <div class="d-flex justify-content-center mt-3" *ngIf="clientes[0]['total'] > itemsPerPage">

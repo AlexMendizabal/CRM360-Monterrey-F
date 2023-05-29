@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { saveAs } from 'file-saver';
@@ -23,6 +23,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EscritoriosService } from 'src/app/shared/services/requests/escritorios.service';
 import { ComercialCadastrosTitulosAgendaService } from 'src/app/modules/comercial/cadastros/titulos-agenda/titulos-agenda.service';
 import { ComercialAgendaService } from 'src/app/modules/comercial/agenda/agenda.service';
+
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
@@ -81,10 +82,13 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   contatos: any = [];
   filteredVendedores: any[] = [];
   escritorios: any[] = [];
+  codSituacao: any[] = [];
+  statusList: any[] = [];
+  compromissos: any[];
   titulos: any[] = [];
-  estados : any[] = [];
-  compromissos: any[] = [];
-
+  estados: any[] = [];
+  
+  
   constructor(
     private activatedRoute: ActivatedRoute,
     private vendedoresService: ComercialVendedoresService,
@@ -99,6 +103,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     private detailPanelService: DetailPanelService,
     private titulosAgendaService: ComercialCadastrosTitulosAgendaService,
     private agendaService: ComercialAgendaService,
+    
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -111,7 +116,18 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.setFormFilter(); // Agregar esta línea para inicializar el formulario
     this.getEscritorios();
     this.getTitulosAgenda();
-    this.getCompromissos();
+    this.getEstados();
+    this.formFilter = this.formBuilder.group({
+      fechaInicial: [''],
+      fechaFinal: [''],
+      nombreVendedor: [''],
+      listaSucursales: [''],
+      titulo: [''],
+      estado: ['']
+    });
+    this.reporteAgenda();
+    
+
   }
   
   getVendedores(): void {
@@ -138,7 +154,24 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
   
   getTitulosAgenda(): void {
-    this.titulosAgendaService.getListaTitulosAgenda({}).subscribe(
+    // Llamada al servicio para obtener la lista de títulos
+    this.titulosAgendaService.getListaTitulosAgenda({ codSituacao: null }).subscribe(
+      (response: any) => {
+        this.titulos = response.data; // Asignar la lista de títulos a la variable "titulos"
+      },
+      (error: any) => {
+        // Manejar el error en caso de que ocurra
+      }
+    );
+  }
+  
+  getEstados(): void {
+    const params = {
+      codSituacao: null
+    };
+  
+    // Llamada al servicio para obtener la lista de estados
+    this.agendaService.getCompromissos(params).subscribe(
       (response: any) => {
         console.log(response); // Verificar el tipo de datos de la respuesta
         this.estados = response.result;
@@ -149,17 +182,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
   
-  getEstados(): void {
-    this.agendaService.getEstado({}).subscribe(
-      (response: any) => {
-        console.log(response); // Verificar el tipo de datos de la respuesta
-        this.estados = response.result;
-      },
-      (error: any) => {
-        // Manejar el error en caso de que ocurra
-      }
-    );
-  }
+  
+
   
   filterCompromissos(): void {
     const params = {
@@ -176,22 +200,26 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-  getCompromissos(): void {
-    const params = {
-      // Agrega aquí los parámetros iniciales de obtención de compromisos
+  reporteAgenda(): void {
+    const data = {
+      // Proporciona los datos necesarios para generar el informe de la agenda
     };
-
-    this.agendaService.getCompromissos(params).subscribe(
+  
+    // Llamada al servicio reporteAgenda
+    this.agendaService.reporteAgenda(data).subscribe(
       (response: any) => {
-        console.log(response); // Verifica la respuesta en la consola
-        this.compromissos = response.result;
+        // Manejar la respuesta de texto en lugar de JSON
+        console.log(response);
+        // Realizar las acciones necesarias con la respuesta de texto
       },
       (error: any) => {
-        // Maneja el error en caso de que ocurra
+        console.error(error);
       }
     );
+    
+    
   }
-
+  
 
   ngOnDestroy(): void {
     this.showDetailPanelSubscription.unsubscribe();
@@ -227,7 +255,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       carteira: [formValue['carteira'], Validators.required],
       pagina: [formValue['pagina']],
       nombreVendedor: [''],  // Agrega esta línea para definir el control "nombreVendedor"
-      listaSucursales: this.formBuilder.control('') // Agrega el control listaSucursales aquí
+      listaSucursales: this.formBuilder.control(''), // Agrega el control listaSucursales aquí
+      estado: new FormControl('')
     });
   }
   
@@ -258,14 +287,11 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.onFilter();
   }
 
-  onFilter(): void {
-    let params = this.formFilter.value;
-    params['orderBy'] = this.orderBy;
-    params['orderType'] = this.orderType;
-
-    this.currentPage = 1;
-    this.setRouterParams(params);
+  onFilter() {
+    const filters = this.formFilter.value;
   }
+
+  
 
   setSubmittedSearch(): void {
     this.searchSubmitted = true;
@@ -364,17 +390,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     }
   }
 
-  onPreCadastroCpfCnpj() {
-    let pesquisa = this.pesquisa.replace(/\D/g, '');
-
-    if (pesquisa.length === 11) {
-      return { cpf: pesquisa };
-    } else if (pesquisa.length === 14) {
-      return { cnpj: pesquisa };
-    }
-
-    return {};
-  }
 
   handleCounter(value: any) {
     return value.toFixed(0);

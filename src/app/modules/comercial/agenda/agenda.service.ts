@@ -33,10 +33,9 @@
         .get(`${this.API}/compromissos/detalhes/${id}`)
         .pipe(take(1), retry(2));
     }
-    getEstado(params: any) {
-      return this.http
-        .get(`${this.API}/compromissos/Estado`, { params })
-        .pipe(take(1), retry(2));
+
+    reporteAgenda(data: any) {
+      return this.http.post(`${this.API}/reporte`, data).pipe(take(1), retry(2));
     }
     
 
