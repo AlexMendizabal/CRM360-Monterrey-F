@@ -147,6 +147,7 @@ export class LoginComponent implements OnInit {
     } else {
       if (response.result.id_modulo_home != null) {
         if (isDevMode()) {
+           /* console.log(response.result)  */
           matriculaTid =
             response.result.matricula_tid != null
               ? response.result.matricula_tid

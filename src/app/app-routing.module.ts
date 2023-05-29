@@ -15,6 +15,7 @@ import { SistemasGuard } from './modules/sistemas/sistemas.guard';
 import { SulFluminenseGuard } from './modules/sul-fluminense/sul-fluminense.guard';
 import { TecnologiaInformacaoGuard } from './modules/tecnologia-informacao/tecnologia-informacao.guard';
 import { TidSoftwareGuard } from './modules/tid-software/tid-software.guard';
+import { AgmCoreModule } from '@agm/core';
 
 // Components
 import { LoginComponent } from './modules/login/login.component';
@@ -141,6 +142,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {
       useHash: true,
       onSameUrlNavigation: 'reload',
+      
     }),
   ],
   exports: [RouterModule],
