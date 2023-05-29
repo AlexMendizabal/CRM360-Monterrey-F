@@ -269,13 +269,13 @@ export class ComercialAgendaFormularioComponent
         promotor: [
           {
             value: detalhes.id_vendedor,
-            disabled: this.action == 'novo' ? false : true,
+            disabled: this.action == 'reagendar' || this.action === 'finalizar' ? true: false,
           },
         ],
         direccion: [
           {
             value: detalhes.direccion,
-            disabled: this.action === 'novo' || this.action === 'editar' ? false : true,
+            disabled: this.action === 'novo' || this.action === 'editar' ? true: false,
 
           },
         ],
