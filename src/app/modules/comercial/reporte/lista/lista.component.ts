@@ -201,12 +201,30 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
   reporteAgenda(): void {
+    const nombreVendedor = this.formFilter.value['nombreVendedor'];
+    const listaSucursales = this.formFilter.value['listaSucursales'];
+    const titulo = this.formFilter.value['titulo'];
+    const estado = this.formFilter.value['estado'];
+    const fechaInicial = this.formFilter.value['fechaInicial'];
+    const fechaFinal = this.formFilter.value['fechaFinal'];
+
+    const params = {
+      nombreVendedor: nombreVendedor,
+      sucursal: listaSucursales,
+      titulo: titulo,
+      Estado: estado,
+      fechaInicial: fechaInicial,
+      fechaFinal: fechaFinal,
+
+    };
+    console.log('dATA')
+    console.log(params)
     const data = {
       // Proporciona los datos necesarios para generar el informe de la agenda
     };
   
     // Llamada al servicio reporteAgenda
-    this.agendaService.reporteAgenda(data).subscribe(
+    this.agendaService.reporteAgenda(params).subscribe(
       (response: any) => {
         // Manejar la respuesta de texto en lugar de JSON
         console.log(response);
@@ -251,11 +269,12 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       fechaFinal: [null, Validators.required],
       vendedores: [formValue['vendedores'], Validators.required],
       tipoPessoa: [formValue['tipoPessoa'], Validators.required],
+      
       carteira: [formValue['carteira'], Validators.required],
       pagina: [formValue['pagina']],
-      nombreVendedor: [''],  // Agrega esta línea para definir el control "nombreVendedor"
-      listaSucursales: this.formBuilder.control(''), // Agrega el control listaSucursales aquí
-      estado: new FormControl('')
+      nombreVendedor: [formValue['nombreVendedor'], Validators.required],  // Agrega esta línea para definir el control "nombreVendedor"
+      listaSucursales: [formValue['listaSucursales'], Validators.required], // Agrega el control listaSucursales aquí
+      estado: [formValue['estado'], Validators.required], 
     });
   }
   
@@ -287,7 +306,13 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   onFilter() {
-    const filters = this.formFilter.value;
+    //const filters = this.formFilter.value;
+    let params = this.formFilter.value;
+    params['orderBy'] = this.orderBy;
+    params['orderType'] = this.orderType;
+
+    this.currentPage = 1;
+    this.setRouterParams(params);
   }
 
   
@@ -425,23 +450,39 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
   }
   
+
+//   filtrar2() {
+//     const promotor = this.formFilter.value['promotor'];
+//     const sucursal = this.formFilter.value['sucursal'];
+//     const titulo = this.formFilter.value['titulo'];
+//     const Estado = this.formFilter.value['Estado'];
+
+//     const params = {
+//       promotor: promotor,
+//       sucursal: sucursal,
+//       titulo: titulo,
+//       Estado: Estado
+//     };
+//    var filtrar= this.agendaService.reporte(params);
+//    console.log(params)
+//   }
   
 
 
-  excelExport(): void {
-  const data = this.prepareDataForExport();
-  const worksheet = XLSX.utils.json_to_sheet(data);
-  console.log('data123')
-  console.log(this.clienteSelecionado);
-  console.log(this.clientesService)
-  console.log(this.dadosCadastrais)
-  console.log(this.checkRouterParams())
-  console.log(this.itemsPerPage)
-  const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  const excelBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  saveAs(excelBlob, 'reporte.xlsx');
-}
+//   excelExport(): void {
+//   const data = this.prepareDataForExport();
+//   const worksheet = XLSX.utils.json_to_sheet(data);
+//   console.log('data123')
+//   console.log(this.clienteSelecionado);
+//   console.log(this.clientesService)
+//   console.log(this.dadosCadastrais)
+//   console.log(this.checkRouterParams())
+//   console.log(this.itemsPerPage)
+//   const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+//   const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+//   const excelBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+//   saveAs(excelBlob, 'reporte.xlsx');
+// }
 
   prepareDataForExport(): any[] {
   // Aquí debes implementar la lógica para obtener los datos que deseas exportar

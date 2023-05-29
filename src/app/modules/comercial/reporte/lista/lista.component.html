@@ -7,6 +7,7 @@
   </button>
 
   <button type="button" (click)="reporteAgenda()" class="btn btn-primary">Filtrar</button>
+  <button type="button" (click)="onFilter()" class="btn btn-primary">Filtrar</button>
  
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
@@ -55,15 +56,14 @@
           <label for="titulo">Título</label>
           <select class="form-control custom-select" id="title" formControlName="titulo">
             <option value="">Seleccionar título</option>
-            <option *ngFor="let titulo of titulos" 
-            [value]="titulo.codTitulo">{{ titulo.descricaoTitulo }}</option>
+            <option *ngFor="let titulo of titulos" [value]="titulo.codTitulo">{{ titulo.descricaoTitulo }}</option>
           </select>
         </div>
 
         <div class="form-group col-lg-3">
           <label for="estado">Estado</label>
           <select class="form-control custom-select" id="estado" formControlName="estado">
-            <option value="">Seleccionar estado</option>
+            <option value="estado">Seleccionar estado</option>
             <option *ngFor="let estado of estados" [value]="estado.id_status">{{ estado.statusnome }}</option>
           </select>
         </div>

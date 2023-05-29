@@ -112,6 +112,7 @@ export class ComercialAgendaFormularioComponent
   showFormulario = true;
   hideFormulario = true;
   color: string;
+  
 
   bsConfig: Partial<BsDatepickerConfig>;
   mostrarElemento: any;
@@ -240,8 +241,7 @@ export class ComercialAgendaFormularioComponent
       
   
       this.form = this.formBuilder.group({
-
-        id: [detalhes.id],
+        id: [detalhes.id], // Agrega el campo 'id' al formulario
         cor: [detalhes.color.primary],
         codTitulo: [
           {
@@ -554,7 +554,7 @@ export class ComercialAgendaFormularioComponent
         msgSuccess = 'Su cita fue editada.';
         msgError = 'Ocurrió un error al editar la cita.';
       }
-  
+      
       if (formValue.cliente != '') {
         for (let index = 0; index < this.clientes.length; index++) {
           if (this.clientes[index].id == formValue.cliente) {
@@ -562,28 +562,23 @@ export class ComercialAgendaFormularioComponent
           }
         }
       }
-  
+      
       if (formValue.codFormaContato != '') {
         for (let index = 0; index < this.formasContato.length; index++) {
-          if (
-            this.formasContato[index].codFormaContato ==
-            formValue.codFormaContato
-          ) {
+          if (this.formasContato[index].codFormaContato == formValue.codFormaContato) {
             formContactDesc = this.formasContato[index].nomeFormaContato;
           }
         }
       }
-  
+      
       if (formValue.codOrigemContato != '') {
         for (let index = 0; index < this.origensContato.length; index++) {
-          if (
-            this.origensContato[index].codOrigemContato ==
-            formValue.codFormaContato
-          ) {
+          if (this.origensContato[index].codOrigemContato == formValue.codOrigemContato) {
             typeContactDesc = this.origensContato[index].nomeOrigemContato;
           }
         }
       }
+      
   
       if (formValue.diaInteiro) {
         inicioData = formValue.inicioData;
@@ -606,6 +601,26 @@ export class ComercialAgendaFormularioComponent
           terminoHorario.getMinutes()
         );
       }
+      let status: number;
+
+  // if (formValue.id) {
+  //   status = 0; // 'editar'
+  // } else {
+    switch (this.action) {
+      case 'novo':
+        status = 1;
+        break;
+      case 'finalizar':
+        status = 3;
+        break;
+      case 'reagendar':
+        status = 4;
+        break;
+      default:
+        status = 0;
+        break;
+    }
+  // }
   
       const inicio = this.dateService.convert2PhpDate(inicioData);
       const termino = this.dateService.convert2PhpDate(terminoData);
@@ -630,7 +645,8 @@ export class ComercialAgendaFormularioComponent
         description: formValue.observacao
           ? formValue.observacao.toUpperCase()
           : null,
-          Obsfinalizar: obsFinalizar.value
+          Obsfinalizar: obsFinalizar.value,
+          status: status
                     
       };
   
