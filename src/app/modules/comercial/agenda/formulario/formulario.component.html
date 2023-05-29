@@ -208,7 +208,7 @@
             <label for="motivoReagendamento">Motivo de la reprogramación</label>
             <select class="form-control custom-select" id="motivoReagendamento" formControlName="motivoReagendamento"
               (change)="onInput()" [ngClass]="onFieldError('inicioData') + ' ' + onFieldRequired('inicioData')">
-              <option *ngFor="let item of motivosReagendamento" [value]="item.id">{{ item.descricao }}</option>
+              <option *ngFor="let item of motivosReagendamento" [value]="item.id">{{ item.DS_REAG_MOTI }}</option>
             </select>
             <invalid-form-control [show]="onFieldInvalid('motivoReagendamento')"
               message="Motivo do reagendamento é obrigatório."></invalid-form-control>
