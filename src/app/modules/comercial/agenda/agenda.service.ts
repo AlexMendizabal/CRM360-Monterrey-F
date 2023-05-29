@@ -35,6 +35,7 @@
     }
 
     reporteAgenda(data: any) {
+      console.log('entro')
       return this.http.post(`${this.API}/reporte`, data).pipe(take(1), retry(2));
     }
     
@@ -86,4 +87,11 @@
         .pipe(take(1), retry(2));
     }
 
+    reporte(params: any) {
+      console.log(params);
+        return this.http.post(`${this.API}/reporte`, params ).pipe(
+          take(1),
+          retry(2)
+        );
+      }
   }

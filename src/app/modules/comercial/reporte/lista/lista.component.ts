@@ -87,7 +87,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   compromissos: any[];
   titulos: any[] = [];
   estados: any[] = [];
-  
+  resuldata: any[] = [];
   
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -208,36 +208,30 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     const fechaInicial = this.formFilter.value['fechaInicial'];
     const fechaFinal = this.formFilter.value['fechaFinal'];
 
-    const params = {
-      nombreVendedor: nombreVendedor,
+    const data = {
+      id_Vendedor: nombreVendedor,
       sucursal: listaSucursales,
       titulo: titulo,
       Estado: estado,
       fechaInicial: fechaInicial,
       fechaFinal: fechaFinal,
-
     };
     console.log('dATA')
-    console.log(params)
-    const data = {
-      // Proporciona los datos necesarios para generar el informe de la agenda
-    };
-  
+    console.log(data)
     // Llamada al servicio reporteAgenda
-    this.agendaService.reporteAgenda(params).subscribe(
-      (response: any) => {
-        // Manejar la respuesta de texto en lugar de JSON
-        console.log(response);
-        // Realizar las acciones necesarias con la respuesta de texto
-      },
-      (error: any) => {
-        console.error(error);
-      }
-    );
-    
-    
+    // this.agendaService.reporteAgenda(params).subscribe(
+    //   (response: any) => {
+    //     // Manejar la respuesta de texto en lugar de JSON
+    //     this.resuldata.push(response);
+    //     console.log('respuesta');
+    //     console.log(this.resuldata);
+    //     // Realizar las acciones necesarias con la respuesta de texto
+    //   },
+    //   (error: any) => {
+    //     console.error(error);
+    //   }
+    // );    
   }
-  
 
   ngOnDestroy(): void {
     this.showDetailPanelSubscription.unsubscribe();
@@ -307,6 +301,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
   onFilter() {
     //const filters = this.formFilter.value;
+    this.dataLoaded = true;
     let params = this.formFilter.value;
     params['orderBy'] = this.orderBy;
     params['orderType'] = this.orderType;
@@ -334,7 +329,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   search(params: any): void {
     if (this.searchSubmitted) {
       this.loaderNavbar = true;
-      this.dataLoaded = false;
+      //this.dataLoaded = false;
       this.detailPanelService.hide();
       this.clientes = [];
       this.buscandoPor = params['buscarPor'];
@@ -345,7 +340,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         .pipe(
           finalize(() => {
             this.loaderNavbar = false;
-            this.dataLoaded = true;
+           // this.dataLoaded = true;
           })
         )
         
@@ -449,25 +444,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     });
     saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
   }
-  
-
-//   filtrar2() {
-//     const promotor = this.formFilter.value['promotor'];
-//     const sucursal = this.formFilter.value['sucursal'];
-//     const titulo = this.formFilter.value['titulo'];
-//     const Estado = this.formFilter.value['Estado'];
-
-//     const params = {
-//       promotor: promotor,
-//       sucursal: sucursal,
-//       titulo: titulo,
-//       Estado: Estado
-//     };
-//    var filtrar= this.agendaService.reporte(params);
-//    console.log(params)
-//   }
-  
-
+    
 
 //   excelExport(): void {
 //   const data = this.prepareDataForExport();
