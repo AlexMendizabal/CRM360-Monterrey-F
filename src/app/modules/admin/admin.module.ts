@@ -57,7 +57,7 @@ import { AdminHomeComponent } from './home/home.component';
     AdminDepartamentosCadastroComponent,
     AdminCargosCadastroComponent,
     AdminCargosListaComponent,
-    AdminPerfisCadastroAtividadesComponent */
+    AdminPerfisCadastroAtividadesComponent  */
   ],
   imports: [
     CommonModule,

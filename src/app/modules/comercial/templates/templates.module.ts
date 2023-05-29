@@ -14,10 +14,12 @@ import { SharedModule } from 'src/app/shared/modules/shared.module';
 // Components
 import { ComercialTemplatesFiltroVendedorEscritorioComponent } from './filtro-vendedor-escritorio/filtro-vendedor-escritorio.component';
 import { ComercialTemplatesMapaMetasComponent } from './mapa-metas/mapa-metas.component';
+import{ ComercialTemplatesFiltroVendedorEscritorioDateComponent} from './filtro-vendedor-escritorio-date/filtro-vendedor-escritorio-date.component';
 
 @NgModule({
   declarations: [
     ComercialTemplatesFiltroVendedorEscritorioComponent,
+    ComercialTemplatesFiltroVendedorEscritorioDateComponent,
     ComercialTemplatesMapaMetasComponent
   ],
   imports: [
@@ -30,6 +32,7 @@ import { ComercialTemplatesMapaMetasComponent } from './mapa-metas/mapa-metas.co
   ],
   exports: [
     ComercialTemplatesFiltroVendedorEscritorioComponent,
+    ComercialTemplatesFiltroVendedorEscritorioDateComponent,
     ComercialTemplatesMapaMetasComponent
   ]
 })

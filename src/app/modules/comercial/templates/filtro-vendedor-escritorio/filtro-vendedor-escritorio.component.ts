@@ -27,6 +27,8 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
 
   escritorios: any[];
   vendedores: any[];
+  estados: any[];
+  diasVisita: any[];
   filteredVendedores: any[] = [];
 
   form: FormGroup;
@@ -118,6 +120,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
       });
   }
 
+  
   loadEscritoriosVendedores(): Observable<any> {
     const escritorios = this.comercialService.getEscritorios();
     const vendedores = this.vendedoresService.getVendedores();
@@ -170,6 +173,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
   }
 
   onInput(): void {
+   /*  alert(this.form.value['idVendedor']) */
     if (this.form.valid) {
       if (this.adminOnly()) {
         if (this.form.value['idEscritorio'] === 0) {

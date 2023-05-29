@@ -33,12 +33,13 @@ import { ComercialTemplatesModule } from '../templates/templates.module';
 import { ComercialAgendaCompromissosComponent } from './compromissos/compromissos.component';
 import { ComercialAgendaDetalhesComponent } from './detalhes/detalhes.component';
 import { ComercialAgendaFormularioComponent } from './formulario/formulario.component';
+import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
   declarations: [
     ComercialAgendaCompromissosComponent,
     ComercialAgendaDetalhesComponent,
-    ComercialAgendaFormularioComponent
+    ComercialAgendaFormularioComponent,
   ],
   imports: [
     CommonModule,
@@ -57,7 +58,10 @@ import { ComercialAgendaFormularioComponent } from './formulario/formulario.comp
     NotFoundModule,
     SharedModule,
     TemplatesModule.forRoot(),
-    ComercialTemplatesModule
+    ComercialTemplatesModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDl5b7STz9xYNDhybTTer2POVncX9FYqCc' // Reemplaza con tu propia clave de API de Google Maps
+    }),
   ],
   providers: [FormDeactivateGuard, { provide: LOCALE_ID, useValue: 'es-BO' }]
 })

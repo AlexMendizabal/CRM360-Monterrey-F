@@ -39,7 +39,7 @@ import { ComercialLoteRutaComponent } from './ruta/ruta.component';
 
 @NgModule({
   declarations: [
-    ComercialLoteRutaComponent
+    ComercialLoteRutaComponent,
   ],
   imports: [
     CommonModule,
@@ -62,6 +62,7 @@ import { ComercialLoteRutaComponent } from './ruta/ruta.component';
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDl5b7STz9xYNDhybTTer2POVncX9FYqCc' // Reemplaza con tu propia clave de API de Google Maps
     }),
+
   ],
   providers: [FormDeactivateGuard, { provide: LOCALE_ID, useValue: 'es-BO' },  DatePipe,]
 })

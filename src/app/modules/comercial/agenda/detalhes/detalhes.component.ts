@@ -105,6 +105,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   }
 
   onEdit(detalhes: any) {
+    detalhes.status = 2;
     this.router.navigate(['../../editar', detalhes.id], {
       relativeTo: this.activatedRoute
     });
@@ -112,12 +113,14 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   }
 
   onReschedule(detalhes: any) {
+    detalhes.status = 4;
     this.router.navigate(['../../reagendar', detalhes.id], {
       relativeTo: this.activatedRoute
     });
   }
 
   onFinish(detalhes: any) {
+    detalhes.status = 3;
     this.router.navigate(['../../finalizar', detalhes.id], {
       relativeTo: this.activatedRoute
     });

@@ -481,14 +481,9 @@ export class ComercialLoteRutaComponent implements OnInit {
             .pipe(takeUntil(this.enviarDatosSubject))
             .subscribe(
                 (response) => {
-                    if (response['responseCode'] === 200) {
-                        this.pnotifyService.success(msgSuccess);
-                        this.mostrarSpinner = false;
-                        this.actualizarPagina();
-                    } else {
-                        this.pnotifyService.error(msgError);
-                        this.mostrarSpinner = false;
-                    }
+                    this.pnotifyService.success(msgSuccess);
+                    this.mostrarSpinner = false;
+                    this.actualizarPagina();
                 },
                 (error) => {
                     this.pnotifyService.error(msgError);
@@ -506,7 +501,7 @@ export class ComercialLoteRutaComponent implements OnInit {
         this.longitud = this.longitud;
 
     }
-    actualizarPagina() {
+    actualizarPagina(){
         location.reload();
     }
     // En caso de que el componente se destruya antes de completarse el envío de datos,

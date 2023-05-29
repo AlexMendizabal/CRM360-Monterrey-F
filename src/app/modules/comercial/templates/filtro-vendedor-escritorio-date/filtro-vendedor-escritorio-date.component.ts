@@ -4,8 +4,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { EventEmitter } from '@angular/core';
 import { finalize, take } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 
 // Services
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
