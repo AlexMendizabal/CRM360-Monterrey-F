@@ -451,7 +451,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       cliente.sucursal,
       cliente.cliente,
       cliente.motivo, // Asegúrate de que cliente.titulo sea una cadena de caracteres
-      cliente.estado // Asegúrate de que cliente.estado sea una cadena de caracteres
+      cliente.Estado // Asegúrate de que cliente.estado sea una cadena de caracteres
     ]);
   
     const workbook = new ExcelJS.Workbook();
@@ -494,12 +494,13 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       const column = worksheet.getColumn(i);
       column.width = 20; // Establecer el ancho de la columna en 200 píxeles
     }
-  
+    const currentDate = new Date().toISOString().split('T')[0]; // Obtener la fecha actual
+    const fileName = `${currentDate}_reporte.xlsx`; // Crear el nombre del archivo con la fecha actual
     const buffer = await workbook.xlsx.writeBuffer();
     const excelBlob: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   
     // Guardar el archivo Excel
-    saveAs(excelBlob, 'reporte.xlsx');
+    saveAs(excelBlob, fileName);
   }
   
   

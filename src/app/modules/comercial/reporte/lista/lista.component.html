@@ -62,7 +62,7 @@
             <label for="estado">Estado</label>
             <select class="form-control custom-select" id="estado" formControlName="estado">
               <option value="estado">Seleccionar estado</option>
-              <option *ngFor="let estado of estados" [value]="estado.nombre">{{ estado.nombre }}</option>
+              <option *ngFor="let estado of estados" [value]="estado.id">{{ estado.nombre }}</option>
             </select>
           </div>
           
