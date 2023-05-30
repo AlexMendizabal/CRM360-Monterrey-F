@@ -469,6 +469,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       worksheet.addRow(row);
     });
   
+   
+  
     // Agregar estilos a las celdas
     worksheet.eachRow((row, rowNumber) => {
       row.eachCell(cell => {
@@ -484,6 +486,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       const column = worksheet.getColumn(i);
       column.width = 20; // Establecer el ancho de la columna en 20 píxeles
     }
+     // Ajustar el ancho de las columnas
+     worksheet.getColumn('D').width = 25; // Establecer el ancho de la columna D en 25 píxeles
   
     function formatDate(date: string): string {
       const currentDate = new Date(date);
@@ -501,6 +505,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     // Guardar el archivo Excel
     saveAs(excelBlob, fileName);
   }
+  
   
   
   

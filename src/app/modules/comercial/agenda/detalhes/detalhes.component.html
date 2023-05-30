@@ -1,24 +1,15 @@
 <app-header appTitle="Detalles del compromiso">
+  <button type="button" (click)="onEdit(detalhes)">Editar</button>
+  <button type="button" (click)="onReschedule(detalhes)">Reagendar</button>
+  <button type="button" (click)="onDelete(detalhes)">Excluir</button>
   <button
     type="button"
-    (click)="onEdit(detalhes)">
-    Editar
+    (click)="onFinish(detalhes)"
+    [disabled]="detalhes.status === 'FINALIZADO'"
+  >
+    Finalizado
   </button>
-  <button
-    type="button"
-    (click)="onReschedule(detalhes)">
-    Reagendar
-  </button>
-  <button
-    type="button"
-    (click)="onDelete(detalhes)">
-    Excluir
-  </button>
-  <button 
-  type="button" 
-  (click)="onFinish(detalhes)" [disabled]="detalhes.status === 'FINALIZADO'">
-  Finalizado
-</button> <!-- Nuevo botón -->
+  <!-- Nuevo botón -->
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
   <div class="row justify-content-center">
@@ -40,12 +31,11 @@
         <div class="form-group col-sm-6">
           <label>FORMA DE CONTACTO</label>
           <div *ngIf="!detalhes.formContactDesc">Sin informacion</div>
-          <div *ngIf="detalhes.formContactDesc">{{ detalhes.formContactDesc }}</div>
+          <div *ngIf="detalhes.formContactDesc">
+            {{ detalhes.formContactDesc }}
+          </div>
         </div>
-        <div class="form-group col-sm-6">
-          <label>Contacto de origen</label>
-          <div *ngIf="!detalhes.typeContactDesc">Sin informacion</div>
-          <div *ngIf="detalhes.typeContactDesc">{{ detalhes.typeContactDesc }}</div>
+        <div class="form-row">
         </div>
       </div>
       <div class="form-row">
@@ -58,40 +48,78 @@
         <div class="form-group col">
           <label>Observación</label>
           <div *ngIf="!detalhes.description">Sin informacion</div>
-          <div *ngIf="detalhes.description" [innerHTML]="detalhes.description | uppercase"></div>
+          <div
+            *ngIf="detalhes.description"
+            [innerHTML]="detalhes.description | uppercase"
+          ></div>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col">
           <label>Reprogramación</label>
           <div *ngIf="!detalhes.motivo">No reprogramado</div>
-          <div *ngIf="detalhes.motivo" [innerHTML]="detalhes.motivo | uppercase"></div>
+          <div
+            *ngIf="detalhes.motivo"
+            [innerHTML]="detalhes.motivo | uppercase"
+          ></div>
         </div>
-      </div>
-    <div class="form-row">
-      <div class="form-group col">
-        <label>Observacion de Finalizado</label>
-        <div *ngIf="!detalhes.observacionFinal">Sin informacion</div>
-        <div *ngIf="detalhes.observacionFinal" [innerHTML]="detalhes.observacionFinal"></div>
+              
       </div>
-      <div class="form-group col">
-     <label>Estado</label>
-       <div *ngIf="!detalhes.status">Registrado</div>
-    <div *ngIf="detalhes.status" [innerHTML]="detalhes.status | uppercase"></div>
-  </div>
-</div>
-<div class="form-row">
-  <div class="form-group col">
-    <label>Anexo</label>
-    <div *ngIf="!detalhes.anexo">
-      <img src="../../../assets/images/system-alerts/404.png" alt="Sin información" style="width: 100px; height: 100px;">
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Observacion de Finalizado</label>
+          <div *ngIf="!detalhes.observacionFinal">Sin informacion</div>
+          <div
+            *ngIf="detalhes.observacionFinal"
+            [innerHTML]="detalhes.observacionFinal"
+          ></div>
+        </div>
+        <div class="form-group col">
+          <label>Estado</label>
+          <div *ngIf="!detalhes.status">Registrado</div>
+          <div
+            *ngIf="detalhes.status"
+            [innerHTML]="detalhes.status | uppercase"
+          ></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Anexo</label>
+          <div *ngIf="!detalhes.anexo">
+            <img
+              src="../../../assets/images/system-alerts/404.png"
+              alt="Sin información"
+              style="width: 80px; height: 80px"
+            />
+          </div>
+          <div *ngIf="detalhes.anexo">{{ detalhes.anexo }}</div>
+        </div>
+      </div>
+      
     </div>
-    <div *ngIf="detalhes.anexo">{{ detalhes.anexo }}</div>
-  </div>
-</div>
+    <div class="col-md-6">
+      <p class="marker-info"><strong> SEGUIMIENTO DEL PROMOTOR</strong></p> 
 
+      <div class="embed-responsive embed-responsive-16by9">
+        <agm-map [latitude]="-17.783646812698528" [longitude]="-63.180786897945055" [zoom]="13" class="embed-responsive-item"
+          (mapClick)="actualizarMarcador($event)">
+          <agm-marker [latitude]="-17.783646812698528" [longitude]="-63.180786897945055">
+            <agm-info-window [disableAutoPan]="true">
+              <div class="marker-info-window">
+                <h5 class="marker-name">Nombre del lugar</h5>
+                <p class="marker-info"><strong>Dirección:</strong> Dirección del lugar</p>
+                <p class="marker-info"><strong>Fecha de inicio:</strong> Fecha de inicio</p>
+                <p class="marker-info"><strong>Fecha de fin:</strong> Fecha de fin</p>
+                <button class="marker-button" (click)="agregarClienteTemporal(mapa)">
+                  <i class="fas fa-plus"></i> &nbsp; Agregar
+                </button>
+              </div>
+            </agm-info-window>
+          </agm-marker>
+        </agm-map>
 
+      </div>
     </div>
-    
   </div>
 </app-body>
