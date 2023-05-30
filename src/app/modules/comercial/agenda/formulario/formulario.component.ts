@@ -325,18 +325,18 @@ export class ComercialAgendaFormularioComponent
 
         gerarCotacaoPedido: [false],
         inicioData: [
-          { value: inicioData, disabled: this.action == 'finalizar' },
+          { value: inicioData, disabled: this.action == 'finalizar'},
           [Validators.required],
         ],
         inicioHorario: [
-          { value: inicioHorario, disabled: this.action == 'novo' || this.action == 'finalizar' },
+          { value: inicioHorario, disabled:this.action == 'finalizar' },
           [Validators.required],
         ],
         terminoData: [
-          { value: terminoData, disabled: this.action == 'novo' || this.action == 'finalizar' },
+          { value: terminoData, disabled:this.action == 'finalizar' },
         ],
         terminoHorario: [
-          { value: terminoHorario, disabled: this.action == 'novo' || this.action === 'finalizar'},
+          { value: terminoHorario, disabled:this.action === 'finalizar'},
         ],
         diaInteiro: [{ value: detalhes.allDay = false, disabled: this.action === 'finalizar'}],
         motivoReagendamento: [
