@@ -20,7 +20,6 @@
             class="form-control"
             id="fechaInicial"
             formControlName="fechaInicial"
-            (change)="onFechaInicialChange($event.target.value)"
           />
         </div>
         <div class="form-group col-lg-3">
@@ -30,10 +29,8 @@
             class="form-control"
             id="fechaFinal"
             formControlName="fechaFinal"
-            (change)="onFechaFinalChange($event.target.value)"
           />
         </div>
-        
         <div class="form-group col-lg-3">
           <label for="nombreVendedor">Nombre del vendedor</label>
           <select class="form-control custom-select" id="nombreVendedor" formControlName="nombreVendedor">
@@ -92,27 +89,23 @@
         <th scope="col" class="hover">
           <thead-sorter value="Titulo"></thead-sorter>
         </th>
-        <th>
-          <th scope="col" class="hover">
+        <th scope="col" class="hover">
           <thead-sorter value="Estado"></thead-sorter>
         </th>
       </tr>
     </ng-template>
-      
-        <ng-template #tbody let-tbody>
-          <ng-container *ngIf="resuldata && resuldata.length">
-            <tr *ngFor="let cliente of resuldata">
-              <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover" (click)="viewRegister(cliente)"></td>
-              <td class="text-center hover">{{ cliente.vendedor }}</td>
-              <td class="hover">{{ cliente.sucursal }}</td>
-              <td class="hover">{{ cliente.cliente }}</td>
-              <td class="hover">{{ cliente.motivo }}</td>
-              <td class="hover">registrado</td>
-            </tr>
-            <tr *ngIf="!resuldata || resuldata.length === 0">
-              <td colspan="5" class="text-center">Sin datos registrados</td>
-            </tr>
-          </ng-container>
-        </ng-template>
-      </custom-table>
+    <ng-template #tbody let-tbody>
+      <ng-container *ngIf="resuldata && resuldata.length">
+        <tr *ngFor="let cliente of resuldata">
+          <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover" (click)="viewRegister(cliente)"></td>
+          <td class="text-center hover">{{ cliente.vendedor }}</td>
+          <td class="hover">{{ cliente.sucursal }}</td>
+          <td class="hover">{{ cliente.cliente }}</td>
+          <td class="hover">{{ cliente.motivo }}</td>
+          <td class="hover">{{ cliente.Estado }}</td>
+        </tr>
+      </ng-container>
+    </ng-template>
+  </custom-table>
+  
 </app-body>

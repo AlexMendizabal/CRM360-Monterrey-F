@@ -1,41 +1,7 @@
-.custom-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .custom-table th,
-  .custom-table td {
-    padding: 8px;
-    border: 1px solid #ccc;
-  }
-  
-  .row {
-    display: flex;
-    align-items: center;
-    margin-top: 1rem;
-  }
-  
-  .mt-3 {
-    margin-top: 3rem;
-  }
-  
-  /* Estilos adicionales para la tabla */
-  thead th {
-    background-color: #f5f5f5;
-    text-align: center;
-  }
-  
-  .text-center {
-    text-align: center;
-  }
-  
-  .hover:hover {
-    background-color: #f9f9f9;
-  }
-  
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
+.text-center {
+  text-align: center;
+}
+
+.hover:hover {
+  /* Estilos de apariencia en hover */
+}

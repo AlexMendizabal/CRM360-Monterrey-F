@@ -81,7 +81,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
   } */
 
   filtrarClientes() {
-    
+
     const idSucursal = this.form.get('sucursal_id').value;
     const idVendedor = this.form.get('vendedor_id').value;
     const idUltimaVisita = this.form.get('visita_id').value;
@@ -98,8 +98,8 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
 
   }
 
-  
-  
+
+
 
 
 

@@ -19,10 +19,10 @@ import { ComercialClientesCadastroDadosFaturamentoFormularioService } from '../.
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { DetailPanelService } from 'src/app/shared/templates/detail-panel/detal-panel.service';
 import { ComercialVendedoresService } from '../../services/vendedores.service';
+import { ComercialAgendaService } from 'src/app/modules/comercial/agenda/agenda.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EscritoriosService } from 'src/app/shared/services/requests/escritorios.service';
 import { ComercialCadastrosTitulosAgendaService } from 'src/app/modules/comercial/cadastros/titulos-agenda/titulos-agenda.service';
-import { ComercialAgendaService } from 'src/app/modules/comercial/agenda/agenda.service';
 
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
@@ -31,7 +31,7 @@ import { JsonResponse } from 'src/app/models/json-response';
 import { dataLoader } from '@amcharts/amcharts4/core';
  // calendario
 @Component({
-  
+
   selector: 'comercial-clientes-lista',
   templateUrl: './lista.component.html',
   styleUrls: ['./lista.component.scss'],
@@ -138,7 +138,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     
 
   }
-  
+
   getVendedores(): void {
     this.vendedoresService.getVendedores().subscribe(
       (response: any) => {
@@ -176,7 +176,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
+
   getTitulosAgenda(): void {
     // Llamada al servicio para obtener la lista de títulos
     this.titulosAgendaService.getListaTitulosAgenda({ codSituacao: null }).subscribe(
@@ -218,8 +218,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       sucursal: listaSucursales,
       titulo: titulo,
       estado: estado,
-      fecha_inicio: fechaInicial ? fechaInicial : null,
-      fecha_final: fechaFinal ? fechaFinal : null,
+      fechaInicial: fechaInicial ? fechaInicial : null,
+      fechaFinal: fechaFinal ? fechaFinal : null,
     };
   
     // Llamada al servicio reporteAgenda
@@ -289,16 +289,16 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
   setFormFilter(): void {
     const formValue = this.checkRouterParams();
-  
+
     this.formFilter = this.formBuilder.group({
       pesquisa: [formValue['pesquisa']],
       buscarPor: [formValue['buscarPor'], Validators.required],
-      titulo: [formValue['titulo']], 
+      titulo: [formValue['titulo']],
       fechaInicial: [null, Validators.required],
       fechaFinal: [null, Validators.required],
       vendedores: [formValue['vendedores'], Validators.required],
       tipoPessoa: [formValue['tipoPessoa'], Validators.required],
-      
+
       carteira: [formValue['carteira'], Validators.required],
       pagina: [formValue['pagina']],
       nombreVendedor: [formValue['nombreVendedor'], Validators.required],
@@ -306,7 +306,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       estado: [formValue['estado'], Validators.required], 
     });
   }
-  
+
 
   checkRouterParams(): Object {
     let formValue = {
@@ -317,11 +317,11 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       carteira: 'T',
       pagina: 1,
     };
-  
+
     if (this.activatedRouteSubscription) {
       this.activatedRouteSubscription.unsubscribe();
     }
-  
+
     return formValue;
   }
 
@@ -353,12 +353,11 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.setRouterParams(params);
   }
 
-  
+
 
   setSubmittedSearch(): void {
     this.searchSubmitted = true;
   }
-
   setRouterParams(params: any): void {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
@@ -367,6 +366,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     });
     this.setSubmittedSearch();
     this.search(params);
+    // console.log('a')
+    // console.log(JSON.stringify(params))
   }
 
   search(params: any): void {
@@ -386,7 +387,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
            // this.dataLoaded = true;
           })
         )
-        
+
     }
   }
   viewDetails(cliente: any): void {
@@ -446,11 +447,11 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   async exportToExcel(): Promise<void> {
     const headers = ['Nombre de Vendedor', 'Sucursal', 'Cliente', 'Titulo', 'Estado'];
     const data = this.resuldata.map(cliente => [
-      { text: cliente.vendedor, bold: true },
-      { text: cliente.sucursal },
-      { text: cliente.cliente },
-      { text: cliente.motivo },
-      { text: 'registrado', fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFF00' } } }
+      cliente.vendedor,
+      cliente.sucursal,
+      cliente.cliente,
+      cliente.titulo, // Asegúrate de que cliente.titulo sea una cadena de caracteres
+      cliente.estado // Asegúrate de que cliente.estado sea una cadena de caracteres
     ]);
   
     const workbook = new ExcelJS.Workbook();
