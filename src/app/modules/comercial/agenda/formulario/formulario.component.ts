@@ -275,7 +275,7 @@ export class ComercialAgendaFormularioComponent
         direccion: [
           {
             value: detalhes.direccion,
-            disabled: this.action === 'novo' || this.action === 'editar' ? true: false,
+            disabled: this.action === 'reagendar' || this.action === 'finalizar' ? true: false,
 
           },
         ],
