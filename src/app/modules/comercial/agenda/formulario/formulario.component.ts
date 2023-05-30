@@ -125,6 +125,10 @@ export class ComercialAgendaFormularioComponent
 
   bsConfig: Partial<BsDatepickerConfig>;
   mostrarElemento: any;
+  detalhes: any = {
+    status: null
+  };
+  
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -705,6 +709,7 @@ export class ComercialAgendaFormularioComponent
         direccion: formValue.direccion,
         latitud: formValue.latitud_clie,
         longitud: formValue.longitud_clie,
+        status: status
       };
   
       this.agendaService.save(this.action, formObj).subscribe({
