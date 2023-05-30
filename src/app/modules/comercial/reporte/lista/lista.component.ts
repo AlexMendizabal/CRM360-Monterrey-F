@@ -240,6 +240,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   
   
   filtrar() {
+    this.resuldata=[];
     // Obtener los valores del formulario
     const filtro = this.formFilter.value;
   
@@ -445,40 +446,30 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   async exportToExcel(): Promise<void> {
-    const headers = ['Nombre de Vendedor', 'Sucursal', 'Cliente', 'Titulo', 'Estado'];
+    const headers = ['', 'Nombre de Vendedor', 'Sucursal', 'Cliente', 'Titulo', 'Estado', 'Fecha Inicial'];
     const data = this.resuldata.map(cliente => [
+      '', // Columna A vacía
       cliente.vendedor,
       cliente.sucursal,
       cliente.cliente,
       cliente.motivo, // Asegúrate de que cliente.titulo sea una cadena de caracteres
-      cliente.Estado // Asegúrate de que cliente.estado sea una cadena de caracteres
+      cliente.Estado, // Asegúrate de que cliente.estado sea una cadena de caracteres
+      cliente.fecha // Asegúrate de que cliente.fechaInicial sea una cadena de caracteres o un objeto de tipo Date
     ]);
   
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('data');
   
-    // Ajustar ancho de la columna A
-    const columnA = worksheet.getColumn('A');
-    columnA.width = 3; // Establecer ancho de 3 píxeles para la columna A
+    // Agregar encabezados en la fila 1
+    worksheet.addRow(headers);
   
-    // Agregar encabezados en la fila 1, comenzando desde la columna B
-    worksheet.getRow(1).getCell(2).value = headers[0];
-    worksheet.getRow(1).getCell(3).value = headers[1];
-    worksheet.getRow(1).getCell(4).value = headers[2];
-    worksheet.getRow(1).getCell(5).value = headers[3];
-    worksheet.getRow(1).getCell(6).value = headers[4];
-  
-    // Agregar datos en las filas, comenzando desde la columna B
-    data.forEach((row, index) => {
-      const rowIndex = index + 2; // Comenzar desde la fila 2
-      worksheet.getRow(rowIndex).getCell(2).value = row[0];
-      worksheet.getRow(rowIndex).getCell(3).value = row[1];
-      worksheet.getRow(rowIndex).getCell(4).value = row[2];
-      worksheet.getRow(rowIndex).getCell(5).value = row[3];
-      worksheet.getRow(rowIndex).getCell(6).value = row[4];
+    data.forEach((row, rowIndex) => {
+      const formattedDate = formatDate(row[6]); // Formatear la fecha (row[6])
+      row[6] = formattedDate; // Reemplazar el valor original con la fecha formateada
+      worksheet.addRow(row);
     });
   
-    // Aplicar estilos a las celdas
+    // Agregar estilos a las celdas
     worksheet.eachRow((row, rowNumber) => {
       row.eachCell(cell => {
         cell.alignment = { vertical: 'middle', horizontal: 'center' };
@@ -488,12 +479,20 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     });
   
-    // Ajustar el ancho de las columnas B a F
-    const columnCount = headers.length;
-    for (let i = 2; i <= columnCount + 1; i++) {
+    // Ajustar el ancho de las columnas B a G
+    for (let i = 2; i <= headers.length; i++) {
       const column = worksheet.getColumn(i);
-      column.width = 20; // Establecer el ancho de la columna en 200 píxeles
+      column.width = 20; // Establecer el ancho de la columna en 20 píxeles
     }
+  
+    function formatDate(date: string): string {
+      const currentDate = new Date(date);
+      const day = currentDate.getDate();
+      const month = currentDate.getMonth() + 1;
+      const year = currentDate.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+  
     const currentDate = new Date().toISOString().split('T')[0]; // Obtener la fecha actual
     const fileName = `${currentDate}_reporte.xlsx`; // Crear el nombre del archivo con la fecha actual
     const buffer = await workbook.xlsx.writeBuffer();
@@ -502,6 +501,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     // Guardar el archivo Excel
     saveAs(excelBlob, fileName);
   }
+  
+  
   
   
   

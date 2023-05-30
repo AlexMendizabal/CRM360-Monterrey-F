@@ -16,7 +16,7 @@
   </button>
   <button 
   type="button" 
-  (click)="onFinish(detalhes)">
+  (click)="onFinish(detalhes)" [disabled]="detalhes.status === 'FINALIZADO'">
   Finalizado
 </button> <!-- Nuevo botón -->
 </app-header>
@@ -68,14 +68,30 @@
           <div *ngIf="detalhes.motivo" [innerHTML]="detalhes.motivo | uppercase"></div>
         </div>
       </div>
-<div class="form-row">
-  <div class="form-group col">
-    <label>Estado</label>
-    <div *ngIf="!detalhes.status">Registrado</div>
+    <div class="form-row">
+      <div class="form-group col">
+        <label>Observacion de Finalizado</label>
+        <div *ngIf="!detalhes.observacionFinal">Sin informacion</div>
+        <div *ngIf="detalhes.observacionFinal" [innerHTML]="detalhes.observacionFinal"></div>
+      </div>
+      <div class="form-group col">
+     <label>Estado</label>
+       <div *ngIf="!detalhes.status">Registrado</div>
     <div *ngIf="detalhes.status" [innerHTML]="detalhes.status | uppercase"></div>
   </div>
 </div>
+<div class="form-row">
+  <div class="form-group col">
+    <label>Anexo</label>
+    <div *ngIf="!detalhes.anexo">
+      <img src="../../../assets/images/system-alerts/404.png" alt="Sin información" style="width: 100px; height: 100px;">
+    </div>
+    <div *ngIf="detalhes.anexo">{{ detalhes.anexo }}</div>
+  </div>
+</div>
+
 
     </div>
+    
   </div>
 </app-body>

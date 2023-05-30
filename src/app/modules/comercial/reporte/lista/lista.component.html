@@ -44,24 +44,24 @@
             <select class="form-control custom-select" id="listaSucursales" formControlName="listaSucursales">
               <option value="">Seleccionar escritorio</option>
               <ng-container *ngFor="let escritorio of escritorios">
-                <option [value]="escritorio.nomeEscritorio" 
-                *ngIf="escritorio.nomeEscritorio">{{ escritorio.nomeEscritorio }}</option>
+                <option [value]="escritorio.codEscritorio" *ngIf="escritorio.nomeEscritorio !== ''">{{ escritorio.nomeEscritorio }}</option>
               </ng-container>
             </select>
-          </div>  
+          </div>
+          
           
           <div class="form-group col-lg-3">
             <label for="titulo">Título</label>
             <select class="form-control custom-select" id="titulo" formControlName="titulo">
               <option value="">Seleccionar título</option>
-              <option *ngFor="let titulo of titulos" [value]="titulo.descricaoTitulo">{{ titulo.descricaoTitulo }}</option>
+              <option *ngFor="let titulo of titulos" [value]="titulo.codTitulo">{{ titulo.descricaoTitulo }}</option>
             </select>
           </div>
 
           <div class="form-group col-lg-3">
             <label for="estado">Estado</label>
             <select class="form-control custom-select" id="estado" formControlName="estado">
-              <option value="estado">Seleccionar estado</option>
+              <option value="">Seleccionar estado</option>
               <option *ngFor="let estado of estados" [value]="estado.id">{{ estado.nombre }}</option>
             </select>
           </div>
@@ -95,7 +95,7 @@
         </tr>
       </ng-template>
       <ng-template #tbody let-tbody>
-        <ng-container *ngIf="resuldata && resuldata.length">
+        <ng-container >
           <tr *ngFor="let cliente of resuldata">
             <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover" (click)="viewRegister(cliente)"></td>
             <td class="text-center hover">{{ cliente.vendedor }}</td>
@@ -103,6 +103,9 @@
             <td class="hover">{{ cliente.cliente }}</td>
             <td class="hover">{{ cliente.motivo }}</td>
             <td class="hover">{{ cliente.Estado }}</td>
+          </tr>
+          <tr *ngIf="resuldata.length === 0">
+            <td colspan="6" class="text-center">Sin datos registrados </td>
           </tr>
         </ng-container>
       </ng-template>

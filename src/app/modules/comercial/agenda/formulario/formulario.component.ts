@@ -25,6 +25,7 @@ import { ComercialAgendaService } from 'src/app/modules/comercial/agenda/agenda.
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { ComercialCicloVendasCotacoesService } from '../../ciclo-vendas/cotacoes/cotacoes.service';
 import { ComercialCadastrosTitulosAgendaService } from './../../cadastros/titulos-agenda/titulos-agenda.service';
+import { AbstractControl } from '@angular/forms';
 
 
 // Interfaces
@@ -34,9 +35,6 @@ import { JsonResponse } from 'src/app/models/json-response';
 import { id } from 'date-fns/locale';
 import { Column3D } from '@amcharts/amcharts4/charts';
 import { titulo } from 'ng-brazil/titulo/validator';
-import { color } from '@amcharts/amcharts4/core';
-import { COLORS } from 'html2canvas/dist/types/css/types/color';
-
 
 import { compileDirectiveFromRender2 } from '@angular/compiler/src/render3/view/compiler';
 
@@ -553,18 +551,22 @@ export class ComercialAgendaFormularioComponent
   }
 
   onFieldError(field: string): string {
-    if (this.onFieldInvalid(field)) {
+    const control = this.form.get(field);
+  
+    if (this.onFieldInvalid(control)) {
       return 'is-invalid';
     }
-
+  
     return '';
   }
-
-  onFieldInvalid(field: any): boolean {
-    field = this.form.get(field);
-
-    return field.status == 'INVALID' && field.touched;
+  
+  onFieldInvalid(control: AbstractControl): boolean {
+    return control && control.invalid && (control.touched || control.dirty);
   }
+  
+  
+  
+  
 
   onFieldRequired(field: string): string {
     let required = false;
@@ -683,6 +685,7 @@ export class ComercialAgendaFormularioComponent
 
       const inicio = this.dateService.convert2PhpDate(inicioData);
       const termino = this.dateService.convert2PhpDate(terminoData);
+      
       const observacaoUpperCase = formValue.observacao !== null && formValue.observacao !== undefined
         ? formValue.observacao.toUpperCase()
         : null;
@@ -709,7 +712,8 @@ export class ComercialAgendaFormularioComponent
         direccion: formValue.direccion,
         latitud: formValue.latitud_clie,
         longitud: formValue.longitud_clie,
-        status: status
+        status: status,
+        obsFinalizar: formValue.Obsfinalizar
       };
 
       this.agendaService.save(this.action, formObj).subscribe({
