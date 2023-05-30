@@ -329,16 +329,16 @@ export class ComercialAgendaFormularioComponent
           [Validators.required],
         ],
         inicioHorario: [
-          { value: inicioHorario, disabled: this.action == 'finalizar' || detalhes.allDay },
+          { value: inicioHorario, disabled: this.action == 'novo' || this.action == 'finalizar' },
           [Validators.required],
         ],
         terminoData: [
-          { value: terminoData, disabled: this.action == 'finalizar' || detalhes.allDay },
+          { value: terminoData, disabled: this.action == 'novo' || this.action == 'finalizar' },
         ],
         terminoHorario: [
-          { value: terminoHorario, disabled: this.action == 'finalizar' || detalhes.allDay },
+          { value: terminoHorario, disabled: this.action == 'novo' || this.action === 'finalizar'},
         ],
-        diaInteiro: [{ value: detalhes.allDay, disabled: this.action == 'finalizar' }],
+        diaInteiro: [{ value: detalhes.allDay = false, disabled: this.action === 'finalizar'}],
         motivoReagendamento: [
           { value: detalhes.rescheduleId, disabled: this.action == 'finalizar' },
           this.action == 'reagendar' ? [Validators.required] : null,
@@ -506,6 +506,7 @@ export class ComercialAgendaFormularioComponent
      const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
      this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
   }
+
 
   triggerAllDay(): void {
     this.isDisabledTime = !this.isDisabledTime;
