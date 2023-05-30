@@ -216,7 +216,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     const data = {
       id_vendedor: nombreVendedor,
       sucursal: listaSucursales,
-      titulo: titulo,
+      titulo: titulo, 
       estado: estado,
       fechaInicial: fechaInicial ? fechaInicial : null,
       fechaFinal: fechaFinal ? fechaFinal : null,
@@ -450,14 +450,33 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       cliente.vendedor,
       cliente.sucursal,
       cliente.cliente,
-      cliente.titulo, // Asegúrate de que cliente.titulo sea una cadena de caracteres
+      cliente.motivo, // Asegúrate de que cliente.titulo sea una cadena de caracteres
       cliente.estado // Asegúrate de que cliente.estado sea una cadena de caracteres
     ]);
   
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('data');
-    worksheet.addRow(headers);
-    data.forEach(row => worksheet.addRow(row));
+  
+    // Ajustar ancho de la columna A
+    const columnA = worksheet.getColumn('A');
+    columnA.width = 3; // Establecer ancho de 3 píxeles para la columna A
+  
+    // Agregar encabezados en la fila 1, comenzando desde la columna B
+    worksheet.getRow(1).getCell(2).value = headers[0];
+    worksheet.getRow(1).getCell(3).value = headers[1];
+    worksheet.getRow(1).getCell(4).value = headers[2];
+    worksheet.getRow(1).getCell(5).value = headers[3];
+    worksheet.getRow(1).getCell(6).value = headers[4];
+  
+    // Agregar datos en las filas, comenzando desde la columna B
+    data.forEach((row, index) => {
+      const rowIndex = index + 2; // Comenzar desde la fila 2
+      worksheet.getRow(rowIndex).getCell(2).value = row[0];
+      worksheet.getRow(rowIndex).getCell(3).value = row[1];
+      worksheet.getRow(rowIndex).getCell(4).value = row[2];
+      worksheet.getRow(rowIndex).getCell(5).value = row[3];
+      worksheet.getRow(rowIndex).getCell(6).value = row[4];
+    });
   
     // Aplicar estilos a las celdas
     worksheet.eachRow((row, rowNumber) => {
@@ -468,6 +487,13 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         row.font = { bold: true };
       }
     });
+  
+    // Ajustar el ancho de las columnas B a F
+    const columnCount = headers.length;
+    for (let i = 2; i <= columnCount + 1; i++) {
+      const column = worksheet.getColumn(i);
+      column.width = 20; // Establecer el ancho de la columna en 200 píxeles
+    }
   
     const buffer = await workbook.xlsx.writeBuffer();
     const excelBlob: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });

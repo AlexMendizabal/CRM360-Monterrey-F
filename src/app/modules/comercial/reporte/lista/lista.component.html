@@ -1,111 +1,111 @@
-<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
-<app-header appTitle="reporte">
-  <button (click)="exportToExcel()" class="btn btn-primary">
-    Exportar a Excel
-  </button>
-  
+  <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+  <app-header appTitle="reporte">
+    <button (click)="exportToExcel()" class="btn btn-primary">
+      Exportar a Excel
+    </button>
+    
 
-  <button type="button" (click)="reporteAgenda()" class="btn btn-primary">Reporte Agenda</button>
- 
-</app-header>
-<app-body [breadCrumbTree]="breadCrumbTree">
+    <button type="button" (click)="reporteAgenda()" class="btn btn-primary">Reporte Agenda</button>
   
-  <advanced-filter>
-    <form [formGroup]="formFilter">
-      <div class="form-row">
-        <div class="form-group col-lg-3">
-          <label for="fechaInicial">Fecha inicial</label>
-          <input
-            type="date"
-            class="form-control"
-            id="fechaInicial"
-            formControlName="fechaInicial"
-          />
-        </div>
-        <div class="form-group col-lg-3">
-          <label for="fechaFinal">Fecha final</label>
-          <input
-            type="date"
-            class="form-control"
-            id="fechaFinal"
-            formControlName="fechaFinal"
-          />
-        </div>
-        <div class="form-group col-lg-3">
-          <label for="nombreVendedor">Nombre del vendedor</label>
-          <select class="form-control custom-select" id="nombreVendedor" formControlName="nombreVendedor">
-            <option value="">Seleccione un vendedor</option>
-            <option *ngFor="let vendedor of vendedores" [value]="vendedor.id">{{ vendedor.nome }}</option>
-          </select>
-        </div>
-        
-        <div class="form-group col-lg-3">
-          <label for="listaSucursales">Lista de sucursales</label>
-          <select class="form-control custom-select" id="listaSucursales" formControlName="listaSucursales">
-            <option value="">Seleccionar escritorio</option>
-            <ng-container *ngFor="let escritorio of escritorios">
-              <option [value]="escritorio.nomeEscritorio" 
-              *ngIf="escritorio.nomeEscritorio">{{ escritorio.nomeEscritorio }}</option>
-            </ng-container>
-          </select>
-        </div>  
-        
-        <div class="form-group col-lg-3">
-          <label for="titulo">Título</label>
-          <select class="form-control custom-select" id="title" formControlName="titulo">
-            <option value="">Seleccionar título</option>
-            <option *ngFor="let titulo of titulos" [value]="titulo.codTitulo">{{ titulo.descricaoTitulo }}</option>
-          </select>
-        </div>
+  </app-header>
+  <app-body [breadCrumbTree]="breadCrumbTree">
+    
+    <advanced-filter>
+      <form [formGroup]="formFilter">
+        <div class="form-row">
+          <div class="form-group col-lg-3">
+            <label for="fechaInicial">Fecha inicial</label>
+            <input
+              type="date"
+              class="form-control"
+              id="fechaInicial"
+              formControlName="fechaInicial"
+            />
+          </div>
+          <div class="form-group col-lg-3">
+            <label for="fechaFinal">Fecha final</label>
+            <input
+              type="date"
+              class="form-control"
+              id="fechaFinal"
+              formControlName="fechaFinal"
+            />
+          </div>
+          <div class="form-group col-lg-3">
+            <label for="nombreVendedor">Nombre del vendedor</label>
+            <select class="form-control custom-select" id="nombreVendedor" formControlName="nombreVendedor">
+              <option value="">Seleccione un vendedor</option>
+              <option *ngFor="let vendedor of vendedores" [value]="vendedor.id">{{ vendedor.nome }}</option>
+            </select>
+          </div>
+          
+          <div class="form-group col-lg-3">
+            <label for="listaSucursales">Lista de sucursales</label>
+            <select class="form-control custom-select" id="listaSucursales" formControlName="listaSucursales">
+              <option value="">Seleccionar escritorio</option>
+              <ng-container *ngFor="let escritorio of escritorios">
+                <option [value]="escritorio.nomeEscritorio" 
+                *ngIf="escritorio.nomeEscritorio">{{ escritorio.nomeEscritorio }}</option>
+              </ng-container>
+            </select>
+          </div>  
+          
+          <div class="form-group col-lg-3">
+            <label for="titulo">Título</label>
+            <select class="form-control custom-select" id="titulo" formControlName="titulo">
+              <option value="">Seleccionar título</option>
+              <option *ngFor="let titulo of titulos" [value]="titulo.descricaoTitulo">{{ titulo.descricaoTitulo }}</option>
+            </select>
+          </div>
 
-        <div class="form-group col-lg-3">
-          <label for="estado">Estado</label>
-          <select class="form-control custom-select" id="estado" formControlName="estado">
-            <option value="estado">Seleccionar estado</option>
-            <option *ngFor="let estado of estados" [value]="estado.nombre">{{ estado.nombre }}</option>
-          </select>
+          <div class="form-group col-lg-3">
+            <label for="estado">Estado</label>
+            <select class="form-control custom-select" id="estado" formControlName="estado">
+              <option value="estado">Seleccionar estado</option>
+              <option *ngFor="let estado of estados" [value]="estado.nombre">{{ estado.nombre }}</option>
+            </select>
+          </div>
+          
+          
         </div>
-        
-        
-      </div>
-      <div class="form-row">
-        <!-- Agrega aquí más campos de filtrado avanzado si es necesario -->
-      </div>
-    </form>
-  </advanced-filter>
-  <custom-table [config]="tableConfig">
-    <ng-template #thead let-thead>
-      <tr>
-        <th></th>
-        <th class="text-center hover">
-          <thead-sorter value="Nombre de Vendedor"></thead-sorter>
-        </th>
-        <th scope="col" class="hover">
-          <thead-sorter value="Sucursal"></thead-sorter>
-        </th>
-        <th scope="col" class="hover">
-          <thead-sorter value="Cliente"></thead-sorter>
-        </th>
-        <th scope="col" class="hover">
-          <thead-sorter value="Titulo"></thead-sorter>
-        </th>
-        <th scope="col" class="hover">
-          <thead-sorter value="Estado"></thead-sorter>
-        </th>
-      </tr>
-    </ng-template>
-    <ng-template #tbody let-tbody>
-      <ng-container *ngIf="resuldata && resuldata.length">
-        <tr *ngFor="let cliente of resuldata">
-          <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover" (click)="viewRegister(cliente)"></td>
-          <td class="text-center hover">{{ cliente.vendedor }}</td>
-          <td class="hover">{{ cliente.sucursal }}</td>
-          <td class="hover">{{ cliente.cliente }}</td>
-          <td class="hover">{{ cliente.motivo }}</td>
-          <td class="hover">{{ cliente.Estado }}</td>
+        <div class="form-row">
+          <!-- Agrega aquí más campos de filtrado avanzado si es necesario -->
+        </div>
+      </form>
+    </advanced-filter>
+    <custom-table [config]="tableConfig">
+      <ng-template #thead let-thead>
+        <tr>
+          <th></th>
+          <th class="text-center hover">
+            <thead-sorter value="Nombre de Vendedor"></thead-sorter>
+          </th>
+          <th scope="col" class="hover">
+            <thead-sorter value="Sucursal"></thead-sorter>
+          </th>
+          <th scope="col" class="hover">
+            <thead-sorter value="Cliente"></thead-sorter>
+          </th>
+          <th scope="col" class="hover">
+            <thead-sorter value="Titulo"></thead-sorter>
+          </th>
+          <th scope="col" class="hover">
+            <thead-sorter value="Estado"></thead-sorter>
+          </th>
         </tr>
-      </ng-container>
-    </ng-template>
-  </custom-table>
-  
-</app-body>
+      </ng-template>
+      <ng-template #tbody let-tbody>
+        <ng-container *ngIf="resuldata && resuldata.length">
+          <tr *ngFor="let cliente of resuldata">
+            <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover" (click)="viewRegister(cliente)"></td>
+            <td class="text-center hover">{{ cliente.vendedor }}</td>
+            <td class="hover">{{ cliente.sucursal }}</td>
+            <td class="hover">{{ cliente.cliente }}</td>
+            <td class="hover">{{ cliente.motivo }}</td>
+            <td class="hover">{{ cliente.Estado }}</td>
+          </tr>
+        </ng-container>
+      </ng-template>
+    </custom-table>
+    
+  </app-body>

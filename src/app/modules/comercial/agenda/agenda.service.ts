@@ -51,8 +51,6 @@
       );
       
     }
-    
-    
 
     private saveCompromisso(record: any) {
       return this.http
@@ -72,7 +70,7 @@
 
     private rescheduleCompromisso(record: any) {
       return this.http
-        .post(`${this.API}/compromiso/reagendar`, record)
+        .post(`${this.API}/compromisso/reagendar`, record)
         .pipe(take(1), retry(2));
     }
 
@@ -84,9 +82,12 @@
 
     save(action: string, record: any) {
 
-      if (action == 'editar' || action == 'finalizar'|| action == 'reagendar') {
+      if (action == 'editar' || action == 'finalizar') {
         return this.updateCompromisso(record);
-      } else  {
+      } else if (action == 'reagendar') {
+        return this.rescheduleCompromisso(record);
+      }
+       else  {
         return this.saveCompromisso(record);
       }
     
