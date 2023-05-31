@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { writeFile } from 'xlsx';
+import * as ExcelJS from 'exceljs/dist/exceljs.min.js';
 
 
 // ngx-bootstrap
