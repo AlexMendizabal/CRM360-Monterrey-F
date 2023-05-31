@@ -1,7 +1,10 @@
   import { Injectable } from '@angular/core';
   import { HttpClient, HttpParams } from '@angular/common/http';
   import { take, retry } from 'rxjs/operators';
+  import { Observable } from 'rxjs';
 
+  // Resto del código del servicio
+  
   import { environment } from 'src/environments/environment';
 
   @Injectable({
@@ -39,6 +42,15 @@
       return this.http.post(`${this.API}/reporte`, data).pipe(take(1), retry(2));
     }
     
+    estadosAgenda(data?: any): Observable<any> {
+      const params = data ? { params: data } : {}; // Opcionalmente, incluye los parámetros en la solicitud
+    
+      return this.http.get(`${this.API}/estados`, params).pipe(
+        take(1),
+        retry(2)
+      );
+      
+    }
 
     private saveCompromisso(record: any) {
       return this.http
@@ -58,7 +70,7 @@
 
     private rescheduleCompromisso(record: any) {
       return this.http
-        .post(`${this.API}/compromiso/reagendar`, record)
+        .post(`${this.API}/compromisso/reagendar`, record)
         .pipe(take(1), retry(2));
     }
 
@@ -70,9 +82,12 @@
 
     save(action: string, record: any) {
 
-      if (action == 'editar' || action == 'finalizar'|| action == 'reagendar') {
+      if (action == 'editar' || action == 'finalizar') {
         return this.updateCompromisso(record);
-      } else  {
+      } else if (action == 'reagendar') {
+        return this.rescheduleCompromisso(record);
+      }
+       else  {
         return this.saveCompromisso(record);
       }
     

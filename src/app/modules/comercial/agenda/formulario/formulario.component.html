@@ -17,9 +17,8 @@
             <label for="codTitulo">Título</label>
             <div class="input-group">
               <div class="input-group-prepend">
-
-              </div>
               <ng-select
+              class="custom-control-input form-control"
               [searchable]="true"
               [clearable]="true"
               class="col p-0"
@@ -33,6 +32,7 @@
               formControlName="codTitulo"
               (change)="onCodTituloChange()">
             </ng-select>
+          </div>
             <invalid-form-control [show]="onFieldInvalid('codTitulo')" message="Título obligatorio."></invalid-form-control>
             </div>
           </div>
@@ -207,12 +207,13 @@
           <div class="form-group col">
             <label for="motivoReagendamento">Motivo de la reprogramación</label>
             <select class="form-control custom-select" id="motivoReagendamento" formControlName="motivoReagendamento"
-              (change)="onInput()" [ngClass]="onFieldError('inicioData') + ' ' + onFieldRequired('inicioData')">
-              <option *ngFor="let item of motivosReagendamento" [value]="item.id">{{ item.DS_REAG_MOTI }}</option>
+              (change)="onInput()" [ngClass]="{'is-invalid': onFieldInvalid(form.get('motivoReagendamento'))}">
+              <option *ngFor="let item of motivosReagendamento" [value]="item.ID_REAG_MOTI">{{ item.DS_REAG_MOTI }}</option>
             </select>
-            <invalid-form-control [show]="onFieldInvalid('motivoReagendamento')"
-              message="Motivo do reagendamento é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="form.get('motivoReagendamento').invalid && form.get('motivoReagendamento').touched"
+              message="Motivo de reagendamiento es obligatorio."></invalid-form-control>
           </div>
+          
         </div>
 
         <div class="form-row">
@@ -234,19 +235,6 @@
             </textarea>
           </div>
         </div>
-        <!-- <div class="form-row" *ngIf="action == 'finalizar'">
-          <div class="form-group col">
-            <label for="anexo">Archivo adjunto</label>
-            <div class="custom-file">
-              <input
-                type="file"
-                class="custom-file-input"
-                id="anexo"
-                [disabled]="false">
-              <label class="custom-file-label" for="anexo">Seleccionar archivo</label>
-            </div>
-          </div>
-        </div> -->
       </form>
     </div>
   </div>

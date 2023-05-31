@@ -75,6 +75,8 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     this.detalhes.formContactDesc = detalhes.formContactDesc;
     this.detalhes.typeContactDesc = detalhes.typeContactDesc;
     this.detalhes.allDay = detalhes.allDay;
+    this.detalhes.anexo = detalhes.anexo;
+    this.detalhes.observacionFinal = detalhes.motivo;
     this.detalhes.description =
       detalhes.description != null
         ? detalhes.description.replace(/(?:\r\n|\r|\n)/g, '<br />')
