@@ -120,9 +120,9 @@
             <label for="codOrigemContato">DIRECCION</label>
             <input type="text" class="form-control" formControlName="direccion"
               [ngClass]="onFieldError('codOrigemContato') + ' ' + onFieldRequired('codOrigemContato')">
-            <input type="hidden" formControlName="latitud_clie">
-            <input type="hidden" formControlName="longitud_clie">
-            <input type="hidden" formControlName="codigo_cliente">
+            <input type="hidden" formControlName="latitud_clie" >
+            <input type="hidden" formControlName="longitud_clie" >
+            <input type="hidden" formControlName="codigo_cliente" >
 
 
             <invalid-form-control [show]="onFieldInvalid('codOrigemContato')"
