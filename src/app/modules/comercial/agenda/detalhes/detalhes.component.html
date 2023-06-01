@@ -1,14 +1,8 @@
 <app-header appTitle="Detalles del compromiso">
-  <button type="button" (click)="onEdit(detalhes)">Editar</button>
-  <button type="button" (click)="onReschedule(detalhes)">Reagendar</button>
-  <button type="button" (click)="onDelete(detalhes)">Excluir</button>
-  <button
-    type="button"
-    (click)="onFinish(detalhes)"
-    [disabled]="detalhes.status === 'FINALIZADO'"
-  >
-    Finalizado
-  </button>
+  <button type="button" (click)="onEdit(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Editar</button>
+  <button type="button" (click)="onReschedule(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Reagendar</button>
+  <button type="button" (click)="onDelete(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Excluir</button>
+  <button type="button" (click)="onFinish(detalhes)" [disabled]="detalhes.status === 'FINALIZADO'">Finalizado</button>
   <!-- Nuevo botón -->
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
@@ -86,16 +80,16 @@
       <div class="form-row">
         <div class="form-group col">
           <label>Anexo</label>
-          <div *ngIf="!detalhes.anexo">
+          <div *ngIf="detalhes.title !== 'LLAMADA'">
             <img
               src="../../../assets/images/system-alerts/404.png"
               alt="Sin información"
               style="width: 80px; height: 80px"
             />
           </div>
-          <div *ngIf="detalhes.anexo">{{ detalhes.anexo }}</div>
+          <div *ngIf="detalhes.title === 'LLAMADA'">{{ detalhes.anexo }}</div>
         </div>
-      </div>
+      </div>     
       
     </div>
     <div class="col-md-6">
