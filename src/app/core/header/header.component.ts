@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
-
+import 'bootstrap';
 // Services
 import { AuthService } from 'src/app/shared/services/core/auth.service';
 import { ModulosService } from 'src/app/shared/services/requests/modulos.service';
