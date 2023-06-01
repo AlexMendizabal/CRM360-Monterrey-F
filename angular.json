@@ -52,7 +52,10 @@
               "./node_modules/@ng-select/ng-select/themes/default.theme.css",
               "src/styles.scss"
             ],
-            "scripts": [],
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.min.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
             "allowedCommonJsDependencies": [
               "xlsx",
               "ng2-currency-mask",
