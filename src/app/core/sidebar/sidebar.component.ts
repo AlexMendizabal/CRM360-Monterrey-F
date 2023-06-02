@@ -123,7 +123,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
           }
           this.atividadesError = false;
           let data: object[] = response.body["data"];
-          console.log({ ...response.body["data"] })
+          //console.log({ ...response.body["data"] })
           let idx1 = data.findIndex((val) => val["id"] === 89)
           data.splice(idx1, 1);
           let idx2 = data.findIndex((val) => val["id"] === 28)
@@ -138,7 +138,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
           this.atividades = data;
           this.routerLinkHome = data[0]["moduloRota"];
-          console.log(response)
+          //console.log(response)
         },
         (error: any) => {
           this.atividadesError = true;

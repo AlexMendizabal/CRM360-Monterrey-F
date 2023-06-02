@@ -411,7 +411,7 @@ export class ComercialLoteRutaComponent implements OnInit {
                 }
             },
             (error) => {
-                console.error(error);
+                //console.error(error);
             }
         );
     }

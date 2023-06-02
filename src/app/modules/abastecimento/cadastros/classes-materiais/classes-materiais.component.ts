@@ -449,7 +449,7 @@ export class AbastecimentoCadastrosClassesMateriaisComponent implements OnInit {
   }
 
   onLogs(item: any): void {
-    console.log(item);
+    //console.log(item);
 
     let params = {
       ID_CLAS: item['ID']
