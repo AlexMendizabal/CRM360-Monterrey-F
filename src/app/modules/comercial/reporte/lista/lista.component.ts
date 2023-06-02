@@ -236,25 +236,12 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
 
-  reporteCliente(): void {
-    const nombreVendedor = this.formFilter.value['nombreVendedor'];
-    const listaSucursales = this.formFilter.value['listaSucursales'];
-    const titulo = this.formFilter.value['titulo'];
-    const estado = this.formFilter.value['estado'];
-    const fechaInicial = this.formFilter.value['fechaInicial'];
-    const fechaFinal = this.formFilter.value['fechaFinal'];
-  
-    const data = {
-      id_vendedor: nombreVendedor,
-      sucursal: listaSucursales,
-      titulo: titulo, 
-      estado: estado,
-      fechaInicial: fechaInicial ? fechaInicial : null,
-      fechaFinal: fechaFinal ? fechaFinal : null,
-    };
-  
+  reporteCliente(id: any): void { 
     // Llamada al servicio reporteAgenda
-    this.agendaService.reporteAgenda(data).subscribe(
+    const data = {
+      id : id
+    }
+    this.agendaService.reporte_cliente(data).subscribe(
       (response: any) => {
         this.resuldata = response.result;
         console.log('respuesta');
@@ -423,16 +410,17 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
     }
   }
-  viewDetails(cliente: any): void {
+  viewDetails(id: any): void {
+    console.log('cliente')
+    console.log(id)
     this.detailPanelService.loadedFinished(false);
-    this.clienteSelecionado = cliente.codCliente;
     this.dadosCadastraisLoaded = false;
     this.dadosCadastraisEmpty = false;
     this.contatosLoaded = false;
     this.contatosEmpty = false;
 
-    this.clientesService
-      .getDetalhes(cliente.codCliente)
+    this.agendaService
+      .reporte_cliente(id)
       .pipe(
         finalize(() => {
           this.dadosCadastraisLoaded = true;
