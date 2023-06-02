@@ -77,25 +77,21 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
     });
   }
 
-  /* obtenerDatos() {
-  } */
 
   filtrarClientes() {
-
     const idSucursal = this.form.get('sucursal_id').value;
     const idVendedor = this.form.get('vendedor_id').value;
     const idUltimaVisita = this.form.get('visita_id').value;
     const idEstado = this.form.get('estado_id').value;
-
     const params = {
       idSucursal: idSucursal,
       idVendedor: idVendedor,
       idUltimaVisita: idUltimaVisita,
       idEstado: idEstado
     };
-
     this.rutaService.filtrarMapas(params);
-
+    const vendedorSeleccionado = idVendedor;
+    this.rutaService.indiceVendedor = vendedorSeleccionado
   }
 
 
@@ -169,10 +165,10 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
             this.vendedores = response[1]['result'];
             this.filteredVendedores = this.vendedores;
             /* if (this.showAll === true) { */
-              this.filteredVendedores.unshift({
-                id: 0,
-                nome: 'TODOS'
-              });
+            this.filteredVendedores.unshift({
+              id: 0,
+              nome: 'TODOS'
+            });
             /* } */
           } else {
             this.handleLoadDependenciesError();

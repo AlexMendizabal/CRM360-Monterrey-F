@@ -104,7 +104,7 @@ export class ComercialAgendaFormularioComponent
   origensContato: any = [];
   listarTitulosAgenda: any = [];
   motivosReagendamento: any = [];
-
+  marcadorArrastrable = true;
   attachedFiles: File[] = [];
   adjunto: File = null;
 
@@ -252,6 +252,7 @@ export class ComercialAgendaFormularioComponent
 
 
       this.form = this.formBuilder.group({
+        
         id: [detalhes.id], // Agrega el campo 'id' al formulario
         cor: [detalhes.color.primary],
 
@@ -269,6 +270,8 @@ export class ComercialAgendaFormularioComponent
             disabled: this.action != 'novo',
           },
         ],
+
+       
         promotor: [
           {
             value: detalhes.id_vendedor,
@@ -351,8 +354,8 @@ export class ComercialAgendaFormularioComponent
       if (detalhes.allDay) {
         this.isDisabledTime = true;
       }
-      this.latitud = detalhes.latitud;
-      this.longitud = detalhes.longitud;
+      this.latitud = detalhes.latitud
+      this.longitud = detalhes.longitud
       if (this.action == 'reagendar') {
         this.form.controls.motivoReagendamento.setValidators([
           Validators.required,
@@ -695,7 +698,7 @@ export class ComercialAgendaFormularioComponent
         idVendedor: formValue.promotor,
         client: client,
         formContactId: formValue.codFormaContato,
-        codigo_cliente: formValue.codigo_cliente,
+        codigo_cliente: formValue.codigo_cliente.value,
         formContactDesc: formContactDesc,
         typeContactId: formValue.codOrigemContato,
         typeContactDesc: typeContactDesc,
@@ -705,8 +708,8 @@ export class ComercialAgendaFormularioComponent
         rescheduleId: formValue.motivoReagendamento,
         description: formValue.observacao,
         direccion: formValue.direccion,
-        latitud: formValue.latitud_clie,
-        longitud: formValue.longitud_clie,
+        latitud: this.latitud,
+        longitud: this.longitud,
         status: status,
         /* id_status: id_status, */
         obsFinalizar: formValue.Obsfinalizar

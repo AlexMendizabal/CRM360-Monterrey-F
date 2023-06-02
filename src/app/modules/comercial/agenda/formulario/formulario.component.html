@@ -131,7 +131,7 @@
           <div class="form-group col-md-12">
             <div class="embed-responsive embed-responsive-16by9">
               <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="16" class="embed-responsive-item" (mapClick)="actualizarMarcador($event)">
-                <agm-marker [latitude]="latitud" [longitude]="longitud" (markerDragEnd)="actualizarDireccion($event)">
+                <agm-marker [latitude]="latitud" [longitude]="longitud" (markerDragEnd)="actualizarDireccion($event)" >
                 </agm-marker>
               </agm-map>
               <div id="map-zoom-control" class="map-control"> </div>
