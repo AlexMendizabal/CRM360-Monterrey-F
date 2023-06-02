@@ -348,7 +348,7 @@ export class ComercialAgendaFormularioComponent
         observacao: [
           {
             value: detalhes.description,
-            disabled: this.action == 'reagendar' || this.action == 'finalizar',
+            disabled: this.action == 'finalizar' ,
           },
         ],
         Obsfinalizar: [

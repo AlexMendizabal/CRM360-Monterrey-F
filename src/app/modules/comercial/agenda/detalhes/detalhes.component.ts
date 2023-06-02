@@ -10,6 +10,7 @@ import { ConfirmModalService } from 'src/app/shared/modules/confirm-modal/confir
 import { ComercialAgendaService } from 'src/app/modules/comercial/agenda/agenda.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
 import { TitleService } from 'src/app/shared/services/core/title.service';
+import { AuthService } from 'src/app/shared/services/core/auth.service';
 
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
@@ -37,14 +38,10 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   detalhes: any = {
     status: null
   };
-  
+  switchEdit : boolean ;
 
-  //mostrarElemento: boolean = true;
-
-  //ocultarFormulario(){
-   // this.mostrarElemento = false;
- // }
-
+ private user = this.authService.getCurrentUser();
+ 
   constructor(
     private activatedRoute: ActivatedRoute,
     private atividadesService: AtividadesService,
@@ -53,7 +50,10 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     private agendaService: ComercialAgendaService,
     private confirmModalService: ConfirmModalService,
     private pnotifyService: PNotifyService,
-    private titleService: TitleService
+    private titleService: TitleService,
+    private authService: AuthService
+
+    
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -67,6 +67,14 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     const fim = new Date(detalhes['end']);
     this.detalhes.status = detalhes.status;
 
+    if (this.user.info.matricula == 1) {
+      this.switchEdit = true;
+    } else {
+      this.switchEdit = false;
+    
+    }
+    console.log(this.user)
+    this.detalhes.matricula = detalhes.matricula;
     this.detalhes.id = detalhes.id;
     this.detalhes.title = detalhes.title;
     this.detalhes.codClient = detalhes.codClient;
@@ -115,6 +123,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   }
 
   onReschedule(detalhes: any) {
+    
     detalhes.status = 4;
     this.router.navigate(['../../reagendar', detalhes.id], {
       relativeTo: this.activatedRoute

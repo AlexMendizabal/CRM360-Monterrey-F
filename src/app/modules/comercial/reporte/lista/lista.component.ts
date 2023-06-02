@@ -142,7 +142,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   getVendedores(): void {
     this.vendedoresService.getVendedores().subscribe(
       (response: any) => {
-        console.log(response); // Verificar el tipo de datos de la respuesta
+        console.log(response); // Verificar el tipo de datos de la respuesta  
         this.vendedores = response.result;
       },
       (error: any) => {
@@ -154,7 +154,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   estadosAgenda(): void {
     this.agendaService.estadosAgenda().subscribe(
       (response: any) => {
-        console.log(response); // Verificar el tipo de datos de la respuesta
+
         this.estados = response.result; // Almacena los estados en la variable estados
       },
       (error: any) => {
@@ -168,7 +168,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   getEscritorios(): void {
     this.escritoriosService.getEscritorios().subscribe(
       (response: any) => {
-        console.log(response); // Verificar la respuesta en la consola
+
         this.escritorios = response.result;
       },
       (error: any) => {
@@ -197,7 +197,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
     this.agendaService.getCompromissos(params).subscribe(
       (response: any) => {
-        console.log(response); // Verifica la respuesta en la consola
+
         this.compromissos = response.result;
       },
       (error: any) => {
@@ -226,7 +226,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.agendaService.reporteAgenda(data).subscribe(
       (response: any) => {
         this.resuldata = response.result;
-        console.log('respuesta');
+
         console.log(this.resuldata);
         // Realizar las acciones necesarias con la respuesta
       },
@@ -298,7 +298,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       fechaInicial: [null, Validators.required],
       fechaFinal: [null, Validators.required],
       vendedores: [formValue['vendedores'], Validators.required],
-      tipoPessoa: [formValue['tipoPessoa'], Validators.required],
 
       carteira: [formValue['carteira'], Validators.required],
       pagina: [formValue['pagina']],
@@ -367,8 +366,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     });
     this.setSubmittedSearch();
     this.search(params);
-    // console.log('a')
-    // console.log(JSON.stringify(params))
+
   }
 
   search(params: any): void {
@@ -446,7 +444,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   async exportToExcel(): Promise<void> {
-    const headers = ['', 'Nombre de Vendedor', 'Sucursal', 'Cliente', 'Titulo', 'Estado', 'Fecha Inicial'];
+    const headers = ['', 'NOMBRE DE VENDEDOR', 'SUCURSAL', 'CLIENTE', 'TITULO', 'ESTADO', 'FECHA DE LA CITA', 'OBSERVACION FINAL'];
     const data = this.resuldata.map(cliente => [
       '', // Columna A vacía
       cliente.vendedor,
@@ -454,7 +452,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       cliente.cliente,
       cliente.motivo, // Asegúrate de que cliente.titulo sea una cadena de caracteres
       cliente.Estado, // Asegúrate de que cliente.estado sea una cadena de caracteres
-      cliente.fecha // Asegúrate de que cliente.fechaInicial sea una cadena de caracteres o un objeto de tipo Date
+      cliente.fecha, // Asegúrate de que cliente.fechaInicial sea una cadena de caracteres o un objeto de tipo Date
+      cliente.observacionFinal
     ]);
   
     const workbook = new ExcelJS.Workbook();
