@@ -84,6 +84,8 @@ export class ComercialLoteRutaComponent implements OnInit {
     seleccion_id: any[];
     indiceVendedor: number;
     item: any;
+    selectedIconUrl = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|C0C0C0';
+
     /*   events$: Observable<Array<CalendarEvent<{ compromisso: Compromisso }>>>;
       eventSelected: Compromisso; */
 
@@ -423,12 +425,15 @@ export class ComercialLoteRutaComponent implements OnInit {
             direccion: mapa.DIRECCION,
             fechaVisita: mapa.FECHA_INICIO,
             mapa: mapa.markers.icon,
-            vendedor_id: mapa.id_vendedor // Asignar la posición del vendedor directamente
+            vendedor_id: mapa.id_vendedor,
+            indice: mapa.index
         };
         this.atividades.push(nuevoCliente);
+        mapa.markers['icon'] = this.selectedIconUrl;
+
         this.selectVendedorDefault(nuevoCliente, mapa);
     }
-    
+
     selectVendedorDefault(cliente: any, mapa: any) {
         //console.log(mapa.id_vendedor);
         const vendedorEncontrado = this.filteredVendedores.find(vendedor => vendedor.id === mapa.ID_VENDEDOR);
@@ -443,9 +448,24 @@ export class ComercialLoteRutaComponent implements OnInit {
 
     eliminarClienteTemporal(item: any) {
         const index = this.atividades.indexOf(item);
-        if (index !== -1) {
+        let registro = 0;
+        registro = this.mapas.findIndex(mapa => mapa.CODIGO_CLIENTE === item.codigoCliente);
+
+        if (registro !== -1) {
             this.atividades.splice(index, 1);
+            if (this.mapas[registro].color === 1) {
+                this.mapas[registro].markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000'; // Rojo
+            } else if (this.mapas[registro].color === 2) {
+                this.mapas[registro].markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FC9F3A'; // Naranja
+            } else if (this.mapas[registro].color === 3) {
+                this.mapas[registro].markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00'; // Amarillo
+            } else if (this.mapas[registro].color === 4) {
+                this.mapas[registro].markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFFFF'; // Blanco
+            } else {
+                this.mapas[registro].markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00'; // Verde
+            }
         }
+
     }
     vendedores() {
         this.vendedoresService.getVendedores().subscribe(
@@ -486,7 +506,6 @@ export class ComercialLoteRutaComponent implements OnInit {
     enviarDatos() {
         let msgSuccess = 'Cita creada exitosamente.';
         let msgError = 'Ocurrio un error al agendar la cita.';
-        console.log(this.atividades);
         const datos = this.atividades;
 
         /* console.log(datos);
