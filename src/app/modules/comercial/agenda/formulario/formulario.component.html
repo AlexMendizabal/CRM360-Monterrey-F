@@ -5,7 +5,10 @@
     Cancelar
   </button>
   <button type="button" (click)="onSubmit()" [disabled]="submittingForm || !form.valid">
-    Salvar
+    Guardar
+  </button>
+  <button type="button" (click)="filtrovendedor()" >
+    Guardar
   </button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
@@ -14,8 +17,7 @@
       <form [formGroup]="form" autocomplete="off">
         <div class="form-row justify-content-center">
           <div class="form-group col">
-            <label for="codTitulo">Título</label>
-            <div class="input-group">
+            <label for="codTitulo">Título</label>          
               <div class="input-group-prepend">
               <ng-select
               class="custom-control-input form-control"
@@ -34,30 +36,6 @@
             </ng-select>
           </div>
             <invalid-form-control [show]="onFieldInvalid('codTitulo')" message="Título obligatorio."></invalid-form-control>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="showInputClientes">
-          <div class="form-row" *ngIf="permissoesAcesso.simuladorVendas === true">
-            <div class="form-group col my-3">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="gerar-cotacao-pedido"
-                  formControlName="gerarCotacaoPedido" (change)="onGerarCotacaoPedido()">
-                <label class="custom-control-label" for="gerar-cotacao-pedido">
-                  Generar presupuesto/solicitud para este contacto
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group col">
-              <label for="cliente">Cliente</label>
-              <ng-select [searchable]="true" [clearable]="false" [items]="clientes" [virtualScroll]="true"
-                labelForId="cliente" bindLabel="codRazaoSocial" bindValue="codCliente" formControlName="cliente"
-                [ngClass]="onFieldError('cliente') + ' ' + onFieldRequired('cliente')"
-                (change)="updateDireccion($event)">
-              </ng-select>
-            </div>
           </div>
         </div>
         <div *ngIf="showInputVendedores">
@@ -92,6 +70,36 @@
                 formControlName="promotor"
                 [ngClass]="onFieldError('promotor') + ' ' + onFieldRequired('promotor')"
                 (change)="onInput()">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="showInputClientes">
+          <div class="form-row" *ngIf="permissoesAcesso.simuladorVendas === true">
+            <div class="form-group col my-3">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="gerar-cotacao-pedido"
+                  formControlName="gerarCotacaoPedido" (change)="onGerarCotacaoPedido()">
+                <label class="custom-control-label" for="gerar-cotacao-pedido">
+                  Generar presupuesto/solicitud para este contacto
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="cliente">Cliente</label>
+              <ng-select 
+              [searchable]="true" 
+              [clearable]="false" 
+              [items]="clientes" 
+              [virtualScroll]="true"
+              labelForId="cliente" 
+              bindLabel="codRazaoSocial" 
+              bindValue="codCliente" 
+              formControlName="cliente"
+              [ngClass]="onFieldError('cliente') + ' ' + onFieldRequired('cliente')"
+              (change)="updateDireccion($event)">
               </ng-select>
             </div>
           </div>

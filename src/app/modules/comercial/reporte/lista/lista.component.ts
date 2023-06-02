@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { saveAs } from 'file-saver';
-import * as XLSX from 'xlsx';
+//import * as XLSX from 'xlsx';
 import * as XLSXStyle from 'xlsx-style';
 import * as ExcelJS from 'exceljs/dist/exceljs.min.js';
 
@@ -72,7 +72,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   orderBy = 'codCliente';
   orderType = 'desc';
   maxSize = 10;
-  itemsPerPage = 50;
+  itemsPerPage = 15;
   currentPage = 1;
   totalItems: number = 0;
   clientes: any[] = [];
@@ -235,6 +235,38 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+  reporteCliente(): void {
+    const nombreVendedor = this.formFilter.value['nombreVendedor'];
+    const listaSucursales = this.formFilter.value['listaSucursales'];
+    const titulo = this.formFilter.value['titulo'];
+    const estado = this.formFilter.value['estado'];
+    const fechaInicial = this.formFilter.value['fechaInicial'];
+    const fechaFinal = this.formFilter.value['fechaFinal'];
+  
+    const data = {
+      id_vendedor: nombreVendedor,
+      sucursal: listaSucursales,
+      titulo: titulo, 
+      estado: estado,
+      fechaInicial: fechaInicial ? fechaInicial : null,
+      fechaFinal: fechaFinal ? fechaFinal : null,
+    };
+  
+    // Llamada al servicio reporteAgenda
+    this.agendaService.reporteAgenda(data).subscribe(
+      (response: any) => {
+        this.resuldata = response.result;
+        console.log('respuesta');
+        console.log(this.resuldata);
+        // Realizar las acciones necesarias con la respuesta
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
+  }
+
   
   
   
@@ -243,7 +275,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.resuldata=[];
     // Obtener los valores del formulario
     const filtro = this.formFilter.value;
-  
+    
     // Obtener los valores de fecha individualmente
     const fechaInicial = filtro.fechaInicial;
     const fechaFinal = filtro.fechaFinal;
@@ -530,5 +562,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   resetClienteSelecionado() {
     this.clienteSelecionado = null;
   }
+  
 }
 
