@@ -26,6 +26,8 @@ import { TitleService } from 'src/app/shared/services/core/title.service';
 import { ComercialCicloVendasCotacoesService } from '../../ciclo-vendas/cotacoes/cotacoes.service';
 import { ComercialCadastrosTitulosAgendaService } from './../../cadastros/titulos-agenda/titulos-agenda.service';
 import { AbstractControl } from '@angular/forms';
+import { ComercialVendedoresService } from '../../services/vendedores.service';
+
 
 
 // Interfaces
@@ -140,7 +142,8 @@ export class ComercialAgendaFormularioComponent
     private pnotifyService: PNotifyService,
     private dateService: DateService,
     private titleService: TitleService,
-    private cotacoesService: ComercialCicloVendasCotacoesService
+    private cotacoesService: ComercialCicloVendasCotacoesService,
+    private ComercialVendedoresService : ComercialVendedoresService,
   ) {
     this.localeService.use('pt-br');
     this.bsConfig = Object.assign(
@@ -249,8 +252,9 @@ export class ComercialAgendaFormularioComponent
         terminoData = new Date(detalhes.end);
         terminoHorario = new Date(detalhes.end);
       }
-
-
+      console.log('error')
+      console.log(detalhes)
+      
       this.form = this.formBuilder.group({
         id: [detalhes.id], // Agrega el campo 'id' al formulario
         cor: [detalhes.color.primary],
@@ -441,9 +445,11 @@ export class ComercialAgendaFormularioComponent
         })
       )
       .subscribe((response: Array<JsonResponse>) => {
+        console.log('respuesta')
         console.log(response)
         if (response[0].success === true) {
           this.clientes = response[0].data;
+          console.log(this.clientes)
         } else if (response[0].success === false) {
           this.showInputClientes = false;
         } else {
@@ -552,7 +558,6 @@ export class ComercialAgendaFormularioComponent
 
   onFieldError(field: string): string {
     const control = this.form.get(field);
-
     if (this.onFieldInvalid(control)) {
       return 'is-invalid';
     }
@@ -593,6 +598,8 @@ export class ComercialAgendaFormularioComponent
       this.loaderNavbar = true;
       this.submittingForm = true;
       const formValue = this.form.getRawValue();
+      console.log('123456')
+      console.log(formValue)
       const obsFinalizar = this.form.get('Obsfinalizar');
       let client: string,
         formContactDesc: string,
@@ -714,7 +721,9 @@ export class ComercialAgendaFormularioComponent
         status: status,
         obsFinalizar: formValue.Obsfinalizar
       };
-
+      console.log('123456')
+      console.log(formObj.codClient)
+      console.log(formObj.idVendedor)
       this.agendaService.save(this.action, formObj).subscribe({
         next: (response: any) => {
           if (response.responseCode === 200) {
@@ -754,6 +763,16 @@ export class ComercialAgendaFormularioComponent
 
   onInput(): void {
     this.formChanged = true;
+    const idVendedor = this.form.value.promotor
+    let params = {
+      idVendedor: idVendedor,
+      
+    }
+    this.ComercialVendedoresService.getCarteiraClientes(params).subscribe((response: JsonResponse) => {
+      if(response.success== true){
+        this.clientes = response.data;
+      }
+    })
   }
 
 
@@ -896,6 +915,12 @@ export class ComercialAgendaFormularioComponent
           this.pnotifyService.error();
         }
       });
+  }
+  filtrovendedor(): void {
+    
+    console.log(this.form.value.promotor)
+    var params = this.form.value.promotor
+    this.agendaService.reporte(params);
   }
 }
 
