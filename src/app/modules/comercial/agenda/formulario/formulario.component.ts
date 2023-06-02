@@ -594,7 +594,6 @@ export class ComercialAgendaFormularioComponent
       this.submittingForm = true;
       const formValue = this.form.getRawValue();
       const obsFinalizar = this.form.get('Obsfinalizar');
-      const obsFinalizarValue = obsFinalizar ? obsFinalizar.value : '';
       let client: string,
         formContactDesc: string,
         typeContactDesc: string,

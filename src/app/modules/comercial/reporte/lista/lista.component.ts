@@ -90,6 +90,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   resuldata: any[] = [];
   params: any;
   result: any[] = []; // Declarar la variable 'result' en la clase
+  obsFinal: any[];
   
 
   constructor(
@@ -212,6 +213,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     const estado = this.formFilter.value['estado'];
     const fechaInicial = this.formFilter.value['fechaInicial'];
     const fechaFinal = this.formFilter.value['fechaFinal'];
+    
   
     const data = {
       id_vendedor: nombreVendedor,

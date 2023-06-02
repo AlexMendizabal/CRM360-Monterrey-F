@@ -57,11 +57,11 @@
         .post(`${this.API}/compromisso/salvar`, record)
         .pipe(take(1), retry(2));
     }
-    private actualizarCompromiso(record: any) {
-      return this.http
-        .post(`${this.API}/compromiso/actualizar`, record)
-        .pipe(take(1), retry(2));
-    }
+    // private actualizarCompromiso(record: any) {
+    //   return this.http
+    //     .post(`${this.API}/compromiso/actualizar`, record)
+    //     .pipe(take(1), retry(2));
+    // }
     private updateCompromisso(record: any) {
       return this.http
         .post(`${this.API}/compromiso/actualizar` , record)
@@ -82,16 +82,16 @@
 
     save(action: string, record: any) {
 
-      if (action == 'editar' || action == 'finalizar') {
+      if (action == 'editar') {
         return this.updateCompromisso(record);
-      } else if (action == 'reagendar') {
+      } else if (action == 'finalizar') {
+        return this.finalizarCompromisso(record);
+      } else if (action == 'reagendar'){
         return this.rescheduleCompromisso(record);
       }
        else  {
         return this.saveCompromisso(record);
-      }
-    
-      
+      }      
     }
     
 

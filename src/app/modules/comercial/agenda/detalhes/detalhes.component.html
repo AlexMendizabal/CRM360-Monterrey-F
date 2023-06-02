@@ -1,7 +1,7 @@
 <app-header appTitle="Detalles del compromiso">
   <button type="button" *ngIf="switchEdit" (click)="onEdit(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Editar</button>
   <button type="button" *ngIf="switchEdit"(click)="onReschedule(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Reagendar</button>
-  <button type="button" *ngIf="switchEdit"(click)="onDelete(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Excluir</button>
+  <button type="button" *ngIf="switchEdit"(click)="onDelete(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Eliminar</button>
   <button type="button" *ngIf="switchEdit"(click)="onFinish(detalhes)" [disabled]="detalhes.status === 'FINALIZADO'">Finalizado</button>
   <!-- Nuevo botón -->
 </app-header>
