@@ -107,12 +107,12 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     private detailPanelService: DetailPanelService,
     private titulosAgendaService: ComercialCadastrosTitulosAgendaService,
     private agendaService: ComercialAgendaService,
-    
-    
-    
+
+
+
   ) {
     this.pnotifyService.getPNotify();
-    
+
   }
 
   ngOnInit(): void {
@@ -134,9 +134,9 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     });
     this.reporteAgenda();
     this.resuldata = [];
-    this.estadosAgenda(); 
+    this.estadosAgenda();
 
-    
+
 
   }
 
@@ -163,9 +163,9 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
-  
-  
+
+
+
   getEscritorios(): void {
     this.escritoriosService.getEscritorios().subscribe(
       (response: any) => {
@@ -189,7 +189,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
+
 
   filterCompromissos(): void {
     const params = {
@@ -218,12 +218,12 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     const data = {
       id_vendedor: nombreVendedor,
       sucursal: listaSucursales,
-      titulo: titulo, 
+      titulo: titulo,
       estado: estado,
       fechaInicial: fechaInicial ? fechaInicial : null,
       fechaFinal: fechaFinal ? fechaFinal : null,
     };
-  
+
     // Llamada al servicio reporteAgenda
     this.agendaService.reporteAgenda(data).subscribe(
       (response: any) => {
@@ -237,29 +237,29 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
-  
-  
-  
+
+
+
+
   filtrar() {
     this.resuldata=[];
     // Obtener los valores del formulario
     const filtro = this.formFilter.value;
-  
+
     // Obtener los valores de fecha individualmente
     const fechaInicial = filtro.fechaInicial;
     const fechaFinal = filtro.fechaFinal;
-  
+
     // Crear un nuevo objeto de filtro con los valores de fecha
     const filtroConFecha = { ...filtro, fechaInicial, fechaFinal };
-  
+
     // Realizar la solicitud de filtrado con el nuevo objeto de filtro
     this.agendaService.reporteAgenda(filtroConFecha).subscribe(
       (response: any) => {
         // Procesar la respuesta y asignar los datos al arreglo resuldata
         this.resuldata = response.result;
         this.totalItems = response.total;
-  
+
         // Resto del código necesario para gestionar los datos filtrados
       },
       (error: any) => {
@@ -268,8 +268,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
-  
+
+
 
   ngOnDestroy(): void {
     this.showDetailPanelSubscription.unsubscribe();
@@ -305,7 +305,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       pagina: [formValue['pagina']],
       nombreVendedor: [formValue['nombreVendedor'], Validators.required],
       listaSucursales: [formValue['listaSucursales'], Validators.required],
-      estado: [formValue['estado'], Validators.required], 
+      estado: [formValue['estado'], Validators.required],
     });
   }
 
@@ -326,7 +326,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
     return formValue;
   }
-
   classStatusBorder(status: string): string {
     if (status === 'registrado') {
       return 'border-primary';
@@ -334,7 +333,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       return 'border-secondary';
     }
   }
-  
+
   onAdvancedFilter(): void {
     this.showAdvancedFilter = !this.showAdvancedFilter;
   }
@@ -457,21 +456,21 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       cliente.fecha, // Asegúrate de que cliente.fechaInicial sea una cadena de caracteres o un objeto de tipo Date
       cliente.observacionFinal
     ]);
-  
+
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('data');
-  
+
     // Agregar encabezados en la fila 1
     worksheet.addRow(headers);
-  
+
     data.forEach((row, rowIndex) => {
       const formattedDate = formatDate(row[6]); // Formatear la fecha (row[6])
       row[6] = formattedDate; // Reemplazar el valor original con la fecha formateada
       worksheet.addRow(row);
     });
-  
-   
-  
+
+
+
     // Agregar estilos a las celdas
     worksheet.eachRow((row, rowNumber) => {
       row.eachCell(cell => {
@@ -481,7 +480,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         row.font = { bold: true };
       }
     });
-  
+
     // Ajustar el ancho de las columnas B a G
     for (let i = 2; i <= headers.length; i++) {
       const column = worksheet.getColumn(i);
@@ -489,7 +488,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     }
      // Ajustar el ancho de las columnas
      worksheet.getColumn('D').width = 25; // Establecer el ancho de la columna D en 25 píxeles
-  
+
     function formatDate(date: string): string {
       const currentDate = new Date(date);
       const day = currentDate.getDate();
@@ -497,22 +496,22 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       const year = currentDate.getFullYear();
       return `${day}-${month}-${year}`;
     }
-  
+
     const currentDate = new Date().toISOString().split('T')[0]; // Obtener la fecha actual
     const fileName = `${currentDate}_reporte.xlsx`; // Crear el nombre del archivo con la fecha actual
     const buffer = await workbook.xlsx.writeBuffer();
     const excelBlob: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  
+
     // Guardar el archivo Excel
     saveAs(excelBlob, fileName);
   }
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
 
   onPageChanged(event: PageChangedEvent) {
     if (this.formFilter.value['pagina'] != event.page) {

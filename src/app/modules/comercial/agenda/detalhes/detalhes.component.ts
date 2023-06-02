@@ -45,6 +45,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private atividadesService: AtividadesService,
+    private authservice: AuthService,
     private router: Router,
     private dateService: DateService,
     private agendaService: ComercialAgendaService,
@@ -57,6 +58,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   ) {
     this.pnotifyService.getPNotify();
   }
+
 
   ngOnInit() {
     this.registrarAcesso();
@@ -73,8 +75,6 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
       this.switchEdit = false;
     
     }
-    console.log(this.user)
-    this.detalhes.matricula = detalhes.matricula;
     this.detalhes.id = detalhes.id;
     this.detalhes.title = detalhes.title;
     this.detalhes.codClient = detalhes.codClient;
@@ -102,6 +102,8 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
       } else {
       }
     }
+
+
   }
 
   registrarAcesso() {

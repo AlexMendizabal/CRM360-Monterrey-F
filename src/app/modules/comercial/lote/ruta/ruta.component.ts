@@ -45,6 +45,7 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
     templateUrl: './ruta.component.html',
     styleUrls: ['./ruta.component.scss']
 })
+
 export class ComercialLoteRutaComponent implements OnInit {
     private user = this.authService.getCurrentUser();
     profile: any = {};
