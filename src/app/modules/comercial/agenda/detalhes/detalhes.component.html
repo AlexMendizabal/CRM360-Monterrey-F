@@ -85,23 +85,31 @@
       <div class="embed-responsive embed-responsive-16by9">
         <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="13" class="embed-responsive-item"
           (mapClick)="actualizarMarcador($event)">
-          <agm-marker [latitude]="latitud" [longitude]="longitud">
+          <agm-marker [latitude]="latitud" [longitude]="longitud" [label]="'C'">
+
             <agm-info-window [disableAutoPan]="true">
               <div class="marker-info-window">
-                <h5 class="marker-name">Nombre del lugar</h5>
-                <p class="marker-info"><strong>Dirección:</strong> Dirección del lugar</p>
-                <p class="marker-info"><strong>Fecha de inicio:</strong> Fecha de inicio</p>
-                <p class="marker-info"><strong>Fecha de fin:</strong> Fecha de fin</p>
-                <button class="marker-button" (click)="agregarClienteTemporal(mapa)">
-                  <i class="fas fa-plus"></i> &nbsp; Agregar
-                </button>
+                <p class="marker-name mb-0"><strong> Cliente: </strong> {{detalhes.client}}</p>
               </div>
             </agm-info-window>
             <agm-marker *ngFor="let posicion of posiciones" [latitude]="posicion.latitud"
               [longitude]="posicion.longitud" [iconUrl]="'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'">
+              <agm-info-window [disableAutoPan]="true" >
+                <div class="marker-info-window">
+                 <!--  <p class="marker-name mb-0"><strong> Promotor: </strong> {{posicion.vendedor}}</p> -->
+                  <p class="marker-name mb-0"><strong> Fecha: </strong> {{posicion.fecha}}</p>
+
+                </div>
+              </agm-info-window>
             </agm-marker>
 
           </agm-marker>
+          <agm-polyline [strokeColor]="'blue'">
+            <ng-container *ngFor="let posicion of posiciones">
+              <agm-polyline-point [latitude]="posicion.latitud" [longitude]="posicion.longitud">
+              </agm-polyline-point>
+            </ng-container>
+          </agm-polyline>
         </agm-map>
 
       </div>

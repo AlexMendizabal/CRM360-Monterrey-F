@@ -110,8 +110,8 @@ export class ComercialAgendaService {
     );
   }
 
-  getPosicionPromotor(params: any) {
-    return this.http.post(`${this.API}/reporte`, params).pipe(
+  getPosicionPromotor(id: any) {
+    return this.http.get(`${this.API}/getruta/${id}`).pipe(
       take(1),
       retry(2)
     );

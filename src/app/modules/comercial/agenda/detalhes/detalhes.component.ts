@@ -168,10 +168,9 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   }
 
   filtrarPosiciones(id_agenda: any) {
-    //console.log(id_agenda)
     this.agendaService.getPosicionPromotor(id_agenda).subscribe(
       (response: any) => {
-        this.posiciones = response.data;
+        this.posiciones = response.result;
       })
   }
 }
