@@ -74,7 +74,7 @@
       </form>
     </advanced-filter>
 
-    <div class="row mt-3">
+    <div class="row mt-6">
       <div [ngClass]="{'col-12': !showDetailPanel, 'col-7 pr-0': showDetailPanel}">
         <custom-table [config]="tableConfig">
           <ng-template #thead let-thead>
@@ -87,7 +87,7 @@
                 <thead-sorter value="Sucursal"></thead-sorter>
               </th>
               <th scope="col" class="hover">
-                <thead-sorter value="Nombre de Vendedor"></thead-sorter>
+                <thead-sorter value="Vendedor"></thead-sorter>
               </th>
               <th scope="col" class="hover">
                 <thead-sorter value="Titulo"></thead-sorter>
@@ -135,7 +135,7 @@
           </pagination>
         </div>
       </div>
-      <div class="col-5" [hidden]="!showDetailPanel">
+      <div class="col-md-5" [hidden]="!showDetailPanel">
         <div class="sticky-top" style="max-height: 400px; overflow-y: auto;">
           <detail-panel>
             <div class="border-right border-left border-bottom px-3 pt-3">
@@ -151,7 +151,7 @@
                         <thead-sorter value="Sucursal"></thead-sorter>
                       </th>
                       <th scope="col" class="hover">
-                        <thead-sorter value="Nombre de Vendedor"></thead-sorter>
+                        <thead-sorter value="Vendedor"></thead-sorter>
                       </th>
                       <th scope="col" class="hover">
                         <thead-sorter value="Titulo"></thead-sorter>
