@@ -83,6 +83,7 @@
             [innerHTML]="detalhes.motivo | uppercase"
           ></div>
         </div>
+              
       </div>
       <div class="form-row">
         <div class="form-group col">
@@ -105,14 +106,11 @@
       <div class="form-row">
         <div class="form-group col">
           <label>Anexo</label>
-          <div *ngIf="detalhes.title !== 'LLAMADA'">
-            <img
-              src="../../../assets/images/system-alerts/404.png"
-              alt="Sin información"
-              style="width: 80px; height: 80px"
-            />
+          <div *ngIf="!detalhes.anexo">
+            <img src="../../../assets/images/system-alerts/404.png" alt="Sin información"
+              style="width: 80px; height: 80px" />
           </div>
-          <div *ngIf="detalhes.title === 'LLAMADA'">{{ detalhes.anexo }}</div>
+          <div *ngIf="detalhes.anexo">{{ detalhes.anexo }}</div>
         </div>
       </div>
     </div>

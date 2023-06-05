@@ -11,6 +11,9 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ComercialAgendaService {
+  getPosicionPromotor(id_agenda: any) {
+    throw new Error('Method not implemented.');
+  }
   private readonly API = `https://crm360.monterrey.com.bo/api/comercial/agenda`;
 
   constructor(protected http: HttpClient) { }
@@ -37,20 +40,20 @@ export class ComercialAgendaService {
       .pipe(take(1), retry(2));
   }
 
-  reporteAgenda(data: any) {
-    console.log('entro')
-    return this.http.post(`${this.API}/reporte`, data).pipe(take(1), retry(2));
-  }
+    reporteAgenda(data: any) {
+      console.log('entro')
+      return this.http.post(`${this.API}/reporte`, data).pipe(take(1), retry(2));
+    }
 
-  estadosAgenda(data?: any): Observable<any> {
-    const params = data ? { params: data } : {}; // Opcionalmente, incluye los parámetros en la solicitud
+    estadosAgenda(data?: any): Observable<any> {
+      const params = data ? { params: data } : {}; // Opcionalmente, incluye los parámetros en la solicitud
 
-    return this.http.get(`${this.API}/estados`, params).pipe(
-      take(1),
-      retry(2)
-    );
+      return this.http.get(`${this.API}/estados`, params).pipe(
+        take(1),
+        retry(2)
+      );
 
-  }
+    }
 
   private saveCompromisso(record: any) {
     return this.http
@@ -76,7 +79,7 @@ export class ComercialAgendaService {
 
   private finalizarCompromisso(record: any) {
     return this.http
-      .post(`${this.API}/compromisso/finalizar`, record)
+      .post(`${this.API}/compromiso/actualizar`, record)
       .pipe(take(1), retry(2));
   }
 
@@ -99,28 +102,20 @@ export class ComercialAgendaService {
       .pipe(take(1), retry(2));
   }
 
-  reporte(params: any) {
-    console.log(params);
-    return this.http
-      .post(`${this.API}/reporte`, params)
-      .pipe(take(1), retry(2));
-  }
-  filtro_vendedor(params: any) {
-    console.log(params);
-    return this.http
-      .post(`${this.API}/reporte`, params)
-      .pipe(take(1), retry(2));
-    //console.log(params);
-    return this.http.post(`${this.API}/reporte`, params).pipe(
-      take(1),
-      retry(2)
-    );
-  }
+    reporte(params: any) {
+      console.log(params);
+        return this.http.post(`${this.API}/reporte`, params ).pipe(
+          take(1),
+          retry(2)
+        );
+      }
+    reporte_cliente(params: any) {
+      console.log('entro432')
+      console.log(params);
+        return this.http.post(`${this.API}/reportecliente`, params ).pipe(
+          take(1),
+          retry(2)
+        );
+      }
 
-  getPosicionPromotor(id: any) {
-    return this.http.get(`${this.API}/getruta/${id}`).pipe(
-      take(1),
-      retry(2)
-    );
-  }
 }

@@ -73,42 +73,114 @@
         </div>
       </form>
     </advanced-filter>
-    <custom-table [config]="tableConfig">
-      <ng-template #thead let-thead>
-        <tr>
-          <th></th>
-          <th class="text-center hover">
-            <thead-sorter value="Nombre de Vendedor"></thead-sorter>
-          </th>
-          <th scope="col" class="hover">
-            <thead-sorter value="Sucursal"></thead-sorter>
-          </th>
-          <th scope="col" class="hover">
-            <thead-sorter value="Cliente"></thead-sorter>
-          </th>
-          <th scope="col" class="hover">
-            <thead-sorter value="Titulo"></thead-sorter>
-          </th>
-          <th scope="col" class="hover">
-            <thead-sorter value="Estado"></thead-sorter>
-          </th>
-        </tr>
-      </ng-template>
-      <ng-template #tbody let-tbody>
-        <ng-container >
-          <tr *ngFor="let cliente of resuldata">
-            <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover" (click)="viewRegister(cliente)"></td>
-            <td class="text-center hover">{{ cliente.vendedor }}</td>
-            <td class="hover">{{ cliente.sucursal }}</td>
-            <td class="hover">{{ cliente.cliente }}</td>
-            <td class="hover">{{ cliente.motivo }}</td>
-            <td class="hover">{{ cliente.Estado }}</td>
-          </tr>
-          <tr *ngIf="resuldata.length === 0">
-            <td colspan="6" class="text-center">Sin datos registrados </td>
-          </tr>
-        </ng-container>
-      </ng-template>
-    </custom-table>
-    
+
+    <div class="row mt-6">
+      <div [ngClass]="{'col-12': !showDetailPanel, 'col-7 pr-0': showDetailPanel}">
+        <custom-table [config]="tableConfig">
+          <ng-template #thead let-thead>
+            <tr>
+              <th></th>
+              <th class="text-center hover">
+                <thead-sorter value="Cliente"></thead-sorter>
+              </th>
+              <th scope="col" class="hover">
+                <thead-sorter value="Sucursal"></thead-sorter>
+              </th>
+              <th scope="col" class="hover">
+                <thead-sorter value="Vendedor"></thead-sorter>
+              </th>
+              <th scope="col" class="hover">
+                <thead-sorter value="Titulo"></thead-sorter>
+              </th>
+              <th scope="col" class="hover">
+                <thead-sorter value="Estado"></thead-sorter>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <ng-container >
+              <tr *ngFor="let cliente of resuldata">
+                <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover"></td>
+                <td class="text-center hover">{{ cliente.cliente }}</td>
+                <td class="hover">{{ cliente.sucursal }}</td>
+                <td class="hover">{{ cliente.vendedor }}</td>
+                <td class="hover">{{ cliente.motivo }}</td>
+                <td class="hover">{{ cliente.Estado }}</td>
+                <td>
+                  <span tooltip="Datos de Cliente" placement="left" container="body">
+                    <button type="button" class="btn-icon-sm" (click)="viewDetails(cliente.id_cliente)">
+                      <i class="fas fa-user"></i>
+                    </button>
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="resuldata.length === 0">
+                <td colspan="6" class="text-center">Sin datos registrados </td>
+              </tr>
+            </ng-container>
+          </ng-template>
+        </custom-table>
+        <div class="d-flex justify-content-center mt-3" >
+          <pagination
+            [maxSize]="maxSize"
+            [(totalItems)]="totalItems"
+            (pageChanged)="onPageChanged($event)"
+            [(itemsPerPage)]="itemsPerPage"
+            [boundaryLinks]="true"
+            [(ngModel)]="currentPage"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;">
+          </pagination>
+        </div>
+      </div>
+      <div class="col-md-5" [hidden]="!showDetailPanel">
+        <div class="sticky-top" style="max-height: 400px; overflow-y: auto;">
+          <detail-panel>
+            <div class="border-right border-left border-bottom px-3 pt-3">
+              <div *ngIf="dadosCadastraisLoaded && !dadosCadastraisEmpty">
+                <custom-table [config]="tableConfig">
+                  <ng-template #thead let-thead>
+                    <tr>
+                      <th></th>
+                      <th class="text-center hover">
+                        <thead-sorter value="Cliente"></thead-sorter>
+                      </th>
+                      <th scope="col" class="hover">
+                        <thead-sorter value="Sucursal"></thead-sorter>
+                      </th>
+                      <th scope="col" class="hover">
+                        <thead-sorter value="Vendedor"></thead-sorter>
+                      </th>
+                      <th scope="col" class="hover">
+                        <thead-sorter value="Titulo"></thead-sorter>
+                      </th>
+                      <th scope="col" class="hover">
+                        <thead-sorter value="Estado"></thead-sorter>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <ng-container>
+                      <tr *ngFor="let cliente of resultcliente">
+                        <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover"></td>
+                        <td class="text-center hover">{{ cliente.cliente }}</td>
+                        <td class="hover">{{ cliente.sucursal }}</td>
+                        <td class="hover">{{ cliente.vendedor }}</td>
+                        <td class="hover">{{ cliente.motivo }}</td>
+                        <td class="hover">{{ cliente.estado }}</td>
+                      </tr>
+                      <tr *ngIf="resuldata.length === 0">
+                        <td colspan="6" class="text-center">Sin datos registrados</td>
+                      </tr>
+                    </ng-container>
+                  </ng-template>
+                </custom-table>
+              </div>
+            </div>
+          </detail-panel>
+        </div>
+      </div>
+    </div>
   </app-body>

@@ -549,6 +549,12 @@ export class ComercialAgendaFormularioComponent
     return control && control.invalid && (control.touched || control.dirty);
   }
 
+
+
+
+
+
+
   onFieldRequired(field: string): string {
     let required = false;
     let formControl = new FormControl();
@@ -749,14 +755,13 @@ export class ComercialAgendaFormularioComponent
     const idVendedor = this.form.value.promotor;
     let params = {
       idVendedor: idVendedor,
-    };
-    this.ComercialVendedoresService.getCarteiraClientes(params).subscribe(
-      (response: JsonResponse) => {
-        if (response.success == true) {
-          this.clientes = response.data;
-        }
+
+    }
+    this.ComercialVendedoresService.getCarteiraClientes(params).subscribe((response: JsonResponse) => {
+      if(response.success== true){
+        this.clientes = response.data;
       }
-    );
+    })
   }
 
   updateDireccion(event: any) {
@@ -894,8 +899,9 @@ export class ComercialAgendaFormularioComponent
       });
   }
   filtrovendedor(): void {
-    console.log(this.form.value.promotor);
-    var params = this.form.value.promotor;
+
+    console.log(this.form.value.promotor)
+    var params = this.form.value.promotor
     this.agendaService.reporte(params);
   }
 }

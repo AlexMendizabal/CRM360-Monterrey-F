@@ -92,12 +92,12 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   titulos: any[] = [];
   estados: any[] = [];
   resuldata: any[] = [];
-  resulcliente: any[] = [];
+
   params: any;
   result: any[] = []; // Declarar la variable 'result' en la clase
-  obsFinal: any[];
+
   resultcliente: any[] = [];
-  
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -232,31 +232,35 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
 
-  // reporteCliente(id: any): void { 
-  //   // Llamada al servicio reporteAgenda
-  //   this.detailPanelService.loadedFinished(false);
-  //   this.dadosCadastraisLoaded = false;
-  //   this.dadosCadastraisEmpty = false;
-  //   const data = {
-  //     id : id
-  //   }
-  //   this.agendaService.reporte_cliente(data).subscribe(
-  //     (response: any) => {
-  //       this.resulcliente = response.result;
-  //       console.log('respuesta56');
-  //       console.log(this.resuldata);
-  //       // Realizar las acciones necesarias con la respuesta
-  //     },
-  //     (error: any) => {
-  //       console.error(error);
-  //     }
-  //   );
-  // }
 
-  
-  
-  
-  
+
+
+
+  reporteCliente(id: any): void {
+    // Llamada al servicio reporteAgenda
+    this.detailPanelService.loadedFinished(false);
+    this.dadosCadastraisLoaded = false;
+    this.dadosCadastraisEmpty = false;
+    const data = {
+      id : id
+    }
+    this.agendaService.reporte_cliente(data).subscribe(
+      (response: any) => {
+        this.resultcliente = response.result;
+        console.log('respuesta56');
+        console.log(this.resuldata);
+        // Realizar las acciones necesarias con la respuesta
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
+  }
+
+
+
+
+
   filtrar() {
     this.resuldata = [];
     // Obtener los valores del formulario
@@ -398,36 +402,35 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
   // viewDetails(id: any): void {
 
-  //   this.detailPanelService.loadedFinished(false);
-  //   this.dadosCadastraisLoaded = false;
-  //   this.dadosCadastraisEmpty = false;
-  //   this.contatosLoaded = false;
-  //   this.contatosEmpty = false;
-  //     const data = {
-  //       id : id
-  //     }
-  //     this.agendaService.reporte_cliente(data)
-  //     .pipe(
-  //       finalize(() => {
-  //         this.dadosCadastraisLoaded = true;
-  //       })
-  //     ).subscribe(
-  //       (response: any) => {
-          
-  //         console.log('respuesta56');
-  //         console.log(this.resuldata);
-  //         if (response.id_cliente == id) {
-  //           this.resulcliente = response.resultcliente;
-  //         } else {
-  //           this.dadosCadastraisEmpty = true;
-  //         }
-  //         // Realizar las acciones necesarias con la respuesta
-  //       },
-  //       (error: any) => {
-  //         console.error(error);
-  //       }
-  //     );
-  // }
+    this.detailPanelService.loadedFinished(false);
+    this.dadosCadastraisLoaded = false;
+    this.dadosCadastraisEmpty = false;
+    this.contatosLoaded = false;
+    this.contatosEmpty = false;
+      const data = {
+        id : id
+      }
+      this.agendaService.reporte_cliente(data)
+      .pipe(
+        finalize(() => {
+          this.dadosCadastraisLoaded = true;
+        })
+      ).subscribe(
+        (response: any) => {
+          if (response.result) {
+            this.resultcliente = response.result;
+            console.log('respuesta123456');
+            console.log(this.resultcliente);
+          } else {
+            this.dadosCadastraisEmpty = true;
+          }
+          // Realizar las acciones necesarias con la respuesta
+        },
+        (error: any) => {
+          console.error(error);
+        }
+      );
+  }
 
   onCloseDetailPanel() {
     this.resetClienteSelecionado();
@@ -444,17 +447,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   async exportToExcel(): Promise<void> {
-    const headers = [
-      '',
-      'NOMBRE DE VENDEDOR',
-      'SUCURSAL',
-      'CLIENTE',
-      'TITULO',
-      'ESTADO',
-      'FECHA DE LA CITA',
-      'OBSERVACION FINAL',
-    ];
-    const data = this.resuldata.map((cliente) => [
+    const headers = ['', 'Nombre de Vendedor', 'Sucursal', 'Cliente', 'Titulo', 'Estado', 'Fecha Inicial', 'Observacion Final'];
+    const data = this.resuldata.map(cliente => [
       '', // Columna A vacía
       cliente.vendedor,
       cliente.sucursal,
@@ -462,7 +456,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       cliente.motivo, // Asegúrate de que cliente.titulo sea una cadena de caracteres
       cliente.Estado, // Asegúrate de que cliente.estado sea una cadena de caracteres
       cliente.fecha, // Asegúrate de que cliente.fechaInicial sea una cadena de caracteres o un objeto de tipo Date
-      cliente.observacionFinal,
+      cliente.obs_final
     ]);
 
     const workbook = new ExcelJS.Workbook();
