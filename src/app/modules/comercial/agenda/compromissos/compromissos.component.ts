@@ -124,6 +124,11 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   .pipe(takeUntil(this.destroy$))
   .subscribe(() => {
   this.fetchEvents();
+  if (this.user.info.matricula == 1) {
+    this.switchEdit = true;
+  } else {
+    this.switchEdit = false;
+  }
 });
 
 

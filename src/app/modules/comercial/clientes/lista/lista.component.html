@@ -350,7 +350,7 @@
                   </div>
                   <div class="form-row">
                     <div class="form-group col-lg-6">
-                      <label>Vendedor</label>
+                      <label>Promotor</label>
                       <div *ngIf="dadosCadastrais.vendedor == null">NO INFORMADO</div>
                       <div *ngIf="dadosCadastrais.vendedor != null">{{ dadosCadastrais.vendedor }}</div>
                     </div>
@@ -383,7 +383,7 @@
                 </div>
               </div>
             </tab>
-            <tab heading="Contatos">
+            <tab heading="Contactos">
               <div class="border-right border-left border-bottom px-3 pt-3">
                 <div *ngIf="contatosLoaded && !contatosEmpty">
                   <div class="form-row" *ngFor="let contato of contatos">

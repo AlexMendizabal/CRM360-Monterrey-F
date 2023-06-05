@@ -97,7 +97,7 @@
                 <button
                   type="button"
                   class="btn-icon-sm"
-                  tooltip="Detalhes"
+                  tooltip="Detalles"
                   (click)="onDetail(item)"
                   >
                   <i class="fas fa-search"></i>
@@ -118,7 +118,7 @@
       >
         <i class="fas fa-times"></i>
       </button>
-      <tab heading="Detalhes">
+      <tab heading="Detalles">
         <div
           class="border-right border-left border-bottom px-3 pt-3"
           style="overflow: auto; height: 338px;"
@@ -135,18 +135,18 @@
             </ng-template>
             <ng-template #tbody let-tbody>
               <tr *ngFor="let item of dataDetail">
-                <td nowrap class="text-center">{{ item.NM_EMPR }}</td>        
-                <td nowrap class="text-center">{{ item.NM_DEPO }}</td>        
-                <td nowrap class="text-center">{{ item.VOLU_VEND | number: '0.3' }}</td>         
-                <td nowrap class="text-center">{{ item.VOLU_CART | number: '0.3' }}</td>              
-                <td nowrap class="text-center">{{ item.PLAN_CORT | number: '0.3' }}</td>                  
+                <td nowrap class="text-center">{{ item.NM_EMPR }}</td>
+                <td nowrap class="text-center">{{ item.NM_DEPO }}</td>
+                <td nowrap class="text-center">{{ item.VOLU_VEND | number: '0.3' }}</td>
+                <td nowrap class="text-center">{{ item.VOLU_CART | number: '0.3' }}</td>
+                <td nowrap class="text-center">{{ item.PLAN_CORT | number: '0.3' }}</td>
               </tr>
               <tr>
-                <td nowrap class="text-center bg-dark text-white">TOTAL</td>        
-                <td nowrap class="text-center bg-dark text-white"></td>        
-                <td nowrap class="text-center bg-dark text-white">120,00</td>         
-                <td nowrap class="text-center bg-dark text-white">300,00</td>              
-                <td nowrap class="text-center bg-dark text-white">400,00</td>                  
+                <td nowrap class="text-center bg-dark text-white">TOTAL</td>
+                <td nowrap class="text-center bg-dark text-white"></td>
+                <td nowrap class="text-center bg-dark text-white">120,00</td>
+                <td nowrap class="text-center bg-dark text-white">300,00</td>
+                <td nowrap class="text-center bg-dark text-white">400,00</td>
               </tr>
             </ng-template>
           </custom-table>

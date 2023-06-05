@@ -3,13 +3,13 @@
     <button (click)="exportToExcel()" class="btn btn-primary">
       Exportar a Excel
     </button>
-    
+
 
     <button type="button" (click)="reporteAgenda()" class="btn btn-primary">Reporte Agenda</button>
-  
+
   </app-header>
   <app-body [breadCrumbTree]="breadCrumbTree">
-    
+
     <advanced-filter>
       <form [formGroup]="formFilter">
         <div class="form-row">
@@ -32,24 +32,24 @@
             />
           </div>
           <div class="form-group col-lg-3">
-            <label for="nombreVendedor">Nombre del vendedor</label>
+            <label for="nombreVendedor">Nombre del Promotor</label>
             <select class="form-control custom-select" id="nombreVendedor" formControlName="nombreVendedor">
-              <option value="">Seleccione un vendedor</option>
+              <option value="">Seleccione un Promotor</option>
               <option *ngFor="let vendedor of vendedores" [value]="vendedor.id">{{ vendedor.nome }}</option>
             </select>
           </div>
-          
+
           <div class="form-group col-lg-3">
             <label for="listaSucursales">Lista de sucursales</label>
             <select class="form-control custom-select" id="listaSucursales" formControlName="listaSucursales">
-              <option value="">Seleccionar escritorio</option>
+              <option value="">Seleccionar sucursal</option>
               <ng-container *ngFor="let escritorio of escritorios">
                 <option [value]="escritorio.codEscritorio" *ngIf="escritorio.nomeEscritorio !== ''">{{ escritorio.nomeEscritorio }}</option>
               </ng-container>
             </select>
           </div>
-          
-          
+
+
           <div class="form-group col-lg-3">
             <label for="titulo">Título</label>
             <select class="form-control custom-select" id="titulo" formControlName="titulo">
@@ -65,8 +65,8 @@
               <option *ngFor="let estado of estados" [value]="estado.id">{{ estado.nombre }}</option>
             </select>
           </div>
-          
-          
+
+
         </div>
         <div class="form-row">
           <!-- Agrega aquí más campos de filtrado avanzado si es necesario -->
@@ -78,7 +78,7 @@
         <tr>
           <th></th>
           <th class="text-center hover">
-            <thead-sorter value="Nombre de Vendedor"></thead-sorter>
+            <thead-sorter value="Nombre del Promotor"></thead-sorter>
           </th>
           <th scope="col" class="hover">
             <thead-sorter value="Sucursal"></thead-sorter>
@@ -110,5 +110,5 @@
         </ng-container>
       </ng-template>
     </custom-table>
-    
+
   </app-body>

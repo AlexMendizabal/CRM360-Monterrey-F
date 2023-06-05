@@ -1,7 +1,7 @@
 <loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
 <loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
 <app-header appTitle="Cadastro de Materiais">
-  <button 
+  <button
     [disabled]="form.valid === false || form.value.codCliente == null"
     (click)="postPainelBobinas()"
     >
@@ -73,7 +73,7 @@
                 <a
                   class="text-secondary"
                   href="javascript:void(0)"
-                  
+
                   (click)="onDetalhesContato()">
                   <strong>Detalhes</strong>
                 </a>
@@ -96,7 +96,7 @@
             <div class="mb-0 d-flex justify-content-between w-100" style="height: 22px">
               <label class="my-auto" for="codEndereco">Local de entrega</label>
               <div class="my-auto text-uppercase" style="font-size: 11px" *ngIf="form.value.codCliente != null">
-                <a 
+                <a
                   class="text-secondary"
                   href="javascript:void(0)"
                   (click)="onDetalhesLocalEntrega()">
@@ -159,7 +159,7 @@
           </div> -->
           <div class="form-group col-md-2 pl-0">
             <label for="nfMae">Nota Fiscal Mãe</label>
-            <select 
+            <select
             class="form-control custom-select"
             id="nfMae"
             formControlName="nfMae"
@@ -261,7 +261,7 @@
                   formControlName="pesquisa"
                   >
                   <div class="input-group-append">
-                    <span 
+                    <span
                       [tooltip]="formClientes.valid == false ? 'Digite um termo de pesquisa':''"
                       container="body"
                       placement ="left"
@@ -312,7 +312,7 @@
           </tr>
         </ng-template>
       </custom-table>
-      
+
     </div>
   </ng-template>
 </app-body>

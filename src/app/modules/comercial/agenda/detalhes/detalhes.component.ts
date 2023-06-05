@@ -48,6 +48,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
  // }
   switchEdit: boolean;
   private user = this.authservice.getCurrentUser();
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private atividadesService: AtividadesService,
