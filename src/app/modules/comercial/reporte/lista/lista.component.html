@@ -100,7 +100,7 @@
           <ng-template #tbody let-tbody>
             <ng-container >
               <tr *ngFor="let cliente of resuldata">
-                <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover" (click)="viewRegister(cliente)"></td>
+                <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover"></td>
                 <td class="text-center hover">{{ cliente.vendedor }}</td>
                 <td class="hover">{{ cliente.sucursal }}</td>
                 <td class="hover">{{ cliente.cliente }}</td>
@@ -108,7 +108,7 @@
                 <td class="hover">{{ cliente.Estado }}</td>
                 <td>
                   <span tooltip="Datos de Cliente" placement="left" container="body">
-                    <button type="button" class="btn-icon-sm" (click)="reporteCliente(cliente.id_cliente)">
+                    <button type="button" class="btn-icon-sm" (click)="viewDetails(cliente.id_cliente)">
                       <i class="fas fa-user"></i>
                     </button>
                   </span>
@@ -143,96 +143,47 @@
                 <div class="border-right border-left border-bottom px-3 pt-3">
                   <div *ngIf="dadosCadastraisLoaded && !dadosCadastraisEmpty">
                     <div class="form-row">
-                      <div class="form-group col-lg-6" *ngIf="dadosCadastrais.tipoPessoa == 'F'">
-                        <label>CPF</label>
-                        <div *ngIf="dadosCadastrais.cpf == null">NO INFORMADO</div>
-                        <div *ngIf="dadosCadastrais.cpf != null">{{ dadosCadastrais.cpf }}</div>
-                      </div>
-                      <div class="form-group col-lg-6" *ngIf="dadosCadastrais.tipoPessoa == 'J'">
-                        <label>CNPJ</label>
-                        <div *ngIf="dadosCadastrais.cnpj == null">NO INFORMADO</div>
-                        <div *ngIf="dadosCadastrais.cnpj != null">{{ dadosCadastrais.cnpj }}</div>
+                      <div class="form-group col-lg-6" >
+                        <label>nombre del cliente</label>
+                        <div *ngIf="resulcliente.cliente == null">NO INFORMADO</div>
+                        <div *ngIf="resulcliente.cliente != null">{{ resulcliente.cliente }}</div>
                       </div>
                       <div class="form-group col-lg-6">
-                        <label>Nombre de fantasía</label>
-                        <div *ngIf="dadosCadastrais.nomeFantasia == null">NO INFORMADO</div>
-                        <div *ngIf="dadosCadastrais.nomeFantasia != null">{{ dadosCadastrais.nomeFantasia }}</div>
+                        <label>codigo de cliente</label>
+                        <div *ngIf="resulcliente.codigo_cliente == null">NO INFORMADO</div>
+                        <div *ngIf="resulcliente.codigo_cliente != null">{{ resulcliente.codigo_cliente }}</div>
                       </div>
                     </div>
                     <div class="form-row">
                       <div class="form-group col">
-                        <label>Razón social</label>
-                        <div *ngIf="dadosCadastrais.razaoSocial == null">NO INFORMADO</div>
-                        <div *ngIf="dadosCadastrais.razaoSocial != null">{{ dadosCadastrais.razaoSocial }}</div>
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col">REPORTE
-                        <label>Dirección</label>
-                        <div *ngIf="dadosCadastrais.endereco == null">NO INFORMADO</div>
-                        <div *ngIf="dadosCadastrais.endereco != null">{{ dadosCadastrais.endereco }}</div>
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col-lg-6">
-                        <label>Barrio</label>
-                        <div *ngIf="dadosCadastrais.bairro == null">NO INFORMADO</div>
-                        <div *ngIf="dadosCadastrais.bairro != null">{{ dadosCadastrais.bairro }}</div>
-                      </div>
-                      <div class="form-group col-lg-6">
-                        <label>CEP</label>
-                        <div *ngIf="dadosCadastrais.cep == null">NO INFORMADO</div>
-                        <div *ngIf="dadosCadastrais.cep != null">{{ dadosCadastrais.cep }}</div>
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col-lg-6">
-                        <label>Ciudad</label>
-                        <div *ngIf="dadosCadastrais.cidade == null">NO INFORMADO</div>
-                        <div *ngIf="dadosCadastrais.cidade != null">{{ dadosCadastrais.cidade }}</div>
-                      </div>
-                      <div class="form-group col-lg-6">
-                        <label>Estado</label>
-                        <div *ngIf="dadosCadastrais.uf == null">NO INFORMADO</div>
-                        <div *ngIf="dadosCadastrais.uf != null">{{ dadosCadastrais.uf }}</div>
+                        <label>estado</label>
+                        <div *ngIf="resulcliente.Estado == null">NO INFORMADO</div>
+                        <div *ngIf="resulcliente.Estado != null">{{ resulcliente.Estado }}</div>
                       </div>
                     </div>
                     <div class="form-row">
                       <div class="form-group col">
-                        <label>Asegurado</label>
-                        <div *ngIf="dadosCadastrais.segurado != ''">Si</div>
-                        <div *ngIf="dadosCadastrais.segurado == ''">NO</div>
+                        <label>motivo</label>
+                        <div *ngIf="resulcliente.motivo == null">NO INFORMADO</div>
+                        <div *ngIf="resulcliente.motivo != null">{{ resulcliente.motivo }}</div>
                       </div>
                     </div>
                     <div class="form-row">
                       <div class="form-group col-lg-6">
-                        <label>Vendedor</label>
-                        <div *ngIf="dadosCadastrais.vendedor == null">NO INFORMADO</div>
-                        <div *ngIf="dadosCadastrais.vendedor != null">{{ dadosCadastrais.vendedor }}</div>
+                        <label>sucursal</label>
+                        <div *ngIf="resulcliente.sucursal == null">NO INFORMADO</div>
+                        <div *ngIf="resulcliente.sucursal != null">{{ resulcliente.sucursal }}</div>
                       </div>
                       <div class="form-group col-lg-6">
-                        <label>Escritório</label>
-                        <div *ngIf="dadosCadastrais.escritorio == null">NO INFORMADO</div>
-                        <div *ngIf="dadosCadastrais.escritorio != null">{{ dadosCadastrais.escritorio }}</div>
+                        <label>vendedor</label>
+                        <div *ngIf="resulcliente.vendedor == null">NO INFORMADO</div>
+                        <div *ngIf="resulcliente.vendedor != null">{{ resulcliente.vendedor }}</div>
                       </div>
                     </div>
-                    <div class="form-row">
-                      <div class="form-group col-lg-4" *ngIf="dadosCadastrais.codSAP != '' && dadosCadastrais.codSAP != null">
-                        <label>Código DBA</label>
-                        <div>{{ dadosCadastrais.codSAP }}</div>
-                      </div>
-                      <div class="form-group col-lg-4" *ngIf="dadosCadastrais.escritorioDba != '' && dadosCadastrais.escritorioDba != null">
-                        <label>Escritorio</label>
-                        <div>{{ dadosCadastrais.escritorioDba }}</div>
-                      </div>
-                      <div class="form-group col-lg-4" *ngIf="dadosCadastrais.ultimaCompraDba != '' && dadosCadastrais.ultimaCompraDba != null">
-                        <label>Última compra</label>
-                        <div>{{ dadosCadastrais.ultimaCompraDba }}</div>
-                      </div>
-                    </div>
+                    
                   </div>
                   <div class="mb-3" *ngIf="dadosCadastraisLoaded && dadosCadastraisEmpty">
-                    <empty-result message="Nenhuma informação encontrada"></empty-result>
+                    <empty-result message="No se ha encontrado información"></empty-result>
                   </div>
                   <div class="d-flex justify-content-center mb-3" *ngIf="!dadosCadastraisLoaded">
                     <div class="spinner-border text-dark"></div>
@@ -242,28 +193,7 @@
               <tab heading="Contatos">
                 <div class="border-right border-left border-bottom px-3 pt-3">
                   <div *ngIf="contatosLoaded && !contatosEmpty">
-                    <div class="form-row" *ngFor="let contato of contatos">
-                      <div class="form-group col">
-                        <label>{{ contato.tipoContato }}</label>
-                        <div>
-                          <span *ngIf="contato.nomeContato.length > 1" class="mr-1">{{ contato.nomeContato }}:</span>
-                          <span
-                            *ngIf="(contato.tipoContato != 'Email NFe') &&
-                                  (contato.tipoContato != 'E-mail NFe') &&
-                                  (contato.tipoContato != 'MalaDireta') &&
-                                  (contato.tipoContato != 'E-Mail')">
-                            {{ contato.contato }}
-                          </span>
-                          <span
-                            *ngIf="(contato.tipoContato == 'Email NFe') ||
-                                  (contato.tipoContato == 'E-mail NFe') ||
-                                  (contato.tipoContato == 'MalaDireta') ||
-                                  (contato.tipoContato == 'E-Mail')">
-                            <a [href]="'mailto:' + contato.contato">{{ contato.contato | lowercase }}</a>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                    
                   </div>
                   <div class="mb-3" *ngIf="contatosLoaded && contatosEmpty">
                     <empty-result message="Ningun contacto encontrado"></empty-result>

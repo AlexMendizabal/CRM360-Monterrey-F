@@ -38,7 +38,6 @@
     }
 
     reporteAgenda(data: any) {
-      console.log('entro')
       return this.http.post(`${this.API}/reporte`, data).pipe(take(1), retry(2));
     }
     
@@ -109,16 +108,10 @@
           retry(2)
         );
       }
-    filtro_vendedor(params: any) {
-      console.log(params);
-        return this.http.post(`${this.API}/reporte`, params ).pipe(
-          take(1),
-          retry(2)
-        );
-      }
     reporte_cliente(params: any) {
+      console.log('entro432')
       console.log(params);
-        return this.http.post(`${this.API}/reporte-cliente`, params ).pipe(
+        return this.http.post(`${this.API}/reportecliente`, params ).pipe(
           take(1),
           retry(2)
         );
