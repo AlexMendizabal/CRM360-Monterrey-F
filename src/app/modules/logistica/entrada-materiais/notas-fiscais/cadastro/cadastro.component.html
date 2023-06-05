@@ -1,7 +1,7 @@
 <loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
 <loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
 <app-header appTitle="NOTAS FISCAIS">
-  <button 
+  <button
     [disabled]="form.valid === false || loadingNavBar === true || noMaterial === false "
     (click)="postNotasFiscais()"
     >
@@ -152,7 +152,7 @@
                 </div>
                 <div class="form-group col-md-2 pl-0">
                   <label for="DS_UNID_MEDI">Unidade de Medida</label>
-                  <select 
+                  <select
                   class="form-control custom-select"
                   id="DS_UNID_MEDI"
                   formControlName="DS_UNID_MEDI"
@@ -223,10 +223,10 @@
         <div class="form-row justify-content-center">
           <div class="form-group col">
             <label for="DS_OBSE" >Observação:</label>
-            <textarea 
+            <textarea
             class="form-control"
             id="DS_OBSE"
-            formControlName="DS_OBSE" 
+            formControlName="DS_OBSE"
             rows="3"></textarea>
           </div>
         </div>
@@ -258,7 +258,7 @@
               >
                 <option value="1">Ativo</option>
                 <option value="0">Inativo</option>
-                <option value="">Exibir Todos</option>
+                <option value="">Exhibir Todos</option>
               </select>
             </div>
             <div class="form-group col-3">
@@ -283,7 +283,7 @@
                   formControlName="pesquisa"
                   >
                   <div class="input-group-append">
-                    <span 
+                    <span
                       [tooltip]="formPesquisaFornecedor.valid == false ? 'Digite um termo de pesquisa':''"
                       container="body"
                       placement ="left"
@@ -371,7 +371,7 @@
               >
                 <option value="1">Ativo</option>
                 <option value="0">Inativo</option>
-                <option value="">Exibir Todos</option>
+                <option value="">Exhibir Todos</option>
               </select>
             </div>
             <div class="form-group col-3">
@@ -396,7 +396,7 @@
                   formControlName="pesquisa"
                   >
                   <div class="input-group-append">
-                    <span 
+                    <span
                       [tooltip]="formAllMateriais.valid == false ? 'Digite um termo de pesquisa':''"
                       container="body"
                       placement ="left"
@@ -492,8 +492,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button 
-      type="button" 
+      <button
+      type="button"
       class="btn btn-success "
       target="_blank"
       (click)="gerarFicha()"
@@ -501,8 +501,8 @@
       <span aria-hidden="true">
       </span>Sim
     </button>
-    <button 
-      type="button" 
+    <button
+      type="button"
       class="btn btn-danger "
       (click)="hidePopup()"
     >

@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 export class ComercialAgendaService {
   private readonly API = `https://crm360.monterrey.com.bo/api/comercial/agenda`;
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient) { }
 
   getAcessos() {
     return this.http.get(`${this.API}/acessos`).pipe(take(1), retry(2));
@@ -38,14 +38,18 @@ export class ComercialAgendaService {
   }
 
   reporteAgenda(data: any) {
-    console.log('entro');
+    console.log('entro')
     return this.http.post(`${this.API}/reporte`, data).pipe(take(1), retry(2));
   }
 
   estadosAgenda(data?: any): Observable<any> {
     const params = data ? { params: data } : {}; // Opcionalmente, incluye los parámetros en la solicitud
 
-    return this.http.get(`${this.API}/estados`, params).pipe(take(1), retry(2));
+    return this.http.get(`${this.API}/estados`, params).pipe(
+      take(1),
+      retry(2)
+    );
+
   }
 
   private saveCompromisso(record: any) {
@@ -106,5 +110,17 @@ export class ComercialAgendaService {
     return this.http
       .post(`${this.API}/reporte`, params)
       .pipe(take(1), retry(2));
+    //console.log(params);
+    return this.http.post(`${this.API}/reporte`, params).pipe(
+      take(1),
+      retry(2)
+    );
+  }
+
+  getPosicionPromotor(id: any) {
+    return this.http.get(`${this.API}/getruta/${id}`).pipe(
+      take(1),
+      retry(2)
+    );
   }
 }
