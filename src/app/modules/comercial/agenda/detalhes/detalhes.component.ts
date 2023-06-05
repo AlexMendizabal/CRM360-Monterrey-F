@@ -18,30 +18,30 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 @Component({
   selector: 'comercial-agenda-detalhes',
   templateUrl: './detalhes.component.html',
-  styleUrls: ['./detalhes.component.scss']
+  styleUrls: ['./detalhes.component.scss'],
 })
 export class ComercialAgendaDetalhesComponent implements OnInit {
   breadCrumbTree: Array<Breadcrumb> = [
     {
       descricao: 'Home',
-      routerLink: '/comercial/home'
+      routerLink: '/comercial/home',
     },
     {
       descricao: 'Agenda',
-      routerLink: `/comercial/agenda/compromissos`
+      routerLink: `/comercial/agenda/compromissos`,
     },
     {
-      descricao: 'Detalles de cita'
-    }
+      descricao: 'Detalles de cita',
+    },
   ];
 
   detalhes: any = {
-    status: null
+    status: null,
   };
-  switchEdit : boolean ;
+  switchEdit: boolean;
 
- private user = this.authService.getCurrentUser();
- 
+  private user = this.authService.getCurrentUser();
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private atividadesService: AtividadesService,
@@ -53,12 +53,9 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     private pnotifyService: PNotifyService,
     private titleService: TitleService,
     private authService: AuthService
-
-    
   ) {
     this.pnotifyService.getPNotify();
   }
-
 
   ngOnInit() {
     this.registrarAcesso();
@@ -73,7 +70,6 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
       this.switchEdit = true;
     } else {
       this.switchEdit = false;
-    
     }
     this.detalhes.id = detalhes.id;
     this.detalhes.title = detalhes.title;
@@ -102,8 +98,6 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
       } else {
       }
     }
-
-
   }
 
   registrarAcesso() {
@@ -112,30 +106,28 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
 
   onEliminar(detalhes: any) {
     this.router.navigate(['../../eliminar', detalhes.id], {
-      relativeTo: this.activatedRoute
+      relativeTo: this.activatedRoute,
     });
   }
 
   onEdit(detalhes: any) {
     detalhes.status = 2;
     this.router.navigate(['../../editar', detalhes.id], {
-      relativeTo: this.activatedRoute
+      relativeTo: this.activatedRoute,
     });
-
   }
 
   onReschedule(detalhes: any) {
-    
     detalhes.status = 4;
     this.router.navigate(['../../reagendar', detalhes.id], {
-      relativeTo: this.activatedRoute
+      relativeTo: this.activatedRoute,
     });
   }
 
   onFinish(detalhes: any) {
     detalhes.status = 3;
     this.router.navigate(['../../finalizar', detalhes.id], {
-      relativeTo: this.activatedRoute
+      relativeTo: this.activatedRoute,
     });
   }
 
@@ -152,7 +144,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
       .asObservable()
       .pipe(
         take(1),
-        switchMap(result =>
+        switchMap((result) =>
           result ? this.agendaService.deleteCompromisso(detalhes.id) : EMPTY
         )
       )
@@ -160,14 +152,12 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
         next: (success) => {
           this.pnotifyService.success('Cita borrada con exito!');
           this.router.navigate(['../../compromissos'], {
-            relativeTo: this.activatedRoute
+            relativeTo: this.activatedRoute,
           });
         },
         error: (error) => {
-          this.pnotifyService.error(
-            'Error al borrar, intente nuevamente!'
-          );
-        }
+          this.pnotifyService.error('Error al borrar, intente nuevamente!');
+        },
       });
   }
 }

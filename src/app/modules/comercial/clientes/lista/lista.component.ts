@@ -367,7 +367,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         
       });
     } else {
-      this.pnotifyService.notice('Esse cliente não faz parte da sua carteira.');
+      this.pnotifyService.notice('Este cliente no pertenece a su cartera.');
     }
   }
 

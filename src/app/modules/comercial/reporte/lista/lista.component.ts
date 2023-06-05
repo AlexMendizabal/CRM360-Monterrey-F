@@ -1,6 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { saveAs } from 'file-saver';
@@ -29,9 +34,8 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { JsonResponse } from 'src/app/models/json-response';
 import { dataLoader } from '@amcharts/amcharts4/core';
- // calendario
+// calendario
 @Component({
-
   selector: 'comercial-clientes-lista',
   templateUrl: './lista.component.html',
   styleUrls: ['./lista.component.scss'],
@@ -91,7 +95,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   params: any;
   result: any[] = []; // Declarar la variable 'result' en la clase
   obsFinal: any[];
-  
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -106,13 +109,9 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     private escritoriosService: EscritoriosService,
     private detailPanelService: DetailPanelService,
     private titulosAgendaService: ComercialCadastrosTitulosAgendaService,
-    private agendaService: ComercialAgendaService,
-
-
-
+    private agendaService: ComercialAgendaService
   ) {
     this.pnotifyService.getPNotify();
-
   }
 
   ngOnInit(): void {
@@ -129,21 +128,18 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       nombreVendedor: [''], // Valor inicial del campo nombreVendedor
       listaSucursales: [''], // Valor inicial del campo listaSucursales
       titulo: [''], // Valor inicial del campo titulo
-      estado: [''] // Valor inicial del campo estado
+      estado: [''], // Valor inicial del campo estado
       // Agrega más campos de filtrado avanzado si es necesario
     });
     this.reporteAgenda();
     this.resuldata = [];
     this.estadosAgenda();
-
-
-
   }
 
   getVendedores(): void {
     this.vendedoresService.getVendedores().subscribe(
       (response: any) => {
-        console.log(response); // Verificar el tipo de datos de la respuesta  
+        console.log(response); // Verificar el tipo de datos de la respuesta
         this.vendedores = response.result;
       },
       (error: any) => {
@@ -155,7 +151,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   estadosAgenda(): void {
     this.agendaService.estadosAgenda().subscribe(
       (response: any) => {
-
         this.estados = response.result; // Almacena los estados en la variable estados
       },
       (error: any) => {
@@ -164,12 +159,9 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
 
-
-
   getEscritorios(): void {
     this.escritoriosService.getEscritorios().subscribe(
       (response: any) => {
-
         this.escritorios = response.result;
       },
       (error: any) => {
@@ -180,16 +172,17 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
   getTitulosAgenda(): void {
     // Llamada al servicio para obtener la lista de títulos
-    this.titulosAgendaService.getListaTitulosAgenda({ codSituacao: null }).subscribe(
-      (response: any) => {
-        this.titulos = response.data; // Asignar la lista de títulos a la variable "titulos"
-      },
-      (error: any) => {
-        // Manejar el error en caso de que ocurra
-      }
-    );
+    this.titulosAgendaService
+      .getListaTitulosAgenda({ codSituacao: null })
+      .subscribe(
+        (response: any) => {
+          this.titulos = response.data; // Asignar la lista de títulos a la variable "titulos"
+        },
+        (error: any) => {
+          // Manejar el error en caso de que ocurra
+        }
+      );
   }
-
 
   filterCompromissos(): void {
     const params = {
@@ -198,7 +191,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
     this.agendaService.getCompromissos(params).subscribe(
       (response: any) => {
-
         this.compromissos = response.result;
       },
       (error: any) => {
@@ -213,8 +205,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     const estado = this.formFilter.value['estado'];
     const fechaInicial = this.formFilter.value['fechaInicial'];
     const fechaFinal = this.formFilter.value['fechaFinal'];
-    
-  
+
     const data = {
       id_vendedor: nombreVendedor,
       sucursal: listaSucursales,
@@ -238,11 +229,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
 
-
-
-
   filtrar() {
-    this.resuldata=[];
+    this.resuldata = [];
     // Obtener los valores del formulario
     const filtro = this.formFilter.value;
     // Obtener los valores de fecha individualmente
@@ -267,8 +255,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-
 
   ngOnDestroy(): void {
     this.showDetailPanelSubscription.unsubscribe();
@@ -307,7 +293,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       estado: [formValue['estado'], Validators.required],
     });
   }
-
 
   checkRouterParams(): Object {
     let formValue = {
@@ -353,8 +338,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.setRouterParams(params);
   }
 
-
-
   setSubmittedSearch(): void {
     this.searchSubmitted = true;
   }
@@ -366,7 +349,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     });
     this.setSubmittedSearch();
     this.search(params);
-
   }
 
   search(params: any): void {
@@ -378,15 +360,12 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       this.buscandoPor = params['buscarPor'];
       this.pesquisa = params['pesquisa'];
       this.vendedores;
-      this.clientesService
-        .getClientes(params)
-        .pipe(
-          finalize(() => {
-            this.loaderNavbar = false;
-           // this.dataLoaded = true;
-          })
-        )
-
+      this.clientesService.getClientes(params).pipe(
+        finalize(() => {
+          this.loaderNavbar = false;
+          // this.dataLoaded = true;
+        })
+      );
     }
   }
   viewDetails(cliente: any): void {
@@ -444,8 +423,17 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   async exportToExcel(): Promise<void> {
-    const headers = ['', 'NOMBRE DE VENDEDOR', 'SUCURSAL', 'CLIENTE', 'TITULO', 'ESTADO', 'FECHA DE LA CITA', 'OBSERVACION FINAL'];
-    const data = this.resuldata.map(cliente => [
+    const headers = [
+      '',
+      'NOMBRE DE VENDEDOR',
+      'SUCURSAL',
+      'CLIENTE',
+      'TITULO',
+      'ESTADO',
+      'FECHA DE LA CITA',
+      'OBSERVACION FINAL',
+    ];
+    const data = this.resuldata.map((cliente) => [
       '', // Columna A vacía
       cliente.vendedor,
       cliente.sucursal,
@@ -453,7 +441,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       cliente.motivo, // Asegúrate de que cliente.titulo sea una cadena de caracteres
       cliente.Estado, // Asegúrate de que cliente.estado sea una cadena de caracteres
       cliente.fecha, // Asegúrate de que cliente.fechaInicial sea una cadena de caracteres o un objeto de tipo Date
-      cliente.observacionFinal
+      cliente.observacionFinal,
     ]);
 
     const workbook = new ExcelJS.Workbook();
@@ -468,11 +456,9 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       worksheet.addRow(row);
     });
 
-
-
     // Agregar estilos a las celdas
     worksheet.eachRow((row, rowNumber) => {
-      row.eachCell(cell => {
+      row.eachCell((cell) => {
         cell.alignment = { vertical: 'middle', horizontal: 'center' };
       });
       if (rowNumber === 1) {
@@ -485,8 +471,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       const column = worksheet.getColumn(i);
       column.width = 20; // Establecer el ancho de la columna en 20 píxeles
     }
-     // Ajustar el ancho de las columnas
-     worksheet.getColumn('D').width = 25; // Establecer el ancho de la columna D en 25 píxeles
+    // Ajustar el ancho de las columnas
+    worksheet.getColumn('D').width = 25; // Establecer el ancho de la columna D en 25 píxeles
 
     function formatDate(date: string): string {
       const currentDate = new Date(date);
@@ -499,18 +485,13 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     const currentDate = new Date().toISOString().split('T')[0]; // Obtener la fecha actual
     const fileName = `${currentDate}_reporte.xlsx`; // Crear el nombre del archivo con la fecha actual
     const buffer = await workbook.xlsx.writeBuffer();
-    const excelBlob: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const excelBlob: Blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
 
     // Guardar el archivo Excel
     saveAs(excelBlob, fileName);
   }
-
-
-
-
-
-
-
 
   onPageChanged(event: PageChangedEvent) {
     if (this.formFilter.value['pagina'] != event.page) {
@@ -521,7 +502,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     }
   }
 
-
   handleCounter(value: any) {
     return value.toFixed(0);
   }
@@ -529,6 +509,4 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   resetClienteSelecionado() {
     this.clienteSelecionado = null;
   }
-  
 }
-
