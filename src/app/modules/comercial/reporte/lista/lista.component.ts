@@ -88,7 +88,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   titulos: any[] = [];
   estados: any[] = [];
   resuldata: any[] = [];
-  resulcliente: any[] = [];
+
   params: any;
   result: any[] = []; // Declarar la variable 'result' en la clase
   resultcliente: any[] = [];
@@ -248,7 +248,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     }
     this.agendaService.reporte_cliente(data).subscribe(
       (response: any) => {
-        this.resulcliente = response.result;
+        this.resultcliente = response.result;
         console.log('respuesta56');
         console.log(this.resuldata);
         // Realizar las acciones necesarias con la respuesta
@@ -432,11 +432,10 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         })
       ).subscribe(
         (response: any) => {
-          
-          console.log('respuesta56');
-          console.log(this.resuldata);
-          if (response.id_cliente == id) {
-            this.resulcliente = response.resultcliente;
+          if (response.result) {
+            this.resultcliente = response.result;
+            console.log('respuesta123456');
+            console.log(this.resultcliente);
           } else {
             this.dadosCadastraisEmpty = true;
           }
@@ -463,7 +462,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   async exportToExcel(): Promise<void> {
-    const headers = ['', 'Nombre de Vendedor', 'Sucursal', 'Cliente', 'Titulo', 'Estado', 'Fecha Inicial'];
+    const headers = ['', 'Nombre de Vendedor', 'Sucursal', 'Cliente', 'Titulo', 'Estado', 'Fecha Inicial', 'Observacion Final'];
     const data = this.resuldata.map(cliente => [
       '', // Columna A vacía
       cliente.vendedor,
@@ -471,7 +470,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       cliente.cliente,
       cliente.motivo, // Asegúrate de que cliente.titulo sea una cadena de caracteres
       cliente.Estado, // Asegúrate de que cliente.estado sea una cadena de caracteres
-      cliente.fecha // Asegúrate de que cliente.fechaInicial sea una cadena de caracteres o un objeto de tipo Date
+      cliente.fecha, // Asegúrate de que cliente.fechaInicial sea una cadena de caracteres o un objeto de tipo Date
+      cliente.obs_final
     ]);
   
     const workbook = new ExcelJS.Workbook();
@@ -522,14 +522,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     // Guardar el archivo Excel
     saveAs(excelBlob, fileName);
   }
-  
-  
-  
-  
-  
-  
-  
-
   onPageChanged(event: PageChangedEvent) {
     if (this.formFilter.value['pagina'] != event.page) {
       this.detailPanelService.hide();

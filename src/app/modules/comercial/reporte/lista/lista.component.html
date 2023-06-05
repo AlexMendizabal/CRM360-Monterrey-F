@@ -81,13 +81,13 @@
             <tr>
               <th></th>
               <th class="text-center hover">
-                <thead-sorter value="Nombre de Vendedor"></thead-sorter>
+                <thead-sorter value="Cliente"></thead-sorter>
               </th>
               <th scope="col" class="hover">
                 <thead-sorter value="Sucursal"></thead-sorter>
               </th>
               <th scope="col" class="hover">
-                <thead-sorter value="Cliente"></thead-sorter>
+                <thead-sorter value="Nombre de Vendedor"></thead-sorter>
               </th>
               <th scope="col" class="hover">
                 <thead-sorter value="Titulo"></thead-sorter>
@@ -101,9 +101,9 @@
             <ng-container >
               <tr *ngFor="let cliente of resuldata">
                 <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover"></td>
-                <td class="text-center hover">{{ cliente.vendedor }}</td>
+                <td class="text-center hover">{{ cliente.cliente }}</td>
                 <td class="hover">{{ cliente.sucursal }}</td>
-                <td class="hover">{{ cliente.cliente }}</td>
+                <td class="hover">{{ cliente.vendedor }}</td>
                 <td class="hover">{{ cliente.motivo }}</td>
                 <td class="hover">{{ cliente.Estado }}</td>
                 <td>
@@ -136,74 +136,49 @@
         </div>
       </div>
       <div class="col-5" [hidden]="!showDetailPanel">
-        <div class="sticky-top">
-          <detail-panel>
-            <tabset>
-              <tab heading="Datos de registro">
-                <div class="border-right border-left border-bottom px-3 pt-3">
-                  <div *ngIf="dadosCadastraisLoaded && !dadosCadastraisEmpty">
-                    <div class="form-row">
-                      <div class="form-group col-lg-6" >
-                        <label>nombre del cliente</label>
-                        <div *ngIf="resulcliente.cliente == null">NO INFORMADO</div>
-                        <div *ngIf="resulcliente.cliente != null">{{ resulcliente.cliente }}</div>
-                      </div>
-                      <div class="form-group col-lg-6">
-                        <label>codigo de cliente</label>
-                        <div *ngIf="resulcliente.codigo_cliente == null">NO INFORMADO</div>
-                        <div *ngIf="resulcliente.codigo_cliente != null">{{ resulcliente.codigo_cliente }}</div>
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col">
-                        <label>estado</label>
-                        <div *ngIf="resulcliente.Estado == null">NO INFORMADO</div>
-                        <div *ngIf="resulcliente.Estado != null">{{ resulcliente.Estado }}</div>
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col">
-                        <label>motivo</label>
-                        <div *ngIf="resulcliente.motivo == null">NO INFORMADO</div>
-                        <div *ngIf="resulcliente.motivo != null">{{ resulcliente.motivo }}</div>
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col-lg-6">
-                        <label>sucursal</label>
-                        <div *ngIf="resulcliente.sucursal == null">NO INFORMADO</div>
-                        <div *ngIf="resulcliente.sucursal != null">{{ resulcliente.sucursal }}</div>
-                      </div>
-                      <div class="form-group col-lg-6">
-                        <label>vendedor</label>
-                        <div *ngIf="resulcliente.vendedor == null">NO INFORMADO</div>
-                        <div *ngIf="resulcliente.vendedor != null">{{ resulcliente.vendedor }}</div>
-                      </div>
-                    </div>
-                    
-                  </div>
-                  <div class="mb-3" *ngIf="dadosCadastraisLoaded && dadosCadastraisEmpty">
-                    <empty-result message="No se ha encontrado información"></empty-result>
-                  </div>
-                  <div class="d-flex justify-content-center mb-3" *ngIf="!dadosCadastraisLoaded">
-                    <div class="spinner-border text-dark"></div>
-                  </div>
-                </div>
-              </tab>
-              <tab heading="Contatos">
-                <div class="border-right border-left border-bottom px-3 pt-3">
-                  <div *ngIf="contatosLoaded && !contatosEmpty">
-                    
-                  </div>
-                  <div class="mb-3" *ngIf="contatosLoaded && contatosEmpty">
-                    <empty-result message="Ningun contacto encontrado"></empty-result>
-                  </div>
-                  <div class="d-flex justify-content-center mb-3" *ngIf="!contatosLoaded">
-                    <div class="spinner-border text-dark"></div>
-                  </div>
-                </div>
-              </tab>
-            </tabset>
+        <div class="sticky-top" style="max-height: 400px; overflow-y: auto;">
+          <detail-panel>              
+            <div class="border-right border-left border-bottom px-3 pt-3">
+              <div *ngIf="dadosCadastraisLoaded && !dadosCadastraisEmpty">
+                <custom-table [config]="tableConfig">
+                  <ng-template #thead let-thead>
+                    <tr>
+                      <th></th>
+                      <th class="text-center hover">
+                        <thead-sorter value="Cliente"></thead-sorter>
+                      </th>
+                      <th scope="col" class="hover">
+                        <thead-sorter value="Sucursal"></thead-sorter>
+                      </th>
+                      <th scope="col" class="hover">
+                        <thead-sorter value="Nombre de Vendedor"></thead-sorter>
+                      </th>
+                      <th scope="col" class="hover">
+                        <thead-sorter value="Titulo"></thead-sorter>
+                      </th>
+                      <th scope="col" class="hover">
+                        <thead-sorter value="Estado"></thead-sorter>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <ng-container>
+                      <tr *ngFor="let cliente of resultcliente">
+                        <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover"></td>
+                        <td class="text-center hover">{{ cliente.cliente }}</td>
+                        <td class="hover">{{ cliente.sucursal }}</td>
+                        <td class="hover">{{ cliente.vendedor }}</td>
+                        <td class="hover">{{ cliente.motivo }}</td>
+                        <td class="hover">{{ cliente.estado }}</td>
+                      </tr>
+                      <tr *ngIf="resuldata.length === 0">
+                        <td colspan="6" class="text-center">Sin datos registrados</td>
+                      </tr>
+                    </ng-container>
+                  </ng-template>
+                </custom-table>
+              </div>
+            </div>
           </detail-panel>
         </div>
       </div>
