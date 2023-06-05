@@ -1,8 +1,35 @@
 <app-header appTitle="Detalles del compromiso">
-  <button type="button" *ngIf="switchEdit" (click)="onEdit(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Editar</button>
-  <button type="button" (click)="onReschedule(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Reagendar</button>
-  <button type="button" *ngIf="switchEdit" (click)="onDelete(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Excluir</button>
-  <button type="button" *ngIf="detalhes.title === 'LLAMADA'"(click)="onFinish(detalhes)" [disabled]="detalhes.status === 'FINALIZADO'">Finalizado</button>
+  <button
+    type="button"
+    *ngIf="switchEdit"
+    (click)="onEdit(detalhes)"
+    [disabled]="detalhes.status === 'FINALIZADO'"
+  >
+    Editar
+  </button>
+  <button
+    type="button"
+    (click)="onReschedule(detalhes)"
+    [disabled]="detalhes.status === 'FINALIZADO'"
+  >
+    Reagendar
+  </button>
+  <button
+    type="button"
+    *ngIf="switchEdit"
+    (click)="onDelete(detalhes)"
+    [disabled]="detalhes.status === 'FINALIZADO'"
+  >
+    Excluir
+  </button>
+  <button
+    type="button"
+    *ngIf="detalhes.title === 'LLAMADA'"
+    (click)="onFinish(detalhes)"
+    [disabled]="detalhes.status === 'FINALIZADO'"
+  >
+    Finalizado
+  </button>
   <!-- Nuevo botón -->
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
@@ -29,8 +56,7 @@
             {{ detalhes.formContactDesc }}
           </div>
         </div>
-        <div class="form-row">
-        </div>
+        <div class="form-row"></div>
       </div>
       <div class="form-row">
         <div class="form-group col">
@@ -57,7 +83,6 @@
             [innerHTML]="detalhes.motivo | uppercase"
           ></div>
         </div>
-
       </div>
       <div class="form-row">
         <div class="form-group col">
@@ -90,29 +115,44 @@
           <div *ngIf="detalhes.title === 'LLAMADA'">{{ detalhes.anexo }}</div>
         </div>
       </div>
-
     </div>
     <div class="col-md-6">
       <p class="marker-info"><strong> SEGUIMIENTO DEL PROMOTOR</strong></p>
 
       <div class="embed-responsive embed-responsive-16by9">
-        <agm-map [latitude]="-17.783646812698528" [longitude]="-63.180786897945055" [zoom]="13" class="embed-responsive-item"
-          (mapClick)="actualizarMarcador($event)">
-          <agm-marker [latitude]="-17.783646812698528" [longitude]="-63.180786897945055">
+        <agm-map
+          [latitude]="-17.783646812698528"
+          [longitude]="-63.180786897945055"
+          [zoom]="13"
+          class="embed-responsive-item"
+          (mapClick)="actualizarMarcador($event)"
+        >
+          <agm-marker
+            [latitude]="-17.783646812698528"
+            [longitude]="-63.180786897945055"
+          >
             <agm-info-window [disableAutoPan]="true">
               <div class="marker-info-window">
                 <h5 class="marker-name">Nombre del lugar</h5>
-                <p class="marker-info"><strong>Dirección:</strong> Dirección del lugar</p>
-                <p class="marker-info"><strong>Fecha de inicio:</strong> Fecha de inicio</p>
-                <p class="marker-info"><strong>Fecha de fin:</strong> Fecha de fin</p>
-                <button class="marker-button" (click)="agregarClienteTemporal(mapa)">
+                <p class="marker-info">
+                  <strong>Dirección:</strong> Dirección del lugar
+                </p>
+                <p class="marker-info">
+                  <strong>Fecha de inicio:</strong> Fecha de inicio
+                </p>
+                <p class="marker-info">
+                  <strong>Fecha de fin:</strong> Fecha de fin
+                </p>
+                <button
+                  class="marker-button"
+                  (click)="agregarClienteTemporal(mapa)"
+                >
                   <i class="fas fa-plus"></i> &nbsp; Agregar
                 </button>
               </div>
             </agm-info-window>
           </agm-marker>
         </agm-map>
-
       </div>
     </div>
   </div>
