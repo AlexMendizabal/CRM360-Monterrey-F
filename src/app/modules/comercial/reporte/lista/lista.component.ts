@@ -92,9 +92,12 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   titulos: any[] = [];
   estados: any[] = [];
   resuldata: any[] = [];
+  resulcliente: any[] = [];
   params: any;
   result: any[] = []; // Declarar la variable 'result' en la clase
   obsFinal: any[];
+  resultcliente: any[] = [];
+  
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -229,6 +232,31 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
 
+  // reporteCliente(id: any): void { 
+  //   // Llamada al servicio reporteAgenda
+  //   this.detailPanelService.loadedFinished(false);
+  //   this.dadosCadastraisLoaded = false;
+  //   this.dadosCadastraisEmpty = false;
+  //   const data = {
+  //     id : id
+  //   }
+  //   this.agendaService.reporte_cliente(data).subscribe(
+  //     (response: any) => {
+  //       this.resulcliente = response.result;
+  //       console.log('respuesta56');
+  //       console.log(this.resuldata);
+  //       // Realizar las acciones necesarias con la respuesta
+  //     },
+  //     (error: any) => {
+  //       console.error(error);
+  //     }
+  //   );
+  // }
+
+  
+  
+  
+  
   filtrar() {
     this.resuldata = [];
     // Obtener los valores del formulario
@@ -368,45 +396,38 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       );
     }
   }
-  viewDetails(cliente: any): void {
-    this.detailPanelService.loadedFinished(false);
-    this.clienteSelecionado = cliente.codCliente;
-    this.dadosCadastraisLoaded = false;
-    this.dadosCadastraisEmpty = false;
-    this.contatosLoaded = false;
-    this.contatosEmpty = false;
+  // viewDetails(id: any): void {
 
-    this.clientesService
-      .getDetalhes(cliente.codCliente)
-      .pipe(
-        finalize(() => {
-          this.dadosCadastraisLoaded = true;
-        })
-      )
-      .subscribe((response: JsonResponse) => {
-        if (response.success === true) {
-          this.dadosCadastrais = response.data;
-        } else {
-          this.dadosCadastraisEmpty = true;
-        }
-      });
-
-    this.clientesService
-      .getContatosResumido(cliente.codCliente)
-      .subscribe((response: any) => {
-        this.contatosLoaded = true;
-
-        if (response['responseCode'] === 200) {
-          if (Object.keys(response['result']).length > 0) {
-            this.contatos = response['result'];
-          } else {
-            this.contatosEmpty = true;
-          }
-        } else {
-          this.contatosEmpty = true;
-        }
-      });
-  }
+  //   this.detailPanelService.loadedFinished(false);
+  //   this.dadosCadastraisLoaded = false;
+  //   this.dadosCadastraisEmpty = false;
+  //   this.contatosLoaded = false;
+  //   this.contatosEmpty = false;
+  //     const data = {
+  //       id : id
+  //     }
+  //     this.agendaService.reporte_cliente(data)
+  //     .pipe(
+  //       finalize(() => {
+  //         this.dadosCadastraisLoaded = true;
+  //       })
+  //     ).subscribe(
+  //       (response: any) => {
+          
+  //         console.log('respuesta56');
+  //         console.log(this.resuldata);
+  //         if (response.id_cliente == id) {
+  //           this.resulcliente = response.resultcliente;
+  //         } else {
+  //           this.dadosCadastraisEmpty = true;
+  //         }
+  //         // Realizar las acciones necesarias con la respuesta
+  //       },
+  //       (error: any) => {
+  //         console.error(error);
+  //       }
+  //     );
+  // }
 
   onCloseDetailPanel() {
     this.resetClienteSelecionado();

@@ -235,9 +235,7 @@ export class ComercialAgendaFormularioComponent
         terminoData = new Date(detalhes.end);
         terminoHorario = new Date(detalhes.end);
       }
-      console.log('error');
-      console.log(detalhes);
-
+      
       this.form = this.formBuilder.group({
         id: [detalhes.id], // Agrega el campo 'id' al formulario
         cor: [detalhes.color.primary],
@@ -426,11 +424,8 @@ export class ComercialAgendaFormularioComponent
         })
       )
       .subscribe((response: Array<JsonResponse>) => {
-        console.log('respuesta');
-        console.log(response);
         if (response[0].success === true) {
           this.clientes = response[0].data;
-          console.log(this.clientes);
         } else if (response[0].success === false) {
           this.showInputClientes = false;
         } else {
