@@ -37,13 +37,15 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   detalhes: any = {
     status: null
   };
-  
+  latitud: number;
+  longitud: number;
+  posiciones: any[] = [];
 
   //mostrarElemento: boolean = true;
 
   //ocultarFormulario(){
-   // this.mostrarElemento = false;
- // }
+  // this.mostrarElemento = false;
+  // }
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -61,7 +63,6 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   ngOnInit() {
     this.registrarAcesso();
     this.titleService.setTitle('Detalles de cita');
-
     const detalhes = this.activatedRoute.snapshot.data['detalhes']['result'];
     const inicio = new Date(detalhes['start']);
     const fim = new Date(detalhes['end']);
@@ -77,6 +78,10 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     this.detalhes.allDay = detalhes.allDay;
     this.detalhes.anexo = detalhes.anexo;
     this.detalhes.observacionFinal = detalhes.motivo;
+    this.latitud = detalhes.latitud;
+    this.longitud = detalhes.longitud;
+    this.filtrarPosiciones(detalhes.id)
+
     this.detalhes.description =
       detalhes.description != null
         ? detalhes.description.replace(/(?:\r\n|\r|\n)/g, '<br />')
@@ -113,6 +118,8 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     });
 
   }
+
+
 
   onReschedule(detalhes: any) {
     detalhes.status = 4;
@@ -158,5 +165,13 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
           );
         }
       });
+  }
+
+  filtrarPosiciones(id_agenda: any) {
+    //console.log(id_agenda)
+    this.agendaService.getPosicionPromotor(id_agenda).subscribe(
+      (response: any) => {
+        this.posiciones = response.data;
+      })
   }
 }

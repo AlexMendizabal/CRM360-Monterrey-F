@@ -269,4 +269,4 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.clickEventHandler();
     }
   }
-}
+} 
