@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { saveAs } from 'file-saver';
-import * as XLSX from 'xlsx';
+//import * as XLSX from 'xlsx';
 import * as XLSXStyle from 'xlsx-style';
 import * as ExcelJS from 'exceljs/dist/exceljs.min.js';
 
@@ -72,7 +72,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   orderBy = 'codCliente';
   orderType = 'desc';
   maxSize = 10;
-  itemsPerPage = 50;
+  itemsPerPage = 15;
   currentPage = 1;
   totalItems: number = 0;
   clientes: any[] = [];
@@ -88,8 +88,11 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   titulos: any[] = [];
   estados: any[] = [];
   resuldata: any[] = [];
+
   params: any;
   result: any[] = []; // Declarar la variable 'result' en la clase
+
+  resultcliente: any[] = [];
 
 
   constructor(
@@ -235,6 +238,32 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+
+
+
+
+  reporteCliente(id: any): void {
+    // Llamada al servicio reporteAgenda
+    this.detailPanelService.loadedFinished(false);
+    this.dadosCadastraisLoaded = false;
+    this.dadosCadastraisEmpty = false;
+    const data = {
+      id : id
+    }
+    this.agendaService.reporte_cliente(data).subscribe(
+      (response: any) => {
+        this.resultcliente = response.result;
+        console.log('respuesta56');
+        console.log(this.resuldata);
+        // Realizar las acciones necesarias con la respuesta
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
+  }
+
 
 
 
@@ -390,44 +419,36 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
     }
   }
-  viewDetails(cliente: any): void {
+  viewDetails(id: any): void {
+
     this.detailPanelService.loadedFinished(false);
-    this.clienteSelecionado = cliente.codCliente;
     this.dadosCadastraisLoaded = false;
     this.dadosCadastraisEmpty = false;
     this.contatosLoaded = false;
     this.contatosEmpty = false;
-
-    this.clientesService
-      .getDetalhes(cliente.codCliente)
+      const data = {
+        id : id
+      }
+      this.agendaService.reporte_cliente(data)
       .pipe(
         finalize(() => {
           this.dadosCadastraisLoaded = true;
         })
-      )
-      .subscribe((response: JsonResponse) => {
-        if (response.success === true) {
-          this.dadosCadastrais = response.data;
-        } else {
-          this.dadosCadastraisEmpty = true;
-        }
-      });
-
-    this.clientesService
-      .getContatosResumido(cliente.codCliente)
-      .subscribe((response: any) => {
-        this.contatosLoaded = true;
-
-        if (response['responseCode'] === 200) {
-          if (Object.keys(response['result']).length > 0) {
-            this.contatos = response['result'];
+      ).subscribe(
+        (response: any) => {
+          if (response.result) {
+            this.resultcliente = response.result;
+            console.log('respuesta123456');
+            console.log(this.resultcliente);
           } else {
-            this.contatosEmpty = true;
+            this.dadosCadastraisEmpty = true;
           }
-        } else {
-          this.contatosEmpty = true;
+          // Realizar las acciones necesarias con la respuesta
+        },
+        (error: any) => {
+          console.error(error);
         }
-      });
+      );
   }
 
   onCloseDetailPanel() {
@@ -445,7 +466,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   async exportToExcel(): Promise<void> {
-    const headers = ['', 'Nombre de Vendedor', 'Sucursal', 'Cliente', 'Titulo', 'Estado', 'Fecha Inicial'];
+    const headers = ['', 'Nombre de Vendedor', 'Sucursal', 'Cliente', 'Titulo', 'Estado', 'Fecha Inicial', 'Observacion Final'];
     const data = this.resuldata.map(cliente => [
       '', // Columna A vacía
       cliente.vendedor,
@@ -453,7 +474,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       cliente.cliente,
       cliente.motivo, // Asegúrate de que cliente.titulo sea una cadena de caracteres
       cliente.Estado, // Asegúrate de que cliente.estado sea una cadena de caracteres
-      cliente.fecha // Asegúrate de que cliente.fechaInicial sea una cadena de caracteres o un objeto de tipo Date
+      cliente.fecha, // Asegúrate de que cliente.fechaInicial sea una cadena de caracteres o un objeto de tipo Date
+      cliente.obs_final
     ]);
 
     const workbook = new ExcelJS.Workbook();
@@ -529,5 +551,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   resetClienteSelecionado() {
     this.clienteSelecionado = null;
   }
+
 }
 
