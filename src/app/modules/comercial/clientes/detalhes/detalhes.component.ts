@@ -28,7 +28,7 @@ export class ComercialClientesDetalhesComponent implements OnInit {
       routerLink: '/comercial/clientes/lista'
     },
     {
-      descricao: 'Detalhes'
+      descricao: 'Detalles'
     }
   ];
 
