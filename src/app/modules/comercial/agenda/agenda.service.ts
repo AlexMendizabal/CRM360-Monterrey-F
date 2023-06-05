@@ -57,11 +57,11 @@ export class ComercialAgendaService {
       .post(`${this.API}/compromisso/salvar`, record)
       .pipe(take(1), retry(2));
   }
-  private actualizarCompromiso(record: any) {
-    return this.http
-      .post(`${this.API}/compromiso/actualizar`, record)
-      .pipe(take(1), retry(2));
-  }
+  // private actualizarCompromiso(record: any) {
+  //   return this.http
+  //     .post(`${this.API}/compromiso/actualizar`, record)
+  //     .pipe(take(1), retry(2));
+  // }
   private updateCompromisso(record: any) {
     return this.http
       .post(`${this.API}/compromiso/actualizar`, record)
@@ -76,24 +76,21 @@ export class ComercialAgendaService {
 
   private finalizarCompromisso(record: any) {
     return this.http
-      .post(`${this.API}/compromisso/finalizar`, record)
+      .post(`${this.API}/compromiso/actualizar`, record)
       .pipe(take(1), retry(2));
   }
 
   save(action: string, record: any) {
-
-    if (action == 'editar' || action == 'finalizar') {
+    if (action == 'editar') {
       return this.updateCompromisso(record);
+    } else if (action == 'finalizar') {
+      return this.finalizarCompromisso(record);
     } else if (action == 'reagendar') {
       return this.rescheduleCompromisso(record);
-    }
-    else {
+    } else {
       return this.saveCompromisso(record);
     }
-
-
   }
-
 
   deleteCompromisso(id: any) {
     const record = { id: id };
@@ -103,6 +100,16 @@ export class ComercialAgendaService {
   }
 
   reporte(params: any) {
+    console.log(params);
+    return this.http
+      .post(`${this.API}/reporte`, params)
+      .pipe(take(1), retry(2));
+  }
+  filtro_vendedor(params: any) {
+    console.log(params);
+    return this.http
+      .post(`${this.API}/reporte`, params)
+      .pipe(take(1), retry(2));
     //console.log(params);
     return this.http.post(`${this.API}/reporte`, params).pipe(
       take(1),
@@ -114,6 +121,6 @@ export class ComercialAgendaService {
     return this.http.get(`${this.API}/getruta/${id}`).pipe(
       take(1),
       retry(2)
-    );
-  }
+    );
+  }
 }
