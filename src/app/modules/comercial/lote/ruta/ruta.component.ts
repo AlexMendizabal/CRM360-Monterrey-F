@@ -83,6 +83,9 @@ export class ComercialLoteRutaComponent implements OnInit {
     filteredGestiones: any[] = [];
     vendedor_id: any[];
     seleccion_id: any[];
+    indiceVendedor: number;
+    item: any;
+    selectedIconUrl = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|C0C0C0';
 
     /*   events$: Observable<Array<CalendarEvent<{ compromisso: Compromisso }>>>;
       eventSelected: Compromisso; */
@@ -119,8 +122,9 @@ export class ComercialLoteRutaComponent implements OnInit {
         /*  this.getRutas(); */
         this.getPerfil();
         this.titleService.setTitle('Rutas');
-        this.vendedores();
+        //this.vendedores();
         this.gestiones();
+        this.vendedores();
 
     }
 
@@ -386,7 +390,7 @@ export class ComercialLoteRutaComponent implements OnInit {
                     this.mapas.forEach((mapa) => {
                         // Crear el objeto 'markers' si no existe
                         mapa.markers = {};
-
+                        this.indiceVendedor = mapa.ID_VENDEDOR;
                         // Asignar color basado en el código del cliente
                         if (mapa.color === 1) {
                             mapa.markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000'; // Rojo
@@ -408,47 +412,79 @@ export class ComercialLoteRutaComponent implements OnInit {
                 }
             },
             (error) => {
-                console.error(error);
+                //console.error(error);
             }
         );
     }
 
     agregarClienteTemporal(mapa: any) {
-/*         console.log(mapa);
- */        const nuevoCliente = {
+        const nuevoCliente = {
             checked: false,
             codClient: mapa.id_cliente,
             codigoCliente: mapa.CODIGO_CLIENTE,
             nombre: mapa.NOMBRE,
             direccion: mapa.DIRECCION,
             fechaVisita: mapa.FECHA_INICIO,
-            promotor: '', // Asigna el valor correspondiente al promotor
-            mapa: mapa.markers.icon
+            mapa: mapa.markers.icon,
+            vendedor_id: mapa.id_vendedor,
+            indice: mapa.index
         };
-
         this.atividades.push(nuevoCliente);
+        mapa.markers['icon'] = this.selectedIconUrl;
 
+        this.selectVendedorDefault(nuevoCliente, mapa);
     }
+
+    selectVendedorDefault(cliente: any, mapa: any) {
+        //console.log(mapa.id_vendedor);
+        const vendedorEncontrado = this.filteredVendedores.find(vendedor => vendedor.id === mapa.ID_VENDEDOR);
+        if (vendedorEncontrado) {
+            cliente.vendedor_id = vendedorEncontrado.id;
+        } else {
+            cliente.vendedor_id = ''; // Valor por defecto si el vendedor no se encuentra en filteredVendedores
+        }
+    }
+
+
+
     eliminarClienteTemporal(item: any) {
         const index = this.atividades.indexOf(item);
-        if (index !== -1) {
+        let registro = 0;
+        registro = this.mapas.findIndex(mapa => mapa.CODIGO_CLIENTE === item.codigoCliente);
+
+        if (registro !== -1) {
             this.atividades.splice(index, 1);
+            if (this.mapas[registro].color === 1) {
+                this.mapas[registro].markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000'; // Rojo
+            } else if (this.mapas[registro].color === 2) {
+                this.mapas[registro].markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FC9F3A'; // Naranja
+            } else if (this.mapas[registro].color === 3) {
+                this.mapas[registro].markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00'; // Amarillo
+            } else if (this.mapas[registro].color === 4) {
+                this.mapas[registro].markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFFFF'; // Blanco
+            } else {
+                this.mapas[registro].markers.icon = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00'; // Verde
+            }
         }
+
     }
     vendedores() {
         this.vendedoresService.getVendedores().subscribe(
             (response: any) => {
                 if (response['responseCode'] === 200) {
-
                     this.filteredVendedores = response['result'];
+                    if (this.filteredVendedores.length > 0) {
+                        //this.indiceVendedor = this.filteredVendedores[].id;
+                    }
                 } else {
                     this.filteredVendedores = [];
                 }
             }
         );
-
-
     }
+
+
+
 
     gestiones() {
         this.vendedoresService.getGestiones().subscribe(
@@ -471,8 +507,9 @@ export class ComercialLoteRutaComponent implements OnInit {
     enviarDatos() {
         let msgSuccess = 'Cita creada exitosamente.';
         let msgError = 'Ocurrio un error al agendar la cita.';
-        console.log(this.atividades);
         const datos = this.atividades;
+
+        /* console.log(datos);
 
         // Muestra el spinner
         this.mostrarSpinner = true;
@@ -491,7 +528,7 @@ export class ComercialLoteRutaComponent implements OnInit {
                     this.mostrarSpinner = false;
                 }
             );
-        this.limpiarDatos();
+        this.limpiarDatos(); */
     }
     limpiarDatos() {
 
@@ -502,7 +539,7 @@ export class ComercialLoteRutaComponent implements OnInit {
         this.longitud = this.longitud;
 
     }
-    actualizarPagina(){
+    actualizarPagina() {
         location.reload();
     }
     // En caso de que el componente se destruya antes de completarse el envío de datos,
@@ -512,7 +549,9 @@ export class ComercialLoteRutaComponent implements OnInit {
         this.enviarDatosSubject.complete();
     }
     onVendedorChange(item: any, newValue: any) {
+
         item.id_vendedor = newValue;
+
     }
 
     onGestionChange(item: any, newValue: any) {

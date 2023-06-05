@@ -11,7 +11,7 @@
     <div class="col-sm-6">
       <div class="embed-responsive embed-responsive-16by9">
         <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="13" class="embed-responsive-item"
-          (mapClick)="actualizarMarcador($event)">
+          >
 
           <agm-marker *ngFor="let mapa of mapas" [latitude]="mapa.LATITUD" [longitude]="mapa.LONGITUD"
             [iconUrl]="mapa.markers.icon" (markerDragEnd)="actualizarDireccion($event)"

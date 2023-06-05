@@ -104,7 +104,7 @@ export class ComercialAgendaFormularioComponent
   origensContato: any = [];
   listarTitulosAgenda: any = [];
   motivosReagendamento: any = [];
-
+  marcadorArrastrable = true;
   attachedFiles: File[] = [];
   adjunto: File = null;
 
@@ -252,8 +252,10 @@ export class ComercialAgendaFormularioComponent
 
 
       this.form = this.formBuilder.group({
+        
         id: [detalhes.id], // Agrega el campo 'id' al formulario
         cor: [detalhes.color.primary],
+
         codTitulo: [
           {
             value: detalhes.codTitulo,
@@ -268,16 +270,18 @@ export class ComercialAgendaFormularioComponent
             disabled: this.action != 'novo',
           },
         ],
+
+       
         promotor: [
           {
             value: detalhes.id_vendedor,
-            disabled: this.action == 'reagendar' || this.action === 'finalizar' ? true: false,
+            disabled: this.action == 'reagendar' || this.action === 'finalizar' ? true : false,
           },
         ],
         direccion: [
           {
             value: detalhes.direccion,
-            disabled: this.action === 'reagendar' || this.action === 'finalizar' ? true: false,
+            disabled: this.action === 'reagendar' || this.action === 'finalizar' ? true : false,
 
           },
         ],
@@ -288,20 +292,9 @@ export class ComercialAgendaFormularioComponent
 
           },
         ],
-        latitud: [
-          {
-            value: detalhes.latitud,
-            disabled: this.action == 'novo' ? false : true,
 
-          },
-        ],
-        longitud: [
-          {
-            value: detalhes.longitud,
-            disabled: this.action == 'novo' ? false : true,
 
-          },
-        ],
+
         latitud_clie: [
           {
             value: detalhes.latitud,
@@ -327,20 +320,20 @@ export class ComercialAgendaFormularioComponent
 
         gerarCotacaoPedido: [false],
         inicioData: [
-          { value: inicioData, disabled: this.action == 'finalizar'},
+          { value: inicioData, disabled: this.action == 'finalizar' },
           [Validators.required],
         ],
         inicioHorario: [
-          { value: inicioHorario, disabled:this.action == 'finalizar' },
+          { value: inicioHorario, disabled: this.action == 'finalizar' },
           [Validators.required],
         ],
         terminoData: [
-          { value: terminoData, disabled:this.action == 'finalizar' },
+          { value: terminoData, disabled: this.action == 'finalizar' },
         ],
         terminoHorario: [
-          { value: terminoHorario, disabled:this.action === 'finalizar'},
+          { value: terminoHorario, disabled: this.action === 'finalizar' },
         ],
-        diaInteiro: [{ value: detalhes.allDay = false, disabled: this.action === 'finalizar'}],
+        diaInteiro: [{ value: detalhes.allDay = false, disabled: this.action === 'finalizar' }],
         motivoReagendamento: [
           { value: detalhes.rescheduleId, disabled: this.action == 'finalizar' },
           this.action == 'reagendar' ? [Validators.required] : null,
@@ -361,7 +354,8 @@ export class ComercialAgendaFormularioComponent
       if (detalhes.allDay) {
         this.isDisabledTime = true;
       }
-
+      this.latitud = detalhes.latitud
+      this.longitud = detalhes.longitud
       if (this.action == 'reagendar') {
         this.form.controls.motivoReagendamento.setValidators([
           Validators.required,
@@ -416,10 +410,10 @@ export class ComercialAgendaFormularioComponent
           descricao: this.action === 'editar'
             ? 'Editar contato'
             : this.action === 'reagendar'
-            ? 'Reagendar contato'
-            : this.action === 'finalizar'
-            ? 'Finalizar contato'
-            : ''
+              ? 'Reagendar contato'
+              : this.action === 'finalizar'
+                ? 'Finalizar contato'
+                : ''
         }
 
       ];
@@ -503,10 +497,10 @@ export class ComercialAgendaFormularioComponent
   onColorChange(color: any): void {
     this.form.controls.cor.setValue(color.hex);
   }
-   onCodTituloChange(): void {
-     const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
-     const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
-     this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
+  onCodTituloChange(): void {
+    const selectedIndex = this.form.controls.codTitulo.value; // Obtener el índice del elemento seleccionado en el dropdown "codTitulo"
+    const selectedColor = this.colors[selectedIndex]; // Obtener el color correspondiente al índice seleccionado en el dropdown "codTitulo"
+    this.onColorChange(selectedColor); // Establecer el valor del color correspondiente en el dropdown "color-dropdown"
   }
 
 
@@ -664,24 +658,28 @@ export class ComercialAgendaFormularioComponent
 
       let status: number;
 
-  // if (formValue.id) {
-  //   status = 0; // 'editar'
-  // } else {
-    switch (this.action) {
-      case 'novo':
-        status = 1;
-        break;
-      case 'finalizar':
-        status = 3;
-        break;
-      case 'reagendar':
-        status = 4;
-        break;
-      default:
-        status = 0;
-        break;
-    }
-  // }
+      // if (formValue.id) {
+      //   status = 0; // 'editar'
+      // } else {
+      switch (this.action) {
+        case 'novo':
+          status = 1;
+          break;
+        case 'finalizar':
+          status = 3;
+          break;
+        case 'reagendar':
+          status = 4;
+          break;
+
+        case 'editar':
+          status = 2;
+          break;
+        default:
+          status = 0;
+          break;
+      }
+      // }
 
       const inicio = this.dateService.convert2PhpDate(inicioData);
       const termino = this.dateService.convert2PhpDate(terminoData);
@@ -697,10 +695,10 @@ export class ComercialAgendaFormularioComponent
         },
         codTitulo: formValue.codTitulo,
         codClient: formValue.cliente,
-        idVendedor:formValue.promotor,
+        idVendedor: formValue.promotor,
         client: client,
         formContactId: formValue.codFormaContato,
-        codigo_cliente: formValue.codigo_cliente,
+        codigo_cliente: formValue.codigo_cliente.value,
         formContactDesc: formContactDesc,
         typeContactId: formValue.codOrigemContato,
         typeContactDesc: typeContactDesc,
@@ -710,9 +708,10 @@ export class ComercialAgendaFormularioComponent
         rescheduleId: formValue.motivoReagendamento,
         description: formValue.observacao,
         direccion: formValue.direccion,
-        latitud: formValue.latitud_clie,
-        longitud: formValue.longitud_clie,
+        latitud: this.latitud,
+        longitud: this.longitud,
         status: status,
+        /* id_status: id_status, */
         obsFinalizar: formValue.Obsfinalizar
       };
 
