@@ -198,7 +198,7 @@
                   class="text-primary mr-2"
                   href="javascript:void(0)"
                   (click)="onClienteDetalhes()">
-                  Detalhes
+                  Detalles
                 </a>
 
                 <a
@@ -292,14 +292,14 @@
           </div>
           <div class="form-group col-lg-2">
               <label class="my-auto" for="codEndereco">Título de Endereço</label>
-              <div class="my-1 text-uppercase" style="font-size: 11px">  
+              <div class="my-1 text-uppercase" style="font-size: 11px">
               <input
               formControlName="titulo"
               type="text"
               class="form-control"
               [readonly]="true"
               [attr.disabled]="true"
-              />           
+              />
               </div>
           </div>
           <div class="form-group col-lg-6">
@@ -452,7 +452,7 @@
                   [clearable]="false"
                   [items]="formasPagamento"
                   [searchFn]="customSearchFn"
-                  bindLabel="descricao" 
+                  bindLabel="descricao"
                   bindValue="codFormaPagamento"
                   formControlName="codFormaPagamento"
                   [loading]="formasPagamentoLoader"
