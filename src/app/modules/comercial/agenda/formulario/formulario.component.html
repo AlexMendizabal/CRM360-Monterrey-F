@@ -1,10 +1,16 @@
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
-<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
 <app-header [appTitle]="appTitle()">
   <button type="button" (click)="onCancel()" [disabled]="submittingForm">
     Cancelar
   </button>
-  <button type="button" (click)="onSubmit()" [disabled]="submittingForm || !form.valid">
+  <button
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="submittingForm || !form.valid"
+  >
     Guardar
   </button>
 </app-header>
@@ -14,40 +20,46 @@
       <form [formGroup]="form" autocomplete="off">
         <div class="form-row justify-content-center">
           <div class="form-group col">
-            <label for="codTitulo">Título</label>          
-              <div class="input-group-prepend">
+            <label for="codTitulo">Título</label>
+            <div class="input-group-prepend">
               <ng-select
-              class="custom-control-input form-control"
-              [searchable]="true"
-              [clearable]="true"
-              class="col p-0"
-              [items]="listarTitulosAgenda"
-              [virtualScroll]="true"
-              placeholder="Selecione..."
-              labelForId="codTitulo"
-              bindLabel="descricaoTitulo"
-              bindValue="codTitulo"
-              id="codTitulo"
-              formControlName="codTitulo"
-              (change)="onCodTituloChange()">
-            </ng-select>
-          </div>
-            <invalid-form-control [show]="onFieldInvalid('codTitulo')" message="Título obligatorio."></invalid-form-control>
+                class="custom-control-input form-control"
+                [searchable]="true"
+                [clearable]="true"
+                class="col p-0"
+                [items]="listarTitulosAgenda"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                labelForId="codTitulo"
+                bindLabel="descricaoTitulo"
+                bindValue="codTitulo"
+                id="codTitulo"
+                formControlName="codTitulo"
+                (change)="onCodTituloChange()"
+              >
+              </ng-select>
+            </div>
+            <invalid-form-control
+              [show]="onFieldInvalid('codTitulo')"
+              message="Título obligatorio."
+            ></invalid-form-control>
           </div>
         </div>
         <div *ngIf="showInputVendedores">
-          <div class="form-row" *ngIf="permissoesAcesso.simuladorVendas === true">
+          <div
+            class="form-row"
+            *ngIf="permissoesAcesso.simuladorVendas === true"
+          >
             <div class="form-group col my-3">
               <div class="custom-control custom-checkbox">
                 <input
-                 type="checkbox"
-                 class="custom-control-input"
-                 id="gerar-cotacao-pedido"
-                 formControlName="gerarCotacaoPedido"
-                 (change)="onGerarCotacaoPedido()">
-                <label
-                  class="custom-control-label"
-                  for="gerar-cotacao-pedido">
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="gerar-cotacao-pedido"
+                  formControlName="gerarCotacaoPedido"
+                  (change)="onGerarCotacaoPedido()"
+                />
+                <label class="custom-control-label" for="gerar-cotacao-pedido">
                   Generar presupuesto/solicitud para este contacto
                 </label>
               </div>
@@ -65,18 +77,29 @@
                 bindLabel="nome"
                 bindValue="id"
                 formControlName="promotor"
-                [ngClass]="onFieldError('promotor') + ' ' + onFieldRequired('promotor')"
-                (change)="onInput()">
+                [ngClass]="
+                  onFieldError('promotor') + ' ' + onFieldRequired('promotor')
+                "
+                (change)="onInput()"
+              >
               </ng-select>
             </div>
           </div>
         </div>
         <div *ngIf="showInputClientes">
-          <div class="form-row" *ngIf="permissoesAcesso.simuladorVendas === true">
+          <div
+            class="form-row"
+            *ngIf="permissoesAcesso.simuladorVendas === true"
+          >
             <div class="form-group col my-3">
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="gerar-cotacao-pedido"
-                  formControlName="gerarCotacaoPedido" (change)="onGerarCotacaoPedido()">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="gerar-cotacao-pedido"
+                  formControlName="gerarCotacaoPedido"
+                  (change)="onGerarCotacaoPedido()"
+                />
                 <label class="custom-control-label" for="gerar-cotacao-pedido">
                   Generar presupuesto/solicitud para este contacto
                 </label>
@@ -86,17 +109,20 @@
           <div class="form-row">
             <div class="form-group col">
               <label for="cliente">Cliente</label>
-              <ng-select 
-              [searchable]="true" 
-              [clearable]="false" 
-              [items]="clientes" 
-              [virtualScroll]="true"
-              labelForId="cliente" 
-              bindLabel="codRazaoSocial" 
-              bindValue="codCliente" 
-              formControlName="cliente"
-              [ngClass]="onFieldError('cliente') + ' ' + onFieldRequired('cliente')"
-              (change)="updateDireccion($event)">
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="clientes"
+                [virtualScroll]="true"
+                labelForId="cliente"
+                bindLabel="codRazaoSocial"
+                bindValue="codCliente"
+                formControlName="cliente"
+                [ngClass]="
+                  onFieldError('cliente') + ' ' + onFieldRequired('cliente')
+                "
+                (change)="updateDireccion($event)"
+              >
               </ng-select>
             </div>
           </div>
@@ -104,47 +130,88 @@
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="codFormaContato">FORMA DE CONTACTO</label>
-            <ng-select [searchable]="true" [clearable]="false" [items]="formasContato" formControlName="codFormaContato"
-              [virtualScroll]="false" bindLabel="descricao" bindValue="codFormaContato"
-              [ngClass]="onFieldError('codFormaContato') + ' ' + onFieldRequired('codFormaContato')">
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="formasContato"
+              formControlName="codFormaContato"
+              [virtualScroll]="false"
+              bindLabel="descricao"
+              bindValue="codFormaContato"
+              [ngClass]="
+                onFieldError('codFormaContato') +
+                ' ' +
+                onFieldRequired('codFormaContato')
+              "
+            >
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('codFormaContato')"
-              message="Forma de contacto es obligatorio."></invalid-form-control>
+            <invalid-form-control
+              [show]="onFieldInvalid('codFormaContato')"
+              message="Forma de contacto es obligatorio."
+            ></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
             <label for="codOrigemContato">ORIGEN DE CONTACTO</label>
-            <ng-select [searchable]="true" [clearable]="false" [items]="origensContato"
-              formControlName="codOrigemContato" [virtualScroll]="false" bindLabel="DS_MEIO_CONT"
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="origensContato"
+              formControlName="codOrigemContato"
+              [virtualScroll]="false"
+              bindLabel="DS_MEIO_CONT"
               bindValue="ID_MEIO_CONT"
-              [ngClass]="onFieldError('codOrigemContato') + ' ' + onFieldRequired('codOrigemContato')">
+              [ngClass]="
+                onFieldError('codOrigemContato') +
+                ' ' +
+                onFieldRequired('codOrigemContato')
+              "
+            >
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('codOrigemContato')"
-              message="Origen de contacto es obligatorio."></invalid-form-control>
+            <invalid-form-control
+              [show]="onFieldInvalid('codOrigemContato')"
+              message="Origen de contacto es obligatorio."
+            ></invalid-form-control>
           </div>
           <div class="form-group col-md-12">
             <label for="codOrigemContato">DIRECCION</label>
-            <input type="text" class="form-control" formControlName="direccion"
-              [ngClass]="onFieldError('codOrigemContato') + ' ' + onFieldRequired('codOrigemContato')">
-            <input type="hidden" formControlName="latitud_clie">
-            <input type="hidden" formControlName="longitud_clie">
-            <input type="hidden" formControlName="codigo_cliente">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="direccion"
+              [ngClass]="
+                onFieldError('codOrigemContato') +
+                ' ' +
+                onFieldRequired('codOrigemContato')
+              "
+            />
+            <input type="hidden" formControlName="latitud_clie" />
+            <input type="hidden" formControlName="longitud_clie" />
+            <input type="hidden" formControlName="codigo_cliente" />
 
-
-            <invalid-form-control [show]="onFieldInvalid('codOrigemContato')"
-              message="Origen de contacto es obligatorio."></invalid-form-control>
+            <invalid-form-control
+              [show]="onFieldInvalid('codOrigemContato')"
+              message="Origen de contacto es obligatorio."
+            ></invalid-form-control>
           </div>
           <div class="form-group col-md-12">
             <div class="embed-responsive embed-responsive-16by9">
-              <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="16" class="embed-responsive-item" (mapClick)="actualizarMarcador($event)">
-                <agm-marker [latitude]="latitud" [longitude]="longitud" (markerDragEnd)="actualizarDireccion($event)">
+              <agm-map
+                [latitude]="latitud"
+                [longitude]="longitud"
+                [zoom]="16"
+                class="embed-responsive-item"
+                (mapClick)="actualizarMarcador($event)"
+              >
+                <agm-marker
+                  [latitude]="latitud"
+                  [longitude]="longitud"
+                  (markerDragEnd)="actualizarDireccion($event)"
+                >
                 </agm-marker>
               </agm-map>
-              <div id="map-zoom-control" class="map-control"> </div>
+              <div id="map-zoom-control" class="map-control"></div>
             </div>
           </div>
-
-
-
         </div>
         <div class="form-row">
           <div class="form-group col">
@@ -157,24 +224,52 @@
               <div class="col-md-6 pr-0">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                    <span class="input-group-text"
+                      ><i class="far fa-calendar-alt"></i
+                    ></span>
                   </div>
-                  <input class="form-control" id="inicioData" type="text" bsDatepicker [bsConfig]="bsConfig"
-                    formControlName="inicioData" (input)="onInput()"
-                    [ngClass]="onFieldError('inicioData') + ' ' + onFieldRequired('inicioData')">
+                  <input
+                    class="form-control"
+                    id="inicioData"
+                    type="text"
+                    bsDatepicker
+                    [bsConfig]="bsConfig"
+                    formControlName="inicioData"
+                    (input)="onInput()"
+                    [ngClass]="
+                      onFieldError('inicioData') +
+                      ' ' +
+                      onFieldRequired('inicioData')
+                    "
+                  />
                 </div>
-                <invalid-form-control [show]="onFieldInvalid('inicioData')"
-                  message="Início é obrigatório."></invalid-form-control>
+                <invalid-form-control
+                  [show]="onFieldInvalid('inicioData')"
+                  message="Início é obrigatório."
+                ></invalid-form-control>
               </div>
               <div class="col-md-6">
                 <div class="custom-mt d-flex">
-                  <timepicker [showMeridian]="false" [showSpinners]="false" [mousewheel]="true"
-                    formControlName="inicioHorario" (input)="onInput()">
+                  <timepicker
+                    [showMeridian]="false"
+                    [showSpinners]="false"
+                    [mousewheel]="true"
+                    formControlName="inicioHorario"
+                    (input)="onInput()"
+                  >
                   </timepicker>
                   <div class="custom-control custom-checkbox ml-3 mt-2">
-                    <input type="checkbox" class="custom-control-input" id="diaInteiro" formControlName="diaInteiro"
-                      (input)="onInput()" (change)="triggerAllDay()">
-                    <label class="custom-control-label" for="diaInteiro">Dia completo</label>
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="diaInteiro"
+                      formControlName="diaInteiro"
+                      (input)="onInput()"
+                      (change)="triggerAllDay()"
+                    />
+                    <label class="custom-control-label" for="diaInteiro"
+                      >Dia completo</label
+                    >
                   </div>
                 </div>
               </div>
@@ -185,23 +280,41 @@
           <div class="form-group col">
             <div class="row">
               <div class="col">
-                <label [ngClass]="{'required': !isDisabledTime}" for="terminoData">Fecha Final</label>
+                <label
+                  [ngClass]="{ required: !isDisabledTime }"
+                  for="terminoData"
+                  >Fecha Final</label
+                >
               </div>
             </div>
             <div class="row">
               <div class="col-md-6 pr-0">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                    <span class="input-group-text"
+                      ><i class="far fa-calendar-alt"></i
+                    ></span>
                   </div>
-                  <input class="form-control" id="terminoData" type="text" bsDatepicker [bsConfig]="bsConfig"
-                    formControlName="terminoData" (input)="onInput()">
+                  <input
+                    class="form-control"
+                    id="terminoData"
+                    type="text"
+                    bsDatepicker
+                    [bsConfig]="bsConfig"
+                    formControlName="terminoData"
+                    (input)="onInput()"
+                  />
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="custom-mt">
-                  <timepicker [showMeridian]="false" [showSpinners]="false" [mousewheel]="true"
-                    formControlName="terminoHorario" (input)="onInput()">
+                  <timepicker
+                    [showMeridian]="false"
+                    [showSpinners]="false"
+                    [mousewheel]="true"
+                    formControlName="terminoHorario"
+                    (input)="onInput()"
+                  >
                   </timepicker>
                 </div>
               </div>
@@ -211,20 +324,41 @@
         <div class="form-row" *ngIf="action == 'reagendar'">
           <div class="form-group col">
             <label for="motivoReagendamento">Motivo de la reprogramación</label>
-            <select class="form-control custom-select" id="motivoReagendamento" formControlName="motivoReagendamento"
-              (change)="onInput()" [ngClass]="{'is-invalid': onFieldInvalid(form.get('motivoReagendamento'))}">
-              <option *ngFor="let item of motivosReagendamento" [value]="item.ID_REAG_MOTI">{{ item.DS_REAG_MOTI }}</option>
+            <select
+              class="form-control custom-select"
+              id="motivoReagendamento"
+              formControlName="motivoReagendamento"
+              (change)="onInput()"
+              [ngClass]="{
+                'is-invalid': onFieldInvalid(form.get('motivoReagendamento'))
+              }"
+            >
+              <option
+                *ngFor="let item of motivosReagendamento"
+                [value]="item.ID_REAG_MOTI"
+              >
+                {{ item.DS_REAG_MOTI }}
+              </option>
             </select>
-            <invalid-form-control [show]="form.get('motivoReagendamento').invalid && form.get('motivoReagendamento').touched"
-              message="Motivo de reagendamiento es obligatorio."></invalid-form-control>
+            <invalid-form-control
+              [show]="
+                form.get('motivoReagendamento').invalid &&
+                form.get('motivoReagendamento').touched
+              "
+              message="Motivo de reagendamiento es obligatorio."
+            ></invalid-form-control>
           </div>
-          
         </div>
 
         <div class="form-row">
           <div class="form-group col">
             <label for="observacao">Observación</label>
-            <textarea class="form-control" id="observacao" formControlName="observacao" (input)="onInput()">
+            <textarea
+              class="form-control"
+              id="observacao"
+              formControlName="observacao"
+              (input)="onInput()"
+            >
             </textarea>
           </div>
         </div>
@@ -236,7 +370,8 @@
               class="form-control"
               id="Obsfinalizar"
               formControlName="Obsfinalizar"
-              (input)="onInput()">
+              (input)="onInput()"
+            >
             </textarea>
           </div>
         </div>
