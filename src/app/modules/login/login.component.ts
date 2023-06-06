@@ -120,11 +120,11 @@ export class LoginComponent implements OnInit {
                 this.setUserLogin(response);
               } else {
                 this.pnotifyService.error(
-                  'Ocorreu um erro ao gerar seu acesso.'
+                  'Se ha producido un error al generar su acceso.'
                 );
               }
             } else {
-              this.pnotifyService.error('Usuário ou senha incorretos.');
+              this.pnotifyService.error('Nombre de usuario o contraseña incorrectos.');
             }
           },
           (error: any) => {
@@ -143,7 +143,7 @@ export class LoginComponent implements OnInit {
     let rotaModuloPrincipal: string;
 
     if (response.result.versao_mtcorp != 2) {
-      this.pnotifyService.notice('Você não possui acesso ao MTCorp.');
+      this.pnotifyService.notice('No tiene acceso a MTCorp.');
     } else {
       if (response.result.id_modulo_home != null) {
         if (isDevMode()) {
@@ -210,7 +210,7 @@ export class LoginComponent implements OnInit {
         this.authService.setCurrentUser(user);
         this.checkCurrentModule(user.info.moduloPrincipal);
       } else {
-        this.pnotifyService.notice('Você não possui um módulo configurado.');
+        this.pnotifyService.notice('No tiene ningún módulo configurado.');
       }
     }
   }

@@ -17,25 +17,16 @@ import { Injectable } from '@angular/core';
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 
 @Component({
-
   selector: 'comercial-agenda-detalhes',
-
   templateUrl: './detalhes.component.html',
-
   styleUrls: ['./detalhes.component.scss']
-
 })
 
 export class ComercialAgendaDetalhesComponent implements OnInit {
-
 latitud: any;
-
 longitud: any;
-
 actualizarMarcador($event: any) {
-
 throw new Error('Method not implemented.');
-
 }
 
   breadCrumbTree: Array<Breadcrumb> = [
@@ -131,61 +122,29 @@ throw new Error('Method not implemented.');
   ngOnInit() {
 
     this.registrarAcesso();
-
     this.titleService.setTitle('Detalles de cita');
-
     const detalhes = this.activatedRoute.snapshot.data['detalhes']['result'];
-
     const inicio = new Date(detalhes['start']);
-
     const fim = new Date(detalhes['end']);
-
     this.detalhes.status = detalhes.status;
-
-
-
-
     if (this.user.info.matricula == 1) {
-
       this.switchEdit = true;
-
     } else {
-
       this.switchEdit = false;
-
     }
-
-
-
-
     this.detalhes.id = detalhes.id;
-
     this.detalhes.title = detalhes.title;
-
     this.detalhes.codClient = detalhes.codClient;
-
     this.detalhes.motivo = detalhes.motivo;
-
     this.detalhes.client = detalhes.client;
-
     this.detalhes.formContactDesc = detalhes.formContactDesc;
-
     this.detalhes.typeContactDesc = detalhes.typeContactDesc;
-
     this.detalhes.allDay = detalhes.allDay;
-
     this.detalhes.anexo = detalhes.anexo;
-
-    this.detalhes.observacionFinal = detalhes.motivo;
-
+    this.detalhes.observacionFinal = detalhes.observacionFinal;
     this.latitud = detalhes.latitud;
-
     this.longitud = detalhes.longitud;
-
     this.filtrarPosiciones(detalhes.id)
-
-
-
 
     this.detalhes.description =
 
@@ -195,50 +154,27 @@ throw new Error('Method not implemented.');
 
         : null;
 
-
-
-
     if (this.detalhes.allDay === true) {
 
       this.detalhes.fullDate = `${this.dateService.getFullDate(
-
         inicio,
-
         fim,
-
         false
-
       )} (Dia completo)`;
 
     } else {
-
       if (this.dateService.sameDay(inicio, fim)) {
-
         this.detalhes.fullDate = this.dateService.getFullDate(inicio, fim);
-
       } else {
-
       }
-
     }
-
-
-
-
-
   }
-
-
-
 
   registrarAcesso() {
 
     this.atividadesService.registrarAcesso().subscribe();
 
   }
-
-
-
 
   onEliminar(detalhes: any) {
 
@@ -249,8 +185,6 @@ throw new Error('Method not implemented.');
     });
 
   }
-
-
 
 
   onEdit(detalhes: any) {
@@ -267,10 +201,6 @@ throw new Error('Method not implemented.');
 
 
   }
-
-
-
-
 
 
   onReschedule(detalhes: any) {
