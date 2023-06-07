@@ -90,9 +90,9 @@ export class ComercialAgendaFormularioComponent
   longitud: number = -63.18117;
 
   direccion: string;
-
-
-
+  //imagen y prebisualizacion 
+  selectedImage: File;
+  previewImage: string | ArrayBuffer;  
 
   breadCrumbTree: Array<Breadcrumb> = [];
 
@@ -747,8 +747,22 @@ export class ComercialAgendaFormularioComponent
         }
       });
     }
+    const formData = new FormData();
+    formData.append('imagen', this.selectedImage);
+    
   }
 
+  onImageSelected(event: any) {
+    this.selectedImage = event.target.files[0];
+  
+    // Generar la vista previa de la imagen
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewImage = reader.result;
+    };
+    reader.readAsDataURL(this.selectedImage);
+  }
+  
   handleErrorOnSubmit(message: string): void {
     this.loaderNavbar = false;
     this.submittingForm = false;
