@@ -52,7 +52,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   setorAtividades: any = [
     {
       id: 'T',
-      descricao: 'EXIBIR TODOS',
+      descricao: 'TODOS',
     },
   ];
 
@@ -144,7 +144,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         finalize(() => {
           this.setorAtividades.unshift({
             id: 'T',
-            descricao: 'EXIBIR TODOS',
+            descricao: 'TODOS',
           });
         })
       )
@@ -364,10 +364,10 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     if (cliente['podeAcessar'] == 1 || cliente['podeAcessar'] == 0) {
       this.router.navigate(['../detalhes', cliente.codCliente], {
         relativeTo: this.activatedRoute,
-        
+
       });
     } else {
-      this.pnotifyService.notice('Esse cliente não faz parte da sua carteira.');
+      this.pnotifyService.notice('Este cliente no pertenece a su cartera.');
     }
   }
 

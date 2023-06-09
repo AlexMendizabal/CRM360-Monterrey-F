@@ -156,7 +156,7 @@
               formControlName="material"
             >
             </ng-select>
-          </div>        
+          </div>
           <div class="form-group col-lg-2">
             <label for="situacao">Situação</label>
             <ng-select
@@ -173,7 +173,7 @@
               formControlName="situacao"
             >
             </ng-select>
-          </div>        
+          </div>
         </div>
       </form>
   </advanced-filter>
@@ -297,7 +297,7 @@
               ></span>
               <span *ngIf="key != 'NM_EMPR'"
                 ><i [ngClass]="'fas fa-sort'"></i
-              ></span>  
+              ></span>
             </th>
             <th nowrap scope="col" class="hover" (click)="sort('NM_DEPO')">Depósito
               <span *ngIf="key == 'NM_DEPO'"
@@ -307,7 +307,7 @@
               ></span>
               <span *ngIf="key != 'NM_DEPO'"
                 ><i [ngClass]="'fas fa-sort'"></i
-              ></span>  
+              ></span>
             </th>
             <th nowrap scope="col" class="hover" (click)="sort('NR_PEDI')">Nº pedido
               <span *ngIf="key == 'NR_PEDI'"
@@ -317,7 +317,7 @@
               ></span>
               <span *ngIf="key != 'NR_PEDI'"
                 ><i [ngClass]="'fas fa-sort'"></i
-              ></span>  
+              ></span>
             </th>
             <th nowrap scope="col" class="hover" (click)="sort('DT_PEDI')">Data pedido
               <span *ngIf="key == 'DT_PEDI'"
@@ -327,7 +327,7 @@
               ></span>
               <span *ngIf="key != 'DT_PEDI'"
                 ><i [ngClass]="'fas fa-sort'"></i
-              ></span>  
+              ></span>
             </th>
             <th nowrap scope="col" class="hover" (click)="sort('NM_APOI_INTE_PEDI')">Linha do pedido
               <span *ngIf="key == 'NM_APOI_INTE_PEDI'"
@@ -337,7 +337,7 @@
               ></span>
               <span *ngIf="key != 'NM_APOI_INTE_PEDI'"
                 ><i [ngClass]="'fas fa-sort'"></i
-              ></span>  
+              ></span>
             </th>
             <th nowrap scope="col" class="hover" (click)="sort('NM_GRUP_FORN')">Grupo do fornecedor
               <span *ngIf="key == 'NM_GRUP_FORN'"
@@ -347,7 +347,7 @@
               ></span>
               <span *ngIf="key != 'NM_GRUP_FORN'"
                 ><i [ngClass]="'fas fa-sort'"></i
-              ></span>  
+              ></span>
             </th>
             <th nowrap scope="col" class="hover" (click)="sort('VL_TOTA_PEDI')">Valor total
               <span *ngIf="key == 'VL_TOTA_PEDI'"
@@ -357,7 +357,7 @@
               ></span>
               <span *ngIf="key != 'VL_TOTA_PEDI'"
                 ><i [ngClass]="'fas fa-sort'"></i
-              ></span>  
+              ></span>
             </th>
             <th nowrap scope="col" class="hover" (click)="sort('QT_TOTA_PEDI')">Peso (ton)
               <span *ngIf="key == 'QT_TOTA_PEDI'"
@@ -367,7 +367,7 @@
               ></span>
               <span *ngIf="key != 'QT_TOTA_PEDI'"
                 ><i [ngClass]="'fas fa-sort'"></i
-              ></span>  
+              ></span>
             </th>
             <th nowrap scope="col" class="hover" (click)="sort('DT_ENTR')">Data desejada
               <span *ngIf="key == 'DT_ENTR'"
@@ -377,7 +377,7 @@
               ></span>
               <span *ngIf="key != 'DT_ENTR'"
                 ><i [ngClass]="'fas fa-sort'"></i
-              ></span>  
+              ></span>
             </th>
             <th nowrap scope="col" class="hover" (click)="sort('NR_ORDE_VEND_PEDI')">Ordem de Venda
               <span *ngIf="key == 'NR_ORDE_VEND_PEDI'"
@@ -387,7 +387,7 @@
               ></span>
               <span *ngIf="key != 'NR_ORDE_VEND_PEDI'"
                 ><i [ngClass]="'fas fa-sort'"></i
-              ></span>  
+              ></span>
             </th>
             <th nowrap scope="col" width="5%"></th>
             <th nowrap scope="col" width="5%"></th>
@@ -418,7 +418,7 @@
             </td>
             <td nowrap width="5%" class="text-center">
               <span>
-                <i class="fas fa-search" (click)="lgModal.show() + ' ' +  onDetalhes(item)" tooltip="Detalhes"></i>
+                <i class="fas fa-search" (click)="lgModal.show() + ' ' +  onDetalhes(item)" tooltip="Detalles"></i>
               </span>
             </td>
           </tr>
@@ -468,7 +468,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 id="dialog-sizes-name1" class="modal-title pull-left">
-          Detalhes
+          Detalles
         </h4>
         <button
           type="button"
@@ -527,7 +527,7 @@
                     ></span>
                     <span *ngIf="keyA != 'NR_ITEM_PEDI'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortA('ID_MATE_REFE_ERP')">Cód. material
                     <span *ngIf="keyA == 'ID_MATE_REFE_ERP'"
@@ -537,7 +537,7 @@
                     ></span>
                     <span *ngIf="keyA != 'ID_MATE_REFE_ERP'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortA('NM_MATE')">Material
                     <span *ngIf="keyA == 'NM_MATE'"
@@ -547,7 +547,7 @@
                     ></span>
                     <span *ngIf="keyA != 'NM_MATE'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortA('NM_LINH')">Linha
                     <span *ngIf="keyA == 'NM_LINH'"
@@ -557,7 +557,7 @@
                     ></span>
                     <span *ngIf="keyA != 'NM_LINH'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortA('NM_SUB_LINH')">Sublinha
                     <span *ngIf="keyA == 'NM_SUB_LINH'"
@@ -567,7 +567,7 @@
                     ></span>
                     <span *ngIf="keyA != 'NM_SUB_LINH'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortA('NM_CLAS')">Classe
                     <span *ngIf="keyA == 'NM_CLAS'"
@@ -577,7 +577,7 @@
                     ></span>
                     <span *ngIf="keyA != 'NM_CLAS'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortA('DS_UNID')">Un. Medida
                     <span *ngIf="keyA == 'DS_UNID'"
@@ -587,7 +587,7 @@
                     ></span>
                     <span *ngIf="keyA != 'DS_UNID'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortA('CD_MATE_FORN')">Cód. Mat. Fornecedor
                     <span *ngIf="keyA == 'CD_MATE_FORN'"
@@ -597,7 +597,7 @@
                     ></span>
                     <span *ngIf="keyA != 'CD_MATE_FORN'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortA('VL_UNIT_ITEM')">Valor Unitário
                     <span *ngIf="keyA == 'VL_UNIT_ITEM'"
@@ -607,7 +607,7 @@
                     ></span>
                     <span *ngIf="keyA != 'VL_UNIT_ITEM'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortA('QT_ITEM')">Peso (TON)
                     <span *ngIf="keyA == 'QT_ITEM'"
@@ -617,7 +617,7 @@
                     ></span>
                     <span *ngIf="keyA != 'QT_ITEM'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortA('VL_TOTA_ITEM')">Valor Total
                     <span *ngIf="keyA == 'VL_TOTA_ITEM'"
@@ -627,7 +627,7 @@
                     ></span>
                     <span *ngIf="keyA != 'VL_TOTA_ITEM'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortA('NR_ORDE_VEND_ITEM_PEDI')">Ordem de Venda
                     <span *ngIf="keyA == 'NR_ORDE_VEND_ITEM_PEDI'"
@@ -637,7 +637,7 @@
                     ></span>
                     <span *ngIf="keyA != 'NR_ORDE_VEND_ITEM_PEDI'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th scope="col" width="5%"></th>
                   <th scope="col" width="5%"></th>
@@ -742,7 +742,7 @@
                     ></span>
                     <span *ngIf="keyB != 'NR_ITEM_PEDI'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortB('ID_MATE_REFE_ERP')">Cód. Requisição
                     <span *ngIf="keyB == 'ID_MATE_REFE_ERP'"
@@ -752,7 +752,7 @@
                     ></span>
                     <span *ngIf="keyB != 'ID_MATE_REFE_ERP'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortB('NM_MATE')">Descrição envio
                     <span *ngIf="keyB == 'NM_MATE'"
@@ -762,7 +762,7 @@
                     ></span>
                     <span *ngIf="keyB != 'NM_MATE'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortB('NM_LINH')">Data envio
                     <span *ngIf="keyB == 'NM_LINH'"
@@ -772,7 +772,7 @@
                     ></span>
                     <span *ngIf="keyB != 'NM_LINH'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                   <th nowrap scope="col" class="hover" (click)="sortB('NM_SUB_LINH')">Usuário
                     <span *ngIf="keyB == 'NM_SUB_LINH'"
@@ -782,7 +782,7 @@
                     ></span>
                     <span *ngIf="keyB != 'NM_SUB_LINH'"
                       ><i [ngClass]="'fas fa-sort'"></i
-                    ></span>  
+                    ></span>
                   </th>
                 </tr>
               </ng-template>
