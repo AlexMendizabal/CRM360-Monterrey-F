@@ -1,4 +1,4 @@
-<nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-light">
+<nav id="navbar" class="navbar fixed-top navbar-expand-sm  navbar-light">
   <img [src]="srcLogoCliente" (error)="onLogoClienteError($event)" id="logo-manetoni" height="20"
     *ngIf="showLogoCliente">
   <ul class="navbar-nav ml-auto">
@@ -6,7 +6,7 @@
       <div class="spinner-border"></div>
     </li>
     <li class="d-flex mr-2">
-      <span class="my-auto version">Version.1.0</span>
+      <span class="my-auto version">Version 1.0.23</span>
     </li>
     <li class="d-flex mr-2">
       <img src="/assets/images/logo/logo-branco.png" height="22" class="my-auto">
@@ -44,16 +44,19 @@
         </ul>
       </div>
     </li>
-    <li class="nav-item" placement="bottom" tooltip="Reserva de Salas" *ngIf="checkTipoAcessoUser()" style="display: none;">
-      <a class="nav-link" [routerLink]="['/home/reserva-salas']">
-        <i class="fas fa-calendar-alt"></i>
-      </a>
-    </li>
-    <li class="nav-item" placement="bottom" tooltip="Contatos" *ngIf="checkTipoAcessoUser()" style="display: none;">
-      <a class="nav-link" [routerLink]="['/home/contatos']">
-        <i class="fas fa-id-card"></i>
-      </a>
-    </li>
+
+      <li class="nav-item" placement="bottom" tooltip="Reserva de Salas" *ngIf="checkTipoAcessoUser()" style="display: none;">
+        <a class="nav-link" [routerLink]="['/home/reserva-salas']">
+          <i class="fas fa-calendar-alt"></i>
+        </a>
+      </li>
+      <li class="nav-item" placement="bottom" tooltip="Contatos" *ngIf="checkTipoAcessoUser()" style="display: none;">
+        <a class="nav-link" [routerLink]="['/home/contatos']">
+          <i class="fas fa-id-card"></i>
+        </a>
+      </li>
+
+
     <li class="nav-item">
       <div class="btn-group" dropdown>
         <button dropdownToggle type="button" class="nav-link">

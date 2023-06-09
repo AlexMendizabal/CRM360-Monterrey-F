@@ -88,13 +88,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.atividadesLoaded = false;
     this.atividadesError = false;
     const currentUser = localStorage.getItem('currentUser');
-    if(!currentUser){
+    if (!currentUser) {
       this.pnotifyService.error('No tiene permiso para realizar eso.');
       this.authService.logout();
       return
     }
     const matricula = (JSON.parse(currentUser))?.info?.matricula;
-    if(!matricula){
+    if (!matricula) {
       this.pnotifyService.error('No tiene permiso para realizar eso.');
       this.authService.logout();
       return
@@ -115,15 +115,15 @@ export class SidebarComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         response => {
-          
-          if(response.status !== 200){
+
+          if (response.status !== 200) {
             this.pnotifyService.error('No tiene permiso para realizar eso.');
             this.authService.logout();
             return
           }
           this.atividadesError = false;
-          let data:object[] = response.body["data"];
-          console.log( {...response.body["data"]} )
+          let data: object[] = response.body["data"];
+          //console.log({ ...response.body["data"] })
           let idx1 = data.findIndex((val) => val["id"] === 89)
           data.splice(idx1, 1);
           let idx2 = data.findIndex((val) => val["id"] === 28)
@@ -138,6 +138,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
           this.atividades = data;
           this.routerLinkHome = data[0]["moduloRota"];
+          //console.log(response)
         },
         (error: any) => {
           this.atividadesError = true;
@@ -268,4 +269,4 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.clickEventHandler();
     }
   }
-}
+} 

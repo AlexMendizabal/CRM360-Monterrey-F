@@ -75,9 +75,9 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
           if (this.showAll === true) {
             this.formValue.emit({
               idEscritorio: 0,
-              idVendedor: 0,
-              nomeVendedor: 'TODOS OS VENDEDORES',
-              nomeEscritorio: 'TODOS OS ESCRITÓRIOS'
+              // idVendedor: 0,
+              nomeVendedor: 'TODOS LOS VENDEDORES',
+              nomeEscritorio: 'TODOS LAS SUCURSALES'
             });
           }
         })
@@ -177,7 +177,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
     if (this.form.valid) {
       if (this.adminOnly()) {
         if (this.form.value['idEscritorio'] === 0) {
-          this.form.get('nomeEscritorio').setValue('TODOS OS ESCRITÓRIOS');
+          this.form.get('nomeEscritorio').setValue('TODAS LAS SUCURSALES');
         } else {
           for (let i = 0; i < this.escritorios.length; i++) {
             if (this.form.value['idEscritorio'] === this.escritorios[i]['id']) {
@@ -189,7 +189,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
         }
 
         if (this.form.value['idVendedor'] === 0) {
-          this.form.get('nomeVendedor').setValue('TODOS OS VENDEDORES');
+          this.form.get('nomeVendedor').setValue('TODOS LOS VENDEDORES');
         } else {
           for (let i = 0; i < this.vendedores.length; i++) {
             if (this.form.value['idVendedor'] === this.vendedores[i]['id']) {
@@ -229,7 +229,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
       this.filteredVendedores = [
         {
           id: 0,
-          nome: 'TODOS OS VENDEDORES',
+          nome: 'TODOS LOS VENDEDORES',
           idEscritorio: 0
         }
       ];
@@ -243,7 +243,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
       if (this.filteredVendedores.length > 0 && this.showAll === true) {
         this.filteredVendedores.unshift({
           id: 0,
-          nome: 'TODOS OS VENDEDORES'
+          nome: ''
         });
       }
     }

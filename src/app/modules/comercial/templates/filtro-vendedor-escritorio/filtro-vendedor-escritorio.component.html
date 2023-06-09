@@ -16,13 +16,13 @@
           bindLabel="nome"
           bindValue="id"
           formControlName="idEscritorio"
-          (change)="onEscritorioChange($event); onInput()">
+          >
         </ng-select>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col">
-        <label for="idVendedor">Vendedor</label>
+        <label for="idVendedor">Promotor</label>
         <ng-select
           [searchable]="true"
           [clearable]="false"
@@ -36,6 +36,6 @@
         </ng-select>
       </div>
     </div>
-    
+
   </form>
 </div>

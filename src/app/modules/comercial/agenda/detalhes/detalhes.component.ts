@@ -10,6 +10,7 @@ import { ConfirmModalService } from 'src/app/shared/modules/confirm-modal/confir
 import { ComercialAgendaService } from 'src/app/modules/comercial/agenda/agenda.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
 import { TitleService } from 'src/app/shared/services/core/title.service';
+import { AuthService } from 'src/app/shared/services/core/auth.service';
 
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
@@ -34,11 +35,23 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     }
   ];
 
-  detalhes: any = [];
+  detalhes: any = {
+    status: null
+  };
+
+
+  //mostrarElemento: boolean = true;
+
+  //ocultarFormulario(){
+   // this.mostrarElemento = false;
+ // }
+  switchEdit: boolean;
+  private user = this.authservice.getCurrentUser();
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private atividadesService: AtividadesService,
+    private authservice: AuthService,
     private router: Router,
     private dateService: DateService,
     private agendaService: ComercialAgendaService,
@@ -49,21 +62,35 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     this.pnotifyService.getPNotify();
   }
 
+
   ngOnInit() {
     this.registrarAcesso();
     this.titleService.setTitle('Detalles de cita');
-
     const detalhes = this.activatedRoute.snapshot.data['detalhes']['result'];
     const inicio = new Date(detalhes['start']);
     const fim = new Date(detalhes['end']);
+    this.detalhes.status = detalhes.status;
+
+    if (this.user.info.matricula == 1) {
+      this.switchEdit = true;
+    } else {
+      this.switchEdit = false;
+    }
 
     this.detalhes.id = detalhes.id;
     this.detalhes.title = detalhes.title;
     this.detalhes.codClient = detalhes.codClient;
+    this.detalhes.motivo = detalhes.motivo;
     this.detalhes.client = detalhes.client;
     this.detalhes.formContactDesc = detalhes.formContactDesc;
     this.detalhes.typeContactDesc = detalhes.typeContactDesc;
     this.detalhes.allDay = detalhes.allDay;
+    this.detalhes.anexo = detalhes.anexo;
+    this.detalhes.observacionFinal = detalhes.motivo;
+    this.latitud = detalhes.latitud;
+    this.longitud = detalhes.longitud;
+    this.filtrarPosiciones(detalhes.id)
+
     this.detalhes.description =
       detalhes.description != null
         ? detalhes.description.replace(/(?:\r\n|\r|\n)/g, '<br />')
@@ -81,20 +108,40 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
       } else {
       }
     }
+
+
   }
 
   registrarAcesso() {
     this.atividadesService.registrarAcesso().subscribe();
   }
 
-  onEdit(detalhes: any) {
-    this.router.navigate(['../../editar', detalhes.id], {
+  onEliminar(detalhes: any) {
+    this.router.navigate(['../../eliminar', detalhes.id], {
       relativeTo: this.activatedRoute
     });
   }
 
+  onEdit(detalhes: any) {
+    detalhes.status = 2;
+    this.router.navigate(['../../editar', detalhes.id], {
+      relativeTo: this.activatedRoute
+    });
+
+  }
+
+
+
   onReschedule(detalhes: any) {
+    detalhes.status = 4;
     this.router.navigate(['../../reagendar', detalhes.id], {
+      relativeTo: this.activatedRoute
+    });
+  }
+
+  onFinish(detalhes: any) {
+    detalhes.status = 3;
+    this.router.navigate(['../../finalizar', detalhes.id], {
       relativeTo: this.activatedRoute
     });
   }
@@ -118,7 +165,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
       )
       .subscribe({
         next: (success) => {
-          this.pnotifyService.success('Compromisso excluído com sucesso!');
+          this.pnotifyService.success('Cita borrada con exito!');
           this.router.navigate(['../../compromissos'], {
             relativeTo: this.activatedRoute
           });
@@ -129,5 +176,12 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
           );
         }
       });
+  }
+
+  filtrarPosiciones(id_agenda: any) {
+    this.agendaService.getPosicionPromotor(id_agenda).subscribe(
+      (response: any) => {
+        this.posiciones = response.result;
+      })
   }
 }

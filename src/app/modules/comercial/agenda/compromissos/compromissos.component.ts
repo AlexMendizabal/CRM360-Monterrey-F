@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { map, finalize } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import { interval, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 // angular-calendar
 import { CalendarEvent } from 'angular-calendar';
@@ -26,8 +28,30 @@ import { TitleService } from 'src/app/shared/services/core/title.service';
 import { DateService } from 'src/app/shared/services/core/date.service';
 
 // Interfaces
-import { Compromisso } from '../models/compromisso';
+
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
+import { userInfo } from 'os';
+export interface Compromisso {
+  id: string;
+  color: {
+    primary: string;
+  };
+  title: string;
+  client: string;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  description: string;
+  draggable: boolean;
+  codClient: string; // Nueva propiedad para el código del cliente
+  formContactId: string; // Nueva propiedad para el ID del formulario de contacto
+  formContactDesc: string; // Nueva propiedad para la descripción del formulario de contacto
+  typeContactId: string; // Nueva propiedad para el ID del tipo de contacto
+  typeContactDesc: string; // Nueva propiedad para la descripción del tipo de contacto
+  statusnome : string;
+}
+
+
 
 @Component({
   selector: 'comercial-agenda-compromissos',
@@ -37,7 +61,10 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 export class ComercialAgendaCompromissosComponent implements OnInit {
   private user = this.authService.getCurrentUser();
   profile: any = {};
-
+  destroy$: Subject<void> = new Subject<void>();
+  refreshEvents(): void {
+    this.fetchEvents();
+  }
   loaderFullScreen = true;
 
   breadCrumbTree: Array<Breadcrumb> = [
@@ -65,10 +92,16 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   nomeVendedor: string;
   nomeEscritorio: string;
 
+
   events$: Observable<Array<CalendarEvent<{ compromisso: Compromisso }>>>;
   eventSelected: Compromisso;
 
   queryParamsChecked = false;
+  // ...
+  // estado: number;
+  // ...
+
+  switchEdit: boolean;
 
   constructor(
     private router: Router,
@@ -79,13 +112,31 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
     private atividadesService: AtividadesService,
     private titleService: TitleService,
     private dateService: DateService
-  ) {}
+  ) { }
+
 
   ngOnInit(): void {
     this.registrarAcesso();
     this.getPerfil();
     this.titleService.setTitle('Agenda');
+    // Actualizar los eventos cada 20 seg
+  interval(20 * 1000) // 20 seg en milisegundos
+  .pipe(takeUntil(this.destroy$))
+  .subscribe(() => {
+  this.fetchEvents();
+  if (this.user.info.matricula == 1) {
+    this.switchEdit = true;
+  } else {
+    this.switchEdit = false;
   }
+});
+
+
+  }
+ngOnDestroy(): void {
+  this.destroy$.next();
+  this.destroy$.complete();
+}
 
   appTitle(date: Date): string {
     if (this.showCalendar) {
@@ -161,10 +212,12 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
     }
   }
 
+
   dataFilter(event: any): void {
-    this.idEscritorio = event.idEscritorio;
+    console.log(event)
     this.idVendedor = event.idVendedor;
-    this.nomeEscritorio = event.nomeEscritorio;
+    this.nomeEscritorio = this.user.info.nomeCompleto;
+    this.idEscritorio = event.idEscritorio;
     this.nomeVendedor = event.nomeVendedor;
   }
 
@@ -247,7 +300,8 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
             idEscritorio: params.idEscritorio,
             idVendedor: params.idVendedor,
             nomeEscritorio: params.nomeEscritorio,
-            nomeVendedor: params.nomeVendedor
+            nomeVendedor: params.nomeVendedor,
+            statusnome : params.statusnome
           };
         } else {
           this.viewDate = new Date();
@@ -258,7 +312,8 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
             idEscritorio: this.idEscritorio,
             idVendedor: this.idVendedor,
             nomeEscritorio: this.nomeEscritorio,
-            nomeVendedor: this.nomeVendedor
+            nomeVendedor: this.nomeVendedor,
+
           };
         }
       });
@@ -270,6 +325,7 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
         idVendedor: this.idVendedor,
         nomeEscritorio: this.nomeEscritorio,
         nomeVendedor: this.nomeVendedor
+
       };
     }
 
@@ -283,9 +339,9 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
             return {
               id: compromisso.id,
               color: {
-                primary: compromisso.color
+                primary: compromisso.color, //getColorFromVariable()
               },
-              title: compromisso.title,
+              title: `${compromisso.title} - ${compromisso.client} - ${compromisso.statusnome}`,
               codClient: compromisso.codClient,
               client: compromisso.client,
               formContactId: compromisso.formContactId,
@@ -296,11 +352,12 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
               end: new Date(compromisso.end),
               allDay: compromisso.allDay,
               description: compromisso.description,
-              draggable: false
+              draggable: false,
+              statusnome : compromisso.statusnome
             };
           });
-        } else {
-          return [];
+        }else{
+          return[];
         }
       }),
       finalize(() => {

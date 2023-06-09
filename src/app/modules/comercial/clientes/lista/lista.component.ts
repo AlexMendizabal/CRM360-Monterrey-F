@@ -175,6 +175,12 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   searchInputValue: string;
 
   checkRouterParams(): Object {
+    var aux_cartera;
+    if (this.matricula == 1){
+      aux_cartera ='T'
+    }else{
+      aux_cartera = 'S'
+    }
     let formValue = {
       pesquisa: this.searchInputValue, // aquí se actualizaría el valor de pesquisa
       buscarPor: 1,
@@ -183,7 +189,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       tipoPessoa: 'T',
       grupoEconomico: 'T',
       segurado: 'T',
-      carteira: 'S',
+      carteira: aux_cartera,
       pagina: 1,
       registros: this.itemsPerPage,
     };
@@ -241,8 +247,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     for (let i = 0; i < status.length; i++) {
       if (status[i]['situacao'] == 'Ativo') {
         this.ativos = status[i]['quantidade'];
-      } else if (status[i]['situacao'] == 'Inativo') {
-        this.inativos = status[i]['quantidade'];
+      } else if (status[i]['situacao'] == 'Inativo'|| status[i]['situacao'] == null) {
+        this.inativos += status[i]['quantidade'];
       } else if (status[i]['situacao'] == 'Potenci') {
         this.potencial = status[i]['quantidade'];
       } else if (status[i]['situacao'] == 'Arquivo') {
@@ -355,12 +361,13 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   viewRegister(cliente: any): void {
-    if (cliente['podeAcessar'] == 0) {
-      this.pnotifyService.notice('Este cliente no pertenece a su cartera');
-    } else {
+    if (cliente['podeAcessar'] == 1 || cliente['podeAcessar'] == 0) {
       this.router.navigate(['../detalhes', cliente.codCliente], {
         relativeTo: this.activatedRoute,
+        
       });
+    } else {
+      this.pnotifyService.notice('Esse cliente não faz parte da sua carteira.');
     }
   }
 

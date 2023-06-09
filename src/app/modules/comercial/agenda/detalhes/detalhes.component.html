@@ -1,19 +1,11 @@
 <app-header appTitle="Detalles del compromiso">
-  <button
-    type="button"
-    (click)="onEdit(detalhes)">
-    Editar
+  <button type="button" (click)="onEdit(detalhes)">Editar</button>
+  <button type="button" (click)="onReschedule(detalhes)">Reagendar</button>
+  <button type="button" (click)="onDelete(detalhes)">Excluir</button>
+  <button type="button" (click)="onFinish(detalhes)" [disabled]="detalhes.status === 'FINALIZADO'">
+    Finalizado
   </button>
-  <button
-    type="button"
-    (click)="onReschedule(detalhes)">
-    Reagendar
-  </button>
-  <button
-    type="button"
-    (click)="onDelete(detalhes)">
-    Excluir
-  </button>
+  <!-- Nuevo botón -->
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
   <div class="row justify-content-center">
@@ -35,12 +27,11 @@
         <div class="form-group col-sm-6">
           <label>FORMA DE CONTACTO</label>
           <div *ngIf="!detalhes.formContactDesc">Sin informacion</div>
-          <div *ngIf="detalhes.formContactDesc">{{ detalhes.formContactDesc }}</div>
+          <div *ngIf="detalhes.formContactDesc">
+            {{ detalhes.formContactDesc }}
+          </div>
         </div>
-        <div class="form-group col-sm-6">
-          <label>Contacto de origen</label>
-          <div *ngIf="!detalhes.typeContactDesc">Sin informacion</div>
-          <div *ngIf="detalhes.typeContactDesc">{{ detalhes.typeContactDesc }}</div>
+        <div class="form-row">
         </div>
       </div>
       <div class="form-row">
@@ -55,6 +46,72 @@
           <div *ngIf="!detalhes.description">Sin informacion</div>
           <div *ngIf="detalhes.description" [innerHTML]="detalhes.description | uppercase"></div>
         </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Reprogramación</label>
+          <div *ngIf="!detalhes.motivo">No reprogramado</div>
+          <div *ngIf="detalhes.motivo" [innerHTML]="detalhes.motivo | uppercase"></div>
+        </div>
+              
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Observacion de Finalizado</label>
+          <div *ngIf="!detalhes.observacionFinal">Sin informacion</div>
+          <div *ngIf="detalhes.observacionFinal" [innerHTML]="detalhes.observacionFinal"></div>
+        </div>
+        <div class="form-group col">
+          <label>Estado</label>
+          <div *ngIf="!detalhes.status">Registrado</div>
+          <div *ngIf="detalhes.status" [innerHTML]="detalhes.status | uppercase"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Anexo</label>
+          <div *ngIf="!detalhes.anexo">
+            <img src="../../../assets/images/system-alerts/404.png" alt="Sin información"
+              style="width: 80px; height: 80px" />
+          </div>
+          <div *ngIf="detalhes.anexo">{{ detalhes.anexo }}</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-md-6">
+      <p class="marker-info"><strong> SEGUIMIENTO DEL PROMOTOR</strong></p>
+
+      <div class="embed-responsive embed-responsive-16by9">
+        <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="13" class="embed-responsive-item"
+          (mapClick)="actualizarMarcador($event)">
+          <agm-marker [latitude]="latitud" [longitude]="longitud" [label]="'C'">
+
+            <agm-info-window [disableAutoPan]="true">
+              <div class="marker-info-window">
+                <p class="marker-name mb-0"><strong> Cliente: </strong> {{detalhes.client}}</p>
+              </div>
+            </agm-info-window>
+            <agm-marker *ngFor="let posicion of posiciones" [latitude]="posicion.latitud"
+              [longitude]="posicion.longitud" [iconUrl]="'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'">
+              <agm-info-window [disableAutoPan]="true" >
+                <div class="marker-info-window">
+                 <!--  <p class="marker-name mb-0"><strong> Promotor: </strong> {{posicion.vendedor}}</p> -->
+                  <p class="marker-name mb-0"><strong> Fecha: </strong> {{posicion.fecha}}</p>
+
+                </div>
+              </agm-info-window>
+            </agm-marker>
+
+          </agm-marker>
+          <agm-polyline [strokeColor]="'blue'">
+            <ng-container *ngFor="let posicion of posiciones">
+              <agm-polyline-point [latitude]="posicion.latitud" [longitude]="posicion.longitud">
+              </agm-polyline-point>
+            </ng-container>
+          </agm-polyline>
+        </agm-map>
+
       </div>
     </div>
   </div>

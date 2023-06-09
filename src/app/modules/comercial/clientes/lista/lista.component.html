@@ -1,18 +1,18 @@
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
 <app-header appTitle="Busqueda de clientes">
-  <button
+  <!-- <button
     type="button"
     [routerLink]="['../pre-cadastro']">
     Adicionar
-  </button>
+  </button> -->
   <button
     type="button"
     (click)="onFilter()">
     Filtrar
   </button>
-    
-  
-  
+
+
+
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
   <div class="row justify-content-center mb-2">
@@ -96,9 +96,6 @@
             formControlName="buscarPor">
             <option value="1">Código, nombre o razon social</option>
             <option value="2">C.I. o NIT</option>
-            <option value="3">Ciudad</option>
-            <option value="4">Código SAP</option>
-            <option value="5">Contactos</option>
           </select>
         </div>
         <div class="form-group col-lg-3">
@@ -148,7 +145,7 @@
             <option value="T">Todos</option>
           </select>
         </div>
-        <div class="form-group col-lg-3 mb-lg-0">
+        <!-- <div class="form-group col-lg-3 mb-lg-0">
           <label for="grupoEconomico">Esta en grupo economico</label>
           <select
             class="form-control custom-select"
@@ -169,17 +166,17 @@
             <option value="N">No</option>
             <option value="T">Todos</option>
           </select>
-        </div>
-        <div class="form-group col-lg-2 mb-lg-0">
+        </div> -->
+        <!-- <div class="form-group col-lg-2 mb-lg-0">
           <label for="carteira">Cartera</label>
           <select
             class="form-control custom-select"
             id="carteira"
             formControlName="carteira">
-            <option value="S">Mi cartera</option>
+            <option value="S" selected>Mi cartera</option>
             <option value="T">Todos</option>
           </select>
-        </div>
+        </div> -->
         <div class="form-group col-lg-1 mb-lg-0">
           <label for="registros">Registros</label>
           <select
@@ -258,7 +255,7 @@
             <td class="hover" (click)="viewRegister(cliente)">{{ cliente.nomeFantasia | uppercase }}</td>
             <td class="hover" (click)="viewRegister(cliente)" *ngIf="!showDetailPanel">{{ cliente.razaoSocial | uppercase }}</td>
             <td>
-              <span tooltip="Datos registrados" placement="left" container="body"> 
+              <span tooltip="Datos registrados" placement="left" container="body">
                 <button type="button" class="btn-icon-sm" (click)="viewDetails(cliente)">
                   <i class="fas fa-user"></i>
                 </button>
@@ -353,7 +350,7 @@
                   </div>
                   <div class="form-row">
                     <div class="form-group col-lg-6">
-                      <label>Vendedor</label>
+                      <label>Promotor</label>
                       <div *ngIf="dadosCadastrais.vendedor == null">NO INFORMADO</div>
                       <div *ngIf="dadosCadastrais.vendedor != null">{{ dadosCadastrais.vendedor }}</div>
                     </div>
@@ -386,14 +383,14 @@
                 </div>
               </div>
             </tab>
-            <tab heading="Contatos">
+            <tab heading="Contactos">
               <div class="border-right border-left border-bottom px-3 pt-3">
                 <div *ngIf="contatosLoaded && !contatosEmpty">
                   <div class="form-row" *ngFor="let contato of contatos">
                     <div class="form-group col">
                       <label>{{ contato.tipoContato }}</label>
                       <div>
-                        <span *ngIf="contato.nomeContato.length > 1" class="mr-1">{{ contato.nomeContato }}:</span>
+                        <span *ngIf="contato.nomeContato.length > 1" class="mr-1">{{ contato.nomeContato }} :</span>
                         <span
                           *ngIf="(contato.tipoContato != 'Email NFe') &&
                                 (contato.tipoContato != 'E-mail NFe') &&

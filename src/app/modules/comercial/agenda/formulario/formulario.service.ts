@@ -26,10 +26,10 @@ export class ComercialAgendaFormularioService {
 
   loadDependencies(): Observable<Object | JsonResponse> {
     let clientes = this.vendedoresService.getCarteiraClientes();
+    let vendedores = this.vendedoresService.getVendedores();
     let formasContato = this.getFormasContato();
     let origensContato = this.getOrigensContato();
     let motivosReagendamento = this.getMotivosReagendamento();
-    let vendedores = this.vendedoresService.getVendedores();
 
     let listarTitulosAgenda = this.titulosAgendaService.getListaTitulosAgenda({
       codSituacao: '1',
@@ -41,7 +41,7 @@ export class ComercialAgendaFormularioService {
       origensContato,
       motivosReagendamento,
       listarTitulosAgenda,
-      vendedores
+      vendedores,
     ]);
   }
 

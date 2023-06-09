@@ -22,7 +22,7 @@
     (click)="onSave()"
     [disabled]="form.status == 'INVALID' || !loading"
   >
-    Salvar
+    Guardar
   </button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
@@ -244,20 +244,20 @@
                 >
                 <label class="custom-control-label hover" [for]="'item' + item.ID"></label>
               </div>
-            </td>    
-            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.DS_TIPO_MATE }}</td>    
-            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.NM_LINH }}</td>              
-            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.NM_SUB_LINH ? item.NM_SUB_LINH : "-" }}</td>         
-            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.NM_CLAS }}</td>        
-            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.CODE_MATE | number: '0.0' }}</td>        
-            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.DS_MATE }}</td>        
-            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.VOL_VENDA | number: '0.3'}}</td>        
-            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.ESTO_ATUAL | number: '0.3'}}</td>        
-            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.TT_CART | number: '0.3'}}</td>        
-            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.TT_PLAN_CORT | number: '0.0'}}</td>         
+            </td>
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.DS_TIPO_MATE }}</td>
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.NM_LINH }}</td>
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.NM_SUB_LINH ? item.NM_SUB_LINH : "-" }}</td>
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.NM_CLAS }}</td>
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.CODE_MATE | number: '0.0' }}</td>
+            <td nowrap class="text-center" [ngClass]="item.select ? 'bg-row-selected' : ''">{{ item.DS_MATE }}</td>
+            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.VOL_VENDA | number: '0.3'}}</td>
+            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.ESTO_ATUAL | number: '0.3'}}</td>
+            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.TT_CART | number: '0.3'}}</td>
+            <td nowrap class="text-center" *ngIf="!compressedTable">{{ item.TT_PLAN_CORT | number: '0.0'}}</td>
             <td nowrap class="text-center" width="4%" *ngIf="!compressedTable">
               <span><i [ngClass]="setIconUnabled(item)" [tooltip]="item.DS_PERF_INAT" ></i></span>
-            </td>            
+            </td>
             <!-- <td nowrap class="text-center" width="4%" *ngIf="!compressedTable"> -->
 
               <!-- <div>
@@ -282,19 +282,19 @@
                   <i class="fas fa-external-link-alt text-primary"></i>
                 </button>
               </div>
-            </td>       
+            </td>
             <td nowrap  class="text-center" width="4%" *ngIf="!compressedTable">
               <div>
                 <button
                   type="button"
                   class="btn-icon-sm"
-                  tooltip="Detalhes"
+                  tooltip="Detalles"
                   (click)="onDetail(item)"
                   >
                   <i class="fas fa-search"></i>
                 </button>
               </div>
-            </td>       
+            </td>
           </tr>
         </ng-template>
       </custom-table>
@@ -309,7 +309,7 @@
         >
           <i class="fas fa-times"></i>
         </button>
-        <tab heading="Detalhes">
+        <tab heading="Detalles">
           <div
             class="border-right border-left border-bottom px-3 pt-3"
             style="overflow: auto; height: 338px;"
@@ -326,18 +326,18 @@
               </ng-template>
               <ng-template #tbody let-tbody>
                 <tr *ngFor="let item of dataDetail">
-                  <td nowrap class="text-center">{{ item.NM_EMPR }}</td>        
-                  <td nowrap class="text-center">{{ item.NM_DEPO }}</td>        
-                  <td nowrap class="text-center">{{ item.VOLU_VEND | number: '0.3' }}</td>         
-                  <td nowrap class="text-center">{{ item.VOLU_CART | number: '0.3' }}</td>              
-                  <td nowrap class="text-center">{{ item.PLAN_CORT | number: '0.3' }}</td>                  
+                  <td nowrap class="text-center">{{ item.NM_EMPR }}</td>
+                  <td nowrap class="text-center">{{ item.NM_DEPO }}</td>
+                  <td nowrap class="text-center">{{ item.VOLU_VEND | number: '0.3' }}</td>
+                  <td nowrap class="text-center">{{ item.VOLU_CART | number: '0.3' }}</td>
+                  <td nowrap class="text-center">{{ item.PLAN_CORT | number: '0.3' }}</td>
                 </tr>
                 <tr>
-                  <td nowrap class="text-center bg-dark text-white">TOTAL</td>        
-                  <td nowrap class="text-center bg-dark text-white"></td>        
-                  <td nowrap class="text-center bg-dark text-white">120,00</td>         
-                  <td nowrap class="text-center bg-dark text-white">300,00</td>              
-                  <td nowrap class="text-center bg-dark text-white">400,00</td>                  
+                  <td nowrap class="text-center bg-dark text-white">TOTAL</td>
+                  <td nowrap class="text-center bg-dark text-white"></td>
+                  <td nowrap class="text-center bg-dark text-white">120,00</td>
+                  <td nowrap class="text-center bg-dark text-white">300,00</td>
+                  <td nowrap class="text-center bg-dark text-white">400,00</td>
                 </tr>
               </ng-template>
             </custom-table>

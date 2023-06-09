@@ -41,6 +41,10 @@ const routes: Routes = [
         path: 'clientes',
         redirectTo: '/comercial/clientes/lista',
       },
+      {
+        path: 'reporte',
+        redirectTo: '/comercial/reporte',
+      },
     ],
   }
 ];

@@ -143,7 +143,7 @@
             [virtualScroll]="true"
             [hideSelected]="true"
             [closeOnSelect]="false"
-            (change)="getDepositos()" 
+            (change)="getDepositos()"
             placeholder="Selecione..."
             bindLabel="NM_FANT"
             bindValue="ID"
@@ -389,19 +389,19 @@
               'bg-row-selected' :  item.SELECTED
               }">
               {{ item.NM_TIPO_MATE }}
-            </td>        
-            <td nowrap class="text-left" [hidden]="colsNivelEstoque || ableEditMassa">{{ item.NM_LINH }}</td>        
-            <td nowrap class="text-center" [hidden]="colsNivelEstoque || ableEditMassa">{{ item.NM_SUB_LINH ? item.NM_SUB_LINH : "-" }}</td>    
-            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-center">{{ item.NM_CLAS }}</td>        
-            <td nowrap class="text-left" [hidden]="colsNivelEstoque || ableEditMassa">{{ item.NM_EMPR }}</td>        
-            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-left">{{ item.NM_DEPO }}</td>              
+            </td>
+            <td nowrap class="text-left" [hidden]="colsNivelEstoque || ableEditMassa">{{ item.NM_LINH }}</td>
+            <td nowrap class="text-center" [hidden]="colsNivelEstoque || ableEditMassa">{{ item.NM_SUB_LINH ? item.NM_SUB_LINH : "-" }}</td>
+            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-center">{{ item.NM_CLAS }}</td>
+            <td nowrap class="text-left" [hidden]="colsNivelEstoque || ableEditMassa">{{ item.NM_EMPR }}</td>
+            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-left">{{ item.NM_DEPO }}</td>
             <td nowrap class="text-center" [hidden]="colsNivelEstoque">
               <span *ngIf="!item.ON_EDIT_CELL || ableEditMassa">
                 {{ item.TT_PERI_VEND_MESE | number: '0.0' }}
                 <!-- <span class="btn-icon-sm ml-1">
-                  <i 
-                    class="fas fa-info-circle" 
-                    tooltip="Há materiais com parametrizações diferentes" 
+                  <i
+                    class="fas fa-info-circle"
+                    tooltip="Há materiais com parametrizações diferentes"
                     aria-hidden="true"
                   >
                   </i>
@@ -415,7 +415,7 @@
                   placeholder="0"
                   [(ngModel)]="item.FORM_PERI_VEND"
                   #FORM_PERI_VEND_VALI="ngModel"
-                  [ngClass]="{ 'is-invalid': FORM_PERI_VEND_VALI.invalid && (FORM_PERI_VEND_VALI.dirty || FORM_PERI_VEND_VALI.touched) }" 
+                  [ngClass]="{ 'is-invalid': FORM_PERI_VEND_VALI.invalid && (FORM_PERI_VEND_VALI.dirty || FORM_PERI_VEND_VALI.touched) }"
                   required
                 />
                 <!-- name="toneladaEditado_{{i}}" -->
@@ -423,35 +423,35 @@
                   <i class="fas fa-sync text-success" tooltip="Calcular"></i>
                 </button>
               </div>
-            </td>        
-            <td nowrap class="text-center" [hidden]="colsNivelEstoque"> 
-              <span *ngIf="!item.ON_EDIT_CELL || ableEditMassa"> 
-                {{ item.DT_INIC_PERI_VEND ? (item.DT_INIC_PERI_VEND | date: 'dd/MM/yyy') : '--/--/----' }} 
-                  à 
-                {{ item.DT_FINA_PERI_VEND ? (item.DT_FINA_PERI_VEND | date: 'dd/MM/yyy') : '--/--/----' }} 
+            </td>
+            <td nowrap class="text-center" [hidden]="colsNivelEstoque">
+              <span *ngIf="!item.ON_EDIT_CELL || ableEditMassa">
+                {{ item.DT_INIC_PERI_VEND ? (item.DT_INIC_PERI_VEND | date: 'dd/MM/yyy') : '--/--/----' }}
+                  à
+                {{ item.DT_FINA_PERI_VEND ? (item.DT_FINA_PERI_VEND | date: 'dd/MM/yyy') : '--/--/----' }}
               </span>
-              <span class="text-danger" *ngIf="item.ON_EDIT_CELL  && !ableEditMassa"> 
-                {{ item.DATE_STAR_CALC ? (item.DATE_STAR_CALC | date: 'dd/MM/yyyy') : '--/--/----' }} 
-                  à 
-                {{ item.DATE_END_CALC ? (item.DATE_END_CALC | date: 'dd/MM/yyyy') : '--/--/----' }} 
+              <span class="text-danger" *ngIf="item.ON_EDIT_CELL  && !ableEditMassa">
+                {{ item.DATE_STAR_CALC ? (item.DATE_STAR_CALC | date: 'dd/MM/yyyy') : '--/--/----' }}
+                  à
+                {{ item.DATE_END_CALC ? (item.DATE_END_CALC | date: 'dd/MM/yyyy') : '--/--/----' }}
               </span>
-            </td>        
-            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-center" [hidden]="colsNivelEstoque"> 
-              <span *ngIf="!item.ON_EDIT_CELL || ableEditMassa"> 
-                {{ item.TT_MEDI_VEND_PERI | number: '0.3'}} 
+            </td>
+            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-center" [hidden]="colsNivelEstoque">
+              <span *ngIf="!item.ON_EDIT_CELL || ableEditMassa">
+                {{ item.TT_MEDI_VEND_PERI | number: '0.3'}}
               </span>
-              <span class="text-danger" *ngIf="item.ON_EDIT_CELL  && !ableEditMassa"> 
+              <span class="text-danger" *ngIf="item.ON_EDIT_CELL  && !ableEditMassa">
                 {{ item.MEDI_VEND_CALC ? (item.MEDI_VEND_CALC | number:'0.3') : '0,000'}}
               </span>
-            </td>        
-            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-center"> {{ item.TT_ESTO_DISP | number: '0.3'}} </td>        
-            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-center" [hidden]="colsNivelEstoque"> {{ item.NR_DIAS_GIRO | number: '0.0'}} </td>        
-            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-right"> 
+            </td>
+            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-center"> {{ item.TT_ESTO_DISP | number: '0.3'}} </td>
+            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-center" [hidden]="colsNivelEstoque"> {{ item.NR_DIAS_GIRO | number: '0.0'}} </td>
+            <td nowrap [ngClass]="{'bg-row-selected' : item.SELECTED}" class="text-right">
               {{ item.DS_APOI_TIPO_NIVE_ESTO }}
-              <button 
-                class="btn-icon-sm" 
+              <button
+                class="btn-icon-sm"
                 (click)="setDefaultValueFormModalNivelEstoque(item) + '' +smModal1.show()"
-                [disabled]="item.TT_PERI_VEND_MESE == 0 || item.TT_PERI_VEND_MESE == null" 
+                [disabled]="item.TT_PERI_VEND_MESE == 0 || item.TT_PERI_VEND_MESE == null"
                 *ngIf="!item.ON_EDIT_CELL"
               >
                 <i class="fas fa-calculator" tooltip="Calcular nível de estoque"></i>
@@ -474,7 +474,7 @@
                   placeholder="0"
                   [(ngModel)]="item.FORM_PERI_VEND"
                   #FORM_PERI_VEND_VALI="ngModel"
-                  [ngClass]="{ 'is-invalid': FORM_PERI_VEND_VALI.invalid && (FORM_PERI_VEND_VALI.dirty || FORM_PERI_VEND_VALI.touched) }" 
+                  [ngClass]="{ 'is-invalid': FORM_PERI_VEND_VALI.invalid && (FORM_PERI_VEND_VALI.dirty || FORM_PERI_VEND_VALI.touched) }"
                   required
                 />
                 <!-- name="toneladaEditado_{{i}}" -->
@@ -482,27 +482,27 @@
                   <i class="fas fa-sync text-success" tooltip="Calcular"></i>
                 </button>
               </div>
-            </td>        
+            </td>
             <td nowrap class="bg-secondary text-center text-white" [hidden]="colsNivelEstoque || !ableEditMassa">
-              <span *ngIf="!item.ON_EDIT_CELL"> 
-                {{ item.DT_INIC_PERI_VEND_SIMU ? (item.DT_INIC_PERI_VEND_SIMU | date: 'dd/MM/yyy') : '--/--/----' }} 
-                  à 
-                {{ item.DT_FINA_PERI_VEND_SIMU ? (item.DT_FINA_PERI_VEND_SIMU | date: 'dd/MM/yyy') : '--/--/----' }} 
+              <span *ngIf="!item.ON_EDIT_CELL">
+                {{ item.DT_INIC_PERI_VEND_SIMU ? (item.DT_INIC_PERI_VEND_SIMU | date: 'dd/MM/yyy') : '--/--/----' }}
+                  à
+                {{ item.DT_FINA_PERI_VEND_SIMU ? (item.DT_FINA_PERI_VEND_SIMU | date: 'dd/MM/yyy') : '--/--/----' }}
               </span>
-              <span class="text-warning" *ngIf="item.ON_EDIT_CELL"> 
-                {{ item.DATE_STAR_CALC ? (item.DATE_STAR_CALC | date: 'dd/MM/yyyy') : '--/--/----' }} 
-                  à 
-                {{ item.DATE_END_CALC ? (item.DATE_END_CALC | date: 'dd/MM/yyyy') : '--/--/----' }} 
+              <span class="text-warning" *ngIf="item.ON_EDIT_CELL">
+                {{ item.DATE_STAR_CALC ? (item.DATE_STAR_CALC | date: 'dd/MM/yyyy') : '--/--/----' }}
+                  à
+                {{ item.DATE_END_CALC ? (item.DATE_END_CALC | date: 'dd/MM/yyyy') : '--/--/----' }}
               </span>
-            </td>        
+            </td>
             <td nowrap class="bg-secondary text-center text-white" [hidden]="colsNivelEstoque || !ableEditMassa">
               <span *ngIf="!item.ON_EDIT_CELL">
                 {{ item.TT_MEDI_VEND_PERI_SIMU | number:'0.3' }}
               </span>
-              <span class="text-warning" *ngIf="item.ON_EDIT_CELL"> 
+              <span class="text-warning" *ngIf="item.ON_EDIT_CELL">
                 {{ item.MEDI_VEND_CALC ? (item.MEDI_VEND_CALC | number:'0.3') : '0,000'}}
-              </span>              
-            </td>        
+              </span>
+            </td>
             <td nowrap class="text-center"  [hidden]="colsNivelEstoque || ableEditMassa" width="4%">
               <div>
                 <button
@@ -515,7 +515,7 @@
                 <i class="fas fa-save"></i>
                 </button>
               </div>
-            </td>       
+            </td>
             <td nowrap class="text-center" [ngClass]="ableEditMassa ? 'bg-secondary' : ''" [hidden]="colsNivelEstoque" width="4%">
               <div *ngIf="!item.ON_EDIT_CELL">
                 <button
@@ -526,7 +526,7 @@
                 >
                   <i
                     class="fas fa-edit"
-                    [ngClass]="ableEditMassa ? 'text-white' : ''" 
+                    [ngClass]="ableEditMassa ? 'text-white' : ''"
                     tooltip="Editar"
                   >
                   </i>
@@ -541,51 +541,51 @@
                 >
                   <i
                     class="fas fa-times text-danger"
-                    [ngClass]="ableEditMassa ? 'text-white' : ''" 
+                    [ngClass]="ableEditMassa ? 'text-white' : ''"
                     tooltip="Cancelar edição"
                   >
                   </i>
                 </button>
               </div>
-            </td>       
+            </td>
             <td nowrap  class="text-center" [hidden]="colsNivelEstoque || ableEditMassa" width="4%">
               <div>
                 <button
                   type="button"
                   class="btn-icon-sm"
-                  tooltip="Detalhes materiais"
+                  tooltip="Detalles materiais"
                   placement="left"
                   (click)="onDetails(item)"
                 >
                   <i class="fas fa-search"></i>
                 </button>
               </div>
-            </td>       
+            </td>
           </tr>
           <tr>
-            <td nowrap class="bg-dark text-white text-left border-dark">TOTAL</td>        
-            <td nowrap class="bg-dark text-white text-left" [hidden]="colsNivelEstoque || ableEditMassa"></td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || ableEditMassa"></td>    
-            <td nowrap class="bg-dark text-white text-center"></td>        
-            <td nowrap class="bg-dark text-white text-left" [hidden]="colsNivelEstoque || ableEditMassa"></td>        
-            <td nowrap class="bg-dark text-white text-left"></td>              
-            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"></td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"></td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"> {{ dataTotal['TT_MEDI_VEND_PERI'] | number: '0.3' }} </td>        
-            <td nowrap class="bg-dark text-white text-center"> {{ dataTotal['TT_ESTO_DISP'] | number: '0.3' }} </td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"> {{ dataTotal['NR_DIAS_GIRO'] | number: '0.0' }} </td>        
-            <td nowrap class="bg-dark text-white text-center"></td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || !ableEditMassa"></td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || !ableEditMassa"></td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || !ableEditMassa"> {{ dataTotal['TT_MEDI_VEND_PERI_SIMU'] | number: '0.3' }}</td>        
-            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || ableEditMassa"></td>       
-            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"></td>       
-            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || ableEditMassa"></td>       
+            <td nowrap class="bg-dark text-white text-left border-dark">TOTAL</td>
+            <td nowrap class="bg-dark text-white text-left" [hidden]="colsNivelEstoque || ableEditMassa"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || ableEditMassa"></td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-left" [hidden]="colsNivelEstoque || ableEditMassa"></td>
+            <td nowrap class="bg-dark text-white text-left"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"> {{ dataTotal['TT_MEDI_VEND_PERI'] | number: '0.3' }} </td>
+            <td nowrap class="bg-dark text-white text-center"> {{ dataTotal['TT_ESTO_DISP'] | number: '0.3' }} </td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"> {{ dataTotal['NR_DIAS_GIRO'] | number: '0.0' }} </td>
+            <td nowrap class="bg-dark text-white text-center"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="!colsNivelEstoque"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || !ableEditMassa"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || !ableEditMassa"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || !ableEditMassa"> {{ dataTotal['TT_MEDI_VEND_PERI_SIMU'] | number: '0.3' }}</td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || ableEditMassa"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque"></td>
+            <td nowrap class="bg-dark text-white text-center" [hidden]="colsNivelEstoque || ableEditMassa"></td>
           </tr>
         </ng-template>
       </custom-table>
@@ -640,7 +640,7 @@
           </div>
         </form>
         <div class="d-flex justify-content-end">
-          <button 
+          <button
             class="btn btn-primary"
             (click)="OnEditMassa() + '' + smModal.hide()"
           >
@@ -825,7 +825,7 @@
           </div>
         </form>
         <div class="d-flex justify-content-end">
-          <button 
+          <button
             class="btn btn-primary"
             (click)="OnSaveNivelEstoque() + '' + smModal1.hide()"
             [disabled]="formModal.status == 'INVALID' || !validatorsSaveModal()"

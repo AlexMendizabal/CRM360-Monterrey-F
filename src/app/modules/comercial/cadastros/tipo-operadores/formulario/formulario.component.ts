@@ -212,7 +212,7 @@ export class ComercialCadastrosTipoOperadorFormularioComponent
 
   formCanDeactivate(): boolean {
     if (this.formChanged) {
-      if (confirm('Informações não salvas serão perdidas. Deseja continuar?')) {
+      if (confirm('Este cliente no forma parte de tu cartera?')) {
         return true;
       } else {
         return false;

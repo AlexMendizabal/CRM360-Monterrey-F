@@ -5,7 +5,7 @@
     Cancelar
   </button>
   <button type="button" (click)="onSubmit()" [disabled]="submittingForm || !form.valid">
-    Salvar
+    Guardar
   </button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
@@ -14,33 +14,60 @@
       <form [formGroup]="form" autocomplete="off">
         <div class="form-row justify-content-center">
           <div class="form-group col">
-            <label for="codTitulo">Título</label>
-            <div class="input-group">
+            <label for="codTitulo">Título</label>          
               <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <div class="btn-group" dropdown>
-                    <button dropdownToggle type="button" class="color-dropdown dropdown-toggle"
-                      aria-controls="color-dropdown">
-                      <div [ngStyle]="{'backgroundColor': form.value.cor}"></div>
-                    </button>
-                    <ul id="color-dropdown" *dropdownMenu class="dropdown-menu">
-                      <li role="menuitem">
-                        <a class="dropdown-item" href="javascript:void(0)" *ngFor="let color of colors"
-                          (click)="onColorChange(color)">
-                          <div class="color-hex" [ngStyle]="{'backgroundColor': color.hex}"></div>
-                          <div>{{ color.descricao }}</div>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </span>
+              <ng-select
+              class="custom-control-input form-control"
+              [searchable]="true"
+              [clearable]="true"
+              class="col p-0"
+              [items]="listarTitulosAgenda"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              labelForId="codTitulo"
+              bindLabel="descricaoTitulo"
+              bindValue="codTitulo"
+              id="codTitulo"
+              formControlName="codTitulo"
+              (change)="onCodTituloChange()">
+            </ng-select>
+          </div>
+            <invalid-form-control [show]="onFieldInvalid('codTitulo')" message="Título obligatorio."></invalid-form-control>
+          </div>
+        </div>
+        <div *ngIf="showInputVendedores">
+          <div class="form-row" *ngIf="permissoesAcesso.simuladorVendas === true">
+            <div class="form-group col my-3">
+              <div class="custom-control custom-checkbox">
+                <input
+                 type="checkbox"
+                 class="custom-control-input"
+                 id="gerar-cotacao-pedido"
+                 formControlName="gerarCotacaoPedido"
+                 (change)="onGerarCotacaoPedido()">
+                <label
+                  class="custom-control-label"
+                  for="gerar-cotacao-pedido">
+                  Generar presupuesto/solicitud para este contacto
+                </label>
               </div>
-              <ng-select [searchable]="true" [clearable]="true" class="col p-0" [items]="listarTitulosAgenda"
-                [virtualScroll]="true" placeholder="Selecione..." labelForId="codTitulo" bindLabel="descricaoTitulo"
-                bindValue="codTitulo" id="codTitulo" formControlName="codTitulo">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="promotor">Promotor</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="promotores"
+                [virtualScroll]="true"
+                labelForId="promotor"
+                bindLabel="nome"
+                bindValue="id"
+                formControlName="promotor"
+                [ngClass]="onFieldError('promotor') + ' ' + onFieldRequired('promotor')"
+                (change)="onInput()">
               </ng-select>
-              <invalid-form-control [show]="onFieldInvalid('codTitulo')"
-                message="Título obligatorio."></invalid-form-control>
             </div>
           </div>
         </div>
@@ -59,27 +86,17 @@
           <div class="form-row">
             <div class="form-group col">
               <label for="cliente">Cliente</label>
-              <ng-select [searchable]="true" [clearable]="false" [items]="clientes" [virtualScroll]="true"
-                labelForId="cliente" bindLabel="codRazaoSocial" bindValue="codCliente" formControlName="cliente"
-                [ngClass]="onFieldError('cliente') + ' ' + onFieldRequired('cliente')"
-                (change)="updateDireccion($event)">
-              </ng-select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group col">
-              <label for="promotor">Promotor</label>
-              <ng-select
-                [searchable]="true"
-                [clearable]="false"
-                [items]="promotores"
-                [virtualScroll]="true"
-                labelForId="promotor"
-                bindLabel="nome"
-                bindValue="id"
-                formControlName="promotor"
-                [ngClass]="onFieldError('promotor') + ' ' + onFieldRequired('promotor')"
-                (change)="onInput()">
+              <ng-select 
+              [searchable]="true" 
+              [clearable]="false" 
+              [items]="clientes" 
+              [virtualScroll]="true"
+              labelForId="cliente" 
+              bindLabel="codRazaoSocial" 
+              bindValue="codCliente" 
+              formControlName="cliente"
+              [ngClass]="onFieldError('cliente') + ' ' + onFieldRequired('cliente')"
+              (change)="updateDireccion($event)">
               </ng-select>
             </div>
           </div>
@@ -108,9 +125,9 @@
             <label for="codOrigemContato">DIRECCION</label>
             <input type="text" class="form-control" formControlName="direccion"
               [ngClass]="onFieldError('codOrigemContato') + ' ' + onFieldRequired('codOrigemContato')">
-            <input type="hidden" formControlName="latitud_clie">
-            <input type="hidden" formControlName="longitud_clie">  
-            <input type="hidden" formControlName="codigo_cliente">  
+            <input type="hidden" formControlName="latitud_clie" >
+            <input type="hidden" formControlName="longitud_clie" >
+            <input type="hidden" formControlName="codigo_cliente" >
 
 
             <invalid-form-control [show]="onFieldInvalid('codOrigemContato')"
@@ -125,7 +142,7 @@
               <div id="map-zoom-control" class="map-control"> </div>
             </div>
           </div>
-          
+
 
 
         </div>
@@ -195,21 +212,35 @@
           <div class="form-group col">
             <label for="motivoReagendamento">Motivo de la reprogramación</label>
             <select class="form-control custom-select" id="motivoReagendamento" formControlName="motivoReagendamento"
-              (change)="onInput()" [ngClass]="onFieldError('inicioData') + ' ' + onFieldRequired('inicioData')">
-              <option *ngFor="let item of motivosReagendamento" [value]="item.id">{{ item.descricao }}</option>
+              (change)="onInput()" [ngClass]="{'is-invalid': onFieldInvalid(form.get('motivoReagendamento'))}">
+              <option *ngFor="let item of motivosReagendamento" [value]="item.ID_REAG_MOTI">{{ item.DS_REAG_MOTI }}</option>
             </select>
-            <invalid-form-control [show]="onFieldInvalid('motivoReagendamento')"
-              message="Motivo do reagendamento é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="form.get('motivoReagendamento').invalid && form.get('motivoReagendamento').touched"
+              message="Motivo de reagendamiento es obligatorio."></invalid-form-control>
           </div>
+
         </div>
-        <div class="form-row">
-          <div class="form-group col">
-            <label for="observacao">Observación</label>
-            <textarea class="form-control" id="observacao" formControlName="observacao" (input)="onInput()">
-            </textarea>
-          </div>
+
+            <div class="form-row">
+            <div class="form-group col">
+                <label for="observacao">Observación</label>
+                <textarea class="form-control" id="observacao" formControlName="observacao" (input)="onInput()">
+                </textarea>
+              </div>
+            </div>
+
+            <div class="form-row" *ngIf="action == 'finalizar'">
+              <div class="form-group col">
+                <label for="Obsfinalizar">Observación al finalizar</label>
+                <textarea
+                  class="form-control"
+                  id="Obsfinalizar"
+                  formControlName="Obsfinalizar"
+                  (input)="onInput()">
+                </textarea>
+              </div>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
-  </div>
-</app-body>
+      </div>
+    </app-body>

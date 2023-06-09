@@ -24,6 +24,7 @@
         color: rgba($orangeMtCorp, 0.75) !important;
         display: flex;
         font-size: 1rem;
+      position: relative;
         justify-content: center;
         height: 35px;
         padding: 0px !important;
@@ -36,7 +37,6 @@
           outline: unset;
         }
       }
-      
       .btn-group {
         border: unset !important;
         border-radius: unset !important;
@@ -55,6 +55,12 @@
       }
     }
   }
-
-
 }
+@media (min-width: 400px) and (max-width: auto) {
+  .navbar{
+    padding: 0.4rem 1rem 0.4rem 3.5rem;
+  }
+  
+}
+
+
