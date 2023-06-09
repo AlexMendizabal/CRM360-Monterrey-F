@@ -21,6 +21,11 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
   styleUrls: ['./detalhes.component.scss']
 })
 export class ComercialAgendaDetalhesComponent implements OnInit {
+latitud: any;
+longitud: any;
+actualizarMarcador($event: any) {
+throw new Error('Method not implemented.');
+}
   breadCrumbTree: Array<Breadcrumb> = [
     {
       descricao: 'Home',
@@ -47,6 +52,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
  // }
   switchEdit: boolean;
   private user = this.authservice.getCurrentUser();
+  posiciones: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -86,7 +92,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     this.detalhes.typeContactDesc = detalhes.typeContactDesc;
     this.detalhes.allDay = detalhes.allDay;
     this.detalhes.anexo = detalhes.anexo;
-    this.detalhes.observacionFinal = detalhes.motivo;
+    this.detalhes.observacionFinal = detalhes.obsFinalizar;
     this.latitud = detalhes.latitud;
     this.longitud = detalhes.longitud;
     this.filtrarPosiciones(detalhes.id)
@@ -129,8 +135,6 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     });
 
   }
-
-
 
   onReschedule(detalhes: any) {
     detalhes.status = 4;
@@ -179,7 +183,7 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   }
 
   filtrarPosiciones(id_agenda: any) {
-    this.agendaService.getPosicionPromotor(id_agenda).subscribe(
+    this.agendaService.getruta(id_agenda).subscribe(
       (response: any) => {
         this.posiciones = response.result;
       })

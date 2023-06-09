@@ -11,8 +11,8 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ComercialAgendaService {
-  getPosicionPromotor(id_agenda: any) {
-    throw new Error('Method not implemented.');
+  getruta(id_agenda: any) {
+    return this.http.get(`${this.API}/getruta/${id_agenda}`).pipe(take(1), retry(2));
   }
   private readonly API = `https://crm360.monterrey.com.bo/api/comercial/agenda`;
 
