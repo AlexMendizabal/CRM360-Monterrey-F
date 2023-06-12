@@ -31,83 +31,47 @@ throw new Error('Method not implemented.');
   breadCrumbTree: Array<Breadcrumb> = [
 
     {
-
       descricao: 'Home',
-
       routerLink: '/comercial/home'
-
     },
 
     {
-
       descricao: 'Agenda',
-
       routerLink: `/comercial/agenda/compromissos`
-
     },
 
     {
-
       descricao: 'Detalles de cita'
-
     }
 
   ];
 
-
-
-
   detalhes: any = {
-
     status: null
-
   };
 
-
-
-
-
   //mostrarElemento: boolean = true;
-
-
-
-
   //ocultarFormulario(){
-
    // this.mostrarElemento = false;
-
  // }
 
   switchEdit: boolean;
-
   private user = this.authservice.getCurrentUser();
-  
   posiciones: any;
 
 
 
-
   constructor(
-
     private activatedRoute: ActivatedRoute,
-
     private atividadesService: AtividadesService,
-
     private authservice: AuthService,
-
     private router: Router,
-
     private dateService: DateService,
     private http: HttpClient,
-
     private agendaService: ComercialAgendaService,
-
     private confirmModalService: ConfirmModalService,
-
     private pnotifyService: PNotifyService,
-
     private titleService: TitleService
-
   ) {
 
     this.pnotifyService.getPNotify();
@@ -170,35 +134,20 @@ throw new Error('Method not implemented.');
   }
 
   registrarAcesso() {
-
     this.atividadesService.registrarAcesso().subscribe();
-
   }
 
   onEliminar(detalhes: any) {
-
     this.router.navigate(['../../eliminar', detalhes.id], {
-
       relativeTo: this.activatedRoute
-
     });
-
   }
 
-
   onEdit(detalhes: any) {
-
     detalhes.status = 2;
-
     this.router.navigate(['../../editar', detalhes.id], {
-
       relativeTo: this.activatedRoute
-
     });
-
-
-
-
   }
 
   onReschedule(detalhes: any) {
@@ -213,9 +162,6 @@ throw new Error('Method not implemented.');
 
   }
 
-
-
-
   onFinish(detalhes: any) {
 
     detalhes.status = 3;
@@ -227,9 +173,6 @@ throw new Error('Method not implemented.');
     });
 
   }
-
-
-
 
   onDelete(detalhes: any) {
 
@@ -251,62 +194,35 @@ throw new Error('Method not implemented.');
 
 
     confirm$
-
       .asObservable()
-
       .pipe(
-
         take(1),
-
         switchMap(result =>
-
           result ? this.agendaService.deleteCompromisso(detalhes.id) : EMPTY
-
         )
-
       )
 
       .subscribe({
-
         next: (success) => {
-
           this.pnotifyService.success('Cita borrada con exito!');
-
           this.router.navigate(['../../compromissos'], {
-
             relativeTo: this.activatedRoute
-
           });
-
         },
 
         error: (error) => {
-
           this.pnotifyService.error(
-
             'Error al borrar, intente nuevamente!'
-
           );
-
         }
-
       });
-
   }
-
-
-
 
   filtrarPosiciones(id_agenda: any) {
-    this.agendaService.getruta(id_agenda).subscribe(
+    this.agendaService.getPosicionPromotor(id_agenda).subscribe(
       (response: any) => {
         this.posiciones = response.result;
-      },
-      (error: any) => {
-        // Manejar el error aquí
-      }
-    );
+    })
   }
-
 
 }

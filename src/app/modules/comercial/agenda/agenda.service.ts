@@ -14,9 +14,7 @@ export class ComercialAgendaService {
   getruta(id_agenda: any) {
     return this.http.get(`${this.API}/getruta/${id_agenda}`).pipe(take(1), retry(2));
   }
-  getPosicionPromotor(id_agenda: any) {
-    return this.http.get(`${this.API}/posicionPromotor/${id_agenda}`).pipe(take(1), retry(2));
-  }
+
 
   private readonly API = `https://crm360.monterrey.com.bo/api/comercial/agenda`;
 
@@ -122,4 +120,10 @@ export class ComercialAgendaService {
         );
       }
 
+    getPosicionPromotor(id: any) {
+      return this.http.get(`${this.API}/getruta/${id}`).pipe(
+        take(1),
+        retry(2)
+      );
+    }
 }
