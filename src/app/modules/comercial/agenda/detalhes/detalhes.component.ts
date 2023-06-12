@@ -28,7 +28,6 @@ longitud: any;
 actualizarMarcador($event: any) {
 throw new Error('Method not implemented.');
 }
-
   breadCrumbTree: Array<Breadcrumb> = [
 
     {
@@ -82,7 +81,7 @@ throw new Error('Method not implemented.');
   switchEdit: boolean;
 
   private user = this.authservice.getCurrentUser();
-
+  
   posiciones: any;
 
 
@@ -141,7 +140,7 @@ throw new Error('Method not implemented.');
     this.detalhes.typeContactDesc = detalhes.typeContactDesc;
     this.detalhes.allDay = detalhes.allDay;
     this.detalhes.anexo = detalhes.anexo;
-    this.detalhes.observacionFinal = detalhes.observacionFinal;
+    this.detalhes.observacionFinal = detalhes.obsFinalizar;
     this.latitud = detalhes.latitud;
     this.longitud = detalhes.longitud;
     this.filtrarPosiciones(detalhes.id)
@@ -201,7 +200,6 @@ throw new Error('Method not implemented.');
 
 
   }
-
 
   onReschedule(detalhes: any) {
 
@@ -300,7 +298,7 @@ throw new Error('Method not implemented.');
 
 
   filtrarPosiciones(id_agenda: any) {
-    this.agendaService.getPosicionPromotor(id_agenda).subscribe(
+    this.agendaService.getruta(id_agenda).subscribe(
       (response: any) => {
         this.posiciones = response.result;
       },
@@ -309,6 +307,6 @@ throw new Error('Method not implemented.');
       }
     );
   }
-  
+
 
 }
