@@ -64,5 +64,5 @@ export class ComercialGestaoRankingClientesService{
         return this.http.post(`${this.API}/inativar`, codigo).pipe(take(1));
     }
 
-  
+
 }

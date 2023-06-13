@@ -163,31 +163,20 @@ throw new Error('Method not implemented.');
   }
 
   onFinish(detalhes: any) {
-
     detalhes.status = 3;
-
     this.router.navigate(['../../finalizar', detalhes.id], {
-
       relativeTo: this.activatedRoute
-
     });
-
   }
 
   onDelete(detalhes: any) {
-
+    
     let confirm$ = this.confirmModalService.showConfirm(
-
       'Borrar',
-
       'Confirmar borrado',
-
       'Desea realmente borrar la cita?',
-
       'Cancelar',
-
       'Confirmar'
-
     );
 
 
@@ -222,7 +211,8 @@ throw new Error('Method not implemented.');
     this.agendaService.getPosicionPromotor(id_agenda).subscribe(
       (response: any) => {
         this.posiciones = response.result;
-    })
+      }
+    )
   }
 
 }

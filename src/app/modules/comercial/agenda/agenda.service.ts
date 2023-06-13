@@ -15,7 +15,6 @@ export class ComercialAgendaService {
     return this.http.get(`${this.API}/getruta/${id_agenda}`).pipe(take(1), retry(2));
   }
 
-
   private readonly API = `https://crm360.monterrey.com.bo/api/comercial/agenda`;
 
   constructor(protected http: HttpClient) { }
@@ -104,26 +103,27 @@ export class ComercialAgendaService {
       .pipe(take(1), retry(2));
   }
 
-    reporte(params: any) {
-      console.log(params);
-        return this.http.post(`${this.API}/reporte`, params ).pipe(
-          take(1),
-          retry(2)
-        );
-      }
-    reporte_cliente(params: any) {
-      console.log('entro432')
-      console.log(params);
-        return this.http.post(`${this.API}/reportecliente`, params ).pipe(
-          take(1),
-          retry(2)
-        );
-      }
-
-    getPosicionPromotor(id: any) {
-      return this.http.get(`${this.API}/getruta/${id}`).pipe(
+  reporte(params: any) {
+    console.log(params);
+      return this.http.post(`${this.API}/reporte`, params ).pipe(
         take(1),
         retry(2)
       );
-    }
+  }
+
+  reporte_cliente(params: any) {
+    console.log('entro432')
+    console.log(params);
+      return this.http.post(`${this.API}/reportecliente`, params ).pipe(
+        take(1),
+        retry(2)
+      );
+  }
+
+  getPosicionPromotor(id: any) {
+    return this.http.get(`${this.API}/getruta/${id}`).pipe(
+      take(1),
+      retry(2)
+    );
+  }
 }
