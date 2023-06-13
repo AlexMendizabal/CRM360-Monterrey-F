@@ -104,7 +104,7 @@ throw new Error('Method not implemented.');
     this.detalhes.typeContactDesc = detalhes.typeContactDesc;
     this.detalhes.allDay = detalhes.allDay;
     this.detalhes.anexo = detalhes.anexo;
-    this.detalhes.observacionFinal = detalhes.obsFinalizar;
+    this.detalhes.observacionFinal = detalhes.observacionFinal;
     this.latitud = detalhes.latitud;
     this.longitud = detalhes.longitud;
     this.filtrarPosiciones(detalhes.id)
@@ -170,7 +170,7 @@ throw new Error('Method not implemented.');
   }
 
   onDelete(detalhes: any) {
-    
+
     let confirm$ = this.confirmModalService.showConfirm(
       'Borrar',
       'Confirmar borrado',
