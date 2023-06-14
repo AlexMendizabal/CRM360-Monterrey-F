@@ -12,7 +12,7 @@ import { MotivoAssociacao } from './models/motivo-associacao';
   providedIn: 'root'
 })
 export class ComercialCadastrosMotivoAssociacaoService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/motivo-associacao`;
+  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/motivo-associacao`;
 
   constructor(protected http: HttpClient) {}
 

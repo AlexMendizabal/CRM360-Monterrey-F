@@ -620,7 +620,6 @@ export class ComercialAgendaFormularioComponent
         }
       }
 
-
       if (formValue.codFormaContato != '') {
         for (let index = 0; index < this.formasContato.length; index++) {
           if (this.formasContato[index].codFormaContato == formValue.codFormaContato) {
@@ -628,7 +627,6 @@ export class ComercialAgendaFormularioComponent
           }
         }
       }
-
 
       if (formValue.codOrigemContato != '') {
         for (let index = 0; index < this.origensContato.length; index++) {
@@ -749,7 +747,8 @@ export class ComercialAgendaFormularioComponent
     }
     const formData = new FormData();
     formData.append('imagen', this.selectedImage);
-    
+    console.log('imagen')
+    console.log(formData)
   }
 
   onImageSelected(event: any) {
@@ -928,7 +927,7 @@ export class ComercialAgendaFormularioComponent
     
     console.log(this.form.value.promotor)
     var params = this.form.value.promotor
-    this.agendaService.reporte(params);
+    this.agendaService.reporteAgenda(params);
   }
 }
 

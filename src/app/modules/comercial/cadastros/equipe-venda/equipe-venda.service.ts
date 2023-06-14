@@ -12,7 +12,7 @@ import { EquipeVenda } from './models/equipe-venda';
   providedIn: 'root'
 })
 export class ComercialCadastrosEquipeVendaService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/equipe-venda`;
+  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/equipe-venda`;
 
   constructor(protected http: HttpClient) {}
 

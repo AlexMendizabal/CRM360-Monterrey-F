@@ -28,7 +28,7 @@ import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.
   providedIn: 'root',
 })
 export class ComercialCicloVendasCotacoesFormularioService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/cotacoes`;
+  private readonly API = `http://127.0.0.1:8000/comercial/ciclo-vendas/cotacoes`;
 
   private notifySubmit = new Subject<any>();
 
@@ -156,7 +156,7 @@ export class ComercialCicloVendasCotacoesFormularioService {
   }
 
   getCliente(codCliente){
-    return this.http.get(`https://crm360.monterrey.com.bo/api/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
+    return this.http.get(`http://127.0.0.1:8000/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
   }
   
 }

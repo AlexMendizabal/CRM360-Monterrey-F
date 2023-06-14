@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ModulosService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/common`;
+  private readonly API = `http://127.0.0.1:8000/common`;
 
   private currentModuleSubject: BehaviorSubject<any>;
   public currentModule: Observable<any>;
@@ -36,7 +36,7 @@ export class ModulosService {
 
   _getModulo(rota: string){
     return this.http
-      .get(`https://crm360.monterrey.com.bo/api/core/modulos`, {
+      .get(`http://127.0.0.1:8000/core/modulos`, {
         "params": { "rota": rota },
         "observe":"response"
       }).pipe(take(1), retry(2));

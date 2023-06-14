@@ -12,7 +12,7 @@ import { FormaContato } from './models/formas-contato';
   providedIn: 'root',
 })
 export class ComercialCadastrosContatoFormasContatoService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/contato/forma-contato`;
+  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/contato/forma-contato`;
 
   constructor(protected http: HttpClient) {}
 
