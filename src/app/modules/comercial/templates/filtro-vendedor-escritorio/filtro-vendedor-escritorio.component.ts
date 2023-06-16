@@ -89,7 +89,13 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
             this.escritorios = response[0]['result'];
 
             console.log(this.escritorios)
-            this.escritorios[0] = "Sucursal Central"
+            this.escritorios[0] =
+            {
+              id: 0,
+              nome: 'TODOS',
+              idEscritorio: 0
+            }
+
             this.escritorios.splice(1, 2);
             if (this.escritorios.length > 1 && this.showAll === true) {
               this.escritorios.unshift({
@@ -120,7 +126,6 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
       });
   }
 
-  
   loadEscritoriosVendedores(): Observable<any> {
     const escritorios = this.comercialService.getEscritorios();
     const vendedores = this.vendedoresService.getVendedores();
@@ -149,7 +154,15 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
           this.handleLoadDependenciesError();
         }
       );
+
+
   }
+
+  getPromotorSucursal(): void {
+    this.pnotifyService.error();
+    this.location.back();
+  }
+
 
   handleLoadDependenciesError(): void {
     this.pnotifyService.error();
@@ -218,7 +231,19 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
   }
 
   onEscritorioChange(escritorio: any) {
-    this.filterVendedores(escritorio['id']);
+    console.log(escritorio);
+    this.vendedoresService.getVendedoresSucursal(escritorio).subscribe(
+      (response: any) => {
+        console.log(response)
+        if (response['success'] === true) {
+          this.setFormFilter();
+          this.filteredVendedores = response['data'];
+
+        } else {
+          this.handleLoadDependenciesError();
+        }
+      },
+    )
     this.form.get('idVendedor').setValue(0);
   }
 
@@ -248,4 +273,6 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
       }
     }
   }
+
+  //
 }
