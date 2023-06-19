@@ -88,11 +88,11 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
             this.setFormFilter();
             this.escritorios = response[0]['result'];
 
-            console.log(this.escritorios)
+            //console.log(this.escritorios)
             this.escritorios[0] =
             {
               id: 0,
-              nome: 'TODOS',
+              nome: 'todos',
               idEscritorio: 0
             }
 

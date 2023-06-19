@@ -126,4 +126,13 @@ export class ComercialAgendaService {
       retry(2)
     );
   }
+
+  getImagenes(id: any) {
+
+    return this.http.get(`${this.API}/getimagenes/${id}`).pipe(
+      take(1),
+      retry(2));
+
+  }
+
 }
