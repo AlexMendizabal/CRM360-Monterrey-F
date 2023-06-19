@@ -15,7 +15,7 @@ import { ModulosService } from '../requests/modulos.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/usuario`;
+  private readonly API = `http://127.0.0.1:8000/usuario`;
 
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
@@ -50,7 +50,7 @@ export class AuthService {
   }
 
   changePassword(data: any): Observable<any> {
-    return this.http.post(`https://crm360.monterrey.com.bo/api/core/contra-senha`, data, { observe: 'response' }).pipe(take(1));
+    return this.http.post(`http://127.0.0.1:8000/core/contra-senha`, data, { observe: 'response' }).pipe(take(1));
   }
 
   sessionExpired(): void {

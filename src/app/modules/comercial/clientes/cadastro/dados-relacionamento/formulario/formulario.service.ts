@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ComercialClientesCadastroDadosRelacionamentoFormularioService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/clientes/cadastro/formulario/dados-relacionamento`;
+  private readonly API = `http://127.0.0.1:8000/comercial/clientes/cadastro/formulario/dados-relacionamento`;
 
   constructor(protected http: HttpClient) {}
 

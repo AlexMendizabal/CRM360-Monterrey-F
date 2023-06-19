@@ -12,8 +12,8 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialVendedoresService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/vendedor`;
-  private readonly API_CADASTROS = `https://crm360.monterrey.com.bo/api/comercial/cadastros`;
+  private readonly API = `http://127.0.0.1:8000/comercial/vendedor`;
+  private readonly API_CADASTROS = `http://127.0.0.1:8000/comercial/cadastros`;
 
 
   constructor(protected http: HttpClient) { }
