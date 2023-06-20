@@ -88,7 +88,24 @@
             <img src="../../../assets/images/system-alerts/404.png" alt="Sin información"
               style="width: 80px; height: 80px" />
           </div>
-          <div *ngIf="detalhes.anexo">{{ detalhes.anexo }}</div>
+          <div class="row">
+            <div *ngFor="let image of imagenes" class="col">
+              <a (click)="abrirModal(modalTemplate)">
+                <img src="data:image/jpeg;base64,{{image.url_imagen}}" style="width: 80px; height: 80px" />
+              </a>
+              <ng-template #modalTemplate>
+                <div class="modal-header">
+                  <h4 class="modal-title">Imagen en tamaño completo</h4>
+                  <button type="button" class="close" aria-label="Close" (click)="modalRef?.hide()">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <img src="data:image/jpeg;base64,{{image.url_imagen}}" style="width: 100%" />
+                </div>
+              </ng-template>
+            </div>
+          </div>
         </div>
       </div>
     </div>

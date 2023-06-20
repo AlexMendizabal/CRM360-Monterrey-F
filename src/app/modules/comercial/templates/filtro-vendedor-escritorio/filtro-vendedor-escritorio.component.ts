@@ -92,7 +92,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
             this.escritorios[0] =
             {
               id: 0,
-              nome: 'TODOS',
+              nome: 'todos',
               idEscritorio: 0
             }
 
