@@ -4,14 +4,14 @@
   import { Observable } from 'rxjs';
 
   // Resto del código del servicio
-  
+
   import { environment } from 'src/environments/environment';
 
   @Injectable({
     providedIn: 'root',
   })
   export class ComercialAgendaService {
-    private readonly API = `https://crm360.monterrey.com.bo/api/comercial/agenda`;
+    private readonly API = `http://127.0.0.1:8000/comercial/agenda`;
 
     constructor(protected http: HttpClient) {}
 
@@ -33,7 +33,7 @@
 
     getCompromisso(id: any) {
       return this.http
-        .get(`${this.API}/compromissos/detalhes/${id}`)
+        .get(`${this.API}/compromissos/}/${id}`)
         .pipe(take(1), retry(2));
     }
 
@@ -41,15 +41,15 @@
       console.log('entro')
       return this.http.post(`${this.API}/reporte`, data).pipe(take(1), retry(2));
     }
-    
+
     estadosAgenda(data?: any): Observable<any> {
       const params = data ? { params: data } : {}; // Opcionalmente, incluye los parámetros en la solicitud
-    
+
       return this.http.get(`${this.API}/estados`, params).pipe(
         take(1),
         retry(2)
       );
-      
+
     }
 
     private saveCompromisso(record: any) {
@@ -82,6 +82,8 @@
 
     save(action: string, record: any) {
 
+      console.log(record);
+
       if (action == 'editar' || action == 'finalizar') {
         return this.updateCompromisso(record);
       } else if (action == 'reagendar') {
@@ -90,10 +92,10 @@
        else  {
         return this.saveCompromisso(record);
       }
-    
-      
+
+
     }
-    
+
 
     deleteCompromisso(id: any) {
       const record = { id: id };

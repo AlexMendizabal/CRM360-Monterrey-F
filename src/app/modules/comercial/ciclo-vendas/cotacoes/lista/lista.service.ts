@@ -17,7 +17,7 @@ import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.
   providedIn: 'root',
 })
 export class ComercialCicloVendasCotacoesListaService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/cotacoes`;
+  private readonly API = `http://127.0.0.1:8000/comercial/ciclo-vendas/cotacoes`;
 
   private onChangeClienteCotacao = new BehaviorSubject([]);
   clienteCotacao = this.onChangeClienteCotacao.asObservable();
@@ -44,10 +44,10 @@ export class ComercialCicloVendasCotacoesListaService {
 
   loadDependencies(): Observable<Array<Object | JsonResponse>> {
     const situacoes = this.situacoesService.getListaSituacaoProposta(null);
-    const empresas = this.tidService.getEmpresas('vendas'); 
-    const depositos = this.comercialService.getDepositos(null); 
+    const empresas = this.tidService.getEmpresas('vendas');
+    const depositos = this.comercialService.getDepositos(null);
     // const empresas = this.comercialService.getEmpresas({ idEmpresa: [4,18,55,79,77], tipo: 'search' });
-    // const depositos = this.comercialService.getDepositos({ idDeposito: [1,18,60,79,77], tipo: 'ssv' }); 
+    // const depositos = this.comercialService.getDepositos({ idDeposito: [1,18,60,79,77], tipo: 'ssv' });
     const associacoes = this.associacaoSituacoesPropostaService.getListaAssociacoes(
       {
         codSituacao: 1,

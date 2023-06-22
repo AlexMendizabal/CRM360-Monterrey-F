@@ -126,7 +126,7 @@ export class ComercialAgendaFormularioComponent
   detalhes: any = {
     status: null
   };
-  
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -552,21 +552,21 @@ export class ComercialAgendaFormularioComponent
 
   onFieldError(field: string): string {
     const control = this.form.get(field);
-  
+
     if (this.onFieldInvalid(control)) {
       return 'is-invalid';
     }
-  
+
     return '';
   }
-  
+
   onFieldInvalid(control: AbstractControl): boolean {
     return control && control.invalid && (control.touched || control.dirty);
   }
-  
-  
-  
-  
+
+
+
+
 
   onFieldRequired(field: string): string {
     let required = false;
@@ -685,16 +685,13 @@ export class ComercialAgendaFormularioComponent
 
       const inicio = this.dateService.convert2PhpDate(inicioData);
       const termino = this.dateService.convert2PhpDate(terminoData);
-      
+
       const observacaoUpperCase = formValue.observacao !== null && formValue.observacao !== undefined
         ? formValue.observacao.toUpperCase()
         : null;
 
       let formObj = {
         id: formValue.id,
-        color: {
-          primary: formValue.cor,
-        },
         codTitulo: formValue.codTitulo,
         codClient: formValue.cliente,
         idVendedor:formValue.promotor,
