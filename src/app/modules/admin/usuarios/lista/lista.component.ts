@@ -33,7 +33,7 @@ export class AdminUsuariosListaComponent implements OnInit {
   loading = true;
   loadingNavBar = false;
   loadingSincronizarAd = false;
-  
+
   noResult: boolean;
 
   usuarios: Array<any> = [];
@@ -89,7 +89,7 @@ export class AdminUsuariosListaComponent implements OnInit {
     this.$activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
       (response) => {
         const _response = this.routerService.getBase64UrlParams(response);
-        
+
         if(_response?.registrosPorPagina){
           this.itemsPerPage = _response?.registrosPorPagina;
         }
@@ -217,7 +217,7 @@ export class AdminUsuariosListaComponent implements OnInit {
           }
 
           this.perfis = response.body['data'];
-          
+
         },
         error => {
           this.pnotify.error("Erro ao carregar perfis.");

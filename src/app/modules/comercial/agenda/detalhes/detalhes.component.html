@@ -1,22 +1,11 @@
 <app-header appTitle="Detalles del compromiso">
-
   <button type="button" *ngIf="switchEdit" (click)="onEdit(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Editar</button>
-
-
-
 
   <button type="button" (click)="onReschedule(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Reagendar</button>
 
-
-
-
   <button type="button" *ngIf="switchEdit" (click)="onDelete(detalhes)"[disabled]="detalhes.status === 'FINALIZADO'">Excluir</button>
 
-
-
-
   <button type="button" *ngIf="switchEdit || detalhes.title === 'LLAMADA'"(click)="onFinish(detalhes)" [disabled]="detalhes.status === 'FINALIZADO'">Finalizado</button>
-
   <!-- Nuevo botón -->
 
 </app-header>
@@ -86,7 +75,18 @@
         </div>
 
       </div>
-
+      <!-- <div class="form-row">
+        <div class="form-group col">
+          <label>Hora Inicio</label>
+          <div>{{ detalhes.fullDate | uppercase }}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label>Hora Final</label>
+          <div>{{ detalhes.fullDate | uppercase }}</div>
+        </div>
+      </div> -->
       <div class="form-row">
 
         <div class="form-group col">
@@ -112,8 +112,6 @@
           <div *ngIf="detalhes.motivo" [innerHTML]="detalhes.motivo | uppercase"></div>
 
         </div>
-
-              
 
       </div>
 
@@ -154,25 +152,17 @@
               style="width: 80px; height: 80px" />
 
           </div>
-
-          <div *ngIf="detalhes.anexo">{{ detalhes.anexo }}</div>
-
+          <div *ngFor="let image of imagenes">
+            <img [src]="decodificarBase64(image.url_imagen)" style="width: 500px; height: 500px" />
+          </div>
         </div>
 
       </div>
-
-
-
-
     </div>
 
     <div class="col-md-6">
 
       <p class="marker-info"><strong> SEGUIMIENTO DEL PROMOTOR</strong></p>
-
-
-
-
       <div class="embed-responsive embed-responsive-16by9">
 
         <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="13" class="embed-responsive-item"
@@ -180,30 +170,16 @@
           (mapClick)="actualizarMarcador($event)">
 
           <agm-marker [latitude]="latitud" [longitude]="longitud" [label]="'C'">
-
-
-
-
             <agm-info-window [disableAutoPan]="true">
-
               <div class="marker-info-window">
-
                 <p class="marker-name mb-0"><strong> Cliente: </strong> {{detalhes.client}}</p>
-
               </div>
-
             </agm-info-window>
-
             <agm-marker *ngFor="let posicion of posiciones" [latitude]="posicion.latitud"
-
               [longitude]="posicion.longitud" [iconUrl]="'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'">
-
               <agm-info-window [disableAutoPan]="true" >
-
                 <div class="marker-info-window">
-
                  <!--  <p class="marker-name mb-0"><strong> Promotor: </strong> {{posicion.vendedor}}</p> -->
-
                   <p class="marker-name mb-0"><strong> Fecha: </strong> {{posicion.fecha}}</p>
                 </div>
               </agm-info-window>

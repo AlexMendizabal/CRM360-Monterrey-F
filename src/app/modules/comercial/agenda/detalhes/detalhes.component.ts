@@ -21,14 +21,7 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
   templateUrl: './detalhes.component.html',
   styleUrls: ['./detalhes.component.scss']
 })
-
 export class ComercialAgendaDetalhesComponent implements OnInit {
-latitud: any;
-longitud: any;
-actualizarMarcador($event: any) {
-throw new Error('Method not implemented.');
-}
-
   breadCrumbTree: Array<Breadcrumb> = [
 
     {
@@ -63,15 +56,10 @@ throw new Error('Method not implemented.');
     status: null
 
   };
-
-
-
-
+  latitud: any;
+  longitud: any;
 
   //mostrarElemento: boolean = true;
-
-
-
 
   //ocultarFormulario(){
 
@@ -82,7 +70,6 @@ throw new Error('Method not implemented.');
   switchEdit: boolean;
 
   private user = this.authservice.getCurrentUser();
-
   posiciones: any;
 
 
@@ -99,8 +86,6 @@ throw new Error('Method not implemented.');
     private router: Router,
 
     private dateService: DateService,
-    private http: HttpClient,
-
     private agendaService: ComercialAgendaService,
 
     private confirmModalService: ConfirmModalService,
@@ -197,10 +182,8 @@ throw new Error('Method not implemented.');
 
     });
 
-
-
-
   }
+
 
 
   onReschedule(detalhes: any) {
@@ -297,18 +280,10 @@ throw new Error('Method not implemented.');
   }
 
 
-
-
   filtrarPosiciones(id_agenda: any) {
     this.agendaService.getPosicionPromotor(id_agenda).subscribe(
       (response: any) => {
         this.posiciones = response.result;
-      },
-      (error: any) => {
-        // Manejar el error aquí
-      }
-    );
+      })
   }
-  
-
 }

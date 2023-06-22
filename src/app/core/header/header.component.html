@@ -1,17 +1,12 @@
-<nav id="navbar" class="navbar fixed-top navbar-expand-sm navbar-light">
-  <img
-    [src]="srcLogoCliente"
-    (error)="onLogoClienteError($event)"
-    id="logo-manetoni"
-    height="20"
-    *ngIf="showLogoCliente"
-  />
+<nav id="navbar" class="navbar fixed-top navbar-expand navbar-light">
+  <img [src]="srcLogoCliente" (error)="onLogoClienteError($event)" id="logo-manetoni" height="20"
+    *ngIf="showLogoCliente">
   <ul class="navbar-nav ml-auto">
     <li id="spinner" [hidden]="!showLoader">
       <div class="spinner-border"></div>
     </li>
     <li class="d-flex mr-2">
-      <span class="my-auto version">Version 1.0.25</span>
+      <span class="my-auto version">Version 1.0.27</span>
     </li>
     <li class="d-flex mr-2">
       <img
