@@ -4,7 +4,11 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development server
 
+<<<<<<< HEAD
 Run `ng serve` for a dev server. Navigate to `https://crm360.monterrey.com.bo/api/`. The app will automatically reload if you change any of the source files.
+=======
+Run `ng serve` for a dev server. Navigate to `http://127.0.0.1:8000p will automatically reload if you change any of the source files.
+>>>>>>> d1375df3041083288adb44d0656257cf105ab44d
 
 ## Code scaffolding
 

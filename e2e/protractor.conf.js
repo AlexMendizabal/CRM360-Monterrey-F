@@ -16,7 +16,11 @@ exports.config = {
     'browserName': 'chrome'
   },
   directConnect: true,
+<<<<<<< HEAD
   baseUrl: 'https://crm360.monterrey.com.bo/api/',
+=======
+  baseUrl: 'http://127.0.0.1:8000
+>>>>>>> d1375df3041083288adb44d0656257cf105ab44d
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,

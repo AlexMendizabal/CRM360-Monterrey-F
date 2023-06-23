@@ -5,7 +5,11 @@
 export const environment = {
   production: false,
   API: '/api',
+<<<<<<< HEAD
   URL_MTCORP: 'https://crm360.monterrey.com.bo/api/'
+=======
+  URL_MTCORP: 'http://127.0.0.1:8000'
+>>>>>>> d1375df3041083288adb44d0656257cf105ab44d
 };
 
 /*

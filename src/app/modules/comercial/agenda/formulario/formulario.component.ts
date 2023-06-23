@@ -119,6 +119,10 @@ export class ComercialAgendaFormularioComponent
   detalhes: any = {
     status: null,
   };
+<<<<<<< HEAD
+=======
+
+>>>>>>> d1375df3041083288adb44d0656257cf105ab44d
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -538,6 +542,10 @@ export class ComercialAgendaFormularioComponent
 
   onFieldError(field: string): string {
     const control = this.form.get(field);
+<<<<<<< HEAD
+=======
+
+>>>>>>> d1375df3041083288adb44d0656257cf105ab44d
     if (this.onFieldInvalid(control)) {
       return 'is-invalid';
     }
@@ -552,8 +560,11 @@ export class ComercialAgendaFormularioComponent
 
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> d1375df3041083288adb44d0656257cf105ab44d
 
   onFieldRequired(field: string): string {
     let required = false;
@@ -680,16 +691,19 @@ export class ComercialAgendaFormularioComponent
       const inicio = this.dateService.convert2PhpDate(inicioData);
       const termino = this.dateService.convert2PhpDate(terminoData);
 
+<<<<<<< HEAD
       const observacaoUpperCase =
         formValue.observacao !== null && formValue.observacao !== undefined
           ? formValue.observacao.toUpperCase()
           : null;
+=======
+      const observacaoUpperCase = formValue.observacao !== null && formValue.observacao !== undefined
+        ? formValue.observacao.toUpperCase()
+        : null;
+>>>>>>> d1375df3041083288adb44d0656257cf105ab44d
 
       let formObj = {
         id: formValue.id,
-        color: {
-          primary: formValue.cor,
-        },
         codTitulo: formValue.codTitulo,
         codClient: formValue.cliente,
         idVendedor: formValue.promotor,
