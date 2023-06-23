@@ -131,7 +131,7 @@ export class ComercialCicloVendasCotacoesService {
     return this.http
       .post(`${this.API}/email-cotacao`, params)
       .pipe(take(1)
-      // , 
+      // ,
       // retry(2)
       );
   }
@@ -200,7 +200,7 @@ export class ComercialCicloVendasCotacoesService {
           codFormaPagamento: codFormaPagamento,
           freteConta: freteConta
         }
-    
+
       })
       .pipe(take(1), retry(2));
   }
@@ -384,5 +384,5 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
-  
+
 }

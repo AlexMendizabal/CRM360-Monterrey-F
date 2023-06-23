@@ -66,10 +66,10 @@ export class ComercialCicloVendasCotacoesFormularioService {
 
   loadDependencies(): Observable<Array<Object | JsonResponse>> {
     const situacoes = this.situacoesService.getListaSituacaoProposta(null);
-    // const depositos = this.comercialService.getDepositos({ idDeposito: [1,18,60,79,/*77*/], tipo: 'ssv' }); 
+    // const depositos = this.comercialService.getDepositos({ idDeposito: [1,18,60,79,/*77*/], tipo: 'ssv' });
     // const empresas = this.comercialService.getEmpresas({ idEmpresa: [4,18,55,79,77], tipo: 'search' });
-    const empresas = this.tidService.getEmpresas('vendas'); 
-    const depositos = this.comercialService.getDepositos(null); 
+    const empresas = this.tidService.getEmpresas('vendas');
+    const depositos = this.comercialService.getDepositos(null);
     const formasPagamento = this.formasPagamentoService.getListaFormasPagamento(
       { tipoConsulta: 2 }
     );
@@ -158,5 +158,5 @@ export class ComercialCicloVendasCotacoesFormularioService {
   getCliente(codCliente){
     return this.http.get(`http://127.0.0.1:8000/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
   }
-  
+
 }

@@ -4,7 +4,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SidebarService {
   loadAtividadesEmitter: EventEmitter<any> = new EventEmitter();

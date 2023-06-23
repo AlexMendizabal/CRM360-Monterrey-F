@@ -28,6 +28,11 @@ export class ComercialVendedoresService {
     return this.http.get(`${this.API}/lista`).pipe(take(1), retry(2));
   }
 
+  getVendedoresSucursal(id: number){
+    return this.http
+    .get(`${this.API}/sucursal-vendedor/${id}`)
+  }
+
   getGestiones() {
     return this.http.get(`${this.API_CADASTROS}/titulos-agenda/lista?codSituacao=1`).pipe(take(1), retry(2));
   }

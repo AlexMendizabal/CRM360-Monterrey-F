@@ -65,5 +65,5 @@ export class ComercialGestaoLiberacoesService {
     return this.http.post(`${this.API}/reprovacao`, params).pipe(take(1));
   }
 
-  
+
 }

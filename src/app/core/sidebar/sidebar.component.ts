@@ -7,10 +7,11 @@ import { SidebarService } from './sidebar.service';
 import { ModulosService } from 'src/app/shared/services/requests/modulos.service';
 import { RouterService } from 'src/app/shared/services/core/router.service';
 import { AdminAtividadesService } from 'src/app/modules/admin/atividades/services/atividades.service';
+
 @Component({
   selector: 'core-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   user: any = {};
@@ -64,7 +65,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
           const userModule = {
             id: response.result.id,
             nome: response.result.nome,
-            rota: response.result.rota
+            rota: response.result.rota,
           };
           this.setAtividades(userModule);
         } else {
@@ -88,24 +89,24 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.atividadesLoaded = false;
     this.atividadesError = false;
     const currentUser = localStorage.getItem('currentUser');
-    if(!currentUser){
+    if (!currentUser) {
       this.pnotifyService.error('No tiene permiso para realizar eso.');
       this.authService.logout();
-      return
+      return;
     }
-    const matricula = (JSON.parse(currentUser))?.info?.matricula;
-    if(!matricula){
+    const matricula = JSON.parse(currentUser)?.info?.matricula;
+    if (!matricula) {
       this.pnotifyService.error('No tiene permiso para realizar eso.');
       this.authService.logout();
-      return
+      return;
     }
     let params = {
       matricula: matricula,
       moduloId: moduloId,
       exibeSidebar: 1,
       orderBy: 'nome',
-      inPagina: 0
-    }
+      inPagina: 0,
+    };
     this.atividadesService
       .getAtividades(params)
       .pipe(
@@ -114,12 +115,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(
-        response => {
-          
-          if(response.status !== 200){
+        (response) => {
+          if (response.status !== 200) {
             this.pnotifyService.error('No tiene permiso para realizar eso.');
             this.authService.logout();
-            return
+            return;
           }
           this.atividadesError = false;
           let data:object[] = response.body["data"];
@@ -132,21 +132,18 @@ export class SidebarComponent implements OnInit, OnDestroy {
           data[idx3]["nome"] = "ESTOQUE"
           let idx4 = data.findIndex((val) => val["id"] === 25)
           data[idx4]["nome"] = "CADASTROS"
-
-          let idx5 = data.findIndex((val) => val["id"] === 29)
-          data[idx5]["nome"] = "BÚSQUEDA DE CLIENTES"
+          let idx5 = data.findIndex((val) => val['id'] === 29);
+          data[idx5]['nome'] = 'BÚSQUEDA DE CLIENTES';
 
           this.atividades = data;
-          this.routerLinkHome = data[0]["moduloRota"];
-          console.log(response)
+          this.routerLinkHome = data[0]['moduloRota'];
+          //console.log(response)
         },
         (error: any) => {
           this.atividadesError = true;
-          this.pnotifyService.error(
-            'Ocurrio un error al cargar actividades.'
-          );
+          this.pnotifyService.error('Ocurrio un error al cargar actividades.');
         }
-      )
+      );
     /* this.sidebarService
       .getAtividades(idModulo)
       .pipe(
@@ -238,7 +235,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     if (this.tooltipDisabled === false) {
       const tooltip = document.body.querySelectorAll('.sidebar-navbar-tooltip');
       if (tooltip.length > 0) {
-        tooltip.forEach(element => {
+        tooltip.forEach((element) => {
           element.classList.add('d-none');
         });
       }
@@ -269,4 +266,4 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.clickEventHandler();
     }
   }
-}
+} 

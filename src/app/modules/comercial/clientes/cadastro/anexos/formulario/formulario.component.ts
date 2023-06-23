@@ -62,7 +62,7 @@ export class ComercialClientesCadastroAnexosFormularioComponent
   possuiOutros: boolean = false;
   possuiIdentificacao: boolean = false;
   possuiComprovanteEndereco: boolean = false;
-    
+
   tableConfigAnexos: Partial<CustomTableConfig> = {
     fixedHeader: false,
     bodyHeight: 230,
@@ -85,7 +85,7 @@ export class ComercialClientesCadastroAnexosFormularioComponent
     }
   ];
 
-  
+
 
   tiposAnexoJ: any = [
     {
@@ -103,7 +103,7 @@ export class ComercialClientesCadastroAnexosFormularioComponent
       id: 3,
       descricao: 'Sintegra',
       tipoAnexo: 'Sintegra'
-    }, 
+    },
     {
       id: 4,
       descricao: 'Serasa',
@@ -145,18 +145,18 @@ export class ComercialClientesCadastroAnexosFormularioComponent
       this.clientesService
         .getAnexos(params['id'])
         .subscribe((response: any) => {
-          
+
           this.codCliente = params['id'];
           console.log(response);
           if (response['success'] === true && response['data'].length > 0) {
             this.tipoCliente = response['data'][0]['tipoCliente'];
-            this.setFormValidators(response['data']);                     
+            this.setFormValidators(response['data']);
           } else {
             this.tipoCliente = response['tipoCliente'];
             this.clientesService.getDetalhes(this.codCliente).subscribe((response: any) => {
-              
-              this.tipoCliente = response['data']['tipoPessoa'];          
-              this.setFormValidators(null);                                                                       
+
+              this.tipoCliente = response['data']['tipoPessoa'];
+              this.setFormValidators(null);
             });
           }
         });
@@ -221,8 +221,8 @@ export class ComercialClientesCadastroAnexosFormularioComponent
 
           this.tiposAnexo = this.tiposAnexoF;
           this.setFormBuilder();
-        }                    
-      } else if (this.tipoCliente == 'J') {                         
+        }
+      } else if (this.tipoCliente == 'J') {
         for (let i = 0; i < anexos.length; i++) {
 
           if (anexos[i]['idTipo'] == 1) {
@@ -241,7 +241,7 @@ export class ComercialClientesCadastroAnexosFormularioComponent
         }
 
 
-        if (this.possuiSituacaoCadastral && 
+        if (this.possuiSituacaoCadastral &&
           this.possuiContratoSocial &&
           this.possuiImpostos &&
           this.possuiSintegra &&
@@ -250,7 +250,7 @@ export class ComercialClientesCadastroAnexosFormularioComponent
           this.handleAnexosUploaded();
         } else {
           // for (let i = 0; i < this.tiposAnexoJ.length; i++) {
-           
+
           //   if (
           //     this.possuiContratoSocial &&
           //     this.tiposAnexoJ[i]['id'] == 1
@@ -296,9 +296,9 @@ export class ComercialClientesCadastroAnexosFormularioComponent
 
           this.tiposAnexo = this.tiposAnexoJ;
           this.setFormBuilder();
-        }   
+        }
 
-        
+
       }
     } else {
       if (this.tipoCliente == 'F') {
@@ -322,7 +322,7 @@ export class ComercialClientesCadastroAnexosFormularioComponent
     this.form = this.formBuilder.group({
       tipoAnexo: ['', [Validators.required]],
       tipoCliente: this.tipoCliente,
-      codCliente: this.codCliente, 
+      codCliente: this.codCliente,
       anexos: this.formBuilder.array([])
     });
 
@@ -381,9 +381,9 @@ export class ComercialClientesCadastroAnexosFormularioComponent
     this.pnotifyService.error('Erro no upload do anexo. Tente novamente!');
     this.cadastroService.onNotifyLoaded(false);
   }
- 
+
   // Formulário Preenchido para edição ou novo formulário
-  
+
   getAnexos(codCliente: number) {
     this.loaderNavbar = true;
     this.showAnexos = false;
@@ -455,28 +455,28 @@ export class ComercialClientesCadastroAnexosFormularioComponent
     reader.onload = () => {
         const fd = new FormData();
         fd.append('file', files[0]);
-        this.formData.push(fd);    
-        this.anexos.push(      
+        this.formData.push(fd);
+        this.anexos.push(
           this.formBuilder.group({
             nomeAnexo: [files[0]['name']],
             linkAnexo: [reader.result]
           })
-        );        
+        );
         console.log(this.anexos);
-        
+
         if (this.showAnexos === false) {
           this.showAnexos = true;
         }
-    };      
+    };
   }
 
   onPostAnexos(data: any): void {
-    
+
 
     /* const id = this.form.value.codMaterial; */
     this.formData.forEach((item) => {
         data = data;
-       this.clientesService       
+       this.clientesService
         .uploadAnexo(data)
         .pipe(
           finalize(() => {
@@ -485,7 +485,7 @@ export class ComercialClientesCadastroAnexosFormularioComponent
         )
         .subscribe({
         next: (response: JsonResponse) => {
-          if (response.hasOwnProperty('success')) {          
+          if (response.hasOwnProperty('success')) {
           this.pnotifyService.success();
           this.location.back();
           }
@@ -560,7 +560,7 @@ export class ComercialClientesCadastroAnexosFormularioComponent
           tipoAnexo = this.tiposAnexo[i]['tipoAnexo'];
         }
       }
-      
+
       this.onPostAnexos(this.form.value);
 
     } else {
@@ -569,7 +569,7 @@ export class ComercialClientesCadastroAnexosFormularioComponent
   }
 
 
-  
+
   navegarAnexo(anexo) {
     this.router
       .navigate([], {
@@ -581,7 +581,7 @@ export class ComercialClientesCadastroAnexosFormularioComponent
   }
 
 
-  
+
   confirmDelete(): any {
     return this.confirmModalService.showConfirm(
       'delete',

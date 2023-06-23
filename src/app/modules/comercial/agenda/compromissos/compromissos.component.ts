@@ -30,6 +30,7 @@ import { DateService } from 'src/app/shared/services/core/date.service';
 // Interfaces
 
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
+import { userInfo } from 'os';
 export interface Compromisso {
   id: string;
   color: {
@@ -99,6 +100,9 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   // ...
   // estado: number;
   // ...
+
+  switchEdit: boolean;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -110,6 +114,7 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
     private dateService: DateService
   ) { }
 
+
   ngOnInit(): void {
     this.registrarAcesso();
     this.getPerfil();
@@ -119,6 +124,11 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   .pipe(takeUntil(this.destroy$))
   .subscribe(() => {
   this.fetchEvents();
+  if (this.user.info.matricula == 1) {
+    this.switchEdit = true;
+  } else {
+    this.switchEdit = false;
+  }
 });
 
 
@@ -201,6 +211,7 @@ ngOnDestroy(): void {
       return false;
     }
   }
+
 
   dataFilter(event: any): void {
     console.log(event)
@@ -302,7 +313,7 @@ ngOnDestroy(): void {
             idVendedor: this.idVendedor,
             nomeEscritorio: this.nomeEscritorio,
             nomeVendedor: this.nomeVendedor,
-            
+
           };
         }
       });

@@ -191,10 +191,10 @@
             </th>
             <th scope="col" class="hover" [hidden]="compressedTable" width="4%"></th>
             <th scope="col" class="hover" [hidden]="compressedTable" width="4%"></th>
-          </tr>  
+          </tr>
         </ng-template>
         <ng-template #tbody let-tbody>
-          <tr *ngFor="let item of dados | orderBy: key : reverse | slice: begin : end; let i = index" 
+          <tr *ngFor="let item of dados | orderBy: key : reverse | slice: begin : end; let i = index"
           [ngClass]="item.select ? 'bg-success' : '' " >
             <td class="text-truncate text-center" [ngClass]="{
               'border-black' : item.ID_SITU_CADA_NIVE_ESTO == 1,
@@ -232,7 +232,7 @@
                   type="button"
                   class="btn-icon-sm"
                   (click)="openTab(item)"
-                  tooltip="Detalhes"
+                  tooltip="Detalles"
                 >
                   <i class="fas fa-search"></i>
                 </button>
@@ -247,7 +247,7 @@
         <button type="button" class="btn-icon close position-absolute" (click)="onCloseTabs()">
           <i class="fas fa-times"></i>
         </button>
-        <tab heading="Detalhes">
+        <tab heading="Detalles">
           <div class="border-right border-left border-bottom border-top px-3 pt-3" style="overflow: auto; height: 380px;">
             <custom-table *ngIf="loadingDetalhes">
               <ng-template #thead let-thead>

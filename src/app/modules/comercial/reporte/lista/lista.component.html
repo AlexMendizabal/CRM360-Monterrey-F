@@ -65,16 +65,16 @@
               <option *ngFor="let estado of estados" [value]="estado.id">{{ estado.nombre }}</option>
             </select>
           </div>
-          
-          
+
+
         </div>
         <div class="form-row">
           <!-- Agrega aquí más campos de filtrado avanzado si es necesario -->
         </div>
       </form>
     </advanced-filter>
-    
-    <div class="row mt-3">
+
+    <div class="row mt-6">
       <div [ngClass]="{'col-12': !showDetailPanel, 'col-7 pr-0': showDetailPanel}">
         <custom-table [config]="tableConfig">
           <ng-template #thead let-thead>
@@ -144,9 +144,9 @@
           </pagination>
         </div>
       </div>
-      <div class="col-5" [hidden]="!showDetailPanel">
+      <div class="col-md-5" [hidden]="!showDetailPanel">
         <div class="sticky-top" style="max-height: 400px; overflow-y: auto;">
-          <detail-panel>              
+          <detail-panel>
             <div class="border-right border-left border-bottom px-3 pt-3">
               <div *ngIf="dadosCadastraisLoaded && !dadosCadastraisEmpty">
                 <custom-table [config]="tableConfig">
@@ -165,12 +165,9 @@
                         (click)="setOrderByclinte('sucursal')">
                         <thead-sorter value="Sucursal" [active]="orderBy == 'sucursal'" [sort]="orderType"></thead-sorter>
                       </th>
-                      <th
-                        scope="col"
-                        class="hover"
-                        (click)="setOrderByclinte('vendedor')">
-                        <thead-sorter value="Nombre del Promotor" [active]="orderBy == 'vendedor'" [sort]="orderType"></thead-sorter>
-                      </th>                     
+                      <th scope="col" class="hover">
+                        <thead-sorter value="Nombre de Vendedor"></thead-sorter>
+                      </th>
                       <th scope="col" class="hover">
                         <thead-sorter value="Titulo"></thead-sorter>
                       </th>

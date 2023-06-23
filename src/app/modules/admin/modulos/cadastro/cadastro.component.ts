@@ -32,7 +32,7 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
   styleUrls: ['./cadastro.component.scss']
 })
 export class AdminModulosCadastroComponent implements OnInit {
-  
+
   @ViewChild('childModal', { static: false }) childModal: ModalDirective;
 
   appTitle = "Cadastro";
@@ -101,7 +101,7 @@ export class AdminModulosCadastroComponent implements OnInit {
   }
 
   onActivatedRoute(){
-    
+
     let id = this.activatedRoute.snapshot.params?.id;
 
     if(id == undefined){
@@ -109,7 +109,7 @@ export class AdminModulosCadastroComponent implements OnInit {
       return;
     }
 
-    this.getModulo(id);        
+    this.getModulo(id);
 
   }
 
@@ -141,9 +141,9 @@ export class AdminModulosCadastroComponent implements OnInit {
   }
 
   onSave() {
-    
+
     this.loadingNavBar = true;
-    
+
     let params = this.form.value;
 
     this.service
@@ -176,10 +176,12 @@ export class AdminModulosCadastroComponent implements OnInit {
           this.icones = response.body['icones'];
         }
       });
+      console.log()
+      console.log(this.getIcones)
   }
 
   getModulo(id){
-    
+
     this.loading = true;
 
     this.service
@@ -199,4 +201,7 @@ export class AdminModulosCadastroComponent implements OnInit {
         }
       )
   }
+
+
 }
+
