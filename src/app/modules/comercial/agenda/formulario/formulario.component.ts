@@ -923,8 +923,7 @@ export class ComercialAgendaFormularioComponent
         }
       });
   }
-  filtrovendedor(): void {
-    
+  filtrovendedor(): void {    
     console.log(this.form.value.promotor)
     var params = this.form.value.promotor
     this.agendaService.reporteAgenda(params);
