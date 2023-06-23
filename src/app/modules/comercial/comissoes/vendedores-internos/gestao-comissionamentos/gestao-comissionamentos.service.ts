@@ -47,7 +47,7 @@ export class ComercialComissoesVendedoresInternosGestaoComissionamentosService {
         take(1),
         retry(2)
         );
-  } 
+  }
 
   getPermissoesAcesso(): Observable<Object | JsonResponse> {
     return this.http

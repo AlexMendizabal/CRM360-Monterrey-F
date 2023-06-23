@@ -48,7 +48,7 @@
     "ng-brazil": "^1.4.7",
     "ng2-currency-mask": "^5.3.1",
     "ng2-file-upload": "^1.4.0",
-    "ngx-bootstrap": "^5.3.2",
+    "ngx-bootstrap": "^5.6.2",
     "ngx-filter-pipe": "^2.1.2",
     "ngx-order-pipe": "^2.0.4",
     "ngx-perfect-scrollbar": "^8.0.0",
@@ -90,6 +90,6 @@
   "prettier": {
     "singleQuote": true,
     "jsxBracketSameLine": true,
-    "eslintIntegration": false
-  }
+    "eslintIntegration":false
+}
 }

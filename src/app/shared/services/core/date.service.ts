@@ -7,7 +7,7 @@ export class DateService {
   months: Array<string> = [
     'Enero',
     'Febrero',
-    'Marzon',
+    'Marzo',
     'Abril',
     'Mayo',
     'Junio',

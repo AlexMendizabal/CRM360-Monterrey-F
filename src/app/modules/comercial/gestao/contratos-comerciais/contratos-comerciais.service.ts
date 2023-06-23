@@ -70,7 +70,7 @@ export class ComercialGestaoContratosComerciaisService {
   save(record: any, action: string): Observable<Object | JsonResponse> {
 
     if (action === 'update') {
- 
+
       return this.updateContrato(record);
     }
 

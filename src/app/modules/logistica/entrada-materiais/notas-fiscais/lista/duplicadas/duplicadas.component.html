@@ -10,7 +10,7 @@
           >
             <option value="1">Lotes Justificados</option>
             <option value="0">Lotes não Justificados</option>
-            <option value="">Exibir Todos</option>
+            <option value="">Exhibir Todos</option>
           </select>
         </div>
         <div class="form-group col-3">
@@ -34,7 +34,7 @@
               formControlName="pesquisa"
               >
               <div class="input-group-append">
-                <span 
+                <span
                   container="body"
                   placement ="left"
                 >
@@ -249,10 +249,10 @@
           <div class="form-row justify-content-center">
             <div class="form-group col pl-0">
               <label for="DS_OBSE" >Descrição:</label>
-              <textarea 
-                class="form-control" 
-                id="DS_OBSE" 
-                formControlName="DS_OBSE" 
+              <textarea
+                class="form-control"
+                id="DS_OBSE"
+                formControlName="DS_OBSE"
                 rows="3"
                 [ngClass]="onFieldError('DS_OBSE')"
                 >
@@ -262,8 +262,8 @@
           </div>
         </form>
         <div  class="form-row justify-content-center text-center" >
-          <button 
-            type="button" 
+          <button
+            type="button"
             class="btn btn-default btn-lg m-2"
             (click)="changeType()"
             [disabled]="formLotesDuplicados.valid === false"

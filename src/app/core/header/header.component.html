@@ -6,12 +6,21 @@
       <div class="spinner-border"></div>
     </li>
     <li class="d-flex mr-2">
-      <span class="my-auto version">Version.1.0.22</span>
+      <span class="my-auto version">Version 1.0.27</span>
     </li>
     <li class="d-flex mr-2">
-      <img src="/assets/images/logo/logo-branco.png" height="22" class="my-auto">
+      <img
+        src="/assets/images/logo/logo-branco.png"
+        height="22"
+        class="my-auto"
+      />
     </li>
-    <li class="nav-item" placement="left" tooltip="Módulos" *ngIf="checkTipoAcessoUser()">
+    <li
+      class="nav-item"
+      placement="left"
+      tooltip="Módulos"
+      *ngIf="checkTipoAcessoUser()"
+    >
       <div class="btn-group" dropdown>
         <button dropdownToggle type="button" class="nav-link">
           <i class="fas fa-th"></i>
@@ -19,7 +28,11 @@
         <ul *dropdownMenu id="dropdown-modulos" class="dropdown-menu left">
           <div *ngIf="modulosLoaded && !modulosError">
             <li *ngFor="let modulo of modulos">
-              <a class="dropdown-item" href="javascript:void(0)" (click)="onModulo(modulo)">
+              <a
+                class="dropdown-item"
+                href="javascript:void(0)"
+                (click)="onModulo(modulo)"
+              >
                 <i [class]="modulo.icone"></i>
                 <span>{{ modulo.nome | uppercase }}</span>
               </a>
@@ -44,16 +57,19 @@
         </ul>
       </div>
     </li>
-    <li class="nav-item" placement="bottom" tooltip="Reserva de Salas" *ngIf="checkTipoAcessoUser()" style="display: none;">
-      <a class="nav-link" [routerLink]="['/home/reserva-salas']">
-        <i class="fas fa-calendar-alt"></i>
-      </a>
-    </li>
-    <li class="nav-item" placement="bottom" tooltip="Contatos" *ngIf="checkTipoAcessoUser()" style="display: none;">
-      <a class="nav-link" [routerLink]="['/home/contatos']">
-        <i class="fas fa-id-card"></i>
-      </a>
-    </li>
+
+      <li class="nav-item" placement="bottom" tooltip="Reserva de Salas" *ngIf="checkTipoAcessoUser()" style="display: none;">
+        <a class="nav-link" [routerLink]="['/home/reserva-salas']">
+          <i class="fas fa-calendar-alt"></i>
+        </a>
+      </li>
+      <li class="nav-item" placement="bottom" tooltip="Contatos" *ngIf="checkTipoAcessoUser()" style="display: none;">
+        <a class="nav-link" [routerLink]="['/home/contatos']">
+          <i class="fas fa-id-card"></i>
+        </a>
+      </li>
+
+
     <li class="nav-item">
       <div class="btn-group" dropdown>
         <button dropdownToggle type="button" class="nav-link">
@@ -68,14 +84,22 @@
           </li>
           <li class="divider dropdown-divider"></li>
           <li>
-            <a class="dropdown-item" href="javascript:void(0)" (click)="openModal(template);">
+            <a
+              class="dropdown-item"
+              href="javascript:void(0)"
+              (click)="openModal(template)"
+            >
               <i class="fas fa-key"></i>
               <span>Cambiar la contraseña</span>
             </a>
           </li>
           <li class="divider dropdown-divider"></li>
           <li>
-            <a class="dropdown-item" href="javascript:void(0)" (click)="logout()">
+            <a
+              class="dropdown-item"
+              href="javascript:void(0)"
+              (click)="logout()"
+            >
               <i class="fas fa-sign-out-alt"></i>
               <span>SAIR</span>
             </a>

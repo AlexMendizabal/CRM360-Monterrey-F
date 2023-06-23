@@ -9,7 +9,7 @@
     }
   },
   "/app/*": {
-    "target": "https://crm360.monterrey.com.bo/app/",
+    "target": "https://crm360.monterrey.com.bo/api/app/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
