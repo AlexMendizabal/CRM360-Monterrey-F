@@ -3,13 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { take, retry } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-  // Resto del código del servicio
+// Resto del código del servicio
 
-  import { environment } from 'src/environments/environment';
-
-  @Injectable({
-    providedIn: 'root',
-  })
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +15,7 @@ export class ComercialAgendaService {
     return this.http.get(`${this.API}/getruta/${id_agenda}`).pipe(take(1), retry(2));
   }
 
-  private readonly API = `http://127.0.0.1:8000/comercial/agenda`;
+  private readonly API = `http:/127.0.0.1:8000/comercial/agenda`;
 
   constructor(protected http: HttpClient) { }
 
@@ -129,13 +125,5 @@ export class ComercialAgendaService {
       take(1),
       retry(2)
     );
-  }
-
-  getImagenes(id: any) {
-
-    return this.http.get(`${this.API}/getimagenes/${id}`).pipe(
-      take(1),
-      retry(2));
-
   }
 }

@@ -12,9 +12,9 @@ import { finalize } from 'rxjs/operators';
 // ngx-bootstrap
 import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
-import { esLocale } from 'ngx-bootstrap/locale';
+import { ptBrLocale } from 'ngx-bootstrap/locale';
 
-defineLocale('es', esLocale);
+defineLocale('pt-br', ptBrLocale);
 
 // Services
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
@@ -135,7 +135,7 @@ export class ComercialAgendaFormularioComponent
     private cotacoesService: ComercialCicloVendasCotacoesService,
     private ComercialVendedoresService: ComercialVendedoresService
   ) {
-    this.localeService.use('es');
+    this.localeService.use('pt-br');
     this.bsConfig = Object.assign(
       {},
       { containerClass: 'theme-dark-blue' },
@@ -538,7 +538,6 @@ export class ComercialAgendaFormularioComponent
 
   onFieldError(field: string): string {
     const control = this.form.get(field);
-
     if (this.onFieldInvalid(control)) {
       return 'is-invalid';
     }
@@ -549,6 +548,11 @@ export class ComercialAgendaFormularioComponent
   onFieldInvalid(control: AbstractControl): boolean {
     return control && control.invalid && (control.touched || control.dirty);
   }
+
+
+
+
+
 
 
   onFieldRequired(field: string): string {
@@ -676,12 +680,16 @@ export class ComercialAgendaFormularioComponent
       const inicio = this.dateService.convert2PhpDate(inicioData);
       const termino = this.dateService.convert2PhpDate(terminoData);
 
-      const observacaoUpperCase = formValue.observacao !== null && formValue.observacao !== undefined
-        ? formValue.observacao.toUpperCase()
-        : null;
+      const observacaoUpperCase =
+        formValue.observacao !== null && formValue.observacao !== undefined
+          ? formValue.observacao.toUpperCase()
+          : null;
 
       let formObj = {
         id: formValue.id,
+        color: {
+          primary: formValue.cor,
+        },
         codTitulo: formValue.codTitulo,
         codClient: formValue.cliente,
         idVendedor: formValue.promotor,
