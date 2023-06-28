@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 
-<<<<<<< HEAD
 @Injectable({
   providedIn: 'root',
 })
@@ -16,14 +15,9 @@ export class ComercialAgendaService {
     return this.http.get(`${this.API}/getruta/${id_agenda}`).pipe(take(1), retry(2));
   }
 
-  private readonly API = `http:/127.0.0.1:8000/comercial/agenda`;
-=======
-  @Injectable({
-    providedIn: 'root',
-  })
-  export class ComercialAgendaService {
+
     private readonly API = `http://127.0.0.1:8000/comercial/agenda`;
->>>>>>> origin/diego-local
+
 
   constructor(protected http: HttpClient) { }
 

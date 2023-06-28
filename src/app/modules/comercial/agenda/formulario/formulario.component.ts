@@ -12,9 +12,9 @@ import { finalize } from 'rxjs/operators';
 // ngx-bootstrap
 import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
-import { ptBrLocale } from 'ngx-bootstrap/locale';
+import { esLocale } from 'ngx-bootstrap/locale';
 
-defineLocale('pt-br', ptBrLocale);
+defineLocale('es', esLocale);
 
 // Services
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
@@ -138,7 +138,7 @@ export class ComercialAgendaFormularioComponent
     private cotacoesService: ComercialCicloVendasCotacoesService,
     private ComercialVendedoresService: ComercialVendedoresService
   ) {
-    this.localeService.use('pt-br');
+    this.localeService.use('es');
     this.bsConfig = Object.assign(
       {},
       { containerClass: 'theme-dark-blue' },

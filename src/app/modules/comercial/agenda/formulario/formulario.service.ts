@@ -15,12 +15,9 @@ import { JsonResponse } from 'src/app/models/json-response';
 @Injectable({
   providedIn: 'root',
 })
+
 export class ComercialAgendaFormularioService {
-<<<<<<< HEAD
-  private readonly API = `http:/127.0.0.1:8000/comercial/agenda/formulario`;
-=======
   private readonly API = `http://127.0.0.1:8000/comercial/agenda/formulario`;
->>>>>>> origin/diego-local
 
   constructor(
     protected http: HttpClient,

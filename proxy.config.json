@@ -9,11 +9,9 @@
     }
   },
   "/app/*": {
-<<<<<<< HEAD
-    "target": "http://127.0.0.1:8000",
-=======
+
     "target": "http://127.0.0.1:8000/app/",
->>>>>>> origin/diego-local
+
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,

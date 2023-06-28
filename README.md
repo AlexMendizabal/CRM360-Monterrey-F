@@ -4,12 +4,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development server
 
-<<<<<<< HEAD
-
-Run `ng serve` for a dev server. Navigate to `http://127.0.0.1:8000p will automatically reload if you change any of the source 
-=======
 Run `ng serve` for a dev server. Navigate to `http://127.0.0.1:8000/`. The app will automatically reload if you change any of the source files.
->>>>>>> origin/diego-local
 
 ## Code scaffolding
 
