@@ -15,7 +15,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialGestaoTabelaPrecosService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/gestao/tabela-precos`;
+  private readonly API = `http://127.0.0.1:8000/comercial/gestao/tabela-precos`;
 
   constructor(
     protected http: HttpClient,

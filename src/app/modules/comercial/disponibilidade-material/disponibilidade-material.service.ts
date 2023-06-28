@@ -15,7 +15,7 @@ import { DisponibilidadeMaterial } from './models/disponibilidade-material';
   providedIn: 'root'
 })
 export class ComercialDisponibilidadeMaterialService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/disponibilidade-material`;
+  private readonly API = `http://127.0.0.1:8000/comercial/disponibilidade-material`;
 
   constructor(
     protected http: HttpClient,

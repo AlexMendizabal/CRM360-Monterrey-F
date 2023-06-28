@@ -15,7 +15,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialKanbanPedidosService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/kanban/pedidos`;
+  private readonly API = `http://127.0.0.1:8000/comercial/kanban/pedidos`;
 
   constructor(
     protected http: HttpClient,

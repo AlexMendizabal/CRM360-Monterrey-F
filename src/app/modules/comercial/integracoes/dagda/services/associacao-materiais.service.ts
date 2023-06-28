@@ -12,8 +12,8 @@ import { Observable, forkJoin } from 'rxjs';
   providedIn: 'root',
 })
 export class ComercialIntegracoesServicosIntegracaoMateriaisComponent {
-  private readonly BASE_URL: string = `https://crm360.monterrey.com.bo/api`;
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial`;
+  private readonly BASE_URL: string = `http://127.0.0.1:8000/api`;
+  private readonly API = `http://127.0.0.1:8000/comercial`;
 
   constructor(
     private http: HttpClient,
