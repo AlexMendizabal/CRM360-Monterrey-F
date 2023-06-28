@@ -90,6 +90,6 @@
   "prettier": {
     "singleQuote": true,
     "jsxBracketSameLine": true,
-    "eslintIntegration": false
-  }
+    "eslintIntegration":false
+}
 }

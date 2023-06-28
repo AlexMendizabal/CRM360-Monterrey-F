@@ -134,5 +134,4 @@ export class ComercialAgendaService {
       retry(2));
 
   }
-
 }
