@@ -122,17 +122,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
             return;
           }
           this.atividadesError = false;
-          let data: object[] = response.body['data'];
-          //console.log({ ...response.body["data"] })
-          let idx1 = data.findIndex((val) => val['id'] === 89);
-          data.splice(idx1, 1);
-          let idx2 = data.findIndex((val) => val['id'] === 28);
-          data.splice(idx1, 1);
-          let idx3 = data.findIndex((val) => val['id'] === 30);
-          data.splice(idx3, 1);
-          let idx4 = data.findIndex((val) => val['id'] === 25);
-          data.splice(idx4, 1);
-
+          let data:object[] = response.body["data"];
+          console.log( {...response.body["data"]} )
+          let idx1 = data.findIndex((val) => val["id"] === 89)
+          data[idx1]["nome"] = "CICLO DE VENDAS"
+          let idx2 = data.findIndex((val) => val["id"] === 28)
+          data[idx2]["nome"] = "DASHBOARD DE VENDEDOR"
+          let idx3 = data.findIndex((val) => val["id"] === 30)
+          data[idx3]["nome"] = "STOCK"
+          let idx4 = data.findIndex((val) => val["id"] === 25)
+          data[idx4]["nome"] = "CADASTROS"
           let idx5 = data.findIndex((val) => val['id'] === 29);
           data[idx5]['nome'] = 'BÚSQUEDA DE CLIENTES';
 

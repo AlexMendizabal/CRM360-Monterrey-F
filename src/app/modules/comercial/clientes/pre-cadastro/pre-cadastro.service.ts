@@ -12,7 +12,11 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ComercialClientesPreCadastroService {
   private readonly BASE_URL: string = `http://127.0.0.1:8000`;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> origin/diego-local
   constructor(
     private vendedoresService: ComercialVendedoresService,
     private dadosFaturamentoService: ComercialClientesCadastroDadosFaturamentoFormularioService,

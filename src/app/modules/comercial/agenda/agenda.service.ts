@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 
+<<<<<<< HEAD
 @Injectable({
   providedIn: 'root',
 })
@@ -16,6 +17,13 @@ export class ComercialAgendaService {
   }
 
   private readonly API = `http:/127.0.0.1:8000/comercial/agenda`;
+=======
+  @Injectable({
+    providedIn: 'root',
+  })
+  export class ComercialAgendaService {
+    private readonly API = `http://127.0.0.1:8000/comercial/agenda`;
+>>>>>>> origin/diego-local
 
   constructor(protected http: HttpClient) { }
 
@@ -103,22 +111,21 @@ export class ComercialAgendaService {
       .pipe(take(1), retry(2));
   }
 
-  reporte(params: any) {
-    console.log(params);
-      return this.http.post(`${this.API}/reporte`, params ).pipe(
-        take(1),
-        retry(2)
-      );
-  }
-
-  reporte_cliente(params: any) {
-    console.log('entro432')
-    console.log(params);
-      return this.http.post(`${this.API}/reportecliente`, params ).pipe(
-        take(1),
-        retry(2)
-      );
-  }
+    reporte(params: any) {
+      console.log(params);
+        return this.http.post(`${this.API}/reporte`, params ).pipe(
+          take(1),
+          retry(2)
+        );
+      }
+    reporte_cliente(params: any) {
+      console.log('entro432')
+      console.log(params);
+        return this.http.post(`${this.API}/reportecliente`, params ).pipe(
+          take(1),
+          retry(2)
+        );
+      }
 
   getPosicionPromotor(id: any) {
     return this.http.get(`${this.API}/getruta/${id}`).pipe(

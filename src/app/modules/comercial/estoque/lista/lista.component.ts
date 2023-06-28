@@ -50,13 +50,13 @@ export class ComercialEstoqueListaComponent implements OnInit {
       routerLink: '/comercial/home',
     },
     {
-      descricao: 'Estoque',
+      descricao: 'STOCK',
     },
   ];
 
   subtitles: Array<Subtitles> = [
     {
-      text: 'Estoque suspenso',
+      text: 'Acciones suspendidas',
       color: 'red',
     },
   ];

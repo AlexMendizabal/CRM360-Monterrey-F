@@ -12,7 +12,11 @@ import { take } from 'rxjs/operators';
 })
 export class ComercialCadastroPainelCustosService {
    private readonly API = `http://127.0.0.1:8000/comercial/cadastros/painel-custos`;
+<<<<<<< HEAD
    /*private readonly API = `http://127.0.0.1:8000`*/
+=======
+   /*private readonly API = `http://127.0.0.1:8000`;*/
+>>>>>>> origin/diego-local
 
   constructor(protected http: HttpClient) {}
 
