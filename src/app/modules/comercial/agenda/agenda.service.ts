@@ -80,7 +80,7 @@ export class ComercialAgendaService {
 
   private finalizarCompromisso(record: any) {
     return this.http
-      .post(`${this.API}/compromiso/actualizar`, record)
+      .post(`${this.API}/compromisso/finalizar`, record)
       .pipe(take(1), retry(2));
   }
 
