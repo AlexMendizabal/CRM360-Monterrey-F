@@ -162,25 +162,7 @@
 
       </div>
 
-      <div class="form-row">
-
-        <div class="form-group col">
-
-          <label>Anexo</label>
-
-          <div *ngIf="!detalhes.anexo">
-
-            <img src="../../../assets/images/system-alerts/404.png" alt="Sin información"
-
-              style="width: 80px; height: 80px" />
-
-          </div>
-          <div *ngFor="let image of imagenes">
-            <img [src]="decodificarBase64(image.url_imagen)" style="width: 500px; height: 500px" />
-          </div>
-        </div>
-
-      </div>
+      
     </div>
 
     <div class="col-md-6">
