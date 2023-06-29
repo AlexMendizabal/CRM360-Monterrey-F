@@ -17,11 +17,7 @@ export class CorteDobraDashboardService {
 
   private readonly API_URL_MT: string = `http://127.0.0.1:8000`;
 
-<<<<<<< HEAD
-  //API_URL: string = 'http://127.0.0.1:8000
-=======
-  //API_URL: string = 'http://127.0.0.1:8000';
->>>>>>> origin/diego-local
+
   //API_URL_MT:string = '/api/';
 
   constructor(
