@@ -362,7 +362,16 @@
             </textarea>
           </div>
         </div>
-
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="imagen">Imagen</label>
+            <input type="file" id="imagen" (change)="onImageSelected($event)" >
+          </div>
+        </div>
+        <div *ngIf="previewImage">
+          <img [src]="previewImage" alt="Vista previa de la imagen" width="200">
+        </div>
+        
         <div class="form-row" *ngIf="action == 'finalizar'">
           <div class="form-group col">
             <label for="Obsfinalizar">Observación al finalizar</label>

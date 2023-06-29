@@ -1,10 +1,10 @@
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
-<app-header appTitle="Estoque">
+<app-header appTitle="Stock">
   <button
     type="button"
     (click)="onResetForm()">
-    Limpar
+    Limpiar
   </button>
   <button
     type="button"
@@ -32,10 +32,26 @@
               (change)="onChangeEmpresa($event.idEmpresa)"
               [ngClass]="onFieldError('empresa') + ' ' + onFieldRequired('empresa')">
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('empresa')" message="Empresa é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('empresa')" message="El campo empresa es obligatoria."></invalid-form-control>
           </div>
           <div class="form-group col-lg-3">
-            <label for="deposito">Depósito</label>
+            <label for="empresa">Sucursal</label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="empresas"
+              formControlName="empresa"
+              [virtualScroll]="true"
+              labelForId="empresa"
+              bindLabel="nomeEmpresa"
+              bindValue="idEmpresa"
+              (change)="onChangeEmpresa($event.idEmpresa)"
+              [ngClass]="onFieldError('empresa') + ' ' + onFieldRequired('empresa')">
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('empresa')" message="El campo sucursal es obligatoria"></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-3">
+            <label for="deposito">Almacén</label>
             <ng-select
               [searchable]="true"
               [clearable]="false"
@@ -48,10 +64,10 @@
               (change)="onChangeDeposito($event)"
               [ngClass]="onFieldError('deposito') + ' ' + onFieldRequired('deposito')">
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('deposito')" message="Depósito é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('deposito')" message="El campo Almacén es obligatoria"></invalid-form-control>
           </div>
           <div class="form-group col-lg-3">
-            <label for="linha">Linha</label>
+            <label for="linha">lineas</label>
             <select
               class="form-control"
               id="linha"
@@ -60,8 +76,11 @@
               <option *ngFor="let item of linhas" [value]="item.id">{{ item.descricao }}</option>
             </select>
           </div>
-          <div class="form-group col-lg-3">
-            <label for="classeMaterial">Classe</label>
+          
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-3 mb-0">
+            <label for="classeMaterial">Clase</label>
             <ng-select
               [searchable]="true"
               [clearable]="false"
@@ -74,17 +93,15 @@
               (change)="onChangeClasse($event)">
             </ng-select>
           </div>
-        </div>
-        <div class="form-row">
           <div class="form-group col-lg-3 mb-0">
-            <label for="estoqueDisponivel">Somente estoque disponível</label>
+            <label for="estoqueDisponivel">Sólo stock disponible</label>
             <select
               class="form-control"
               id="estoqueDisponivel"
               formControlName="estoqueDisponivel">
-              <option value="0">Exhibir todos</option>
-              <option value="1">Sim</option>
-              <option value="2">Não</option>
+              <option value="0">Mostrar todo</option>
+              <option value="1">Si</option>
+              <option value="2">No</option>
             </select>
           </div>
           <div class="form-group col-lg-3 mb-0">
@@ -95,15 +112,15 @@
               formControlName="codMaterial"
               (keydown.enter)="onFilter()">
           </div>
-          <div class="form-group col-lg-4 mb-0">
-            <label for="descMaterial">Descrição material</label>
+          <div class="form-group col-lg-3 mb-0">
+            <label for="descMaterial">Descripción del material</label>
             <input
               type="text"
               class="form-control"
               formControlName="descMaterial"
               (keydown.enter)="onFilter()">
           </div>
-          <div class="form-group col-lg-2 mb-0">
+          <!-- <div class="form-group col-lg-2 mb-0">
             <label for="registros">Registros</label>
             <select
               class="form-control"
@@ -115,7 +132,7 @@
               <option>200</option>
               <option>300</option>
             </select>
-          </div>
+          </div> -->
         </div>
       </form>
     </advanced-filter>
@@ -130,14 +147,14 @@
         <ng-template #thead let-thead>
           <tr>
             <th class="text-truncate" width="9%">Código</th>
-            <th class="text-truncate text-left" width="35%">Descrição</th>
-            <th class="text-truncate" width="4%">Un</th>
-            <th class="text-truncate" width="10%">Compra</th>
-            <th class="text-truncate" width="10%">Atual</th>
-            <th class="text-truncate" width="10%">Comprometido</th>
-            <th class="text-truncate" width="10%">Pedido</th>
-            <th class="text-truncate" width="10%">Disponível</th>
-            <th></th>
+            <th class="text-truncate text-left" width="35%">Descripción</th>
+            <th class="text-truncate" width="8%">Unidades</th>
+            <!-- <th class="text-truncate" width="10%">Compra</th> -->
+            <th class="text-truncate" >stock actual</th>
+            <th class="text-truncate" >Comprometido</th>
+            <!-- <th class="text-truncate" >Pedido</th> -->
+            <th class="text-truncate" >Disponible</th>
+            <!-- <th></th> -->
           </tr>
         </ng-template>
         <ng-template #tbody let-tbody>
@@ -158,11 +175,11 @@
               (click)="openModal(modalDetalhes, dado.descricao, dado.id, dado.estoqueSuspenso)">
               {{ dado.medida }}
             </td>
-            <td
+            <!-- <td
               class="hover"
               (click)="openModal(modalDetalhes, dado.descricao, dado.id, dado.estoqueSuspenso)">
               {{ dado.pedCompra | number:'1.3-3' }}
-            </td>
+            </td> -->
             <td
               class="font-weight-bold hover"
               (click)="openModal(modalDetalhes, dado.descricao, dado.id, dado.estoqueSuspenso)">
@@ -173,17 +190,17 @@
               (click)="openModal(modalDetalhes, dado.descricao, dado.id, dado.estoqueSuspenso)">
               {{ dado.estoqueComprometido | number:'1.3-3' }}
             </td>
-            <td
+            <!-- <td
               class="font-weight-bold hover"
               (click)="openModal(modalDetalhes, dado.descricao, dado.id, dado.estoqueSuspenso)">
               {{ dado.pedido | number:'1.3-3' }}
-            </td>
+            </td> -->
             <td
               class="font-weight-bold hover"
               (click)="openModal(modalDetalhes, dado.descricao, dado.id, dado.estoqueSuspenso)">
               {{ dado.estoqueDisponivel | number:'1.3-3' }}
             </td>
-            <td class="text-center">
+            <!-- <td class="text-center">
               <a
                 class="btn-icon-sm"
                 tooltip="Avise-me quando disponível"
@@ -192,11 +209,11 @@
                 target="_blank">
                 <i class="fas fa-bell"></i>
               </a>
-            </td>
+            </td> -->
           </tr>
         </ng-template>
       </custom-table>
-      <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && !dadosLoaded"></empty-result>
+      <empty-result message="No se ha encontrado información" *ngIf="dadosEmpty && !dadosLoaded"></empty-result>
       <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
         <pagination
           [maxSize]="maxSize"
@@ -225,7 +242,7 @@
   </div>
   <div class="modal-body">
     <tabset>
-      <tab heading="Estoque outras unidades" class="border-right border-left border-bottom">
+      <tab heading="Stock en otras unidades" class="border-right border-left border-bottom">
         <div class="px-3 pt-3">
           <div class="form-row" *ngIf="unidadesLoaded">
             <div class="form-group col-lg-3" *ngFor="let estoque of estoqueUnidades">
@@ -238,7 +255,7 @@
           </div>
         </div>
       </tab>
-      <tab heading="Pedidos de compra"  class="border-right border-left border-bottom" (selectTab)="onSelectPedidos()">
+      <!-- <tab heading="Pedidos de compra"  class="border-right border-left border-bottom" (selectTab)="onSelectPedidos()">
         <div class="p-3">
           <div class="d-flex justify-content-center mb-3" *ngIf="!pedidosCompraLoaded && !pedidosCompraEmpty">
             <div class="spinner-border text-dark"></div>
@@ -261,29 +278,29 @@
               </tr>
             </ng-template>
           </custom-table>
-          <empty-result message="Nenhuma informação encontrada" class="my-4" *ngIf="pedidosCompraEmpty && !pedidosCompraLoaded"></empty-result>
+          <empty-result message="No se ha encontrado información" class="my-4" *ngIf="pedidosCompraEmpty && !pedidosCompraLoaded"></empty-result>
 
         </div>
-      </tab>
-      <tab heading="Estoque comprometido" class="border-right border-left border-bottom" (selectTab)="onSelectComprometidos()">
+      </tab> -->
+      <tab heading="Stock comprometido" class="border-right border-left border-bottom" (selectTab)="onSelectComprometidos()">
         <div class="p-3">
           <div *ngIf="comprometidoLoaded">
             <div class="d-flex">
               <div class="legend blue">
                 <div class="square"></div>
-                <div class="text">ESTOQUE COMPROMETIDO</div>
+                <div class="text">STOCK COMPROMETIDO</div>
               </div>
             </div>
             <custom-table [config]="tableConfig" *ngIf="estoqueComprometido.length > 0 && !comprometidoEmpty">
               <ng-template #thead let-thead>
                 <tr>
                   <th>Pedido</th>
-                  <th>Data</th>
+                  <th>Fecha</th>
                   <th>Lote</th>
                   <th>Empresa</th>
                   <th>Cliente</th>
                   <th>Vendedor</th>
-                  <th>Qtde.</th>
+                  <th>Cant.</th>
                 </tr>
               </ng-template>
               <ng-template #tbody let-tbody>
@@ -304,13 +321,13 @@
               </ng-template>
             </custom-table>
           </div>
-          <empty-result message="Nenhuma informação encontrada" class="my-4" *ngIf="comprometidoEmpty && !comprometidoLoaded"></empty-result>
+          <empty-result message="No se ha encontrado información" class="my-4" *ngIf="comprometidoEmpty && !comprometidoLoaded"></empty-result>
           <div class="d-flex justify-content-center mb-3" *ngIf="!comprometidoLoaded && !comprometidoEmpty">
             <div class="spinner-border text-dark"></div>
           </div>
         </div>
       </tab>
-      <tab heading="Detalhamento por lote" class="border-right border-left border-bottom" (selectTab)="onSelectLote()">
+      <!-- <tab heading="Detalhamento por lote" class="border-right border-left border-bottom" (selectTab)="onSelectLote()">
         <div class="p-3">
           <custom-table *ngIf="detalhesLote.length > 0 && !loteEmpty">
             <ng-template #thead let-thead>
@@ -341,19 +358,19 @@
               </tr>
             </ng-template>
           </custom-table>
-          <empty-result message="Nenhuma informação encontrada" class="my-4" *ngIf="loteEmpty && !loteLoaded"></empty-result>
+          <empty-result message="No se ha encontrado información" class="my-4" *ngIf="loteEmpty && !loteLoaded"></empty-result>
           <div class="d-flex justify-content-center mb-3" *ngIf="!loteLoaded && !loteEmpty">
             <div class="spinner-border text-dark"></div>
           </div>
         </div>
-      </tab>
-      <tab heading="Estoque suspenso" class="border-right border-left border-bottom" (selectTab)="onSelectEstoqueSuspenso()" *ngIf="possuiLote">
+      </tab> -->
+      <tab heading="stock suspenso" class="border-right border-left border-bottom" (selectTab)="onSelectEstoqueSuspenso()" *ngIf="possuiLote">
         <div class="p-3">
           <custom-table *ngIf="detalhesSuspenso.length > 0 && suspensoLoaded">
             <ng-template #thead let-thead>
               <tr>
-                <th scope="col">Quantidade</th>
-                <th scope="col">Data</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Fecha</th>
               </tr>
             </ng-template>
             <ng-template #tbody let-tbody>
@@ -363,7 +380,7 @@
               </tr>
             </ng-template>
           </custom-table>
-          <empty-result message="Nenhuma informação encontrada" class="my-4" *ngIf="suspensoEmpty && !suspensoLoaded"></empty-result>
+          <empty-result message="No se ha encontrado información" class="my-4" *ngIf="suspensoEmpty && !suspensoLoaded"></empty-result>
           <div class="d-flex justify-content-center mb-3" *ngIf="!suspensoLoaded && !suspensoEmpty">
             <div class="spinner-border text-dark"></div>
           </div>

@@ -9,38 +9,71 @@
   <!-- Nuevo botón -->
 
 </app-header>
+
 <app-body [breadCrumbTree]="breadCrumbTree">
+
   <div class="row justify-content-center">
+
     <div class="col-6">
+
       <div class="form-row">
+
         <div class="form-group col">
+
           <label>Título</label>
+
           <div>{{ detalhes.title }}</div>
+
         </div>
+
       </div>
+
       <div class="form-row">
+
         <div class="form-group col">
+
           <label>Cliente</label>
+
           <div *ngIf="!detalhes.client">Sin informacion</div>
+
           <div *ngIf="detalhes.client">{{ detalhes.client }}</div>
+
         </div>
+
       </div>
+
       <div class="form-row">
+
         <div class="form-group col-sm-6">
+
           <label>FORMA DE CONTACTO</label>
+
           <div *ngIf="!detalhes.formContactDesc">Sin informacion</div>
+
           <div *ngIf="detalhes.formContactDesc">
+
             {{ detalhes.formContactDesc }}
+
           </div>
+
         </div>
+
         <div class="form-row">
+
         </div>
+
       </div>
+
       <div class="form-row">
+
         <div class="form-group col">
+
           <label>Fecha</label>
+
           <div>{{ detalhes.fullDate | uppercase }}</div>
+
         </div>
+
       </div>
       <!-- <div class="form-row">
         <div class="form-group col">
@@ -55,33 +88,35 @@
         </div>
       </div> -->
       <div class="form-row">
+
         <div class="form-group col">
+
           <label>Observación</label>
+
           <div *ngIf="!detalhes.description">Sin informacion</div>
+
           <div *ngIf="detalhes.description" [innerHTML]="detalhes.description | uppercase"></div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col">
-          <label>Reprogramación</label>
-          <div *ngIf="!detalhes.motivo">No reprogramado</div>
-          <div *ngIf="detalhes.motivo" [innerHTML]="detalhes.motivo | uppercase"></div>
+
         </div>
 
       </div>
+
       <div class="form-row">
+
         <div class="form-group col">
-          <label>Observacion de Finalizado</label>
-          <div *ngIf="!detalhes.observacionFinal">Sin informacion</div>
-          <div *ngIf="detalhes.observacionFinal" [innerHTML]="detalhes.observacionFinal"></div>
+
+          <label>Reprogramación</label>
+
+          <div *ngIf="!detalhes.motivo">No reprogramado</div>
+
+          <div *ngIf="detalhes.motivo" [innerHTML]="detalhes.motivo | uppercase"></div>
+
         </div>
-        <div class="form-group col">
-          <label>Estado</label>
-          <div *ngIf="!detalhes.status">Registrado</div>
-          <div *ngIf="detalhes.status" [innerHTML]="detalhes.status | uppercase"></div>
-        </div>
+
       </div>
+
       <div class="form-row">
+
         <div class="form-group col">
           <label>Anexo</label>
           <div>
@@ -114,13 +149,31 @@
             </div>
           </ng-container>
         </div>
+
+        <div class="form-group col">
+
+          <label>Estado</label>
+
+          <div *ngIf="!detalhes.status">Registrado</div>
+
+          <div *ngIf="detalhes.status" [innerHTML]="detalhes.status | uppercase"></div>
+
+        </div>
+
       </div>
+
+      
     </div>
+
     <div class="col-md-6">
+
       <p class="marker-info"><strong> SEGUIMIENTO DEL PROMOTOR</strong></p>
       <div class="embed-responsive embed-responsive-16by9">
+
         <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="13" class="embed-responsive-item"
+
           (mapClick)="actualizarMarcador($event)">
+
           <agm-marker [latitude]="latitud" [longitude]="longitud" [label]="'C'">
             <agm-info-window [disableAutoPan]="true">
               <div class="marker-info-window">

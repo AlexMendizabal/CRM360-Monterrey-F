@@ -1,4 +1,4 @@
-  <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
   <app-header appTitle="reporte">
     <button (click)="exportToExcel()" class="btn btn-primary">
       Exportar a Excel
@@ -38,7 +38,7 @@
               <option *ngFor="let vendedor of vendedores" [value]="vendedor.id">{{ vendedor.nome }}</option>
             </select>
           </div>
-          
+      
           <div class="form-group col-lg-3">
             <label for="listaSucursales">Lista de sucursales</label>
             <select class="form-control custom-select" id="listaSucursales" formControlName="listaSucursales">
@@ -79,15 +79,24 @@
         <custom-table [config]="tableConfig">
           <ng-template #thead let-thead>
             <tr>
-              <th></th>
-              <th class="text-center hover">
-                <thead-sorter value="Cliente"></thead-sorter>
+              <th scope="col"></th>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('cliente')">
+                <thead-sorter value="Cliente" [active]="orderBy == 'cliente'" [sort]="orderType"></thead-sorter>
               </th>
-              <th scope="col" class="hover">
-                <thead-sorter value="Sucursal"></thead-sorter>
+              <th
+                scope="col"
+                class="text-center hover"
+                (click)="setOrderBy('sucursal')">
+                <thead-sorter value="Sucursal" [active]="orderBy == 'sucursal'" [sort]="orderType"></thead-sorter>
               </th>
-              <th scope="col" class="hover">
-                <thead-sorter value="Vendedor"></thead-sorter>
+              <th
+                scope="col"
+                class="hover"
+                (click)="setOrderBy('vendedor')">
+                <thead-sorter value="Nombre del Promotor" [active]="orderBy == 'vendedor'" [sort]="orderType"></thead-sorter>
               </th>
               <th scope="col" class="hover">
                 <thead-sorter value="Titulo"></thead-sorter>
@@ -99,7 +108,7 @@
           </ng-template>
           <ng-template #tbody let-tbody>
             <ng-container >
-              <tr *ngFor="let cliente of resuldata">
+              <tr *ngFor="let cliente of getPaginateData()">
                 <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover"></td>
                 <td class="text-center hover">{{ cliente.cliente }}</td>
                 <td class="hover">{{ cliente.sucursal }}</td>
@@ -143,15 +152,27 @@
                 <custom-table [config]="tableConfig">
                   <ng-template #thead let-thead>
                     <tr>
-                      <th></th>
-                      <th class="text-center hover">
-                        <thead-sorter value="Cliente"></thead-sorter>
+                      <th scope="col"></th>
+                      <th scope="col" class="hover">
+                        <thead-sorter value="fecha inicial"></thead-sorter>
                       </th>
                       <th scope="col" class="hover">
-                        <thead-sorter value="Sucursal"></thead-sorter>
+                        <thead-sorter value="fecha final"></thead-sorter>
+                      </th>
+                      <th
+                        scope="col"
+                        class="text-center hover"
+                        (click)="setOrderByclinte('cliente')">
+                        <thead-sorter value="Cliente" [active]="orderBy == 'cliente'" [sort]="orderType"></thead-sorter>
+                      </th>
+                      <th
+                        scope="col"
+                        class="text-center hover"
+                        (click)="setOrderByclinte('sucursal')">
+                        <thead-sorter value="Sucursal" [active]="orderBy == 'sucursal'" [sort]="orderType"></thead-sorter>
                       </th>
                       <th scope="col" class="hover">
-                        <thead-sorter value="Vendedor"></thead-sorter>
+                        <thead-sorter value="Promotor"></thead-sorter>
                       </th>
                       <th scope="col" class="hover">
                         <thead-sorter value="Titulo"></thead-sorter>
@@ -165,6 +186,8 @@
                     <ng-container>
                       <tr *ngFor="let cliente of resultcliente">
                         <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover"></td>
+                        <td class="hover">{{ cliente.fecha_inicio }}</td>
+                        <td class="hover">{{ cliente.fecha_fin }}</td>
                         <td class="text-center hover">{{ cliente.cliente }}</td>
                         <td class="hover">{{ cliente.sucursal }}</td>
                         <td class="hover">{{ cliente.vendedor }}</td>

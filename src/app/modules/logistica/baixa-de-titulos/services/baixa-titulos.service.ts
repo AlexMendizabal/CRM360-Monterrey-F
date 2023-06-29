@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 })
 export class LogisticaBaixaTitulosService {
 
-  private readonly API = `https://crm360.monterrey.com.bo/api`;
+  private readonly API = `http://127.0.0.1:8000/api`;
 
   constructor(
     private http: HttpClient
