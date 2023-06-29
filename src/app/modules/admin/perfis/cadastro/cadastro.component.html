@@ -17,10 +17,10 @@
         autocomplete="off"
         [hidden]="loading"
       >
-        <div class="mtc-title">Dados do perfil</div>
+        <div class="mtc-title">Datos de perfil</div>
         <div class="form-row">
           <div class="form-group col">
-            <label for="nome">Nome</label>
+            <label for="nome">Nombre</label>
             <input
               id="nome"
               type="text"
@@ -29,7 +29,7 @@
               placeholder="Digite..."
               [ngClass]="onFieldRequired('nome')"
             >
-            <invalid-form-control [show]="onFieldInvalid('nome')" message="Nome é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('nome')" message="El nombre es obligatorio."></invalid-form-control>
           </div>
         </div>
         <div class="form-row">
@@ -43,18 +43,18 @@
               placeholder="Digite..."
               [ngClass]="onFieldRequired('sigla')"
             >
-            <invalid-form-control [show]="onFieldInvalid('sigla')" message="Sigla é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('sigla')" message="La sigla es obligatoria."></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
-            <label for="situacao">Situação</label>
+            <label for="situacao">Situación</label>
             <select
               name="situacao"
               id="situacao"
               class="form-control"
               formControlName="situacao"
             >
-              <option value="1">Ativo</option>
-              <option value="0">Inativo</option>
+              <option value="1">Activo</option>
+              <option value="0">Inactivo</option>
             </select>
           </div>
         </div>
@@ -72,7 +72,7 @@
       <div [hidden]="atividadesAssociadasLoading">
         <div class="row mb-2 mt-4">
           <div class="col mt-auto">
-            <div class="mtc-title mb-0">Atividades associados ao perfil</div>
+            <div class="mtc-title mb-0">Actividades asociados al perfil</div>
           </div>
           <div class="col">
             <div class="d-flex justify-content-end">
@@ -81,7 +81,7 @@
                 class="btn btn-sm btn-outline-danger"
                 (click)="onRemoverAssociacao()">
                 <i class="fas fa-trash"></i>
-                <span>Limpar</span>
+                <span>Limpiar</span>
               </button>
             </div>
           </div>
@@ -102,7 +102,7 @@
                     </btn-icon>
                   </th>
                   <th scope="col" width="20%">Código</th>
-                  <th scope="col" width="70%">Descrição</th>
+                  <th scope="col" width="70%">Descripción</th>
                   <th scope="col" width="5%"></th>
                 </tr>
               </ng-template>
@@ -149,7 +149,7 @@
     <div class="col-lg-6 border-left">
       <div class="row mb-2">
         <div class="col mt-auto">
-          <div class="mtc-title mb-0">Pesquisa de Atividades</div>
+          <div class="mtc-title mb-0">Búsqueda de Actividades</div>
         </div>
         <div class="col">
           <div class="d-flex justify-content-end">
@@ -172,11 +172,11 @@
                 formControlName="buscarPor"
               >
                 <option value="id">Id</option>
-                <option value="nome" selected>Nome</option>
+                <option value="nome" selected>Nombre</option>
               </select>
             </div>
             <div class="form-group col-8">
-              <label>TERMO DE PESQUISA</label>
+              <label>TÉRMINO DE BÚSQUEDA</label>
               <div class="input-group">
                 <input
                   type="text"

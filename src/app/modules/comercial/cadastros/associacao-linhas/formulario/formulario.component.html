@@ -17,10 +17,10 @@
   <div class="row">
     <div class="col-lg-6">
       <form [formGroup]="form">
-        <div class="mtc-title">Dados da Linha</div>
+        <div class="mtc-title">Datos de línea</div>
         <div class="form-row">
           <div class="form-group col">
-            <label for="NM_LINH">Nome Linha</label>
+            <label for="NM_LINH">Nombre de línea</label>
             <input
               type="text"
               class="form-control"
@@ -37,7 +37,7 @@
         <div formArrayName="assocSetores">
           <div class="row mb-2">
             <div class="col mt-auto">
-              <div class="mtc-title mb-0">Setores associados a linha</div>
+              <div class="mtc-title mb-0">Sectores asociados a línea</div>
             </div>
             <div class="col">
               <div class="d-flex justify-content-end">
@@ -46,7 +46,7 @@
                   class="btn btn-sm btn-outline-danger"
                   (click)="onLimparAssociacoes()">
                   <i class="fas fa-trash"></i>
-                  <span>Limpar</span>
+                  <span>Limpiar</span>
                 </button>
               </div>
             </div>
@@ -91,7 +91,7 @@
     <div class="col-lg-6 border-left">
       <div class="row mb-2">
         <div class="col mt-auto">
-          <div class="mtc-title mb-0">Pesquisa de setores</div>
+          <div class="mtc-title mb-0">Búsqueda de sectores</div>
         </div>
         <div class="col">
           <div class="d-flex justify-content-end">
@@ -100,7 +100,7 @@
               class="btn btn-sm btn-outline-secondary"
               (click)="onFilterSetores()">
               <i class="fas fa-search"></i>
-              <span>Pesquisar</span>
+              <span>Buscar</span>
             </button>
           </div>
         </div>
@@ -132,7 +132,7 @@
       <div *ngIf="setoresLista.length > 0">
         <div class="row mb-2">
           <div class="col mt-auto">
-            <div class="mtc-title mb-0">Seleção de setores</div>
+            <div class="mtc-title mb-0">Selección de sectores</div>
           </div>
           <div class="col">
             <div class="d-flex justify-content-end">
@@ -162,7 +162,7 @@
                       (click)="onToggleAll()">
                     </btn-icon>
                   </th>
-                  <th scope="col" style="width: 95%">Setor de Atividade</th>
+                  <th scope="col" style="width: 95%">Sector de actividades</th>
                 </tr>
               </ng-template>
               <ng-template #tbody let-tbody>
