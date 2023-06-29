@@ -16,7 +16,10 @@ export class ComercialAgendaService {
   }
 
   private readonly API = `http://127.0.0.1:8000/comercial/agenda`;
-
+<<<<<<<<< Temporary merge branch 1
+>>>>>>>>> Temporary merge branch 2
+=========
+>>>>>>>>> Temporary merge branch 2
 
   constructor(protected http: HttpClient) { }
 

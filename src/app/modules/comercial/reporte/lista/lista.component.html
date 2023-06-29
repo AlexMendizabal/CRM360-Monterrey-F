@@ -1,4 +1,4 @@
-  <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
   <app-header appTitle="reporte">
     <button (click)="exportToExcel()" class="btn btn-primary">
       Exportar a Excel
@@ -153,6 +153,12 @@
                   <ng-template #thead let-thead>
                     <tr>
                       <th scope="col"></th>
+                      <th scope="col" class="hover">
+                        <thead-sorter value="fecha inicial"></thead-sorter>
+                      </th>
+                      <th scope="col" class="hover">
+                        <thead-sorter value="fecha final"></thead-sorter>
+                      </th>
                       <th
                         scope="col"
                         class="text-center hover"
@@ -166,7 +172,7 @@
                         <thead-sorter value="Sucursal" [active]="orderBy == 'sucursal'" [sort]="orderType"></thead-sorter>
                       </th>
                       <th scope="col" class="hover">
-                        <thead-sorter value="Nombre de Vendedor"></thead-sorter>
+                        <thead-sorter value="Promotor"></thead-sorter>
                       </th>
                       <th scope="col" class="hover">
                         <thead-sorter value="Titulo"></thead-sorter>
@@ -180,6 +186,8 @@
                     <ng-container>
                       <tr *ngFor="let cliente of resultcliente">
                         <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover"></td>
+                        <td class="hover">{{ cliente.fecha_inicio }}</td>
+                        <td class="hover">{{ cliente.fecha_fin }}</td>
                         <td class="text-center hover">{{ cliente.cliente }}</td>
                         <td class="hover">{{ cliente.sucursal }}</td>
                         <td class="hover">{{ cliente.vendedor }}</td>

@@ -15,7 +15,7 @@ export class CorteDobraDashboardService {
   private AnaliticoTransporte: boolean = false;
 
 
-  private readonly API_URL_MT: string = `http://127.0.0.1:8000`;
+  private readonly API_URL_MT: string = `http://127.0.0.1:8000/api`;
 
 
   //API_URL_MT:string = '/api/';

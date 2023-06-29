@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class LogisticaEntradaMateriaisService {
-  private readonly API = `http://127.0.0.1:8000`;
+  private readonly API = `http://127.0.0.1:8000/api`;
 
   constructor(protected http: HttpClient) {}
 

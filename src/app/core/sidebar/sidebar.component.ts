@@ -122,18 +122,37 @@ export class SidebarComponent implements OnInit, OnDestroy {
             return;
           }
           this.atividadesError = false;
-          let data:object[] = response.body["data"];
-          console.log( {...response.body["data"]} )
-          let idx1 = data.findIndex((val) => val["id"] === 89)
-          data[idx1]["nome"] = "CICLO DE VENDAS"
-          let idx2 = data.findIndex((val) => val["id"] === 28)
-          data[idx2]["nome"] = "DASHBOARD DE VENDEDOR"
-          let idx3 = data.findIndex((val) => val["id"] === 30)
-          data[idx3]["nome"] = "STOCK"
-          let idx4 = data.findIndex((val) => val["id"] === 25)
-          data[idx4]["nome"] = "CADASTROS"
-          let idx5 = data.findIndex((val) => val['id'] === 29);
-          data[idx5]['nome'] = 'BÚSQUEDA DE CLIENTES';
+          let data: object[] = response.body['data'];
+          console.log({ ...response.body["data"] })
+          // let idx1 = data.findIndex((val) => val['id'] === 89);
+          // data[idx1]['nome'] = 'Ciclo de Ventas';
+
+           //let idx2 = data.findIndex((val) => val['id'] === 28);
+           // [idx2]['nome'] = 'Dashboard de Vendedor';
+
+           //let idx3 = data.findIndex((val) => val['id'] === 30);
+          // data[idx3]['nome'] = 'Stock';
+
+           //let idx4 = data.findIndex((val) => val['id'] === 25);
+          // data[idx4]['nome'] = 'Registros';
+
+           //let idx5 = data.findIndex((val) => val['id'] === 29);
+          // data[idx5]['nome'] = 'BÚSQUEDA DE CLIENTES';
+
+           //let idx6 = data.findIndex((val) => val['id'] === 12);
+          // data[idx6]['nome'] = 'Actividades';
+
+           //let idx7 = data.findIndex((val) => val['id'] === 10);
+          // data[idx7]['nome'] = 'Modulos';
+
+           //let idx8 = data.findIndex((val) => val['id'] === 13);
+          // data[idx8]['nome'] = 'Perfiles';
+
+           //let idx9 = data.findIndex((val) => val['id'] === 11);
+          // data[idx9]['nome'] = 'Sub modulos';
+
+           //let idx10 = data.findIndex((val) => val['id'] === 21);
+          // data[idx10]['nome'] = 'Usuarios';
 
           this.atividades = data;
           this.routerLinkHome = data[0]['moduloRota'];

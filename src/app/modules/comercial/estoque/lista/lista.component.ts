@@ -196,7 +196,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
           }
         },
         error: (error: any) => {
-          this.handleSearchError('Ocorreu um erro ao carregar filtros.');
+          this.handleSearchError('Se ha producido un error al cargar los filtros.');
         }
       });
   }
@@ -314,7 +314,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
           }
         },
         error: (error: any) => {
-          this.handleSearchError('Erro ao carregar lista de materiais.');
+          this.handleSearchError('Error al cargar lista de materiales.');
         }
       });
   }
@@ -455,11 +455,11 @@ export class ComercialEstoqueListaComponent implements OnInit {
           this.estoqueUnidades = response.result;
           this.unidadesLoaded = true;
         } else {
-          this.pnotifyService.notice('Dados não encontrados.');
+          this.pnotifyService.notice('Datos no encontrados.');
         }
       },
       error: (error: any) => {
-        this.handleSearchError('Erro ao carregar estoque de outras unidades.');
+        this.handleSearchError('Error al cargar stock de otras unidades.');
       }
     });
   }
@@ -480,12 +480,12 @@ export class ComercialEstoqueListaComponent implements OnInit {
           this.totaisPedCompra = response.result.total;
           this.pedidosCompraLoaded = true;
         } else {
-          this.pnotifyService.notice('Dados não encontrados.');
+          this.pnotifyService.notice('Datos no encontrados.');
           this.pedidosCompraEmpty = true;
         }
       },
       error: (error: any) => {
-        this.handleSearchError('Erro ao carregar pedidos de compra.');
+        this.handleSearchError('Error al cargar los pedidos de compra.');
       }
     });
   }
@@ -506,7 +506,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
           this.totaisComprometido = response.result.total;
           this.comprometidoLoaded = true;
         } else {
-          this.pnotifyService.notice('Dados não encontrados.');
+          this.pnotifyService.notice('Datos no encontrados.');
           this.comprometidoEmpty = true;
         }
       },
@@ -531,7 +531,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
           this.totaisLote = response.result.total;
           this.loteLoaded = true;
         } else {
-          this.pnotifyService.notice('Dados não encontrados.');
+          this.pnotifyService.notice('Datos no encontrados.');
           this.loteEmpty = true;
         }
       },
@@ -556,7 +556,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
           this.detalhesSuspenso = response.result;
           this.suspensoLoaded = true;
         } else {
-          this.pnotifyService.notice('Dados não encontrados.');
+          this.pnotifyService.notice('Datos no encontrados.');
           this.suspensoEmpty = true;
         }
       },
