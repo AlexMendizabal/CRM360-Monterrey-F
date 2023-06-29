@@ -88,20 +88,22 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
             this.setFormFilter();
             this.escritorios = response[0]['result'];
 
-            console.log(this.escritorios)
-            this.escritorios[0] =
-            {
-              id: 0,
-              nome: 'TODOS',
-              idEscritorio: 0
-            }
+            //console.log(this.escritorios)
+            // if (this.escritorios[0]>0){
+              // this.escritorios[0] =
+              // {
+              // id: 0,
+              // nome: 'todos',
+              // idEscritorio: 0
+              // }
+            //}
 
-            this.escritorios.splice(1, 2);
+            //this.escritorios.splice(1, 2);
             if (this.escritorios.length > 1 && this.showAll === true) {
-              this.escritorios.unshift({
-                id: 0,
-                nome: 'TODAS LAS SUCURSALES'
-              });
+                // this.escritorios.unshift({
+                //   id: 0,
+                //   nome: 'TODAS LAS SUCURSALES'
+                // });
             }
           } else {
             this.handleLoadDependenciesError();
@@ -231,19 +233,26 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
   }
 
   onEscritorioChange(escritorio: any) {
-    console.log(escritorio);
-    this.vendedoresService.getVendedoresSucursal(escritorio).subscribe(
-      (response: any) => {
-        console.log(response)
-        if (response['success'] === true) {
-          this.setFormFilter();
-          this.filteredVendedores = response['data'];
+    // alert(1)
+    //console.log(escritorio);
+    //if (escritorio> 0){
+      this.vendedoresService.getVendedoresSucursal(escritorio).subscribe(
+        (response: any) => {
+          //console.log(response)
+          if (response['success'] === true) {
+            //this.setFormFilter();
+            this.filteredVendedores = response['data'];
 
-        } else {
-          this.handleLoadDependenciesError();
-        }
-      },
-    )
+          } else {
+            this.handleLoadDependenciesError();
+          }
+        },
+      )
+    //}
+    // //else{
+    //   this.vendedoresService.getVendedoresSucursal(escritorio.idEscritorio)
+
+    // }
     this.form.get('idVendedor').setValue(0);
   }
 

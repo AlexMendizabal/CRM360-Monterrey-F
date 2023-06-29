@@ -23,6 +23,7 @@ export class ComercialHomeComponent implements OnInit {
 
   compromissos: any = [];
   compromissosLoaded = false;
+  idVendedor: any;
 
   constructor(
     private authService: AuthService,
@@ -36,8 +37,14 @@ export class ComercialHomeComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.authService.getCurrentUser().info;
+    if(this.user.idVendedor > 0 && this.user.idVendedor != 88){
+      this.idVendedor= this.user.idVendedor;
+    }else{
+      this.idVendedor= '';
+    }
+   // console.log(this.user.idVendedor);
     this.getPerfil();
-    this.getCompromissos();
+    this.getCompromissos(this.idVendedor);
     this.titleService.setTitle('Home');
   }
 
@@ -62,13 +69,14 @@ export class ComercialHomeComponent implements OnInit {
       });
   }
 
-  getCompromissos() {
+  getCompromissos(idVendedor) {
     const d = new Date();
     const today = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 
     const params = {
       inicio: today,
-      fim: today
+      fim: today,
+      idVendedor: idVendedor
     };
 
     this.agendaService
@@ -78,6 +86,7 @@ export class ComercialHomeComponent implements OnInit {
           this.compromissosLoaded = true;
         })
       )
+
       .subscribe({
         next: (response: any) => {
           if (response['responseCode'] === 200) {
@@ -89,7 +98,9 @@ export class ComercialHomeComponent implements OnInit {
             'Ocurrio un problema al cargar las citas.'
           );
         }
+
       });
+      //console.log(this.agendaService);
   }
 
   handleDiaCompromisso(data: string) {

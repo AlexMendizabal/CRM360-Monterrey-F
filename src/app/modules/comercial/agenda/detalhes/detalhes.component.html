@@ -84,11 +84,35 @@
       <div class="form-row">
         <div class="form-group col">
           <label>Anexo</label>
-          <div *ngIf="!detalhes.anexo">
-            <img src="../../../assets/images/system-alerts/404.png" alt="Sin información"
-              style="width: 80px; height: 80px" />
+          <div>
+            <ng-container *ngIf="imagenes.length === 0">
+              <img src="../../../assets/images/system-alerts/404.png" alt="Sin información" style="width: 80px; height: 80px" />
+            </ng-container>
           </div>
-          <div *ngIf="detalhes.anexo">{{ detalhes.anexo }}</div>
+          <ng-container *ngIf="imagenes.length > 0">
+            <div class="row">
+              <div *ngFor="let image of imagenes" class="col">
+                <div class="row image-container">
+                  <a (click)="abrirModal(modalTemplate)">
+                    <img src="data:image/jpeg;base64,{{image.url_imagen}}" class="m-3" style="width: 80px; height: 80px;" />
+                  </a>
+                </div>
+                <ng-template #modalTemplate>
+                  <div class="modal-container">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Imagen en tamaño completo</h4>
+                      <button type="button" class="close" aria-label="Close" (click)="modalRef?.hide()">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <img class="modal-image" src="data:image/jpeg;base64,{{image.url_imagen}}" />
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </ng-container>
         </div>
       </div>
     </div>

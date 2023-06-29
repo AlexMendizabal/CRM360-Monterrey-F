@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { take, switchMap } from 'rxjs/operators';
+import { map, toArray, take, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { from } from 'rxjs';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 // Services
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { DateService } from 'src/app/shared/services/core/date.service';
@@ -15,6 +17,7 @@ import { AuthService } from 'src/app/shared/services/core/auth.service';
 import { Injectable } from '@angular/core';
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
+import { array } from '@amcharts/amcharts4/core';
 
 @Component({
   selector: 'comercial-agenda-detalhes',
@@ -25,6 +28,7 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 export class ComercialAgendaDetalhesComponent implements OnInit {
 latitud: any;
 longitud: any;
+modalRef: BsModalRef | undefined;
 actualizarMarcador($event: any) {
 throw new Error('Method not implemented.');
 }
@@ -50,6 +54,8 @@ throw new Error('Method not implemented.');
     status: null
   };
 
+  imagenes: any = [];
+  img: any = [];
   //mostrarElemento: boolean = true;
   //ocultarFormulario(){
    // this.mostrarElemento = false;
@@ -71,7 +77,8 @@ throw new Error('Method not implemented.');
     private agendaService: ComercialAgendaService,
     private confirmModalService: ConfirmModalService,
     private pnotifyService: PNotifyService,
-    private titleService: TitleService
+    private titleService: TitleService,
+    private modalService: BsModalService
   ) {
 
     this.pnotifyService.getPNotify();
@@ -107,8 +114,15 @@ throw new Error('Method not implemented.');
     this.detalhes.observacionFinal = detalhes.observacionFinal;
     this.latitud = detalhes.latitud;
     this.longitud = detalhes.longitud;
-    this.filtrarPosiciones(detalhes.id)
+    this.detalhes.url_web = detalhes.url_web;
 
+    this.filtrarPosiciones(detalhes.id)
+    this.imagenesAnexo(detalhes.id)
+    console.log(this.imagenesAnexo(detalhes.id));
+
+
+
+    console.log(detalhes);
     this.detalhes.description =
 
       detalhes.description != null
@@ -213,6 +227,45 @@ throw new Error('Method not implemented.');
         this.posiciones = response.result;
       }
     )
+  }
+
+  imagenesAnexo(id_agenda: any) {
+    this.agendaService.getImagenes(id_agenda).subscribe(
+      (response: any) => {
+        this.imagenes = response.result;
+      },
+      (error: any) => {
+        console.error('Error al obtener las imágenes:', error);
+      }
+    );
+  }
+
+
+  // decodeBase64Image(base64Image: string): string{
+  //   const decodedString = atob(base64Image);
+  //   return decodedString;
+  // }
+
+  decodificarBase64(base64String: string): string {
+    const binaryString = window.atob(base64String);
+    const byteArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      byteArray[i] = binaryString.charCodeAt(i);
+    }
+    const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Cambia 'image/png' al tipo de imagen correcto si no es PNG
+    return URL.createObjectURL(blob);
+  }
+
+  mostrarImagen(urlImagen: string) {
+    this.abrirVentana("data:image/jpeg;base64;"+urlImagen);
+  }
+
+  abrirVentana(urlImagen: string) {
+    window.open(urlImagen, "_blank");
+  }
+
+  abrirModal(template: any) {
+    this.modalRef = this.modalService.show(template);
   }
 
 }
