@@ -79,24 +79,15 @@
         <custom-table [config]="tableConfig">
           <ng-template #thead let-thead>
             <tr>
-              <th scope="col"></th>
-              <th
-                scope="col"
-                class="text-center hover"
-                (click)="setOrderBy('cliente')">
-                <thead-sorter value="Cliente" [active]="orderBy == 'cliente'" [sort]="orderType"></thead-sorter>
+              <th></th>
+              <th class="text-center hover">
+                <thead-sorter value="Cliente"></thead-sorter>
               </th>
-              <th
-                scope="col"
-                class="text-center hover"
-                (click)="setOrderBy('sucursal')">
-                <thead-sorter value="Sucursal" [active]="orderBy == 'sucursal'" [sort]="orderType"></thead-sorter>
+              <th scope="col" class="hover">
+                <thead-sorter value="Sucursal"></thead-sorter>
               </th>
-              <th
-                scope="col"
-                class="hover"
-                (click)="setOrderBy('vendedor')">
-                <thead-sorter value="Nombre del Promotor" [active]="orderBy == 'vendedor'" [sort]="orderType"></thead-sorter>
+              <th scope="col" class="hover">
+                <thead-sorter value="Vendedor"></thead-sorter>
               </th>
               <th scope="col" class="hover">
                 <thead-sorter value="Titulo"></thead-sorter>
@@ -108,7 +99,7 @@
           </ng-template>
           <ng-template #tbody let-tbody>
             <ng-container >
-              <tr *ngFor="let cliente of getPaginateData()">
+              <tr *ngFor="let cliente of resuldata">
                 <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover"></td>
                 <td class="text-center hover">{{ cliente.cliente }}</td>
                 <td class="hover">{{ cliente.sucursal }}</td>
@@ -152,27 +143,15 @@
                 <custom-table [config]="tableConfig">
                   <ng-template #thead let-thead>
                     <tr>
-                      <th scope="col"></th>
-                      <th scope="col" class="hover">
-                        <thead-sorter value="fecha inicial"></thead-sorter>
+                      <th></th>
+                      <th class="text-center hover">
+                        <thead-sorter value="Cliente"></thead-sorter>
                       </th>
                       <th scope="col" class="hover">
-                        <thead-sorter value="fecha final"></thead-sorter>
-                      </th>
-                      <th
-                        scope="col"
-                        class="text-center hover"
-                        (click)="setOrderByclinte('cliente')">
-                        <thead-sorter value="Cliente" [active]="orderBy == 'cliente'" [sort]="orderType"></thead-sorter>
-                      </th>
-                      <th
-                        scope="col"
-                        class="text-center hover"
-                        (click)="setOrderByclinte('sucursal')">
-                        <thead-sorter value="Sucursal" [active]="orderBy == 'sucursal'" [sort]="orderType"></thead-sorter>
+                        <thead-sorter value="Sucursal"></thead-sorter>
                       </th>
                       <th scope="col" class="hover">
-                        <thead-sorter value="Promotor"></thead-sorter>
+                        <thead-sorter value="Vendedor"></thead-sorter>
                       </th>
                       <th scope="col" class="hover">
                         <thead-sorter value="Titulo"></thead-sorter>
@@ -186,8 +165,6 @@
                     <ng-container>
                       <tr *ngFor="let cliente of resultcliente">
                         <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover"></td>
-                        <td class="hover">{{ cliente.fecha_inicio }}</td>
-                        <td class="hover">{{ cliente.fecha_fin }}</td>
                         <td class="text-center hover">{{ cliente.cliente }}</td>
                         <td class="hover">{{ cliente.sucursal }}</td>
                         <td class="hover">{{ cliente.vendedor }}</td>
@@ -207,4 +184,3 @@
       </div>
     </div>
   </app-body>
-  
