@@ -689,7 +689,7 @@ export class ComercialAgendaFormularioComponent
           : null;
 
       let formObj = {
-        id: formValue.id,
+        id_agenda: formValue.id,
         color: {
           primary: formValue.cor,
         },
