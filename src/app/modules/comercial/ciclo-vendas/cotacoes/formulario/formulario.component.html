@@ -186,14 +186,6 @@
           </div>
 
           <div class="form-group col-lg-2">
-            <label for="codFormaContato">Tipo de Contacto</label>
-            <ng-select [searchable]="true" [clearable]="false" [items]="formasContato" formControlName="codFormaContato"
-              [readonly]="visualizar" [virtualScroll]="true" placeholder="Selecione..." bindLabel="descricao"
-              bindValue="codFormaContato">
-              <!--  [ngClass]="onFieldError('codFormaContato') + ' ' + onFieldRequired(form.controls.codFormaContato)"-->
-            </ng-select>
-          </div>
-          <div class="form-group col-lg-2">
             <label for="orderBy">Lista de precios de clientes</label>
             <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
               <option value="nrPedido">...</option>
@@ -233,7 +225,16 @@
             <label for="dataEntrega">Referencia</label>
             <input type="text" class="form-control">
           </div>
+          <div class="form-group col-lg-2">
+            <label for="codFormaContato">Tipo de Contacto</label>
+            <ng-select [searchable]="true" [clearable]="false" [items]="formasContato" formControlName="codFormaContato"
+              [readonly]="visualizar" [virtualScroll]="true" placeholder="Selecione..." bindLabel="descricao"
+              bindValue="codFormaContato">
+              <!--  [ngClass]="onFieldError('codFormaContato') + ' ' + onFieldRequired(form.controls.codFormaContato)"-->
+            </ng-select>
+          </div>
         </div>
+        
         <div class="form-row">
           <div class="form-group col-lg-3">
             <label for="codDeposito">Almacén</label>
@@ -323,6 +324,20 @@
               <option value="nmPedido">USD</option>
             </select>
           </div>
+          <div class="form-group col-lg-1">
+            <label for="orderBy">Estado</label>
+            <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
+              <option value="nrPedido">Abierto</option>
+              <option value="nmPedido">Pendiente</option>
+            </select>
+          </div>
+          <div class="form-group col-lg-1">
+            <label for="orderBy">Autorización</label>
+            <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
+              <option value="nrPedido">Sí</option>
+              <option value="nmPedido">No</option>
+            </select>
+          </div>
           <div class="form-group col-lg-2">
             <label for="dataEntrega">Fecha de Entrega</label>
             <input class="form-control" id="dataEntrega" type="text" placeholder="Selecione..." bsDatepicker
@@ -368,10 +383,14 @@
             <label for="dataEntrega">Total en USD.</label>
             <input type="text" class="form-control">
           </div>
+          <div class="form-group col-lg-2">
+            <label for="dataEntrega">Descuento % por línea</label>
+            <input type="text" class="form-control">
+          </div>
         </div>
       </div>
     </div>
-
+    
     <!-- <div class="row" [hidden]="visualizar">
       <div class="col">
         <hr class="my-5">
