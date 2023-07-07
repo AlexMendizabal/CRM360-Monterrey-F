@@ -136,8 +136,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
            let idx4 = data.findIndex((val) => val['id'] === 25);
            data.splice(idx4,1);
 
-           let idx5 = data.findIndex((val) => val['id'] === 29);
-           data[idx5]['nome'] = 'BÚSQUEDA DE CLIENTES';
+          let idx5 = data.findIndex((val) => val['id'] === 29);
+          data[idx5]['nome'] = 'BÚSQUEDA DE CLIENTES';
 
           // let idx6 = data.findIndex((val) => val['id'] === 12);
           // data[idx6]['nome'] = 'Actividades';

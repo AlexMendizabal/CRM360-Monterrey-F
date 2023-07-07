@@ -1,7 +1,7 @@
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
 <div class="modal-content" *ngIf="dataCotacao" [hidden]="loaderFullScreen">
   <div class="modal-header" id="actions">
-    <h4 class="mtc-title mb-0 my-auto">Cotação #{{ dataCotacao.codCotacao }} / Realizada com Sucesso</h4>
+    <h4 class="mtc-title mb-0 my-auto">Cotação #{{ dataCotacao.codCotacao }} / Realizada con éxito</h4>
 
     <button type="button"
     (click)="onClose()">
@@ -11,7 +11,7 @@
   <div class="modal-body py-5">
     <div class="row">
       <div class="col">
-        <div class="mtc-title">Resumo do Pedido</div>
+        <div class="mtc-title">Resumen de Pedido</div>
         <custom-table [config]="tableConfig">
           <ng-template #thead let-thead>
             <tr>
