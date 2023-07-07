@@ -67,7 +67,7 @@
       <message
         *ngIf="atividadesAssociadasLoading"
         icon="fas fa-cog fa-spin"
-        text="Estamos buscando informações do perfil selecionado...">
+        text="Estamos buscando la información del perfil seleccionado...">
       </message>
       <div [hidden]="atividadesAssociadasLoading">
         <div class="row mb-2 mt-4">
@@ -140,7 +140,7 @@
           <div class="col">
             <message
               icon="fas fa-exchange-alt"
-              text="Nenhuma associação encontrada">
+              text="Ninguna información encontrada">
             </message>
           </div>
         </div>
@@ -192,7 +192,7 @@
       <div *ngIf="atividades.length > 0 && !atividadesLoading">
         <div class="row mb-2">
           <div class="col mt-auto">
-            <div class="mtc-title mb-0">Seleção de Atividades</div>
+            <div class="mtc-title mb-0">Selección de Actividades</div>
           </div>
           <div class="col">
             <div class="d-flex justify-content-end">
@@ -203,9 +203,9 @@
                 [disabled]="!form.get('id')?.value">
                 <i class="fas fa-exchange-alt"></i>
                 <span
-                  [tooltip]="!form.get('id')?.value ? 'Selecione um perfil':''"
+                  [tooltip]="!form.get('id')?.value ? 'Selecione un perfil':''"
                   container="body"
-                  placement ="left">Associar
+                  placement ="left">Asociar
                 </span>
               </button>
             </div>
@@ -260,7 +260,7 @@
         <div class="col">
           <message
             icon="fas fa-cog fa-spin"
-            text="Estamos pesquisando os atividades para você...">
+            text="Estamos buscando las atividades para usted...">
           </message>
         </div>
       </div>
@@ -269,7 +269,7 @@
           <div class="col">
             <message
               icon="fas fa-box-open"
-              text="Nenhuma informação encontrada">
+              text="Ninguna información encontrada">
             </message>
           </div>
         </div>

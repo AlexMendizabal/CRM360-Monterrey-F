@@ -1013,53 +1013,53 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     if (event === true) {
       this.onScrollToForm('top');
 
-      if (this.form.getRawValue().codEmpresa === null) {
+     // if (this.form.getRawValue().codEmpresa === null) {
         this.form.controls.codEmpresa.markAsTouched();
         this.form.controls.codEmpresa.markAsDirty();
         this.form.controls.codEmpresa.setErrors({ required: true });
-        this.pnotifyService.notice('Selecione uma empresa.');
-      }
+        //this.pnotifyService.notice('Selecione uma empresa.');
+     // }
 
-      if (this.form.getRawValue().codDeposito === null) {
+      //if (this.form.getRawValue().codDeposito === null) {
         this.form.controls.codDeposito.markAsTouched();
         this.form.controls.codDeposito.markAsDirty();
         this.form.controls.codDeposito.setErrors({ required: true });
-        this.pnotifyService.notice('Selecione um depósito.');
-      }
+        //this.pnotifyService.notice('Selecione um depósito.');
+     // }
 
-      if (this.form.value.codEndereco === null) {
+     // if (this.form.value.codEndereco === null) {
         this.form.controls.codEndereco.markAsTouched();
         this.form.controls.codEndereco.markAsDirty();
         this.form.controls.codEndereco.setErrors({ required: true });
-        this.pnotifyService.notice('Selecione um endereço de entrega.');
-      }
-    }
+        //this.pnotifyService.notice('Selecione um endereço de entrega.');
+      //}
+   }
   }
 
   onHistoricoComprasFieldError(event: boolean): void {
     if (event === true) {
       this.onScrollToForm('top');
 
-      if (this.form.value.codEndereco === null) {
+     // if (this.form.value.codEndereco === null) {
         this.form.controls.codEndereco.markAsTouched();
         this.form.controls.codEndereco.markAsDirty();
         this.form.controls.codEndereco.setErrors({ required: true });
-        this.pnotifyService.notice('Selecione um endereço de entrega.');
-      }
+        //this.pnotifyService.notice('Selecione um endereço de entrega.');
+    //  }
 
-      if (this.form.controls.codFormaPagamento.errors !== null) {
+    //    if (this.form.controls.codFormaPagamento.errors !== null) {
         this.onScrollToForm('top');
         this.form.controls.codFormaPagamento.markAsTouched();
         this.form.controls.codFormaPagamento.setErrors({ incorrect: true });
-        this.pnotifyService.notice('Selecione a forma de pagamento.');
-      }
+        //this.pnotifyService.notice('Selecione a forma de pagamento.');
+ //     }
 
-      if (this.form.controls.freteConta.errors !== null) {
+   //   if (this.form.controls.freteConta.errors !== null) {
         this.onScrollToForm('bottom');
         this.form.controls.freteConta.markAsTouched();
         this.form.controls.freteConta.setErrors({ incorrect: true });
-        this.pnotifyService.notice('Selecione quem pagará o frete.');
-      }
+        //this.pnotifyService.notice('Selecione quem pagará o frete.');
+  //    }
 
     }
   }
@@ -1075,13 +1075,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   onCarrinhoScrollTop(event: boolean): void {
-    if (event === true) {
+    //if (event === true) {
       this.onScrollToForm('top');
       this.codClientErrors = true;
       this.form.controls.codCliente.markAsTouched();
       this.form.controls.codCliente.setErrors({ required: true });
-      this.pnotifyService.notice('Selecione um cliente.');
-    }
+     // this.pnotifyService.notice('Selecione um cliente.');
+    //}
   }
 
   onSubmit(): void {
@@ -1224,64 +1224,64 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       });
       hasError = true;
     } else {
-      if (this.form.controls.tipoCotacao.errors !== null) {
+      //if (this.form.controls.tipoCotacao.errors !== null) {
         this.onScrollToForm('top');
         this.form.controls.tipoCotacao.markAsTouched();
         this.form.controls.tipoCotacao.setErrors({ incorrect: true });
-        this.pnotifyService.notice('Selecione o tipo de cotação.');
+       // this.pnotifyService.notice('Selecione o tipo de cotação.');
         hasError = true;
-      }
+     // }
 
-      if (this.form.controls.codSituacao.errors !== null) {
+     // if (this.form.controls.codSituacao.errors !== null) {
         this.onScrollToForm('top');
         this.form.controls.codSituacao.markAsTouched();
         this.form.controls.codSituacao.setErrors({ incorrect: true });
-        this.pnotifyService.notice('Selecione a situação.');
+      //  this.pnotifyService.notice('Selecione a situação.');
         hasError = true;
-      }
+    //  }
 
-      if (this.form.controls.codCliente.errors !== null) {
+      //if (this.form.controls.codCliente.errors !== null) {
         this.onScrollToForm('top');
         this.codClientErrors = true;
         this.form.controls.codCliente.markAsTouched();
         this.form.controls.codCliente.setErrors({ incorrect: true });
-        this.pnotifyService.notice('Selecione um cliente.');
+      //  this.pnotifyService.notice('Selecione um cliente.');
         hasError = true;
-      }
+     // }
 
-      if (this.form.controls.codContato.errors !== null) {
+     // if (this.form.controls.codContato.errors !== null) {
         this.onScrollToForm('top');
         this.form.controls.codContato.markAsTouched();
         this.form.controls.codContato.setErrors({
           incorrect: true,
         });
-        this.pnotifyService.notice('Selecione o contato responsável.');
+       // this.pnotifyService.notice('Selecione o contato responsável.');
         hasError = true;
-      }
+     // }
 
-      if (this.form.controls.codEndereco.errors !== null) {
+     // if (this.form.controls.codEndereco.errors !== null) {
         this.onScrollToForm('top');
         this.form.controls.codEndereco.markAsTouched();
         this.form.controls.codEndereco.setErrors({ incorrect: true });
-        this.pnotifyService.notice('Selecione o local de entrega.');
+       // this.pnotifyService.notice('Selecione o local de entrega.');
         hasError = true;
-      }
+     // }
 
-      if (this.form.controls.notaFiscalMae.errors !== null) {
+    //  if (this.form.controls.notaFiscalMae.errors !== null) {
         this.onScrollToForm('top');
         this.form.controls.notaFiscalMae.markAsTouched();
         this.form.controls.notaFiscalMae.setErrors({ incorrect: true });
-        this.pnotifyService.notice('Selecione se existe Nota Fiscal Mãe.');
+       // this.pnotifyService.notice('Selecione se existe Nota Fiscal Mãe.');
         hasError = true;
-      }
+    //  }
 
-      if (this.form.controls.codFormaPagamento.errors !== null) {
+      //if (this.form.controls.codFormaPagamento.errors !== null) {
         this.onScrollToForm('top');
         this.form.controls.codFormaPagamento.markAsTouched();
         this.form.controls.codFormaPagamento.setErrors({ incorrect: true });
-        this.pnotifyService.notice('Selecione a forma de pagamento.');
+       // this.pnotifyService.notice('Selecione a forma de pagamento.');
         hasError = true;
-      }
+      //}
 
       if (this.form.controls.dataEntrega.errors !== null) {
         this.onScrollToForm('top');
@@ -1309,37 +1309,37 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         hasError = true;
       }
 
-      if (this.form.controls.codFormaContato.errors !== null) {
+      //if (this.form.controls.codFormaContato.errors !== null) {
         this.onScrollToForm('bottom');
         this.form.controls.codFormaContato.markAsTouched();
         this.form.controls.codFormaContato.setErrors({ incorrect: true });
-        this.pnotifyService.notice('Selecione a forma de contato.');
+       // this.pnotifyService.notice('Selecione a forma de contato.');
         hasError = true;
-      }
+      //}
 
-      if (this.form.controls.codOrigemContato.errors !== null) {
+     // if (this.form.controls.codOrigemContato.errors !== null) {
         this.onScrollToForm('bottom');
         this.form.controls.codOrigemContato.markAsTouched();
         this.form.controls.codOrigemContato.setErrors({ incorrect: true });
-        this.pnotifyService.notice('Selecione a origem de contato.');
+       // this.pnotifyService.notice('Selecione a origem de contato.');
         hasError = true;
-      }
+     // }
 
-      if (this.form.controls.freteConta.errors !== null) {
+      //if (this.form.controls.freteConta.errors !== null) {
         this.onScrollToForm('bottom');
         this.form.controls.freteConta.markAsTouched();
         this.form.controls.freteConta.setErrors({ incorrect: true });
-        this.pnotifyService.notice('Selecione quem pagará o frete.');
+      //  this.pnotifyService.notice('Selecione quem pagará o frete.');
         hasError = true;
-      }
+      //}
 
-      if (this.form.controls.codTransportadora.errors !== null) {
+      //if (this.form.controls.codTransportadora.errors !== null) {
         this.onScrollToForm('bottom');
         this.form.controls.codTransportadora.markAsTouched();
         this.form.controls.codTransportadora.setErrors({ incorrect: true });
-        this.pnotifyService.notice('Selecione a transportadora.');
+      //  this.pnotifyService.notice('Selecione a transportadora.');
         hasError = true;
-      }
+      //}
 
       for(let i = 0; i<this.materiais.length; i++){
         if(this.materiais[i].qtdePecas == null){
@@ -1635,16 +1635,17 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         return;
       }
     }
+    
 
-    if (this.form.getRawValue().codEmpresa === null) {
+    //if (this.form.getRawValue().codEmpresa === null) {
       this.pnotifyService.notice('Selecione uma empresa.');
       return;
-    }
+    //}
 
-    if (this.form.value.codFormaPagamento === null) {
+   // if (this.form.value.codFormaPagamento === null) {
       this.pnotifyService.notice('Selecione uma forma de pagamento.');
       return;
-    }
+   // }
 
     for (let i = 0; i < this.formasPagamento.length; i++) {
       if (

@@ -39,6 +39,12 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   @Input('codFormaPagamento') codFormaPagamento: number;
   @Input('freteConta') freteConta: number;
 
+  filas = [
+    { columna1: 'Valor 1', columna2: 'Valor 2', columna3: 'Valor 3', columna4: 'Valor 4', columna5: 'Valor 5', columna6: 'Valor 6', columna7: 'Valor 7', columna8: 'Valor 8', columna9: 'Valor 9', columna10: 'Valor 10' },
+    { columna1: 'Valor 1', columna2: 'Valor 2', columna3: 'Valor 3', columna4: 'Valor 4', columna5: 'Valor 5', columna6: 'Valor 6', columna7: 'Valor 7', columna8: 'Valor 8', columna9: 'Valor 9', columna10: 'Valor 10' },
+    // Agrega más filas si es necesario
+  ];
+
   @Output('loaderNavbar') loaderNavbar: EventEmitter<
     boolean
   > = new EventEmitter();
@@ -60,12 +66,12 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   subtitles: Array<Subtitles> = [
     {
       id: 1,
-      text: 'Disponível em estoque',
+      text: 'Disponible en stock',
       color: 'green',
     },
     {
       id: 2,
-      text: 'Indisponível em estoque',
+      text: 'No disponible en stock',
       color: 'red',
     },
   ];
@@ -234,7 +240,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 
               this.materiais.unshift({
                 codigoMaterial: 0,
-                codigoDescricaoMaterial: 'EXIBIR TODOS',
+                codigoDescricaoMaterial: 'EXHIBIR TODOS',
               });
 
               this.form.controls.codMaterial.enable();
@@ -395,7 +401,6 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 
   onFieldInvalid(field: any): boolean {
     field = this.form.get(field);
-
     return field.status == 'INVALID' && field.touched;
   }
 
@@ -442,11 +447,14 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 
   onFilter(): void {
     if (this.checkFieldErrors() === false) {
-      if (this.searching === false && this.form.valid) {
-        this.setRouterParams(this.getFormFilterValues());
+      //console.log(this.checkFieldErrors);
+     if (this.searching === false && this.form.valid) {
+       this.setRouterParams(this.getFormFilterValues());
       }
     } else {
-      this.scrollToFormOnTop.emit(true);
+      console.log("hola");
+      this.setRouterParams(this.getFormFilterValues());
+      //this.scrollToFormOnTop.emit(true);
     }
   }
 
@@ -470,21 +478,21 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   getFormFilterValues(): Object {
     let params: any = {};
 
-    if (this.form.value.codLinha) {
+    //if (this.form.value.codLinha) {
       params.codLinha = this.form.value.codLinha;
-    }
+    //}
 
-    if (this.form.value.codClasse && this.form.value.codClasse !== 0) {
+    //if (this.form.value.codClasse && this.form.value.codClasse !== 0) {
       params.codClasse = this.form.value.codClasse;
-    }
+    //}
 
-    if (this.form.value.codMaterial && this.form.value.codMaterial !== 0) {
+    //if (this.form.value.codMaterial && this.form.value.codMaterial !== 0) {
       params.codMaterial = this.form.value.codMaterial;
-    }
+    //}
 
-    if (this.codEmpresa) {
+    //if (this.codEmpresa) {
       params.codEmpresa = this.codEmpresa;
-    }
+    //}
 
     if (this.codDeposito) {
       params.codDeposito = this.codDeposito;
@@ -532,26 +540,33 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       )
       .subscribe({
         next: (response: any) => {
-          console.log(response);
-          if (response.hasOwnProperty('success')
+          //console.log(response);
+         /*  if (response.hasOwnProperty('success')
           && response.success === true
           && !response.data[0].msg) {
             this.dados = response.data.map(function (el: any) {
               var o = Object.assign({}, el);
               o.checked = 0;
               return o;
-            });
+            }); */
+            if ( response.success === true)
+             {
+              this.dados = response.data.map(function (el: any) {
+                var o = Object.assign({}, el);
+                o.checked = 0;
+                return o;
+              });
 
-            console.log('dados', this.dados);
+            //console.log('dados', this.dados);
 
-            if (this.dados.length > 10) {
+           // if (this.dados.length > 10) {
               this.tableConfig.fixedHeader = true;
-            } else {
-              this.tableConfig.fixedHeader = false;
-            }
-          } else {
-            this.pnotifyService.notice("Há campos faltando ou não há dados para sua consulta.");
-            this.dadosEmpty = true;
+           // } else {
+              //this.tableConfig.fixedHeader = false;
+          //  }
+          //} else {
+            //this.pnotifyService.notice("Há campos faltando ou não há dados para sua consulta.");
+            //this.dadosEmpty = true;
           }
         },
         error: (error: any) => {
@@ -567,17 +582,17 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 
   checkFieldErrors(): boolean {
 
-    let hasError = false;
+    //let hasError = false;
+    let hasError = true;
+    //if(this.codCliente == null){
+      //this.pnotifyService.notice("Selecione o cliente")
+      //hasError = true;
+    //}
 
-    if(this.codCliente == null){
-      this.pnotifyService.notice("Selecione o cliente")
-      hasError = true;
-    }
-
-    if(this.codFormaPagamento == null){
-      this.pnotifyService.notice("Selecione a forma de pagamento")
-      hasError = true;
-    }
+    //if(this.codFormaPagamento == null){
+      //this.pnotifyService.notice("Selecione a forma de pagamento")
+      //hasError = true;
+    //}
 
 
     return hasError;
@@ -685,13 +700,13 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       }
     }
 
-    if (materiais.length > 0) {
+    //if (materiais.length > 0) {
       this.formularioService.materiaisSubject.next(materiais);
       this.toggleAll = this.toggleAll === true ? false : this.toggleAll;
       this.scrollToCarrinho.emit(this.autoScroll);
-    } else {
+    //} else {
       this.pnotifyService.notice('Selecione ao menos um material.');
-    }
+    //}
   }
 
   onActiveRow(index: number): void {

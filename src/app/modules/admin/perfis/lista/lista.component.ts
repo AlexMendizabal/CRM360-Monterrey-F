@@ -39,7 +39,7 @@ export class AdminPerfisListaComponent implements OnInit, OnDestroy {
       routerLink: '/admin/home'
     },
     {
-      descricao: 'Lista de perfis'
+      descricao: 'Lista de perfiles'
     }
   ];
 

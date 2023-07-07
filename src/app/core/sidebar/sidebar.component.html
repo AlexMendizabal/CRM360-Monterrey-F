@@ -131,23 +131,6 @@
             <span>REPORTE de agenda</span>
           </a>
         </li>
-        <li
-        placement="right"
-        tooltip="reporte de agenda"
-        container="body"
-        [isDisabled]="tooltipDisabled"
-        containerClass="sidebar-navbar-tooltip"
-        *ngIf="user?.matricula === '1'"
-      >
-        <a
-          [routerLinkActive]="['active']"
-          [routerLink]="'estoque'"
-          (click)="onHideMenu()"
-        >
-          <i class="fas fa-book"></i>
-          <span>ESTOQUE</span>
-        </a>
-      </li>
       </ul>
       <ul class="sidebar-navbar" *ngIf="atividadesLoaded && atividadesError">
         <li

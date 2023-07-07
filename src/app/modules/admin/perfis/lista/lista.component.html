@@ -1,7 +1,7 @@
 <loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
 <loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
-<app-header appTitle="Lista de Perfis">
-  <button type="button" (click)="onReset()">Limpar</button>
+<app-header appTitle="Lista de Perfiles">
+  <button type="button" (click)="onReset()">Limpiar</button>
   <button type="button" (click)="onFilter()">Filtrar</button>
   <button type="button" [routerLink]="['../novo']">Adicionar</button>
 </app-header>
@@ -18,14 +18,14 @@
           <input id="matricula" type="text" class="form-control" placeholder="DIGITE..." formControlName="sigla" (keyup.enter)="onFilter()">
         </div>
         <div class="form-group col-3">
-          <label for="situacao">Situação</label>
+          <label for="situacao">Situación</label>
           <select
             class="form-control custom-select"
             formControlName="situacao"  
             (change)="onFilter()"
           >
-            <option value="1">Ativo</option>
-            <option value="0">Inativo</option>
+            <option value="1">Activo</option>
+            <option value="0">Inactivo</option>
             <option value="''">Todos</option>
           </select>
         </div>
@@ -53,7 +53,7 @@
         <ng-template #thead let-thead>
           <tr>
             <th style="width:100px">Id</th>
-            <th>Nome</th>
+            <th>Nombre</th>
             <th>Sigla</th>
             <th class="align-middle" style="width:70px"></th>
             <!-- <th class="align-middle" style="width:70px"></th> -->
@@ -100,6 +100,6 @@
     </div>
   </div>
   <div [hidden]="loading || !noResult" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
-    <empty-result message="Nenhuma informação encontrada"></empty-result>
+    <empty-result message="Ninguna información encontrada"></empty-result>
   </div>
 </app-body>
