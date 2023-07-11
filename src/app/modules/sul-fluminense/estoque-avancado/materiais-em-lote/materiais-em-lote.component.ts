@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterService } from 'src/app/shared/services/core/router.service';
 import { DateService } from 'src/app/shared/services/core/date.service';
-import { BsDatepickerConfig, BsDaterangepickerConfig, BsDaterangepickerInlineConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsDaterangepickerConfig, /* BsDaterangepickerInlineConfig, */ BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { finalize } from 'rxjs/operators';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
