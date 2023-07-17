@@ -241,31 +241,31 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   ngOnInit(): void {
-    
+
     this.urlPath = this.activatedRoute.snapshot.url[0].path;
     this.onReadOnly();
     this.hasAccessToClient();
-    this.changeDirty();   
+    this.changeDirty();
     this.getCarteira(this.urlPath);
     this.getTituloEndereco();
     this.detalhesCodCliente.NM_CLIE = this.activatedRoute.snapshot.queryParams['codCliente'];
     this.getClientes(this.detalhesCodCliente);
-    
+
   }
 
   getCarteira(action: string){
-    if(action == 'editar') {  
+    if(action == 'editar') {
       this.cotacoesService
       .getCotacao(this.activatedRoute.snapshot.params.codCotacao, this.activatedRoute.snapshot.params.idEmpresa)
       .subscribe((response: JsonResponse) => {
         this.getClientesParams(response.data.cobrancaSomenteCarteira);
-      });    
-    }  
+      });
+    }
   }
 
-  getTituloEndereco(){  
+  getTituloEndereco(){
     let urlPath = this.activatedRoute.snapshot.url[0].path;
-    if (urlPath == 'editar'){  
+    if (urlPath == 'editar'){
     this.formularioService
     .getLocaisEntrega(this.form.controls.codCliente.value)
     .subscribe((response: JsonResponse) =>{
@@ -277,7 +277,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       });
     }
   }
-  
+
   checkCheckBoxvalue(event){
     if(event.target.checked == true){
       this.form.controls.duplicatasSomenteCarteira.setValue(1);
@@ -583,7 +583,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       if(data.codEnderecoEntrega){
         this.exibirClienteTerceiro(data.notaFiscalMae);
       }
-      
+
       this.dadosLancamento.data = data.dataLancamento;
       // this.dadosLancamento.codVendedor = data.codVendedor;
       // this.dadosLancamento.nomeVendedor = data.nomeVendedor;
@@ -999,14 +999,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   onScrollToCarrinho(event: boolean): void {
     this.autoScrollToCarrinho = event;
-
-    if (this.autoScrollToCarrinho === true) {
+// if (this.autoScrollToCarrinho === true) {
       setTimeout(() => {
         this.scrollToCarrinho.nativeElement.scrollIntoView({
           behavior: 'instant',
         });
       }, 500);
-    }
+   // }
   }
 
   onMateriaisScrollTop(event: boolean): void {
@@ -1384,7 +1383,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     }
   }
 
-  onChangeEndereco(event: any) {    
+  onChangeEndereco(event: any) {
     this.form.controls.titulo.setValue(event.titulo);
     this.form.controls.TP_ACAO.setValue(event.TP_ACAO);
     this.getCliente(event.COD_CLIE_TERC);
@@ -1430,7 +1429,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           for (let i = 0; i < _enderecosAguardando.length; i++) {
             enderecosAguardando.push({
               codEndereco: _enderecosAguardando[i].id,
-              descricao: this.formatLocalEntrega(_enderecosAguardando[i]),              
+              descricao: this.formatLocalEntrega(_enderecosAguardando[i]),
               titulo: _enderecos[i].titulo,
               tipo: 'Aguardando aprovação',
               COD_CLIE_TERC: _enderecosAguardando[i].COD_CLIE_TERC,
@@ -1635,7 +1634,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         return;
       }
     }
-    
+
 
     //if (this.form.getRawValue().codEmpresa === null) {
       this.pnotifyService.notice('Selecione uma empresa.');
@@ -1870,7 +1869,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         if (data[0].responseCode === 200) {
           const codRazao = (data[0].result.codCliente+" - "+data[0].result.razaoSocial);
           this.form.controls.COD_CLIE_TERC.setValue(codRazao);
-        } 
+        }
       }
     });
   }

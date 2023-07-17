@@ -97,9 +97,12 @@
     <div class="col shadow-sm mt-4" id="blocos">
       <div class="row" [hidden]="visualizar">
         <div class="col">
-          <comercial-ciclo-vendas-cotacoes-formulario-materiais-lista [codEndereco]="form.value.codEndereco"
-            [codCliente]="form.value.codCliente" [codEmpresa]="form.getRawValue().codEmpresa"
-            [codDeposito]="form.getRawValue().codDeposito" [codFormaPagamento]="form.value.codFormaPagamento"
+          <comercial-ciclo-vendas-cotacoes-formulario-materiais-lista
+           [codEndereco]="form.value.codEndereco"
+            [codCliente]="form.value.codCliente"
+             [codEmpresa]="form.getRawValue().codEmpresa"
+            [codDeposito]="form.getRawValue().codDeposito"
+            [codFormaPagamento]="form.value.codFormaPagamento"
             [freteConta]="form.value.freteConta" (loaderNavbar)="onLoaderNavbar($event)"
             (loaderFullScreen)="onLoaderFullScreen($event)" (scrollToFormOnTop)="onMateriaisScrollTop($event)"
             (scrollToCarrinho)="onScrollToCarrinho($event)">
@@ -134,7 +137,7 @@
             <input type="text" id="codCotacao" class="form-control" formControlName="codCotacao"
               [readonly]="visualizar">
           </div>
-         
+
           <div class="form-group col-lg-5">
             <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
               <label class="my-auto" for="codCliente">Cliente</label>
@@ -235,7 +238,7 @@
             </ng-select>
           </div>
         </div>
-        
+
         <div class="form-row">
           <div class="form-group col-lg-3">
             <label for="codDeposito">Almacén</label>
@@ -391,13 +394,13 @@
         </div>
       </div>
     </div>
-    
+
     <!-- <div class="row" [hidden]="visualizar">
       <div class="col">
         <hr class="my-5">
       </div>
     </div> -->
-    <div class="col shadow-sm mt-4" id="blocos" [hidden]="this.materiais.length == 0">
+    <div class="col shadow-sm mt-4" id="blocos" >
       <div class="row" #scrollToCarrinho>
         <div class="col">
           <comercial-ciclo-vendas-cotacoes-formulario-carrinho [appTitle]="appTitle"
