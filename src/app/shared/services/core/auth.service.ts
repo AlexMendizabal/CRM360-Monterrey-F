@@ -42,6 +42,11 @@ export class AuthService {
     return this.http.post(`${this.API}/login`, data).pipe(take(1), retry(2));
   }
 
+  loginSAP(data: any): Observable<any> {
+    this.hasSession = true;
+    return this.http.post(`http://192.168.0.123:4100/api/Login`, data).pipe(take(1), retry(2));
+  }
+
   logout(): boolean {
     this.resetCurrentUser();
     this.showMenuEmitter.emit(false);

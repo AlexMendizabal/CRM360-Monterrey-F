@@ -37,6 +37,7 @@ export class ComercialTidSoftwareService {
     return this.http.get(`${this.API}/linhas`).pipe(take(1), retry(2));
   }
 
+
   getModulosVendas() {
     return this.http.get(`${this.API}/modulos/vendas`).pipe(take(1), retry(2));
   }
