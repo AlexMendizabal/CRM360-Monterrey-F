@@ -44,6 +44,15 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
+  getOfertas (params: any): Observable<Object | JsonResponse> {
+    let httpParams = new HttpParams();
+    return this.http
+    .get(`${this.API}/lista_cotizacion` , {
+      params: params,
+    })
+    .pipe(take(1), retry(2));
+  }
+
   getDetalhesCotacoes(
     codEmpresa: number,
     nrPedido: number
