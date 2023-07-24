@@ -80,6 +80,14 @@ export class ComercialCicloVendasCotacoesListaComponent
   cotacaoDesdobradaSubscription: Subscription;
   trocarEmpresaSubscription: Subscription;
 
+  situacoes = [
+    { "id": "", "nombre": "Todos" },
+    { "id": 0, "nombre": "Borrador" },
+    { "id": 1, "nombre": "Venta" },
+    { "id": 2, "nombre": "Rechazado" },
+  ];
+  formGroup: FormGroup;
+  defaultSelection = this.situacoes[0];
   breadCrumbTree: Array<Breadcrumb> = [];
 
   subtitles: Array<Subtitles> = [];
@@ -106,13 +114,15 @@ export class ComercialCicloVendasCotacoesListaComponent
   codSituacao: number;
   pedidoTransferido: number;
   imprimirSeparacao: number;
-
-  situacoes: Array<any> = [];
   empresas: Array<any> = [];
   depositos: Array<any> = [];
   filteredDepositos: Array<any> = [];
   situacoesCores: Array<IAssociacao> = [];
   vendedores: Array<any> = [];
+  totalMateriales: Array<any> = [];
+
+
+  items: Array<any> = [];
 
   dados: Array<any> = [];
   dadosLoaded = false;
@@ -199,6 +209,9 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.onDetailPanelEmitter();
     this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente'];
     this.search(null);
+    this.formGroup = this.formBuilder.group({
+      codSituacao: [this.defaultSelection]
+    });
   }
 
   ngOnDestroy(): void {
@@ -425,13 +438,33 @@ export class ComercialCicloVendasCotacoesListaComponent
       )
       .subscribe(
         (response: any | JsonResponse[]) => {
-          this.situacoes = response[0].data || [];
+          /* this.situacoes = response[0].data || [];
 
           this.situacoes.unshift({
             codParametroSituacaoProposta: 0,
             situacaoProposta: 'EXIBIR TODOS',
           });
-
+          
+ */
+/*           console.log(response);
+ */          this.situacoes = [
+            {
+              "id": "",
+              "nombre": "Todos"
+            },
+            {
+              "id": 0,
+              "nombre": "Borrador"
+            },
+            {
+              "id": 1,
+              "nombre": "Venta"
+            },
+            {
+              "id": 2,
+              "nombre": "Rechazado"
+            },
+          ]
           this.empresas = response[1].result || [];
 
           this.depositos = response[2].result || [];
@@ -674,7 +707,8 @@ export class ComercialCicloVendasCotacoesListaComponent
     }
 
     if (this.form.value.codSituacao) {
-      params.codSituacao = this.form.value.codSituacao;
+      params.codSituacao = this.form.value.codSituacao.id;
+      /*    console.log(params.codSituacao); */
     }
 
     if (this.form.value.nrPedido) {
@@ -756,7 +790,7 @@ export class ComercialCicloVendasCotacoesListaComponent
             this.dados = [];
             this.dados = response.result;
             this.dados = this.dados.slice(0, this.itemsPerPage);
-             this.totalItems = this.dados.length; 
+            this.totalItems = this.dados.length;
             /* console.log(this.datos); */
             this.dadosEmpty = false;
           } else {
@@ -934,7 +968,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     return borderClass;
   }
 
-  
+
 
   resetRegister(): void {
     this.detalhes.contatos = [];
@@ -954,7 +988,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.contatoSelected = contato;
   }
 
-  
+
 
   onCloseDetailPanel(): void {
     this.resetActiveCotacao();
@@ -1228,13 +1262,30 @@ export class ComercialCicloVendasCotacoesListaComponent
     }
   }
 
-  openModal(template: TemplateRef<any>) {
+  openModal(template: TemplateRef<any>, id_oferta: number) {
+    /* alert('sdsa'); */
+    var params = {
+      "id_oferta": id_oferta
+    };
     this.loadingModal = true;
+    this.cotacoesService.getDetalleOferta(params)
+      .subscribe({
+        next: (response: any) => {
+          if (response.responseCode === 200) {
+            this.items = response.result['analitico'];
+            this.totalMateriales = response.result.total;
+          } else {
+            this.loaderNavbar = false;
+            this.pnotifyService.notice('Ningún registro encontrado');
+            this.dadosEmpty = true;
+          }
+        }
+      });
     this.form.controls.codEmpresaAdd.setValidators([Validators.required]);
     this.form.controls.codEmpresaAdd.updateValueAndValidity();
     this.modalRef = this.modalService.show(template, {
       animated: false,
-      class: 'modal-md',
+      class: 'modal-xl',
     });
   }
 

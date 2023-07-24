@@ -34,9 +34,12 @@
           </div>
           <div class="form-group col-lg-3">
             <label for="codStatus">Situacion</label>
-            <ng-select type='text' [items]="situacoes" [searchable]="true" [clearable]="false"
-              bindLabel="situacaoProposta" bindValue="codParametroSituacaoProposta" formControlName="codSituacao">
+            <ng-select [items]="situacoes" [searchable]="true" [clearable]="false" labelForId="id" bindLabel="nombre"
+              formControlName="codSituacao" [(ngModel)]="defaultSelection">
             </ng-select>
+
+
+
           </div>
           <div class="form-group col-lg-2">
             <label for="nrPedido">Núm. pedido</label>
@@ -150,7 +153,7 @@
                   (click)="setOrderBy('vendedor')">
                 </thead-sorter>
               </th>
-              <th scope="col">
+             <!--  <th scope="col">
                 <thead-sorter value="Monto total bruto" [active]="orderBy == 'monto_total_bruto'" [sort]="orderType"
                   (click)="setOrderBy('monto_total_bruto')">
                 </thead-sorter>
@@ -159,7 +162,7 @@
                 <thead-sorter value="Descuento" [active]="orderBy == 'descuento'" [sort]="orderType"
                   (click)="setOrderBy('descuento')">
                 </thead-sorter>
-              </th>
+              </th> -->
               <th scope="col">
                 <thead-sorter value="Monto total" [active]="orderBy == 'monto_total'" [sort]="orderType"
                   (click)="setOrderBy('monto_total')">
@@ -185,13 +188,13 @@
                   (click)="setOrderBy('estado_oferta')">
                 </thead-sorter>
               </th>
-  
+
             </tr>
           </ng-template>
           <ng-template #tbody let-tbody>
             <tr *ngFor="let pedido of dados; let i = index" [class.table-active]="i == activeRow">
-  
-  
+
+
               <!-- <td class="text-center" [ngStyle]="styleStatusBorder(pedido)">
                 <span class="d-inline-flex"> -->
               <!-- <ng-template #tooltipLiberacao>
@@ -204,7 +207,7 @@
                       </dl>
                     </div>
                   </ng-template>  -->
-  
+
               <!--  <ng-template #tooltipLiberacaoAberto>
                     <p class="mb-2">ESPERANDO LIBERACION:</p><br>
                     <div>
@@ -215,7 +218,7 @@
                       </dl>
                     </div>
                   </ng-template>  -->
-  
+
               <!--  <i class="mr-2 text-warning fas fa-random" *ngIf="pedido.estado_oferta === 1"
                     tooltip="Pedido transferido" placement="right"></i>
   
@@ -243,34 +246,29 @@
                     tooltip="Pedido não faturado" placement="right"></i>
                 </span>
               </td> -->
-  
-  
+
+
               <td class="text-center hover" (click)="viewRegister(i, pedido)"
                 [ngClass]="estoqueSuspensoClassStatusBorder(pedido.estado_oferta)">
                 {{ pedido.codigo_oferta }}
               </td>
-              <td class="text-center hover" (click)="viewRegister(i, pedido)">{{ pedido.fecha_inicial | date: 'dd/MM/yyyy'
+              <td class="text-center hover" (click)="viewRegister(i, pedido)">{{ pedido.fecha_inicial | date:
+                'dd/MM/yyyy'
                 }}</td>
               <td class="text-center hover" (click)="viewRegister(i, pedido)">{{ pedido.fecha_final | date: 'dd/MM/yyyy'
                 }}</td>
-              <td class="hover" (click)="openModal()">{{ pedido.cliente | uppercase }}</td>
-              <td class="hover" (click)="openModal()">{{ pedido.vendedor | uppercase }}</td>
-              <td class="hover" (click)="openModal()">{{ pedido.monto_total_bruto }}</td>
-              <td class="hover" (click)="openModal()">{{ pedido.descuento }}</td>
-              <td class="hover" (click)="openModal()">{{ pedido.monto_total }}</td>
-              <td class="hover" (click)="openModal()">{{ pedido.peso_total }}</td>
-              <td class="hover" (click)="openModal()">{{ pedido.lista_precio }}</td>
-              <td class="hover" (click)="openModal()">{{ pedido.modo_entrega }}</td>
-              <td class="hover" (click)="openModal()">{{ pedido.estado_oferta }}</td>
-  
-  
-  
-  
-  
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.cliente | uppercase }}
+              </td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.vendedor | uppercase }}
+              </td>
+              <!-- <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.monto_total_bruto }}</td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.descuento }}</td> -->
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.monto_total }}</td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.peso_total }}</td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.lista_precio }}</td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.modo_entrega }}</td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.estado_oferta }}</td>
               <!-- 
-  
-  
-  
               <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeEmpresa | uppercase }}</td>
               <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeVendedor | uppercase }}</td> -->
             </tr>
@@ -284,7 +282,7 @@
         </pagination>
       </div>
     </div>
-    
+
   </div>
   <div *ngIf="dadosEmpty && !dadosLoaded" class="text-center d-flex justify-content-center align-items-center"
     style="height: 80%">
@@ -292,7 +290,7 @@
   </div>
   <ng-template #modalDetalhes>
     <div class="modal-header">
-      <h4 class="modal-title pull-left">Seleccione la empresa de la cotización</h4>
+      <h4 class="modal-title pull-left">Detalle de la oferta</h4>
       <div class="d-flex justify-content-center align-items-center">
         <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
           <span aria-hidden="true">&times;</span>
@@ -300,27 +298,85 @@
       </div>
     </div>
     <div class="modal-body">
-      <div class="col-12">
-        <form [formGroup]="form" autocomplete="off">
-          <div class="form-row justify-content-center">
-            <div class="form-group col pl-0">
-              <label for="codEmpresaAdd">Empresa</label>
-              <ng-select [searchable]="true" [clearable]="false" [items]="empresas" placeholder="Selecione..."
-                formControlName="codEmpresaAdd" [virtualScroll]="true" labelForId="codEmpresaAdd"
-                bindLabel="nomeEmpresa" bindValue="idEmpresa"
-                [ngClass]="onFieldError('codEmpresaAdd') + ' ' + onFieldRequired(form.controls.codEmpresaAdd)">
-              </ng-select>
-              <invalid-form-control [show]="onFieldInvalid('codEmpresaAdd')"
-                message="Empresa é obrigatório."></invalid-form-control>
-            </div>
-          </div>
-        </form>
-        <div class="form-row justify-content-center text-center" id="actions">
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <custom-table [config]="tableConfig" *ngIf="dados.length > 0 && !dadosEmpty">
+            <ng-template #thead let-thead>
+              <tr>
+                <th class="text-truncate text-center" (click)="setOrderBy('codigo_material')">
+                  <thead-sorter value="Articulo" [active]="orderBy == 'codigo'" [sort]="orderType"> Código
+                  </thead-sorter>
+                </th>
+                <th class="text-truncate text-left" (click)="setOrderBy('nombre')">
+                  <thead-sorter value="Descripcion" [active]="orderBy == 'Nombre Material'"
+                    [sort]="orderType"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderBy('cantidad')">
+                  <thead-sorter value="Cantidad"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderBy('sigla')">
+                  <thead-sorter value="Unidad."></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderBy('codigo_almacen')">
+                  <thead-sorter value="precio"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderBy('nombre_almacen')">
+                  <thead-sorter value="total bruto"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderBy('nombre_almacen')">
+                  <thead-sorter value="% Descuento"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderBy('nombre_almacen')">
+                  <thead-sorter value="Precio descuento"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderBy('nombre_almacen')">
+                  <thead-sorter value="Almacen"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderBy('nombre_almacen')">
+                  <thead-sorter value="Total con descuento"></thead-sorter>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <ng-container>
+                <tr *ngFor="let item of items">
+                  <td class="font-weight-bold hover text-center">
+                    {{item.codigo_material}}</td>
+                  <td class="font-weight-bold hover text-left">
+                    {{item.nombre_material}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.cantidad}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.unidad}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.precio}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.total_bruto}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    0.00</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.precio_descuento}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.nombre_almacen}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.total_bruto}} {{item.nombre_moneda}}</td>
+                </tr>
+                <tr class="bg-dark text-center text-dark">
+                  <td colspan="8" class="border-dark"></td>
+                  <td><strong>Total</strong></td>
+                  <td class="text-center"><strong>{{ totalMateriales.cantidad | number:'1.4-4' }} DOLARES </strong></td>
+                </tr>
+              </ng-container>
+            </ng-template>
+          </custom-table>
+          <empty-result message="Ningún registro encontrado." *ngIf="dadosEmpty"></empty-result>
+        </div>
+        <!-- <div class="form-row justify-content-center text-center" id="actions">
           <button type="button" (click)="onAdd()"
             [disabled]="form.controls.codEmpresaAdd.valid === false || loaderNavbar === true">
             Avançar
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
   </ng-template>
