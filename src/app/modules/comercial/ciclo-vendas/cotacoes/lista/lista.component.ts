@@ -150,9 +150,12 @@ export class ComercialCicloVendasCotacoesListaComponent
   activeCotacao: ICotacao;
 
   maxSize = 10;
-  itemsPerPage = 100;
+  itemsPerPage = 20;
   currentPage = 1;
   totalItems = 0;
+  totalModal = 0;
+  itemsPerPageModal = 20;
+
 
   imprimirPdf: boolean = false;
   pdfBase64: any;
@@ -643,6 +646,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   setOrderBy(column: string) {
+    console.log(column);
     if (this.orderBy === column) {
       this.orderType = this.orderType === 'asc' ? 'desc' : 'asc'; // Cambiar el tipo de orden si se hace clic nuevamente en la misma columna
     } else {
@@ -651,6 +655,32 @@ export class ComercialCicloVendasCotacoesListaComponent
     }
 
     this.dados.sort((a, b) => {
+
+      const valueA = a[column]/* .toUpperCase(); */;
+      const valueB = b[column]/* .toUpperCase() */;
+      /*       console.log(this.datos);
+            console.log(column); */
+      if (valueA < valueB) {
+        return this.orderType === 'asc' ? -1 : 1;
+      }
+      if (valueA > valueB) {
+        return this.orderType === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+
+  }
+
+  setOrderByModal(column: string) {
+    console.log(column);
+    if (this.orderBy === column) {
+      this.orderType = this.orderType === 'asc' ? 'desc' : 'asc'; // Cambiar el tipo de orden si se hace clic nuevamente en la misma columna
+    } else {
+      this.orderBy = column;
+      this.orderType = 'asc'; // Establecer el orden ascendente por defecto al hacer clic en una nueva columna
+    }
+
+    this.items.sort((a, b) => {
 
       const valueA = a[column]/* .toUpperCase(); */;
       const valueB = b[column]/* .toUpperCase() */;
@@ -791,6 +821,7 @@ export class ComercialCicloVendasCotacoesListaComponent
             this.dados = response.result;
             this.dados = this.dados.slice(0, this.itemsPerPage);
             this.totalItems = this.dados.length;
+            /* console.log(this.totalItems); */
             /* console.log(this.datos); */
             this.dadosEmpty = false;
           } else {
@@ -854,18 +885,28 @@ export class ComercialCicloVendasCotacoesListaComponent
     });
   }
 
-  onPageChanged(event: PageChangedEvent) {
-    if (this.form.value.pagina != event.page) {
-      this.form.controls.pagina.setValue(event.page);
+  onPageChanged(event: PageChangedEvent): void {
+    this.currentPage = event.page;
+    this.getPaginateData();
+  }
 
-      this.onCloseDetailPanel();
-      this.detailPanelService.hide();
-      this.setRouterParams(this.getFormFilterValues());
+  getPaginateData(): any[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
+    return this.dados.slice(startIndex, endIndex);
+  }
 
-      this.scrollToFilter.nativeElement.scrollIntoView({
-        behavior: 'instant',
-      });
-    }
+  onPageChangedModal(event: PageChangedEvent): void {
+    this.currentPage = event.page;
+    this.getPaginateDataModal();
+  }
+
+  getPaginateDataModal(): any[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPageModal;
+    const endIndex = startIndex + this.itemsPerPageModal;
+    //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
+    return this.items.slice(startIndex, endIndex);
   }
 
   styleStatusBorder(cotacao: ICotacao): object {
@@ -1274,6 +1315,7 @@ export class ComercialCicloVendasCotacoesListaComponent
           if (response.responseCode === 200) {
             this.items = response.result['analitico'];
             this.totalMateriales = response.result.total;
+            this.totalModal = this.items.length;
           } else {
             this.loaderNavbar = false;
             this.pnotifyService.notice('Ningún registro encontrado');
