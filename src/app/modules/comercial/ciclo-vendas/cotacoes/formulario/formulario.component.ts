@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { switchMap } from 'rxjs/operators';
 import {
   FormGroup,
   FormBuilder,
@@ -251,6 +252,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.detalhesCodCliente.NM_CLIE = this.activatedRoute.snapshot.queryParams['codCliente'];
     this.getClientes(this.detalhesCodCliente);
 
+
+
   }
 
   getCarteira(action: string){
@@ -262,19 +265,27 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       });
     }
   }
-
-  getTituloEndereco(){
+  //Algunos cambios se realizaron
+  getTituloEndereco() {
     let urlPath = this.activatedRoute.snapshot.url[0].path;
-    if (urlPath == 'editar'){
-    this.formularioService
-    .getLocaisEntrega(this.form.controls.codCliente.value)
-    .subscribe((response: JsonResponse) =>{
-        response.data.enderecos.forEach(element => {
-          if(element.id == this.form.controls.codEndereco.value){
-            this.form.controls.titulo.setValue(element.titulo);
+    if (urlPath == 'editar') {
+      this.formularioService
+        .getLocaisEntrega(this.form.controls.codCliente.value)
+        .pipe(
+          switchMap((response: JsonResponse) => {
+            return response.data.enderecos;
+          })
+        )
+        .subscribe((enderecos: any[]) => {
+          const enderecoSelecionado = enderecos.find(
+            (endereco) => endereco.id === this.form.controls.codEndereco.value
+          );
+
+          if (enderecoSelecionado) {
+            this.form.controls.titulo.setValue(enderecoSelecionado.titulo);
           }
+
         });
-      });
     }
   }
 
@@ -423,13 +434,34 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       class: 'modal-xl',
     });
   }
-
+  // ALGUNOS CAMBIOS FUERON REALIZADOS PARA ENVIAR DIRECCION
   onCliente(event) {
+    console.log('Datos del evento (cliente seleccionado):', event);
+
     this.form.patchValue(event);
     this.onChangeCliente(event.codCliente, 'user');
     this.onLoadCliente(true);
 
+    // Llama a la función exibirClienteTerceiro con los datos del cliente seleccionado
+    this.exibirClienteTerceiro(event);
+    // Carga la dirección del cliente en el campo codEndereco del formulario
+    this.form.controls['codEndereco'].setValue(event.direccion);
+    this.form.controls['razaoSocial'].setValue(event.razaoSocial);
+    // Se trata de llamar al cpfCnpj ( AUN NO LO TERMINE)
+    this.clientesService.getExisteCpfCnpj(event.codCliente, true).subscribe(
+      (response: any) => {
+        // Se trata de llamar al cpfCnpj ( AUN NO LO TERMINE)
+        const cpfCnpj = response && response.hasOwnProperty('CpfCnpj') ? response['CpfCnpj'] : null;
+        this.form.controls['cpfCnpj'].setValue(cpfCnpj);
+      },
+      (error) => {
+        // Manejar el error si es necesario
+        console.error('Error al obtener el CpfCnpj del cliente:', error);
+      }
+    );
+
   }
+
 
   getVendedor() {
 
@@ -526,6 +558,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             data.duplicatasSomenteCarteira = 0;
           }
 
+
+
       this.form = this.formBuilder.group({
         codCotacao: [{ value: codCotacao, disabled: true }],
         tipoCotacao: [{ value: data.tipoCotacao, disabled: true }],
@@ -582,6 +616,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       });
       if(data.codEnderecoEntrega){
         this.exibirClienteTerceiro(data.notaFiscalMae);
+
       }
 
       this.dadosLancamento.data = data.dataLancamento;
@@ -1380,6 +1415,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.getLocaisEntrega(codCliente, source);
       this.getDadosRelacionamento(codCliente);
       this.getFormasPagamento(codCliente);
+
     }
   }
 
@@ -1836,14 +1872,19 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         }
       }
   }
-
-  exibirClienteTerceiro(event: any){
-    if(event == 1){
+ // ACA SE REALIZARON CAMBIOS PARA LLAMAR A DIRECCION AL ESCOGER CLIENTE
+  exibirClienteTerceiro(event: any) {
+    if (event.notaFiscalMae === 1) {
       this.exibirClienteT = true;
-    }else{
+      // Carga la dirección del cliente en el campo codEndereco del formulario
+      this.form.controls['codEndereco'].setValue(event.direccion);
+    } else {
       this.exibirClienteT = false;
+      // Si el cliente no tiene una dirección asociada, se puede borrar el valor del campo codEndereco
+      this.form.controls['codEndereco'].setValue('');
     }
   }
+
 
   setClientTerceiro(cod: any){
     for (let i = 0; i < this.locaisEntrega.length; i++) {

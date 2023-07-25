@@ -112,25 +112,25 @@
     </div>
 
     <div class="col shadow-sm mt-4" id="blocos">
-      <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(2)">
+      <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(1)">
         <span class="fas fa-list-alt d-flex justify-content-center align-items-center" id="icon-gray"></span>
         <div class="d-flex justify-content-center align-items-center ml-2"><strong>Datos de cotización</strong></div>
         <div class="col"></div>
         <div class="d-flex justify-content-end align-items-center">
 
-          <div class="d-flex float-end align-items-center mr-4" *ngIf="showBloco2">
+          <div class="d-flex float-end align-items-center mr-4" *ngIf="showBloco1">
             <i class="fas fa-caret-down"
               style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
           </div>
 
-          <div class="d-flex float-end align-items-center mr-4" *ngIf="!showBloco2">
+          <div class="d-flex float-end align-items-center mr-4" *ngIf="!showBloco1">
             <i class="fas fa-caret-up"
               style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
           </div>
         </div>
       </div>
 
-      <div class="col" [hidden]=showBloco2>
+      <div class="col" [hidden]=showBloco1>
         <div class="form-row">
           <div class="form-group col-lg-2">
             <label class="mb-1" for="codCotacao">Número</label>
@@ -166,11 +166,12 @@
             <input type="text" class="form-control" id="codRazaoSocial" formControlName="codRazaoSocial"
               [readonly]="visualizar" placeholder="Selecionar..." [attr.disabled]="true" />
           </div>
+        </div>
+        <div class="row">
           <div class="form-group col-lg-2">
             <label class="my-auto" for="codEndereco">Dirección</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName="titulo" type="text" class="form-control" [readonly]="true"
-                [attr.disabled]="true" />
+              <input formControlName="codEndereco" type="text" class="form-control" [readonly]="true" [attr.disabled]="true" />
             </div>
           </div>
         </div>
@@ -178,13 +179,13 @@
           <div class="form-group col-lg-2">
             <label class="my-auto" for="codEndereco">NIT</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName="titulo" type="text" class="form-control" />
+              <input formControlName="codRazaoSocial"type="text" class="form-control" />
             </div>
           </div>
           <div class="form-group col-lg-2">
-            <label class="my-auto" for="codEndereco">Nombre factura</label>
+            <label class="my-auto" for="razaoSocial">Nombre factura</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName="titulo" type="text" class="form-control" />
+              <input formControlName="razaoSocial" type="text" class="form-control" />
             </div>
           </div>
           <!--jjjjjjj-->
@@ -229,13 +230,83 @@
             <label for="dataEntrega">Referencia</label>
             <input type="text" class="form-control">
           </div>
+
+        </div>
+        <!--novos campos fim-->
+
+        <div class="row">
           <div class="form-group col-lg-2">
-            <label for="codFormaContato">Tipo de Contacto</label>
-            <ng-select [searchable]="true" [clearable]="false" [items]="formasContato" formControlName="codFormaContato"
-              [readonly]="visualizar" [virtualScroll]="true" placeholder="Selecione..." bindLabel="descricao"
-              bindValue="codFormaContato">
-              <!--  [ngClass]="onFieldError('codFormaContato') + ' ' + onFieldRequired(form.controls.codFormaContato)"-->
+            <label for="orderBy">Ejecutivo de ventas</label>
+            <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
+              <option value="nrPedido">...</option>
+            </select>
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="orderBy">Propietario</label>
+            <input type="text" class="form-control">
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="dataEntrega">Descuento % por línea</label>
+            <input type="text" class="form-control">
+  </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- datos de envio -->
+
+    <div class="col shadow-sm mt-4" id="blocos">
+      <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(6)">
+        <span class="fas fa-list-alt d-flex justify-content-center align-items-center" id="icon-gray"></span>
+        <div class="d-flex justify-content-center align-items-center ml-2"><strong>Datos de Envio</strong></div>
+        <div class="col"></div>
+        <div class="d-flex justify-content-end align-items-center">
+
+          <div class="d-flex float-end align-items-center mr-4" *ngIf="showBloco6">
+            <i class="fas fa-caret-down"
+              style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
+          </div>
+
+          <div class="d-flex float-end align-items-center mr-4" *ngIf="!showBloco6">
+            <i class="fas fa-caret-up"
+              style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col" [hidden]=showBloco6>
+
+        <div class="form-row">
+          <div class="form-group col-lg-3">
+            <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
+              <label class="my-auto" for="codContato">Persona de contacto</label>
+              <div class="my-auto text-uppercase" style="font-size: 11px"
+                *ngIf="form.value.codCliente != null && !visualizar">
+                <a id="top-links" class="text-primary mr-2" href="javascript:void(0)" (click)="onDetalhesContato()">
+                  Detalles
+                </a>
+
+                <a id="top-links" class="text-primary mr-2" href="javascript:void(0)"
+                  [routerLink]="[getLinkAddContato()]" target="_blank">
+                  Adicionar
+                </a>
+
+                <a id="top-links" class="text-primary mr-2" href="javascript:void(0)" tooltip="Recarregar"
+                  (click)="onReloadContatos()">
+                  <i class="fas fa-redo-alt text-light"></i>
+                </a>
+              </div>
+            </div>
+            <ng-select [searchable]="true" [clearable]="false" [items]="contatos" formControlName="codContato"
+              placeholder="Selecione..." [virtualScroll]="true" bindLabel="nomeContato" bindValue="codContato"
+              [loading]="contatosLoader" loadingText="Carregando..." [readonly]="visualizar">
             </ng-select>
+            <!-- [ngClass]="onFieldError('codContato') + ' ' + onFieldRequired(form.controls.codContato)"-->
+            <!-- <invalid-form-control [show]="onFieldInvalid('codContato')" message="Contato responsável é obrigatório."></invalid-form-control>-->
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="dataEntrega">Referencia</label>
+            <input type="text" class="form-control">
           </div>
         </div>
 
@@ -253,20 +324,6 @@
               <label class="my-auto" for="codEndereco">Lugar de entrega</label>
               <div class="my-auto text-uppercase" style="font-size: 11px">
                 <!-- *ngIf="form.value.codCliente != null && !visualizar"-->
-                <a id="top-links" class="text-primary mr-2" href="javascript:void(0)"
-                  (click)="onDetalhesLocalEntrega()">
-                  Detalles
-                </a>
-
-                <a id="top-links" class="text-primary mr-2" href="javascript:void(0)"
-                  [routerLink]="[getLinkAddLocalEntrega()]" target="_blank">
-                  Adicionar
-                </a>
-
-                <a id="top-links" class="text-primary mr-2" href="javascript:void(0)" tooltip="Recarregar"
-                  (click)="onReloadLocalEntrega()">
-                  <i class="fas fa-redo-alt text-light"></i>
-                </a>
               </div>
             </div>
             <ng-select [searchable]="true" [clearable]="false" [items]="locaisEntrega"
@@ -277,6 +334,7 @@
             <!--  [ngClass]="onFieldError('codEndereco') + ' ' + onFieldRequired(form.controls.codEndereco)"-->
             <!--<invalid-form-control [show]="onFieldInvalid('codEndereco')" message="Local de entrega é obrigatório."></invalid-form-control>-->
           </div>
+
         </div>
         <!--novos campos fim-->
         <div class="form-row">
@@ -286,10 +344,6 @@
                 <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
                   <label class="my-auto" for="codFormaPagamento">Forma de Pago</label>
                   <div class="my-auto text-uppercase" style="font-size: 11px">
-                    <a id="top-links" class="text-primary mr-2" href="javascript:void(0)"
-                      (click)="onVisualizarDuplicatas()">
-                      Visualizar duplicatas
-                    </a>
                   </div>
                 </div>
                 <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
@@ -302,32 +356,8 @@
                   message="El tipo de pago es obligatorio."></invalid-form-control>
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group col d-flex">
-                <div class="custom-control custom-checkbox mt-auto">
-                  <input type="checkbox" class="custom-control-input" id="duplicatas-somente-carteira"
-                    formControlName="duplicatasSomenteCarteira" [checked]="duplicatasSomenteCarteira ? true : false"
-                    (change)="checkCheckBoxvalue($event)">
-                  <label class="custom-control-label" for="duplicatas-somente-carteira">
-                    Duplicadas solo para algunas billeteras
-                  </label>
-                </div>
-              </div>
-            </div>
           </div>
-          <div class="form-group col-lg-2">
-            <label for="orderBy">Condiciones de pago</label>
-            <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
-              <option value="nrPedido">PLazo de pago de 10 días</option>
-            </select>
-          </div>
-          <div class="form-group col-lg-1">
-            <label for="orderBy">Moneda</label>
-            <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
-              <option value="nrPedido">Bs.</option>
-              <option value="nmPedido">USD</option>
-            </select>
-          </div>
+
           <div class="form-group col-lg-1">
             <label for="orderBy">Estado</label>
             <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
@@ -342,24 +372,6 @@
               <option value="nmPedido">No</option>
             </select>
           </div>
-          <div class="form-group col-lg-2">
-            <label for="dataEntrega">Fecha de Entrega</label>
-            <input class="form-control" id="dataEntrega" type="text" placeholder="Selecione..." bsDatepicker
-              [bsConfig]="bsConfig" formControlName="dataEntrega" [readonly]="visualizar">
-            <!-- -->
-            <invalid-form-control [show]="onFieldInvalid('dataEntrega')"
-              message="La fecha de entrega es obligatorio."></invalid-form-control>
-          </div>
-          <div class="form-group col-lg-2">
-            <label for="dataValidade">Válido hasta</label>
-            <input class="form-control" id="dataValidade" type="datetime" bsDatepicker [bsConfig]="bsConfig"
-              formControlName="dataValidade" [readonly]="true" [attr.disabled]="true" (bsValueChange)="onChangeValidadeProposta($event)">
-            <!-- [ngClass]="onFieldError('dataValidade') + ' ' + onFieldRequired(form.controls.dataValidade)" -->
-            <invalid-form-control [show]="onFieldInvalid('dataValidade') == 'required'"
-              message="Data de validade é obrigatório."></invalid-form-control>
-            <invalid-form-control [show]="onFieldInvalid('dataValidade') == 'maxDate'"
-              message="Não deve ser superior a 15 dias."></invalid-form-control>
-          </div>
         </div>
         <div class="row">
           <div class="form-group col-lg-2">
@@ -369,32 +381,16 @@
             </select>
           </div>
           <div class="form-group col-lg-2">
-            <label for="orderBy">Propietario</label>
-            <input type="text" class="form-control">
+            <label class="my-auto" for="codEndereco">Dirección</label>
+            <div class="my-1 text-uppercase" style="font-size: 11px">
+              <input formControlName="titulo" type="text" class="form-control" [readonly]="true"
+                [attr.disabled]="true" />
+            </div>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group col-lg-2">
-            <label for="dataEntrega">Total peso</label>
-            <input type="text" class="form-control">
-          </div>
-          <div class="form-group col-lg-2">
-            <label for="dataEntrega">Total en Bs.</label>
-            <input type="text" class="form-control">
-          </div>
-          <div class="form-group col-lg-2">
-            <label for="dataEntrega">Total en USD.</label>
-            <input type="text" class="form-control">
-          </div>
-          <div class="form-group col-lg-2">
-            <label for="dataEntrega">Descuento % por línea</label>
-            <input type="text" class="form-control">
-          </div>
-        </div>
       </div>
     </div>
-
     <!-- <div class="row" [hidden]="visualizar">
       <div class="col">
         <hr class="my-5">
