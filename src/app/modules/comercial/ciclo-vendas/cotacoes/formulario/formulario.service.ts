@@ -158,5 +158,4 @@ export class ComercialCicloVendasCotacoesFormularioService {
   getCliente(codCliente){
     return this.http.get(`http://127.0.0.1:8000/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
   }
-
 }

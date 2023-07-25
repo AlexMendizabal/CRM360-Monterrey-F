@@ -149,57 +149,59 @@
           <detail-panel>
             <div class="border-right border-left border-bottom px-3 pt-3">
               <div *ngIf="dadosCadastraisLoaded && !dadosCadastraisEmpty">
-                <custom-table [config]="tableConfig">
-                  <ng-template #thead let-thead>
-                    <tr>
-                      <th scope="col"></th>
-                      <th scope="col" class="hover">
-                        <thead-sorter value="fecha inicial"></thead-sorter>
-                      </th>
-                      <th scope="col" class="hover">
-                        <thead-sorter value="fecha final"></thead-sorter>
-                      </th>
-                      <th
-                        scope="col"
-                        class="text-center hover"
-                        (click)="setOrderByclinte('cliente')">
-                        <thead-sorter value="Cliente" [active]="orderBy == 'cliente'" [sort]="orderType"></thead-sorter>
-                      </th>
-                      <th
-                        scope="col"
-                        class="text-center hover"
-                        (click)="setOrderByclinte('sucursal')">
-                        <thead-sorter value="Sucursal" [active]="orderBy == 'sucursal'" [sort]="orderType"></thead-sorter>
-                      </th>
-                      <th scope="col" class="hover">
-                        <thead-sorter value="Promotor"></thead-sorter>
-                      </th>
-                      <th scope="col" class="hover">
-                        <thead-sorter value="Titulo"></thead-sorter>
-                      </th>
-                      <th scope="col" class="hover">
-                        <thead-sorter value="Estado"></thead-sorter>
-                      </th>
-                    </tr>
-                  </ng-template>
-                  <ng-template #tbody let-tbody>
-                    <ng-container>
-                      <tr *ngFor="let cliente of resultcliente">
-                        <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover"></td>
-                        <td class="hover">{{ cliente.fecha_inicio }}</td>
-                        <td class="hover">{{ cliente.fecha_fin }}</td>
-                        <td class="text-center hover">{{ cliente.cliente }}</td>
-                        <td class="hover">{{ cliente.sucursal }}</td>
-                        <td class="hover">{{ cliente.vendedor }}</td>
-                        <td class="hover">{{ cliente.motivo }}</td>
-                        <td class="hover">{{ cliente.estado }}</td>
+                <div class="table-responsive">
+                  <custom-table [config]="tableConfig">
+                    <ng-template #thead let-thead>
+                      <tr>
+                        <th scope="col"></th>
+                        <th scope="col" class="hover">
+                          <thead-sorter value="fecha inicial"></thead-sorter>
+                        </th>
+                        <th scope="col" class="hover">
+                          <thead-sorter value="fecha final"></thead-sorter>
+                        </th>
+                        <th
+                          scope="col"
+                          class="text-center hover"
+                          (click)="setOrderByclinte('cliente')">
+                          <thead-sorter value="Cliente" [active]="orderBy == 'cliente'" [sort]="orderType"></thead-sorter>
+                        </th>
+                        <th
+                          scope="col"
+                          class="text-center hover"
+                          (click)="setOrderByclinte('sucursal')">
+                          <thead-sorter value="Sucursal" [active]="orderBy == 'sucursal'" [sort]="orderType"></thead-sorter>
+                        </th>
+                        <th scope="col" class="hover">
+                          <thead-sorter value="Promotor"></thead-sorter>
+                        </th>
+                        <th scope="col" class="hover">
+                          <thead-sorter value="Titulo"></thead-sorter>
+                        </th>
+                        <th scope="col" class="hover">
+                          <thead-sorter value="Estado"></thead-sorter>
+                        </th>
                       </tr>
-                      <tr *ngIf="resuldata.length === 0">
-                        <td colspan="6" class="text-center">Sin datos registrados</td>
-                      </tr>
-                    </ng-container>
-                  </ng-template>
-                </custom-table>
+                    </ng-template>
+                    <ng-template #tbody let-tbody>
+                      <ng-container>
+                        <tr *ngFor="let cliente of resultcliente">
+                          <td [ngClass]="classStatusBorder(cliente.Estado)" class="text-center hover"></td>
+                          <td class="hover">{{ cliente.fecha_inicio }}</td>
+                          <td class="hover">{{ cliente.fecha_fin }}</td>
+                          <td class="text-center hover">{{ cliente.cliente }}</td>
+                          <td class="hover">{{ cliente.sucursal }}</td>
+                          <td class="hover">{{ cliente.vendedor }}</td>
+                          <td class="hover">{{ cliente.motivo }}</td>
+                          <td class="hover">{{ cliente.estado }}</td>
+                        </tr>
+                        <tr *ngIf="resuldata.length === 0">
+                          <td colspan="6" class="text-center">Sin datos registrados</td>
+                        </tr>
+                      </ng-container>
+                    </ng-template>
+                  </custom-table>
+                </div>
               </div>
             </div>
           </detail-panel>

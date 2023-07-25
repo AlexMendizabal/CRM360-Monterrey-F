@@ -58,5 +58,5 @@ export class ComercialAgendaFormularioService {
     return this.http
       .get(`${this.API}/motivos-reagendamento`)
       .pipe(take(1), retry(2));
-  }
+}
 }

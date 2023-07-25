@@ -36,6 +36,10 @@ export class PNotifyService {
     this.showMessage('notice', 'Advertencia', message);
   }
 
+  delete(message: string = 'Operación eliminada con éxito.'){
+    this.showMessage('error', 'Algo salió mal.', message);
+  }
+
   private showMessage(type: string, title: string, message: string) {
     PNotify.alert({
       addClass: 'custom',

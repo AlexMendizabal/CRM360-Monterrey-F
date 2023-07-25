@@ -1,7 +1,7 @@
 <loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
 <loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
 <app-header [appTitle]="appTitle">
-  <button type="button" (click)="onReset()">Limpar</button>
+  <button type="button" (click)="onReset()">Limpiar</button>
   <button type="button" (click)="onFilter()">Filtrar</button>
   <button type="button" [routerLink]="['./novo']">Adicionar</button>
 </app-header>
@@ -10,7 +10,7 @@
     <form autocomplete="off" [formGroup]="form">
       <div class="form-row">
         <div class="form-group col">
-          <label for="nome">Nome</label>
+          <label for="nome">Nombre</label>
           <input id="nome" type="text" class="form-control" placeholder="DIGITE..." formControlName="nome" (keyup.enter)="onFilter()">
         </div>
         <div class="form-group col">
@@ -59,7 +59,7 @@
           </ng-select>
         </div>
         <div class="form-group col">
-          <label for="tipoAtividade">Tipo de Atividade</label>
+          <label for="tipoAtividade">Tipo de Actividades</label>
           <ng-select
             [searchable]="true"
             [clearable]="true"
@@ -80,7 +80,7 @@
           </ng-select>
         </div>
         <div class="form-group col">
-          <label for="situacao">Situação</label>
+          <label for="situacao">Situación</label>
           <select
             name="situacao"
             id="situacao"
@@ -89,8 +89,8 @@
             (change)="onFilter()"
           >
             <option value="">Todos</option>
-            <option value="1">Ativos</option>
-            <option value="0">Inativos</option>
+            <option value="1">Activos</option>
+            <option value="0">Inactivos</option>
           </select>
         </div>
         <div class="form-group col-1">
@@ -118,10 +118,10 @@
         <thead class="thead-light">
           <tr>
             <th style="width:100px">ID</th>
-            <th style="width: 30%">Nome</th>
+            <th style="width: 30%">Nombre</th>
             <th>Módulo</th>
             <th>Submódulo</th>
-            <th>Tipo de atividade</th>
+            <th>Tipo de actividades</th>
             <th style="width:70px"></th>
             <th style="width:70px"></th>
           </tr>
