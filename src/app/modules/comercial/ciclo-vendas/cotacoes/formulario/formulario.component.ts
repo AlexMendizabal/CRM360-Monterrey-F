@@ -1,3 +1,4 @@
+import { id } from 'date-fns/locale';
 import { ComercialCadastrosFormasPagamentoService } from './../../../cadastros/formas-pagamento/formas-pagamento.service';
 import { TitulosAgenda } from './../../../cadastros/titulos-agenda/models/titulos-agenda';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -11,7 +12,7 @@ import {
   Input,
   TemplateRef,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Data } from '@angular/router';
 import { Location } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
 import {
@@ -69,6 +70,7 @@ import { FormaContato } from '../../../cadastros/contato/formas-contato/models/f
 import { OrigemContato } from '../../../cadastros/contato/origem-contato/models/origem-contato';
 import { Transportadora } from '../../../cadastros/transportadoras/models/transportadora';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
+import { array } from '@amcharts/amcharts4/core';
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-formulario',
@@ -149,6 +151,15 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   locaisEntrega: Array<any> = [];
   locaisEntregaLoader: boolean;
 
+  listaPrecios: any[] = [];
+
+  listaEjecutivo: any[] = [];
+
+  idVendedor: number = 0;
+
+  tipoEntrega = [];
+  swReferencia : boolean=false;
+
   clientes: any;
   obsPropostas = [];
   detalhesCodCliente: any = [];
@@ -195,7 +206,9 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   showBloco3: boolean = true;
   showBloco4: boolean = true;
   showBloco5: boolean = true;
+  showBloco6: boolean = true;
 
+  idListaPrecio: number ;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -251,8 +264,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.getTituloEndereco();
     this.detalhesCodCliente.NM_CLIE = this.activatedRoute.snapshot.queryParams['codCliente'];
     this.getClientes(this.detalhesCodCliente);
-
-
+    this.getListarPrecios();
+    this.getTodosVendedores();
+    this.tipoEntrega = [
+      { id: 1, nombre: 'entrega en almacen' },
+      { id: 2, nombre: 'entrega en obra'}
+    ];
 
   }
 
@@ -345,7 +362,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         this.appTitle = 'Editar cotação/pedido';
       } else if (params.idReservado) {
         this.idReservado = parseInt(params.idReservado);
-        this.appTitle = 'Nova cotação/pedido';
+        this.appTitle = 'Nueva Cotización/pedido';
       }
 
       if(this.activatedRoute.snapshot.url[0].path == 'visualizar'){
@@ -436,7 +453,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
   // ALGUNOS CAMBIOS FUERON REALIZADOS PARA ENVIAR DIRECCION
   onCliente(event) {
-    console.log('Datos del evento (cliente seleccionado):', event);
+    console.log(event.nombreVendedor);
 
     this.form.patchValue(event);
     this.onChangeCliente(event.codCliente, 'user');
@@ -447,6 +464,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     // Carga la dirección del cliente en el campo codEndereco del formulario
     this.form.controls['codEndereco'].setValue(event.direccion);
     this.form.controls['razaoSocial'].setValue(event.razaoSocial);
+    this.form.controls['nombreVendedor'].setValue(event.nombreVendedor);
+    this.idListaPrecio = event.id_lista_precio;
+    this.idVendedor = event.id_vendedor
+    console.log(event)
+
+
     // Se trata de llamar al cpfCnpj ( AUN NO LO TERMINE)
     this.clientesService.getExisteCpfCnpj(event.codCliente, true).subscribe(
       (response: any) => {
@@ -571,6 +594,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         codCliente: [data.codCliente],
         razaoSocial: [data.razaoSocial],
         codRazaoSocial: [data.codRazaoSocial],
+        nombreVendedor: [data.nombreVendedor],
+        id_lista_precio: [data.id_lista_precio],
+
+
         codContato: [
           data.codContato != 0 ? data.codContato : null,
           [Validators.required],
@@ -1423,6 +1450,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.form.controls.titulo.setValue(event.titulo);
     this.form.controls.TP_ACAO.setValue(event.TP_ACAO);
     this.getCliente(event.COD_CLIE_TERC);
+    console.log(event)
+    if(event.id == 2){
+      this.swReferencia =true
+    }else(
+      this.swReferencia =false
+    )
   }
 
   getLocaisEntrega(codCliente: number, source: string): void {
@@ -1799,7 +1832,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.showBloco4 = !this.showBloco4;
     } else if(bloco == 5){
       this.showBloco5 = !this.showBloco5;
+    } else if(bloco == 6){
+      this.showBloco6 = !this.showBloco6;
     }
+
   }
 
   getDadosRelacionamento(codCliente: number): void {
@@ -1933,4 +1969,29 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       }
     });
   }
+
+  getListarPrecios():void{
+    this.formularioService.getListarPrecios().subscribe(
+      (response: any) => {
+        this.listaPrecios = response.data;
+      },
+      (error: any) =>{
+
+      }
+    )
+  }
+
+  getTodosVendedores():void{
+    this.formularioService.getTodosVendedores().subscribe(
+      (response: any) =>{
+        this.listaEjecutivo = response.data;
+      },
+      (error: any) =>{
+
+      }
+    )
+  }
+
+
+
 }

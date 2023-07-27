@@ -114,7 +114,7 @@
     <div class="col shadow-sm mt-4" id="blocos">
       <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(1)">
         <span class="fas fa-list-alt d-flex justify-content-center align-items-center" id="icon-gray"></span>
-        <div class="d-flex justify-content-center align-items-center ml-2"><strong>Datos de cotización</strong></div>
+        <div class="d-flex justify-content-center align-items-center ml-2"><strong>Datos de cliente</strong></div>
         <div class="col"></div>
         <div class="d-flex justify-content-end align-items-center">
 
@@ -192,13 +192,12 @@
 
           <div class="form-group col-lg-2">
             <label for="orderBy">Lista de precios de clientes</label>
-            <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
-              <option value="nrPedido">...</option>
+            <select class="form-control custom-select" formControlName="lista" id="orderBy">
+              <ng-container *ngFor="let listaPrecio of listaPrecios">
+                <option [value]="listaPrecio.id" [selected]="idListaPrecio === listaPrecio.id">{{ listaPrecio.nombre_lista }}</option>
+              </ng-container>
             </select>
           </div>
-        </div>
-
-        <div class="form-row">
           <div class="form-group col-lg-3">
             <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
               <label class="my-auto" for="codContato">Persona de contacto</label>
@@ -212,11 +211,10 @@
                   [routerLink]="[getLinkAddContato()]" target="_blank">
                   Adicionar
                 </a>
-
-                <a id="top-links" class="text-primary mr-2" href="javascript:void(0)" tooltip="Recarregar"
+                <!-- <a id="top-links" class="text-primary mr-2" href="javascript:void(0)" tooltip="Recarregar"
                   (click)="onReloadContatos()">
                   <i class="fas fa-redo-alt text-light"></i>
-                </a>
+                </a> -->
               </div>
             </div>
             <ng-select [searchable]="true" [clearable]="false" [items]="contatos" formControlName="codContato"
@@ -226,29 +224,27 @@
             <!-- [ngClass]="onFieldError('codContato') + ' ' + onFieldRequired(form.controls.codContato)"-->
             <!-- <invalid-form-control [show]="onFieldInvalid('codContato')" message="Contato responsável é obrigatório."></invalid-form-control>-->
           </div>
-          <div class="form-group col-lg-2">
-            <label for="dataEntrega">Referencia</label>
-            <input type="text" class="form-control">
-          </div>
-
+          <!-- <div class="form-row"> -->
+            <div class="form-group col-lg-2">
+              <label for="dataEntrega">Referencia</label>
+              <input type="text" class="form-control">
+            </div>
+          <!-- </div> -->
         </div>
         <!--novos campos fim-->
-
         <div class="row">
           <div class="form-group col-lg-2">
             <label for="orderBy">Ejecutivo de ventas</label>
             <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
-              <option value="nrPedido">...</option>
+              <ng-container *ngFor="let listaEjecutivo of listaEjecutivo">
+                <option [value]="listaEjecutivo.id"  [selected]="idVendedor === listaEjecutivo.id">{{ listaEjecutivo.nome }}</option>
+              </ng-container>
             </select>
           </div>
           <div class="form-group col-lg-2">
             <label for="orderBy">Propietario</label>
-            <input type="text" class="form-control">
+            <input formControlName="nombreVendedor" type="text" class="form-control" />
           </div>
-          <div class="form-group col-lg-2">
-            <label for="dataEntrega">Descuento % por línea</label>
-            <input type="text" class="form-control">
-  </div>
         </div>
       </div>
     </div>
@@ -275,66 +271,35 @@
       </div>
 
       <div class="col" [hidden]=showBloco6>
-
         <div class="form-row">
-          <div class="form-group col-lg-3">
+          <div class="form-group col-lg-2">
             <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
-              <label class="my-auto" for="codContato">Persona de contacto</label>
-              <div class="my-auto text-uppercase" style="font-size: 11px"
-                *ngIf="form.value.codCliente != null && !visualizar">
-                <a id="top-links" class="text-primary mr-2" href="javascript:void(0)" (click)="onDetalhesContato()">
-                  Detalles
-                </a>
-
-                <a id="top-links" class="text-primary mr-2" href="javascript:void(0)"
-                  [routerLink]="[getLinkAddContato()]" target="_blank">
-                  Adicionar
-                </a>
-
-                <a id="top-links" class="text-primary mr-2" href="javascript:void(0)" tooltip="Recarregar"
-                  (click)="onReloadContatos()">
-                  <i class="fas fa-redo-alt text-light"></i>
-                </a>
+              <label class="my-auto" for="codEndereco">Tipo de entrega</label>
+              <div class="my-auto text-uppercase" style="font-size: 11px">
+                <!-- *ngIf="form.value.codCliente != null && !visualizar"-->
               </div>
             </div>
-            <ng-select [searchable]="true" [clearable]="false" [items]="contatos" formControlName="codContato"
-              placeholder="Selecione..." [virtualScroll]="true" bindLabel="nomeContato" bindValue="codContato"
-              [loading]="contatosLoader" loadingText="Carregando..." [readonly]="visualizar">
+            <ng-select [searchable]="true" [clearable]="false" [items]="tipoEntrega" (change)="onChangeEndereco($event)"
+              formControlName="codEndereco" [virtualScroll]="true" bindLabel="nombre" bindValue="id" placeholder="Selecione..."
+              [loading]="locaisEntregaLoader" loadingText="Carregando..." groupBy="tipo" [readonly]="visualizar">
             </ng-select>
-            <!-- [ngClass]="onFieldError('codContato') + ' ' + onFieldRequired(form.controls.codContato)"-->
-            <!-- <invalid-form-control [show]="onFieldInvalid('codContato')" message="Contato responsável é obrigatório."></invalid-form-control>-->
+            <!--  [ngClass]="onFieldError('codEndereco') + ' ' + onFieldRequired(form.controls.codEndereco)"-->
+            <!--<invalid-form-control [show]="onFieldInvalid('codEndereco')" message="Local de entrega é obrigatório."></invalid-form-control>-->
           </div>
           <div class="form-group col-lg-2">
             <label for="dataEntrega">Referencia</label>
             <input type="text" class="form-control">
           </div>
         </div>
-
         <div class="form-row">
-          <div class="form-group col-lg-3">
+          <!-- <div class="form-group col-lg-3">
             <label for="codDeposito">Almacén</label>
             <ng-select [searchable]="true" [clearable]="false" [items]="filteredDepositos" formControlName="codDeposito"
               [virtualScroll]="true" labelForId="codDeposito" placeholder="Selecione..." bindLabel="nomeDeposito"
-              bindValue="idDeposito" [readonly]="visualizar">
+              bindValue="idDeposito" [readonly]="visualizar"> -->
               <!--  [ngClass]="onFieldError('codDeposito') + ' ' + onFieldRequired(form.controls.codDeposito)"-->
-            </ng-select>
-          </div>
-          <div class="form-group col-lg-3">
-            <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
-              <label class="my-auto" for="codEndereco">Lugar de entrega</label>
-              <div class="my-auto text-uppercase" style="font-size: 11px">
-                <!-- *ngIf="form.value.codCliente != null && !visualizar"-->
-              </div>
-            </div>
-            <ng-select [searchable]="true" [clearable]="false" [items]="locaisEntrega"
-              (change)="onChangeEndereco($event)" formControlName="codEndereco" [virtualScroll]="true"
-              bindLabel="descricao" bindValue="codEndereco" placeholder="Selecione..." [loading]="locaisEntregaLoader"
-              loadingText="Carregando..." groupBy="tipo" [readonly]="visualizar">
-            </ng-select>
-            <!--  [ngClass]="onFieldError('codEndereco') + ' ' + onFieldRequired(form.controls.codEndereco)"-->
-            <!--<invalid-form-control [show]="onFieldInvalid('codEndereco')" message="Local de entrega é obrigatório."></invalid-form-control>-->
-          </div>
-
+            <!-- </ng-select>
+          </div> -->
         </div>
         <!--novos campos fim-->
         <div class="form-row">
@@ -358,33 +323,12 @@
             </div>
           </div>
 
-          <div class="form-group col-lg-1">
-            <label for="orderBy">Estado</label>
-            <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
-              <option value="nrPedido">Abierto</option>
-              <option value="nmPedido">Pendiente</option>
-            </select>
-          </div>
-          <div class="form-group col-lg-1">
-            <label for="orderBy">Autorización</label>
-            <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
-              <option value="nrPedido">Sí</option>
-              <option value="nmPedido">No</option>
-            </select>
-          </div>
         </div>
         <div class="row">
-          <div class="form-group col-lg-2">
-            <label for="orderBy">Ejecutivo de ventas</label>
-            <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
-              <option value="nrPedido">...</option>
-            </select>
-          </div>
-          <div class="form-group col-lg-2">
-            <label class="my-auto" for="codEndereco">Dirección</label>
+          <div *ngIf="swReferencia == true" class="form-group col-lg-2">
+            <label class="my-auto" for="codEndereco">Dirección de destino</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName="titulo" type="text" class="form-control" [readonly]="true"
-                [attr.disabled]="true" />
+              <input formControlName="codEndereco" type="text" class="form-control"/>
             </div>
           </div>
         </div>
