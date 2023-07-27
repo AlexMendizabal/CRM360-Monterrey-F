@@ -48,6 +48,7 @@ export class ComercialCicloVendasCotacoesFormularioModalDetalhesClienteService {
             const initialState = {
               cliente: response.data,
             };
+            console.log(initialState)
 
             this.modalService.show(
               ComercialCicloVendasCotacoesFormularioModalDetalhesClienteComponent,
@@ -62,6 +63,6 @@ export class ComercialCicloVendasCotacoesFormularioModalDetalhesClienteService {
         (error: any) => {
           this.pnotifyService.error();
         }
-      );
-  }
+);
+}
 }

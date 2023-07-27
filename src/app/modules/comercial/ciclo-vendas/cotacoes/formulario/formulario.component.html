@@ -152,7 +152,7 @@
                   Detalles
                 </a>
 
-                <a id="top-links" *ngIf="form.value.codCliente != null" class="text-primary mr-2"
+                <!-- <a id="top-links" *ngIf="form.value.codCliente != null" class="text-primary mr-2"
                   href="javascript:void(0)" (click)="onHistoricoCompras()">
                   Histórico de Compras
                 </a>
@@ -160,7 +160,7 @@
                 <a id="top-links" *ngIf="form.value.codCliente != null" class="text-primary mr-2"
                   href="javascript:void(0)" (click)="navegarHistoricoFinanceiro()">
                   Histórico Financeiro
-                </a>
+                </a> -->
               </div>
             </div>
             <input type="text" class="form-control" id="codRazaoSocial" formControlName="codRazaoSocial"
@@ -203,7 +203,8 @@
               <label class="my-auto" for="codContato">Persona de contacto</label>
               <div class="my-auto text-uppercase" style="font-size: 11px"
                 *ngIf="form.value.codCliente != null && !visualizar">
-                <a id="top-links" class="text-primary mr-2" href="javascript:void(0)" (click)="onDetalhesContato()">
+                <a id="top-links" *ngIf="form.value.codCliente != null" class="text-primary mr-2"
+                  href="javascript:void(0)" (click)="onDetalhesContato()">
                   Detalles
                 </a>
 
@@ -243,7 +244,7 @@
           </div>
           <div class="form-group col-lg-2">
             <label for="orderBy">Propietario</label>
-            <input formControlName="nombreVendedor" type="text" class="form-control" />
+            <input formControlName=" " type="text" class="form-control" [value]="dadosLancamento.nomeVendedor"/>
           </div>
         </div>
       </div>
@@ -328,7 +329,7 @@
           <div *ngIf="swReferencia == true" class="form-group col-lg-2">
             <label class="my-auto" for="codEndereco">Dirección de destino</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName="codEndereco" type="text" class="form-control"/>
+              <input formControlName=" " type="text" class="form-control"/>
             </div>
           </div>
         </div>

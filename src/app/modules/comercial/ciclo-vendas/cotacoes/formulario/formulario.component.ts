@@ -464,24 +464,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     // Carga la dirección del cliente en el campo codEndereco del formulario
     this.form.controls['codEndereco'].setValue(event.direccion);
     this.form.controls['razaoSocial'].setValue(event.razaoSocial);
-    this.form.controls['nombreVendedor'].setValue(event.nombreVendedor);
+    //this.form.controls['nombreVendedor'].setValue(event.nombreVendedor);
     this.idListaPrecio = event.id_lista_precio;
     this.idVendedor = event.id_vendedor
     console.log(event)
 
 
-    // Se trata de llamar al cpfCnpj ( AUN NO LO TERMINE)
-    this.clientesService.getExisteCpfCnpj(event.codCliente, true).subscribe(
-      (response: any) => {
-        // Se trata de llamar al cpfCnpj ( AUN NO LO TERMINE)
-        const cpfCnpj = response && response.hasOwnProperty('CpfCnpj') ? response['CpfCnpj'] : null;
-        this.form.controls['cpfCnpj'].setValue(cpfCnpj);
-      },
-      (error) => {
-        // Manejar el error si es necesario
-        console.error('Error al obtener el CpfCnpj del cliente:', error);
-      }
-    );
 
   }
 
@@ -1631,12 +1619,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   onDetalhesContato(): void {
-    if (this.form.value.codContato != null) {
       this.contatoDetalhesService.showModal(
         this.form.value.codCliente,
         this.form.value.codContato
       );
-    }
   }
 
   onReloadLocalEntrega(): void {
