@@ -1621,7 +1621,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   onDetalhesContato(): void {
       this.contatoDetalhesService.showModal(
         this.form.value.codCliente,
-        this.form.value.codContato
+        this.form.value.codContato  
       );
   }
 
