@@ -1,3 +1,4 @@
+import { id } from 'date-fns/locale';
 import { ComercialCadastrosFormasPagamentoService } from './../../../cadastros/formas-pagamento/formas-pagamento.service';
 import { TitulosAgenda } from './../../../cadastros/titulos-agenda/models/titulos-agenda';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -11,8 +12,9 @@ import {
   Input,
   TemplateRef,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Data } from '@angular/router';
 import { Location } from '@angular/common';
+import { switchMap } from 'rxjs/operators';
 import {
   FormGroup,
   FormBuilder,
@@ -68,6 +70,7 @@ import { FormaContato } from '../../../cadastros/contato/formas-contato/models/f
 import { OrigemContato } from '../../../cadastros/contato/origem-contato/models/origem-contato';
 import { Transportadora } from '../../../cadastros/transportadoras/models/transportadora';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
+import { array } from '@amcharts/amcharts4/core';
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-formulario',
@@ -148,6 +151,15 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   locaisEntrega: Array<any> = [];
   locaisEntregaLoader: boolean;
 
+  listaPrecios: any[] = [];
+
+  listaEjecutivo: any[] = [];
+
+  idVendedor: number = 0;
+
+  tipoEntrega = [];
+  swReferencia : boolean=false;
+
   clientes: any;
   obsPropostas = [];
   detalhesCodCliente: any = [];
@@ -194,7 +206,9 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   showBloco3: boolean = true;
   showBloco4: boolean = true;
   showBloco5: boolean = true;
+  showBloco6: boolean = true;
 
+  idListaPrecio: number ;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -250,6 +264,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.getTituloEndereco();
     this.detalhesCodCliente.NM_CLIE = this.activatedRoute.snapshot.queryParams['codCliente'];
     this.getClientes(this.detalhesCodCliente);
+    this.getListarPrecios();
+    this.getTodosVendedores();
+    this.tipoEntrega = [
+      { id: 1, nombre: 'entrega en almacen' },
+      { id: 2, nombre: 'entrega en obra'}
+    ];
 
   }
 
@@ -262,19 +282,27 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       });
     }
   }
-
-  getTituloEndereco(){
+  //Algunos cambios se realizaron
+  getTituloEndereco() {
     let urlPath = this.activatedRoute.snapshot.url[0].path;
-    if (urlPath == 'editar'){
-    this.formularioService
-    .getLocaisEntrega(this.form.controls.codCliente.value)
-    .subscribe((response: JsonResponse) =>{
-        response.data.enderecos.forEach(element => {
-          if(element.id == this.form.controls.codEndereco.value){
-            this.form.controls.titulo.setValue(element.titulo);
+    if (urlPath == 'editar') {
+      this.formularioService
+        .getLocaisEntrega(this.form.controls.codCliente.value)
+        .pipe(
+          switchMap((response: JsonResponse) => {
+            return response.data.enderecos;
+          })
+        )
+        .subscribe((enderecos: any[]) => {
+          const enderecoSelecionado = enderecos.find(
+            (endereco) => endereco.id === this.form.controls.codEndereco.value
+          );
+
+          if (enderecoSelecionado) {
+            this.form.controls.titulo.setValue(enderecoSelecionado.titulo);
           }
+
         });
-      });
     }
   }
 
@@ -334,7 +362,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         this.appTitle = 'Editar cotação/pedido';
       } else if (params.idReservado) {
         this.idReservado = parseInt(params.idReservado);
-        this.appTitle = 'Nova cotação/pedido';
+        this.appTitle = 'Nueva Cotización/pedido';
       }
 
       if(this.activatedRoute.snapshot.url[0].path == 'visualizar'){
@@ -423,13 +451,28 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       class: 'modal-xl',
     });
   }
-
+  // ALGUNOS CAMBIOS FUERON REALIZADOS PARA ENVIAR DIRECCION
   onCliente(event) {
+    console.log(event.nombreVendedor);
+
     this.form.patchValue(event);
     this.onChangeCliente(event.codCliente, 'user');
     this.onLoadCliente(true);
 
+    // Llama a la función exibirClienteTerceiro con los datos del cliente seleccionado
+    this.exibirClienteTerceiro(event);
+    // Carga la dirección del cliente en el campo codEndereco del formulario
+    this.form.controls['codEndereco'].setValue(event.direccion);
+    this.form.controls['razaoSocial'].setValue(event.razaoSocial);
+    //this.form.controls['nombreVendedor'].setValue(event.nombreVendedor);
+    this.idListaPrecio = event.id_lista_precio;
+    this.idVendedor = event.id_vendedor
+    console.log(event)
+
+
+
   }
+
 
   getVendedor() {
 
@@ -526,6 +569,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             data.duplicatasSomenteCarteira = 0;
           }
 
+
+
       this.form = this.formBuilder.group({
         codCotacao: [{ value: codCotacao, disabled: true }],
         tipoCotacao: [{ value: data.tipoCotacao, disabled: true }],
@@ -537,6 +582,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         codCliente: [data.codCliente],
         razaoSocial: [data.razaoSocial],
         codRazaoSocial: [data.codRazaoSocial],
+        nombreVendedor: [data.nombreVendedor],
+        id_lista_precio: [data.id_lista_precio],
+
+
         codContato: [
           data.codContato != 0 ? data.codContato : null,
           [Validators.required],
@@ -582,6 +631,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       });
       if(data.codEnderecoEntrega){
         this.exibirClienteTerceiro(data.notaFiscalMae);
+
       }
 
       this.dadosLancamento.data = data.dataLancamento;
@@ -1380,6 +1430,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.getLocaisEntrega(codCliente, source);
       this.getDadosRelacionamento(codCliente);
       this.getFormasPagamento(codCliente);
+
     }
   }
 
@@ -1387,6 +1438,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.form.controls.titulo.setValue(event.titulo);
     this.form.controls.TP_ACAO.setValue(event.TP_ACAO);
     this.getCliente(event.COD_CLIE_TERC);
+    console.log(event)
+    if(event.id == 2){
+      this.swReferencia =true
+    }else(
+      this.swReferencia =false
+    )
   }
 
   getLocaisEntrega(codCliente: number, source: string): void {
@@ -1476,7 +1533,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
               _contatos[i].nomeCompleto.length > 1
             )
               contatos.push({
-                codContato: _contatos[i].idSeqTid,
+                codContato: _contatos[i].id,
                 nomeContato: _contatos[i].nomeCompleto,
               });
           }
@@ -1562,12 +1619,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   onDetalhesContato(): void {
-    if (this.form.value.codContato != null) {
       this.contatoDetalhesService.showModal(
         this.form.value.codCliente,
         this.form.value.codContato
       );
-    }
   }
 
   onReloadLocalEntrega(): void {
@@ -1763,7 +1818,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.showBloco4 = !this.showBloco4;
     } else if(bloco == 5){
       this.showBloco5 = !this.showBloco5;
+    } else if(bloco == 6){
+      this.showBloco6 = !this.showBloco6;
     }
+
   }
 
   getDadosRelacionamento(codCliente: number): void {
@@ -1836,14 +1894,19 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         }
       }
   }
-
-  exibirClienteTerceiro(event: any){
-    if(event == 1){
+ // ACA SE REALIZARON CAMBIOS PARA LLAMAR A DIRECCION AL ESCOGER CLIENTE
+  exibirClienteTerceiro(event: any) {
+    if (event.notaFiscalMae === 1) {
       this.exibirClienteT = true;
-    }else{
+      // Carga la dirección del cliente en el campo codEndereco del formulario
+      this.form.controls['codEndereco'].setValue(event.direccion);
+    } else {
       this.exibirClienteT = false;
+      // Si el cliente no tiene una dirección asociada, se puede borrar el valor del campo codEndereco
+      this.form.controls['codEndereco'].setValue('');
     }
   }
+
 
   setClientTerceiro(cod: any){
     for (let i = 0; i < this.locaisEntrega.length; i++) {
@@ -1892,4 +1955,29 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       }
     });
   }
+
+  getListarPrecios():void{
+    this.formularioService.getListarPrecios().subscribe(
+      (response: any) => {
+        this.listaPrecios = response.data;
+      },
+      (error: any) =>{
+
+      }
+    )
+  }
+
+  getTodosVendedores():void{
+    this.formularioService.getTodosVendedores().subscribe(
+      (response: any) =>{
+        this.listaEjecutivo = response.data;
+      },
+      (error: any) =>{
+
+      }
+    )
+  }
+
+
+
 }
