@@ -116,19 +116,19 @@ export class LoginComponent implements OnInit {
         .subscribe(
           (response: any) => {
             if (response.responseCode === 200) {
-             /*  console.log(response); */
-              if (response.token) {
+              this.setUserLogin(response);
+
+              /*  console.log(response); */
+              if (response.token) {/* 
                 var params = {
                   Usuario: 'crm360',
                   Password: 'M1ddlewareCRM360$/',
                 }
                 this.authService.loginSAP(params).subscribe(
                   (respuesta: any) => {
-                    /* console.log(response); */
                     if (respuesta.CodigoRespuesta === 0) {
                       if (respuesta.Mensaje) {
                         response['tokenSAP'] = response.Mensaje;
-                        /* console.log(response); */
                         this.setUserLogin(response);
                       }
                     } else {
@@ -142,6 +142,7 @@ export class LoginComponent implements OnInit {
                 this.pnotifyService.error(
                   'Se ha producido un error al generar su acceso.'
                 );
+              } */
               }
             } else {
               this.pnotifyService.error('Nombre de usuario o contraseña incorrectos.');

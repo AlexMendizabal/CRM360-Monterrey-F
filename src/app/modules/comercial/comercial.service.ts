@@ -57,7 +57,7 @@ export class ComercialService {
     return this.http.get(`${this.API}/sublineas/${id}`).pipe(take(1), retry(2));
   }
 
-  sincronizarMateriales(){
+  sincronizarMateriales() {
     return this.http.get(`${this.API}/sincronizar`).pipe(take(1), retry(2));
   }
   getMateriales(params: any) {
@@ -69,6 +69,14 @@ export class ComercialService {
       .pipe(take(1), retry(2));
   }
 
+  getMaterialesOferta(params: any) {
+    return this.http
+      .get(
+        `${this.API}/materiales_lista_precio`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
   getLinhas(params: any): Observable<Object> {
     let httpParams = new HttpParams();
 

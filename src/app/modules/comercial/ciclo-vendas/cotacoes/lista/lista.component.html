@@ -1,6 +1,6 @@
 <loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
-<app-header appTitle="Cotações">
+<app-header appTitle="Cotizaciones">
   <button type="button" (click)="onReset()">
     Limpar
   </button>
@@ -188,6 +188,9 @@
                   (click)="setOrderBy('estado_oferta')">
                 </thead-sorter>
               </th>
+              <th class="text-truncate text-center">
+                Reporte
+              </th>
 
             </tr>
           </ng-template>
@@ -270,13 +273,14 @@
               <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.lista_precio }}</td>
               <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.modo_entrega }}</td>
               <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.estado_oferta }}</td>
+              <td class="hover">  <a href="" class="text-danger"> <i class="fas fa-file-pdf text-danger"></i> Nota </a>  </td>
               <!-- 
               <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeEmpresa | uppercase }}</td>
               <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeVendedor | uppercase }}</td> -->
             </tr>
           </ng-template>
         </custom-table>
-        <div class="d-flex justify-content-center mt-3" >
+        <div class="d-flex justify-content-center mt-3">
           <pagination [maxSize]="maxSize" [(totalItems)]="totalItems" (pageChanged)="onPageChanged($event)"
             [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
             nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
@@ -341,6 +345,7 @@
                   <thead-sorter value="Total con descuento" [active]="orderBy == 'nombre_moneda'"
                     [sort]="orderType"></thead-sorter>
                 </th>
+
               </tr>
             </ng-template>
             <ng-template #tbody let-tbody>
@@ -376,10 +381,10 @@
             </ng-template>
           </custom-table>
           <empty-result message="Ningún registro encontrado." *ngIf="dadosEmpty"></empty-result>
-          <div class="d-flex justify-content-center mt-3" >
+          <div class="d-flex justify-content-center mt-3">
             <pagination [maxSize]="maxSize" [(totalItems)]="totalModal" (pageChanged)="onPageChangedModal($event)"
-              [(itemsPerPage)]="itemsPerPageModal" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
-              nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+              [(itemsPerPage)]="itemsPerPageModal" [boundaryLinks]="true" [(ngModel)]="currentPage"
+              previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
             </pagination>
           </div>
         </div>

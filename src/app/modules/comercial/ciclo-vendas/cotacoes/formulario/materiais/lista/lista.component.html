@@ -37,26 +37,33 @@
         <form [formGroup]="form">
           <div class="form-row py-3">
             <div class="form-group col-lg-2">
-              <label for="codLinha">Línea</label>
-              <ng-select [searchable]="true" [clearable]="false" placeholder="Selecione..." [items]="linhas"
-                formControlName="codLinha" [virtualScroll]="true" labelForId="codLinha" bindLabel="descricao"
-                bindValue="id" (change)="onChangeLinha($event.id, true)">
+              <label for="codLinha">Familia</label>
+              <ng-select [searchable]="true" [clearable]="false" placeholder="Selecione..." [items]="linhas"  placeholder="Seleccione..."
+                formControlName="codLinha" [virtualScroll]="true" labelForId="idClasse" bindLabel="nomeClasse"
+                bindValue="idClasse" (change)="onChangeLinha($event.idClasse, true)">
                 <!--  [ngClass]="onFieldError('codLinha') + ' ' + onFieldRequired(form.controls.codLinha)"-->
               </ng-select>
             </div>
-            <div class="form-group col-lg-3">
-              <label for="codClasse">Clase</label>
-              <ng-select [searchable]="true" [clearable]="false" placeholder="Selecione..." [items]="filteredClasses"
-                formControlName="codClasse" [virtualScroll]="true" labelForId="codClasse" bindLabel="nomeClasse"
-                bindValue="idClasse" (change)="onChangeClasse($event.idClasse, true, 'application')">
+            <div class="form-group col-lg-2">
+              <label for="codClasse">Grupo</label>
+              <ng-select [searchable]="true" [clearable]="false" placeholder="Selecione..." [items]="grupos"  placeholder="Seleccione..."
+                formControlName="codClasse" [virtualScroll]="true" labelForId="id_linha" bindLabel="descricao"
+                bindValue="id_linha" (change)="onChangegrupo($event.id_linha)">
               </ng-select>
             </div>
-            <div class="form-group col-lg-3">
+            <div class="form-group col-lg-2">
+              <label for="codLinea">Línea</label>
+              <ng-select [searchable]="true" [clearable]="false" placeholder="Selecione..." [items]="lineas" placeholder="Seleccione..."
+                formControlName="codLinea" [virtualScroll]="true" labelForId="ID" bindLabel="NM_SUB_LINH"
+                bindValue="idClasse" (change)="onChangeClasse($event.ID, true, 'application')">
+              </ng-select>
+            </div>
+            <div class="form-group col-lg-4">
               <label for="codMaterial">Material</label>
-              <ng-select [searchable]="true" [clearable]="false" [items]="materiais" placeholder="Selecione..."
-                formControlName="codMaterial" [virtualScroll]="true" labelForId="codMaterial"
-                bindLabel="codigoDescricaoMaterial" bindValue="codigoMaterial" [loading]="materiaisLoader"
-                loadingText="Carregando...">
+              <ng-select [searchable]="true" [clearable]="false" [items]="materiais" placeholder="Seleccione..."
+                formControlName="codMaterial" [virtualScroll]="true" labelForId="id_material"
+                bindLabel="nombre" bindValue="codigoMaterial" [loading]="materiaisLoader"
+                loadingText="Cargando..."  (change)="cambioMaterial($event.id_material)">
               </ng-select>
             </div>
             <!--<div class="form-group col-lg-3">
@@ -81,7 +88,7 @@
             </div> -->
             <div class="form-group col-lg-1">
               <label for="registros">Registros</label>
-              <select class="form-control custom-select" id="registros" formControlName="registros">
+              <select class="form-control custom-select" id="registros" formControlName="registros" (change)="cambioRegistros($event)">
                 <option>50</option>
                 <option>100</option>
                 <option>200</option>
@@ -95,6 +102,16 @@
                 <option value="nmPedido">Por nombre</option>
               </select>
             </div>
+            <!-- <div class="form-group col-lg-3">
+              <label for="codClasse">Código </label>
+              <input type="text" class="form-control"  />
+
+            </div>
+            <div class="form-group col-lg-3">
+              <label for="codClasse">Nombre </label>
+              <input type="text" class="form-control"  />
+
+            </div> -->
           </div>
         </form>
       </tab>
@@ -141,20 +158,19 @@
                 </btn-icon>
               </th>
               <th scope="col" class="text-center align-items-center" [ngStyle]="{ width: columSize('codMaterial') }">
-                <thead-sorter value="Código" [active]="orderBy == 'codMaterial'" [sort]="orderType"
-                  (click)="setOrderBy('codMaterial')">
+                <thead-sorter value="Código" [active]="orderBy == 'codigo_material'" [sort]="orderType"
+                  (click)="setOrderBy('codigo_material')">
                 </thead-sorter>
               </th>
               <th scope="col" [ngStyle]="{ width: columSize('nomeMaterial') }">
-                <thead-sorter value="Descripción de material" [active]="orderBy == 'nomeMaterial'" [sort]="orderType"
-                  (click)="setOrderBy('nomeMaterial')">
+                <thead-sorter value="Descripción de material" [active]="orderBy == 'nombre_material'" [sort]="orderType"
+                  (click)="setOrderBy('nombre_material')">
                 </thead-sorter>
               </th>
-              <!--  <th scope="col" [ngStyle]="{ width: columSize('nomeLinha') }">
-                  Linea
-                </th> -->
-              <th scope="col" [ngStyle]="{ width: columSize('nomeDeposito') }">
-                Almacen
+              <th scope="col" [ngStyle]="{ width: columSize('nombre_almacen') }">
+                <thead-sorter value="Almacén" [active]="orderBy == 'nombre_almacen'" [sort]="orderType"
+                  (click)="setOrderBy('nombre_almacen')">
+                </thead-sorter>
               </th>
               <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                 Unidades
@@ -172,14 +188,14 @@
                 Precio Neto
               </th>
               <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
-                Total USD
+                Moneda
               </th>
               <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                 IVA
               </th>
-              <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+              <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                 Modo Entrega
-              </th>
+              </th> -->
               <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
               </th>
             </tr>
@@ -189,7 +205,7 @@
               <td class="text-truncate text-center" [ngClass]="classStatusBorder(material.disponibilidade)"
                 [ngStyle]="{ width: columSize('disponibilidade') }">
                 <ng-template #tooltipMaterialSemEstoqueTemplate>
-                  <p class="text-nowrap mb-0">Material sem estoque</p>
+                  <p class="text-nowrap mb-0">Seleccionar material</p>
                 </ng-template>
                 <btn-icon [icon]="material.checked == 1 ? 'fas fa-check-square' : 'far fa-square'" size="small"
                   [isDisabled]="material.disponibilidade === 1" [tooltip]="tooltipMaterialSemEstoqueTemplate"
@@ -198,11 +214,11 @@
               </td>
               <td class="text-truncate text-center" [ngStyle]="{ width: columSize('codMaterial') }"
                 (click)="onClickMaterial(i, material)">
-                {{ material.codMaterial }}
+                {{ material.codigo_material }}
               </td>
               <td class="text-truncate" [ngStyle]="{ width: columSize('nomeMaterial') }"
                 (click)="onClickMaterial(i, material)">
-                {{ material.nomeMaterial }}
+                {{ material.nombre_material }}
               </td>
               <!--<td class="text-truncate" [ngStyle]="{ width: columSize('nomeLinha') }"
                   (click)="onClickMaterial(i, material)">
@@ -210,25 +226,25 @@
                 </td> -->
               <td class="text-truncate" [ngStyle]="{ width: columSize('nomeDeposito') }"
                 (click)="onClickMaterial(i, material)">
-                {{ material.nomeDeposito }}
+                {{ material.nombre_almacen }}
               </td>
               <!--- <td class="text-truncate text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }"
                   (click)="onClickMaterial(i, material)">
                   {{ material.estoqueDisponivel | number:'1.3-3' }} {{ material.unidade }}
                 </td> -->
-              <td> {{material.columna1}}</td>
-              <td> {{material.columna2}}</td>
-              <td> {{material.columna3}}</td>
-              <td> {{material.columna4}}</td>
-              <td> {{material.columna5}}</td>
-              <td> {{material.columna6}}</td>
-              <td> {{material.columna7}}</td>
-              <td> {{material.columna8}}</td>
+              <td> {{material.unidad}}</td>
+              <td> {{material.cantidad}}</td>
+              <td> {{ material.precio | number:'1.4-4' }}</td>
+              <td> {{ material.descuento | number:'1.2-2' }}</td>
+              <td> {{ material.precio_neto | number:'1.4-4' }}</td>
+              <td> {{material.nombre_moneda}}</td>
+              <td> {{material.iva | number:'1.2-2' }} %</td>
+             <!--  <td> {{material.columna8}}</td> -->
               <td class="text-right" [ngStyle]="{ width: columSize('buttons') }">
-                <btn-icon icon="fas fa-warehouse" size="small" class="mr-3" tooltip="Detalhamento do estoque"
+                <btn-icon icon="fas fa-warehouse" size="small" class="mr-3" tooltip="MATERIAL COMPROMETIDO"
                   container="body" (click)="onEstoqueDetalhes(material)">
                 </btn-icon>
-                <comercial-ciclo-vendas-cotacoes-formulario-template-button-disponibilidade [index]="i"
+                <!-- <comercial-ciclo-vendas-cotacoes-formulario-template-button-disponibilidade [index]="i"
                   [codMaterial]="material.codMaterial"
                   [deposito]="{ codDeposito: material.codDeposito, nomeDeposito: material.nomeDeposito, quantidade: material.estoqueAtual, unidade: material.unidade }"
                   (onChange)="onChangeDeposito($event)" (activeRow)="onActiveRow($event)"
@@ -238,7 +254,7 @@
                   [codEndereco]="this.codEndereco" [index]="i" [material]="material"
                   [codFormaPagamento]="this.codFormaPagamento" [freteConta]="this.freteConta"
                   (activeRow)="onActiveRow($event)">
-                </comercial-ciclo-vendas-cotacoes-formulario-template-button-outros>
+                </comercial-ciclo-vendas-cotacoes-formulario-template-button-outros> -->
               </td>
             </tr>
           </ng-template>
@@ -267,4 +283,5 @@
       </div>
     </div>
   </div>
+  
 </div>

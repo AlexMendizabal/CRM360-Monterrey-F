@@ -1,7 +1,7 @@
 <div *ngIf="materiais.length > 0">
   <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco()" >
     <span class="fas fa-clipboard d-flex justify-content-center align-items-center" id="icon-gray" ></span>
-    <div class="d-flex justify-content-center align-items-center ml-2"><strong>Resumo da Cotação</strong></div>
+    <div class="d-flex justify-content-center align-items-center ml-2"><strong>Resumen de cotización</strong></div>
     <div class="col"></div>
     <div class="d-flex justify-content-end align-items-center">
 
@@ -51,10 +51,10 @@
                   <span class="ml-0">Item</span>
                 </th>
                 <th scope="col" [ngStyle]="{ width: columSize('nomeMaterial') }">Material</th>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('quantidade') }">Qtde. (Ton)</th>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('qtdeItem') }">Qtde. (Itens)</th>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valor') }">Unit.</th>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorDesc') }">Desconto Unit.</th>
+                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('quantidade') }">Cantidad Kg.</th>
+                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('qtdeItem') }">Cantidad. (Items)</th>
+                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valor') }">Unid.</th>
+                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorDesc') }">Descuento Uni.</th>
                 <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorIcms') }">ICMS</th>
                 <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorIpi') }">IPI</th>
                 <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorTotal') }">Total</th>

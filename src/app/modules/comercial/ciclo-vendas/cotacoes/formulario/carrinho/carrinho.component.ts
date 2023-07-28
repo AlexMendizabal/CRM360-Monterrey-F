@@ -122,7 +122,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     quantidade: 0,
     qtdeItem: 0,
     qtdePecas: 0,
-    quantidadeItem:0,
+    quantidadeItem: 0,
     valor: 0,
     valorIpi: 0,
     valorIcms: 0,
@@ -163,7 +163,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     this.calculoSubject();
     this.descontoSubject();
     this.setFormBuilder();
-    if(this.appTitle == 'visualizar cotação/pedido'){
+    if (this.appTitle == 'visualizar cotação/pedido') {
       this.visualizar = true;
     }
     // this.checkPreviously();
@@ -208,6 +208,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     this.materiaisSubscription = this.formularioService.materiaisSubject.subscribe(
       (response: any) => {
         const materiais = this.formatMateriais(response);
+        console.log(materiais);
+        console.log('materiales');
+
         this.onAddMaterial(materiais);
       }
     );
@@ -231,7 +234,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
         let qtdePecas: number;
 
-        if(calculo.tipoLancamento == 6){
+        if (calculo.tipoLancamento == 6) {
           qtdePecas = 0;
         } else {
           qtdePecas = calculo.qtde;
@@ -243,9 +246,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
           calculo.tipoCalculo == 5
         ) {
           formGroup.controls.quantidade.setValue(calculo.tonelada);
-          if(calculo.unidade == "To" || calculo.unidade == "Ton"){
+          if (calculo.unidade == "To" || calculo.unidade == "Ton") {
             formGroup.controls.quantidadeItem.setValue(calculo.tonelada);
-          }else {
+          } else {
             formGroup.controls.quantidadeItem.setValue(calculo.qtde);
           }
           formGroup.controls.qtdeItem.setValue(calculo.qtde);
@@ -350,6 +353,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       materiais: this.form.value.materiais,
       total: this.total,
     });
+    console.log(this.form.value.materiais)
   }
 
   setFormBuilder(): void {
@@ -371,11 +375,13 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   }
 
   onAddMaterial(materiais: Array<ICarrinhoModel>): void {
+    /* console.log(materiais) */
     if (materiais.length > 0) {
       let hasError = false,
         qtdeAdicionados = 0;
 
       for (let i = 0; i < materiais.length; i++) {
+        console.log(materiais[i]);
         if (
           (this.selectedCodEmpresa === null ||
             this.selectedCodEmpresa === materiais[i].codEmpresa) &&
@@ -384,73 +390,73 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
           let quantidadeItem: number;
 
-          if(materiais[i].unidade == 'To' || materiais[i].unidade == 'Ton'){
+          if (materiais[i].unidade == 'To' || materiais[i].unidade == 'Ton') {
             quantidadeItem = materiais[i].quantidade;
           } else {
             quantidadeItem = materiais[i].qtdeItem;
           }
 
           // if (this.checkMaterialExists(materiais[i]) === false) {
-            this.materiais.push(
-              this.formBuilder.group({
-                codCotacao: [materiais[i].codCotacao],
-                codDeposito: [materiais[i].codDeposito],
-                codEmpresa: [materiais[i].codEmpresa],
-                codMaterial: [materiais[i].codMaterial],
-                idReservado: [materiais[i].idReservado],
-                fatorMultiplo: [materiais[i].fatorMultiplo],
-                materialAssociado: [materiais[i].materialAssociado],
-                medida1: [materiais[i].medida1],
-                medida2: [materiais[i].medida2],
-                nomeDeposito: [materiais[i].nomeDeposito],
-                nomeEmpresa: [materiais[i].nomeEmpresa],
-                nomeMaterial: [materiais[i].nomeMaterial],
-                percentualDesc: [materiais[i].percentualDesc],
-                percentualIcms: [materiais[i].percentualIcms],
-                percentualIpi: [materiais[i].percentualIpi],
-                pesoEspecifico: [materiais[i].pesoEspecifico],
-                quantidade: [materiais[i].quantidade, [Validators.required]],
-                quantidadeItem: [quantidadeItem],
-                qtdeItem: [
-                  materiais[i].qtdeItem === materiais[i].quantidade
+          this.materiais.push(
+            this.formBuilder.group({
+              codCotacao: [materiais[i].codCotacao],
+              codDeposito: [materiais[i].codDeposito],
+              codEmpresa: [materiais[i].codEmpresa],
+              codMaterial: [materiais[i].codMaterial],
+              idReservado: [materiais[i].idReservado],
+              fatorMultiplo: [materiais[i].fatorMultiplo],
+              materialAssociado: [materiais[i].materialAssociado],
+              medida1: [materiais[i].medida1],
+              medida2: [materiais[i].medida2],
+              nomeDeposito: [materiais[i].nomeDeposito],
+              nomeEmpresa: [materiais[i].nomeEmpresa],
+              nomeMaterial: [materiais[i].nomeMaterial],
+              percentualDesc: [materiais[i].percentualDesc],
+              percentualIcms: [materiais[i].percentualIcms],
+              percentualIpi: [materiais[i].percentualIpi],
+              pesoEspecifico: [materiais[i].pesoEspecifico],
+              quantidade: [materiais[i].quantidade, [Validators.required]],
+              quantidadeItem: [quantidadeItem],
+              qtdeItem: [
+                materiais[i].qtdeItem === materiais[i].quantidade
                   ? 0
                   : materiais[i].qtdeItem
-                ],
-                qtdePecas:[materiais[i].qtdePecas],
-                unidade: [materiais[i].unidade],
-                tipoDesc: [materiais[i].tipoDesc],
-                valor: [materiais[i].valor, [Validators.required]],
-                valorDesc: [materiais[i].valorDesc],
-                valorIcms: [materiais[i].valorIcms, [Validators.required]],
-                valorIcmsSt: [
-                  materiais[i].valorIcmsSt != null
-                    ? materiais[i].valorIcmsSt
-                    : 0,
-                  [Validators.required],
-                ],
-                valorIpi: [materiais[i].valorIpi, [Validators.required]],
-                valorTotal: [materiais[i].valorTotal, [Validators.required]],
-                valorTotalOri: [materiais[i].valorTotalOri],
-                valorMaterialBarra: [materiais[i].valorMaterialBarra],
-                valorMaterialContrato: [materiais[i].valorMaterialContrato],
-                valorMaterialPreco: [materiais[i].valorMaterialPreco],
-                valorServicoApsContrato: [materiais[i].valorServicoApsContrato],
-                valorServicoContrato: [materiais[i].valorServicoContrato],
-                valorUnit: [materiais[i].valorUnit],
-                valorBaseIcmsSt:[materiais[i].valorBaseIcmsSt],
-                aliquotaReducaoIcms:[materiais[i].aliquotaReducaoIcms],
-                controladoPorLote: [materiais[i].controladoPorLote],
-                sequenciaLote: [materiais[i].sequenciaLote],
-                loteFabricacao: [materiais[i].loteFabricacao],
-                estoqueLote:[materiais[i].estoqueLote],
-                nrPedidoCliente: [materiais[i].nrPedidoCliente],
-                codItemPedidoCliente: [materiais[i].codItemPedidoCliente],
-                codProdutoCliente: [materiais[i].codProdutoCliente]
-              })
-            );
+              ],
+              qtdePecas: [materiais[i].qtdePecas],
+              unidade: [materiais[i].unidade],
+              tipoDesc: [materiais[i].tipoDesc],
+              valor: [materiais[i].valor, [Validators.required]],
+              valorDesc: [materiais[i].valorDesc],
+              valorIcms: [materiais[i].valorIcms, [Validators.required]],
+              valorIcmsSt: [
+                materiais[i].valorIcmsSt != null
+                  ? materiais[i].valorIcmsSt
+                  : 0,
+                [Validators.required],
+              ],
+              valorIpi: [materiais[i].valorIpi, [Validators.required]],
+              valorTotal: [materiais[i].valorTotal, [Validators.required]],
+              valorTotalOri: [materiais[i].valorTotalOri],
+              valorMaterialBarra: [materiais[i].valorMaterialBarra],
+              valorMaterialContrato: [materiais[i].valorMaterialContrato],
+              valorMaterialPreco: [materiais[i].valorMaterialPreco],
+              valorServicoApsContrato: [materiais[i].valorServicoApsContrato],
+              valorServicoContrato: [materiais[i].valorServicoContrato],
+              valorUnit: [materiais[i].valorUnit],
+              valorBaseIcmsSt: [materiais[i].valorBaseIcmsSt],
+              aliquotaReducaoIcms: [materiais[i].aliquotaReducaoIcms],
+              controladoPorLote: [materiais[i].controladoPorLote],
+              sequenciaLote: [materiais[i].sequenciaLote],
+              loteFabricacao: [materiais[i].loteFabricacao],
+              estoqueLote: [materiais[i].estoqueLote],
+              nrPedidoCliente: [materiais[i].nrPedidoCliente],
+              codItemPedidoCliente: [materiais[i].codItemPedidoCliente],
+              codProdutoCliente: [materiais[i].codProdutoCliente]
+            })
+          );
 
-            this.setSelectedCodEmpresa(materiais[i].codEmpresa);
-            qtdeAdicionados++;
+          this.setSelectedCodEmpresa(materiais[i].codEmpresa);
+          qtdeAdicionados++;
           // }
         } else {
           hasError = true;
@@ -502,10 +508,20 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   }
 
   onCalcMaterial(index: number, material: ICarrinhoModel): void {
-    if(material.controladoPorLote == 1){
-      if(material.sequenciaLote == null){
+
+    this.calculoService.showModal(
+      index,
+      material,
+      this.codCliente,
+      1,
+      this.codEndereco
+    );
+
+
+    /* if (material.controladoPorLote == 1) {
+      if (material.sequenciaLote == null) {
         this.pnotifyService.notice("Selecione o lote do material");
-      }else{
+      } else {
         if (this.codCliente !== null) {
           this.calculoService.showModal(
             index,
@@ -518,8 +534,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
           this.scrollTop.emit(true);
         }
       }
-    }else{
+    } else {
       if (this.codCliente !== null) {
+        console.log(index);
         this.calculoService.showModal(
           index,
           material,
@@ -530,7 +547,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       } else {
         this.scrollTop.emit(true);
       }
-    }
+    } */
   }
 
   onSelecionaLote(index: number, material: ICarrinhoModel): void {
@@ -587,7 +604,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     );
   }
 
-  onLoteSelecionado(lote: ILoteModel): void{
+  onLoteSelecionado(lote: ILoteModel): void {
     const formArray = this.form.controls.materiais as FormArray;
     const formGroup = formArray.controls[lote.index] as FormGroup;
 
@@ -713,9 +730,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     for (let index = 0; index < data.length; index++) {
       let material = {
         codCotacao: this.codCotacao !== null ? this.codCotacao : null,
-        codDeposito: data[index].codDeposito,
+        codDeposito: data[index].nombre_almacen,
         codEmpresa: data[index].codEmpresa,
-        codMaterial: data[index].codMaterial,
+        codMaterial: data[index].id_material,
         idReservado: this.idReservado !== null ? this.idReservado : null,
         fatorMultiplo: data[index].fatorMultiplo,
         materialAssociado: data[index].materialAssociado,
@@ -723,16 +740,16 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         medida2: data[index].medida2,
         nomeDeposito: data[index].nomeDeposito,
         nomeEmpresa: data[index].nomeEmpresa,
-        nomeMaterial: data[index].nomeMaterial,
+        nomeMaterial: data[index].nombre_material,
         percentualDesc: 0,
         percentualIcms: data[index].percentualIcms,
         percentualIpi: data[index].percentualIpi,
-        pesoEspecifico: data[index].pesoEspecifico,
+        pesoEspecifico: data[index].peso,
         quantidade: 0,
-        quantidadeItem:0,
+        quantidadeItem: 0,
         qtdeItem: 0,
         qtdePecas: 0,
-        unidade: data[index].unidade,
+        unidade: data[index].unidades,
         tipoDesc: null,
         valor: 0,
         valorDesc: 0,
@@ -992,7 +1009,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     this.selectedCodEmpresa = codEmpresa;
   }
 
-  onShowBloco(){
+  onShowBloco() {
     this.showBloco3 = !this.showBloco3;
   }
 
