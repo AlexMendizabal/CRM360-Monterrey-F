@@ -464,6 +464,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     // Carga la dirección del cliente en el campo codEndereco del formulario
     this.form.controls['codEndereco'].setValue(event.direccion);
     this.form.controls['razaoSocial'].setValue(event.razaoSocial);
+    this.form.controls['nomeCliente'].setValue(event.nomeCliente);
+
     //this.form.controls['nombreVendedor'].setValue(event.nombreVendedor);
     this.idListaPrecio = event.id_lista_precio;
     this.idVendedor = event.id_vendedor

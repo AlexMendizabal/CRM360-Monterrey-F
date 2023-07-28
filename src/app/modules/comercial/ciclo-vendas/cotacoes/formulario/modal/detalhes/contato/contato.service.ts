@@ -32,7 +32,7 @@ export class ComercialCicloVendasCotacoesFormularioModalDetalhesContatoService {
     this.loaderNavbar.emit(true);
 
     this.clientesService
-      .getContato(codCliente, codContato)
+      .getContato(codContato, codCliente)
       .pipe(
         finalize(() => {
           this.loaderNavbar.emit(false);

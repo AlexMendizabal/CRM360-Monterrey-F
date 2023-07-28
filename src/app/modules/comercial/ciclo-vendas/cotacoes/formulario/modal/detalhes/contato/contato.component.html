@@ -11,16 +11,16 @@
         <div class="form-row">
           <div class="form-group col-md-6">
             <label><strong>Nombre Completo</strong></label>
-            <div *ngIf="contato.ds_cont == null">SIN INFORMACION</div>
-            <div *ngIf="contato.ds_cont != null">{{ contato.ds_cont }}</div>
+            <div *ngIf="contato.nombreCompleto == null">SIN INFORMACION</div>
+            <div *ngIf="contato.nombreCompleto != null">{{ contato.nombreCompleto }}</div>
           </div>
           <div class="form-group col-md-6">
-            <label><strong>Sexo</strong></label>
-            <div *ngIf="contato.descGenero == null">SIN INFORMACION</div>
-            <div *ngIf="contato.descGenero != null">{{ contato.descGenero }}</div>
+            <label><strong>Contacto</strong></label>
+            <div *ngIf="contato.ds_cont_meio == null">SIN INFORMACION</div>
+            <div *ngIf="contato.ds_cont_meio != null">{{ contato.ds_cont_meio }}</div>
           </div>
         </div>
-        <div class="form-row">
+        <!-- <div class="form-row">
           <div class="form-group col-md-6 mb-0">
             <label><strong>FUNCION</strong></label>
             <div *ngIf="contato.descFuncao == null">SIN INFORMACION</div>
@@ -31,7 +31,7 @@
             <div *ngIf="contato.descSetor == null">SIN INFORMACION</div>
             <div *ngIf="contato.descSetor != null">{{ contato.descSetor }}</div>
           </div>
-        </div>
+        </div> -->
         <div class="form-row">
           <div class="col"><hr></div>
         </div>
