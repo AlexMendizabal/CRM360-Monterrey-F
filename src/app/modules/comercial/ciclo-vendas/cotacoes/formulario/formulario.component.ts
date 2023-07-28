@@ -1533,7 +1533,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
               _contatos[i].nomeCompleto.length > 1
             )
               contatos.push({
-                codContato: _contatos[i].idSeqTid,
+                codContato: _contatos[i].id,
                 nomeContato: _contatos[i].nomeCompleto,
               });
           }
@@ -1621,7 +1621,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   onDetalhesContato(): void {
       this.contatoDetalhesService.showModal(
         this.form.value.codCliente,
-        this.form.value.codContato  
+        this.form.value.codContato
       );
   }
 

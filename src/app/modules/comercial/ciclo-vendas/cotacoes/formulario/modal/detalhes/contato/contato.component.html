@@ -1,6 +1,6 @@
 <div class="modal-content">
   <div class="modal-header">
-    <h4 class="mtc-title mb-0 my-auto">Detalhes do Contato</h4>
+    <h4 class="mtc-title mb-0 my-auto">DETALLES DE CONTACTO</h4>
     <button type="button" class="close" (click)="onClose()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -11,8 +11,8 @@
         <div class="form-row">
           <div class="form-group col-md-6">
             <label><strong>Nombre Completo</strong></label>
-            <div *ngIf="contato.nomeCompleto == null">SIN INFORMACION</div>
-            <div *ngIf="contato.nomeCompleto != null">{{ contato.nomeCompleto }}</div>
+            <div *ngIf="contato.ds_cont == null">SIN INFORMACION</div>
+            <div *ngIf="contato.ds_cont != null">{{ contato.ds_cont }}</div>
           </div>
           <div class="form-group col-md-6">
             <label><strong>Sexo</strong></label>
@@ -22,7 +22,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-6 mb-0">
-            <label><strong>Função</strong></label>
+            <label><strong>FUNCION</strong></label>
             <div *ngIf="contato.descFuncao == null">SIN INFORMACION</div>
             <div *ngIf="contato.descFuncao != null">{{ contato.descFuncao }}</div>
           </div>
