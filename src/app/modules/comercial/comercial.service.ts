@@ -14,7 +14,7 @@ import { JsonResponse } from 'src/app/models/json-response';
 export class ComercialService {
   private readonly API = `http://127.0.0.1:8000/comercial`;
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient) { }
 
   getEmpresas(params?: any): Observable<Object> {
     let httpParams = new HttpParams();
@@ -40,6 +40,31 @@ export class ComercialService {
     return this.http
       .get(`${this.API}/depositos`, {
         params: httpParams,
+      })
+      .pipe(take(1), retry(2));
+  }
+
+  getAlmacen(params?: any): Observable<Object | JsonResponse> {
+    return this.http
+      .get(`${this.API}/almacen`)
+      .pipe(take(1), retry(2));
+  }
+  getLinhasId(id: any) {
+    return this.http.get(`${this.API}/linhas/${id}`).pipe(take(1), retry(2));
+  }
+
+  getSublineasId(id: any) {
+    return this.http.get(`${this.API}/sublineas/${id}`).pipe(take(1), retry(2));
+  }
+
+  sincronizarMateriales(){
+    return this.http.get(`${this.API}/sincronizar`).pipe(take(1), retry(2));
+  }
+  getMateriales(params: any) {
+    return this.http
+      .get(
+        `${this.API}/materiales`, {
+        params: params,
       })
       .pipe(take(1), retry(2));
   }

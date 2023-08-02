@@ -133,9 +133,11 @@
       <div class="col" [hidden]=showBloco1>
         <div class="form-row">
           <div class="form-group col-lg-2">
-            <label class="mb-1" for="codCotacao">Número</label>
-            <input type="text" id="codCotacao" class="form-control" formControlName="codCotacao"
-              [readonly]="visualizar">
+            <label class="mb-1" for="codigoCliente">Código cliente</label>
+           <!--  <input type="text" id="codCotacao" class="form-control" formControlName="codCotacao"
+              [readonly]="visualizar"> -->
+              <input type="text" id="codigoCliente" class="form-control" formControlName="codigoCliente"
+              [readonly]="true" placeholder="Código...">
           </div>
 
           <div class="form-group col-lg-5">
@@ -164,7 +166,7 @@
               </div>
             </div>
             <input type="text" class="form-control" id="codRazaoSocial" formControlName="codRazaoSocial"
-              [readonly]="visualizar" placeholder="Selecionar..." [attr.disabled]="true" />
+              [readonly]="visualizar" placeholder="Seleccionar..." [attr.disabled]="true" />
           </div>
         </div>
         <div class="row">
