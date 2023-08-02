@@ -330,13 +330,14 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
             formGroup.controls.percentualDesc.setValue(
               (100 * desconto.desconto) / valor
             );
+            console.log(formGroup.controls.percentualDesc)
           } else if (desconto.tipo === 'percentual') {
             valorDesc = valor - ((100 - desconto.desconto) / 100) * valor;
             formGroup.controls.percentualDesc.setValue(desconto.desconto);
           }
 
-          const quantidade = formGroup.value.quantidade;
-          const valorTotal = quantidade * (valor - valorDesc);
+          /* const quantidade = formGroup.value.quantidade; */
+          const valorTotal = valor - valorDesc;
 
           formGroup.controls.tipoDesc.setValue(desconto.tipo);
           formGroup.controls.valorDesc.setValue(valorDesc);
