@@ -86,7 +86,7 @@
                 [ngClass]="onFieldError('comEstoque') + ' ' + onFieldRequired(form.controls.comEstoque)"
               </select>
             </div> -->
-            <div class="form-group col-lg-1">
+            <div class="form-group col-lg-2">
               <label for="registros">Registros</label>
               <select class="form-control custom-select" id="registros" formControlName="registros" (change)="cambioRegistros($event)">
                 <option>50</option>
@@ -95,13 +95,13 @@
                 <option>300</option>
               </select>
             </div>
-            <div class="form-group col-lg-1">
+            <!-- <div class="form-group col-lg-1">
               <label for="orderBy">Ordenación</label>
               <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
                 <option value="nrPedido">Por código</option>
                 <option value="nmPedido">Por nombre</option>
               </select>
-            </div>
+            </div> -->
             <!-- <div class="form-group col-lg-3">
               <label for="codClasse">Código </label>
               <input type="text" class="form-control"  />
@@ -124,9 +124,9 @@
       <div class="col mb-2">
         <div class="d-flex justify-content-end">
           <div class="form-group pt-1 mb-0 mr-3">
-            <div class="custom-control custom-checkbox">
+           <!--  <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="auto-scroll" [(ngModel)]="autoScroll"
-                [ngModelOptions]="{ standalone: true }">
+                [ngModelOptions]="{ standalone: true }"> 
               <label class="custom-control-label" for="auto-scroll">
                 <span class="mr-1">Auto-scroll</span>
                 <ng-template #tooltipAutoScrollTemplate>
@@ -136,7 +136,7 @@
                 </ng-template>
                 <i class="far fa-question-circle" [tooltip]="tooltipAutoScrollTemplate"></i>
               </label>
-            </div>
+            </div> -->
           </div>
           <div class="form-group mb-0">
             <button type="button" class="btn btn-sm btn-success" (click)="onAddMaterial()">

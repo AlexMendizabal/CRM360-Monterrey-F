@@ -68,13 +68,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   subtitles: Array<Subtitles> = [
     {
       id: 1,
-      text: 'Disponible en stock',
+      text: 'Disponibles en stock',
       color: 'green',
-    },
-    {
-      id: 2,
-      text: 'No disponible en stock',
-      color: 'red',
     },
   ];
 
@@ -373,7 +368,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       comEstoque: 1,
       registros: 100,
     });
-    this.form.controls.codMaterial.disable();
+    /* this.form.controls.codMaterial.disable(); */
     this.form.controls.codMaterial.updateValueAndValidity();
 
     this.form.controls.codClasse.disable();
@@ -385,8 +380,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   confirmReset(): any {
     return this.confirmModalService.showConfirm(
       '',
-      'Limpar pesquisa de materiais',
-      'Deseja realmente prosseguir com a ação?',
+      'Limpiar campos de materiales',
+      'Está seguro de continuar con esta acción?',
       'Cancelar',
       'Confirmar'
     );

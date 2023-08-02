@@ -115,7 +115,7 @@
                       </span>
                     </td>
                     <td class="text-center border-light">
-                      Unidades
+                      <p class="text-nowrap mb-0"> {{ form.value.materiais[i].unidade}} </p>
                     </td>
                     <td class=" text-center border-light" [ngStyle]="{ width: columSize('valorDesc') }">
                       <span *ngIf="form.value.materiais[i].valorDesc === 0">0,00 </span>

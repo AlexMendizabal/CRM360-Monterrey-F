@@ -68,6 +68,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     nrPedidoCliente: '',
     codItemPedidoCliente: '',
     codProdutoCliente: '',
+    valorTotalBruto: 0,
+
   };
 
   form: FormGroup;
@@ -119,7 +121,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       medida: [
         { value: this.medida, disabled: this.medida > 0 ? true : false },
       ],
-      nrPedidoCliente: this.material.nrPedidoCliente,
+      nrPedidoCliente: this.material.nomeMaterial,
       codItemPedidoCliente: this.material.codigo_material,
       codProdutoCliente: this.material.codProdutoCliente
     });
@@ -475,6 +477,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       tonelada: 0,
       qtde: 0,
       valorUnitario: 0,
+      descuento: 0.00,
       valorItem: 0,
       aliquotaIpi: 0,
       valorIpi: 0,

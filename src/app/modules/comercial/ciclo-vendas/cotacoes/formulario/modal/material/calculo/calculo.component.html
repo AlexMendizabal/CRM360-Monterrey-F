@@ -207,14 +207,14 @@
                     <strong class="text-secondary">{{ calculo.valorItem  }}</strong>
                   </div>
                 </li> -->
-                <li class="list-group-item">
+                <!-- <li class="list-group-item">
                   <div class="d-flex justify-content-between w-100">
                     <div class="my-auto">
                       <strong>Descuento %</strong>
                     </div>
                     <strong class="text-secondary">{{ calculo.descuento  }} </strong>
                   </div>
-                </li>
+                </li> -->
                 <!-- <li class="list-group-item" [hidden]="!showImpostos">
                   <div class="d-flex justify-content-between w-100">
                     <div class="my-auto">
@@ -288,29 +288,33 @@
               <div class="col mt-3">
                 <div class="mtc-title mb-3 text-uppercase text-primary">Detalles del Pedido</div>
                 <div class="row">
-                  <div class="form-group col-lg-4">
+                  <!-- <div class="form-group col-lg-4">
                     <label for="nrPedidoCliente" class="fontBold">Nro. Pedido</label>
                     <input
                       class="form-control"
                       id="nrPedidoCliente"
                       type="text"
                       formControlName="nrPedidoCliente">
-                  </div>
+                  </div> -->
                   <div class="form-group col-lg-4 font-weight-bold">
                     <label for="codItemPedidoCliente" class="fontBold">Cód. Item</label>
                     <input
                       class="form-control"
                       id="codItemPedidoCliente"
                       type="text"
-                      formControlName="codItemPedidoCliente">
+                      formControlName="codItemPedidoCliente"
+                      readonly
+                      >
                   </div>
-                  <div class="form-group col-lg-4 font-weight-bold">
-                    <label for="codProdutoCliente" class="fontBold">Cód. Producto</label>
+                  <div class="form-group col-lg-8 font-weight-bold">
+                    <label for="codProdutoCliente" class="fontBold">Nomb. Item</label>
                     <input
                       class="form-control"
                       id="codProdutoCliente"
                       type="text"
-                      formControlName="codProdutoCliente">
+                      formControlName="nrPedidoCliente"
+                      readonly
+                      >
                   </div>
                 </div>
               </div>

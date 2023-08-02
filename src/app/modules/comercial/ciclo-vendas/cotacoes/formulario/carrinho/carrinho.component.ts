@@ -131,6 +131,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     valorDescCarrinho: 0,
     valorTotalOri: 0,
     valorTotal: 0,
+    valorTotalBruto: 0,
     valorProposta: 0,
   };
 
@@ -714,8 +715,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   confirmReset(): any {
     return this.confirmModalService.showConfirm(
       '',
-      'Limpar resumo da cotação',
-      'Deseja realmente prosseguir com a ação?',
+      'Limpiar resumen de cotización',
+      'Desea realmente proseguir con esta acción?',
       'Cancelar',
       'Confirmar'
     );
@@ -767,7 +768,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         quantidadeItem: 0,
         qtdeItem: 0,
         qtdePecas: 0,
-        unidade: data[index].unidades,
+        unidade: data[index].unidad,
         tipoDesc: null,
         valor: 0,
         valorDesc: 0,
@@ -775,6 +776,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         valorIcmsSt: 0,
         valorIpi: 0,
         valorTotal: 0,
+        valorTotalBruto: 0,
         valorTotalOri: 0,
         valorMaterialBarra: data[index].valorMaterialBarra,
         valorMaterialContrato: data[index].valorMaterialContrato,
@@ -790,6 +792,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         codigo_material: data[index].codigo_material,
         peso: data[index].peso,
         descuento: data[index].descuento,
+        unidad: data[index].unidad,
       };
 
       materiais.push(material);
