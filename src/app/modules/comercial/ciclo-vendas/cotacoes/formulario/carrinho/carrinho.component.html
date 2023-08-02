@@ -20,8 +20,8 @@
     <div class="row mb-5" #scrollToCarrinho >
       <div class="col">
         <div class="row">
-          <div class="col">
-            <subtitles [data]="subtitles" [show]="true"></subtitles>
+          <div class="col"><br><br>
+            <!-- <subtitles [data]="subtitles" [show]="true"></subtitles> -->
           </div>
           <div class="col">
             <div class="d-flex justify-content-end" *ngIf="!visualizar">
@@ -29,211 +29,228 @@
                 type="button"
                 class="btn btn-sm btn-primary mr-3"
                 (click)="onDescontoCarrinho()"
-                disabled>
+               >
                 <i class="fas fa-percentage"></i>
-                <span>Desconto</span>
+                <span>Descuento</span>
               </button>
               <button
                 type="button"
                 class="btn btn-sm btn-danger"
                 (click)="onReset()">
                 <i class="fas fa-trash"></i>
-                <span>Limpar</span>
+                <span>Limpiar</span>
               </button>
             </div>
           </div>
         </div>
         <form [formGroup]="form" autocomplete="off">
-          <custom-table [config]="tableHeadConfig">
-            <ng-template #thead let-thead>
-              <tr>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('index') }">
-                  <span class="ml-0">Item</span>
-                </th>
-                <th scope="col" [ngStyle]="{ width: columSize('nomeMaterial') }">Material</th>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('quantidade') }">Cantidad Kg.</th>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('qtdeItem') }">Cantidad. (Items)</th>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valor') }">Unid.</th>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorDesc') }">Descuento Uni.</th>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorIcms') }">ICMS</th>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorIpi') }">IPI</th>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorTotal') }">Total</th>
-                <th scope="col" class="text-center" [ngStyle]="{ width: columSize('nomeDeposito') }">Depósito</th>
-                <th scope="col" class="text-end" [ngStyle]="{ width: columSize('buttons') }"></th>
-              </tr>
-            </ng-template>
-          </custom-table>
-          <custom-table [config]="tableBodyConfig" style="position: relative; top: -2px;">
-            <div formArrayName="materiais">
-              <ng-template #tbody let-tbody>
-                <tr class="mb-1" *ngFor="let material of materiais.controls; let i = index" [formGroupName]="i">
-                  <td
-                    class="align-middle text-center border-light"
-                    [ngClass]="classStatusBorder(form.value.materiais[i])"
-                    [ngStyle]="{ width: columSize('index') }">
-                    {{ i + 1 }}
-                  </td>
-                  <td class="align-middle text-truncate border-light" [ngStyle]="{ width: columSize('nomeMaterial') }">
-                    <span [tooltip]="tooltipNomeMaterial" container="body">
-                      {{ form.value.materiais[i].codMaterial }} - {{ form.value.materiais[i].nomeMaterial}}
-                    </span>
-                    <ng-template #tooltipNomeMaterial>
-                      <p class="mb-0">{{ form.value.materiais[i].codMaterial }} - {{ form.value.materiais[i].nomeMaterial}}</p>
-                    </ng-template>
-                  </td>
-                  <td class="align-middle text-center border-light" [ngStyle]="{ width: columSize('quantidade') }">
-                    {{ form.value.materiais[i].quantidade | number:'1.3-3' }} TON
-                  </td>
-                  <td class="align-middle text-center border-light" [ngStyle]="{ width: columSize('qtdeItem') }" *ngIf="form.value.materiais[i].qtdePecas > 0">
-                    {{ form.value.materiais[i].qtdePecas }}
-                  </td>
-                  <td class="align-middle text-center border-light" [ngStyle]="{ width: columSize('qtdeItem') }" *ngIf="form.value.materiais[i].qtdePecas == 0 || form.value.materiais[i].qtdePecas == null">
-                    -
-                  </td>
-                  <td class="align-middle text-center border-light" [ngStyle]="{ width: columSize('valor') }">
-                    <span *ngIf="checkValorMaterial(form.value.materiais[i]) === true">
-                      {{ form.value.materiais[i].valor | currency:'BRL':'symbol':'1.2-2' }}
-                    </span>
-                    <span *ngIf="checkValorMaterial(form.value.materiais[i]) === false">
-                      <span class="text-danger font-weight-bolder mr-1" [tooltip]="tooltipPrecoMinimoTemplate" container="body">
-                        {{ form.value.materiais[i].valor | currency:'BRL':'symbol':'1.2-2' }}
-                      </span>
-                      <ng-template #tooltipPrecoMinimoTemplate>
-                        <p class="text-nowrap mb-0">Este material está com</p>
-                        <p class="text-nowrap mb-0">preço abaixo do mínimo.</p>
-                        <p class="text-nowrap mb-0">O ideal é acima de {{ form.value.materiais[i].valorUnit | currency:'BRL':'symbol':'1.2-2' }}</p>
-                      </ng-template>
-                    </span>
-                  </td>
-                  <td class="align-middle text-center border-light" [ngStyle]="{ width: columSize('valorDesc') }">
-                    <span *ngIf="form.value.materiais[i].valorDesc === 0">0,00%</span>
-                    <span *ngIf="form.value.materiais[i].valorDesc > 0">
-                      <span class="text-success font-weight-bolder mr-1">
-                        {{ form.value.materiais[i].percentualDesc | number:'1.2-2' }}%
-                      </span>
-                      <ng-template #tooltipDescontoTemplate>
-                        <p class="text-nowrap mb-0">{{ form.value.materiais[i].valorDesc | currency:'BRL':'symbol':'1.2-2' }}</p>
-                      </ng-template>
-                      <i class="far fa-question-circle text-success" [tooltip]="tooltipDescontoTemplate" container="body"></i>
-                    </span>
-                  </td>
-                  <td class="align-middle text-center border-light" [ngStyle]="{ width: columSize('valorIcms') }">
-                    {{ form.value.materiais[i].valorIcms | currency:'BRL':'symbol':'1.2-2' }}
-                  </td>
-                  <td class="align-middle text-center border-light" [ngStyle]="{ width: columSize('valorIpi') }">
-                    {{ form.value.materiais[i].valorIpi | currency:'BRL':'symbol':'1.2-2' }}
-                  </td>
-
-                  <td class="align-middle text-center border-light" [ngStyle]="{ width: columSize('valorTotal') }">
-                    {{ form.value.materiais[i].valorTotal | currency:'BRL':'symbol':'1.2-2' }}
-                  </td>
-                  <td class="border-light" width="20%" [ngStyle]="{ width: columSize('nomeDeposito') }">
-                    <ng-template #tooltipDescontoTemplate>
-                      <p class="text-left mb-0"><u>Empresa:</u></p>
-                      <p class="text-left text-nowrap mb-0">{{ form.value.materiais[i].nomeEmpresa | uppercase }}</p>
-                    </ng-template>
-                    <i class="far fa-question-circle" [tooltip]="tooltipDescontoTemplate" container="body"></i>
-                    <span class="ml-1">
-                      {{ form.value.materiais[i].nomeDeposito | uppercase }}
-                    </span>
-                  </td>
-                  <td class="align-middle text-right border-light" [ngStyle]="{ width: columSize('buttons') }">
-
-                    <span>
-                      <btn-icon
-                      icon="far fa-question-circle"
-                      class="mr-3 "
-                      [tooltip]="tooltipLoteTemplate"
-                      container="body"
-                      [disabled]=true
-                      *ngIf="form.value.materiais[i].controladoPorLote === 1 && form.value.materiais[i].sequenciaLote !== null">
-                    </btn-icon>
-                    <ng-template #tooltipLoteTemplate>
-                      <p class="text-center text-nowrap mb-0">Lote selecionado: {{form.value.materiais[i].loteFabricacao}},</p>
-                      <p class="text-center text-nowrap mb-0">estoque: {{form.value.materiais[i].estoqueLote}} TON</p>
-                    </ng-template>
-                    </span>
-
-                    <btn-icon
-                      icon="fas fa-list-alt"
-                      class="mr-3 "
-                      tooltip="Selecione Lote"
-                      container="body"
-                      (click)="onSelecionaLote(i, form.value.materiais[i])"
-                      [disabled]="visualizar"
-                      *ngIf="form.value.materiais[i].controladoPorLote === 1 && form.value.materiais[i].sequenciaLote === null">
-                    </btn-icon>
-
-                    <btn-icon
-                      icon="fas fa-th"
-                      class="mr-3"
-                      tooltip="Materiais associados"
-                      container="body"
-                      (click)="onAssocMaterial(form.value.materiais[i])"
-                      [disabled]="visualizar"
-                      *ngIf="form.value.materiais[i].materialAssociado === 1">
-                    </btn-icon>
-                    <btn-icon
-                      icon="fas fa-calculator"
-                      class="mr-3"
-                      tooltip="Calcular quantidades"
-                      container="body"
-                      (click)="onCalcMaterial(i, form.value.materiais[i])"
-                      [disabled]="visualizar">
-                    </btn-icon>
-                    <btn-icon
-                      icon="fas fa-percentage"
-                      class="mr-3"
-                      tooltip="Aplicar desconto"
-                      container="body"
-                      (click)="onDescontoMaterial(i, form.value.materiais[i])"
-                      [disabled]=true>
-                    </btn-icon>
-                    <btn-icon
-                      icon="fas fa-trash"
-                      class="mr-3"
-                      tooltip="Remover"
-                      container="body"
-                      (click)="onDeleteMaterial(i, form.value.materiais[i])"
-                      [disabled]="visualizar">
-                    </btn-icon>
-                  </td>
-                </tr>
+          <div class="table-responsive">
+            <custom-table [config]="tableHeadConfig">
+              <ng-template #thead let-thead>
                 <tr>
-                  <td class="border-light" [ngStyle]="{ width: columSize('index') }"></td>
-                  <td class="border-light" [ngStyle]="{ width: columSize('nomeMaterial') }"></td>
-                  <td class="text-center border-light" [ngStyle]="{ width: columSize('quantidade') }">
-                    {{ total.quantidade | number:'1.3-3' }} TON
-                  </td>
-                  <td class="text-center border-light" [ngStyle]="{ width: columSize('qtdeItem') }" *ngIf="total.qtdePecas > 0" >
-                    {{ total.qtdePecas }}
-                  </td>
-                  <td class="text-center border-light" [ngStyle]="{ width: columSize('qtdeItem') }" *ngIf="total.qtdePecas == 0">
-                    -
-                  </td>
-                  <td class="text-center border-light" [ngStyle]="{ width: columSize('valor') }">
-                  </td>
-                  <td class="text-center border-light" [ngStyle]="{ width: columSize('valorDesc') }">
-                  </td>
-                  <td class="text-center border-light" [ngStyle]="{ width: columSize('valorIcms') }">
-                    {{ total.valorIcms | currency:'BRL':'symbol':'1.2-2' }}
-                  </td>
-                  <td class="text-center border-light" [ngStyle]="{ width: columSize('valorIpi') }">
-                    {{ total.valorIpi | currency:'BRL':'symbol':'1.2-2' }}
-                  </td>
-                  <td class="text-center border-light" [ngStyle]="{ width: columSize('valorTotal') }">
-                    {{ total.valorTotal | currency:'BRL':'symbol':'1.2-2' }}
-                  </td>
-                  <td class="border-light" [ngStyle]="{ width: columSize('codDeposito') }"></td>
-                  <td class="border-light" [ngStyle]="{ width: columSize('buttons') }"></td>
+                  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('index') }">
+                    <span class="ml-0">Item</span>
+                  </th>
+                  <th scope="col" [ngStyle]="{ width: columSize('nomeMaterial') }">Material</th>
+                  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('quantidade') }">Peso Kg.</th>
+                  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('qtdeItem') }">Cantidad</th>
+                  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valor') }">Precio uni.</th>
+                  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('qtdeItem') }">Unidad</th>
+                  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorDesc') }">Desc. Aut. %</th>
+                  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorDesc') }">Precio bruto</th>
+  
+                  <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorIcms') }">ICMS</th>
+                  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorIpi') }">IPI</th> -->
+                  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('valorTotal') }">Precio Total</th>
+                  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('codDeposito') }">Depósito</th>
+                  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('codDeposito') }"></th>
+  
+                  <th scope="col" class="text-end" >Acciones </th>
                 </tr>
               </ng-template>
-            </div>
-          </custom-table>
+            </custom-table>
+            <custom-table [config]="tableBodyConfig" style="position: relative; top: -2px;">
+              <div formArrayName="materiais">
+                <ng-template #tbody let-tbody>
+                  <tr class="mb-1" *ngFor="let material of materiais.controls; let i = index" [formGroupName]="i">
+                    <td
+                      class="align-middle text-center border-light"
+                      [ngClass]="classStatusBorder(form.value.materiais[i])"
+                      [ngStyle]="{ width: columSize('index') }">
+                      {{ i + 1 }}
+                    </td>
+                    <td class="align-middle text-truncate border-light" [ngStyle]="{ width: columSize('nomeMaterial') }">
+                      <span [tooltip]="tooltipNomeMaterial" container="body">
+                        {{ form.value.materiais[i].codMaterial }} - {{ form.value.materiais[i].nomeMaterial}}
+                      </span>
+                      <ng-template #tooltipNomeMaterial>
+                        <p class="mb-0">{{ form.value.materiais[i].codMaterial }} - {{ form.value.materiais[i].nomeMaterial}}</p>
+                      </ng-template>
+                    </td>
+                    <td class=" text-center border-light" [ngStyle]="{ width: columSize('quantidade') }">
+                      {{ form.value.materiais[i].quantidade | number:'1.3-3' }}
+                    </td>
+                    <td class=" text-center border-light" [ngStyle]="{ width: columSize('qtdeItem') }" *ngIf="form.value.materiais[i].cantidad > 0">
+                      {{ form.value.materiais[i].qtdeItem }}
+                    </td>
+                   <!--  <td class=" text-center border-light" >
+                      {{ form.value.materiais[i].unidad | number:'1.2-2' }}
+                    </td> -->
+                    <td class=" text-center border-light" [ngStyle]="{ width: columSize('qtdeItem') }" *ngIf="form.value.materiais[i].cantidad == 0 || form.value.materiais[i].cantidad == null">
+                      -
+                    </td>
+                    <td class=" text-center border-light" [ngStyle]="{ width: columSize('valor') }">
+                      <span *ngIf="checkValorMaterial(form.value.materiais[i]) === true">
+                        {{ form.value.materiais[i].valor | number:'1.4-4'  }}
+                      </span>
+                      <span *ngIf="checkValorMaterial(form.value.materiais[i]) === false">
+                        <span class="text-danger font-weight-bolder mr-1" [tooltip]="tooltipPrecoMinimoTemplate" container="body">
+                          {{ form.value.materiais[i].valor | number:'1.4-4'   }}
+                        </span>
+                        <ng-template #tooltipPrecoMinimoTemplate>
+                          <p class="text-nowrap mb-0">Este material está com</p>
+                          <p class="text-nowrap mb-0">preço abaixo do mínimo.</p>
+                          <p class="text-nowrap mb-0">O ideal é acima de {{ form.value.materiais[i].valorUnit | currency:'BRL':'symbol':'1.2-2' }}</p>
+                        </ng-template>
+                      </span>
+                    </td>
+                    <td class="text-center border-light">
+                      Unidades
+                    </td>
+                    <td class=" text-center border-light" [ngStyle]="{ width: columSize('valorDesc') }">
+                      <span *ngIf="form.value.materiais[i].valorDesc === 0">0,00 </span>
+                      <span *ngIf="form.value.materiais[i].valorDesc > 0">
+                        <span class="text-success font-weight-bolder mr-1">
+                          {{ form.value.materiais[i].percentualDesc | number:'1.2-2' }}%
+                        </span> 
+                         <ng-template #tooltipDescontoTemplate>
+                          <p class="text-nowrap mb-0">{{ form.value.materiais[i].valorDesc  }}</p>
+                        </ng-template>
+                        <i class="far fa-question-circle text-success" [tooltip]="tooltipDescontoTemplate" container="body"></i>
+                      </span>
+                    </td>
+                    <!-- <td class="align-middle text-center border-light" [ngStyle]="{ width: columSize('valorIcms') }">
+                      {{ form.value.materiais[i].valorIcms  }}
+                    </td>
+                    <td class="align-middle text-center border-light" [ngStyle]="{ width: columSize('valorIpi') }">
+                      {{ form.value.materiais[i].valorIpi  }}
+                    </td> -->
+                    <td class=" text-center border-light" [ngStyle]="{ width: columSize('valorTotal') }">
+                      {{ form.value.materiais[i].valorTotalBruto| number:'1.4-4'  }}
+                    </td>
+                    <td class=" text-center border-light" [ngStyle]="{ width: columSize('valorTotal') }">
+                      {{ form.value.materiais[i].valorTotal| number:'1.4-4'  }}
+                    </td>
+                   
+                    <td class=" text-center border-light"  [ngStyle]="{ width: columSize('codDeposito') }">
+                      <!-- <ng-template #tooltipDescontoTemplate>
+                        <p class="text-left mb-0"><u>Empresa:</u></p>
+                        <p class="text-left text-nowrap mb-0">{{ form.value.materiais[i].nomeEmpresa | uppercase }}</p>
+                      </ng-template>
+                      <i class="far fa-question-circle" [tooltip]="tooltipDescontoTemplate" container="body"></i> -->
+                      <span class="">
+                        {{ form.value.materiais[i].codDeposito | uppercase }}
+                      </span>
+                    </td>
+                    <td class=" text-right border-light" [ngStyle]="{ width: columSize('buttons') }">
+  
+                      <span>
+                        <btn-icon
+                        icon="far fa-question-circle"
+                        class="mr-3 "
+                        [tooltip]="tooltipLoteTemplate"
+                        container="body"
+                        [disabled]=true
+                        *ngIf="form.value.materiais[i].controladoPorLote === 1 && form.value.materiais[i].sequenciaLote !== null">
+                      </btn-icon>
+                      <ng-template #tooltipLoteTemplate>
+                        <p class="text-center text-nowrap mb-0">Lote selecionado: {{form.value.materiais[i].loteFabricacao}},</p>
+                        <p class="text-center text-nowrap mb-0">estoque: {{form.value.materiais[i].estoqueLote}} TON</p>
+                      </ng-template>
+                      </span>
+  
+                      <btn-icon
+                        icon="fas fa-list-alt"
+                        class="mr-3 "
+                        tooltip="Selecione Lote"
+                        container="body"
+                        (click)="onSelecionaLote(i, form.value.materiais[i])"
+                        [disabled]="visualizar"
+                        *ngIf="form.value.materiais[i].controladoPorLote === 1 && form.value.materiais[i].sequenciaLote === null">
+                      </btn-icon>
+  
+                      <btn-icon
+                        icon="fas fa-th"
+                        class="mr-3"
+                        tooltip="Materiais associados"
+                        container="body"
+                        (click)="onAssocMaterial(form.value.materiais[i])"
+                        [disabled]="visualizar"
+                        *ngIf="form.value.materiais[i].materialAssociado === 1">
+                      </btn-icon>
+                      <btn-icon
+                        icon="fas fa-calculator"
+                        class="mr-3"
+                        tooltip="Calcular quantidades"
+                        container="body"
+                        (click)="onCalcMaterial(i, form.value.materiais[i])"
+                        [disabled]="visualizar">
+                      </btn-icon>
+                      <btn-icon
+                        icon="fas fa-percentage"
+                        class="mr-3"
+                        tooltip="Aplicar desconto"
+                        container="body"
+                        (click)="onDescontoMaterial(i, form.value.materiais[i])"
+                        >
+                      </btn-icon>
+                      <btn-icon
+                        icon="fas fa-trash"
+                        class="mr-3"
+                        tooltip="Remover"
+                        container="body"
+                        (click)="onDeleteMaterial(i, form.value.materiais[i])"
+                        [disabled]="visualizar">
+                      </btn-icon>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border-light" [ngStyle]="{ width: columSize('index') }"></td>
+                    <td class="border-light" [ngStyle]="{ width: columSize('nomeMaterial') }"></td>
+                    <td class="text-center border-light" [ngStyle]="{ width: columSize('quantidade') }">
+                      {{ total.quantidade | number:'1.3-3' }}
+                    </td>
+                    <td class="text-center border-light" [ngStyle]="{ width: columSize('qtdeItem') }" *ngIf="total.qtdePecas > 0" >
+                      {{ total.qtdePecas }}
+                    </td>
+                    <td class="text-center border-light" [ngStyle]="{ width: columSize('qtdeItem') }" *ngIf="total.qtdePecas == 0">
+                      -
+                    </td>
+                    <td class="text-center border-light" [ngStyle]="{ width: columSize('valor') }">
+                    </td>
+                    <td class="text-center border-light" [ngStyle]="{ width: columSize('valorDesc') }">
+                    </td>
+                    <td class="text-center border-light" [ngStyle]="{ width: columSize('valorIcms') }">
+                     
+                    </td>
+                    <td class="text-center border-light" [ngStyle]="{ width: columSize('valorIpi') }">
+                      {{ total.bruto | number:'1.4-4' }}
+                    </td>
+                    <td class="text-center border-light" [ngStyle]="{ width: columSize('valorTotal') }">
+                      {{ total.valorTotal | number:'1.4-4' }}
+                    </td>
+                    <td class="border-light" [ngStyle]="{ width: columSize('codDeposito') }"></td>
+                    <td class="border-light" [ngStyle]="{ width: columSize('buttons') }"></td>
+                  <!--   <td></td> -->
+                  </tr>
+                </ng-template>
+              </div>
+            </custom-table>
+          </div>
         </form>
       </div>
     </div>
-    <div class="my-5" style="background-color: #FBFCFF;" *ngIf="canLoadRelacionados === true" [hidden]="visualizar">
+    <!-- <div class="my-5" style="background-color: #FBFCFF;" *ngIf="canLoadRelacionados === true" [hidden]="visualizar">
         <comercial-ciclo-vendas-cotacoes-formulario-materiais-relacionados
           [codEmpresa]="selectedCodEmpresa"
           [materiais]="materiaisRelacionados"
@@ -242,12 +259,12 @@
           [codFormaPagamento]="codFormaPagamento"
           [freteConta]="freteConta">
         </comercial-ciclo-vendas-cotacoes-formulario-materiais-relacionados>
-    </div>
+    </div> -->
     <div class="row my-5">
 
       <div class="col"></div>
       <div class="col-3">
-        <div class="col-md" id="card-light-grey">
+        <!-- <div class="col-md" id="card-light-grey">
           <div class="row d-flex">
             <div class="col">
               <div class="col" id="card-label-light">Valor Total IPI  </div>
@@ -258,19 +275,19 @@
               <span class="fas fa-tag d-flex p-3" id="icon-light-grey" ></span>
             </div>
           </div>
-        </div>
+        </div> -->
 
-        <div class="my-3"></div>
+        <!-- <div class="my-3"></div> -->
 
-        <div class="col-md " id="card-light-grey">
+        <div class="col-md " id="card-strong-grey">
           <div class="row d-flex">
             <div class="col">
-              <div class="col" id="card-label-light">Valor Total do ICMS</div>
-              <div class="col" id="card-value-grey">{{ total.valorIcms | currency:'BRL':'symbol':'1.2-2' }}</div>
+              <div class="col" id="card-label-light" style="font-size: small;">Total en Bs. 6.96</div>
+              <div class="col" id="card-value-grey">Bs. {{ total.monedaLocal | number:'1.2-2'}}   </div>
               <div class="col" id=""></div>
             </div>
             <div class="col-4">
-              <span class="fas fa-tags d-flex p-3" id="icon-light-grey" ></span>
+              <span class="fas fa-tags d-flex p-3" id="icon-strong-grey" ></span>
             </div>
           </div>
         </div>
@@ -280,7 +297,7 @@
           <div class="row d-flex mh-100">
             <div class="col-9">
               <div class="col" id="card-label-light" style="font-size: small;">Peso Total</div>
-              <div class="col" id="card-value-grey">{{ total.quantidade | number:'1.3-3' }} TON</div>
+              <div class="col" id="card-value-grey">{{ total.quantidade | number:'1.2-2' }} Kg.</div>
               <div class="col" id=""></div>
             </div>
             <div class="col-3">
@@ -293,8 +310,8 @@
         <div class="col-md"  style="height: 140;">
           <div class="row d-flex mh-100">
             <div class="col-9">
-              <div class="col" id="card-label-light" style="font-size: small;">Valor Final da Proposta</div>
-              <div class="col" id="card-value-grey">{{ total.valorProposta | currency:'BRL':'symbol':'1.2-2' }}</div>
+              <div class="col" id="card-label-light" style="font-size: small;">Monto total </div>
+              <div class="col" id="card-value-grey">USD. {{ total.valorProposta | number:'1.2-2' }}</div>
               <div class="col" id=""></div>
             </div>
             <div class="col-3">

@@ -583,7 +583,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioCarrinhoComponent
         {
           idReservado: this.idReservado !== null ? this.idReservado : null,
           codCotacao: this.codCotacao !== null ? this.codCotacao : null,
-          codMaterial: data[index].codMaterial,
+          codMaterial: data[index].id_material,
           nomeMaterial: data[index].nomeMaterial,
           quantidade: 0,
           valorUnit: data[index].valorUnit,

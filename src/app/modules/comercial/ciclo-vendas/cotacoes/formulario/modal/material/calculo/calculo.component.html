@@ -16,35 +16,35 @@
                 <div class="col-7">
                   <div class="form-row">
                     <div class="form-group col">
-                      <div class="mtc-title mb-2 text-uppercase text-primary">Unidade para cálculo</div>
-                      <p>{{nomeTipoLancamento | titlecase}}</p>
+                      <div class="mtc-title mb-2 text-uppercase text-primary">Calculo de cantidades</div>
+                      <!-- <p>{{nomeTipoLancamento | titlecase}}</p> -->
                     </div>
                   </div>
                   <div class="form-row">
                     <div class="form-group col">
-                      <label class="font-weight-bold"for="quantidade">{{ descQtde }}</label>
+                      <label class="font-weight-bold"for="quantidade">Cantidad</label>
                       <input
-                        type="text"
+                        type="number"
                         id="quantidade"
                         class="form-control"
                         formControlName="quantidade"
-                        currencyMask [options]="currencyMaskOptions"
+                        
                         [ngClass]="onFieldError('quantidade') + ' ' + onFieldRequired(form.controls.quantidade)">
                     </div>
                   </div>
                   <div class="form-row">
                     <div class="form-group col">
-                      <label for="preco1">{{ descPreco }}</label>
+                      <label for="preco1">Precio</label>
                       <input
                         type="text"
                         id="preco1"
                         class="form-control"
                         formControlName="preco1"
-                        placeholder="R$ 0,00"
-                        currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',', precision: 2 }"
+                        placeholder="USD. 0,00"
                         [ngClass]="onFieldError('preco1') + ' ' + onFieldRequired(form.controls.preco1)"
                         aria-describedby="preco1-help"
-                        (ngModelChange)="onDisablePreco2()">
+                        (ngModelChange)="onDisablePreco2()"
+                        readonly>
                       <small *ngIf="tipoCalculo1 == 6 && material.valorMaterialContrato == 0"  id="preco1-help" class="text-muted" style="font-size: 11px">
                         Preço ideal acima de <strong>{{ material.valorUnit | currency:'BRL':'symbol':'1.2-2' }}</strong>
                       </small>
@@ -62,7 +62,7 @@
                   </div>
                   <div class="form-row" *ngIf="tipoCalculo2 > 0 && material.valorMaterialContrato == 0" >
                     <div class="form-group col">
-                      <label for="preco2">Preço por Tonelada</label>
+                      <label for="preco2">Precio por kg.</label>
                       <input
                         type="text"
                         id="preco2"
@@ -178,36 +178,44 @@
             <div class="col-6 pl-0 my-auto">
               <div class="text-right text-uppercase mr-1 mb-2" style="font-size: 11px">
                 <a class="text-primary" href="javascript:void(0)" (click)="onShowImpostos()">
-                  <i class="fas mr-2" [ngClass]="{'fa-chevron-up': showImpostos, 'fa-chevron-down': !showImpostos}"></i>
-                  <strong>Detalhes</strong>
+                  <!-- <i class="fas mr-2" [ngClass]="{'fa-chevron-up': showImpostos, 'fa-chevron-down': !showImpostos}"></i> -->
+                  <!-- <strong>Detalhes</strong> -->
                 </a>
               </div>
               <ul class="list-group">
                 <li class="list-group-item">
                   <div class="d-flex justify-content-between w-100">
                     <div class="my-auto">
-                      <strong>Peso item</strong>
+                      <strong>Peso Item</strong>
                     </div>
-                    <strong class="text-secondary">{{ calculo.tonelada | number }} Ton</strong>
+                    <strong class="text-secondary">{{ calculo.tonelada | number }} Kg</strong>
                   </div>
                 </li>
                 <li class="list-group-item">
                   <div class="d-flex justify-content-between w-100">
                     <div class="my-auto">
-                      <strong>Valor unitário</strong>
+                      <strong>Valor unitario</strong>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorUnitario | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                    <strong class="text-secondary">{{ calculo.valorUnitario }} USD.</strong>
                   </div>
                 </li>
+                <!-- <li class="list-group-item">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="my-auto">
+                      <strong>Valor Item</strong>
+                    </div>
+                    <strong class="text-secondary">{{ calculo.valorItem  }}</strong>
+                  </div>
+                </li> -->
                 <li class="list-group-item">
                   <div class="d-flex justify-content-between w-100">
                     <div class="my-auto">
-                      <strong>Valor item</strong>
+                      <strong>Descuento %</strong>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorItem | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                    <strong class="text-secondary">{{ calculo.descuento  }} </strong>
                   </div>
                 </li>
-                <li class="list-group-item" [hidden]="!showImpostos">
+                <!-- <li class="list-group-item" [hidden]="!showImpostos">
                   <div class="d-flex justify-content-between w-100">
                     <div class="my-auto">
                       <strong class="mr-1">Alíquota IPI</strong>
@@ -228,7 +236,7 @@
                       </ng-template>
                       <i class="far fa-question-circle" [tooltip]="tooltipValorIpiTemplate"></i>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorIpi | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                    <strong class="text-secondary">{{ calculo.valorIpi  }}</strong>
                   </div>
                 </li>
                 <li class="list-group-item" [hidden]="!showImpostos">
@@ -252,7 +260,7 @@
                       </ng-template>
                       <i class="far fa-question-circle" [tooltip]="tooltipValorIcmsTemplate"></i>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorIcms | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                    <strong class="text-secondary">{{ calculo.valorIcms  }}</strong>
                   </div>
                 </li>
                 <li class="list-group-item" [hidden]="!showImpostos">
@@ -264,24 +272,24 @@
                       </ng-template>
                       <i class="far fa-question-circle" [tooltip]="tooltipValorIcmsStTemplate"></i>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorIcmsSt | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                    <strong class="text-secondary">{{ calculo.valorIcmsSt  }}</strong>
                   </div>
-                </li>
+                </li> -->
                 <li class="list-group-item">
                   <div class="d-flex justify-content-between w-100">
                     <div class="my-auto">
                       <strong>Valor total</strong>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                    <strong class="text-secondary">{{ calculo.valorTotal  }} USD.</strong>
                   </div>
                 </li>
               </ul>
 
               <div class="col mt-3">
-                <div class="mtc-title mb-3 text-uppercase text-primary">Detalhes do Pedido</div>
+                <div class="mtc-title mb-3 text-uppercase text-primary">Detalles del Pedido</div>
                 <div class="row">
                   <div class="form-group col-lg-4">
-                    <label for="nrPedidoCliente" class="fontBold">Nr. Pedido</label>
+                    <label for="nrPedidoCliente" class="fontBold">Nro. Pedido</label>
                     <input
                       class="form-control"
                       id="nrPedidoCliente"
@@ -297,7 +305,7 @@
                       formControlName="codItemPedidoCliente">
                   </div>
                   <div class="form-group col-lg-4 font-weight-bold">
-                    <label for="codProdutoCliente" class="fontBold">Cód. Produto</label>
+                    <label for="codProdutoCliente" class="fontBold">Cód. Producto</label>
                     <input
                       class="form-control"
                       id="codProdutoCliente"

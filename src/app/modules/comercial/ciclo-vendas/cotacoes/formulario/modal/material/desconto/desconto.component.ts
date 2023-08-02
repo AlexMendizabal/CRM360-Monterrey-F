@@ -89,7 +89,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoComponen
 
   onChangeTipoDesconto(tipo: string): void {
     if (tipo === 'valor') {
-      this.currencyMaskOptions.prefix = 'R$ ';
+      this.currencyMaskOptions.prefix = 'USD. ';
       this.currencyMaskOptions.suffix = '';
       this.maxValue = 9999999;
     } else if (tipo === 'percentual') {

@@ -60,9 +60,11 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoService {
               nomeTipoLancamento: response.data.nomeTipoLancamento_1,
               codCliente: codCliente,
               medida: response.data.medida,
-              codEndereco: codEndereco
-            };
+              codEndereco: codEndereco,
+              precio: material.precio,
 
+            };
+            //console.log(initialState)
             this.modalService.show(
               ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent,
               Object.assign({}, modalConfig, {

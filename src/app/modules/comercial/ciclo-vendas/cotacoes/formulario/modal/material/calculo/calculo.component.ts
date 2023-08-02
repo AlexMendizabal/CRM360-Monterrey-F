@@ -40,6 +40,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   @Input('codCliente') codCliente: number;
   @Input('medida') medida: number;
   @Input('codEndereco') codEndereco: number;
+  @Input('precio') precio: number;
+
 
   medidaDisable = false;
 
@@ -65,7 +67,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     medida: 0,
     nrPedidoCliente: '',
     codItemPedidoCliente: '',
-    codProdutoCliente: ''
+    codProdutoCliente: '',
   };
 
   form: FormGroup;
@@ -105,21 +107,23 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   }
 
   setFormBuilder(): void {
+
     this.form = this.formBuilder.group({
 
       quantidade: [
         null,
         [Validators.required, Validators.min(0.001), Validators.minLength(1)],
       ],
-      preco1: [this.material.valor, [Validators.required, Validators.min(0.001)]],
+      preco1: [this.material.precio, [Validators.required, Validators.min(0.001)]],
       preco2: [null],
       medida: [
         { value: this.medida, disabled: this.medida > 0 ? true : false },
       ],
       nrPedidoCliente: this.material.nrPedidoCliente,
-      codItemPedidoCliente: this.material.codItemPedidoCliente,
+      codItemPedidoCliente: this.material.codigo_material,
       codProdutoCliente: this.material.codProdutoCliente
     });
+    /* console.log(this.material); */
 
     this.setFormValidators();
   }
@@ -131,7 +135,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
         Validators.min(0.001),
       ]);
       this.form.controls.medida.updateValueAndValidity();
-      if(this.material.medida1 > 0){
+      if (this.material.medida1 > 0) {
         this.form.controls.medida.setValue(this.material.medida1);
         this.form.controls.medida.updateValueAndValidity();
       }
@@ -147,11 +151,13 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       ]);
       this.form.controls.preco2.updateValueAndValidity();
     }
+    console.log('aqui cantidad')
+    console.log(this.material)
 
-    if(this.tipoLancamento == 6){
-      this.form.controls.quantidade.setValue(this.material.quantidade);
+    if (this.tipoLancamento == 6) {
+      this.form.controls.quantidade.setValue(this.material.qtdeItem);
       this.form.controls.quantidade.updateValueAndValidity();
-    }else{
+    } else {
       this.form.controls.quantidade.setValue(this.material.qtdePecas);
       this.form.controls.quantidade.updateValueAndValidity();
     }
@@ -302,15 +308,41 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   }
 
   onCalcular(): void {
-    if (this.checkFormValidators() === false && this.form.valid) {
+
+
+    /* if (this.checkFormValidators() === false && this.form.valid) {
       if (this.material.valorMaterialContrato > 0) {
         this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
       } else if (this.form.value.preco2 > 0) {
         if (
           Math.floor(this.material.valorUnit * 100) / 100 >
           this.form.value.preco2
-        ) {
-          this.confirmModalService
+          ) {
+            this.confirmModalService
+            .showConfirm(
+              null,
+              'Preço abaixo do mínimo',
+              'O preço informado está abaixo do valor mínimo. Deseja continuar mesmo assim?',
+              'Cancelar',
+              'Confirmar'
+              )
+            .subscribe((response: boolean) =>
+            response
+            ? this.postCalculoMaterial(
+              this.tipoCalculo2,
+              this.form.value.preco2
+              )
+              : EMPTY
+              );
+            } else {
+              this.postCalculoMaterial(this.tipoCalculo2, this.form.value.preco2);
+            }
+          } else if (this.form.value.preco1 > 0 && this.tipoLancamento == 6) {
+            if (
+              Math.floor(this.material.valorUnit * 100) / 100 >
+              this.form.value.preco1
+              ) {
+                this.confirmModalService
             .showConfirm(
               null,
               'Preço abaixo do mínimo',
@@ -321,36 +353,13 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
             .subscribe((response: boolean) =>
               response
                 ? this.postCalculoMaterial(
-                    this.tipoCalculo2,
-                    this.form.value.preco2
-                  )
+                  this.tipoCalculo1,
+                  this.form.value.preco1
+                )
                 : EMPTY
             );
         } else {
-          this.postCalculoMaterial(this.tipoCalculo2, this.form.value.preco2);
-        }
-      } else if (this.form.value.preco1 > 0 && this.tipoLancamento == 6) {
-        if (
-          Math.floor(this.material.valorUnit * 100) / 100 >
-          this.form.value.preco1
-        ) {
-          this.confirmModalService
-            .showConfirm(
-              null,
-              'Preço abaixo do mínimo',
-              'O preço informado está abaixo do valor mínimo. Deseja continuar mesmo assim?',
-              'Cancelar',
-              'Confirmar'
-            )
-            .subscribe((response: boolean) =>
-              response
-                ? this.postCalculoMaterial(
-                    this.tipoCalculo1,
-                    this.form.value.preco1
-                  )
-                : EMPTY
-            );
-        } else {
+          ///ewqeqweqwqw////////////////
           this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
         }
       } else {
@@ -369,16 +378,21 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
             .subscribe((response: boolean) =>
               response
                 ? this.postCalculoMaterial(
-                    this.tipoCalculo1,
-                    this.form.value.preco1
-                  )
+                  this.tipoCalculo1,
+                  this.form.value.preco1
+                )
                 : EMPTY
             );
         } else {
           this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
         }
       }
-    }
+    } */
+    /*     this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
+    
+     */
+    this.calcularTotais(this.material, 1, this.tipoLancamento, this.material.unidade);
+
   }
 
   postCalculoMaterial(tipoCalculo: number, preco: number): void {
@@ -417,27 +431,40 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   }
 
   calcularTotais(data: any, tipoCalculo: number, tipoLancamento: number, unidade: string): void {
+    /*   alert('ingreso'); */
     this.resetTotais();
+    console.log('dataaqui');
+    console.log(data);
 
-    this.calculo.tonelada = data.tonelada;
+
+    this.calculo.tonelada = data.pesoEspecifico;
     this.calculo.qtde = data.qtde;
-    this.calculo.valorUnitario = data.valorUnitario;
+    this.calculo.valorUnitario = data.precio;
     this.calculo.valorItem = data.valorItem;
     this.calculo.aliquotaIpi = data.aliquotaIpi;
     this.calculo.valorIpi = data.valorIpi;
     this.calculo.aliquotaIcms = data.aliquotaIcms;
     this.calculo.valorIcms = data.valorIcms;
     this.calculo.valorIcmsSt = data.valorIcmsSt;
-    this.calculo.valorTotal = data.valorTotal;
+    this.calculo.valorTotalBruto = (data.precio * this.form.value.quantidade).toFixed(4);
     this.calculo.valorBaseIcmsSt = data.valorBaseIcmsSt;
     this.calculo.aliquotaReducaoIcms = data.aliquotaReducaoIcms;
     this.calculo.tipoCalculo = tipoCalculo;
     this.calculo.tipoLancamento = tipoLancamento;
+    this.calculo.descuento = data.descuento.toFixed(2);
+    this.calculo.descuentoAplicado = this.calculo.valorTotalBruto *data.descuento;
+    this.calculo.valorTotal = this.calculo.valorTotalBruto - this.calculo.descuentoAplicado;
     this.calculo.unidade = unidade;
     this.calculo.nrPedidoCliente = this.form.value.nrPedidoCliente,
     this.calculo.codItemPedidoCliente = this.form.value.codItemPedidoCliente,
     this.calculo.codProdutoCliente = this.form.value.codProdutoCliente
     this.calculo.medida = this.form.getRawValue().medida;
+    this.calculo.cantidad =  this.form.value.quantidade;
+
+
+    console.log('calculo')
+    console.log(this.calculo)
+
   }
 
   resetTotais(): void {
@@ -457,7 +484,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       valorTotal: 0,
       valorBaseIcmsSt: 0,
       aliquotaReducaoIcms: 0,
-      unidade:'',
+      unidade: '',
       medida: 0,
       nrPedidoCliente: '',
       codItemPedidoCliente: '',
@@ -470,18 +497,20 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     if (this.calculo.valorTotal === 0) {
       this.pnotifyService.notice('Realize os cálculos para continuar.');
     } else {
-      if(this.material.controladoPorLote == 1){
-        if(this.material.estoqueLote != this.form.value.quantidade){
+      if (this.material.controladoPorLote == 1) {
+        if (this.material.estoqueLote != this.form.value.quantidade) {
           this.pnotifyService.notice(`Quantidade diferente ao lote. Quantidade deve ser: ${this.material.estoqueLote}`);
           return;
         }
-        else{
+        else {
           this.calculo.index = this.index;
           this.formularioService.calculoSubject.next(this.calculo);
           this.onClose();
         }
       } else
-      this.calculo.index = this.index;
+      console.log('respuesta_calculo')
+      console.log(this.calculo);
+        this.calculo.index = this.index;
       this.formularioService.calculoSubject.next(this.calculo);
       this.onClose();
     }
@@ -536,9 +565,9 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.showImpostos = !this.showImpostos;
   }
 
-  setCOD(){
+  setCOD() {
     this.calculo.nrPedidoCliente = this.form.value.nrPedidoCliente,
-    this.calculo.codItemPedidoCliente = this.form.value.codItemPedidoCliente,
-    this.calculo.codProdutoCliente = this.form.value.codProdutoCliente
+      this.calculo.codItemPedidoCliente = this.form.value.codItemPedidoCliente,
+      this.calculo.codProdutoCliente = this.form.value.codProdutoCliente
   }
 }
