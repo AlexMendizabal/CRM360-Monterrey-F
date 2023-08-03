@@ -191,7 +191,7 @@
                       <btn-icon
                         icon="fas fa-calculator"
                         class="mr-3"
-                        tooltip="Calcular quantidades"
+                        tooltip="Calcular cantidades"
                         container="body"
                         (click)="onCalcMaterial(i, form.value.materiais[i])"
                         [disabled]="visualizar">
@@ -199,7 +199,7 @@
                       <btn-icon
                         icon="fas fa-percentage"
                         class="mr-3"
-                        tooltip="Aplicar desconto"
+                        tooltip="Aplicar descuento"
                         container="body"
                         (click)="onDescontoMaterial(i, form.value.materiais[i])"
                         >
@@ -250,7 +250,7 @@
         </form>
       </div>
     </div>
-    <!-- <div class="my-5" style="background-color: #FBFCFF;" *ngIf="canLoadRelacionados === true" [hidden]="visualizar">
+    <div class="my-5" style="background-color: #FBFCFF;" *ngIf="canLoadRelacionados === true" [hidden]="visualizar">
         <comercial-ciclo-vendas-cotacoes-formulario-materiais-relacionados
           [codEmpresa]="selectedCodEmpresa"
           [materiais]="materiaisRelacionados"
@@ -259,7 +259,7 @@
           [codFormaPagamento]="codFormaPagamento"
           [freteConta]="freteConta">
         </comercial-ciclo-vendas-cotacoes-formulario-materiais-relacionados>
-    </div> -->
+    </div> 
     <div class="row my-5">
 
       <div class="col"></div>

@@ -705,9 +705,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   confirmDelete(): any {
     return this.confirmModalService.showConfirm(
       'delete',
-      'Confirmar exclusão',
-      'Deseja realmente prosseguir com a exclusão do material?',
-      'Cancelar',
+      'Confirmar eliminación',
+      'Esta seguro de retirar este ítem de la lista?',
+      'Cancelar' ,
       'Confirmar'
     );
   }
@@ -893,7 +893,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       if (this.descontoCarrinho.tipo !== null) {
         if (this.descontoCarrinho.tipo === 'valor') {
           this.total.valorDescCarrinho =
-            this.total.valorDescMaterial + this.descontoCarrinho.desconto;
+            this.total.valorDescMaterial - this.descontoCarrinho.desconto;
 
           this.total.valorProposta =
             this.total.valorTotal +
@@ -905,10 +905,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
           this.total.valorTotal =
             ((100 - this.descontoCarrinho.desconto) / 100) *
             this.total.valorTotal;
-
           this.total.valorDescCarrinho =
-            this.total.valorDescMaterial +
-            (this.total.valorTotalOri - this.total.valorTotal);
+           /*  this.total.valorDescMaterial +
+            (this.total.valorTotalOri - this.total.valorTotal); */
 
           this.total.valorProposta =
             this.total.valorTotal +

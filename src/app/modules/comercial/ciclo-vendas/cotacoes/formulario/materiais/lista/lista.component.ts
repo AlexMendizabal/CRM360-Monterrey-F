@@ -176,7 +176,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   onChangeLinha(codLinha: number, reset: boolean) {
     if (reset) {
       this.form.controls.codClasse.reset();
-      this.form.controls.codClasse.setValue(0);
+      /* this.form.controls.codClasse.setValue(0); */
 
       this.form.controls.codMaterial.reset();
       /* this.form.controls.codMaterial.disable(); */
@@ -190,12 +190,15 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
           this.grupos = response.result;
         } else {
           this.grupos = [];
-
         }
+        /* this.grupos.unshift({
+          id_linha: '',
+          descricao: 'SELECCIONE',
+        });  */
         this.grupos.unshift({
           id_linha: 0,
           descricao: 'TODOS',
-        });
+        }); 
       },
       error: (error: any) => {
         /*  */
