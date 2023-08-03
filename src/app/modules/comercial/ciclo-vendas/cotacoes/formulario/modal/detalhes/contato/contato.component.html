@@ -35,7 +35,7 @@
         <div class="form-row">
           <div class="col"><hr></div>
         </div>
-        <div class="mtc-title">Meios de contato</div>
+        <div class="mtc-title">Medios de contacto</div>
         <div class="form-row" *ngIf="contato.contatos != null">
           <div class="form-group col-md-6" *ngFor="let item of contato.contatos">
             <label><strong>{{ item.tipo }}</strong></label>
@@ -53,7 +53,7 @@
         </div>
         <message
           icon="fas fa-box-open"
-          text="Nenhuma informação encontrada"
+          text="Sin Información"
           class="py-4"
           *ngIf="contato.contatos == null">
         </message>

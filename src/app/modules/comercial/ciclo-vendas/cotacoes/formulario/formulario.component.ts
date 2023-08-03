@@ -381,7 +381,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           routerLink: `/comercial/ciclo-vendas/${id}`,
         },
         {
-          descricao: 'Cotações e pedidos',
+          descricao: 'Cotizaciones y Ofertas',
           routerLink: `/comercial/ciclo-vendas/${id}/cotacoes-pedidos/lista`,
         },
         {

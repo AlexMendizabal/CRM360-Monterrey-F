@@ -3,37 +3,30 @@
 <app-header [appTitle]="title">
   <button
     type="button"
-    style="display: none;"
     (click)="onEdit()"
-    [hidden]="!showEditButton"
     [disabled]="loaderNavbar">
     Editar
   </button>
   <button
     type="button"
-    style="display: none;"
     (click)="onAdd()"
-    [hidden]="!showAddButton"
     [disabled]="loaderNavbar">
     Adicionar
   </button>
   <button
     type="button"
-    style="display: none;"
     (click)="onCancel()"
-    [hidden]="!showCancelButton"
     [disabled]="loaderNavbar">
     Cancelar
   </button>
   <button
     type="button"
-    style="display: none;"
     (click)="onSubmit()"
-    [hidden]="!showSubmitButton"
     [disabled]="loaderNavbar">
     Guardar
   </button>
 </app-header>
+
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
   <div class="row mb-3" *ngIf="cliente.codCliente">
     <div class="col">

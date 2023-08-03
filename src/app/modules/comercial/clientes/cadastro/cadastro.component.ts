@@ -37,10 +37,10 @@ export class ComercialClientesCadastroComponent
   cliente: any = {};
 
   title: string = 'Dados cadastrais';
-  showEditButton: boolean = false;
-  showAddButton: boolean = false;
-  showCancelButton: boolean = false;
-  showSubmitButton: boolean = false;
+  showEditButton: boolean = true;
+  showAddButton: boolean = true;
+  showCancelButton: boolean = true;
+  showSubmitButton: boolean = true;
   breadCrumbTree: Array<Breadcrumb> = [];
 
   travas: number = 0;

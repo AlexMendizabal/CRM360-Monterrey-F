@@ -36,7 +36,7 @@
       <div class="col-md" id="card-green">
         <div class="row d-flex">
           <div class="col-9">
-            <div class="col" id="card-label-light">Valor da Proposta</div>
+            <div class="col" id="card-label-light">Valor Total</div>
             <div class="col" id="card-value-grey">{{ valorProposta | currency:'BRL':'symbol':'1.2-2' }}</div>
           </div>
           <div class="col-3">
@@ -51,7 +51,7 @@
             <span class="fas fa-clock d-flex justify-content-center align-items-center" id="icon-purple"></span>
           </div>
           <div class="col-10">
-            <div class="col" id="card-label-purple">Datos de lanzamiento</div>
+            <div class="col" id="card-label-purple">Datos de Creación</div>
             <div class="col" id="card-value-light">{{ dadosLancamento.data | date:'dd/MM/yyyy' }} às {{
               dadosLancamento.data | date:'HH:mm' }}</div>
           </div>
@@ -198,6 +198,15 @@
               </ng-container>
             </select>
           </div>
+
+          <!-- <div class="form-row"> -->
+            <div class="form-group col-lg-2">
+              <label for="dataEntrega">Referencia</label>
+              <input type="text" class="form-control">
+            </div>
+          <!-- </div> -->
+        </div>
+        <div class="row">
           <div class="form-group col-lg-3">
             <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
               <label class="my-auto" for="codContato">Persona de contacto</label>
@@ -225,12 +234,13 @@
             <!-- [ngClass]="onFieldError('codContato') + ' ' + onFieldRequired(form.controls.codContato)"-->
             <!-- <invalid-form-control [show]="onFieldInvalid('codContato')" message="Contato responsável é obrigatório."></invalid-form-control>-->
           </div>
-          <!-- <div class="form-row"> -->
-            <div class="form-group col-lg-2">
-              <label for="dataEntrega">Referencia</label>
-              <input type="text" class="form-control">
+          <!-- cambiar formControlName y for="codEndereco"-->
+          <div class="form-group col-lg-2">
+            <label class="my-auto" for="codEndereco">numero de celular</label>
+            <div class="my-1 text-uppercase" style="font-size: 11px">
+              <input formControlName=" " type="text" class="form-control" [readonly]="true" [attr.disabled]="true" />
             </div>
-          <!-- </div> -->
+          </div>
         </div>
         <!--novos campos fim-->
         <div class="row">
@@ -323,7 +333,21 @@
               </div>
             </div>
           </div>
-
+          <div class="form-group col-lg-2">
+            <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
+              <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
+              <div class="my-auto text-uppercase" style="font-size: 11px">
+              </div>
+            </div>
+            <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
+                  bindLabel="descricao" bindValue="codFormaPagamento" formControlName="codFormaPagamento"
+                  [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="visualizar"
+                  [virtualScroll]="true" placeholder="Selecione...">
+                  <!-- [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)"-->
+                </ng-select>
+                <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
+                  message="Centro Logistico obligatorio."></invalid-form-control>
+          </div>
         </div>
         <div class="row">
           <div *ngIf="swReferencia == true" class="form-group col-lg-2">

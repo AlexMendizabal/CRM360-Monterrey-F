@@ -209,7 +209,7 @@ export class ComercialCicloVendasPedidosProducaoTelasListaComponent
     this.setBreadCrumb();
     this.getFilterValues();
     this.setFormFilter();
-    this.titleService.setTitle('Cotações e pedidos');
+    this.titleService.setTitle('Cotizaciones y Ofertas');
     this.onDetailPanelEmitter();
     // this.setFormProducao();
     // this.setFormExpedicao();
