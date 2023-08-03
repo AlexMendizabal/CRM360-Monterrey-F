@@ -48,13 +48,13 @@ export class ComercialCicloVendasCotacoesFormularioModalDetalhesContatoService {
             const initialState = {
               contato: response.data,
             };
-
             this.modalService.show(
               ComercialCicloVendasCotacoesFormularioModalDetalhesContatoComponent,
               Object.assign({}, modalConfig, {
                 initialState,
               })
             );
+            console.log(initialState);
           } else {
             this.pnotifyService.error();
           }

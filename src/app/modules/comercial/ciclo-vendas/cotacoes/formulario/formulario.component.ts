@@ -1482,7 +1482,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
               _contatos[i].nomeCompleto.length > 1
             )
               contatos.push({
-                codContato: _contatos[i].idSeqTid,
+                codContato: _contatos[i].id,
                 nomeContato: _contatos[i].nomeCompleto,
               });
           }
