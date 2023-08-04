@@ -21,6 +21,7 @@ import { ICarrinhoModel } from '../../../models/carrinho';
 import { ICalculoModel } from '../../../models/calculo';
 import { JsonResponse } from 'src/app/models/json-response';
 import { finalize } from 'rxjs/operators';
+import { ComercialService } from '../../../../../../comercial.service';
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-formulario-modal-material-calculo',
@@ -46,6 +47,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   medidaDisable = false;
 
   loaderModal: boolean;
+  swDesactivarForm = true;
 
   calculo: ICalculoModel = {
     index: null,
@@ -69,6 +71,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     codItemPedidoCliente: '',
     codProdutoCliente: '',
     valorTotalBruto: 0,
+    presentacionSeleccionado: 0,
 
   };
 
@@ -87,6 +90,9 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   };
 
   opcoesVenda: Array<any> = [];
+  arrayPresentacion: Array<any> = [];
+  swPresentacion = false;
+
 
   showImpostos = false;
 
@@ -96,7 +102,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     private pnotifyService: PNotifyService,
     private confirmModalService: ConfirmModalService,
     private formularioService: ComercialCicloVendasCotacoesFormularioService,
-    private cotacoesService: ComercialCicloVendasCotacoesService
+    private cotacoesService: ComercialCicloVendasCotacoesService,
+    private comercialService: ComercialService
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -106,6 +113,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.onSetUnidadeLancamento();
     this.onDisablePreco1();
     this.onDisablePreco2();
+    this.getPresentacionMaterial();
   }
 
   setFormBuilder(): void {
@@ -121,6 +129,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       medida: [
         { value: this.medida, disabled: this.medida > 0 ? true : false },
       ],
+      formPresentacion: { value: 3, disabled: true },
       nrPedidoCliente: this.material.nomeMaterial,
       codItemPedidoCliente: this.material.codigo_material,
       codProdutoCliente: this.material.codProdutoCliente
@@ -153,8 +162,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       ]);
       this.form.controls.preco2.updateValueAndValidity();
     }
-    console.log('aqui cantidad')
-    console.log(this.material)
+    /*     console.log('aqui cantidad')
+        console.log(this.material) */
 
     if (this.tipoLancamento == 6) {
       this.form.controls.quantidade.setValue(this.material.qtdeItem);
@@ -165,7 +174,14 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     }
 
   }
-
+  getPresentacionMaterial() {
+    this.comercialService.getPresentacionMaterial()
+      .subscribe((response: any) => {
+        if (response.responseCode === 200) {
+          this.arrayPresentacion = response.result;
+        }
+      });
+  }
   onSetUnidadeLancamento(): void {
     this.opcoesVenda = [];
     this.resetTotais();
@@ -311,6 +327,13 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
 
   onCalcular(): void {
 
+    this.swDesactivarForm == false;
+
+
+    this.form.controls['formPresentacion'].enable();
+    /* this.form.controls['formPresentacion'].setValue(3); */
+
+
 
     /* if (this.checkFormValidators() === false && this.form.valid) {
       if (this.material.valorMaterialContrato > 0) {
@@ -435,8 +458,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   calcularTotais(data: any, tipoCalculo: number, tipoLancamento: number, unidade: string): void {
     /*   alert('ingreso'); */
     this.resetTotais();
-    console.log('dataaqui');
-    console.log(data);
+    /*     console.log('dataaqui');
+        console.log(data); */
 
 
     this.calculo.tonelada = data.pesoEspecifico;
@@ -454,18 +477,18 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.calculo.tipoCalculo = tipoCalculo;
     this.calculo.tipoLancamento = tipoLancamento;
     this.calculo.descuento = data.descuento.toFixed(2);
-    this.calculo.descuentoAplicado = this.calculo.valorTotalBruto *data.descuento;
+    this.calculo.descuentoAplicado = this.calculo.valorTotalBruto * data.descuento;
     this.calculo.valorTotal = this.calculo.valorTotalBruto - this.calculo.descuentoAplicado;
     this.calculo.unidade = unidade;
     this.calculo.nrPedidoCliente = this.form.value.nrPedidoCliente,
-    this.calculo.codItemPedidoCliente = this.form.value.codItemPedidoCliente,
-    this.calculo.codProdutoCliente = this.form.value.codProdutoCliente
+      this.calculo.codItemPedidoCliente = this.form.value.codItemPedidoCliente,
+      this.calculo.codProdutoCliente = this.form.value.codProdutoCliente
     this.calculo.medida = this.form.getRawValue().medida;
-    this.calculo.cantidad =  this.form.value.quantidade;
+    this.calculo.cantidad = this.form.value.quantidade;
 
 
-    console.log('calculo')
-    console.log(this.calculo)
+    /*  console.log('calculo')
+     console.log(this.calculo) */
 
   }
 
@@ -511,8 +534,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
           this.onClose();
         }
       } else
-      console.log('respuesta_calculo')
-      console.log(this.calculo);
+        /*    console.log('respuesta_calculo')
+           console.log(this.calculo); */
         this.calculo.index = this.index;
       this.formularioService.calculoSubject.next(this.calculo);
       this.onClose();

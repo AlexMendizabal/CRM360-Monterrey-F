@@ -124,4 +124,9 @@ export class ComercialService {
   getEscritorios(): Observable<Object> {
     return this.http.get(`${this.API}/escritorios`).pipe(take(1), retry(2));
   }
+  getPresentacionMaterial(): Observable<Object>{
+    return this.http
+      .get(`${this.API}/presentacion_materiales`)
+      .pipe(take(1), retry(2));
+  }
 }

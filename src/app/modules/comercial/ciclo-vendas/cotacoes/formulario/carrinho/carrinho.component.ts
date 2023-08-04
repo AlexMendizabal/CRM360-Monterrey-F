@@ -331,7 +331,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
             formGroup.controls.percentualDesc.setValue(
               (100 * desconto.desconto) / valor
             );
-            console.log(formGroup.controls.percentualDesc)
+            /* console.log(formGroup.controls.percentualDesc) */
           } else if (desconto.tipo === 'percentual') {
             valorDesc = valor - ((100 - desconto.desconto) / 100) * valor;
             formGroup.controls.percentualDesc.setValue(desconto.desconto);
@@ -400,9 +400,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
             quantidadeItem = materiais[i].qtdeItem;
           }
           /* Aqui para cargar al modal */
-          console.log('crear');
+      /*     console.log('crear');
 
-          console.log(materiais[i]);
+          console.log(materiais[i]); */
           // if (this.checkMaterialExists(materiais[i]) === false) {
           /* console.log('datos')
           console.log(materiais[i]) */
@@ -706,8 +706,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     return this.confirmModalService.showConfirm(
       'delete',
       'Confirmar eliminación',
-      'Esta seguro de retirar este ítem de la lista?',
-      'Cancelar' ,
+      'Esta seguro de retirar este ítem de la lista? ',
+      'Cancelar',
       'Confirmar'
     );
   }
@@ -868,10 +868,11 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     this.total.monedaLocal = 0;
     this.total.bruto = 0;
     this.total.total = 0;
+    this.total.impuesto = 0;
 
     if (materiais.length > 0) {
-      console.log('aqui_material')
-      console.log(materiais)
+     /*  console.log('aqui_material')
+      console.log(materiais) */
 
 
       for (let index = 0; index < materiais.length; index++) {
@@ -886,6 +887,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         this.total.valorTotalOri += materiais[index].valorTotalOri;
         this.total.valorTotal += materiais[index].valorTotal;
         this.total.bruto += materiais[index].valorTotalBruto;
+        this.total.impuesto = this.total.valorTotal * 0.13;
 
 
       }
@@ -906,10 +908,10 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
             ((100 - this.descontoCarrinho.desconto) / 100) *
             this.total.valorTotal;
           this.total.valorDescCarrinho =
-           /*  this.total.valorDescMaterial +
-            (this.total.valorTotalOri - this.total.valorTotal); */
+            /*  this.total.valorDescMaterial +
+             (this.total.valorTotalOri - this.total.valorTotal); */
 
-          this.total.valorProposta =
+            this.total.valorProposta =
             this.total.valorTotal +
             // this.total.valorIpi -
             this.total.valorDescCarrinho;
