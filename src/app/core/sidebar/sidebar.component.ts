@@ -123,9 +123,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
           }
           this.atividadesError = false;
           let data: object[] = response.body['data'];
-          //console.log({ ...response.body["data"] })
-           let idx1 = data.findIndex((val) => val['id'] === 89);
-           data.splice(idx1,1);
+          console.log({ ...response.body["data"] })
+          let idx1 = data.findIndex((val) => val['id'] === 89);
+          data[idx1]['nome'] = 'CICLO DE VENTAS';
 
            let idx2 = data.findIndex((val) => val['id'] === 28);
            data.splice(idx2,1);
@@ -136,23 +136,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
            let idx4 = data.findIndex((val) => val['id'] === 25);
            data.splice(idx4,1);
 
-          let idx5 = data.findIndex((val) => val['id'] === 29);
-          data[idx5]['nome'] = 'BÚSQUEDA DE CLIENTES';
 
-          // let idx6 = data.findIndex((val) => val['id'] === 12);
-          // data[idx6]['nome'] = 'Actividades';
+           let idx6 = data.findIndex((val) => val['id'] === 29);
+          data[idx6]['nome'] = 'BÚSQUEDA DE CLIENTES';
 
-           //let idx7 = data.findIndex((val) => val['id'] === 10);
-          // data[idx7]['nome'] = 'Modulos';
 
-           //let idx8 = data.findIndex((val) => val['id'] === 13);
-          // data[idx8]['nome'] = 'Perfiles';
-
-           //let idx9 = data.findIndex((val) => val['id'] === 11);
-          // data[idx9]['nome'] = 'Sub modulos';
-
-           //let idx10 = data.findIndex((val) => val['id'] === 21);
-          // data[idx10]['nome'] = 'Usuarios';
 
           this.atividades = data;
           this.routerLinkHome = data[0]['moduloRota'];

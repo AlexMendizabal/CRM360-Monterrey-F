@@ -116,28 +116,8 @@ export class LoginComponent implements OnInit {
         .subscribe(
           (response: any) => {
             if (response.responseCode === 200) {
-             /*  console.log(response); */
               if (response.token) {
-                var params = {
-                  Usuario: 'crm360',
-                  Password: 'M1ddlewareCRM360$/',
-                }
-                this.authService.loginSAP(params).subscribe(
-                  (respuesta: any) => {
-                    /* console.log(response); */
-                    if (respuesta.CodigoRespuesta === 0) {
-                      if (respuesta.Mensaje) {
-                        response['tokenSAP'] = response.Mensaje;
-                        /* console.log(response); */
-                        this.setUserLogin(response);
-                      }
-                    } else {
-                      this.pnotifyService.error(
-                        'Se ha producido un error al generar su acceso.'
-                      );
-                    }
-                  }
-                );
+                this.setUserLogin(response);
               } else {
                 this.pnotifyService.error(
                   'Se ha producido un error al generar su acceso.'
@@ -167,7 +147,7 @@ export class LoginComponent implements OnInit {
     } else {
       if (response.result.id_modulo_home != null) {
         if (isDevMode()) {
-          /* console.log(response.result)  */
+           /* console.log(response.result)  */
           matriculaTid =
             response.result.matricula_tid != null
               ? response.result.matricula_tid
@@ -177,7 +157,7 @@ export class LoginComponent implements OnInit {
             response.result.id_vendedor != null
               ? response.result.id_vendedor
               : 88;
-          console.log(response.result.id_vendedor)
+              console.log(response.result.id_vendedor)
           idEscritorio =
             response.result.id_escritorio != null
               ? response.result.id_escritorio
@@ -237,38 +217,38 @@ export class LoginComponent implements OnInit {
 
   checkCurrentModule(moduloPrincipal: any) {
 
-    const routerParams = this.activatedRoute.snapshot.queryParams;
-    const urlAfterLogin = routerParams?.urlAfterLogin
+      const routerParams = this.activatedRoute.snapshot.queryParams;
+      const urlAfterLogin = routerParams?.urlAfterLogin
 
-    const modulo = urlAfterLogin ? urlAfterLogin?.split('/')[1] : undefined;
-    console.log(modulo)
-    if (!modulo) {
-      this.modulosService.setCurrentModule(moduloPrincipal);
-      this.router.navigate([moduloPrincipal.rota]);
-      return
-    }
+      const modulo = urlAfterLogin ? urlAfterLogin?.split('/')[1] : undefined;
+      console.log(modulo)
+      if(!modulo){
+        this.modulosService.setCurrentModule(moduloPrincipal);
+        this.router.navigate([moduloPrincipal.rota]);
+        return
+      }
 
-    this._modulosService
-      .getModulos({ rota: moduloPrincipal.rota })
-      .subscribe(
-        response => {
+      this._modulosService
+        .getModulos({rota: moduloPrincipal.rota})
+        .subscribe(
+          response => {
 
-          if (response.status !== 200) {
+            if(response.status !== 200){
+              this.modulosService.setCurrentModule(moduloPrincipal);
+              this.router.navigate([moduloPrincipal.rota]);
+              return;
+            }
+
+            let data = response.body["data"][0];
+            this.modulosService.setCurrentModule(data);
+            this.router.navigate([urlAfterLogin]);
+
+          },
+          (error: any) => {
             this.modulosService.setCurrentModule(moduloPrincipal);
             this.router.navigate([moduloPrincipal.rota]);
-            return;
           }
-
-          let data = response.body["data"][0];
-          this.modulosService.setCurrentModule(data);
-          this.router.navigate([urlAfterLogin]);
-
-        },
-        (error: any) => {
-          this.modulosService.setCurrentModule(moduloPrincipal);
-          this.router.navigate([moduloPrincipal.rota]);
-        }
-      )
+        )
 
   }
 }

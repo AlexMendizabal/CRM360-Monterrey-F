@@ -13,6 +13,13 @@ const routes: Routes = [
         component: ComercialCicloVendasComponent,
       },
       {
+        path: 'autorizaciones',
+        loadChildren: () =>
+          import('./autorizaciones/autorizaciones.module').then(
+            (m) => m.ComercialCicloVendasAutorizacionesModule
+          ),
+      },
+      {
         path: 'cotacoes-pedidos',
         loadChildren: () =>
           import('./cotacoes/cotacoes.module').then(
@@ -32,6 +39,10 @@ const routes: Routes = [
           import('./painel-bobinas/painel-bobinas.module').then(
             (m) => m.ComercialPainelBobinasModule
           ),
+      },
+      {
+        path: 'Autorizaciones',
+        redirectTo: '/autorizaciones',
       },
       {
         path: 'contato',
