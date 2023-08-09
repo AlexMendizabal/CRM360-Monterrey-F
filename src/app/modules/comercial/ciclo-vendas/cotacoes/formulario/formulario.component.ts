@@ -117,6 +117,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   idReservado: number;
   codCotacao: number;
+  codigo_cliente: string;
 
   breadCrumbTree: Array<Breadcrumb> = [];
 
@@ -465,6 +466,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.form.controls['codEndereco'].setValue(event.direccion);
     this.form.controls['razaoSocial'].setValue(event.razaoSocial);
     this.form.controls['nomeCliente'].setValue(event.nomeCliente);
+    this.form.controls['codigo_cliente'].setValue(event.nomeCliente);
 
     //this.form.controls['nombreVendedor'].setValue(event.nombreVendedor);
     this.idListaPrecio = event.id_lista_precio;
@@ -586,6 +588,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         codRazaoSocial: [data.codRazaoSocial],
         nombreVendedor: [data.nombreVendedor],
         id_lista_precio: [data.id_lista_precio],
+        codigo_cliente: [data.codigo_cliente],
 
 
         codContato: [

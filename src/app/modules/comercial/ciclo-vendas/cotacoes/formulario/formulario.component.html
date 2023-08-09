@@ -133,9 +133,9 @@
       <div class="col" [hidden]=showBloco1>
         <div class="form-row">
           <div class="form-group col-lg-2">
-            <label class="mb-1" for="codCotacao">Número</label>
-            <input type="text" id="codCotacao" class="form-control" formControlName="codCotacao"
-              [readonly]="visualizar">
+            <label class="mb-1" for="codigo_cliente">Codigo Cliente</label>
+            <input type="text" id="codigo_cliente" class="form-control" formControlName="codigo_cliente"
+                   [readonly]="true" [attr.disabled]="true">
           </div>
 
           <div class="form-group col-lg-5">
@@ -166,8 +166,6 @@
             <input formControlName="razaoSocial" type="text" class="form-control" id="razaoSocial"
               [readonly]="visualizar" placeholder="Selecionar..." [attr.disabled]="true" />
           </div>
-        </div>
-        <div class="row">
           <div class="form-group col-lg-2">
             <label class="my-auto" for="codEndereco">Dirección</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
@@ -175,6 +173,7 @@
             </div>
           </div>
         </div>
+
         <div class="row">
           <div class="form-group col-lg-2">
             <label class="my-auto" for="codEndereco">NIT</label>
@@ -199,12 +198,7 @@
             </select>
           </div>
 
-          <!-- <div class="form-row"> -->
-            <div class="form-group col-lg-2">
-              <label for="dataEntrega">Referencia</label>
-              <input type="text" class="form-control">
-            </div>
-          <!-- </div> -->
+
         </div>
         <div class="row">
           <div class="form-group col-lg-3">
@@ -297,9 +291,49 @@
             <!--  [ngClass]="onFieldError('codEndereco') + ' ' + onFieldRequired(form.controls.codEndereco)"-->
             <!--<invalid-form-control [show]="onFieldInvalid('codEndereco')" message="Local de entrega é obrigatório."></invalid-form-control>-->
           </div>
+          <div *ngIf="swReferencia == true" class="form-group col-lg-2">
+            <label class="my-auto" for="codEndereco">Dirección de destino</label>
+            <div class="my-1 text-uppercase" style="font-size: 11px">
+              <input formControlName=" " type="text" class="form-control"/>
+            </div>
+          </div>
           <div class="form-group col-lg-2">
             <label for="dataEntrega">Referencia</label>
             <input type="text" class="form-control">
+          </div>
+          <div class="form-group col-lg-2">
+            <div class="form-row">
+              <div class="form-group col">
+                <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
+                  <label class="my-auto" for="codFormaPagamento">Forma de Pago</label>
+                  <div class="my-auto text-uppercase" style="font-size: 11px">
+                  </div>
+                </div>
+                <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
+                           bindLabel="descricao" bindValue="codFormaPagamento" formControlName="codFormaPagamento"
+                           [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="visualizar"
+                           [virtualScroll]="true" placeholder="Selecione...">
+                  <!-- [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)"-->
+                </ng-select>
+                <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
+                                      message="El tipo de pago es obligatorio."></invalid-form-control>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-lg-2">
+            <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
+              <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
+              <div class="my-auto text-uppercase" style="font-size: 11px">
+              </div>
+            </div>
+            <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
+                       bindLabel="descricao" bindValue="codFormaPagamento" formControlName="codFormaPagamento"
+                       [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="visualizar"
+                       [virtualScroll]="true" placeholder="Selecione...">
+              <!-- [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)"-->
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
+                                  message="Centro Logistico obligatorio."></invalid-form-control>
           </div>
         </div>
         <div class="form-row">
@@ -311,51 +345,14 @@
               <!--  [ngClass]="onFieldError('codDeposito') + ' ' + onFieldRequired(form.controls.codDeposito)"-->
             <!-- </ng-select>
           </div> -->
+
         </div>
         <!--novos campos fim-->
         <div class="form-row">
-          <div class="form-group col-lg-2">
-            <div class="form-row">
-              <div class="form-group col">
-                <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
-                  <label class="my-auto" for="codFormaPagamento">Forma de Pago</label>
-                  <div class="my-auto text-uppercase" style="font-size: 11px">
-                  </div>
-                </div>
-                <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
-                  bindLabel="descricao" bindValue="codFormaPagamento" formControlName="codFormaPagamento"
-                  [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="visualizar"
-                  [virtualScroll]="true" placeholder="Selecione...">
-                  <!-- [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)"-->
-                </ng-select>
-                <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
-                  message="El tipo de pago es obligatorio."></invalid-form-control>
-              </div>
-            </div>
-          </div>
-          <div class="form-group col-lg-2">
-            <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
-              <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
-              <div class="my-auto text-uppercase" style="font-size: 11px">
-              </div>
-            </div>
-            <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
-                  bindLabel="descricao" bindValue="codFormaPagamento" formControlName="codFormaPagamento"
-                  [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="visualizar"
-                  [virtualScroll]="true" placeholder="Selecione...">
-                  <!-- [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)"-->
-                </ng-select>
-                <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
-                  message="Centro Logistico obligatorio."></invalid-form-control>
-          </div>
+
         </div>
         <div class="row">
-          <div *ngIf="swReferencia == true" class="form-group col-lg-2">
-            <label class="my-auto" for="codEndereco">Dirección de destino</label>
-            <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName=" " type="text" class="form-control"/>
-            </div>
-          </div>
+
         </div>
 
       </div>
