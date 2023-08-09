@@ -34,7 +34,7 @@ export class LogisticaEntradaMateriaisService {
       }
     );
   }
-  
+
   getAllMateriais(params?) {
     return this.http.get(
       `${this.API}/common/v2/materiais`,

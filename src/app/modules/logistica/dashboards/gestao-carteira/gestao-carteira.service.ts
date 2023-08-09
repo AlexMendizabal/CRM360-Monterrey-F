@@ -27,7 +27,7 @@ export class LogisticaDashboardGestaoCarteiraService {
     });
   }
 
-  
+
   getEmpresas() {
     const empresas = [
       {
