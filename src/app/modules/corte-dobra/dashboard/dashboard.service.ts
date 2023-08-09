@@ -17,7 +17,7 @@ export class CorteDobraDashboardService {
 
   private readonly API_URL_MT: string = `http://127.0.0.1:8000/api`;
 
-  //API_URL: string = 'http://127.0.0.1:8000';
+
   //API_URL_MT:string = '/api/';
 
   constructor(
@@ -37,7 +37,7 @@ export class CorteDobraDashboardService {
     //**
 
   parametros = {unidade: "03", periodo:"1"};
- 
+
 
   // getPerfil(idUsuario: number) {
   //   return this.http.get(`${this.API_URL}/perfil`).pipe(
@@ -117,7 +117,7 @@ export class CorteDobraDashboardService {
   getPedidosFaturados(parametros): Observable<any>{
     let unidade = parametros["unidade"];
     let periodo = parametros["periodo"];
-    return this.http.get(`${this.API_URL_MT}/corteDobra/pedidosFaturados`,{ 
+    return this.http.get(`${this.API_URL_MT}/corteDobra/pedidosFaturados`,{
       params: {
         "emp": unidade,
         "id":periodo
@@ -170,7 +170,7 @@ export class CorteDobraDashboardService {
     let d           = new Date();
     let dtInicial = new Date(d.getFullYear(),d.getMonth(), 1);
     let dtFinal   = new Date(d.getFullYear(),d.getMonth() + 1,0);
-    
+
     let dataInicial = this.dateService.convert2PhpDate(new Date(dtInicial));
     let dataFinal = this.dateService.convert2PhpDate(new Date(dtFinal));
 
@@ -202,7 +202,7 @@ console.log(projeto)
     let d           = new Date();
     let dtInicial = new Date(d.getFullYear(),d.getMonth(), 1);
     let dtFinal   = new Date(d.getFullYear(),d.getMonth() + 1,0);
-    
+
     // let dataInicial = this.dateService.convert2PhpDate(new Date(dtInicial));
     // let dataFinal = this.dateService.convert2PhpDate(new Date(dtFinal));
 

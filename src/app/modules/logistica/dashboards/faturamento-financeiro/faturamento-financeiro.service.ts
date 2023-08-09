@@ -39,7 +39,7 @@ export class LogisticaDashboardFaturamentoFinanceiroService {
       observe: 'response',
     });
   }
-  
+
   getFaturamentoCteComplementar(params?) {
     return this.http.get(`${this.API}/logistica/indicadores/faturamento/complementares`, {
       params: params,
