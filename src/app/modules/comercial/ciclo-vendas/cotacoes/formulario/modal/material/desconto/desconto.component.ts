@@ -11,6 +11,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 
 // Services
 import { ComercialCicloVendasCotacoesFormularioService } from '../../../formulario.service';
+import { ConsoleReporter } from 'jasmine';
 
 @Component({
   selector:
@@ -41,8 +42,17 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoComponen
     private formularioService: ComercialCicloVendasCotacoesFormularioService
   ) {}
 
+  
   ngOnInit(): void {
     this.setFormBuilder();
+    this.onChangeTipoDesconto('percentual');
+ /*    console.log('aqui');
+    console.log(this.params); */
+    if(this.params.descuento > 0 ){
+      this.form.controls.descuentoAutorizado.setValue(this.params.descuento);
+    }else{
+      this.form.controls.descuentoAutorizado.setValue('No definido');
+    }
   }
 
   onClose(): void {
@@ -55,6 +65,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoComponen
     this.form = this.formBuilder.group({
       tipo: [formValue.tipo, [Validators.required]],
       desconto: [formValue.desconto, [Validators.required]],
+      descuentoAutorizado: [formValue.descuentoAutorizado]
+
     });
 
     this.onChangeTipoDesconto(formValue.tipo);
@@ -93,6 +105,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoComponen
       this.currencyMaskOptions.suffix = '';
       this.maxValue = 9999999;
     } else if (tipo === 'percentual') {
+     /*  descuento : number = this.params.descuento; */
       this.currencyMaskOptions.prefix = '';
       this.currencyMaskOptions.suffix = '%';
       this.maxValue = 100;
@@ -105,8 +118,9 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoComponen
         aplicarDesconto: this.params.aplicarDesconto,
         index:
           typeof this.params.index !== 'undefined' ? this.params.index : null,
-        tipo: this.form.value.tipo,
+        tipo: 'percentual',
         desconto: this.form.value.desconto,
+        descuento_permitido: this.form.controls.descuentoAutorizado.value
       });
       this.onClose();
     }

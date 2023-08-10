@@ -68,6 +68,8 @@ export class ComercialService {
       })
       .pipe(take(1), retry(2));
   }
+  
+  
 
   getMaterialesOferta(params: any) {
     return this.http
@@ -124,9 +126,23 @@ export class ComercialService {
   getEscritorios(): Observable<Object> {
     return this.http.get(`${this.API}/escritorios`).pipe(take(1), retry(2));
   }
-  getPresentacionMaterial(): Observable<Object>{
+  getPresentacionMaterial(): Observable<Object> {
     return this.http
       .get(`${this.API}/presentacion_materiales`)
       .pipe(take(1), retry(2));
+  }
+
+  getCliente(codCliente) {
+    return this.http.get(`${this.API}/clientes/detalhes/${codCliente}`).pipe(take(1));
+  }
+
+  getListarPrecios() {
+    return this.http.get(`${this.API}/vendedor/lista_precio`)
+    .pipe(take(1), retry(2));
+  }
+
+  getTodosVendedores() {
+    return this.http.get(`${this.API}/vendedor/allvendedor`)
+    .pipe(take(1), retry(2));
   }
 }

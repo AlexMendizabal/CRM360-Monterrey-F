@@ -40,6 +40,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   @Input('codDeposito') codDeposito: number;
   @Input('codFormaPagamento') codFormaPagamento: number;
   @Input('freteConta') freteConta: number;
+  @Input('id_lista_precio') id_lista: number;
 
   filas = [
     { columna1: 'Valor 1', columna2: 'Valor 2', columna3: 'Valor 3', columna4: 'Valor 4', columna5: 'Valor 5', columna6: 'Valor 6', columna7: 'Valor 7', columna8: 'Valor 8', columna9: 'Valor 9', columna10: 'Valor 10' },
@@ -198,7 +199,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         this.grupos.unshift({
           id_linha: 0,
           descricao: 'TODOS',
-        }); 
+        });
       },
       error: (error: any) => {
         /*  */
@@ -551,7 +552,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     } else {
       /*    console.log("hola"); */
       this.setRouterParams(this.getFormFilterValues());
-      //this.scrollToFormOnTop.emit(true);
+    /*   this.scrollToFormOnTop.emit(true); */
     }
   }
 
@@ -599,10 +600,10 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
   search(): void {
-    /*  if (!this.codCliente) {
-       
-       return;
-     } */
+    console.log(this.codCliente)
+    if (!this.codCliente) {
+      return;
+    }
     this.loaderNavbar.emit(true);
     this.searching = true;
     /* this.searchParams = params; */
@@ -611,7 +612,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     this.dadosEmpty = false;
     const params = {
       id_material: this.idMaterial,
-      id_lista: this.idLista,
+      id_lista: this.id_lista,
       registros: this.form.controls.registros.value
     }
     this.comercialService
@@ -628,13 +629,13 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         next: (response: any) => {
           /*           console.log(response.responseCode);
            */          /*  if (response.hasOwnProperty('success')
-                 && response.success === true
-                 && !response.data[0].msg) {
-                   this.dados = response.data.map(function (el: any) {
-                     var o = Object.assign({}, el);
-                     o.checked = 0; 
-                     return o;
-                   }); */
+              && response.success === true
+              && !response.data[0].msg) {
+                this.dados = response.data.map(function (el: any) {
+                  var o = Object.assign({}, el);
+                  o.checked = 0; 
+                  return o;
+                }); */
           if (response.responseCode === 200) {
             this.dados = response.result.map((el) => {
 /*               console.log(this.dados);
@@ -672,10 +673,10 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 
     //let hasError = false;
     let hasError = true;
-    //if(this.codCliente == null){
-    //this.pnotifyService.notice("Selecione o cliente")
-    //hasError = true;
-    //}
+    if (this.codCliente == null) {
+      this.pnotifyService.notice("Seleccione un cliente")
+      hasError = true;
+    }
 
     //if(this.codFormaPagamento == null){
     //this.pnotifyService.notice("Selecione a forma de pagamento")

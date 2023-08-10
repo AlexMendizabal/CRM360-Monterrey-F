@@ -42,6 +42,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   @Input('medida') medida: number;
   @Input('codEndereco') codEndereco: number;
   @Input('precio') precio: number;
+  /* @Input('id_presentacion') id_presentacion : number; */
+
 
 
   medidaDisable = false;
@@ -92,6 +94,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   opcoesVenda: Array<any> = [];
   arrayPresentacion: Array<any> = [];
   swPresentacion = false;
+  id_presentacion: number = 0;
 
 
   showImpostos = false;
@@ -114,12 +117,13 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.onDisablePreco1();
     this.onDisablePreco2();
     this.getPresentacionMaterial();
+    /* this.id_presentacion = this.material.id_presentacion; */
+    /* console.log(this.id_presentacion)  */
   }
 
   setFormBuilder(): void {
 
     this.form = this.formBuilder.group({
-
       quantidade: [
         null,
         [Validators.required, Validators.min(0.001), Validators.minLength(1)],
@@ -129,11 +133,12 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       medida: [
         { value: this.medida, disabled: this.medida > 0 ? true : false },
       ],
-      formPresentacion: { value: 3, disabled: true },
+      formPresentacion: this.material.id_presentacion,
       nrPedidoCliente: this.material.nomeMaterial,
       codItemPedidoCliente: this.material.codigo_material,
       codProdutoCliente: this.material.codProdutoCliente
     });
+    /* console.log('ddd'); */
     /* console.log(this.material); */
 
     this.setFormValidators();
@@ -330,7 +335,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.swDesactivarForm == false;
 
 
-    this.form.controls['formPresentacion'].enable();
+    /* this.form.controls['formPresentacion'].enable(); */
     /* this.form.controls['formPresentacion'].setValue(3); */
 
 
@@ -416,7 +421,9 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     /*     this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
     
      */
+
     this.calcularTotais(this.material, 1, this.tipoLancamento, this.material.unidade);
+
 
   }
 
@@ -458,9 +465,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   calcularTotais(data: any, tipoCalculo: number, tipoLancamento: number, unidade: string): void {
     /*   alert('ingreso'); */
     this.resetTotais();
-    /*     console.log('dataaqui');
-        console.log(data); */
-
+   /*  console.log('dataaqui');
+    console.log(data);  */
 
     this.calculo.tonelada = data.pesoEspecifico;
     this.calculo.qtde = data.qtde;
@@ -471,7 +477,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.calculo.aliquotaIcms = data.aliquotaIcms;
     this.calculo.valorIcms = data.valorIcms;
     this.calculo.valorIcmsSt = data.valorIcmsSt;
-    this.calculo.valorTotalBruto = (data.precio * this.form.value.quantidade).toFixed(4);
+    this.calculo.valorTotalBruto = (data.precio * this.form.value.quantidade);
     this.calculo.valorBaseIcmsSt = data.valorBaseIcmsSt;
     this.calculo.aliquotaReducaoIcms = data.aliquotaReducaoIcms;
     this.calculo.tipoCalculo = tipoCalculo;
@@ -485,10 +491,11 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       this.calculo.codProdutoCliente = this.form.value.codProdutoCliente
     this.calculo.medida = this.form.getRawValue().medida;
     this.calculo.cantidad = this.form.value.quantidade;
+    this.calculo.id_presentacion = data.id_presentacion;
 
 
-    /*  console.log('calculo')
-     console.log(this.calculo) */
+    /* console.log(this.calculo) */
+    /* console.log(this.calculo) */
 
   }
 
@@ -514,7 +521,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       medida: 0,
       nrPedidoCliente: '',
       codItemPedidoCliente: '',
-      codProdutoCliente: ''
+      codProdutoCliente: '',
+      id_presentacion: 0,
     };
   }
 
@@ -523,6 +531,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     if (this.calculo.valorTotal === 0) {
       this.pnotifyService.notice('Realize os cálculos para continuar.');
     } else {
+      /* console.log(thiscalculo); */
       if (this.material.controladoPorLote == 1) {
         if (this.material.estoqueLote != this.form.value.quantidade) {
           this.pnotifyService.notice(`Quantidade diferente ao lote. Quantidade deve ser: ${this.material.estoqueLote}`);
@@ -535,9 +544,11 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
         }
       } else
         /*    console.log('respuesta_calculo')
-           console.log(this.calculo); */
-        this.calculo.index = this.index;
+        console.log(this.calculo); */
+        this.calculo.id_presentacion = this.form.value.formPresentacion;
+      this.calculo.index = this.index;
       this.formularioService.calculoSubject.next(this.calculo);
+      /*  console.log(this.calculo); */
       this.onClose();
     }
   }
@@ -589,6 +600,9 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
 
   onShowImpostos(): void {
     this.showImpostos = !this.showImpostos;
+  }
+  changePresentacion(id) {
+    this.calculo.id_presentacion = id;
   }
 
   setCOD() {

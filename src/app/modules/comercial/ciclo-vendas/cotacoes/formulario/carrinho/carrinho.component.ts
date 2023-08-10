@@ -132,13 +132,20 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     valorTotalOri: 0,
     valorTotal: 0,
     valorTotalBruto: 0,
-    valorProposta: 0,
+    valorProposta: 0, 
+    bruto: 0,
   };
 
   cardCounterConfig: Partial<CardCounterConfig> = {
     showDecimals: true,
     format: 'currency',
   };
+
+  descuento_permitido: number = 0;
+  id_presentacion: number = 0;
+  swDescuentoPermitido = false;
+
+  descuento: number = 0;
 
   canLoadRelacionados = false;
   materiaisRelacionados: number[];
@@ -299,6 +306,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
           formGroup.controls.codItemPedidoCliente.setValue(calculo.codItemPedidoCliente);
           formGroup.controls.codProdutoCliente.setValue(calculo.codProdutoCliente);
           formGroup.controls.valorTotalBruto.setValue(calculo.valorTotalBruto);
+          formGroup.controls.cantidad.setValue(2);
+          formGroup.controls.id_presentacion.setValue(calculo.id_presentacion);
 
         }
 
@@ -311,6 +320,10 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     this.descontoSubscription = this.formularioService.descontoSubject.subscribe(
       (desconto: IDescontoModel) => {
         const formArray = this.form.controls.materiais as FormArray;
+        /* console.log('descuento')
+        console.log(desconto) */
+
+
 
         if (desconto.aplicarDesconto === 'carrinho') {
           if (desconto.desconto === 0) {
@@ -343,8 +356,23 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
           formGroup.controls.tipoDesc.setValue(desconto.tipo);
           formGroup.controls.valorDesc.setValue(valorDesc);
           formGroup.controls.valorTotal.setValue(valorTotal);
-        }
+          formGroup.controls.descuento_permitido.setValue(desconto.descuento_permitido);
+          /* formGroup.controls.descuento_permitido.setValue(desconto.descuento_permitido); */
+         /*  console.log('form group');
 
+          console.log(formGroup); */
+          /* if (formGroup.controls.percentualDesc > formGroup.controls.descuento_permitido) {
+            formGroup.controls.swDescuentoPermitido = true;
+          } */
+         /*  this.descuento_permitido = desconto.descuento_permitido;
+          /* console.log('descuentos');
+          console.log(desconto.desconto)
+          console.log(desconto.descuento_permitido) */
+        /*   this.swDescuentoPermitido = false;
+          if (desconto.desconto > this.descuento_permitido) {
+            this.swDescuentoPermitido = true;
+          } */
+        }
         this.onCalcularTotais(true);
       }
     );
@@ -400,12 +428,14 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
             quantidadeItem = materiais[i].qtdeItem;
           }
           /* Aqui para cargar al modal */
-      /*     console.log('crear');
-
-          console.log(materiais[i]); */
+          /*     console.log('crear');
+    
+              console.log(materiais[i]); */
           // if (this.checkMaterialExists(materiais[i]) === false) {
           /* console.log('datos')
           console.log(materiais[i]) */
+          /* console.log('materiales');
+          console.log() */
           this.materiais.push(
             this.formBuilder.group({
               codCotacao: [materiais[i].codCotacao],
@@ -445,7 +475,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
               ],
               valorIpi: [materiais[i].valorIpi, [Validators.required]],
               valorTotal: [materiais[i].valorTotal, [Validators.required]],
-              valorTotalBruto: [materiais[i].valorTotalBruto, [Validators.required]],
+              valorTotalBruto: [materiais[i].valorTotalBruto],
               valorTotalOri: [materiais[i].valorTotalOri],
               valorMaterialBarra: [materiais[i].valorMaterialBarra],
               valorMaterialContrato: [materiais[i].valorMaterialContrato],
@@ -465,7 +495,10 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
               precio: [materiais[i].precio],
               codigo_material: [materiais[i].codigo_material],
               descuento: [materiais[i].descuento],
-              cantidad: [2]
+              descuento_permitido: [this.descuento_permitido],
+              id_presentacion: [materiais[i].id_presentacion_material],
+              cantidad: [2],
+             /*  id_presentacion: form[] */
             })
           );
 
@@ -523,7 +556,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
   onCalcMaterial(index: number, material: ICarrinhoModel): void {
 
-    /*     console.log(material) */
+    /* console.log(material) */
     this.calculoService.showModal(
       index,
       material,
@@ -580,15 +613,49 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   }
 
   onDescontoMaterial(index: number, material: ICarrinhoModel): void {
+
+    /*  console.log(material) */
+    //Buscar descuento aplicado al cliente
+    const params = {
+      id_tipo_cliente: 0,
+      cantidad: material.qtdeItem,
+      id_material: material.codMaterial,
+      id_departamento: 0,
+    }
+
+
+
+    this.cotacoesService.descuentoCliente(params)
+      .subscribe(
+        (response: JsonResponse) => {
+          if (response.responseCode == 200) {
+            /* console.log(response); */
+            this.descuento = response.result.descuento;
+            this.descuentoModal(index, material, this.descuento)
+
+          } else {
+            this.pnotifyService.error();
+            this.descuentoModal(index, material, this.descuento)
+          }
+        },
+        (error: any) => {
+          this.pnotifyService.error();
+          this.descuentoModal(index, material, this.descuento)
+        }
+      );
+
+
+  }
+
+  descuentoModal(index, material, descuento) {
     if (material.valorTotal > 0) {
-      this.descontoService.descontoMaterial(index, material);
+      this.descontoService.descontoMaterial(index, material, descuento);
     } else {
       this.pnotifyService.notice(
-        'Realice el calculo de cantidades para continuar'
+        'Realice el calculo de cantidades para continuar '
       );
     }
   }
-
   onDescontoCarrinho(): void {
     let hasError = false;
     const materiais: Array<ICarrinhoModel> = this.form.value.materiais;
@@ -743,8 +810,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     data: Array<IMateriaisModel & ISimilaridadeModel>
   ): Array<ICarrinhoModel> {
     let materiais = [];
-    /* console.log('data');
+   /*  console.log('data')
     console.log(data); */
+    /*console.log(data); */
 
     for (let index = 0; index < data.length; index++) {
       let material = {
@@ -793,6 +861,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         peso: data[index].peso,
         descuento: data[index].descuento,
         unidad: data[index].unidad,
+        id_presentacion_material : 3,
       };
 
       materiais.push(material);
@@ -865,16 +934,16 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     this.total.valorTotalOri = 0;
     this.total.valorTotal = 0;
     this.total.valorProposta = 0;
-    this.total.monedaLocal = 0;
+    this.total.monedaLocal =  0;
     this.total.bruto = 0;
     this.total.total = 0;
     this.total.impuesto = 0;
 
     if (materiais.length > 0) {
-     /*  console.log('aqui_material')
-      console.log(materiais) */
+      /*  console.log('aqui_material')
+        */
 
-
+      /* console.log(materiais) */
       for (let index = 0; index < materiais.length; index++) {
         this.total.quantidade += materiais[index].quantidade;
         this.total.qtdeItem += materiais[index].qtdeItem;
@@ -891,6 +960,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
 
       }
+
+      /* console.log(this.total.bruto); */
 
       if (this.descontoCarrinho.tipo !== null) {
         if (this.descontoCarrinho.tipo === 'valor') {

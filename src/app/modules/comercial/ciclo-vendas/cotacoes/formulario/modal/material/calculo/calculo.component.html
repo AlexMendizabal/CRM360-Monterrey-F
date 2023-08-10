@@ -267,7 +267,7 @@
                     <div class="my-auto">
                       <strong>Valor total</strong>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorTotal }} USD.</strong>
+                    <strong class="text-secondary">{{ calculo.valorTotal | number:'1.2-2' }} USD.</strong>
                   </div>
                 </li>
 
@@ -297,11 +297,17 @@
                   </div>
                   <div class="col-lg-12 mb-2">
                     <label for="codProdutoCliente" class="fontBold">PRESENTACIÓN</label>
-                    <ng-select [searchable]="true" [clearable]="false" placeholder="Seleccione..."
+                    <!-- <ng-select [searchable]="true" [clearable]="false" placeholder="Seleccione..."
                       [items]="arrayPresentacion"  [virtualScroll]="true" formControlName="formPresentacion"
                       labelForId="id" bindLabel="nombre_mat_presentacion" bindValue="id_linha" 
                       >
-                    </ng-select>
+                    </ng-select> -->
+                    <select class="form-control custom-select" formControlName="formPresentacion" (change)="changePresentacion($event.target.value)">
+                      <ng-container *ngFor="let item of arrayPresentacion">
+                        <option [value]="item.id" >{{ item.nombre_mat_presentacion }}</option>
+                      </ng-container>
+                    </select>
+        
                   </div>
                 </div>
               </div>

@@ -202,6 +202,15 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
+  descuentoCliente(params: any) {
+    return this.http
+      .get(
+        `${this.API}/descuento_cliente`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
+
 
 
   getMateriaisCombo(

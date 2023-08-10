@@ -1,4 +1,4 @@
-<div *ngIf="showApp">
+<div *ngIf="showApp" >
   <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco()">
     <span class="fas fa-search d-flex justify-content-center align-items-center" id="icon-gray"></span>
     <div class="d-flex justify-content-center align-items-center ml-2"><strong>Búsqueda de Materiales</strong></div>
@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <div class="col" [hidden]=showBloco2>
+  <div class="col" [hidden]=showBloco2 >
     <div class="row mb-2">
       <div class="col">
         <div class="d-flex justify-content-end">
@@ -181,9 +181,9 @@
               <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                 Precio
               </th>
-              <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+             <!--  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                 Porcentaje Autorizado
-              </th>
+              </th> -->
               <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                 Precio Neto
               </th>
@@ -232,13 +232,13 @@
                   (click)="onClickMaterial(i, material)">
                   {{ material.estoqueDisponivel | number:'1.3-3' }} {{ material.unidade }}
                 </td> -->
-              <td> {{material.unidad}}</td>
-              <td> {{material.cantidad}}</td>
-              <td> {{ material.precio | number:'1.4-4' }}</td>
-              <td> {{ material.descuento | number:'1.2-2' }}</td>
-              <td> {{ material.precio_neto | number:'1.4-4' }}</td>
-              <td> {{material.nombre_moneda}}</td>
-              <td> {{material.iva | number:'1.2-2' }} %</td>
+              <td class="text-center"> {{material.unidad}}</td>
+              <td class="text-center"> {{material.cantidad}}</td>
+              <td class="text-center"> {{ material.precio | number:'1.4-4' }}</td>
+              <!-- <td> {{ material.descuento | number:'1.2-2' }}</td> -->
+              <td class="text-center"> {{ material.precio_neto | number:'1.4-4' }}</td>
+              <td class="text-center"> {{material.nombre_moneda}}</td>
+              <td class="text-center"> {{material.iva | number:'1.2-2' }} %</td>
              <!--  <td> {{material.columna8}}</td> -->
               <td class="text-right" [ngStyle]="{ width: columSize('buttons') }">
                 <btn-icon icon="fas fa-warehouse" size="small" class="mr-3" tooltip="MATERIAL COMPROMETIDO"
