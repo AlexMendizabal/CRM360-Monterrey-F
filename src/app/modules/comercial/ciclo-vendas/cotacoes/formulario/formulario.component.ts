@@ -117,7 +117,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   idReservado: number;
   codCotacao: number;
-  codigo_cliente: string;
+
 
   breadCrumbTree: Array<Breadcrumb> = [];
 
@@ -383,7 +383,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         },
         {
           descricao: 'Cotizaciones y Ofertas',
-          routerLink: `/comercial/ciclo-vendas/${id}/cotacoes-pedidos/lista`,
+            routerLink: `/comercial/ciclo-vendas/${id}/cotacoes-pedidos/lista`,
         },
         {
           descricao: this.appTitle,
@@ -454,7 +454,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
   // ALGUNOS CAMBIOS FUERON REALIZADOS PARA ENVIAR DIRECCION
   onCliente(event) {
-    console.log(event.nombreVendedor);
 
     this.form.patchValue(event);
     this.onChangeCliente(event.codCliente, 'user');
@@ -463,15 +462,18 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     // Llama a la función exibirClienteTerceiro con los datos del cliente seleccionado
     this.exibirClienteTerceiro(event);
     // Carga la dirección del cliente en el campo codEndereco del formulario
+    this.idListaPrecio = event.id_lista_precio;
     this.form.controls['codEndereco'].setValue(event.direccion);
     this.form.controls['razaoSocial'].setValue(event.razaoSocial);
     this.form.controls['nomeCliente'].setValue(event.nomeCliente);
-    this.form.controls['codigo_cliente'].setValue(event.nomeCliente);
+    this.form.controls['codigo_cliente'].setValue(event.codigo_cliente);
+    this.form.controls['nombreTipo'].setValue(event.nombreTipo);
 
     //this.form.controls['nombreVendedor'].setValue(event.nombreVendedor);
-    this.idListaPrecio = event.id_lista_precio;
-    this.idVendedor = event.id_vendedor
-    console.log(event)
+
+
+    this.idVendedor = event.id_vendedor;
+
 
 
 
@@ -585,10 +587,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         ],
         codCliente: [data.codCliente],
         razaoSocial: [data.razaoSocial],
+        nomeCliente: [data.nomeCliente],
         codRazaoSocial: [data.codRazaoSocial],
         nombreVendedor: [data.nombreVendedor],
         id_lista_precio: [data.id_lista_precio],
         codigo_cliente: [data.codigo_cliente],
+        nombreTipo: [data.nombreTipo],
 
 
         codContato: [

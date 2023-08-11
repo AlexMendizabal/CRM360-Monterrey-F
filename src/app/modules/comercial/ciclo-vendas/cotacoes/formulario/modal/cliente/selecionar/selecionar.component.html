@@ -57,16 +57,16 @@
     <ng-template #thead let-thead>
       <tr>
         <th>Cód Cliente </th>
-        <th>Nombre de Fantasia</th>
-        <th>Razon Social </th>
+        <th>Nombre del Cliente</th>
+
         <th></th>
       </tr>
     </ng-template>
     <ng-template #tbody let-tbody>
       <tr *ngFor="let cliente of clientes | slice : begin : end; let i = index">
-        <td>{{ cliente.codCliente }}</td>
+        <td>{{ cliente.codigo_cliente }}</td>
         <td>{{ cliente.nomeCliente }}</td>
-        <td>{{ cliente.razaoSocial }}</td>
+
         <td>
           <button
             class="btn-icon-sm"

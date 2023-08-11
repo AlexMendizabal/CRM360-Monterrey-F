@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { take, switchMap } from 'rxjs/operators';
+import { map, toArray, take, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { from } from 'rxjs';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 // Services
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { DateService } from 'src/app/shared/services/core/date.service';
@@ -15,6 +17,7 @@ import { AuthService } from 'src/app/shared/services/core/auth.service';
 import { Injectable } from '@angular/core';
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
+import { array } from '@amcharts/amcharts4/core';
 
 @Component({
   selector: 'comercial-agenda-detalhes',
@@ -22,11 +25,36 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
   styleUrls: ['./detalhes.component.scss']
 })
 export class ComercialAgendaDetalhesComponent implements OnInit {
-latitud: any;
-longitud: any;
-actualizarMarcador($event: any) {
-throw new Error('Method not implemented.');
-}
+
+
+
+
+  constructor(
+
+    private activatedRoute: ActivatedRoute,
+
+    private atividadesService: AtividadesService,
+
+    private authservice: AuthService,
+
+    private router: Router,
+
+    private dateService: DateService,
+    private agendaService: ComercialAgendaService,
+
+    private confirmModalService: ConfirmModalService,
+
+    private pnotifyService: PNotifyService,
+    private titleService: TitleService,
+    private modalService: BsModalService
+  ) {
+
+    this.pnotifyService.getPNotify();
+
+  }
+  latitud: any;
+  longitud: any;
+  modalRef: BsModalRef | undefined;
   breadCrumbTree: Array<Breadcrumb> = [
 
     {
@@ -62,43 +90,22 @@ throw new Error('Method not implemented.');
 
   };
 
-  //mostrarElemento: boolean = true;
+  imagenes: any = [];
+  img: any = [];
+  // mostrarElemento: boolean = true;
 
-  //ocultarFormulario(){
+  // ocultarFormulario(){
 
-   // this.mostrarElemento = false;
+  // this.mostrarElemento = false;
 
- // }
+  // }
 
   switchEdit: boolean;
 
   private user = this.authservice.getCurrentUser();
   posiciones: any;
-
-
-
-
-  constructor(
-
-    private activatedRoute: ActivatedRoute,
-
-    private atividadesService: AtividadesService,
-
-    private authservice: AuthService,
-
-    private router: Router,
-
-    private dateService: DateService,
-    private agendaService: ComercialAgendaService,
-
-    private confirmModalService: ConfirmModalService,
-
-    private pnotifyService: PNotifyService,
-    private titleService: TitleService
-  ) {
-
-    this.pnotifyService.getPNotify();
-
+  actualizarMarcador($event: any) {
+    throw new Error('Method not implemented.');
   }
 
 
@@ -109,9 +116,9 @@ throw new Error('Method not implemented.');
 
     this.registrarAcesso();
     this.titleService.setTitle('Detalles de cita');
-    const detalhes = this.activatedRoute.snapshot.data['detalhes']['result'];
-    const inicio = new Date(detalhes['start']);
-    const fim = new Date(detalhes['end']);
+    const detalhes = this.activatedRoute.snapshot.data.detalhes.result;
+    const inicio = new Date(detalhes.start);
+    const fim = new Date(detalhes.end);
     this.detalhes.status = detalhes.status;
     if (this.user.info.matricula == 1) {
       this.switchEdit = true;
@@ -130,8 +137,15 @@ throw new Error('Method not implemented.');
     this.detalhes.observacionFinal = detalhes.observacionFinal;
     this.latitud = detalhes.latitud;
     this.longitud = detalhes.longitud;
-    this.filtrarPosiciones(detalhes.id)
+    this.detalhes.url_web = detalhes.url_web;
 
+    this.filtrarPosiciones(detalhes.id);
+    this.imagenesAnexo(detalhes.id);
+    console.log(this.imagenesAnexo(detalhes.id));
+
+
+
+    console.log(detalhes);
     this.detalhes.description =
 
       detalhes.description != null
@@ -219,7 +233,7 @@ throw new Error('Method not implemented.');
 
   onDelete(detalhes: any) {
 
-    let confirm$ = this.confirmModalService.showConfirm(
+    const confirm$ = this.confirmModalService.showConfirm(
 
       'Borrar',
 
@@ -285,7 +299,46 @@ throw new Error('Method not implemented.');
     this.agendaService.getPosicionPromotor(id_agenda).subscribe(
       (response: any) => {
         this.posiciones = response.result;
-      })
+      });
+  }
+
+  imagenesAnexo(id_agenda: any) {
+    this.agendaService.getImagenes(id_agenda).subscribe(
+      (response: any) => {
+        this.imagenes = response.result;
+      },
+      (error: any) => {
+        console.error('Error al obtener las imágenes:', error);
+      }
+    );
+  }
+
+
+  // decodeBase64Image(base64Image: string): string{
+  //   const decodedString = atob(base64Image);
+  //   return decodedString;
+  // }
+
+  decodificarBase64(base64String: string): string {
+    const binaryString = window.atob(base64String);
+    const byteArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      byteArray[i] = binaryString.charCodeAt(i);
+    }
+    const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Cambia 'image/png' al tipo de imagen correcto si no es PNG
+    return URL.createObjectURL(blob);
+  }
+
+  mostrarImagen(urlImagen: string) {
+    this.abrirVentana('data:image/jpeg;base64;' + urlImagen);
+  }
+
+  abrirVentana(urlImagen: string) {
+    window.open(urlImagen, '_blank');
+  }
+
+  abrirModal(template: any) {
+    this.modalRef = this.modalService.show(template);
   }
 
 }
