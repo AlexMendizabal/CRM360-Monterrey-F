@@ -270,6 +270,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
   getMateriais(codClasse: number, src: string): void {
+    /* alert('dasd'); */
     this.materiais = [];
     if (codClasse === null || codClasse === undefined) {
       if (src === 'application') {
@@ -552,7 +553,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     } else {
       /*    console.log("hola"); */
       this.setRouterParams(this.getFormFilterValues());
-    /*   this.scrollToFormOnTop.emit(true); */
+      /*   this.scrollToFormOnTop.emit(true); */
     }
   }
 
@@ -629,13 +630,13 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         next: (response: any) => {
           /*           console.log(response.responseCode);
            */          /*  if (response.hasOwnProperty('success')
-              && response.success === true
-              && !response.data[0].msg) {
-                this.dados = response.data.map(function (el: any) {
-                  var o = Object.assign({}, el);
-                  o.checked = 0; 
-                  return o;
-                }); */
+             && response.success === true
+             && !response.data[0].msg) {
+               this.dados = response.data.map(function (el: any) {
+                 var o = Object.assign({}, el);
+                 o.checked = 0; 
+                 return o;
+               }); */
           if (response.responseCode === 200) {
             this.dados = response.result.map((el) => {
 /*               console.log(this.dados);
@@ -790,8 +791,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     }
 
     if (materiais.length > 0) {
-      console.log(materiais);
-      this.formularioService.materiaisSubject.next(materiais);
+/*       console.log(materiais);
+ */      this.formularioService.materiaisSubject.next(materiais);
       this.toggleAll = this.toggleAll === true ? false : this.toggleAll;
       this.scrollToCarrinho.emit(this.autoScroll);
     } else {

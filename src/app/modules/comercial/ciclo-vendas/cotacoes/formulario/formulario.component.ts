@@ -148,7 +148,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   valorProposta: number;
   valorIcmsSt: number;
 
-  
+
 
   locaisEntrega: Array<any> = [];
   locaisEntregaLoader: boolean;
@@ -477,9 +477,21 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   onCliente(event) {
     this.form.patchValue(event);
-    
     this.onChangeCliente(event.codCliente, 'user');
     this.onLoadCliente(true);
+
+    // Llama a la función exibirClienteTerceiro con los datos del cliente seleccionado
+    this.exibirClienteTerceiro(event);
+    // Carga la dirección del cliente en el campo codEndereco del formulario
+    this.idListaPrecio = event.id_lista_precio;
+    this.form.controls['codEndereco'].setValue(event.direccion);
+    this.form.controls['razaoSocial'].setValue(event.razaoSocial);
+    this.form.controls['nomeCliente'].setValue(event.nomeCliente);
+    this.form.controls['codigo_cliente'].setValue(event.codigo_cliente);
+    this.form.controls['nombreTipo'].setValue(event.nombreTipo);
+    this.form.controls['id_tipo_cliente'].setValue(event.tipoCliente);
+    this.form.controls['id_departamento'].setValue(event.id_departamento_lista);
+
 
   }
 
@@ -507,8 +519,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     if (resolver.success === true) {
       const data = resolver.data;
       const formValue: any = this.checkRouterParams();
-         /* console.log('datos');
-            console.log(data); */ 
+      /* ('datos');
+         (data); */
 
       let dataEntrega: Date,
         dataEncerramento: Date,
@@ -590,8 +602,16 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         ],
         codCliente: [data.codCliente],
         razaoSocial: [data.razaoSocial],
+        nomeCliente: [data.nomeCliente],
         codRazaoSocial: [data.codRazaoSocial],
-        codigoCliente: [data.codigo_cliente],
+        nombreVendedor: [data.nombreVendedor],
+        id_lista_precio: [data.id_lista_precio],
+        codigo_cliente: [data.codigo_cliente],
+        nombreTipo: [data.nombreTipo],
+        id_tipo_cliente: [data.tipoCliente],
+        id_departamento: [data.id_departamento_lista],
+
+        /* codEndereco: [data.direccion], */
         codContato: [
           data.codContato != 0 ? data.codContato : null,
           [Validators.required],
@@ -1496,8 +1516,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           }
 
           this.locaisEntrega = [...enderecos, ...enderecosAguardando];
-          /*     console.log(this.locaisEntrega);
-              console.log(_enderecos); */
+          /*     (this.locaisEntrega);
+              (_enderecos); */
           this.setClientTerceiro(this.form.controls.codEndereco.value);
         }
       });
@@ -1943,7 +1963,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       'tipoConsulta': 2,
       'codCliente': params
     };
-    /* console.log(params, '-----') */
+    /* (params, '-----') */
     this.formasPagamentoLoader = true;
     this.formasPagamentoS.getListaFormasPagamento(data).pipe(
       finalize(() => {
@@ -1951,7 +1971,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       })
     ).subscribe({
       next: (response: JsonResponse) => {
-        /* console.log(response); */
+        /* (response); */
         this.formasPagamento = response.data;
       }
     });

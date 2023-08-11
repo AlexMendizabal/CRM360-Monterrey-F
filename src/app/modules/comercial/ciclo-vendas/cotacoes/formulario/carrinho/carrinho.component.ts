@@ -56,6 +56,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   @Input('codCotacao') codCotacao: number;
   @Input('codCliente') codCliente: number;
   @Input('codEndereco') codEndereco: number;
+  @Input('id_departamento') id_departamento: number;
+  @Input('id_tipo_cliente') id_tipo_cliente: number;
+
   @Input('codFormaPagamento') codFormaPagamento: number;
   @Input('freteConta') freteConta: number;
   @Input('initialValue') initialValue: Array<ICarrinhoModel>;
@@ -216,8 +219,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     this.materiaisSubscription = this.formularioService.materiaisSubject.subscribe(
       (response: any) => {
         const materiais = this.formatMateriais(response);
-        /*         console.log(materiais);
-         */      /*   console.log('materiales'); * */
+        /*         (materiais);
+         */      /*   ('materiales'); * */
 
         this.onAddMaterial(materiais);
       }
@@ -320,8 +323,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     this.descontoSubscription = this.formularioService.descontoSubject.subscribe(
       (desconto: IDescontoModel) => {
         const formArray = this.form.controls.materiais as FormArray;
-        /* console.log('descuento')
-        console.log(desconto) */
+        /* ('descuento')
+        (desconto) */
 
 
 
@@ -344,7 +347,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
             formGroup.controls.percentualDesc.setValue(
               (100 * desconto.desconto) / valor
             );
-            /* console.log(formGroup.controls.percentualDesc) */
+            /* (formGroup.controls.percentualDesc) */
           } else if (desconto.tipo === 'percentual') {
             valorDesc = valor - ((100 - desconto.desconto) / 100) * valor;
             formGroup.controls.percentualDesc.setValue(desconto.desconto);
@@ -358,16 +361,16 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
           formGroup.controls.valorTotal.setValue(valorTotal);
           formGroup.controls.descuento_permitido.setValue(desconto.descuento_permitido);
           /* formGroup.controls.descuento_permitido.setValue(desconto.descuento_permitido); */
-         /*  console.log('form group');
+         /*  ('form group');
 
-          console.log(formGroup); */
+          (formGroup); */
           /* if (formGroup.controls.percentualDesc > formGroup.controls.descuento_permitido) {
             formGroup.controls.swDescuentoPermitido = true;
           } */
          /*  this.descuento_permitido = desconto.descuento_permitido;
-          /* console.log('descuentos');
-          console.log(desconto.desconto)
-          console.log(desconto.descuento_permitido) */
+          /* ('descuentos');
+          (desconto.desconto)
+          (desconto.descuento_permitido) */
         /*   this.swDescuentoPermitido = false;
           if (desconto.desconto > this.descuento_permitido) {
             this.swDescuentoPermitido = true;
@@ -385,7 +388,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       materiais: this.form.value.materiais,
       total: this.total,
     });
-    /*  console.log(this.form.value.materiais) */
+    /*  (this.form.value.materiais) */
   }
 
   setFormBuilder(): void {
@@ -407,13 +410,13 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   }
 
   onAddMaterial(materiais: Array<ICarrinhoModel>): void {
-    /* console.log(materiais) */
+    /* (materiais) */
     if (materiais.length > 0) {
       let hasError = false,
         qtdeAdicionados = 0;
 
       for (let i = 0; i < materiais.length; i++) {
-        /* console.log(materiais[i]); */
+        /* (materiais[i]); */
         if (
           (this.selectedCodEmpresa === null ||
             this.selectedCodEmpresa === materiais[i].codEmpresa) &&
@@ -428,14 +431,14 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
             quantidadeItem = materiais[i].qtdeItem;
           }
           /* Aqui para cargar al modal */
-          /*     console.log('crear');
+          /*     ('crear');
     
-              console.log(materiais[i]); */
+              (materiais[i]); */
           // if (this.checkMaterialExists(materiais[i]) === false) {
-          /* console.log('datos')
-          console.log(materiais[i]) */
-          /* console.log('materiales');
-          console.log() */
+          /* ('datos')
+          (materiais[i]) */
+          /* ('materiales');
+          () */
           this.materiais.push(
             this.formBuilder.group({
               codCotacao: [materiais[i].codCotacao],
@@ -498,6 +501,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
               descuento_permitido: [this.descuento_permitido],
               id_presentacion: [materiais[i].id_presentacion_material],
               cantidad: [2],
+              id_departamento: [this.id_departamento],
+              id_tipo_cliente: [this.id_tipo_cliente],
              /*  id_presentacion: form[] */
             })
           );
@@ -556,7 +561,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
   onCalcMaterial(index: number, material: ICarrinhoModel): void {
 
-    /* console.log(material) */
+    /* (material) */
     this.calculoService.showModal(
       index,
       material,
@@ -565,8 +570,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       this.codEndereco
     );
 
-    /*     console.log('pruebas');
-        console.log(material) */
+    /*     ('pruebas');
+        (material) */
 
     /* if (material.controladoPorLote == 1) {
       if (material.sequenciaLote == null) {
@@ -586,7 +591,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       }
     } else {
       if (this.codCliente !== null) {
-        console.log(index);
+        (index);
         this.calculoService.showModal(
           index,
           material,
@@ -614,13 +619,15 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
   onDescontoMaterial(index: number, material: ICarrinhoModel): void {
 
-    /*  console.log(material) */
+/*   ("onDescontoMaterial")
+   (material)  */
     //Buscar descuento aplicado al cliente
+    (material);
     const params = {
-      id_tipo_cliente: 0,
+      id_tipo_cliente: material.id_tipo_cliente,
       cantidad: material.qtdeItem,
       id_material: material.codMaterial,
-      id_departamento: 0,
+      id_departamento: material.id_departamento,
     }
 
 
@@ -629,7 +636,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       .subscribe(
         (response: JsonResponse) => {
           if (response.responseCode == 200) {
-            /* console.log(response); */
+            /* (response); */
             this.descuento = response.result.descuento;
             this.descuentoModal(index, material, this.descuento)
 
@@ -810,9 +817,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     data: Array<IMateriaisModel & ISimilaridadeModel>
   ): Array<ICarrinhoModel> {
     let materiais = [];
-   /*  console.log('data')
-    console.log(data); */
-    /*console.log(data); */
+   /*  ('data')
+    (data); */
+    /*(data); */
 
     for (let index = 0; index < data.length; index++) {
       let material = {
@@ -866,7 +873,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
       materiais.push(material);
     }
-    /* console.log(materiais); */
+    /* (materiais); */
     return materiais;
   }
 
@@ -940,10 +947,10 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     this.total.impuesto = 0;
 
     if (materiais.length > 0) {
-      /*  console.log('aqui_material')
+      /*  ('aqui_material')
         */
 
-      /* console.log(materiais) */
+      /* (materiais) */
       for (let index = 0; index < materiais.length; index++) {
         this.total.quantidade += materiais[index].quantidade;
         this.total.qtdeItem += materiais[index].qtdeItem;
@@ -961,7 +968,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
       }
 
-      /* console.log(this.total.bruto); */
+      /* (this.total.bruto); */
 
       if (this.descontoCarrinho.tipo !== null) {
         if (this.descontoCarrinho.tipo === 'valor') {

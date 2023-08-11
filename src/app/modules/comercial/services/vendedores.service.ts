@@ -46,6 +46,15 @@ export class ComercialVendedoresService {
       .pipe(take(1), retry(2));
   }
 
+  getCarteiraClientesCotizacion(params?): Observable<Object | JsonResponse> {
+    return this.http
+      .get(`${this.API}/carteira-clientes-cotizacion`,
+        {
+          params: params
+        })
+      .pipe(take(1), retry(2));
+  }
+
   getValidaClienteCarteira(
     codCliente: number
   ): Observable<Object | JsonResponse> {
