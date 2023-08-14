@@ -15,10 +15,10 @@
         <custom-table [config]="tableConfig">
           <ng-template #thead let-thead>
             <tr>
-              <th scope="col" width="10%" class="text-center">Código</th>
+              <th scope="col" width="10%" class="text-center">Código </th>
               <th scope="col" width="34%">Nombre</th>
               <th scope="col" width="12%" class="text-center">Peso Kg.</th>
-              <th scope="col" width="12%" class="text-center">Unit.</th>
+              <th scope="col" width="12%" class="text-center">Cantidad.</th>
               <th scope="col" width="12%" class="text-center">USD.</th>
               <th scope="col" width="20%">Almacen</th>
             </tr>
@@ -37,14 +37,14 @@
                 </i>
               </td>
               <td width="12%" class="text-center">{{ material.valorTotal| number:'1.2-2'  }} </td>
-              <td width="20%" class="text-truncate">{{ material.codDeposito | uppercase }} </td>
+              <td width="20%" class="text-truncate">{{ material.codDeposito | uppercase }}  </td>
             </tr>
             <tr>
               <td width="10%"></td>
               <td width="34%" class="text-right">TOTAL</td>
               <td width="12%" class="text-center"> {{ calcularTotais('quantidade') | number:'1.3-3' }} KG</td>
               <td width="12%" class="text-center"></td>
-              <td width="12%" class="text-center">{{ calcularTotais('valor') }} USD. </td>
+              <td width="12%" class="text-center">{{ calcularTotais('valor') | number:'1.3-3' }} USD.  </td>
               <td width="20%"></td>
             </tr>
           </ng-template>
@@ -55,7 +55,7 @@
       <div class="col-5 d-flex">
         <div class="my-auto">
           <span class="mtc-title mb-0 mr-2">Cotización realizada para:</span>
-          <span> {{ dataCotacao.id_cliente }} </span>
+          <span> {{ dataCotacao.nombre_cliente }} </span>
         </div>
       </div>
       <!-- <div class="col-3" *ngIf="user.idVendedor !== null && showMetas">

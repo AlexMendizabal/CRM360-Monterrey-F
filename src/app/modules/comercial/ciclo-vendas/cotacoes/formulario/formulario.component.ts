@@ -314,7 +314,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   changeLatitudLongitud(event: { latitud: number, longitud: number }) {
-   /*  alert('click'); */
+    /*  alert('click'); */
     this.latitud = event.latitud;
     this.longitud = event.longitud;
   }
@@ -1266,7 +1266,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     }
   }
 
-  changeContacto(id){
+  changeContacto(id) {
     console.log(id);
     this.id_forma_contacto = id;
   }
@@ -1352,7 +1352,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             profile: this.activatedRoute.snapshot.data.profile.result
           }; */
 
-          
+
           const dataCotizacion = {
             monto_total: this.valorProposta,
             monto_total_bruto: this.valorPropuestaBruto,
@@ -1370,12 +1370,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             fecha_inicial: formValue.dataEncerramento,
             latitud: this.latitud,
             longitud: this.longitud,
-            id_persona_contacto:  formValue.codContato,
+            id_persona_contacto: formValue.codContato,
             carrinho: this.materiais,
+            nombre_cliente: formValue.nomeCliente
           }
 
           this.finalizacaoService.sendCotizacion(dataCotizacion);
-          
+
           //this.onPostAnexos(dataCotacao.codCotacao);
         }
       });
@@ -1417,7 +1418,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       //  }
 
       if (this.form.controls.codCliente.errors !== null) {
-        console.log(1);
+        //console.log(1);
         this.onScrollToForm('top');
         this.codClientErrors = true;
         this.form.controls.codCliente.markAsTouched();
@@ -1437,7 +1438,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       }
  */
       if (this.form.controls.codEndereco.errors !== null) {
-        console.log(3);
+        //console.log(3);
 
         this.onScrollToForm('top');
         this.form.controls.codEndereco.markAsTouched();
@@ -1473,7 +1474,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
        } */
 
       if (this.form.controls.dataValidade.errors !== null) {
-        console.log(4);
+        //console.log(4);
 
         this.onScrollToForm('top');
         this.form.controls.dataValidade.markAsTouched();
@@ -1576,7 +1577,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   datoEntrega(a: number) {
-    console.log(a);
+    //console.log(a);
     if (a.id == 2) {
       this.swEntrega = true;
     } else {
@@ -1643,8 +1644,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   getContatos(codCliente: number, source: string): void {
     if (source != 'application') {
       this.form.controls.codContato.markAsUntouched();
-     /*  this.form.controls.codContato.setValue(null);
-      this.form.controls.codContato.disable(); */
+      /*  this.form.controls.codContato.setValue(null);
+       this.form.controls.codContato.disable(); */
     }
 
     this.contatos = [];
@@ -1677,7 +1678,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
               });
           }
           this.contatos = contatos;
-          console.log(contatos);
+         // console.log(contatos);
         }
       });
   }
