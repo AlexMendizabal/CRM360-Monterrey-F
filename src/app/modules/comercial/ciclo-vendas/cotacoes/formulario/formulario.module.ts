@@ -71,6 +71,8 @@ import { ComercialCicloVendasCotacoesFormularioModalMaterialEstoqueService } fro
 import { ComercialCicloVendasCotacoesFormularioModalMaterialComboService } from './modal/material/combo/combo.service';
 import { ComercialCicloVendasCotacoesFormularioModalHistoricoComprasService } from './modal/cliente/historico-compras/historico-compras.service';
 import { ComercialCicloVendasCotacoesFormularioModalDetalhesClienteService } from './modal/detalhes/cliente/cliente.service';
+import { ComercialCicloVendasCotacoesFormularioModalMaterialAutorizacionComponent } from './modal/material/autorizacion/autorizacion.component';
+
 import { ComercialCicloVendasCotacoesFormularioModalDetalhesEnderecoService } from './modal/detalhes/endereco/endereco.service';
 import { ComercialCicloVendasCotacoesFormularioModalDetalhesContatoService } from './modal/detalhes/contato/contato.service';
 import { ComercialCicloVendasCotacoesFormularioModalDetalhesConcorrenteService } from './modal/detalhes/concorrente/concorrente.service';
@@ -112,7 +114,8 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioTemplateProgressBarComponent,
     ComercialCicloVendasCotacoesFormularioModalSelecionarComponent,
     ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent,
-    ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
+    ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
+    ComercialCicloVendasCotacoesFormularioModalMaterialAutorizacionComponent
   ],
   imports: [
     CommonModule,
@@ -166,7 +169,8 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioTemplateButtonOutrosComponent,
     ComercialCicloVendasCotacoesFormularioTemplateProgressBarComponent,
     ComercialCicloVendasCotacoesFormularioModalSelecionarComponent,
-    ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
+    ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
+
 
   ],
   entryComponents: [
@@ -187,7 +191,9 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoComponent,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoPadraoComponent,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoPerdidaComponent,
-    ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
+    ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
+    ComercialCicloVendasCotacoesFormularioModalMaterialAutorizacionComponent
+
 
   ],
   providers: [
@@ -208,6 +214,7 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoService,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoService,
     ComercialCicloVendasCotacoesFormularioService,
+  
   ],
 })
 export class ComercialCicloVendasCotacoesFormularioModule {}

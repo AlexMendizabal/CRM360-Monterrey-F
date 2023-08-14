@@ -52,6 +52,8 @@ import { ComercialCicloVendasCotacoesFormularioModalDetalhesConcorrenteService }
 import { ComercialCicloVendasCotacoesFormularioModalDuplicatasService } from './modal/duplicatas/duplicatas.service';
 import { ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
 import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoService } from './modal/finalizacao/finalizacao.service';
+import { ComercialCicloVendasCotacoesFormularioModalMaterialAutorizacionService } from './modal/material/autorizacion/autorizacion.service';
+
 import { ComercialVendedoresService } from '../../../services/vendedores.service';
 import { ComercialCicloVendasCotacoesService } from '../cotacoes.service';
 import { AuthService } from 'src/app/shared/services/core/auth.service';
@@ -231,6 +233,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   swEntrega: boolean = false;
   id_forma_contacto: number = 0;
+  centrosLogisticos: any[] = [];
 
 
 
@@ -258,6 +261,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     private duplicatasService: ComercialCicloVendasCotacoesFormularioModalDuplicatasService,
     private historicoExclusaoService: ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoService,
     private finalizacaoService: ComercialCicloVendasCotacoesFormularioModalFinalizacaoService,
+    private autorizacionService: ComercialCicloVendasCotacoesFormularioModalMaterialAutorizacionService,
     private calculoService: ComercialCicloVendasCotacoesFormularioModalMaterialCalculoService,
     private descontoService: ComercialCicloVendasCotacoesFormularioModalMaterialDescontoService,
     private estoqueService: ComercialCicloVendasCotacoesFormularioModalMaterialEstoqueService,
@@ -294,6 +298,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
     this.getListarPrecios();
     this.getTodosVendedores();
+    this.getCentrosLogisticos();
     this.tipoEntrega = [
       { id: 1, nombre: 'entrega en almacen' },
       { id: 2, nombre: 'entrega en obra' }
@@ -343,6 +348,17 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         console.error('Error al obtener la lista de precios:', error);
       }
     );
+  }
+
+  getCentrosLogisticos():void{
+    this.comercialService.getCentrosLogisticos().subscribe(
+      (response: any)=>{
+        this.centrosLogisticos = response.data;
+      },
+      (error: any) =>{
+
+      }
+    )
   }
 
 
@@ -672,6 +688,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         id_departamento: [data.id_departamento_lista],
         ejecutivo_ventas: [],
         codigo_oferta: [],
+        centrosLogisticos:[],
 
         /* codEndereco: [data.direccion], */
         codContato: [
@@ -1364,7 +1381,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             id_modo_entrega: formValue.codEndereco,
             id_cliente: formValue.codCliente,
             id_vendedor: formValue.ejecutivo_ventas,
-            id_almacen: 0,
+            id_almacen: formValue.centrosLogisticos,
             codigo_oferta: null,
             fecha_final: formValue.dataValidade,
             fecha_inicial: formValue.dataEncerramento,
@@ -1372,10 +1389,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             longitud: this.longitud,
             id_persona_contacto: formValue.codContato,
             carrinho: this.materiais,
-            nombre_cliente: formValue.nomeCliente
+            nombre_cliente: formValue.nomeCliente,
+            observacion: formValue.observacoes,
           }
 
-          this.finalizacaoService.sendCotizacion(dataCotizacion);
+          this.autorizacionService.showModal(dataCotizacion);
+
+          //this.finalizacaoService.sendCotizacion(dataCotizacion);
 
           //this.onPostAnexos(dataCotacao.codCotacao);
         }

@@ -40,7 +40,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
 
   loaderModal: boolean;
   swDesactivarForm = true;
-  
+
 
 
   form: FormGroup;
@@ -64,8 +64,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
   latitud: number = -17.78629;
   longitud: number = -63.18117;
   direccion: string;
+  showModal: boolean = true;
 
-  
 
 
   showImpostos = false;
@@ -85,38 +85,25 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
   ngOnInit(): void {
     this.setFormBuilder();
     this.getPresentacionMaterial();
+    /* throw new Error("Method not implemented."); */
+
   }
 
   setFormBuilder(): void {
 
     this.form = this.formBuilder.group({
-      /* quantidade: [
-        null,
-        [Validators.required, Validators.min(0.001), Validators.minLength(1)],
-      ],
-      preco1: [this.material.precio, [Validators.required, Validators.min(0.001)]],
-      preco2: [null],
-      medida: [
-        { value: this.medida, disabled: this.medida > 0 ? true : false },
-      ],
-      formPresentacion: this.material.id_presentacion,
-      nrPedidoCliente: this.material.nomeMaterial,
-      codItemPedidoCliente: this.material.codigo_material,
-      codProdutoCliente: this.material.codProdutoCliente */
       latitud: [this.latitud],
       longitud: [this.longitud],
       direccion: [this.direccion],
 
     });
-    /* console.log('ddd'); */
-    /* console.log(this.material); */
 
-    this.setFormValidators();
+    /* this.setFormValidators(); */
   }
-  setFormValidators(): void {
+ /*  setFormValidators(): void {
 
 
-  }
+  } */
 
   getPresentacionMaterial() {
     this.comercialService.getPresentacionMaterial()
@@ -302,11 +289,14 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
     this.latLngChanged.emit({ latitud: this.latitud, longitud: this.longitud });
   }
   onSubmit(): void {
-    this.emitLatLng(); 
+    this.emitLatLng();
     this.onClose();
   }
 
   onClose(): void {
-    this.bsModalRef.hide();
+    this.showModal = false;
+    if (this.bsModalRef) {
+      /* this.bsModalRef.hide(); */
+    }
   }
 }

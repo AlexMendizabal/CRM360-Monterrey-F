@@ -145,4 +145,7 @@ export class ComercialService {
     return this.http.get(`${this.API}/vendedor/allvendedor`)
     .pipe(take(1), retry(2));
   }
+  getCentrosLogisticos(){
+    return this.http.get(`${this.API}/almacen/centros_logisticos`);
+  }
 }

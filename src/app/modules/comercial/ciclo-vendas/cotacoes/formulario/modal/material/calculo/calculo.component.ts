@@ -117,6 +117,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.onDisablePreco1();
     this.onDisablePreco2();
     this.getPresentacionMaterial();
+    
     /* this.id_presentacion = this.material.id_presentacion; */
     /* console.log(this.id_presentacion)  */
   }

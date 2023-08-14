@@ -14,14 +14,14 @@
     <button type="button" dropdownToggle>
       <i class="fas fa-ellipsis-v"></i>
     </button>
-    <ul *dropdownMenu class="dropdown-menu left">
+    <!-- <ul *dropdownMenu class="dropdown-menu left">
       <li>
         <a class="dropdown-item" href="javascript:void(0)" (click)="onHistoricoExclusao()">
           <i class="fas fa-history"></i>
           <span class="text-uppercase">Historial de eliminación</span>
         </a>
       </li>
-    </ul>
+    </ul> -->
   </div>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
@@ -395,15 +395,26 @@
           </div>
           <div class="form-group col-lg-2" *ngIf="swEntrega == true">
             <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
-            <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
-              bindLabel="descricao" bindValue="codFormaPagamento" formControlName="codCentroLogistico"
-              [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="visualizar"
-              [virtualScroll]="true" placeholder="Selecione...">
-              <!-- [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)"-->
+            <ng-select class="" [formControlName]="centroLogisticoControl" id="orderBy">
+              <ng-option *ngFor="let centroLogistico of centrosLogisticos" [value]="centroLogistico.id">
+                {{ centroLogistico.NOMBRE_DEPOSITO }}
+              </ng-option>
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
-              message="Centro Logistico obligatorio."></invalid-form-control>
+            <!-- <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
+              message="Centro Logistico obligatorio."></invalid-form-control> -->
           </div>
+          
+         <!--  <div class="form-group col-lg-2" *ngIf="swEntrega == true">
+            <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
+              <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
+              <select class="form-control custom-select" formControlName="centroLogistico" id="orderBy">
+                <ng-container *ngFor="let centroLogistico of centroLogistico">
+                  <option [value]="centroLogistico.id_almacen"  [selected]="idVendedor === centroLogistico.id_almacen">{{ centroLogistico.nombre_almacen }}</option>
+                </ng-container>
+              </select>
+            </div>
+          </div> -->
+
           <div class="form-group col-lg-2">
             <div class="form-row">
               <div class="form-group col">
@@ -503,9 +514,11 @@
       (latLngChanged)="changeLatitudLongitud($event)">
     </comercial-ciclo-vendas-cotacoes-formulario-modal-material-ubicacion>
   </ng-template>
-  <ng-template>
+
+  
+  <!-- <ng-template>
     <comercial-ciclo-vendas-cotacoes-formulario-modal-finalizacao-finalizacion>
     </comercial-ciclo-vendas-cotacoes-formulario-modal-finalizacao-finalizacion>
-  </ng-template>
+  </ng-template> -->
 
 </app-body>

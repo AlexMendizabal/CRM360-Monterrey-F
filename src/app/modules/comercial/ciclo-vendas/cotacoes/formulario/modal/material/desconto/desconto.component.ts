@@ -11,7 +11,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 
 // Services
 import { ComercialCicloVendasCotacoesFormularioService } from '../../../formulario.service';
-import { ConsoleReporter } from 'jasmine';
 
 @Component({
   selector:

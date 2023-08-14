@@ -106,8 +106,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
         let codCotacao = this.dataCotacao.codCotacao;
         let codEmpresa = this.dataCotacao.codEmpresa;
         this.formularioService.limparCarrinhoSubject.next(true);
-        console.log('ew')
-        this.bsModalRef.hide();
+/*         console.log('ew')
+ */        this.bsModalRef.hide();
         this.router.navigate([`/comercial/ciclo-vendas/${idSubModulo}/cotacoes-pedidos/lista/${codCotacao}/${codEmpresa}`]);
 
     }
