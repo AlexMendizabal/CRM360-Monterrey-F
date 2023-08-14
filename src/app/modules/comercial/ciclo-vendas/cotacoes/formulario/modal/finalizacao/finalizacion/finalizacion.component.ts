@@ -82,6 +82,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
 
     ngOnInit(): void {
         //this.confirmDuplicatas();
+        console.log(this.dataCotacao);
 
     }
 
@@ -166,8 +167,9 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
             if (this.user.idVendedor !== null) {
                 this.showMetas = true;
                 const profile = this.dataCotacao.profile;
+                this.loaderFullScreen = false;
 
-                this.cotacoesService
+                /* this.cotacoesService
                     .getComissaoCotacao(
                         this.dataCotacao.codCotacao,
                         this.dataCotacao.codEmpresa
@@ -191,7 +193,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
                             this.comissaoMax = response.data.valorMaximoComissao;
                             this.comissaoMin = response.data.valorMinimoComissao;
                         }
-                    });
+                    }); */
             }
         }
     }

@@ -7,6 +7,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 // Components
 import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoPadraoComponent } from './padrao/padrao.component';
 import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoPerdidaComponent } from './perdida/perdida.component';
+import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion } from './finalizacion/finalizacion.component';
 
 // Services
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
@@ -83,8 +84,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
         (response: JsonResponse) => {
           this.eventDirty.emit(true)
           if (response.responseCode == 200) {
-            dataCotacao.carrinho = [];
-            dataCotacao.carrinho = response.data;
+            /* dataCotacao.carrinho = [];
+            dataCotacao.carrinho = response.data; */
             setTimeout(()=>{
               /* if (dataCotacao.id_oferta.codTipoFinalizacao >0) {
                 this.showModal(
@@ -92,9 +93,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
                   dataCotacao
                 );
               } else { */
-               
                 this.showModal(
-                  ComercialCicloVendasCotacoesFormularioModalFinalizacaoPadraoComponent,
+                  ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
                   dataCotacao
                 );
              /*  } */

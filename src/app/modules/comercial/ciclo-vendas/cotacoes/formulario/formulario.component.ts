@@ -1375,6 +1375,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           }
 
           this.finalizacaoService.sendCotizacion(dataCotizacion);
+          
           //this.onPostAnexos(dataCotacao.codCotacao);
         }
       });

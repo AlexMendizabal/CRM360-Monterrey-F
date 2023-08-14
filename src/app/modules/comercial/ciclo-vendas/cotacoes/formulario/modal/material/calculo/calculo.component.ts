@@ -467,8 +467,10 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.resetTotais();
    /*  console.log('dataaqui');
     console.log(data);  */
+   
+    
 
-    this.calculo.tonelada = data.pesoEspecifico;
+    this.calculo.tonelada = (data.pesoEspecifico * this.form.value.quantidade);
     this.calculo.qtde = data.qtde;
     this.calculo.valorUnitario = data.precio;
     this.calculo.valorItem = data.valorItem;
