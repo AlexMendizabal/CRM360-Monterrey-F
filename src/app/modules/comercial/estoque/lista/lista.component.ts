@@ -442,7 +442,6 @@ export class ComercialEstoqueListaComponent implements OnInit {
   getPaginateData(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
     return this.datos.slice(startIndex, endIndex);
   }
   onChangeAlmacen(id: number) {

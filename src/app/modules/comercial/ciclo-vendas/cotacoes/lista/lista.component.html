@@ -195,7 +195,7 @@
             </tr>
           </ng-template>
           <ng-template #tbody let-tbody>
-            <tr *ngFor="let pedido of dados; let i = index" [class.table-active]="i == activeRow">
+            <tr *ngFor="let pedido of getPaginateData(); let i = index" [class.table-active]="i == activeRow">
 
 
               <!-- <td class="text-center" [ngStyle]="styleStatusBorder(pedido)">
@@ -280,11 +280,19 @@
             </tr>
           </ng-template>
         </custom-table>
-        <div class="d-flex justify-content-center mt-3">
-          <pagination [maxSize]="maxSize" [(totalItems)]="totalItems" (pageChanged)="onPageChanged($event)"
-            [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
-            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
-          </pagination>
+        <div class="d-flex justify-content-center mt-3" >
+          <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </pagination>
         </div>
       </div>
     </div>
@@ -296,7 +304,7 @@
   </div>
   <ng-template #modalDetalhes>
     <div class="modal-header">
-      <h4 class="modal-title pull-left">Detalle de la oferta</h4>
+      <h4 class="modal-title pull-left">Resumen de la oferta </h4>
       <div class="d-flex justify-content-center align-items-center">
         <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
           <span aria-hidden="true">&times;</span>
@@ -306,7 +314,7 @@
     <div class="modal-body">
       <div class="col-md-12">
         <div class="table-responsive">
-          <custom-table [config]="tableConfig" *ngIf="dados.length > 0 && !dadosEmpty">
+          <custom-table [config]="tableConfig" *ngIf="items.length > 0" >
             <ng-template #thead let-thead>
               <tr>
                 <th class="text-truncate text-center" (click)="setOrderByModal('codigo_material')">
@@ -372,7 +380,7 @@
                   <td class="font-weight-bold hover text-center">
                     {{item.total_bruto}} {{item.nombre_moneda}}</td>
                 </tr>
-                <tr class="bg-dark text-center text-dark">
+                <tr class="bg-dark text-center text-dark" >
                   <td colspan="8" class="border-dark"></td>
                   <td><strong>Total</strong></td>
                   <td class="text-center"><strong>{{ totalMateriales.cantidad | number:'1.4-4' }} DOLARES </strong></td>
@@ -380,7 +388,7 @@
               </ng-container>
             </ng-template>
           </custom-table>
-          <empty-result message="Ningún registro encontrado." *ngIf="dadosEmpty"></empty-result>
+          <empty-result message="Ningún registro encontrado." *ngIf="dadosEmptyModal"></empty-result>
           <div class="d-flex justify-content-center mt-3">
             <pagination [maxSize]="maxSize" [(totalItems)]="totalModal" (pageChanged)="onPageChangedModal($event)"
               [(itemsPerPage)]="itemsPerPageModal" [boundaryLinks]="true" [(ngModel)]="currentPage"

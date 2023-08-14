@@ -366,6 +366,9 @@ export class ComercialCicloVendasCotacoesService {
   postCotacao(params: any): Observable<Object | JsonResponse> {
     return this.http.post(`${this.API}/salvar`, params).pipe(take(1), retry(2));
   }
+  postCotizacion(params: any): Observable<Object | JsonResponse> {
+    return this.http.post(`${this.API}/guardar`, params).pipe(take(1), retry(2));
+  }
 
   putCotacao(params: any): Observable<Object | JsonResponse> {
     return this.http.put(`${this.API}/atualizar`, params).pipe(take(1), retry(2));

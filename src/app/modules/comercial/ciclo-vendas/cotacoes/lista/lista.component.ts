@@ -127,6 +127,11 @@ export class ComercialCicloVendasCotacoesListaComponent
   dados: Array<any> = [];
   dadosLoaded = false;
   dadosEmpty = false;
+  dadosEmptyModal = false;
+  dadosReturned: Array<any> = [];
+  dadosTotal: Array<any> = [];
+
+
 
   detalhes: any = {
     dataFaturamento: Date,
@@ -150,9 +155,10 @@ export class ComercialCicloVendasCotacoesListaComponent
   activeCotacao: ICotacao;
 
   maxSize = 10;
-  itemsPerPage = 20;
+  itemsPerPage =  10;
   currentPage = 1;
-  totalItems = 0;
+
+  totalItems = 10;
   totalModal = 0;
   itemsPerPageModal = 20;
 
@@ -529,7 +535,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       codSituacao: [formValue.codSituacao],
       cliente: [formValue.cliente],
       codVendedor: [formValue.codVendedor, [Validators.required]],
-      pagina: [formValue.pagina],
+      /* pagina: [formValue.pagina], */
       registros: [this.itemsPerPage, Validators.required],
       statusCliente: ['Ativo'],
     });
@@ -564,9 +570,9 @@ export class ComercialCicloVendasCotacoesListaComponent
           params = JSON.parse(params);
           this.search(params);
 
-          if (params['pagina']) {
+         /*  if (params['pagina']) {
             this.currentPage = params['pagina'];
-          }
+          } */
 
           Object.keys(formValue).forEach((formKey) => {
             Object.keys(params).forEach((paramKey) => {
@@ -699,9 +705,10 @@ export class ComercialCicloVendasCotacoesListaComponent
   onFilter(): void {
 
     /* if (this.form?.valid) { */
-    this.itemsPerPage = this.form.value.registros;
+    /* this.itemsPerPage = 10;
     this.currentPage = 1;
-
+ */
+    /* this.totalItems = 0; */
     this.detailPanelService.hide();
 
     this.setRouterParams(this.getFormFilterValues());
@@ -803,6 +810,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.dados = [];
     this.dadosLoaded = true;
     this.dadosEmpty = false;
+    this.dadosTotal = [];
 
     this.cotacoesService
       .getOfertas(params)
@@ -819,10 +827,8 @@ export class ComercialCicloVendasCotacoesListaComponent
 
             this.dados = [];
             this.dados = response.result;
-            this.dados = this.dados.slice(0, this.itemsPerPage);
+            this.dadosTotal = this.dados.slice(0, this.itemsPerPage);
             this.totalItems = this.dados.length;
-            /* console.log(this.totalItems); */
-            /* console.log(this.datos); */
             this.dadosEmpty = false;
           } else {
             this.loaderNavbar = false;
@@ -886,20 +892,17 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   onPageChanged(event: PageChangedEvent): void {
+    console.log(event)
     this.currentPage = event.page;
     this.getPaginateData();
   }
+
 
   getPaginateData(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
     return this.dados.slice(startIndex, endIndex);
-  }
-
-  onPageChangedModal(event: PageChangedEvent): void {
-    this.currentPage = event.page;
-    this.getPaginateDataModal();
   }
 
   getPaginateDataModal(): any[] {
@@ -1319,7 +1322,7 @@ export class ComercialCicloVendasCotacoesListaComponent
           } else {
             this.loaderNavbar = false;
             this.pnotifyService.notice('Ningún registro encontrado');
-            this.dadosEmpty = true;
+            this.dadosEmptyModal = true;
           }
         }
       });

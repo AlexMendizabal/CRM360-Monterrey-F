@@ -41,6 +41,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   @Input('codFormaPagamento') codFormaPagamento: number;
   @Input('freteConta') freteConta: number;
   @Input('id_lista_precio') id_lista: number;
+  @Output() resetRequested = new EventEmitter<void>();
 
   filas = [
     { columna1: 'Valor 1', columna2: 'Valor 2', columna3: 'Valor 3', columna4: 'Valor 4', columna5: 'Valor 5', columna6: 'Valor 6', columna7: 'Valor 7', columna8: 'Valor 8', columna9: 'Valor 9', columna10: 'Valor 10' },
@@ -137,6 +138,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     this.getFilterValues();
     this.cliente.emit(this.codCliente)
     this.getMateriais(null, 'application')
+
+
   }
 
   getFilterValues(): void {
@@ -363,6 +366,9 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         }
       });
   }
+  limpiarBusqueda(): void {
+    this.dados = [];
+  }
 
   executeReset(): void {
     this.form.reset();
@@ -380,6 +386,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     this.form.controls.codClasse.updateValueAndValidity();
 
     this.dados = [];
+    this.resetRequested.emit();
   }
 
   confirmReset(): any {
@@ -545,6 +552,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
  */  }
 
   onFilter(): void {
+
     if (this.checkFieldErrors() === false) {
       //console.log(this.checkFieldErrors);
       if (this.searching === false && this.form.valid) {
@@ -601,7 +609,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
   search(): void {
-    console.log(this.codCliente)
+    /* console.log(this.codCliente) */
     if (!this.codCliente) {
       return;
     }
@@ -630,20 +638,20 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         next: (response: any) => {
           /*           console.log(response.responseCode);
            */          /*  if (response.hasOwnProperty('success')
-             && response.success === true
-             && !response.data[0].msg) {
-               this.dados = response.data.map(function (el: any) {
-                 var o = Object.assign({}, el);
-                 o.checked = 0; 
-                 return o;
-               }); */
+           && response.success === true
+           && !response.data[0].msg) {
+             this.dados = response.data.map(function (el: any) {
+               var o = Object.assign({}, el);
+               o.checked = 0; 
+               return o;
+             }); */
           if (response.responseCode === 200) {
             this.dados = response.result.map((el) => {
-/*               console.log(this.dados);
- */              var o = Object.assign({}, el);
+              var o = Object.assign({}, el);
               o.checked = 0;
               return o;
             });
+
 
 
 

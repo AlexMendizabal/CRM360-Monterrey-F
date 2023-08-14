@@ -76,6 +76,10 @@ import { ComercialCicloVendasCotacoesFormularioModalDuplicatasService } from './
 import { ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
 import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoService } from './modal/finalizacao/finalizacao.service';
 import { ComercialCicloVendasCotacoesFormularioModalSelecionarComponent } from './modal/cliente/selecionar/selecionar.component';
+import { ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent } from './modal/material/ubicacion/ubicacion.component';
+import { AgmCoreModule } from '@agm/core';
+
+
 
 @NgModule({
   declarations: [
@@ -105,6 +109,7 @@ import { ComercialCicloVendasCotacoesFormularioModalSelecionarComponent } from '
     ComercialCicloVendasCotacoesFormularioTemplateButtonOutrosComponent,
     ComercialCicloVendasCotacoesFormularioTemplateProgressBarComponent,
     ComercialCicloVendasCotacoesFormularioModalSelecionarComponent,
+    ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent
   ],
   imports: [
     CommonModule,
@@ -127,6 +132,9 @@ import { ComercialCicloVendasCotacoesFormularioModalSelecionarComponent } from '
     SharedModule,
     TemplatesModule,
     ComercialTemplatesModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDl5b7STz9xYNDhybTTer2POVncX9FYqCc' // Reemplaza con tu propia clave de API de Google Maps
+    }),
   ],
   exports: [
     ComercialCicloVendasCotacoesFormularioComponent,

@@ -184,7 +184,7 @@ export class ComercialAgendaFormularioComponent
       } else {
         this.action = 'novo';
         this.setBreadCrumb(this.action);
-      }
+      }value
 
       this.setFormBuilder();
     });
@@ -300,7 +300,7 @@ export class ComercialAgendaFormularioComponent
           {
             value: detalhes.typeContactId,
             disabled:
-              this.action === 'novo' || this.action === 'editar' ? false : true,
+              this.action === 'novo' || this.action === 'editar' ?  false : true,
           },
         ],
 

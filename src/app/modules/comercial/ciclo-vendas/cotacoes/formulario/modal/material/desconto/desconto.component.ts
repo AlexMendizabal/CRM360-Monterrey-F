@@ -78,6 +78,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoComponen
       desconto: 0,
     };
 
+    /* console.log(this.params); */
+
     if (this.params.aplicarDesconto === 'carrinho') {
       if (this.params.descontoCarrinho.tipo !== null) {
         formValue = {
@@ -113,6 +115,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoComponen
   }
 
   onSubmit(): void {
+   /* console.log(this.params.aplicarDesconto); */
     if (this.form.valid) {
       this.formularioService.descontoSubject.next({
         aplicarDesconto: this.params.aplicarDesconto,

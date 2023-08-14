@@ -496,6 +496,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
 
     /* console.log(this.calculo) */
     /* console.log(this.calculo) */
+    /* alert('aqui'); */
 
   }
 
@@ -529,7 +530,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   onSubmit(): void {
     this.setCOD();
     if (this.calculo.valorTotal === 0) {
-      this.pnotifyService.notice('Realize os cálculos para continuar.');
+      this.pnotifyService.notice('Realize los cálculos para continuar.');
     } else {
       /* console.log(thiscalculo); */
       if (this.material.controladoPorLote == 1) {

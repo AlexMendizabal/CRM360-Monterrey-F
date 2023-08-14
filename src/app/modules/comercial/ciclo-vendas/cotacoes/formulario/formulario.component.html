@@ -94,12 +94,11 @@
       </div>
     </div> -->
 
-
-    <!-- Clientes -->
+    <!-- Datos de oferta -->
     <div class="col shadow-sm mt-4" id="blocos">
       <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(1)">
         <span class="fas fa-list-alt d-flex justify-content-center align-items-center" id="icon-gray"></span>
-        <div class="d-flex justify-content-center align-items-center ml-2"><strong>Datos de cliente</strong></div>
+        <div class="d-flex justify-content-center align-items-center ml-2"><strong>Datos de la oferta</strong></div>
         <div class="col"></div>
         <div class="d-flex justify-content-end align-items-center">
 
@@ -116,6 +115,65 @@
       </div>
 
       <div class="col" [hidden]=showBloco1>
+        <div class="form-row">
+          <div class="form-group col-lg-2">
+            <label class="mb-1" for="codigo_cliente">N° de Oferta</label>
+            <input type="text" id="codigo_cliente" class="form-control" formControlName="codigo_oferta"
+              [readonly]="true" [attr.disabled]="true">
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="dataEncerramento">Fecha de cotización</label>
+            <input class="form-control" id="dataEncerramento" type="text" bsDatepicker [bsConfig]="bsConfig"
+              formControlName="dataEncerramento" [readonly]="visualizar"
+              [ngClass]="onFieldError('dataEncerramento') + ' ' + onFieldRequired(form.controls.dataEncerramento)">
+            <invalid-form-control [show]="onFieldInvalid('dataEncerramento')"
+              message="Data de encerramento é obrigatório."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="dataValidade">Válido hasta</label>
+            <input class="form-control" id="dataValidade" type="text" bsDatepicker [bsConfig]="bsConfig"
+              formControlName="dataValidade" [readonly]="true" (bsValueChange)="onChangeValidadeProposta($event)"
+              [ngClass]="onFieldError('dataValidade') + ' ' + onFieldRequired(form.controls.dataValidade)">
+            <invalid-form-control [show]="onFieldInvalid('dataValidade') == 'required'"
+              message="La fecha de validez es obligatorio."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('dataValidade') == 'maxDate'"
+              message="No debe sobrepasar los 30 días."></invalid-form-control>
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="dataValidade"> Cambio de estado</label>
+            <input class="form-control" id="fechaRecordatorio" type="text" bsDatepicker [bsConfig]="bsConfig"
+              formControlName="fechaRecordatorio" [readonly]="true"
+              [ngClass]="onFieldError('fechaRecordatorio') + ' ' + onFieldRequired(form.controls.fechaRecordatorio)">
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- Clientes -->
+    <div class="col shadow-sm mt-4" id="blocos">
+      <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(2)">
+        <span class="fas fa-list-alt d-flex justify-content-center align-items-center" id="icon-gray"></span>
+        <div class="d-flex justify-content-center align-items-center ml-2"><strong>Datos de cliente</strong></div>
+        <div class="col"></div>
+        <div class="d-flex justify-content-end align-items-center">
+
+          <div class="d-flex float-end align-items-center mr-4" *ngIf="showBloco2">
+            <i class="fas fa-caret-down"
+              style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
+          </div>
+
+          <div class="d-flex float-end align-items-center mr-4" *ngIf="!showBloco2">
+            <i class="fas fa-caret-up"
+              style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col" [hidden]=showBloco2>
         <div class="form-row">
           <div class="form-group col-lg-2">
             <label class="mb-1" for="codigo_cliente">Codigo Cliente</label>
@@ -184,9 +242,10 @@
           </div>
           <div class="form-group col-lg-2">
             <label for="orderBy">Lista de precios</label>
-            <select class="form-control custom-select" formControlName="lista" id="orderBy">
+            <select class="form-control custom-select" formControlName="lista" (change)="updateLista()">
               <ng-container *ngFor="let listaPrecio of listaPrecios">
-                <option [value]="listaPrecio.id" [selected]=" listaPrecio.id==idListaPrecio">{{ listaPrecio.nombre_lista
+                <option [value]="listaPrecio.id" [selected]=" listaPrecio.id==idListaPrecio">{{
+                  listaPrecio.nombre_lista
                   }}</option>
               </ng-container>
             </select>
@@ -216,7 +275,7 @@
             </div>
             <ng-select [searchable]="true" [clearable]="false" [items]="contatos" formControlName="codContato"
               placeholder="Selecione..." [virtualScroll]="true" bindLabel="nomeContato" bindValue="codContato"
-              [loading]="contatosLoader" loadingText="Carregando..." [readonly]="visualizar">
+              [loading]="contatosLoader" loadingText="Carregando..." [readonly]="visualizar" (change)="changeContacto($event.codContato)" >
             </ng-select>
             <!-- [ngClass]="onFieldError('codContato') + ' ' + onFieldRequired(form.controls.codContato)"-->
             <!-- <invalid-form-control [show]="onFieldInvalid('codContato')" message="Contato responsável é obrigatório."></invalid-form-control>-->
@@ -233,9 +292,10 @@
         <div class="row">
           <div class="form-group col-lg-2">
             <label for="orderBy">Ejecutivo de ventas</label>
-            <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
+            <select class="form-control custom-select" formControlName="ejecutivo_ventas" id="orderBy">
               <ng-container *ngFor="let listaEjecutivo of listaEjecutivo">
-                <option [value]="listaEjecutivo.id" [selected]="idVendedor === listaEjecutivo.id">{{ listaEjecutivo.nome
+                <option [value]="listaEjecutivo.id" [selected]="idVendedor === listaEjecutivo.id">{{
+                  listaEjecutivo.nome
                   }}</option>
               </ng-container>
             </select>
@@ -255,7 +315,7 @@
         <div class="col">
           <comercial-ciclo-vendas-cotacoes-formulario-materiais-lista [codEndereco]="form.value.codEndereco"
             [codCliente]="form.value.codCliente" [codEmpresa]="form.getRawValue().codEmpresa"
-            [id_lista_precio]="form.value.lista" [codDeposito]="form.getRawValue().codDeposito"
+            [id_lista_precio]="idListaPrecio" [codDeposito]="form.getRawValue().codDeposito"
             [codFormaPagamento]="form.value.codFormaPagamento" [freteConta]="form.value.freteConta"
             (loaderNavbar)="onLoaderNavbar($event)" (loaderFullScreen)="onLoaderFullScreen($event)"
             (scrollToFormOnTop)="onMateriaisScrollTop($event)" (scrollToCarrinho)="onScrollToCarrinho($event)">
@@ -275,7 +335,7 @@
         <div class="col">
           <comercial-ciclo-vendas-cotacoes-formulario-carrinho [appTitle]="appTitle"
             [codFormaPagamento]="form.value.codFormaPagamento" [freteConta]="form.value.freteConta"
-            [id_tipo_cliente] = form.value.id_tipo_cliente [id_departamento]="form.value.id_departamento"
+            [id_tipo_cliente]=form.value.id_tipo_cliente [id_departamento]="form.value.id_departamento"
             [idReservado]="idReservado" [codCotacao]="codCotacao" [codCliente]="form.value.codCliente"
             [codEndereco]="form.value.codEndereco" [initialValue]="carrinho" (loaderNavbar)="onLoaderNavbar($event)"
             (hasError)="onCarrinhoError($event)" (scrollTop)="onCarrinhoScrollTop($event)"
@@ -287,7 +347,7 @@
 
     <!-- datos de envio -->
     <div class="col shadow-sm mt-4" id="blocos">
-      <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(6)">
+      <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(5)">
         <span class="fas fa-list-alt d-flex justify-content-center align-items-center" id="icon-gray"></span>
         <div class="d-flex justify-content-center align-items-center ml-2"><strong>Datos de Envio</strong></div>
         <div class="col"></div>
@@ -305,7 +365,8 @@
         </div>
       </div>
 
-      <div class="col" [hidden]=showBloco6>
+      <div class="col" [hidden]=showBloco5>
+
         <div class="form-row">
           <div class="form-group col-lg-2">
             <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
@@ -314,7 +375,7 @@
                 <!-- *ngIf="form.value.codCliente != null && !visualizar"-->
               </div>
             </div>
-            <ng-select [searchable]="true" [clearable]="false" [items]="tipoEntrega" (change)="onChangeEndereco($event)"
+            <ng-select [searchable]="true" [clearable]="false" [items]="tipoEntrega" (change)="datoEntrega($event)"
               formControlName="codEndereco" [virtualScroll]="true" bindLabel="nombre" bindValue="id"
               placeholder="Selecione..." [loading]="locaisEntregaLoader" loadingText="Carregando..." groupBy="tipo"
               [readonly]="visualizar">
@@ -322,15 +383,26 @@
             <!--  [ngClass]="onFieldError('codEndereco') + ' ' + onFieldRequired(form.controls.codEndereco)"-->
             <!--<invalid-form-control [show]="onFieldInvalid('codEndereco')" message="Local de entrega é obrigatório."></invalid-form-control>-->
           </div>
-          <div *ngIf="swReferencia == true" class="form-group col-lg-2">
+          <!-- <div *ngIf="swReferencia == true" class="form-group col-lg-2">
             <label class="my-auto" for="codEndereco">Dirección de destino</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
               <input formControlName=" " type="text" class="form-control" />
             </div>
+          </div> -->
+          <div class="form-group col-lg-1" *ngIf="swEntrega == true"> 
+            <label for="dataEntrega">Referencia</label> <br>
+            <button class="btn btn-primary w-100" type="button"   (click)="openModalUbicacion(seleccionarUbicacion)"> <i class="fas fa-map-marker-alt"></i>Ubicación</button>
           </div>
-          <div class="form-group col-lg-2">
-            <label for="dataEntrega">Referencia</label>
-            <input type="text" class="form-control">
+          <div class="form-group col-lg-2" *ngIf="swEntrega == true">
+            <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
+            <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
+              bindLabel="descricao" bindValue="codFormaPagamento" formControlName="codCentroLogistico"
+              [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="visualizar"
+              [virtualScroll]="true" placeholder="Selecione...">
+              <!-- [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)"-->
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
+              message="Centro Logistico obligatorio."></invalid-form-control>
           </div>
           <div class="form-group col-lg-2">
             <div class="form-row">
@@ -351,21 +423,6 @@
               </div>
             </div>
           </div>
-          <div class="form-group col-lg-2">
-            <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
-              <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
-              <div class="my-auto text-uppercase" style="font-size: 11px">
-              </div>
-            </div>
-            <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
-              bindLabel="descricao" bindValue="codFormaPagamento" formControlName="codFormaPagamento"
-              [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="visualizar"
-              [virtualScroll]="true" placeholder="Selecione...">
-              <!-- [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)"-->
-            </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
-              message="Centro Logistico obligatorio."></invalid-form-control>
-          </div>
         </div>
         <div class="form-row">
           <!-- <div class="form-group col-lg-3">
@@ -376,113 +433,42 @@
           <!--  [ngClass]="onFieldError('codDeposito') + ' ' + onFieldRequired(form.controls.codDeposito)"-->
           <!-- </ng-select>
           </div> -->
-
         </div>
         <!--novos campos fim-->
         <div class="form-row">
-
         </div>
         <div class="row">
-
         </div>
 
       </div>
     </div>
 
     <!-- Anexos y observaciones  -->
-    <div #scrollToFormOnBottom *ngIf="dependenciesLoaded">
-      <div class="row justify-content-between px-3">
-        <div class="col shadow-sm mt-4 mr-3" id="blocos">
-          <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(4)">
-            <span class="fas fa-search d-flex justify-content-center align-items-center" id="icon-gray"></span>
-            <div class="d-flex justify-content-center align-items-center ml-2"><strong>Anexos</strong></div>
-            <div class="col"></div>
-            <div class="d-flex justify-content-end align-items-center">
-
-              <div class="d-flex float-end align-items-center mr-4" *ngIf="showBloco4">
-                <i class="fas fa-caret-down"
-                  style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
-              </div>
-
-              <div class="d-flex float-end align-items-center mr-4" *ngIf="!showBloco4">
-                <i class="fas fa-caret-up"
-                  style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
-              </div>
-
-            </div>
-          </div>
-          <div class="col" [hidden]=showBloco4>
-            <div formArrayName="anexos">
-              <div class="row">
-
-                <div class="col" [hidden]="visualizar">
-                  <label for="novoAnexo" class="d-flex justify-content-end align-items-center" style="cursor: pointer;">
-                    <p class="btn btn-sm btn-primary m-0">
-                      <i class="fas fa-plus"></i>
-                      <span>Novo</span>
-                    </p>
-                  </label>
-                  <input id="novoAnexo" type="file" (change)="appendFile($event.target.files)" class="d-none">
-                </div>
-              </div>
-              <div class="row" *ngIf="showAnexos && form.value.anexos.length > 0">
-                <div class="col">
-                  <custom-table [config]="tableConfigAnexos">
-                    <ng-template #tbody let-tbody>
-                      <tr *ngFor="let anexo of anexos.controls; let i = index" [formGroupName]="i">
-                        <td style="width: 90%">
-                          {{ form.value.anexos[i].codAnexo }} - {{ form.value.anexos[i].nomeAnexo | uppercase }}
-                        </td>
-                        <td class="text-center" style="width: 5%">
-                          <a [href]="form.value.anexos[i].linkAnexo" *ngIf="form.value.anexos[i].linkAnexo != null"
-                            target="_blank" class="btn-icon-sm mx-2 text-black" tooltip="visualizar">
-                            <i class="far fa-eye"></i>
-                          </a>
-                        </td>
-                        <td class="text-center" style="width: 5%">
-                          <btn-icon icon="fas fa-trash" size="small" tooltip="Excluir"
-                            (click)="onDeleteAnexo(form.value.anexos[i].codAnexo, i)">
-                          </btn-icon>
-                        </td>
-                      </tr>
-                    </ng-template>
-                  </custom-table>
-                </div>
-              </div>
-              <div class="row" *ngIf="showAnexos && form.value.anexos.length === 0">
-                <div class="col">
-                  <message icon="far fa-folder-open" text="Nenhum documento encontrado">
-                  </message>
-                </div>
-              </div>
-            </div>
-
-            <!-- <div class="row">
-              <div class="col"><hr></div>
-            </div> -->
-
-          </div>
-        </div>
-        <div class="col shadow-sm mt-4 ml-3" id="blocos">
-          <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(5)">
+    <!-- <div #scrollToFormOnBottom *ngIf="dependenciesLoaded"> -->
+    <!--   <div class="row justify-content-between p x-3">-->
+       
+        <!-- Datos adicionales -->
+        <div class="col shadow-sm mt-4" id="blocos">
+          <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(6)">
             <span class="fas fa-list-alt d-flex justify-content-center align-items-center" id="icon-gray"></span>
-            <div class="d-flex justify-content-center align-items-center ml-2"><strong>Datos Adicionales</strong></div>
+            <div class="d-flex justify-content-center align-items-center ml-2"><strong>Datos Adicionales</strong>
+            </div>
             <div class="col"></div>
             <div class="d-flex justify-content-end align-items-center">
 
-              <div class="d-flex float-end align-items-center mr-4" *ngIf="showBloco5">
+              <div class="d-flex float-end align-items-center mr-4" *ngIf="showBloco6">
                 <i class="fas fa-caret-down"
                   style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
               </div>
 
-              <div class="d-flex float-end align-items-center mr-4" *ngIf="!showBloco5">
+              <div class="d-flex float-end align-items-center mr-4" *ngIf="!showBloco6">
                 <i class="fas fa-caret-up"
                   style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
               </div>
 
             </div>
           </div>
-          <div class="col" [hidden]=showBloco5>
+          <div class="col" [hidden]=showBloco6>
 
             <!-- <div class="row">
               <div class="col"><hr></div>
@@ -504,12 +490,23 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
+     <!--  </div> -->
+    <!-- </div> -->
   </form>
   <ng-template #selecionarCliente>
     <comercial-ciclo-vendas-cotacoes-formulario-modal-selecionar (fecharModal)="onFecharModal($event)"
       (cliente)="onCliente($event)" (clientesParams)="getClientesParams($event)">
     </comercial-ciclo-vendas-cotacoes-formulario-modal-selecionar>
   </ng-template>
+  <ng-template #seleccionarUbicacion>
+    <comercial-ciclo-vendas-cotacoes-formulario-modal-material-ubicacion
+      (latLngChanged)="changeLatitudLongitud($event)">
+    </comercial-ciclo-vendas-cotacoes-formulario-modal-material-ubicacion>
+  </ng-template>
+  <ng-template>
+    <comercial-ciclo-vendas-cotacoes-formulario-modal-finalizacao-padrao
+      [dataCotacao] = 1>
+    </comercial-ciclo-vendas-cotacoes-formulario-modal-finalizacao-padrao>
+  </ng-template>
+
 </app-body>
