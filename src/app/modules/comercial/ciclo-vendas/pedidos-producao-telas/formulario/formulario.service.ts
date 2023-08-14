@@ -19,7 +19,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCicloVendasPedidosProducaoTelasFormularioService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/pedidos-producao-telas`;
+  private readonly API = `http://127.0.0.1:8000/comercial/ciclo-vendas/pedidos-producao-telas`;
 
   private notifySubmit = new Subject<any>();
 

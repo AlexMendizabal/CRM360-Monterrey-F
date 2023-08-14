@@ -69,12 +69,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   formFilter: FormGroup;
   buscandoPor: number;
   pesquisa: string;
-  orderBy = 'codCliente';
-  orderType = 'desc';
-  maxSize = 10;
-  itemsPerPage = 15;
-  currentPage = 1;
-  totalItems: number = 0;
+  orderBy: string = ''; // Variable para almacenar el nombre de la columna seleccionada para ordenar
+  orderType: 'asc' | 'desc' = 'asc'; // Variable para almacenar el tipo de orden (ascendente o descendente)  
   clientes: any[] = [];
   clientesPagination: any = [];
   clienteSelecionado: number;
@@ -88,12 +84,15 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   titulos: any[] = [];
   estados: any[] = [];
   resuldata: any[] = [];
+  getPaginatedData: any[];
 
   params: any;
   result: any[] = []; // Declarar la variable 'result' en la clase
-
   resultcliente: any[] = [];
-
+  currentPage: number = 1; // Página actual
+  totalItems: number = 0; // Total de elementos
+  itemsPerPage: number = 10; // Elementos por página
+  maxSize: number = 5; // Máximo número de páginas a mostrar en la paginación
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -109,12 +108,10 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     private detailPanelService: DetailPanelService,
     private titulosAgendaService: ComercialCadastrosTitulosAgendaService,
     private agendaService: ComercialAgendaService,
-
-
-
+    
   ) {
     this.pnotifyService.getPNotify();
-
+    
   }
 
   ngOnInit(): void {
@@ -136,9 +133,9 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     });
     this.reporteAgenda();
     this.resuldata = [];
-    this.estadosAgenda();
+    this.estadosAgenda(); 
 
-
+    
 
   }
 
@@ -165,9 +162,9 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-
-
+  
+  
+  
   getEscritorios(): void {
     this.escritoriosService.getEscritorios().subscribe(
       (response: any) => {
@@ -191,7 +188,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-
+  
 
   filterCompromissos(): void {
     const params = {
@@ -215,22 +212,23 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     const estado = this.formFilter.value['estado'];
     const fechaInicial = this.formFilter.value['fechaInicial'];
     const fechaFinal = this.formFilter.value['fechaFinal'];
-
+  
     const data = {
       id_vendedor: nombreVendedor,
       sucursal: listaSucursales,
-      titulo: titulo,
+      titulo: titulo, 
       estado: estado,
       fechaInicial: fechaInicial ? fechaInicial : null,
       fechaFinal: fechaFinal ? fechaFinal : null,
     };
-
+  
     // Llamada al servicio reporteAgenda
     this.agendaService.reporteAgenda(data).subscribe(
       (response: any) => {
         this.resuldata = response.result;
-        console.log('respuesta');
-        console.log(this.resuldata);
+        this.totalItems = response.result.length;
+        console.log('respuesta|132123');
+        console.log(this.totalItems);
         // Realizar las acciones necesarias con la respuesta
       },
       (error: any) => {
@@ -239,11 +237,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
 
-
-
-
-
-  reporteCliente(id: any): void {
+  reporteCliente(id: any): void { 
     // Llamada al servicio reporteAgenda
     this.detailPanelService.loadedFinished(false);
     this.dadosCadastraisLoaded = false;
@@ -264,29 +258,29 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
 
-
-
-
-
+  
+  
+  
+  
   filtrar() {
     this.resuldata=[];
     // Obtener los valores del formulario
     const filtro = this.formFilter.value;
-
+    
     // Obtener los valores de fecha individualmente
     const fechaInicial = filtro.fechaInicial;
     const fechaFinal = filtro.fechaFinal;
-
+  
     // Crear un nuevo objeto de filtro con los valores de fecha
     const filtroConFecha = { ...filtro, fechaInicial, fechaFinal };
-
+  
     // Realizar la solicitud de filtrado con el nuevo objeto de filtro
     this.agendaService.reporteAgenda(filtroConFecha).subscribe(
       (response: any) => {
         // Procesar la respuesta y asignar los datos al arreglo resuldata
         this.resuldata = response.result;
         this.totalItems = response.total;
-
+  
         // Resto del código necesario para gestionar los datos filtrados
       },
       (error: any) => {
@@ -295,8 +289,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-
+  
+  
 
   ngOnDestroy(): void {
     this.showDetailPanelSubscription.unsubscribe();
@@ -333,7 +327,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       pagina: [formValue['pagina']],
       nombreVendedor: [formValue['nombreVendedor'], Validators.required],
       listaSucursales: [formValue['listaSucursales'], Validators.required],
-      estado: [formValue['estado'], Validators.required],
+      estado: [formValue['estado'], Validators.required], 
     });
   }
 
@@ -354,6 +348,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
     return formValue;
   }
+
   classStatusBorder(status: string): string {
     if (status === 'registrado') {
       return 'border-primary';
@@ -361,7 +356,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       return 'border-secondary';
     }
   }
-
+  
   onAdvancedFilter(): void {
     this.showAdvancedFilter = !this.showAdvancedFilter;
   }
@@ -420,7 +415,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     }
   }
   viewDetails(id: any): void {
-
     this.detailPanelService.loadedFinished(false);
     this.dadosCadastraisLoaded = false;
     this.dadosCadastraisEmpty = false;
@@ -477,21 +471,22 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       cliente.fecha, // Asegúrate de que cliente.fechaInicial sea una cadena de caracteres o un objeto de tipo Date
       cliente.obs_final
     ]);
-
+    console.log(this.resuldata)
+  
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('data');
-
+  
     // Agregar encabezados en la fila 1
     worksheet.addRow(headers);
-
+  
     data.forEach((row, rowIndex) => {
       const formattedDate = formatDate(row[6]); // Formatear la fecha (row[6])
       row[6] = formattedDate; // Reemplazar el valor original con la fecha formateada
       worksheet.addRow(row);
     });
-
-
-
+  // 
+   
+  
     // Agregar estilos a las celdas
     worksheet.eachRow((row, rowNumber) => {
       row.eachCell(cell => {
@@ -501,7 +496,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         row.font = { bold: true };
       }
     });
-
+  
     // Ajustar el ancho de las columnas B a G
     for (let i = 2; i <= headers.length; i++) {
       const column = worksheet.getColumn(i);
@@ -509,7 +504,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     }
      // Ajustar el ancho de las columnas
      worksheet.getColumn('D').width = 25; // Establecer el ancho de la columna D en 25 píxeles
-
+  
     function formatDate(date: string): string {
       const currentDate = new Date(date);
       const day = currentDate.getDate();
@@ -517,32 +512,15 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       const year = currentDate.getFullYear();
       return `${day}-${month}-${year}`;
     }
-
+  
     const currentDate = new Date().toISOString().split('T')[0]; // Obtener la fecha actual
     const fileName = `${currentDate}_reporte.xlsx`; // Crear el nombre del archivo con la fecha actual
     const buffer = await workbook.xlsx.writeBuffer();
     const excelBlob: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
+  
     // Guardar el archivo Excel
     saveAs(excelBlob, fileName);
   }
-
-
-
-
-
-
-
-
-  onPageChanged(event: PageChangedEvent) {
-    if (this.formFilter.value['pagina'] != event.page) {
-      this.detailPanelService.hide();
-      this.resetClienteSelecionado();
-      this.formFilter.value['pagina'] = event.page;
-      this.onFilter();
-    }
-  }
-
 
   handleCounter(value: any) {
     return value.toFixed(0);
@@ -551,6 +529,65 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   resetClienteSelecionado() {
     this.clienteSelecionado = null;
   }
+// Dentro del componente
+// Variables existentes...
+
+setOrderBy(column: string) {
+  if (this.orderBy === column) {
+    this.orderType = this.orderType === 'asc' ? 'desc' : 'asc'; // Cambiar el tipo de orden si se hace clic nuevamente en la misma columna
+  } else {
+    this.orderBy = column;
+    this.orderType = 'asc'; // Establecer el orden ascendente por defecto al hacer clic en una nueva columna
+  }
+
+  // Ordenar la matriz resultcliente en función del orden seleccionado
+  this.resuldata.sort((a, b) => {
+    const valueA = a[column].toUpperCase();
+    const valueB = b[column].toUpperCase();
+
+    if (valueA < valueB) {
+      return this.orderType === 'asc' ? -1 : 1;
+    }
+    if (valueA > valueB) {
+      return this.orderType === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+}
+  
+setOrderByclinte(column: string) {
+  if (this.orderBy === column) {
+    this.orderType = this.orderType === 'asc' ? 'desc' : 'asc'; // Cambiar el tipo de orden si se hace clic nuevamente en la misma columna
+  } else {
+    this.orderBy = column;
+    this.orderType = 'asc'; // Establecer el orden ascendente por defecto al hacer clic en una nueva columna
+  }
+
+  // Ordenar la matriz resultcliente en función del orden seleccionado
+  this.resultcliente.sort((a, b) => {
+    const valueA = a[column].toUpperCase();
+    const valueB = b[column].toUpperCase();
+
+    if (valueA < valueB) {
+      return this.orderType === 'asc' ? -1 : 1;
+    }
+    if (valueA > valueB) {
+      return this.orderType === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+}
+onPageChanged(event: PageChangedEvent): void {
+  this.currentPage = event.page;
+  this.getPaginateData();
+}
+
+getPaginateData(): any[]  {
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  const endIndex = startIndex + this.itemsPerPage;
+  //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
+  return this.resuldata.slice(startIndex, endIndex);
+}
 
 }
 

@@ -1,7 +1,7 @@
 import { ConfirmModalService } from 'src/app/shared/modules/confirm-modal/confirm-modal.service';
 import { HttpResponse } from '@angular/common/http';
 import { TecnologiaInformacaoFuncionariosService } from './../../services/funcionarios.service';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination/ngx-bootstrap-pagination';
+//import { PageChangedEvent } from 'ngx-bootstrap/pagination/ngx-bootstrap-pagination';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { FormArray } from '@angular/forms';
 //Services
@@ -9,7 +9,7 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsModalRef, BsLocaleService } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsModalRef, BsLocaleService, PageChangedEvent } from 'ngx-bootstrap';
 //Angular
 import { Component, OnInit, TemplateRef, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import {
@@ -127,7 +127,7 @@ export class TecnologiaInformacaoCadastrosOcorrenciaParecerComponent
         const promise = () => responsaveis.forEach(() => this.onAddResponsavel());
         await Promise.resolve(promise());
         this.form.get('responsaveis').patchValue(responsaveis)
-         
+
       },
       (error) => {
         this.pnotify.error('Não foi encontrado nenhum material');
@@ -150,7 +150,7 @@ export class TecnologiaInformacaoCadastrosOcorrenciaParecerComponent
         CONT_EMPR_REPA: [null],
         ID_TEIN_OCOR: [null],
         ID_TEIN_OCPR : [null],
-        IN_STAT: [null], 
+        IN_STAT: [null],
         NR_MATR: [null],
         NM_USUA: [null],
         DT_INCL: [null],
@@ -480,5 +480,5 @@ export class TecnologiaInformacaoCadastrosOcorrenciaParecerComponent
     this.formData.push(fd);
     this.documentos.push({ NM_DOCU: files[0]['name']});
   }
-  
+
 }

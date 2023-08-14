@@ -39,7 +39,7 @@ export class AdminPerfisCadastroComponent implements OnInit, OnDestroy {
   form: FormGroup;
   formAtividades: FormGroup;
 
-  appTitle = "Cadastros";
+  appTitle = "Registros";
 
   loading = true;
   loadingNavBar = false;
@@ -111,7 +111,7 @@ export class AdminPerfisCadastroComponent implements OnInit, OnDestroy {
         routerLink: `/admin/home`,
       },
       {
-        descricao: 'Lista de perfis',
+        descricao: 'Lista de perfiles',
         routerLink: `/admin/perfis`,
       },
       {
@@ -205,7 +205,7 @@ export class AdminPerfisCadastroComponent implements OnInit, OnDestroy {
     this.loadingNavBar = true;
     
     let params = this.form.value;
-
+    //console.log(params);
     this.service
       .postPerfil(params)
       .pipe(
@@ -216,9 +216,35 @@ export class AdminPerfisCadastroComponent implements OnInit, OnDestroy {
       .subscribe(
         response => {
           this.pnotify.success();
-          this.router.navigate(["./../"], {
+         /*this.router.navigate(["./../"], {
             relativeTo: this.activatedRoute
-          });
+          });*/
+        },
+        error => {
+          let message = error.error?.message;
+          message ? this.pnotify.error(message) : this.pnotify.error();
+        }
+      );
+  }
+
+  onEliminar(){
+    this.loadingNavBar = true;
+    let params = this.form.value;
+    
+    //console.log(params);
+    this.service
+      .postPerfil(params)
+      .pipe(
+        finalize(() => {
+          this.loadingNavBar = false
+        })
+      )
+      .subscribe(
+        response => {
+          this.pnotify.delete();
+         /*this.router.navigate(["./../"], {
+            relativeTo: this.activatedRoute
+          });*/ 
         },
         error => {
           let message = error.error?.message;
@@ -293,11 +319,12 @@ export class AdminPerfisCadastroComponent implements OnInit, OnDestroy {
           if(response.status !== 200){
             return
           }
-
+          console.log(response);
           this.atividadesAssociadas = response.body['data'];
           this.tableConfigAtividadesAssociadas.fixedHeader = this.atividadesAssociadas.length > 9 ? true : false;
         }
       )
+
   }
 
   onAssociarAtividades(){

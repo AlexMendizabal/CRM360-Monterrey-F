@@ -19,7 +19,7 @@
             class="form-control custom-select"
             formControlName="buscarPor"
           >
-            <option value="NM_CLIE" selected>Código, nombre de fantasía o razón social</option>
+            <option value="NM_CLIE" selected>Codigo, Nombre</option>
           </select>
         </div>
 
@@ -57,15 +57,15 @@
       <tr>
         <th>Cód Cliente </th>
         <th>Nombre de Fantasia</th>
-        <th>Razon Social </th>
+       <!--  <th>Razon Social </th> -->
         <th></th>
       </tr>
     </ng-template>
     <ng-template #tbody let-tbody>
       <tr *ngFor="let cliente of clientes | slice : begin : end; let i = index">
-        <td>{{ cliente.codCliente }}</td>
+        <td>{{ cliente.codigo_cliente }}</td>
         <td>{{ cliente.nomeCliente }}</td>
-        <td>{{ cliente.razaoSocial }}</td>
+        <!-- <td>{{ cliente.razaoSocial }}</td> -->
         <td>
           <button
             class="btn-icon-sm"

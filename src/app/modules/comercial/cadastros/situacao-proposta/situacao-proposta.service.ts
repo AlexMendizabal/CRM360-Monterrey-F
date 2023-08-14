@@ -12,7 +12,7 @@ import { SituacaoProposta } from './models/situacao-proposta';
   providedIn: 'root',
 })
 export class ComercialCadastrosSituacaoPropostaService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/situacao-proposta`;
+  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/situacao-proposta`;
 
   constructor(protected http: HttpClient) {}
 

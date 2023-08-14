@@ -1,15 +1,15 @@
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
 <app-header appTitle="Ciclo de vendas"></app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
-  <h5 class="pt-2 mb-4 text-center">Selecione uma atividade</h5>
+  <h5 class="pt-2 mb-4 text-center">Seleccione una actividad </h5>
   <div class="row justify-content-center">
     <div class="col-lg-10">
       <div class="row justify-content-center">
-        <div class="col-md-3" *ngFor="let atividade of atividades">
+        <div class="col-md-3" >
           <card-button
-            [icon]="atividade.icone"
-            [text]="atividade.nome"
-            [routerLink]="[atividade.rota]">
+            [icon]="atividades.icone"
+            [text]="atividades.nome"
+            [routerLink]="[atividades.rota]">
           </card-button>
         </div>
       </div>

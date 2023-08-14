@@ -7,7 +7,7 @@
           (click)="onShow()"
           *ngIf="show">
           <div>
-            <span>RELACIONADOS COM O PEDIDO </span>
+            <span>RELACIONADOS CON EL PEDIDO </span>
             <i class="fas fa-caret-down"></i>
           </div>
       </button>
@@ -17,7 +17,7 @@
           (click)="onShow()"
           *ngIf="!show">
           <div>
-            <span>RELACIONADOS COM O PEDIDO </span>
+            <span>RELACIONADOS CON EL PEDIDO </span>
             <i class="fas fa-caret-up"></i>
           </div>
       </button>
@@ -40,7 +40,7 @@
     <div [hidden]="show">
       <tabset>
         <!-- Vendas Gerais -->
-        <tab  heading="Vendas Gerais"  (selectTab)="onSelectVendasGerais()">
+        <!-- <tab  heading="Vendas Gerais"  (selectTab)="onSelectVendasGerais()">
           <div *ngIf="!materiaisRelacionadosLoader" >
             <div class="mt-2 mb-4" id="carousel-gerais" *ngIf="vendasGerais.length > 0">
                 <carousel
@@ -62,14 +62,14 @@
                 </carousel>
             </div>
             <empty-result message="Nenhuma informação encontrada" class="my-4" *ngIf="vendasGerais.length == 0 && !vendasGeraisLoader"></empty-result>
-          </div>
+          </div> -->
           <!-- <div class="d-flex justify-content-center mb-3" *ngIf="vendasGeraisLoader">
             <div class="spinner-border text-dark"></div>
           </div> -->
-        </tab>
+        <!-- </tab> -->
         <!-- Vendas Cliente -->
-        <tab  heading="Vendas do Cliente"  (selectTab)="onSelectVendasCliente()">
-          <div *ngIf="!materiaisRelacionadosLoader" >
+<!--         <tab  heading="Vendas do Cliente"  (selectTab)="onSelectVendasCliente()">
+ -->          <!-- <div *ngIf="!materiaisRelacionadosLoader" >
             <div class="mt-2 mb-4" id="carousel-cliente" *ngIf="vendasCliente.length > 0">
               <carousel
                 class="d-block"
@@ -91,13 +91,13 @@
               </carousel>
             </div>
             <empty-result message="Nenhuma informação encontrada" class="my-4" *ngIf="vendasCliente.length == 0 && !vendasClienteLoader"></empty-result>
-          </div>
+          </div> -->
           <!-- <div class="d-flex justify-content-center mb-3" *ngIf="vendasClienteLoader">
             <div class="spinner-border text-dark"></div>
           </div> -->
-        </tab>
-        <!-- Materiais Relacionados -->
-        <tab  heading="Materiais Relacionados"  (selectTab)="onSelectMateriaisRelacionados()">
+<!--         </tab>
+ -->        <!-- Materiais Relacionados -->
+        <tab  heading="Materiales Relacionados"  (selectTab)="onSelectMateriaisRelacionados()">
           <div *ngIf="!materiaisRelacionadosLoader" >
             <div class="mt-2 mb-4" id="carousel-relacionados" *ngIf="materiaisRelacionados.length > 0">
               <carousel
@@ -119,7 +119,7 @@
                 </slide>
               </carousel>
             </div>
-            <empty-result message="Nenhuma informação encontrada" class="my-4" *ngIf="materiaisRelacionados.length == 0 && !materiaisRelacionadosLoader"></empty-result>
+            <empty-result message="Ninguna información encontrada" class="my-4" *ngIf="materiaisRelacionados.length == 0 && !materiaisRelacionadosLoader"></empty-result>
           </div>
           <!-- <div class="d-flex justify-content-center mb-3" *ngIf="materiaisRelacionadosLoader">
             <div class="spinner-border text-dark"></div>

@@ -10,7 +10,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialGestaoContratosComerciaisService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/gestao/contratos-comerciais`;
+  private readonly API = `http://127.0.0.1:8000/comercial/gestao/contratos-comerciais`;
 
   constructor(protected http: HttpClient) {}
 
@@ -70,7 +70,7 @@ export class ComercialGestaoContratosComerciaisService {
   save(record: any, action: string): Observable<Object | JsonResponse> {
 
     if (action === 'update') {
- 
+
       return this.updateContrato(record);
     }
 

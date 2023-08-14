@@ -18,7 +18,7 @@ import { constants } from 'crypto';
   providedIn: 'root',
 })
 export class ComercialCadastrosMateriaisContratoService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/materiais/contratos`;
+  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/materiais/contratos`;
 
   constructor(
     protected http: HttpClient,

@@ -16,63 +16,55 @@
                 <div class="col-7">
                   <div class="form-row">
                     <div class="form-group col">
-                      <div class="mtc-title mb-2 text-uppercase text-primary">Unidade para cálculo</div>
-                      <p>{{nomeTipoLancamento | titlecase}}</p>
+                      <div class="mtc-title mb-2 text-uppercase text-primary">Calculo de cantidades</div>
+                      <!-- <p>{{nomeTipoLancamento | titlecase}}</p> -->
                     </div>
                   </div>
                   <div class="form-row">
                     <div class="form-group col">
-                      <label class="font-weight-bold"for="quantidade">{{ descQtde }}</label>
-                      <input
-                        type="text"
-                        id="quantidade"
-                        class="form-control"
-                        formControlName="quantidade"
-                        currencyMask [options]="currencyMaskOptions"
+                      <label class="font-weight-bold" for="quantidade">Cantidad</label>
+                      <input type="number" id="quantidade" class="form-control" formControlName="quantidade"
                         [ngClass]="onFieldError('quantidade') + ' ' + onFieldRequired(form.controls.quantidade)">
                     </div>
                   </div>
                   <div class="form-row">
                     <div class="form-group col">
-                      <label for="preco1">{{ descPreco }}</label>
-                      <input
-                        type="text"
-                        id="preco1"
-                        class="form-control"
-                        formControlName="preco1"
-                        placeholder="R$ 0,00"
-                        currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',', precision: 2 }"
+                      <label for="preco1">Precio</label>
+                      <input type="text" id="preco1" class="form-control" formControlName="preco1"
+                        placeholder="USD. 0,00"
                         [ngClass]="onFieldError('preco1') + ' ' + onFieldRequired(form.controls.preco1)"
-                        aria-describedby="preco1-help"
-                        (ngModelChange)="onDisablePreco2()">
-                      <small *ngIf="tipoCalculo1 == 6 && material.valorMaterialContrato == 0"  id="preco1-help" class="text-muted" style="font-size: 11px">
+                        aria-describedby="preco1-help" (ngModelChange)="onDisablePreco2()" readonly>
+                      <small *ngIf="tipoCalculo1 == 6 && material.valorMaterialContrato == 0" id="preco1-help"
+                        class="text-muted" style="font-size: 11px">
                         Preço ideal acima de <strong>{{ material.valorUnit | currency:'BRL':'symbol':'1.2-2' }}</strong>
                       </small>
-                      <small *ngIf="tipoCalculo1 != 6 && material.valorMaterialContrato == 0" id="preco1-help" class="text-muted" style="font-size: 11px">
-                        Preço ideal acima de <strong *ngIf="material.valorMaterialBarra > 0">{{ material.valorMaterialBarra | currency:'BRL':'symbol':'1.2-2' }}</strong>
-                        <strong *ngIf="material.valorMaterialBarra == 0">{{ material.valorUnit | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                      <small *ngIf="tipoCalculo1 != 6 && material.valorMaterialContrato == 0" id="preco1-help"
+                        class="text-muted" style="font-size: 11px">
+                        Preço ideal acima de <strong *ngIf="material.valorMaterialBarra > 0">{{
+                          material.valorMaterialBarra | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                        <strong *ngIf="material.valorMaterialBarra == 0">{{ material.valorUnit |
+                          currency:'BRL':'symbol':'1.2-2' }}</strong>
                       </small>
-                      <small *ngIf="material.valorMaterialContrato > 0 && tipoCalculo1 == 6" id="preco1-help" class="text-muted" style="font-size: 11px">
-                        Preço do contrato <strong>{{ material.valorMaterialContrato | currency:'BRL':'symbol':'1.2-2' }}</strong> por tonelada
+                      <small *ngIf="material.valorMaterialContrato > 0 && tipoCalculo1 == 6" id="preco1-help"
+                        class="text-muted" style="font-size: 11px">
+                        Preço do contrato <strong>{{ material.valorMaterialContrato | currency:'BRL':'symbol':'1.2-2'
+                          }}</strong> por tonelada
                       </small>
-                      <small *ngIf="material.valorMaterialContrato > 0 && tipoCalculo1 != 6" id="preco1-help" class="text-muted" style="font-size: 11px">
-                        Preço do contrato <strong>{{ material.valorMaterialContrato | currency:'BRL':'symbol':'1.2-2' }}</strong> por tonelada, calcular o preço por {{ nomeTipoCalculo1 | titlecase }}
+                      <small *ngIf="material.valorMaterialContrato > 0 && tipoCalculo1 != 6" id="preco1-help"
+                        class="text-muted" style="font-size: 11px">
+                        Preço do contrato <strong>{{ material.valorMaterialContrato | currency:'BRL':'symbol':'1.2-2'
+                          }}</strong> por tonelada, calcular o preço por {{ nomeTipoCalculo1 | titlecase }}
                       </small>
                     </div>
                   </div>
-                  <div class="form-row" *ngIf="tipoCalculo2 > 0 && material.valorMaterialContrato == 0" >
+                  <div class="form-row" *ngIf="tipoCalculo2 > 0 && material.valorMaterialContrato == 0">
                     <div class="form-group col">
-                      <label for="preco2">Preço por Tonelada</label>
-                      <input
-                        type="text"
-                        id="preco2"
-                        class="form-control"
-                        formControlName="preco2"
-                        placeholder="R$ 0,00"
-                        currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',', precision: 2 }"
+                      <label for="preco2">Precio por kg.</label>
+                      <input type="text" id="preco2" class="form-control" formControlName="preco2" placeholder="R$ 0,00"
+                        currencyMask
+                        [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',', precision: 2 }"
                         [ngClass]="onFieldError('preco2') + ' ' + onFieldRequired(form.controls.preco2)"
-                        aria-describedby="preco2-help"
-                        (ngModelChange)="onDisablePreco1()">
+                        aria-describedby="preco2-help" (ngModelChange)="onDisablePreco1()">
                       <small id="preco2-help" class="text-muted" style="font-size: 11px">
                         Preço ideal acima de <strong>{{ material.valorUnit | currency:'BRL':'symbol':'1.2-2' }}</strong>
                       </small>
@@ -81,22 +73,14 @@
                   <div class="form-row" *ngIf="showInputMedida()">
                     <div class="form-group col">
                       <label for="medida">Medida (metros)</label>
-                      <input
-                        type="text"
-                        id="medida"
-                        class="form-control"
-                        formControlName="medida"
-                        currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }"
-                        [ngClass]="onFieldError('medida') + ' ' + onFieldRequired(form.controls.medida)"
-                      >
+                      <input type="text" id="medida" class="form-control" formControlName="medida" currencyMask
+                        [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }"
+                        [ngClass]="onFieldError('medida') + ' ' + onFieldRequired(form.controls.medida)">
                     </div>
                   </div>
                   <div class="form-row mt-1">
                     <div class="form-group col mb-0">
-                      <button
-                        type="button"
-                        class="btn btn-block btn-secondary mt-auto"
-                        (click)="onCalcular()"
+                      <button type="button" class="btn btn-block btn-secondary mt-auto" (click)="onCalcular()"
                         [disabled]="loaderModal">
                         <div *ngIf="!loaderModal">
                           <i class="fas fa-calculator"></i>
@@ -115,7 +99,9 @@
                 <div class="col">
                   <div *ngIf="showInfoMetragem()">
                     <div class="form-row">
-                      <div class="col"><hr></div>
+                      <div class="col">
+                        <hr>
+                      </div>
                     </div>
                     <div class="form-row" *ngIf="!showInputMedida()">
                       <div class="form-group col mb-0">
@@ -138,7 +124,9 @@
                   </div>
                   <div *ngIf="showInfoFatorMultiplo()">
                     <div class="form-row">
-                      <div class="col"><hr></div>
+                      <div class="col">
+                        <hr>
+                      </div>
                     </div>
                     <div class="form-row">
                       <div class="form-group col mb-0">
@@ -149,7 +137,9 @@
                   </div>
                   <div *ngIf="opcoesVenda.length > 0">
                     <div class="form-row">
-                      <div class="col"><hr></div>
+                      <div class="col">
+                        <hr>
+                      </div>
                     </div>
                     <div class="form-row">
                       <div class="form-group col">
@@ -159,14 +149,11 @@
                     <div class="form-row" *ngFor="let opcaoVenda of opcoesVenda; let i = index">
                       <div class="form-group col mb-0">
                         <div class="custom-control custom-radio">
-                          <input
-                            type="radio"
-                            id="opcaoVenda_{{ i }}"
-                            name="opcaoVenda"
-                            class="custom-control-input"
+                          <input type="radio" id="opcaoVenda_{{ i }}" name="opcaoVenda" class="custom-control-input"
                             (click)="calcularTotais(opcaoVenda)">
                           <label class="custom-control-label" for="opcaoVenda_{{ i }}">
-                            {{ opcaoVenda.tonelada | number }} Toneladas ({{ opcaoVenda.qtde }} {{ nomeTipoLancamento | titlecase }})
+                            {{ opcaoVenda.tonelada | number }} Toneladas ({{ opcaoVenda.qtde }} {{ nomeTipoLancamento |
+                            titlecase }})
                           </label>
                         </div>
                       </div>
@@ -178,36 +165,44 @@
             <div class="col-6 pl-0 my-auto">
               <div class="text-right text-uppercase mr-1 mb-2" style="font-size: 11px">
                 <a class="text-primary" href="javascript:void(0)" (click)="onShowImpostos()">
-                  <i class="fas mr-2" [ngClass]="{'fa-chevron-up': showImpostos, 'fa-chevron-down': !showImpostos}"></i>
-                  <strong>Detalhes</strong>
+                  <!-- <i class="fas mr-2" [ngClass]="{'fa-chevron-up': showImpostos, 'fa-chevron-down': !showImpostos}"></i> -->
+                  <!-- <strong>Detalhes</strong> -->
                 </a>
               </div>
               <ul class="list-group">
                 <li class="list-group-item">
                   <div class="d-flex justify-content-between w-100">
                     <div class="my-auto">
-                      <strong>Peso item</strong>
+                      <strong>Peso Item</strong>
                     </div>
-                    <strong class="text-secondary">{{ calculo.tonelada | number }} Ton</strong>
+                    <strong class="text-secondary">{{ calculo.tonelada | number }} Kg</strong>
                   </div>
                 </li>
                 <li class="list-group-item">
                   <div class="d-flex justify-content-between w-100">
                     <div class="my-auto">
-                      <strong>Valor unitário</strong>
+                      <strong>Valor unitario</strong>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorUnitario | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                    <strong class="text-secondary">{{ calculo.valorUnitario }} USD.</strong>
                   </div>
                 </li>
-                <li class="list-group-item">
+                <!-- <li class="list-group-item">
                   <div class="d-flex justify-content-between w-100">
                     <div class="my-auto">
-                      <strong>Valor item</strong>
+                      <strong>Valor Item</strong>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorItem | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                    <strong class="text-secondary">{{ calculo.valorItem  }}</strong>
                   </div>
-                </li>
-                <li class="list-group-item" [hidden]="!showImpostos">
+                </li> -->
+                <!-- <li class="list-group-item">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="my-auto">
+                      <strong>Descuento %</strong>
+                    </div>
+                    <strong class="text-secondary">{{ calculo.descuento  }} </strong>
+                  </div>
+                </li> -->
+                <!-- <li class="list-group-item" [hidden]="!showImpostos">
                   <div class="d-flex justify-content-between w-100">
                     <div class="my-auto">
                       <strong class="mr-1">Alíquota IPI</strong>
@@ -228,7 +223,7 @@
                       </ng-template>
                       <i class="far fa-question-circle" [tooltip]="tooltipValorIpiTemplate"></i>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorIpi | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                    <strong class="text-secondary">{{ calculo.valorIpi  }}</strong>
                   </div>
                 </li>
                 <li class="list-group-item" [hidden]="!showImpostos">
@@ -252,7 +247,7 @@
                       </ng-template>
                       <i class="far fa-question-circle" [tooltip]="tooltipValorIcmsTemplate"></i>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorIcms | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                    <strong class="text-secondary">{{ calculo.valorIcms  }}</strong>
                   </div>
                 </li>
                 <li class="list-group-item" [hidden]="!showImpostos">
@@ -264,45 +259,55 @@
                       </ng-template>
                       <i class="far fa-question-circle" [tooltip]="tooltipValorIcmsStTemplate"></i>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorIcmsSt | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                    <strong class="text-secondary">{{ calculo.valorIcmsSt  }}</strong>
                   </div>
-                </li>
+                </li> -->
                 <li class="list-group-item">
                   <div class="d-flex justify-content-between w-100">
                     <div class="my-auto">
                       <strong>Valor total</strong>
                     </div>
-                    <strong class="text-secondary">{{ calculo.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                    <strong class="text-secondary">{{ calculo.valorTotal | number:'1.2-2' }} USD.</strong>
                   </div>
                 </li>
+
               </ul>
 
               <div class="col mt-3">
-                <div class="mtc-title mb-3 text-uppercase text-primary">Detalhes do Pedido</div>
+                <div class="mtc-title mb-2 text-uppercase text-primary">Detalles del Pedido</div>
                 <div class="row">
-                  <div class="form-group col-lg-4">
-                    <label for="nrPedidoCliente" class="fontBold">Nr. Pedido</label>
+
+                  <!-- <div class="form-group col-lg-4">
+                    <label for="nrPedidoCliente" class="fontBold">Nro. Pedido</label>
                     <input
                       class="form-control"
                       id="nrPedidoCliente"
                       type="text"
                       formControlName="nrPedidoCliente">
-                  </div>
+                  </div> -->
                   <div class="form-group col-lg-4 font-weight-bold">
                     <label for="codItemPedidoCliente" class="fontBold">Cód. Item</label>
-                    <input
-                      class="form-control"
-                      id="codItemPedidoCliente"
-                      type="text"
-                      formControlName="codItemPedidoCliente">
+                    <input class="form-control" id="codItemPedidoCliente" type="text"
+                      formControlName="codItemPedidoCliente" readonly>
                   </div>
-                  <div class="form-group col-lg-4 font-weight-bold">
-                    <label for="codProdutoCliente" class="fontBold">Cód. Produto</label>
-                    <input
-                      class="form-control"
-                      id="codProdutoCliente"
-                      type="text"
-                      formControlName="codProdutoCliente">
+                  <div class="form-group col-lg-8 font-weight-bold">
+                    <label for="codProdutoCliente" class="fontBold">Nomb. Item</label>
+                    <input class="form-control" id="codProdutoCliente" type="text" formControlName="nrPedidoCliente"
+                      readonly>
+                  </div>
+                  <div class="col-lg-12 mb-2">
+                    <label for="codProdutoCliente" class="fontBold">PRESENTACIÓN</label>
+                    <!-- <ng-select [searchable]="true" [clearable]="false" placeholder="Seleccione..."
+                      [items]="arrayPresentacion"  [virtualScroll]="true" formControlName="formPresentacion"
+                      labelForId="id" bindLabel="nombre_mat_presentacion" bindValue="id_linha" 
+                      >
+                    </ng-select> -->
+                    <select class="form-control custom-select" formControlName="formPresentacion" (change)="changePresentacion($event.target.value)">
+                      <ng-container *ngFor="let item of arrayPresentacion">
+                        <option [value]="item.id" >{{ item.nombre_mat_presentacion }}</option>
+                      </ng-container>
+                    </select>
+        
                   </div>
                 </div>
               </div>
@@ -313,17 +318,10 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-danger"
-      (click)="onClose()">
+    <button type="button" class="btn btn-danger" (click)="onClose()">
       Cancelar
     </button>
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="onSubmit()"
-      [disabled]="calculo.valorTotal === 0">
+    <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="calculo.valorTotal === 0">
       Confirmar
     </button>
   </div>

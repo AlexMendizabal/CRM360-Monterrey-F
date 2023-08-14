@@ -12,7 +12,7 @@ import { representantes, dadosBancarios } from './models/representantes';
   providedIn: 'root',
 })
 export class ComercialComissoesRepresentantesProgramacaoPagamentosService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/comissoes/representantes/programacao-pagamentos`;
+  private readonly API = `http://127.0.0.1:8000/comercial/comissoes/representantes/programacao-pagamentos`;
 
   constructor(protected http: HttpClient) {}
 

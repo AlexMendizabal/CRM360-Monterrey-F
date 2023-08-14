@@ -16,21 +16,27 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialEstoqueService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/estoque`;
+  private readonly API = `http://127.0.0.1:8000/comercial/estoque`;
 
   constructor(
     protected http: HttpClient,
     private comercialService: ComercialService,
     private tidSoftwareService: ComercialTidSoftwareService
-  ) {}
+  ) { }
 
   getFiltros(): Observable<Object | JsonResponse> {
-    let empresas = this.tidSoftwareService.getEmpresas('estoques');
-    let depositos = this.comercialService.getDepositos({ grupoManetoni: 1 });
-    let linhas = this.tidSoftwareService.getLinhas();
+    /* Almacen */
+    let almacenes = this.comercialService.getAlmacen();
+    /* Familia */
     let classes = this.comercialService.getClasses(null);
+    let depositos = this.comercialService.getDepositos({ grupoManetoni: 1 });
 
-    return forkJoin([empresas, depositos, linhas, classes]).pipe(
+    let sucursales = this.comercialService.getEscritorios();
+    let empresas = this.tidSoftwareService.getEmpresas('estoques');
+    let linhas = this.tidSoftwareService.getLinhas();
+
+
+    return forkJoin([almacenes, classes, depositos, sucursales, empresas, linhas]).pipe(
       take(1),
       retry(2)
     );
@@ -48,11 +54,13 @@ export class ComercialEstoqueService {
       .pipe(take(1), retry(2));
   }
 
+
   getOutrasUnidades(id: any): Observable<Object | JsonResponse> {
     return this.http
       .get(`${this.API}/outras-unidades/${id}`)
       .pipe(take(1), retry(2));
   }
+
 
   getPedidosCompra(params: any): Observable<Object | JsonResponse> {
     return this.http
@@ -61,6 +69,8 @@ export class ComercialEstoqueService {
       )
       .pipe(take(1), retry(2));
   }
+
+
 
   getComprometido(params: any): Observable<Object | JsonResponse> {
     return this.http
@@ -76,10 +86,26 @@ export class ComercialEstoqueService {
       .pipe(take(1), retry(2));
   }
 
+
   getEstoqueSuspenso(params: any): Observable<Object | JsonResponse> {
     return this.http
       .get(
         `${this.API}/estoque-suspenso/${params.idMaterial}/${params.idEmpresa}`
+      )
+      .pipe(take(1), retry(2));
+  }
+
+  getStockComprometido(params: any): Observable<Object | JsonResponse> {
+    return this.http
+      .get(
+        `${this.API}/estoquecomprometido/${params.idMaterial}`
+      )
+      .pipe(take(1), retry(2));
+  }
+  getStockSuspeso(params: any): Observable<Object | JsonResponse> {
+    return this.http
+      .get(
+        `${this.API}/estoquesuspenso/${params.idMaterial}`
       )
       .pipe(take(1), retry(2));
   }
