@@ -449,6 +449,53 @@
               </div>
             </div>
           </div>
+          <div class="col-md-6 mt-2">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title">Datos de envío</h6>
+                <div class="row">
+                  <div class="col-md-4">
+                    <label for="customerName"> <strong> Tipo entrega:</strong></label>
+                    <input type="text" id="customerName" class="form-control" readonly value="{{oferta.nombre_modo_entrega}}">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="customerName"><strong>Referencia:</strong></label>
+                    <ng-container *ngIf="oferta.latitud && oferta.longitud; else emptyLocation">
+                        <!-- <a [href]="'http://google.com/maps/bylatlng?lat=' + oferta.latitud + '&lng=' + oferta.longitud" target="_blank" style="cursor: pointer;">
+                            <input type="text" id="customerName" class="form-control text-primary" readonly value="Google">
+                        </a> -->
+                        <a [href]="'http://maps.google.com/maps?q=' + oferta.latitud + ',' + oferta.longitud" target="_blank" style="cursor: pointer;">
+                          <input type="text" id="customerName" class="form-control text-primary" readonly value="Google">
+                      </a>
+
+                    </ng-container>
+                    <ng-template #emptyLocation>
+                        <input type="text" id="customerName" class="form-control text-primary" readonly value="">
+                    </ng-template>
+                </div>
+                
+                  <div class="col-md-4">
+                    <label for="customerName"> <strong> Centro logístico:</strong></label>
+                    <input type="text" id="customerName" class="form-control" readonly value="{{oferta.ubicacion_almacen}}">
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mt-2">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title">Datos adicionales</h6>
+                <div class="row">
+                  <div class="col-md-12">
+                    <label for="customerName"> <strong> Observaciones:</strong></label>
+                    <input type="text" id="customerName" class="form-control" readonly value="{{oferta.observacion}}">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -164,7 +164,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   latitud: number;
   longitud: number;
-
+  id_centro_logistico: number;
 
 
 
@@ -690,7 +690,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         id_departamento: [data.id_departamento_lista],
         ejecutivo_ventas: [],
         codigo_oferta: [],
-        centrosLogisticos:[],
+       /*  centroLogisticoControl:[], */
 
         /* codEndereco: [data.direccion], */
         codContato: [
@@ -775,6 +775,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       return;
     }
     this.form.get('freteConta').setValue(event.codFreteConta);
+  }
+
+  onCentroLogisticoChange(id){
+    this.id_centro_logistico = id;
   }
 
   getAnexos(codCotacao: number) {
@@ -1391,7 +1395,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             id_modo_entrega: formValue.codEndereco,
             id_cliente: formValue.codCliente,
             id_vendedor: formValue.ejecutivo_ventas,
-            id_almacen: formValue.centrosLogisticos,
+            id_almacen: this.id_centro_logistico,
             codigo_oferta: null,
             fecha_final: formValue.dataValidade,
             fecha_inicial: formValue.dataEncerramento,
@@ -1404,6 +1408,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           }
 
           /* this.autorizacionService.showModal();  */
+          //console.log(dataCotizacion);
 
           this.finalizacaoService.sendCotizacion(dataCotizacion);
 
