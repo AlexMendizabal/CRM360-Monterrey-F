@@ -144,6 +144,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   transportadoras: Array<Transportadora> = [];
   formData: Array<FormData> = [];
 
+
   carrinho: Array<ICarrinhoModel> = [];
   materiais: Array<ICarrinhoModel> = [];
   valorProposta: number;
@@ -155,6 +156,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   listaPrecios: any[] = [];
 
   listaEjecutivo: any[] = [];
+
+  centroLogistico: any[] = [];
 
   idVendedor: number = 0;
 
@@ -203,7 +206,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   };
 
   showBloco1: boolean = true;
-
   showBloco3: boolean = true;
   showBloco4: boolean = true;
   showBloco5: boolean = true;
@@ -267,6 +269,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.getClientes(this.detalhesCodCliente);
     this.getListarPrecios();
     this.getTodosVendedores();
+    this.getCentrosLogisticos();
     this.tipoEntrega = [
       { id: 1, nombre: 'entrega en almacen' },
       { id: 2, nombre: 'entrega en obra'}
@@ -1980,6 +1983,17 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.formularioService.getTodosVendedores().subscribe(
       (response: any) =>{
         this.listaEjecutivo = response.data;
+      },
+      (error: any) =>{
+
+      }
+    )
+  }
+
+  getCentrosLogisticos():void{
+    this.formularioService.getCentrosLogisticos().subscribe(
+      (response: any)=>{
+        this.centroLogistico = response.data;
       },
       (error: any) =>{
 

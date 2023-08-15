@@ -95,7 +95,7 @@ import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from '
     ComercialCicloVendasCotacoesListaModalTransfereFaturamentoComponent,
     ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent,
     ComercialCicloVendasCotacoesListaTemplatesButtonImprimirSeparacaoComponent,
-    
+
   ],
   entryComponents: [
     ComercialCicloVendasCotacoesListaModalHistoricoComercialComponent,

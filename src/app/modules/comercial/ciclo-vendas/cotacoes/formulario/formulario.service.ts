@@ -168,4 +168,8 @@ export class ComercialCicloVendasCotacoesFormularioService {
   getTodosVendedores(){
     return this.http.get(`${this.URL}/vendedor/allvendedor`);
   }
+
+  getCentrosLogisticos(){
+    return this.http.get(`${this.URL}/almacen/centros_logisticos`);
+  }
 }

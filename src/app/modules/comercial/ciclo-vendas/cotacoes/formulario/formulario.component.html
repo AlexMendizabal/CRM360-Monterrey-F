@@ -202,8 +202,6 @@
               </ng-container>
             </select>
           </div>
-
-
         </div>
         <div class="row">
           <div class="form-group col-lg-3">
@@ -327,17 +325,14 @@
           <div class="form-group col-lg-2">
             <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
               <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
+              <select class="form-control custom-select" formControlName="centroLogistico" id="orderBy">
+                <ng-container *ngFor="let centroLogistico of centroLogistico">
+                  <option [value]="centroLogistico.id_almacen"  [selected]="idVendedor === centroLogistico.id_almacen">{{ centroLogistico.nombre_almacen }}</option>
+                </ng-container>
+              </select>
               <div class="my-auto text-uppercase" style="font-size: 11px">
               </div>
             </div>
-            <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
-                       bindLabel="descricao" bindValue="codFormaPagamento" formControlName="codFormaPagamento"
-                       [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="visualizar"
-                       [virtualScroll]="true" placeholder="Selecione...">
-              <!-- [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)"-->
-            </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
-                                  message="Centro Logistico obligatorio."></invalid-form-control>
           </div>
         </div>
         <div class="form-row">
