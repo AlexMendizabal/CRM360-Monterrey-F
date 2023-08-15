@@ -120,6 +120,8 @@ export class ComercialCicloVendasCotacoesListaComponent
   situacoesCores: Array<IAssociacao> = [];
   vendedores: Array<any> = [];
   totalMateriales: Array<any> = [];
+  oferta: Array<any> = [];
+
 
 
   items: Array<any> = [];
@@ -1318,7 +1320,10 @@ export class ComercialCicloVendasCotacoesListaComponent
           if (response.responseCode === 200) {
             this.items = response.result['analitico'];
             this.totalMateriales = response.result.total;
+            this.oferta = response.result.oferta[0];
             this.totalModal = this.items.length;
+            this.dadosEmptyModal = false;
+
           } else {
             this.loaderNavbar = false;
             this.pnotifyService.notice('Ningún registro encontrado');

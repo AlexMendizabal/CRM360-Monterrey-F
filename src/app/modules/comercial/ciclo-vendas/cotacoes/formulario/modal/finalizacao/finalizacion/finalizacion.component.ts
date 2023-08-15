@@ -108,7 +108,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
         this.formularioService.limparCarrinhoSubject.next(true);
 /*         console.log('ew')
  */        this.bsModalRef.hide();
-        this.router.navigate([`/comercial/ciclo-vendas/${idSubModulo}/cotacoes-pedidos/lista/${codCotacao}/${codEmpresa}`]);
+        this.router.navigate([`/comercial/ciclo-vendas/23/cotacoes-pedidos/lista`]);
 
     }
 

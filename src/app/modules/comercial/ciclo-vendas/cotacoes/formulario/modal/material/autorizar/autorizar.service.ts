@@ -1,44 +1,51 @@
 import { Injectable, EventEmitter } from '@angular/core';
+import { finalize } from 'rxjs/operators';
 
 // ngx-bootstrap
 import { BsModalService } from 'ngx-bootstrap/modal';
 
 // Components
-import { ComercialCicloVendasCotacoesFormularioModalMaterialAutorizacionComponent } from './autorizacion.component';
+import { ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent } from './autorizar.component';
+
+// Services
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
-import { ComercialClientesService } from 'src/app/modules/comercial/services/clientes.service';
+import { ComercialCicloVendasCotacoesService } from '../../../../cotacoes.service';
+
+// Interfaces
+import { ICarrinhoModel } from '../../../models/carrinho';
+import { JsonResponse } from 'src/app/models/json-response';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ComercialCicloVendasCotacoesFormularioModalMaterialAutorizacionService {
+export class ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarService {
     loaderNavbar: EventEmitter<boolean> = new EventEmitter();
 
     constructor(
         private modalService: BsModalService,
         private pnotifyService: PNotifyService,
-        private clientesService: ComercialClientesService
-      ) {
+        private cotacoesService: ComercialCicloVendasCotacoesService
+    ) {
         this.pnotifyService.getPNotify();
-      }
-    
+    }
 
-    showModal(params: any): void {
+    showModal(): void {
+        this.loaderNavbar.emit(true);
         const modalConfig = {
             animated: false,
+            class: 'modal-lg',
             ignoreBackdropClick: true,
             keyboard: false,
         };
-
         const initialState = {
-            params: params,
-        };
 
+        };
         this.modalService.show(
-            ComercialCicloVendasCotacoesFormularioModalMaterialAutorizacionComponent,
+            ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent,
             Object.assign({}, modalConfig, {
                 initialState,
             })
         );
+
     }
 }
