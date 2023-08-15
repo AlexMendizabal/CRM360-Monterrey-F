@@ -20,6 +20,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'autorizaciones',
+        loadChildren: () =>
+          import('./autorizaciones/autorizaciones.module').then(
+            (m) => m.ComercialCicloVendasAutorizacionesModule
+          ),
+      },
+      {
         path: 'pedidos-producao-telas',
         loadChildren: () =>
           import('./pedidos-producao-telas/pedidos-producao-telas.module').then(
