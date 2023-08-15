@@ -12,8 +12,8 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialVendedoresService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/vendedor`;
-  private readonly API_CADASTROS = `https://crm360.monterrey.com.bo/api/comercial/cadastros`;
+  private readonly API = `http://127.0.0.1:8000/comercial/vendedor`;
+  private readonly API_CADASTROS = `http://127.0.0.1:8000/comercial/cadastros`;
 
 
   constructor(protected http: HttpClient) { }
@@ -28,6 +28,11 @@ export class ComercialVendedoresService {
     return this.http.get(`${this.API}/lista`).pipe(take(1), retry(2));
   }
 
+  getVendedoresSucursal(id: number){
+    return this.http
+    .get(`${this.API}/sucursal-vendedor/${id}`)
+  }
+
   getGestiones() {
     return this.http.get(`${this.API_CADASTROS}/titulos-agenda/lista?codSituacao=1`).pipe(take(1), retry(2));
   }
@@ -35,6 +40,15 @@ export class ComercialVendedoresService {
   getCarteiraClientes(params?): Observable<Object | JsonResponse> {
     return this.http
       .get(`${this.API}/carteira-clientes`,
+        {
+          params: params
+        })
+      .pipe(take(1), retry(2));
+  }
+
+  getCarteiraClientesCotizacion(params?): Observable<Object | JsonResponse> {
+    return this.http
+      .get(`${this.API}/carteira-clientes-cotizacion`,
         {
           params: params
         })

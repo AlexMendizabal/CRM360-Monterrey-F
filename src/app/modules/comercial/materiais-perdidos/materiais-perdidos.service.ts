@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ComercialMateriaisPerdidosService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/materiais-perdidos`;
+  private readonly API = `http://127.0.0.1:8000/comercial/materiais-perdidos`;
 
   constructor(protected http: HttpClient) {}
 

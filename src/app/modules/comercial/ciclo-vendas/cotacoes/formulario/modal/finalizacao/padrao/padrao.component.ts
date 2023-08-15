@@ -204,7 +204,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoPadraoCompone
     let valorProposta = this.dataCotacao.valorProposta;
     let valorIcmsSt = this.dataCotacao.valorIcmsSt;
 
-    this.cotacoesService
+    /* this.cotacoesService
       .postGerarDuplicatas({
         codCotacao,
         codEmpresa,
@@ -227,7 +227,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoPadraoCompone
             this.pnotifyService.error();
           }
         }
-      });
+      }); */
   }
 
   classVariacaoPreco(variacaoPreco: number): string {

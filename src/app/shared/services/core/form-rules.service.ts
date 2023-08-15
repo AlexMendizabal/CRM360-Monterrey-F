@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class FormRulesService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/common/services`;
+  private readonly API = `http://127.0.0.1:8000/common/services`;
 
   constructor(protected http: HttpClient) {}
 

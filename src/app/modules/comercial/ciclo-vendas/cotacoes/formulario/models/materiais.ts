@@ -10,7 +10,7 @@ export interface IMateriaisModel {
   codDeposito: number;
   codEmpresa: number;
   codLinha: number;
-  codMaterial: number;
+ /*  codMaterial: number; */
   codNcm: number;
   codSituacao: string;
   descNcm: string;

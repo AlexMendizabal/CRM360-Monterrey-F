@@ -1,6 +1,6 @@
 <div class="modal-content">
   <div class="modal-header">
-    <h4 class="mtc-title mb-0 my-auto">Detalhes do Cliente</h4>
+    <h4 class="mtc-title mb-0 my-auto">Detalles del Cliente</h4>
     <button type="button" class="close" (click)="onClose()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -9,84 +9,44 @@
     <div class="row" *ngIf="cliente">
       <div class="col">
         <div class="form-row">
-          <div class="form-group col-lg-6" *ngIf="cliente.tipoPessoa == 'F'">
-            <label><strong>CPF</strong></label>
-            <div *ngIf="cliente.cpf == null">NÃO INFORMADO</div>
-            <div *ngIf="cliente.cpf != null">{{ cliente.cpf }}</div>
-          </div>
-          <div class="form-group col-lg-6" *ngIf="cliente.tipoPessoa == 'J'">
-            <label><strong>CNPJ</strong></label>
-            <div *ngIf="cliente.cnpj == null">NÃO INFORMADO</div>
-            <div *ngIf="cliente.cnpj != null">{{ cliente.cnpj }}</div>
-          </div>
           <div class="form-group col-lg-6">
-            <label><strong>Nome fantasia</strong></label>
-            <div *ngIf="cliente.nomeFantasia == null">NÃO INFORMADO</div>
+            <label><strong>NOMBRE</strong></label>
+            <div *ngIf="cliente.nomeFantasia == null">SIN INFORMACION</div>
             <div *ngIf="cliente.nomeFantasia != null">{{ cliente.nomeFantasia }}</div>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col">
-            <label><strong>Razão social</strong></label>
-            <div *ngIf="cliente.razaoSocial == null">NÃO INFORMADO</div>
+            <label><strong>RAZON SOCIAL</strong></label>
+            <div *ngIf="cliente.razaoSocial == null">SIN INFORMACION</div>
             <div *ngIf="cliente.razaoSocial != null">{{ cliente.razaoSocial }}</div>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col">
-            <label><strong>Endereço</strong></label>
-            <div *ngIf="cliente.endereco == null">NÃO INFORMADO</div>
+            <label><strong>DIRECCION</strong></label>
+            <div *ngIf="cliente.endereco == null">SIN INFORMACION</div>
             <div *ngIf="cliente.endereco != null">{{ cliente.endereco }}</div>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-lg-8">
-            <label><strong>Bairro</strong></label>
-            <div *ngIf="cliente.bairro == null">NÃO INFORMADO</div>
-            <div *ngIf="cliente.bairro != null">{{ cliente.bairro }}</div>
+            <label><strong>CIUDAD</strong></label>
+            <div *ngIf="cliente.cidade == null">SIN INFORMACION</div>
+            <div *ngIf="cliente.cidade != null">{{ cliente.cidade }} </div>
           </div>
-          <div class="form-group col-lg-4">
-            <label><strong>CEP</strong></label>
-            <div *ngIf="cliente.cep == null">NÃO INFORMADO</div>
-            <div *ngIf="cliente.cep != null">{{ cliente.cep }}</div>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-lg-8">
-            <label><strong>Cidade</strong></label>
-            <div *ngIf="cliente.cidade == null">NÃO INFORMADO</div>
-            <div *ngIf="cliente.cidade != null">{{ cliente.cidade }} / {{ cliente.uf }}</div>
-          </div>
-          <div class="form-group col-lg-4">
-            <label><strong>Segurado</strong></label>
-            <div *ngIf="cliente.segurado != ''">SIM</div>
-            <div *ngIf="cliente.segurado == ''">NÃO</div>
-          </div>
+
         </div>
         <div class="form-row">
           <div class="form-group col-lg-6">
-            <label><strong>Vendedor</strong></label>
-            <div *ngIf="cliente.vendedor == null">NÃO INFORMADO</div>
+            <label><strong>PROMOTOR</strong></label>
+            <div *ngIf="cliente.vendedor == null">SIN INFORMACION</div>
             <div *ngIf="cliente.vendedor != null">{{ cliente.vendedor }}</div>
           </div>
           <div class="form-group col-lg-6">
-            <label><strong>Escritório</strong></label>
-            <div *ngIf="cliente.escritorio == null">NÃO INFORMADO</div>
+            <label><strong>SUCURSAL</strong></label>
+            <div *ngIf="cliente.escritorio == null">SIN INFORMACION</div>
             <div *ngIf="cliente.escritorio != null">{{ cliente.escritorio }}</div>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-lg-4" *ngIf="cliente.codSAP != '' && cliente.codSAP != null">
-            <label><strong>Código DBA</strong></label>
-            <div>{{ cliente.codSAP }}</div>
-          </div>
-          <div class="form-group col-lg-4" *ngIf="cliente.escritorioDba != '' && cliente.escritorioDba != null">
-            <label><strong>Escritório</strong></label>
-            <div>{{ cliente.escritorioDba }}</div>
-          </div>
-          <div class="form-group col-lg-4" *ngIf="cliente.ultimaCompraDba != '' && cliente.ultimaCompraDba != null">
-            <label><strong>Última compra</strong></label>
-            <div>{{ cliente.ultimaCompraDba }}</div>
           </div>
         </div>
       </div>

@@ -52,6 +52,8 @@ import { ComercialCicloVendasCotacoesFormularioModalDetalhesConcorrenteComponent
 import { ComercialCicloVendasCotacoesFormularioModalDuplicatasComponent } from './modal/duplicatas/duplicatas.component';
 import { ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoComponent } from './modal/historico-exclusao/historico-exclusao.component';
 import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoPadraoComponent } from './modal/finalizacao/padrao/padrao.component';
+import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion } from './modal/finalizacao/finalizacion/finalizacion.component';
+
 import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoPerdidaComponent } from './modal/finalizacao/perdida/perdida.component';
 import { ComercialCicloVendasCotacoesFormularioTemplateCardMaterialComponent } from './templates/card-material/card-material.component';
 import { ComercialCicloVendasCotacoesFormularioTemplateClientesComponent } from './templates/clientes/clientes.component';
@@ -69,6 +71,8 @@ import { ComercialCicloVendasCotacoesFormularioModalMaterialEstoqueService } fro
 import { ComercialCicloVendasCotacoesFormularioModalMaterialComboService } from './modal/material/combo/combo.service';
 import { ComercialCicloVendasCotacoesFormularioModalHistoricoComprasService } from './modal/cliente/historico-compras/historico-compras.service';
 import { ComercialCicloVendasCotacoesFormularioModalDetalhesClienteService } from './modal/detalhes/cliente/cliente.service';
+import { ComercialCicloVendasCotacoesFormularioModalMaterialAutorizacionComponent } from './modal/material/autorizacion/autorizacion.component';
+
 import { ComercialCicloVendasCotacoesFormularioModalDetalhesEnderecoService } from './modal/detalhes/endereco/endereco.service';
 import { ComercialCicloVendasCotacoesFormularioModalDetalhesContatoService } from './modal/detalhes/contato/contato.service';
 import { ComercialCicloVendasCotacoesFormularioModalDetalhesConcorrenteService } from './modal/detalhes/concorrente/concorrente.service';
@@ -76,6 +80,10 @@ import { ComercialCicloVendasCotacoesFormularioModalDuplicatasService } from './
 import { ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
 import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoService } from './modal/finalizacao/finalizacao.service';
 import { ComercialCicloVendasCotacoesFormularioModalSelecionarComponent } from './modal/cliente/selecionar/selecionar.component';
+import { ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent } from './modal/material/ubicacion/ubicacion.component';
+import { AgmCoreModule } from '@agm/core';
+
+
 
 @NgModule({
   declarations: [
@@ -105,6 +113,9 @@ import { ComercialCicloVendasCotacoesFormularioModalSelecionarComponent } from '
     ComercialCicloVendasCotacoesFormularioTemplateButtonOutrosComponent,
     ComercialCicloVendasCotacoesFormularioTemplateProgressBarComponent,
     ComercialCicloVendasCotacoesFormularioModalSelecionarComponent,
+    ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent,
+    ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
+    ComercialCicloVendasCotacoesFormularioModalMaterialAutorizacionComponent
   ],
   imports: [
     CommonModule,
@@ -127,6 +138,9 @@ import { ComercialCicloVendasCotacoesFormularioModalSelecionarComponent } from '
     SharedModule,
     TemplatesModule,
     ComercialTemplatesModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDl5b7STz9xYNDhybTTer2POVncX9FYqCc' // Reemplaza con tu propia clave de API de Google Maps
+    }),
   ],
   exports: [
     ComercialCicloVendasCotacoesFormularioComponent,
@@ -155,6 +169,9 @@ import { ComercialCicloVendasCotacoesFormularioModalSelecionarComponent } from '
     ComercialCicloVendasCotacoesFormularioTemplateButtonOutrosComponent,
     ComercialCicloVendasCotacoesFormularioTemplateProgressBarComponent,
     ComercialCicloVendasCotacoesFormularioModalSelecionarComponent,
+    ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
+
+
   ],
   entryComponents: [
     ComercialCicloVendasCotacoesFormularioModalSelecionarComponent,
@@ -174,6 +191,10 @@ import { ComercialCicloVendasCotacoesFormularioModalSelecionarComponent } from '
     ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoComponent,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoPadraoComponent,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoPerdidaComponent,
+    ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
+    ComercialCicloVendasCotacoesFormularioModalMaterialAutorizacionComponent
+
+
   ],
   providers: [
     BsModalRef,
@@ -193,6 +214,7 @@ import { ComercialCicloVendasCotacoesFormularioModalSelecionarComponent } from '
     ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoService,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoService,
     ComercialCicloVendasCotacoesFormularioService,
+  
   ],
 })
 export class ComercialCicloVendasCotacoesFormularioModule {}

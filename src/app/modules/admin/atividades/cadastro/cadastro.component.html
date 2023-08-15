@@ -1,6 +1,6 @@
 <loader-spinner-full-screen *ngIf="loading"></loader-spinner-full-screen>
 <loader-spinner-navbar [hidden]="!loadingNavBar"></loader-spinner-navbar>
-<app-header appTitle="Cadastro de atividade">
+<app-header appTitle="Registro de actividades">
   <button 
     (click)="onSave()"
     [disabled] = "form.status == 'INVALID'"
@@ -14,7 +14,7 @@
       <form [formGroup]="form" autocomplete="off" class="col-6">
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="icone">Icone</label>
+            <label for="icone">Ícono</label>
             <ng-select
               [searchable]="true"
               [clearable]="false"
@@ -43,7 +43,7 @@
             </ng-select>
           </div>
           <div class="form-group col-md-6">
-            <label for="nome">Nome</label>
+            <label for="nome">Nombre</label>
             <input
               type="text"
               class="form-control"
@@ -52,12 +52,12 @@
               placeholder="Digite..."
               [ngClass]="onFieldRequired('nome')"
             />
-            <invalid-form-control [show]="onFieldInvalid('nome')" message="Nome é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('nome')" message="El nombre es obligatorio."></invalid-form-control>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="modulo">Modulo</label>
+            <label for="modulo">Módulo</label>
             <ng-select
               [searchable]="true"
               [clearable]="true"
@@ -78,10 +78,10 @@
                 ({{item.id | number : '3.0-0'}}) {{item.nome}}
               </ng-template>
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('moduloId')" message="Modulo é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('moduloId')" message="Módulo es oligatorio."></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
-            <label for="submodulo">Submodulo</label>
+            <label for="submodulo">Submódulo</label>
             <ng-select
               [searchable]="true"
               [clearable]="true"
@@ -102,12 +102,12 @@
                 ({{item.id | number : '3.0-0'}}) {{item.nome}}
               </ng-template>
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('submoduloId')" message="Submodulo é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('submoduloId')" message="Submódulo es obligatorio."></invalid-form-control>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col">
-            <label for="rota">Rota</label>
+            <label for="rota">Ruta</label>
             <input
               type="text"
               class="form-control text-lowercase"
@@ -132,7 +132,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="tipoAtividade">Tipo da Atividade</label>
+            <label for="tipoAtividade">Tipo de Actividades</label>
             <ng-select
               [searchable]="true"
               [clearable]="true"
@@ -149,18 +149,18 @@
               [ngClass]="onFieldRequired('tipoAtividadeId')"
             >
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('tipoAtividadeId')" message="O Tipo da atividade é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('tipoAtividadeId')" message="Tipo de actividades es obligatorio."></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
-            <label for="situacao">Situação</label>
+            <label for="situacao">Situación</label>
             <select
               name="situacao"
               id="situacao"
               class="form-control"
               formControlName="situacao"
             >
-              <option value="1">Ativo</option>
-              <option value="0">Inativo</option>
+              <option value="1">Activo</option>
+              <option value="0">Inactivo</option>
             </select>
           </div>
         </div>
@@ -176,7 +176,7 @@
               <label
                 class="custom-control-label"
                 for="exibeSidebar"
-                >Exibir no menu?
+                >Mostrar en menú
               </label>
             </div>
             <div class="custom-control custom-checkbox">
@@ -189,13 +189,13 @@
               <label
                 class="custom-control-label"
                 for="exibeNovaAba"
-                >Abrir em nova aba?</label>
+                >Abrir en nueva pestaña</label>
             </div>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col">
-            <label for="descricao">Descrição da Atividade</label>
+            <label for="descricao">Descripción de Actividades</label>
             <textarea
               id="descricao"
               class="w-100"
@@ -205,7 +205,7 @@
               [ngClass]="onFieldRequired('descricao')"
               >
             </textarea>
-            <invalid-form-control [show]="onFieldInvalid('descricao')" message="A descrição da atividade é obrigatório"></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('descricao')" message="La descripción de actividades es obligatorio"></invalid-form-control>
           </div>
         </div>
       </form>

@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ComercialTidSoftwareService {
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/tid-software`;
+  private readonly API = `http://127.0.0.1:8000/comercial/tid-software`;
 
   constructor(protected http: HttpClient) {}
 
@@ -36,6 +36,7 @@ export class ComercialTidSoftwareService {
   getLinhas() {
     return this.http.get(`${this.API}/linhas`).pipe(take(1), retry(2));
   }
+
 
   getModulosVendas() {
     return this.http.get(`${this.API}/modulos/vendas`).pipe(take(1), retry(2));

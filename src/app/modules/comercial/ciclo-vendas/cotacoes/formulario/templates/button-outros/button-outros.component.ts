@@ -31,7 +31,7 @@ export class ComercialCicloVendasCotacoesFormularioTemplateButtonOutrosComponent
   ngOnInit(): void {}
 
   onFichaCadastral(): void {
-    this.fichaCadastralService.showModal(this.material.codMaterial);
+    this.fichaCadastralService.showModal(this.material.id_material);
   }
 
   onSimilaridade(): void {

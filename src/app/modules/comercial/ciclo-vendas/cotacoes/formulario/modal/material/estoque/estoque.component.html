@@ -1,7 +1,8 @@
 <div class="modal-content">
   <div class="modal-header">
     <h4 class="mtc-title mb-0 my-auto">
-      #{{ material.codMaterial }} - {{ material.nomeMaterial | uppercase }} ({{ material.nomeDeposito | uppercase }})
+      #{{ material.codigo_material }} - {{ material.nombre_material | uppercase }} ({{ material.nombre_almacen |
+      uppercase }})
     </h4>
     <button type="button" class="close" (click)="onClose()">
       <span aria-hidden="true">&times;</span>
@@ -14,27 +15,39 @@
           <ng-template #thead let-thead>
             <tr>
               <th scope="col">Material</th>
-              <th class="text-center" scope="col">Unidade</th>
-              <th class="text-center" scope="col">Compra</th>
-              <th class="text-center" scope="col">Atual</th>
+              <th class="text-center" scope="col">Unidad</th>
+              <!--               <th class="text-center" scope="col">Compra</th>
+ -->
+             <!--  <th class="text-center" scope="col">Actual</th> -->
               <th class="text-center" scope="col">Comprometido</th>
               <th class="text-center" scope="col">Pedido</th>
-              <th class="text-center" scope="col">Disponível</th>
+              <th class="text-center" scope="col">Almacen</th>
+
+      <!--         <th class="text-center" scope="col">Disponible</th> -->
             </tr>
           </ng-template>
           <ng-template #tbody let-tbody>
-            <tr>
-              <td>
-                {{ material.codMaterial }} - {{ material.nomeMaterial | uppercase }}
-              </td>
-              <td class="text-center">{{ detalhes.medida | uppercase }}</td>
-              <td class="text-center">{{ detalhes.pedCompra | number:'1.3-3' }}</td>
-              <td class="text-center">{{ detalhes.estoqueAtual | number:'1.3-3' }}</td>
-              <td class="text-center">{{ detalhes.estoqueComprometido | number:'1.3-3' }}</td>
-              <td class="text-center">{{ detalhes.pedido | number:'1.3-3' }}</td>
-              <td class="text-center">{{ detalhes.estoqueDisponivel | number:'1.3-3' }}</td>
+            
+            <tr *ngFor="let detalhe of detalhes;">
+              <ng-container *ngIf="material.id_almacen === detalhe.id_almacen">
+                <td>
+                  {{ material.codigo_material }} - {{ material.nombre_material | uppercase }}
+                </td>
+                <td class="text-center">{{ detalhe.unidad | uppercase }}</td>
+                <!--  <td class="text-center">{{ detalhe.pedCompra | number:'1.3-3' }}</td>
+                <td class="text-center">{{ detalhe.estoqueAtual | number:'1.3-3' }}</td> -->
+                <td class="text-center">{{ detalhe.cantidad | number:'1.3-3' }} {{ detalhes.unidad }}</td>
+                <td class="text-center">{{ detalhe.codigo_oferta }}</td>
+                <td class="text-center">{{ detalhe.nombre_almacen }}</td>
+          
+                <!-- <td class="text-center">{{ material.cantidad | number:'1.3-3' }}</td> -->
+              </ng-container>
+            </tr>
+            <tr *ngIf="material.id_almacen !== detalhes[0].id_almacen">
+              <td colspan="5" class="text-center"> No hay datos disponibles </td>
             </tr>
           </ng-template>
+          
         </custom-table>
       </div>
     </div>

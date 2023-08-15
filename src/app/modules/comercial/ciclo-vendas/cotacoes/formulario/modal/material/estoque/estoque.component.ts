@@ -14,7 +14,7 @@ import { IMateriaisModel } from '../../../models/materiais';
 export class ComercialCicloVendasCotacoesFormularioModalMaterialEstoqueComponent
   implements OnInit {
   @Input('material') material: IMateriaisModel;
-  @Input('detalhes') detalhes: any;
+  @Input('detalhes') detalhes: any[];
 
   constructor(private bsModalRef: BsModalRef) {}
 
