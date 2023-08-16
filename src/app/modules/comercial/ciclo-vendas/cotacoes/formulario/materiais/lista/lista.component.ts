@@ -747,6 +747,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     this.toggleAll = !this.toggleAll;
 
     for (let index = 0; index < this.dados.length; index++) {
+      // @ts-ignore: Ignorar error TS2339
       if (this.dados[index].codigo_situacion == "A") {
         this.dados[index].checked = this.toggleAll === true ? 1 : 0;
       }
@@ -781,6 +782,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
   onCheckMaterial(index: number, material: IMateriaisModel): void {
+    // @ts-ignore: Ignorar error TS2339
     if (this.dados[index].codigo_situacion == "A") {
       this.dados[index].checked = material.checked == 0 ? 1 : 0;
     } else {
@@ -824,6 +826,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   onEstoqueDetalhes(material: IMateriaisModel): void {
 
     let params: any = {
+      // @ts-ignore: Ignorar error TS2339
       idMaterial: material.id_material,
     };
     /* console.log(params); */

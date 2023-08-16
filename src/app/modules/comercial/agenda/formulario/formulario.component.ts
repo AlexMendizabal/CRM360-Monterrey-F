@@ -184,7 +184,7 @@ export class ComercialAgendaFormularioComponent
       } else {
         this.action = 'novo';
         this.setBreadCrumb(this.action);
-      }value
+      }
 
       this.setFormBuilder();
     });

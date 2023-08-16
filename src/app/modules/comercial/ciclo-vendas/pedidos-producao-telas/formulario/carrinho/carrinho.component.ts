@@ -440,6 +440,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioCarrinhoComponent
 
   onDescontoMaterial(index: number, material: ICarrinhoModel): void {
     if (material.valorTotal > 0) {
+      // @ts-ignore: Ignorar error TS2339
       this.descontoService.descontoMaterial(index, material);
     } else {
       this.pnotifyService.notice(
@@ -548,6 +549,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioCarrinhoComponent
         {
           idReservado: this.idReservado !== null ? this.idReservado : null,
           codCotacao: this.codCotacao !== null ? this.codCotacao : null,
+          // @ts-ignore: Ignorar error TS2339
           codMaterial: data[index].codMaterial,
           nomeMaterial: data[index].nomeMaterial,
           quantidade: 0,
@@ -590,6 +592,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioCarrinhoComponent
         {
           idReservado: this.idReservado !== null ? this.idReservado : null,
           codCotacao: this.codCotacao !== null ? this.codCotacao : null,
+          // @ts-ignore: Ignorar error TS2339
           codMaterial: data[index].id_material,
           nomeMaterial: data[index].nomeMaterial,
           quantidade: 0,

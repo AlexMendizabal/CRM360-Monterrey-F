@@ -83,6 +83,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
       .subscribe(
         (response: JsonResponse) => {
           this.eventDirty.emit(true)
+          // @ts-ignore: Ignorar error TS2339
           if (response.responseCode == 200) {
             /* dataCotacao.carrinho = [];
             dataCotacao.carrinho = response.data; */

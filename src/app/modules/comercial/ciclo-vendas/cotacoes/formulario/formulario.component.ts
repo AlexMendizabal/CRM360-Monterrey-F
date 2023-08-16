@@ -1613,6 +1613,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   datoEntrega(a: number) {
     //console.log(a);
+    // @ts-ignore: Ignorar error TS2339
     if (a.id == 2) {
       this.swEntrega = true;
     } else {

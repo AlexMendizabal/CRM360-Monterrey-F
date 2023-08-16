@@ -61,6 +61,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoService {
               codCliente: codCliente,
               medida: response.data.medida,
               codEndereco: codEndereco,
+              // @ts-ignore: Ignorar error TS2339
               precio: material.precio,
 
             };

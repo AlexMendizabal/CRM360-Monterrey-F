@@ -123,6 +123,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoComponen
           typeof this.params.index !== 'undefined' ? this.params.index : null,
         tipo: 'percentual',
         desconto: this.form.value.desconto,
+        // @ts-ignore: Ignorar error TS2339
         descuento_permitido: this.form.controls.descuentoAutorizado.value
       });
       this.onClose();

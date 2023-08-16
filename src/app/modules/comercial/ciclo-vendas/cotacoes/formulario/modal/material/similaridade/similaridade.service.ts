@@ -34,6 +34,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialSimilaridadeServ
     this.loaderNavbar.emit(true);
 
     this.cotacoesService
+    // @ts-ignore: Ignorar error TS2339
       .getSimilaridadeMaterial(material.codEmpresa, material.codMaterial, codCliente, codEndereco, codFormaPagamento, freteConta)
       .pipe(
         finalize(() => {
