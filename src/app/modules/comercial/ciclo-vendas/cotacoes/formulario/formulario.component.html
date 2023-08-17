@@ -125,7 +125,7 @@
             <label for="dataEncerramento">Fecha de cotización</label>
             <input class="form-control" id="dataEncerramento" type="text" bsDatepicker [bsConfig]="bsConfig"
               formControlName="dataEncerramento" [readonly]="visualizar"
-              [ngClass]="onFieldError('dataEncerramento') + ' ' + onFieldRequired(form.controls.dataEncerramento)">
+              [ngClass]="onFieldError('dataEncerramento') + ' ' + onFieldRequired(form.controls.dataEncerramento)" disabled>
             <invalid-form-control [show]="onFieldInvalid('dataEncerramento')"
               message="Data de encerramento é obrigatório."></invalid-form-control>
           </div>
@@ -133,7 +133,7 @@
             <label for="dataValidade">Válido hasta</label>
             <input class="form-control" id="dataValidade" type="text" bsDatepicker [bsConfig]="bsConfig"
               formControlName="dataValidade" [readonly]="true" (bsValueChange)="onChangeValidadeProposta($event)"
-              [ngClass]="onFieldError('dataValidade') + ' ' + onFieldRequired(form.controls.dataValidade)">
+              [ngClass]="onFieldError('dataValidade') + ' ' + onFieldRequired(form.controls.dataValidade)" disabled>
             <invalid-form-control [show]="onFieldInvalid('dataValidade') == 'required'"
               message="La fecha de validez es obligatorio."></invalid-form-control>
             <invalid-form-control [show]="onFieldInvalid('dataValidade') == 'maxDate'"
@@ -142,8 +142,8 @@
           <div class="form-group col-lg-2">
             <label for="dataValidade"> Cambio de estado</label>
             <input class="form-control" id="fechaRecordatorio" type="text" bsDatepicker [bsConfig]="bsConfig"
-              formControlName="fechaRecordatorio" [readonly]="true"
-              [ngClass]="onFieldError('fechaRecordatorio') + ' ' + onFieldRequired(form.controls.fechaRecordatorio)">
+              formControlName="fechaRecordatorio" [readonly]="true" disabled
+              [ngClass]="onFieldError('fechaRecordatorio') + ' ' + onFieldRequired(form.controls.fechaRecordatorio)" >
           </div>
 
         </div>
@@ -303,7 +303,7 @@
           </div>
           <div class="form-group col-lg-2">
             <label for="orderBy">Propietario</label>
-            <input formControlName=" " type="text" class="form-control" [value]="dadosLancamento.nomeVendedor" />
+            <input formControlName=" " type="text" class="form-control" [value]="dadosLancamento.nomeVendedor" readonly/>
           </div>
         </div>
       </div>
@@ -393,7 +393,7 @@
           <div class="form-group col-lg-1" *ngIf="swEntrega == true">
             <label for="dataEntrega">Referencia</label> <br>
             <button class="btn btn-primary w-100" type="button" (click)="openModalUbicacion(seleccionarUbicacion)"> <i
-                class="fas fa-map-marker-alt"></i>Ubicación</button>
+                class="fas fa-map-marker-alt"></i>Ubicación  </button>
           </div>
           <div class="form-group col-lg-2" *ngIf="swEntrega == true">
             <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>

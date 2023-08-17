@@ -17,7 +17,7 @@ import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.
   providedIn: 'root',
 })
 export class ComercialCadastrosMateriaisFichaCadastralService {
-  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/materiais/ficha-cadastral`;
+  private readonly API = `http://23.254.204.187/api/comercial/cadastros/materiais/ficha-cadastral`;
 
   constructor(
     protected http: HttpClient,

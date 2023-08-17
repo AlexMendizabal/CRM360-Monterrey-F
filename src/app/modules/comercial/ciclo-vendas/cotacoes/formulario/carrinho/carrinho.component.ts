@@ -177,7 +177,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     this.calculoSubject();
     this.descontoSubject();
     this.setFormBuilder();
-    if (this.appTitle == 'visualizar cotação/pedido') {
+    if (this.appTitle == 'visualizar cotizacion/pedido') {
       this.visualizar = true;
     }
     // this.checkPreviously();
@@ -751,7 +751,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   }
 
   onDeleteMaterial(index: number, material: IMateriaisModel): void {
-    if (this.appTitle == 'Editar cotação/pedido') {
+    if (this.appTitle == 'Editar cotizacion/pedido') {
       this.confirmDelete()
         .asObservable()
         .pipe(
@@ -938,8 +938,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         this.confirmModalService
           .showConfirm(
             null,
-            `#${this.idReservado} / Cotação não finalizada`,
-            'Parece que essa cotação foi iniciada e não foi finalizada. Deseja recuperar os materiais da cotação?',
+            `#${this.idReservado} / Cotizacion no finalizada`,
+            'Parece que esta cotizacion se ha iniciado y no se ha finalizado. Desea recuperar los materiales de la cotizacion?',
             'Cancelar',
             'Confirmar'
           )

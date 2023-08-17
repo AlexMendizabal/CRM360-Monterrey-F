@@ -12,7 +12,7 @@ import { ICnae } from './models/cnaes';
   providedIn: 'root',
 })
 export class ComercialCadastrosCnaesService {
-  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/cnaes`;
+  private readonly API = `http://23.254.204.187/api/comercial/cadastros/cnaes`;
 
   constructor(protected http: HttpClient) {}
 

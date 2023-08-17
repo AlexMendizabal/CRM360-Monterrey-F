@@ -128,7 +128,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.form = this.formBuilder.group({
       quantidade: [
         null,
-        [Validators.required, Validators.min(0.001), Validators.minLength(1)],
+        [Validators.required, Validators.pattern('[0-9]*')],
       ],
       // @ts-ignore: Ignorar error TS2339
       preco1: [this.material.precio, [Validators.required, Validators.min(0.001)]],

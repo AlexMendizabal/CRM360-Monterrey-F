@@ -34,7 +34,7 @@ defineLocale('pt-br', ptBrLocale);
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { ConfirmModalService } from 'src/app/shared/modules/confirm-modal/confirm-modal.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
-import { TitleService } from 'src/app/shared/services/core/title.service';
+import { TitleService } from 'src/app/shared/services/core/title.service'; 
 import { DateService } from 'src/app/shared/services/core/date.service';
 import { ComercialCicloVendasCotacoesFormularioService } from './formulario.service';
 import { ComercialClientesService } from '../../../services/clientes.service';
@@ -432,14 +432,14 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.activatedRoute.params.subscribe((params: any) => {
       if (params.codCotacao) {
         this.codCotacao = parseInt(params.codCotacao);
-        this.appTitle = 'Editar cotação/pedido';
+        this.appTitle = 'Editar Cotizacion/pedido';
       } else if (params.idReservado) {
         this.idReservado = parseInt(params.idReservado);
-        this.appTitle = 'Nova cotação/pedido';
+        this.appTitle = 'Nueva Cotizacion/pedido';
       }
 
       if (this.activatedRoute.snapshot.url[0].path == 'visualizar') {
-        this.appTitle = 'visualizar cotação/pedido';
+        this.appTitle = 'visualizar Cotizacion/pedido';
       }
 
       this.titleService.setTitle(this.appTitle);
@@ -450,11 +450,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Ciclo de vendas',
+          descricao: 'Ciclo de ventas',
           routerLink: `/comercial/ciclo-vendas/${id}`,
         },
         {
-          descricao: 'Cotações e pedidos',
+          descricao: 'Cotizaciones y pedidos',
           routerLink: `/comercial/ciclo-vendas/${id}/cotacoes-pedidos/lista`,
         },
         {
@@ -489,7 +489,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       .pipe(
         finalize(() => {
           this.dependenciesLoaded = true;
-          if (this.appTitle == 'Nova cotação/pedido') {
+          if (this.appTitle == 'Nova cotizacion/pedido') {
             /*  this.setEmpresa();
              this.setTransportadora(); */
           }
@@ -1833,11 +1833,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   onHistoricoExclusao(): void {
     const params = this.form.value;
 
-    if (this.appTitle == 'Editar cotação/pedido' || this.appTitle == 'visualizar cotação/pedido') {
+    if (this.appTitle == 'Editar cotizacion/pedido' || this.appTitle == 'visualizar cotizacion/pedido') {
       this.historicoExclusaoService.showModal(
         this.setParamsHistoricoExclusao(params)
       );
-    } else if (this.appTitle == 'Nova cotação/pedido') {
+    } else if (this.appTitle == 'Nueva Cotizacion/pedido') {
       this.pnotifyService.notice('Cotação nova, não possui histórico');
     }
   }

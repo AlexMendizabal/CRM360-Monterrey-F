@@ -262,7 +262,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Ciclo de vendas',
+          descricao: 'Ciclo de ventas',
           routerLink: `/comercial/ciclo-vendas/${this.idSubModulo}`,
         },
         {

@@ -216,7 +216,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.setChangeEvents();
     this.getFilterValues();
     this.setFormFilter();
-    this.titleService.setTitle('Cotações e pedidos');
+    this.titleService.setTitle('Cotizaciones y pedidos');
     this.onDetailPanelEmitter();
     this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente'];
     this.search(null);
@@ -245,11 +245,11 @@ export class ComercialCicloVendasCotacoesListaComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Ciclo de vendas',
+          descricao: 'Ciclo de ventas',
           routerLink: `/comercial/ciclo-vendas/${id}`,
         },
         {
-          descricao: 'Cotações e pedidos',
+          descricao: 'Cotizaciones y pedidos',
         },
       ];
     });
