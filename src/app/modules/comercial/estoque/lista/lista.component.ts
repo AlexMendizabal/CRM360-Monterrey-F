@@ -91,6 +91,19 @@ export class ComercialEstoqueListaComponent implements OnInit {
   totalItems = 10;
   showAdvancedFilter = true;
 
+  
+  maxSizeComprometido = 5;
+  itemsPerPageComprometido = 7;
+  totalComprometido = 5;
+  currentPageComprometido = 1;
+
+
+  maxSizeSuspenso = 5;
+  itemsPerPageSuspenso = 7;
+  totalSuspenso = 5;
+  currentPageSuspenso = 1;
+  
+
   materialSelected: string;
   linhaSelected: string;
   classeSelected: string;
@@ -197,7 +210,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
             }
             this.linhas.unshift({
               id: 0,
-              descricao: 'EXIBIR TODOS',
+              descricao: 'EXIBIR  TODOS',
             });
           }
 
@@ -343,6 +356,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
       }
     });
   }
+
   onResetForm() {
     this.form.reset();
     this.form.controls.registros.setValue(300);
@@ -444,6 +458,36 @@ export class ComercialEstoqueListaComponent implements OnInit {
     const endIndex = startIndex + this.itemsPerPage;
     return this.datos.slice(startIndex, endIndex);
   }
+
+  onPageChangedComprometido(event: PageChangedEvent): void {
+    //console.log(event)
+    this.currentPageComprometido = event.page;
+    this.getPaginateDataComprometido();
+  }
+
+
+  getPaginateDataComprometido(): any[] {
+    const startIndex = (this.currentPageComprometido - 1) * this.itemsPerPageComprometido;
+    const endIndex = startIndex + this.itemsPerPageComprometido;
+    //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
+    return this.estoqueComprometido.slice(startIndex, endIndex);
+  }
+
+
+  onPageChangeSuspenso(event: PageChangedEvent): void {
+    //console.log(event)
+    this.currentPageSuspenso = event.page;
+    this.getPaginateDataComprometido();
+  }
+
+
+  getPaginateDatSuspenso(): any[] {
+    const startIndex = (this.currentPageSuspenso - 1) * this.itemsPerPageSuspenso;
+    const endIndex = startIndex + this.itemsPerPageSuspenso;
+    //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
+    return this.estoqueComprometido.slice(startIndex, endIndex);
+  }
+
   onChangeAlmacen(id: number) {
     /* this.form.controls.deposito.reset(); */
     /*  console.log(this.filteredDepositos);
@@ -617,6 +661,8 @@ export class ComercialEstoqueListaComponent implements OnInit {
         if (response.responseCode === 200) {
           this.estoqueComprometido = response.result.analitico;
           this.totaisComprometido = response.result.total;
+          this.totalComprometido =  response.result.analitico.length;
+          console.log(this.totalComprometido)
           this.comprometidoLoaded = true;
         } else {
           this.pnotifyService.notice('Datos no encontrados.');

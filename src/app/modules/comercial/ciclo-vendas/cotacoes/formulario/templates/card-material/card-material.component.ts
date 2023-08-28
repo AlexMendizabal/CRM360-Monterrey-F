@@ -12,6 +12,8 @@ export class ComercialCicloVendasCotacoesFormularioTemplateCardMaterialComponent
   implements OnInit {
   @Input('size') size = '';
   @Input('material') material: ISimilaridadeModel;
+  @Input('filtro') filtro;
+
   
 
   @Output('onMaterial') onMaterial: EventEmitter<
@@ -22,8 +24,11 @@ export class ComercialCicloVendasCotacoesFormularioTemplateCardMaterialComponent
 
   ngOnInit(): void {
   }
-
+  
   onAddMaterial(material: ISimilaridadeModel): void {
+    
+    console.log(this.filtro);
+     console.log(material); 
     this.onMaterial.emit(material);
   }
 }

@@ -173,11 +173,11 @@
                   (click)="setOrderBy('peso_total')">
                 </thead-sorter>
               </th>
-              <th scope="col">
+              <!--  <th scope="col">
                 <thead-sorter value="Lista" [active]="orderBy == 'lista_precio'" [sort]="orderType"
                   (click)="setOrderBy('lista_precio')">
                 </thead-sorter>
-              </th>
+              </th> -->
               <th scope="col">
                 <thead-sorter value="Modo de entrega" [active]="orderBy == 'modo_entrega'" [sort]="orderType"
                   (click)="setOrderBy('modo_entrega')">
@@ -270,7 +270,8 @@
               <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.descuento }}</td> -->
               <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.monto_total }}</td>
               <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.peso_total }}</td>
-              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.lista_precio }}</td>
+              <!--               <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.lista_precio }}</td>
+ -->
               <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.modo_entrega }}</td>
               <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.estado_oferta }}</td>
               <td class="hover"> <a href="" class="text-danger"> <i class="fas fa-file-pdf text-danger"></i> Nota </a>
@@ -366,43 +367,50 @@
                           <tr>
                             <th class="text-truncate text-center" (click)="setOrderByModal('codigo_material')">
                               <!-- <thead-sorter value="Articulo" [active]="orderBy == 'Articulo'"> Código
-                              </thead-sorter> -->  Código
+                              </thead-sorter> --> Código
                             </th>
                             <th class="text-truncate text-left" (click)="setOrderByModal('nombre_material')">
-                              <!-- <thead-sorter value="Descripcion" [active]="orderBy == 'nombre_material'"></thead-sorter> --> Nombre material
+                              <!-- <thead-sorter value="Descripcion" [active]="orderBy == 'nombre_material'"></thead-sorter> -->
+                              Nombre material
                             </th>
                             <th class="text-truncate text-center" (click)="setOrderByModal('cantidad')">
-                              <!-- <thead-sorter value="cantidad" [active]="orderBy == 'cantidad'"></thead-sorter> --> Cantidad
+                              <!-- <thead-sorter value="cantidad" [active]="orderBy == 'cantidad'"></thead-sorter> -->
+                              Cantidad
                             </th>
                             <th class="text-truncate text-center" (click)="setOrderByModal('unidad')">
-                              <!-- <thead-sorter value="unidad " [active]="orderBy == 'unidad'"></thead-sorter> --> Unidad
+                              <!-- <thead-sorter value="unidad " [active]="orderBy == 'unidad'"></thead-sorter> -->
+                              Unidad
                             </th>
                             <th class="text-truncate text-center" (click)="setOrderByModal('precio')">
-                              <!-- <thead-sorter value="precio" [active]="orderBy == 'precio'"></thead-sorter> --> Precio
+                              <!-- <thead-sorter value="precio" [active]="orderBy == 'precio'"></thead-sorter> -->
+                              Precio
                             </th>
                             <th class="text-truncate text-center" (click)="setOrderByModal('total_bruto')">
-                              <!-- <thead-sorter value="total_bruto" [active]="orderBy == 'total_bruto'"></thead-sorter> --> Total Bruto
+                              <!-- <thead-sorter value="total_bruto" [active]="orderBy == 'total_bruto'"></thead-sorter> -->
+                              Total Bruto
                             </th>
                             <th class="text-truncate text-center" (click)="setOrderByModal('nombre_almacen')">
-                              <!-- <thead-sorter value="% Descuento" [active]="orderBy == 'descuento'"></thead-sorter> --> Descuento
+                              <!-- <thead-sorter value="% Descuento" [active]="orderBy == 'descuento'"></thead-sorter> -->
+                              Descuento
                             </th>
                             <th class="text-truncate text-center" (click)="setOrderByModal('precio_descuento')">
                               <!-- <thead-sorter value="Precio descuento"
                                 [active]="orderBy == 'precio_descuento'"></thead-sorter> --> Precio Descuento
                             </th>
                             <th class="text-truncate text-center" (click)="setOrderByModal('nombre_almacen')">
-                             <!--  <thead-sorter value="Almacen" [active]="orderBy == 'nombre_almacen'"></thead-sorter> --> Almacém
+                              <!--  <thead-sorter value="Almacen" [active]="orderBy == 'nombre_almacen'"></thead-sorter> -->
+                              Almacém
                             </th>
                             <th class="text-truncate text-center" (click)="setOrderByModal('nombre_moneda')">
                               <!-- <thead-sorter value="Total con descuento"
-                                [active]="orderBy == 'nombre_moneda'"></thead-sorter> --> Total 
+                                [active]="orderBy == 'nombre_moneda'"></thead-sorter> --> Total
                             </th>
 
                           </tr>
                         </ng-template>
                         <ng-template #tbody let-tbody>
                           <ng-container>
-                            <tr *ngFor="let item of items">
+                            <tr *ngFor="let item of getPaginateDataModal()">
                               <td class="font-weight-bold hover text-center">
                                 {{item.codigo_material}}</td>
                               <td class="font-weight-bold hover text-left">
@@ -427,7 +435,7 @@
                             <tr class="bg-dark text-center text-dark">
                               <td colspan="8" class="border-dark"></td>
                               <td><strong>Total</strong></td>
-                              <td class="text-center"><strong>{{ totalMateriales.cantidad | number:'1.4-4' }} 
+                              <td class="text-center"><strong>{{ totalMateriales.cantidad | number:'1.4-4' }}
                                 </strong>
                               </td>
                             </tr>
@@ -436,7 +444,7 @@
                       </custom-table>
                       <empty-result message="Ningún registro encontrado." *ngIf="dadosEmptyModal"></empty-result>
                       <div class="d-flex justify-content-center mt-3">
-                        <pagination [maxSize]="maxSize" [(totalItems)]="totalModal"
+                        <pagination [maxSize]="maxSizeModal" [(totalItems)]="totalModal"
                           (pageChanged)="onPageChangedModal($event)" [(itemsPerPage)]="itemsPerPageModal"
                           [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;" nextText="&rsaquo;"
                           firstText="&laquo;" lastText="&raquo;">
@@ -456,29 +464,33 @@
                 <div class="row">
                   <div class="col-md-4">
                     <label for="customerName"> <strong> Tipo entrega:</strong></label>
-                    <input type="text" id="customerName" class="form-control" readonly value="{{oferta.nombre_modo_entrega}}">
+                    <input type="text" id="customerName" class="form-control" readonly
+                      value="{{oferta.nombre_modo_entrega}}">
                   </div>
                   <div class="col-md-4">
                     <label for="customerName"><strong>Referencia:</strong></label>
                     <ng-container *ngIf="oferta.latitud && oferta.longitud; else emptyLocation">
-                        <!-- <a [href]="'http://google.com/maps/bylatlng?lat=' + oferta.latitud + '&lng=' + oferta.longitud" target="_blank" style="cursor: pointer;">
+                      <!-- <a [href]="'http://google.com/maps/bylatlng?lat=' + oferta.latitud + '&lng=' + oferta.longitud" target="_blank" style="cursor: pointer;">
                             <input type="text" id="customerName" class="form-control text-primary" readonly value="Google">
                         </a> -->
-                        <a [href]="'http://maps.google.com/maps?q=' + oferta.latitud + ',' + oferta.longitud" target="_blank" style="cursor: pointer;">
-                          <input type="text" id="customerName" class="form-control text-primary" readonly value="Google">
+                      <a [href]="'http://maps.google.com/maps?q=' + oferta.latitud + ',' + oferta.longitud"
+                        target="_blank" style="cursor: pointer; text-decoration: none;">
+                        <span class="form-control text-primary" style="display: inline-block;">Google Maps</span>
                       </a>
+
 
                     </ng-container>
                     <ng-template #emptyLocation>
-                        <input type="text" id="customerName" class="form-control text-primary" readonly value="">
+                      <input type="text" id="customerName" class="form-control text-primary" readonly value="">
                     </ng-template>
-                </div>
-                
+                  </div>
+
                   <div class="col-md-4">
                     <label for="customerName"> <strong> Centro logístico:</strong></label>
-                    <input type="text" id="customerName" class="form-control" readonly value="{{oferta.ubicacion_almacen}}">
+                    <input type="text" id="customerName" class="form-control" readonly
+                      value="{{oferta.ubicacion_almacen}}">
                   </div>
-                  
+
                 </div>
               </div>
             </div>

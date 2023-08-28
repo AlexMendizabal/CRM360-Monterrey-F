@@ -68,6 +68,14 @@ export class ComercialService {
       })
       .pipe(take(1), retry(2));
   }
+  getMaterialesLista(params: any) {
+    return this.http
+      .get(
+        `${this.API}/materiales/lista`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
   
   
 
@@ -75,6 +83,14 @@ export class ComercialService {
     return this.http
       .get(
         `${this.API}/materiales_lista_precio`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
+  getMaterialesOfertaVendedor(params: any) {
+    return this.http
+      .get(
+        `${this.API}/materiales_lista_precio_vendedor`, {
         params: params,
       })
       .pipe(take(1), retry(2));

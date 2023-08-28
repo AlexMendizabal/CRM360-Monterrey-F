@@ -75,6 +75,7 @@ import { OrigemContato } from '../../../cadastros/contato/origem-contato/models/
 import { Transportadora } from '../../../cadastros/transportadoras/models/transportadora';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { ComercialService } from '../../../comercial.service';
+import { timeStamp } from 'console';
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-formulario',
@@ -147,6 +148,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   empresas: Array<any> = [];
   depositos: Array<any> = [];
   vendedores: Array<any> = [];
+  rubros: Array<any> = [];
   filteredDepositos: Array<any> = [];
   formasPagamento: Array<FormasPagamento> = [];
   formasContato: Array<FormaContato> = [];
@@ -165,17 +167,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   latitud: number;
   longitud: number;
   id_centro_logistico: number;
-
-
-
-
+  codigoRubro: number = 0;
   valorIcmsSt: number;
-
-
-
   locaisEntrega: Array<any> = [];
   locaisEntregaLoader: boolean;
-
   clientes: any;
   obsPropostas = [];
   detalhesCodCliente: any = [];
@@ -190,6 +185,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   idVendedor: number = 0;
   tipoEntrega = [];
   idListaPrecio: number;
+  nombreDepartamento: string = "";
 
 
   visualizar = false;
@@ -235,7 +231,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   swEntrega: boolean = false;
   id_forma_contacto: number = 0;
   centrosLogisticos: any[] = [];
-
+  swExisteCliente: boolean = true;
 
 
   constructor(
@@ -287,7 +283,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.pnotifyService.getPNotify();
   }
   ngOnInit(): void {
-    
+
     this.urlPath = this.activatedRoute.snapshot.url[0].path;
     this.onReadOnly();
     this.hasAccessToClient();
@@ -296,15 +292,19 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.getTituloEndereco();
     this.detalhesCodCliente.NM_CLIE = this.activatedRoute.snapshot.queryParams['codCliente'];
     this.getClientes(this.detalhesCodCliente);
-    
+
     this.getListarPrecios();
     this.getTodosVendedores();
     this.getCentrosLogisticos();
+    this.getRubros();
     this.tipoEntrega = [
       { id: 1, nombre: 'entrega en almacen' },
       { id: 2, nombre: 'entrega en obra' }
     ];
-    /* this.finalizacaoService.showModal(this.tipoEntrega, 1);  */
+    this.getIdOferta();
+    //console.log(this.swExisteCliente);
+    /*     this.swExisteCliente = true;
+     */    /* this.finalizacaoService.showModal(this.tipoEntrega, 1);  */
 
     /*   this.form.controls.codigoCliente.setValue('Código'); */
 
@@ -318,6 +318,18 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           this.getClientesParams(response.data.cobrancaSomenteCarteira);
         });
     }
+  }
+
+  getIdOferta() {
+    this.cotacoesService.getIdOferta()
+      .subscribe((response: JsonResponse) => {
+        if (response.responseCode == 200) {
+          var id_oferta = response.result.id_oferta + 1;
+          this.form.controls['codigo_oferta_crm'].setValue(id_oferta);
+          this.form.controls['codigo_oferta'].setValue(response.result.codigo_oferta);
+
+        }
+      });
   }
 
   changeLatitudLongitud(event: { latitud: number, longitud: number }) {
@@ -339,6 +351,16 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     )
   }
 
+  getRubros(): void {
+
+    this.vendedoresService.getRubros()
+      .subscribe((response: JsonResponse) => {
+        if (response.responseCode == 200) {
+          this.rubros = response.result;
+        }
+      });
+  }
+
 
   getListarPrecios(): void {
     /* onsole.log("aqui"); */
@@ -352,12 +374,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     );
   }
 
-  getCentrosLogisticos():void{
+  getCentrosLogisticos(): void {
     this.comercialService.getCentrosLogisticos().subscribe(
-      (response: any)=>{
+      (response: any) => {
         this.centrosLogisticos = response.data;
       },
-      (error: any) =>{
+      (error: any) => {
 
       }
     )
@@ -546,11 +568,18 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     // Llama a la función exibirClienteTerceiro con los datos del cliente seleccio nado
     this.exibirClienteTerceiro(event);
     // Carga la dirección del cliente en el campo codEndereco del formulario
-    this.idListaPrecio = event.id_lista_precio;
+    /*     this.idListaPrecio = event.id_lista_precio; */
+    this.codigoRubro = event.codigo_rubro;
+    this.form.controls['codFormaPagamento'].setValue(1);
+
     this.form.controls['codEndereco'].setValue(event.direccion);
     this.form.controls['razaoSocial'].setValue(event.razaoSocial);
+    this.form.controls['correo_electronico'].setValue(event.correo_electronico);
     this.form.controls['nomeCliente'].setValue(event.nomeCliente);
     this.form.controls['codigo_cliente'].setValue(event.codigo_cliente);
+    this.form.controls['telefono_cliente'].setValue(event.telefono);
+    this.form.controls['celular'].setValue(event.celular);
+
     this.form.controls['nombreTipo'].setValue(event.nombreTipo);
     this.form.controls['id_tipo_cliente'].setValue(event.tipoCliente);
     this.form.controls['id_departamento'].setValue(event.id_departamento_lista);
@@ -558,8 +587,32 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   }
 
+  datosVendedor(id_vendedor) {
+    this.idListaPrecio = 0;
+    const params = {
+      id_vendedor: id_vendedor
+    }
+    this.vendedoresService.getDetalleVendedor(params)
+      .subscribe({
+        next: (response: JsonResponse) => {
+          if (response.responseCode == 200) {
+            this.idListaPrecio = response.detalle[0].id_lista;
+            this.nombreDepartamento = response.detalle[0].nombre_departamento;
+            /*  this.form.controls['lista'].setValue(response.detalle[0].id_lista); */
+            // this.form.value.lista = response.detalle[0].id_lista;
+          } else {
+            this.form.controls['lista'].setValue(null);
+          }
+        },
+        error: (error: any) => {
+          this.pnotifyService.error();
+        }
+      });
+  }
+
   getVendedor() {
 
+    console.log(this.dadosLancamento);
     this.dadosLancamento.codVendedor = this.user.info.idVendedor;
     this.dadosLancamento.nomeVendedor = this.user.info.nomeCompleto;
 
@@ -629,7 +682,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       }
 
       if (data.dataValidade === null) {
-        dataValidade = this.dateService.addDaysToDate(new Date(), 30);
+        dataValidade = this.dateService.addDaysToDate(new Date(), 7);
       } else {
         dataValidade = this.dateService.convertStringToDate(
           data.dataValidade,
@@ -680,17 +733,21 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         ],
         codCliente: [data.codCliente],
         razaoSocial: [data.razaoSocial],
+        correo_electronico: [data.correo_electronico],
         nomeCliente: [data.nomeCliente],
         codRazaoSocial: [data.codRazaoSocial],
         nombreVendedor: [data.nombreVendedor],
-        id_lista_precio: [data.id_lista_precio],
+        codigo_oferta: [],
+        codigo_oferta_crm: [],
+        /*   id_lista_precio: [data.id_lista_precio], */
         codigo_cliente: [data.codigo_cliente],
+        telefono_cliente: [data.telefono],
+        celular: [data.celular],
         nombreTipo: [data.nombreTipo],
         id_tipo_cliente: [data.tipoCliente],
         id_departamento: [data.id_departamento_lista],
         ejecutivo_ventas: [],
-        codigo_oferta: [],
-       /*  centroLogisticoControl:[], */
+        /*  centroLogisticoControl:[], */
 
         /* codEndereco: [data.direccion], */
         codContato: [
@@ -777,7 +834,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.form.get('freteConta').setValue(event.codFreteConta);
   }
 
-  onCentroLogisticoChange(id){
+  onCentroLogisticoChange(id) {
     this.id_centro_logistico = id;
   }
 
@@ -919,7 +976,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   confirmDelete(): any {
     return this.confirmModalService.showConfirm(
       'delete',
-      'Confirmar exclusão',
+      'Confirmar exclusão ',
       'Deseja realmente prosseguir com a exclusão do registro?',
       'Cancelar',
       'Confirmar'
@@ -1713,7 +1770,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
               });
           }
           this.contatos = contatos;
-         // console.log(contatos);
+          // console.log(contatos);
         }
       });
   }

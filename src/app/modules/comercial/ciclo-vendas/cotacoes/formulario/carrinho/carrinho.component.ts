@@ -355,9 +355,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
             /* (formGroup.controls.percentualDesc) */
           } else if (desconto.tipo === 'percentual') {
             valorDesc = valor - ((100 - desconto.desconto) / 100) * valor;
-            console.log(valorDesc);
+           /*  console.log(valorDesc);
             console.log(desconto);
-            console.log(valor);
+            console.log(valor); */
 
             formGroup.controls.percentualDesc.setValue(desconto.desconto);
           }
@@ -448,7 +448,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
           (materiais[i]) */
           /* ('materiales');
           () */
-          console.log(materiais)
+         /*  console.log(materiais) */
           this.materiais.push(
             this.formBuilder.group({
               codCotacao: [materiais[i].codCotacao],
@@ -888,6 +888,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         descuento: data[index].descuento,
         unidad: data[index].unidad,
         id_presentacion_material: 3,
+        id_linea: data[index].id_linea,
+        nombre_linea: data[index].nombre_linea,
+        largo_material: data[index].largo_material
       };
 
       materiais.push(material);
@@ -1028,7 +1031,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         this.total.valorProposta = this.total.valorTotal;
         this.total.monedaLocal = (this.total.valorProposta * 6.96).toFixed(2);
 
-        console.log(this.total)
+        /* console.log(this.total) */
       }
 
 

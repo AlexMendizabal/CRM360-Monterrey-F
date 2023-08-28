@@ -1,6 +1,6 @@
 <div class="modal-content">
   <div class="modal-header">
-    <h4 class="mtc-title mb-0 my-auto">Detalhes do Contato</h4>
+    <h4 class="mtc-title mb-0 my-auto">DETALLES DE CONTACTO</h4>
     <button type="button" class="close" (click)="onClose()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -10,41 +10,41 @@
       <div class="col">
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label><strong>Nome completo</strong></label>
-            <div *ngIf="contato.nomeCompleto == null">NÃO INFORMADO</div>
-            <div *ngIf="contato.nomeCompleto != null">{{ contato.nomeCompleto }}</div>
+            <label><strong>Nombre Completo</strong></label>
+            <div *ngIf="contato.nombreCompleto == null">SIN INFORMACION</div>
+            <div *ngIf="contato.nombreCompleto != null">{{ contato.nombreCompleto }}</div>
           </div>
           <div class="form-group col-md-6">
-            <label><strong>Sexo</strong></label>
-            <div *ngIf="contato.descGenero == null">NÃO INFORMADO</div>
-            <div *ngIf="contato.descGenero != null">{{ contato.descGenero }}</div>
+            <label><strong>Contacto</strong></label>
+            <div *ngIf="contato.ds_cont_meio == null">SIN INFORMACION</div>
+            <div *ngIf="contato.ds_cont_meio != null">{{ contato.ds_cont_meio }}</div>
           </div>
         </div>
-        <div class="form-row">
+        <!-- <div class="form-row">
           <div class="form-group col-md-6 mb-0">
-            <label><strong>Função</strong></label>
-            <div *ngIf="contato.descFuncao == null">NÃO INFORMADO</div>
+            <label><strong>FUNCION</strong></label>
+            <div *ngIf="contato.descFuncao == null">SIN INFORMACION</div>
             <div *ngIf="contato.descFuncao != null">{{ contato.descFuncao }}</div>
           </div>
           <div class="form-group col-md-6 mb-0">
             <label><strong>Setor</strong></label>
-            <div *ngIf="contato.descSetor == null">NÃO INFORMADO</div>
+            <div *ngIf="contato.descSetor == null">SIN INFORMACION</div>
             <div *ngIf="contato.descSetor != null">{{ contato.descSetor }}</div>
           </div>
-        </div>
+        </div> -->
         <div class="form-row">
           <div class="col"><hr></div>
         </div>
-        <div class="mtc-title">Meios de contato</div>
+        <div class="mtc-title">Medios de contacto</div>
         <div class="form-row" *ngIf="contato.contatos != null">
           <div class="form-group col-md-6" *ngFor="let item of contato.contatos">
             <label><strong>{{ item.tipo }}</strong></label>
             <div *ngIf="(item.tipo == 'Telefone') || (item.tipo == 'Celular')">
-              <div *ngIf="item.contato == null">NÃO INFORMADO</div>
+              <div *ngIf="item.contato == null">SIN INFORMACION</div>
               <div *ngIf="item.contato != null">{{ item.contato | telefone }}</div>
             </div>
             <div *ngIf="(item.tipo == 'Email NFe') || (item.tipo == 'E-mail NFe') || (item.tipo == 'E-Mail') || (item.tipo == 'Email') || (item.tipo == 'MalaDireta')">
-              <div *ngIf="item.contato == null">NÃO INFORMADO</div>
+              <div *ngIf="item.contato == null">SIN INFORMACION</div>
               <div *ngIf="item.contato != null">
                 <a [href]="'mailto:' + item.contato">{{ item.contato | lowercase }}</a>
               </div>
@@ -53,11 +53,11 @@
         </div>
         <message
           icon="fas fa-box-open"
-          text="Nenhuma informação encontrada"
+          text="Sin Información"
           class="py-4"
           *ngIf="contato.contatos == null">
         </message>
       </div>
     </div>
-  </div>
+  </div>
 </div>

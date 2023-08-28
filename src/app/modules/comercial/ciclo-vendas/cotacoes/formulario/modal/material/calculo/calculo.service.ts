@@ -32,7 +32,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoService {
   showModal(index: number, material: ICarrinhoModel, codCliente?: number, codFormaPagamento?: number, codEndereco?: number ): void {
     this.loaderNavbar.emit(true);
 
-    this.cotacoesService
+    /* this.cotacoesService
       .getTipoCalculoMaterial(material.codMaterial, codFormaPagamento)
       .pipe(
         finalize(() => {
@@ -41,15 +41,17 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoService {
       )
       .subscribe({
         next: (response: JsonResponse) => {
+          console.log(response)
           if (response.success === true) {
+            
             const modalConfig = {
               animated: false,
               class: 'modal-lg',
               ignoreBackdropClick: true,
               keyboard: false,
-            };
+            }; */
 
-            const initialState = {
+            /* const initialState = {
               index: index,
               material: material,
               tipoCalculo1: response.data.codTipoCalculo_1,
@@ -63,6 +65,28 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoService {
               codEndereco: codEndereco,
               precio: material.precio,
 
+            }; */
+            this.loaderNavbar.emit(false);
+            const modalConfig = {
+              animated: false,
+              class: 'modal-lg',
+              ignoreBackdropClick: true,
+              keyboard: false,
+            };
+            const initialState = {
+              index: index,
+              material: material,
+              tipoCalculo1: 6,
+              nomeTipoCalculo1: "Tonelada",
+              tipoCalculo2: 0,
+              nomeTipoCalculo2: null,
+              tipoLancamento: 6,
+              nomeTipoLancamento: "Tonelada",
+              codCliente: codCliente,
+              medida: 0,
+              codEndereco: codEndereco,
+              precio: material.precio,
+
             };
             //console.log(initialState)
             this.modalService.show(
@@ -71,13 +95,16 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoService {
                 initialState,
               })
             );
-          } else {
-            this.pnotifyService.notice(response.mensagem);
+         /*  } else { */
+          /* console.log('error AQUI'); */
+
+       /*      this.pnotifyService.notice(response.mensagem);
           }
-        },
-        error: (error: any) => {
-          this.pnotifyService.error();
+        }, */
+       /*  error: (error: any) => { */
+          /* console.log(error); */
+       /*    this.pnotifyService.error();
         }
-      });
+      }); */
   }
 }
