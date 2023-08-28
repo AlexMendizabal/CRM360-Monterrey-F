@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 })
 export class ComercialGestaoComissoesService{
 
-    private readonly API = `http://23.254.204.187/api/comercial/comissoes/`
+    private readonly API = `http://127.0.0.1:8000/comercial/comissoes/`
 
     constructor(protected http: HttpClient) {}
 }

@@ -12,7 +12,7 @@ import { OrigemContato } from './models/origem-contato';
   providedIn: 'root',
 })
 export class ComercialCadastrosContatoOrigemContatoService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/contato/origem-contato`;
+  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/contato/origem-contato`;
 
   constructor(protected http: HttpClient) {}
 

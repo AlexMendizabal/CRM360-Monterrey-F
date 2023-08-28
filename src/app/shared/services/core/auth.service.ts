@@ -15,7 +15,7 @@ import { ModulosService } from '../requests/modulos.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly API = `http://23.254.204.187/api/usuario`;
+  private readonly API = `http://127.0.0.1:8000/usuario`;
 
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;

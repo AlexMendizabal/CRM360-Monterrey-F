@@ -12,7 +12,7 @@ import { ISituacaoContratos } from './models/situacoes-contratos-comerciais';
   providedIn: 'root',
 })
 export class ComercialCadastrosContratosComerciaisSituacoesContratosComerciaisService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/contratos-comerciais/situacoes-contratos-comerciais`;
+  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/contratos-comerciais/situacoes-contratos-comerciais`;
 
   constructor(protected http: HttpClient) {}
 

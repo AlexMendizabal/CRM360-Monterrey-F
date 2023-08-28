@@ -1,10 +1,8 @@
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
 <app-header appTitle="Busqueda de clientes">
-  <!-- <button
-    type="button"
-    [routerLink]="['../pre-cadastro']">
+  <button type="button" [routerLink]="['../pre-cadastro']">
     Adicionar
-  </button> -->
+  </button>
   <button type="button" (click)="onFilter()">Filtrar</button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
@@ -15,14 +13,8 @@
           <h6 class="text-muted font-weight-light">Activos</h6>
           <div class="text-success">
             <h4>
-              <strong
-                counto
-                [step]="30"
-                [countTo]="ativos"
-                [countFrom]="0"
-                [duration]="3"
-                (countoChange)="countoAtivos = $event"
-              >
+              <strong counto [step]="30" [countTo]="ativos" [countFrom]="0" [duration]="3"
+                (countoChange)="countoAtivos = $event">
                 {{ handleCounter(countoAtivos) }}
               </strong>
             </h4>
@@ -32,14 +24,8 @@
           <h6 class="text-muted font-weight-light">Inactivos</h6>
           <div class="text-danger">
             <h4>
-              <strong
-                counto
-                [step]="30"
-                [countTo]="inativos"
-                [countFrom]="0"
-                [duration]="3"
-                (countoChange)="countoInativos = $event"
-              >
+              <strong counto [step]="30" [countTo]="inativos" [countFrom]="0" [duration]="3"
+                (countoChange)="countoInativos = $event">
                 {{ handleCounter(countoInativos) }}
               </strong>
             </h4>
@@ -49,14 +35,8 @@
           <h6 class="text-muted font-weight-light">Potencial</h6>
           <div class="text-primary">
             <h4>
-              <strong
-                counto
-                [step]="30"
-                [countTo]="potencial"
-                [countFrom]="0"
-                [duration]="3"
-                (countoChange)="countoPotencial = $event"
-              >
+              <strong counto [step]="30" [countTo]="potencial" [countFrom]="0" [duration]="3"
+                (countoChange)="countoPotencial = $event">
                 {{ handleCounter(countoPotencial) }}
               </strong>
             </h4>
@@ -66,14 +46,8 @@
           <h6 class="text-muted font-weight-light">Archivados</h6>
           <div class="text-secondary">
             <h4>
-              <strong
-                counto
-                [step]="30"
-                [countTo]="arquivados"
-                [countFrom]="0"
-                [duration]="3"
-                (countoChange)="countoArquivados = $event"
-              >
+              <strong counto [step]="30" [countTo]="arquivados" [countFrom]="0" [duration]="3"
+                (countoChange)="countoArquivados = $event">
                 {{ handleCounter(countoArquivados) }}
               </strong>
             </h4>
@@ -87,31 +61,18 @@
       <div class="form-row">
         <div class="form-group col-lg-3">
           <label for="buscarPor">Buscar por</label>
-          <select
-            class="form-control custom-select"
-            id="buscarPor"
-            formControlName="buscarPor"
-          >
+          <select class="form-control custom-select" id="buscarPor" formControlName="buscarPor">
             <option value="1">Código, nombre o razon social</option>
             <option value="2">C.I. o NIT</option>
           </select>
         </div>
         <div class="form-group col-lg-3">
           <label for="pesquisa">Termino de busqueda</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="pesquisa"
-            (keydown.enter)="onFilter()"
-          />
+          <input type="text" class="form-control" formControlName="pesquisa" (keydown.enter)="onFilter()" />
         </div>
         <div class="form-group col-lg-3">
           <label for="situacao">Situacion</label>
-          <select
-            class="form-control custom-select"
-            id="situacao"
-            formControlName="situacao"
-          >
+          <select class="form-control custom-select" id="situacao" formControlName="situacao">
             <option value="Ativo">Activos</option>
             <option value="Inativo">Inactivos</option>
             <option value="Potenci">Potenciales</option>
@@ -121,39 +82,55 @@
         </div>
         <div class="form-group col-lg-3">
           <label for="setorAtividade">Sector empresarial</label>
-          <ng-select
-            [searchable]="true"
-            [clearable]="false"
-            [items]="setorAtividades"
-            [virtualScroll]="true"
-            labelForId="setorAtividade"
-            bindLabel="descricao"
-            bindValue="id"
-            formControlName="setorAtividade"
-          >
+          <ng-select [searchable]="true" [clearable]="false" [items]="setorAtividades" [virtualScroll]="true"
+            labelForId="setorAtividade" bindLabel="descricao" bindValue="id" formControlName="setorAtividade">
           </ng-select>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-lg-3 mb-lg-0">
           <label for="tipoPessoa">Tipo de persona</label>
-          <select
-            class="form-control custom-select"
-            id="tipoPessoa"
-            formControlName="tipoPessoa"
-          >
+          <select class="form-control custom-select" id="tipoPessoa" formControlName="tipoPessoa">
             <option value="F">Persona física</option>
             <option value="J">Persona jurídica</option>
             <option value="T">Todos</option>
           </select>
         </div>
-        <div class="form-group col-lg-1 mb-lg-0">
-          <label for="registros">Registros</label>
+        <!-- <div class="form-group col-lg-3 mb-lg-0">
+          <label for="grupoEconomico">Esta en grupo economico</label>
           <select
             class="form-control custom-select"
-            id="registros"
-            formControlName="registros"
-          >
+            id="grupoEconomico"
+            formControlName="grupoEconomico">
+            <option value="S">Si</option>
+            <option value="N">No</option>
+            <option value="T">Todos</option>
+          </select>
+        </div>
+        <div class="form-group col-lg-3 mb-lg-0">
+          <label for="segurado">Asegurado</label>
+          <select
+            class="form-control custom-select"
+            id="segurado"
+            formControlName="segurado">
+            <option value="S">Si</option>
+            <option value="N">No</option>
+            <option value="T">Todos</option>
+          </select>
+        </div> -->
+        <!-- <div class="form-group col-lg-2 mb-lg-0">
+          <label for="carteira">Cartera</label>
+          <select
+            class="form-control custom-select"
+            id="carteira"
+            formControlName="carteira">
+            <option value="S" selected>Mi cartera</option>
+            <option value="T">Todos</option>
+          </select>
+        </div> -->
+        <div class="form-group col-lg-1 mb-lg-0">
+          <label for="registros">Registros</label>
+          <select class="form-control custom-select" id="registros" formControlName="registros">
             <option>10</option>
             <option>25</option>
             <option>50</option>
@@ -164,127 +141,60 @@
       </div>
     </form>
   </advanced-filter>
-  <div
-    class="row mt-3"
-    *ngIf="
+  <div class="row mt-3" *ngIf="
       dataLoaded && searchSubmitted && clientes.length == 0 && buscandoPor != 2
-    "
-  >
+    ">
     <div class="col-12">
-      <empty-result
-        message="No se encontraron clientes para esta búsqueda."
-        class="py-4"
-      ></empty-result>
+      <empty-result message="No se encontraron clientes para esta búsqueda." class="py-4"></empty-result>
     </div>
   </div>
-  <div
-    class="row mt-3"
-    *ngIf="
+  <div class="row mt-3" *ngIf="
       dataLoaded && searchSubmitted && clientes.length == 0 && buscandoPor == 2
-    "
-  >
+    ">
     <div class="col-7 d-flex justify-content-end w-100 pr-0">
-      <empty-result
-        message="No se encontraron clientes para esta búsqueda."
-        class="py-4"
-      ></empty-result>
+      <empty-result message="No se encontraron clientes para esta búsqueda." class="py-4"></empty-result>
     </div>
     <div class="col-5 d-flex w-100 pl-1">
-      <a
-        [routerLink]="['../pre-cadastro']"
-        [queryParams]="onPreCadastroCpfCnpj()"
-        class="my-auto"
-      >
+      <a [routerLink]="['../pre-cadastro']" [queryParams]="onPreCadastroCpfCnpj()" class="my-auto">
         <strong>Pulse aquí para registrarse..</strong>
       </a>
     </div>
   </div>
   <div class="row mt-4" *ngIf="dataLoaded && clientes.length > 0">
-    <div
-      [ngClass]="{ 'col-12': !showDetailPanel, 'col-7 pr-0': showDetailPanel }"
-    >
+    <div [ngClass]="{ 'col-12': !showDetailPanel, 'col-7 pr-0': showDetailPanel }">
       <custom-table [config]="tableConfig">
         <ng-template #thead let-thead>
           <tr>
             <th scope="col"></th>
-            <th
-              scope="col"
-              class="text-center hover"
-              (click)="setOrderBy('codigo_cliente')"
-            >
-              <thead-sorter
-                value="Código Cliente"
-                [active]="orderBy == 'codigo_cliente'"
-                [sort]="orderType"
-              ></thead-sorter>
+            <th scope="col" class="text-center hover" (click)="setOrderBy('codigo_cliente')">
+              <thead-sorter value="Código Cliente" [active]="orderBy == 'codigo_cliente'"
+                [sort]="orderType"></thead-sorter>
             </th>
-            <th
-              scope="col"
-              class="text-center hover"
-              (click)="setOrderBy('cpf')"
-            >
-              <thead-sorter
-                value="CI/NIT"
-                [active]="orderBy == 'cpf'"
-                [sort]="orderType"
-              ></thead-sorter>
+            <th scope="col" class="text-center hover" (click)="setOrderBy('cpf')">
+              <thead-sorter value="CI/NIT" [active]="orderBy == 'cpf'" [sort]="orderType"></thead-sorter>
             </th>
             <th scope="col" class="hover" (click)="setOrderBy('nomeFantasia')">
-              <thead-sorter
-                value="Nombre y apelllido"
-                [active]="orderBy == 'nomeFantasia'"
-                [sort]="orderType"
-              ></thead-sorter>
+              <thead-sorter value="Nombre y apelllido" [active]="orderBy == 'nomeFantasia'"
+                [sort]="orderType"></thead-sorter>
             </th>
-            <th
-              scope="col"
-              class="hover"
-              (click)="setOrderBy('razaoSocial')"
-              *ngIf="!showDetailPanel"
-            >
-              <thead-sorter
-                value="Razon Social"
-                [active]="orderBy == 'razaoSocial'"
-                [sort]="orderType"
-              ></thead-sorter>
+            <th scope="col" class="hover" (click)="setOrderBy('razaoSocial')" *ngIf="!showDetailPanel">
+              <thead-sorter value="Razon Social" [active]="orderBy == 'razaoSocial'" [sort]="orderType"></thead-sorter>
             </th>
             <th scope="col"></th>
           </tr>
         </ng-template>
         <ng-template #tbody let-tbody>
-          <tr
-            *ngFor="let cliente of clientes"
-            [class.table-active]="cliente.codigo_cliente == clienteSelecionado"
-          >
-            <td
-              class="text-center hover"
-              [ngClass]="classStatusBorder(cliente.situacao)"
-              (click)="viewRegister(cliente)"
-            >
-              <i
-                class="text-black-50 far fa-check-square mr-3"
-                *ngIf="cliente.segurado == 0"
-                tooltip="Cliente no asegurado"
-                placement="right"
-              ></i>
-              <i
-                class="text-warning fas fa-check-square mr-3"
-                *ngIf="cliente.segurado > 0"
-                tooltip="Cliente asegurado"
-                placement="right"
-              ></i>
-              <i
-                class="text-black-50 far fa-folder-open"
-                *ngIf="cliente.grupoEconomico == 0"
-                tooltip="No hace parte de grupo economico"
-                placement="right"
-              ></i>
-              <i
-                class="text-warning fas fa-folder-open"
-                *ngIf="cliente.grupoEconomico > 0"
-                tooltip="Pertenece a un grupo economico"
-                placement="right"
-              ></i>
+          <tr *ngFor="let cliente of clientes" [class.table-active]="cliente.codigo_cliente == clienteSelecionado">
+            <td class="text-center hover" [ngClass]="classStatusBorder(cliente.situacao)"
+              (click)="viewRegister(cliente)">
+              <i class="text-black-50 far fa-check-square mr-3" *ngIf="cliente.segurado == 0"
+                tooltip="Cliente no asegurado" placement="right"></i>
+              <i class="text-warning fas fa-check-square mr-3" *ngIf="cliente.segurado > 0" tooltip="Cliente asegurado"
+                placement="right"></i>
+              <i class="text-black-50 far fa-folder-open" *ngIf="cliente.grupoEconomico == 0"
+                tooltip="No hace parte de grupo economico" placement="right"></i>
+              <i class="text-warning fas fa-folder-open" *ngIf="cliente.grupoEconomico > 0"
+                tooltip="Pertenece a un grupo economico" placement="right"></i>
             </td>
             <td class="text-center hover" (click)="viewRegister(cliente)">
               {{ cliente.codigo_cliente }}
@@ -295,24 +205,12 @@
             <td class="hover" (click)="viewRegister(cliente)">
               {{ cliente.nomeFantasia | uppercase }}
             </td>
-            <td
-              class="hover"
-              (click)="viewRegister(cliente)"
-              *ngIf="!showDetailPanel"
-            >
+            <td class="hover" (click)="viewRegister(cliente)" *ngIf="!showDetailPanel">
               {{ cliente.razaoSocial | uppercase }}
             </td>
             <td>
-              <span
-                tooltip="Datos registrados"
-                placement="left"
-                container="body"
-              >
-                <button
-                  type="button"
-                  class="btn-icon-sm"
-                  (click)="viewDetails(cliente)"
-                >
+              <span tooltip="Datos registrados" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="viewDetails(cliente)">
                   <i class="fas fa-user"></i>
                 </button>
               </span>
@@ -320,22 +218,10 @@
           </tr>
         </ng-template>
       </custom-table>
-      <div
-        class="d-flex justify-content-center mt-3"
-        *ngIf="clientes[0]['total'] > itemsPerPage"
-      >
-        <pagination
-          [maxSize]="maxSize"
-          [(totalItems)]="totalItems"
-          (pageChanged)="onPageChanged($event)"
-          [(itemsPerPage)]="itemsPerPage"
-          [boundaryLinks]="true"
-          [(ngModel)]="currentPage"
-          previousText="&lsaquo;"
-          nextText="&rsaquo;"
-          firstText="&laquo;"
-          lastText="&raquo;"
-        >
+      <div class="d-flex justify-content-center mt-3" *ngIf="clientes[0]['total'] > itemsPerPage">
+        <pagination [maxSize]="maxSize" [(totalItems)]="totalItems" (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
+          nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
         </pagination>
       </div>
     </div>
@@ -346,170 +232,145 @@
             <tab heading="Datos registrados">
               <div class="border-right border-left border-bottom px-3 pt-3">
                 <div *ngIf="dadosCadastraisLoaded && !dadosCadastraisEmpty">
-                  <div class="form-row">
-                    <div
-                      class="form-group col-lg-6"
-                      *ngIf="dadosCadastrais.tipoPessoa == 'F'"
-                    >
-                      <label>C.I. o NIT</label>
-                      <div *ngIf="dadosCadastrais.cpf == null">
-                        NO INFORMADO
+                  <div class="container">
+                    <div class="form-row">
+                      <div class="form-group col-lg-6">
+                        <label>Codigo Cliente CRM360</label>
+                        <div *ngIf="!editingMode">
+                          {{ dadosCadastrais.id_cliente == null ? 'NO INFORMADO' : dadosCadastrais.id_cliente }}
+                        </div>
+                        <div *ngIf="editingMode">
+                          <input [(ngModel)]="editedFields.id_cliente" type="hidden">
+                        </div>
                       </div>
-                      <div *ngIf="dadosCadastrais.cpf != null">
-                        {{ dadosCadastrais.cpf }}
-                      </div>
-                    </div>
-                    <div
-                      class="form-group col-lg-6"
-                      *ngIf="dadosCadastrais.tipoPessoa == 'J'"
-                    >
-                      <label>CNPJ</label>
-                      <div *ngIf="dadosCadastrais.cnpj == null">
-                        NO INFORMADO
-                      </div>
-                      <div *ngIf="dadosCadastrais.cnpj != null">
-                        {{ dadosCadastrais.cnpj }}
+                      <div class="form-group col-lg-6">
+                        <label>C.I.</label>
+                        <div>
+                          <div>
+                            <div *ngIf="!editingMode">{{ dadosCadastrais.cnpj_cpf == null ? 'NO INFORMADO' :
+                              dadosCadastrais.cnpj_cpf }}</div>
+                            <div *ngIf="editingMode"><input [(ngModel)]="editedFields.carnet"></div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div class="form-group col-lg-6">
-                      <label>Nombre</label>
-                      <div *ngIf="dadosCadastrais.nomeFantasia == null">
-                        NO INFORMADO
+                    <div class="form-row">
+                      <div class="form-group col-lg-6">
+                        <label>Nombre</label>
+                        <div>
+                          <div>
+                            <div *ngIf="!editingMode">{{ dadosCadastrais.nombres == null ? 'NO INFORMADO' :
+                              dadosCadastrais.nombres }}</div>
+                            <div *ngIf="editingMode"><input [(ngModel)]="editedFields.nombres"></div>
+                          </div>
+                        </div>
                       </div>
-                      <div *ngIf="dadosCadastrais.nomeFantasia != null">
-                        {{ dadosCadastrais.nomeFantasia }}
+                      <div class="form-group col">
+                        <label>Razon social</label>
+                        <div>
+                          <div>
+                            <div *ngIf="!editingMode">{{ dadosCadastrais.razaoSocial == null ? 'NO INFORMADO' :
+                              dadosCadastrais.razaoSocial }}</div>
+                            <div *ngIf="editingMode"><input [(ngModel)]="editedFields.razonSocial"></div>
+                          </div>
+                        </div>
                       </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col">
+                        <label>Tipo Persona</label>
+                        <div>
+                          <div *ngIf="!editingMode">{{ getTipoPersonaLabel(dadosCadastrais.tipo_pessoa) }}</div>
+                          <div *ngIf="editingMode">
+                            <select [(ngModel)]="editedFields.tipo_pessoa">
+                              <option *ngFor="let option of tipoPersonaOptions" [value]="option.value">{{ option.label
+                                }}</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-6">
+                        <label>NIT.</label>
+                        <div>
+                          <div *ngIf="!editingMode">{{ dadosCadastrais.nit == null ? 'NO INFORMADO' :
+                            dadosCadastrais.nit }}</div>
+                          <div
+                            *ngIf="editingMode && (dadosCadastrais.tipo_pessoa === 'P' || dadosCadastrais.tipo_pessoa === 'G' || dadosCadastrais.tipo_pessoa === 'E')">
+                            <input [(ngModel)]="editedFields.nit">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col">
+                        <label>Celular</label>
+                        <div>
+                          <div *ngIf="!editingMode">{{ dadosCadastrais.celular == null ? 'NO INFORMADO' :
+                            dadosCadastrais.celular }}</div>
+                          <div *ngIf="editingMode"><input [(ngModel)]="editedFields.celular"></div>
+                        </div>
+                      </div>
+                      <div class="form-group col">
+                        <label>Telefono</label>
+                        <div>
+                          <div *ngIf="!editingMode">{{ dadosCadastrais.telefono == null ? 'NO INFORMADO' :
+                            dadosCadastrais.telefono }}</div>
+                          <div *ngIf="editingMode"><input [(ngModel)]="editedFields.telefono"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-lg-6">
+                        <label>Sucursal</label>
+                        <div>
+                          <div *ngIf="!editingMode">{{ dadosCadastrais.sucursal == null ? 'NO INFORMADO' :
+                            dadosCadastrais.sucursal }}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-lg-6">
+                        <label>Ciudad</label>
+                        <div>
+                          <div *ngIf="!editingMode">{{ dadosCadastrais.ciudad == null ? 'NO INFORMADO' :
+                            dadosCadastrais.ciudad }}</div>
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-6">
+                        <label>Vendedor</label>
+                        <div>
+                          <ng-container *ngIf="!editingMode; else editingVendedor">
+                            {{ dadosCadastrais.NombreVendedor || 'NO INFORMADO' }}
+                          </ng-container>
+                          <ng-template #editingVendedor>
+                            <select [(ngModel)]="editedFields.id_vendedor">
+                              <option *ngFor="let vendedor of vendedoresList" [value]="vendedor.id">{{ vendedor.nome }}
+                              </option>
+                            </select>
+                          </ng-template>
+                        </div>
+                      </div>
+
+
                     </div>
                   </div>
-                  <div class="form-row">
-                    <div class="form-group col">
-                      <label>Razon social</label>
-                      <div *ngIf="dadosCadastrais.razaoSocial == null">
-                        NO INFORMADO
-                      </div>
-                      <div *ngIf="dadosCadastrais.razaoSocial != null">
-                        {{ dadosCadastrais.razaoSocial }}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-row">
-                    <div class="form-group col">
-                      <label>Direccion</label>
-                      <div *ngIf="dadosCadastrais.endereco == null">
-                        NO INFORMADO
-                      </div>
-                      <div *ngIf="dadosCadastrais.endereco != null">
-                        {{ dadosCadastrais.endereco }}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-row">
-                    <div class="form-group col-lg-6">
-                      <label>Barrio</label>
-                      <div *ngIf="dadosCadastrais.bairro == null">
-                        NO INFORMADO
-                      </div>
-                      <div *ngIf="dadosCadastrais.bairro != null">
-                        {{ dadosCadastrais.bairro }}
-                      </div>
-                    </div>
-                    <!-- <div class="form-group col-lg-6">
-                      <label>CEP</label>
-                      <div *ngIf="dadosCadastrais.cep == null">NO INFORMADO</div>
-                      <div *ngIf="dadosCadastrais.cep != null">{{ dadosCadastrais.cep }}</div>
-                    </div> -->
-                  </div>
-                  <div class="form-row">
-                    <div class="form-group col-lg-6">
-                      <label>Ciudad</label>
-                      <div *ngIf="dadosCadastrais.cidade == null">
-                        NO INFORMADO
-                      </div>
-                      <div *ngIf="dadosCadastrais.cidade != null">
-                        {{ dadosCadastrais.cidade }}
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-6">
-                      <label>Departamento</label>
-                      <div *ngIf="dadosCadastrais.uf == null">NO INFORMADO</div>
-                      <div *ngIf="dadosCadastrais.uf != null">
-                        {{ dadosCadastrais.uf }}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-row">
-                    <div class="form-group col">
-                      <label>Asegurado</label>
-                      <div *ngIf="dadosCadastrais.segurado != ''">Si</div>
-                      <div *ngIf="dadosCadastrais.segurado == ''">NO</div>
-                    </div>
-                  </div>
-                  <div class="form-row">
-                    <div class="form-group col-lg-6">
-                      <label>Vendedor</label>
-                      <div *ngIf="dadosCadastrais.vendedor == null">
-                        NO INFORMADO
-                      </div>
-                      <div *ngIf="dadosCadastrais.vendedor != null">
-                        {{ dadosCadastrais.vendedor }}
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-6">
-                      <label>Sucursal</label>
-                      <div *ngIf="dadosCadastrais.escritorio == null">
-                        NO INFORMADO
-                      </div>
-                      <div *ngIf="dadosCadastrais.escritorio != null">
-                        {{ dadosCadastrais.escritorio }}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-row">
-                    <div
-                      class="form-group col-lg-4"
-                      *ngIf="
-                        dadosCadastrais.codSAP != '' &&
-                        dadosCadastrais.codSAP != null
-                      "
-                    >
-                      <label>Código DBA</label>
-                      <div>{{ dadosCadastrais.codSAP }}</div>
-                    </div>
-                    <div
-                      class="form-group col-lg-4"
-                      *ngIf="
-                        dadosCadastrais.escritorioDba != '' &&
-                        dadosCadastrais.escritorioDba != null
-                      "
-                    >
-                      <label>Sucursal</label>
-                      <div>{{ dadosCadastrais.escritorioDba }}</div>
-                    </div>
-                    <div
-                      class="form-group col-lg-4"
-                      *ngIf="
-                        dadosCadastrais.ultimaCompraDba != '' &&
-                        dadosCadastrais.ultimaCompraDba != null
-                      "
-                    >
-                      <label>Última compra</label>
-                      <div>{{ dadosCadastrais.ultimaCompraDba }}</div>
+                  <div class="mb-3" *ngIf="dadosCadastraisLoaded && dadosCadastraisEmpty">
+                    <empty-result message="Nenhuma informação encontrada"></empty-result>
+                    <div class="d-flex justify-content-center mb-3" *ngIf="!dadosCadastraisLoaded">
+                      <div class="spinner-border text-dark"></div>
                     </div>
                   </div>
                 </div>
-                <div
-                  class="mb-3"
-                  *ngIf="dadosCadastraisLoaded && dadosCadastraisEmpty"
-                >
-                  <empty-result
-                    message="Nenhuma informação encontrada"
-                  ></empty-result>
+                <div *ngIf="editingMode">
+                  <div class="text-right mt-3">
+                    <button type="button" class="btn btn-secondary" (click)="cancelEditing()">Cancelar</button>
+                    <button type="button" class="btn btn-primary" (click)="saveChanges()">Guardar Cambios</button>
+                  </div>
                 </div>
-                <div
-                  class="d-flex justify-content-center mb-3"
-                  *ngIf="!dadosCadastraisLoaded"
-                >
-                  <div class="spinner-border text-dark"></div>
+                <div *ngIf="!editingMode">
+                  <div class="text-right mt-3">
+                    <button type="button" class="btn btn-light" (click)="enableEditing()">Editar Cliente</button>
+                  </div>
                 </div>
               </div>
             </tab>
@@ -517,53 +378,90 @@
               <div class="border-right border-left border-bottom px-3 pt-3">
                 <div *ngIf="contatosLoaded && !contatosEmpty">
                   <div class="form-row" *ngFor="let contato of contatos">
-                    <div class="form-group col">
-                      <label>{{ contato.tipoContato }}</label>
+                    <!-- <div class="form-group col" [ngClass]="{'hidden': contato.editing}">
+                      <label>ID Contacto</label>
                       <div>
-                        <span
-                          *ngIf="contato.nomeContato.length > 1"
-                          class="mr-1"
-                          >{{ contato.nomeContato }} :</span
-                        >
-                        <span
-                          *ngIf="
-                            contato.tipoContato != 'Email NFe' &&
-                            contato.tipoContato != 'E-mail NFe' &&
-                            contato.tipoContato != 'MalaDireta' &&
-                            contato.tipoContato != 'E-Mail'
-                          "
-                        >
-                          {{ contato.contato }}
-                        </span>
-                        <span
-                          *ngIf="
-                            contato.tipoContato == 'Email NFe' ||
-                            contato.tipoContato == 'E-mail NFe' ||
-                            contato.tipoContato == 'MalaDireta' ||
-                            contato.tipoContato == 'E-Mail'
-                          "
-                        >
-                          <a [href]="'mailto:' + contato.contato">{{
-                            contato.contato | lowercase
-                          }}</a>
-                        </span>
+                        {{ contato.id_cont }}
                       </div>
+                    </div> -->
+                    <div class="form-group col">
+                      <label>Contacto</label>
+                      <div>
+                        <div *ngIf="!editingContacto">{{ contato.contacto }}</div>
+                        <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedContacto"></div>
+                      </div>
+                    </div>
+                    <div class="form-group col">
+                      <label>Tipo de Contacto</label>
+                      <div>
+                        <div *ngIf="!editingContacto">{{ contato.ds_tipo_cont }} {{ contato.ds_cont_meio }}</div>
+                        <div *ngIf="contato.editing">
+                          <input [(ngModel)]="contato.editedds_cont_meio">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group col">
+                      <label>Dirección</label>
+                      <div>
+                        <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
+                        <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedDireccion"></div>
+                      </div>
+                    </div>
+                    <div class="form-group col">
+                      <label>Nombre</label>
+                      <div>
+                        <ng-container *ngIf="!editingContacto">
+                          <div *ngIf="contato.ds_cont && contato.ds_cont.length > 1" class="mr-1">{{ contato.ds_cont }}
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="contato.editing">
+                          <input [(ngModel)]="contato.editedDsCont">
+                        </ng-container>
+                      </div>
+                    </div>
+                    <button type="button" class="btn btn-light" (click)="editarContacto(contato)"
+                      *ngIf="!contato.editing">Editar Contacto</button>
+                    <div *ngIf="contato.editing">
+                      <button type="button" class="btn btn-secondary"
+                        (click)="cancelEditingContact(contato)">Cancelar</button>
+                      <button type="button" class="btn btn-primary" (click)="saveEditedContact(contato)">Guardar Cambios</button>
                     </div>
                   </div>
                 </div>
-                <div class="mb-3" *ngIf="contatosLoaded && contatosEmpty">
-                  <empty-result
-                    message="Ningun contacto encontrado"
-                  ></empty-result>
-                </div>
-                <div
-                  class="d-flex justify-content-center mb-3"
-                  *ngIf="!contatosLoaded"
-                >
-                  <div class="spinner-border text-dark"></div>
-                </div>
               </div>
-            </tab>
+              <!-- <button type="button" class="btn btn-primary" (click)="openAgregarContactoModal()">
+                Abrir Modal
+            </button> -->
+                            
+            </tab>  
+            <!-- <ng-template #modalDetalhes>
+              <div class="modal-header">
+                  <h4 class="modal-title pull-left">Agregar Contacto</h4>
+                  <div class="d-flex justify-content-center align-items-center">
+                      <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+              </div>
+              <div class="modal-body">
+
+                  <form [formGroup]="agregarContactoForm">
+                      <div class="form-group">
+                          <label>Contacto</label>
+                          <input type="text" class="form-control" formControlName="contacto">
+                      </div>
+
+                      <div class="text-center">
+                          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+                          <button type="button" class="btn btn-primary" (click)="guardarContacto()">Guardar Contacto</button>
+                      </div>
+                  </form>
+              </div>
+          </ng-template> -->
+            
+            
+
           </tabset>
         </detail-panel>
       </div>
