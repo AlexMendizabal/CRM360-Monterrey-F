@@ -81,8 +81,9 @@
           </div> -->
        <!--  </tab> -->
       <!-- Materiais Relacionados -->
-        <tab heading="Materiales Relacionados" (selectTab)="onSelectMateriaisRelacionados()">
+        <tab heading="Materiales Relacionados"  (selectTab)="onSelectMateriaisRelacionados()">
           <div *ngIf="!materiaisRelacionadosLoader">
+            <button class="mt-2 display-center btn btn-primary" (click)="cambiar()">  <i class="fas fa-sync-alt"></i> Filtrar </button>
             <div class="mt-2 mb-4" id="carousel-relacionados" *ngIf="materiaisRelacionados.length > 0">
               <carousel class="d-block" [itemsPerSlide]="itemsPerSlide" [singleSlideOffset]="false"
                 [noWrap]="noWrapSlides" [interval]="false" [showIndicators]="false"

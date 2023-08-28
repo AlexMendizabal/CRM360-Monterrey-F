@@ -23,20 +23,20 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
   @Input('codEndereco') codEndereco: number;
   @Input('codFormaPagamento') codFormaPagamento: number;
   @Input('freteConta') freteConta: number;
-  
+
 
   materiaisRelacionados: Array<ISimilaridadeModel> = [];
   materiaisRelacionadosLoader: boolean;
 
-  filtro :array = [];
-  
+  filtro: array = [];
+
 
   vendasGerais: Array<ISimilaridadeModel> = [];
   vendasGeraisLoader: boolean;
-  
+
   vendasCliente: Array<ISimilaridadeModel> = [];
   vendasClienteLoader: boolean;
-  
+
   show: boolean = true;
 
   itemsPerSlide = 4;
@@ -45,41 +45,49 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
   constructor(
     private cotacoesService: ComercialCicloVendasCotacoesService,
     private formularioService: ComercialCicloVendasCotacoesFormularioService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     //this.onSelectVendasGerais();
-    //this.onSelectMateriaisRelacionados();
+    this.onSelectMateriaisRelacionados();
+  }
+  cambiar(){
+    this.onSelectMateriaisRelacionados();
   }
 
   ngOnChanges(event: any): void {
     //this.onSelectVendasGerais();
-    this.onSelectMateriaisRelacionados();
-    // if (event.materiais) {
-    //   const previousValue = event.materiais.previousValue || [];
-    //   const currentValue = event.materiais.currentValue;
+    //this.onSelectMateriaisRelacionados();
+    
+
+    //this.onSelectMateriaisRelacionados();
+    /* if (event.materiais) {
+      const previousValue = event.materiais.previousValue || [];
+      const currentValue = event.materiais.currentValue;
 
 
-    //   /* const materiais = currentValue.filter(
-    //     (codMaterial: number) => !previousValue.includes(codMaterial)
-    //   ); */
+      const materiais = currentValue.filter(
+        (codMaterial: number) => !previousValue.includes(codMaterial)
+      );
 
-    //   previousValue.includes(event.materiais.codMaterial);
+      previousValue.includes(event.materiais.codMaterial);
 
-    //   this.postVendasGerais(currentValue);
+      console.log(currentValue);
 
-    // }
+      this.postMateriaisRelacionados(currentValue);
+
+    } */
   }
 
-  onSelectVendasGerais(){
+  onSelectVendasGerais() {
     this.postVendasGerais(this.materiais);
   }
 
-  onSelectVendasCliente(){
+  onSelectVendasCliente() {
     this.postVendasCliente(this.materiais);
   }
 
-  onSelectMateriaisRelacionados(){
+  onSelectMateriaisRelacionados() {
     /* console.log('click');
     alert('click'); */
     /* console.log('aqui');
@@ -115,8 +123,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
             }
           );
 
-          
-          
+
+
           this.vendasGerais = [
             ...this.vendasGerais,
             ...vendasGerais,
@@ -129,7 +137,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
         }
       });
 
-    
+
   }
 
   postVendasCliente(materiais: any): void {
@@ -159,7 +167,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
               return o;
             }
           );
-          
+
           this.vendasCliente = [
             ...this.vendasCliente,
             ...vendasCliente,
@@ -170,13 +178,13 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
             this.noWrapSlides = false;
           }
         }
-    });
+      });
   }
 
   postMateriaisRelacionados(materiais: any): void {
 
     /* console.log(materiais); */
-    
+
     this.materiaisRelacionadosLoader = true;
     this.materiaisRelacionados = [];
     this.cotacoesService
@@ -241,7 +249,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
       : 'px-5';
   }
 
-  onShow(){
+  onShow() {
     this.show = !this.show;
   }
 }
