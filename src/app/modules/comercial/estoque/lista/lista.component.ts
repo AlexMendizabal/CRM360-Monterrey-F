@@ -209,7 +209,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
             }
             this.linhas.unshift({
               id: 0,
-              descricao: 'EXIBIR TODOS',
+              descricao: 'EXIBIR  TODOS',
             });
           }
 

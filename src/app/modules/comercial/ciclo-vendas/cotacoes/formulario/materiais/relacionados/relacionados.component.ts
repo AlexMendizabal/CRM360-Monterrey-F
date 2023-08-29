@@ -8,6 +8,7 @@ import { ComercialCicloVendasCotacoesFormularioService } from '../../formulario.
 // Interfaces
 import { ISimilaridadeModel } from '../../models/similaridade';
 import { JsonResponse } from 'src/app/models/json-response';
+import { array } from '@amcharts/amcharts4/core';
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-formulario-materiais-relacionados',
@@ -26,6 +27,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
 
   materiaisRelacionados: Array<ISimilaridadeModel> = [];
   materiaisRelacionadosLoader: boolean;
+
+  filtro :array = [];
   
 
   vendasGerais: Array<ISimilaridadeModel> = [];
@@ -45,11 +48,13 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
   ) {}
 
   ngOnInit(): void {
-    this.onSelectVendasGerais();
+    //this.onSelectVendasGerais();
+    //this.onSelectMateriaisRelacionados();
   }
 
   ngOnChanges(event: any): void {
-    this.onSelectVendasGerais();
+    //this.onSelectVendasGerais();
+    this.onSelectMateriaisRelacionados();
     // if (event.materiais) {
     //   const previousValue = event.materiais.previousValue || [];
     //   const currentValue = event.materiais.currentValue;
@@ -75,6 +80,10 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
   }
 
   onSelectMateriaisRelacionados(){
+    /* console.log('click');
+    alert('click'); */
+    /* console.log('aqui');
+    console.log(this.materiais) */
     this.postMateriaisRelacionados(this.materiais);
   }
 
@@ -105,6 +114,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
               return o;
             }
           );
+
           
           
           this.vendasGerais = [
@@ -164,11 +174,13 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
   }
 
   postMateriaisRelacionados(materiais: any): void {
+
+    /* console.log(materiais); */
     
     this.materiaisRelacionadosLoader = true;
     this.materiaisRelacionados = [];
     this.cotacoesService
-      .postMateriaisRelacionados({
+      .materialesrelacionados({
         codEmpresa: this.codEmpresa,
         codMaterial: materiais.codMaterial,
         codCliente: this.codCliente,
@@ -182,15 +194,17 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
         })
       )
       .subscribe((response: JsonResponse) => {
-        if (response.success === true) {
-          const materiaisRelacionados = response.data.map(
+        if (response.responseCode == 200) {
+          //console.log(response.result);
+          const materiaisRelacionados = response.result.materiales.map(
             (material: ISimilaridadeModel) => {
               let o = Object.assign({}, material);
               o.onCarrinho = false;
               return o;
             }
           );
-          
+          this.filtro = response.result.filtro;
+
           this.materiaisRelacionados = [
             ...this.materiaisRelacionados,
             ...materiaisRelacionados,

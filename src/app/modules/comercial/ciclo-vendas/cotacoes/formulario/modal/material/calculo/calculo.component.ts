@@ -47,6 +47,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
 
 
   medidaDisable = false;
+  swLargoMaterial: boolean = false;
 
   loaderModal: boolean;
   swDesactivarForm = true;
@@ -96,8 +97,6 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   arrayPresentacion: Array<any> = [];
   swPresentacion = false;
   id_presentacion: number = 0;
-
-
   showImpostos = false;
 
   constructor(
@@ -196,7 +195,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.opcoesVenda = [];
     this.resetTotais();
 
-    this.descQtde = 'Qtde (' + this.nomeTipoLancamento + ')';
+    this.descQtde = 'Qtde  (' + this.nomeTipoLancamento + ')';
     this.descPreco = 'Preço por ' + this.nomeTipoCalculo1;
     this.currencyMaskOptions.decimal = '';
     this.currencyMaskOptions.precision = 0;
@@ -474,8 +473,17 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     console.log(data);  */
    
     
-
+/*     console.log(data); 
+ */    
     this.calculo.tonelada = (data.pesoEspecifico * this.form.value.quantidade);
+    if(data.largo_material > 0 ){
+      this.swLargoMaterial = true;
+      this.calculo.totalMaterial = this.form.value.quantidade * data.largo_material;
+    }else{
+      this.swLargoMaterial = false;
+
+    }
+    this.calculo.pesoEspecifico = data.pesoEspecifico; 
     this.calculo.qtde = data.qtde;
     this.calculo.valorUnitario = data.precio;
     this.calculo.valorItem = data.valorItem;
@@ -494,8 +502,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.calculo.descuento = data.descuento.toFixed(2);
     // @ts-ignore: Ignorar error TS2339
     this.calculo.descuentoAplicado = this.calculo.valorTotalBruto * data.descuento;
-    // @ts-ignore: Ignorar error TS2339
-    this.calculo.valorTotal = this.calculo.valorTotalBruto - this.calculo.descuentoAplicado;
+    this.calculo.valorTotal = this.calculo.valorTotalBruto - this.calculo.descuentoAplicado ;
     this.calculo.unidade = unidade;
     this.calculo.nrPedidoCliente = this.form.value.nrPedidoCliente,
       this.calculo.codItemPedidoCliente = this.form.value.codItemPedidoCliente,

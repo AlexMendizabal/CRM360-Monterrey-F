@@ -72,9 +72,9 @@ export class ComercialCicloVendasComponent implements OnInit {
             return
           }
 
-          console.log(response.body["data"][1])
+          console.log(response.body["data"])
 
-          this.atividades = response.body["data"][1];
+          this.atividades = response.body["data"];
           this.loaderFullScreen = false;
 
         },

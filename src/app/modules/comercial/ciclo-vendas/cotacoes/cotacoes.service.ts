@@ -26,6 +26,12 @@ export class ComercialCicloVendasCotacoesService {
     private estoqueService: ComercialEstoqueService
   ) { }
 
+  getIdOferta(){
+    return this.http
+      .get(`${this.API}/oferta_id`)
+      .pipe(take(1), retry(2));
+  }
+
   getPermissoesAcesso(): Observable<Object | JsonResponse> {
     return this.http
       .get(`${this.API}/permissoes-acesso`)
@@ -52,6 +58,7 @@ export class ComercialCicloVendasCotacoesService {
       })
       .pipe(take(1), retry(2));
   }
+  
 
   getDetalleOferta(params: any): Observable<Object | JsonResponse> {
     let httpParams = new HttpParams();
@@ -252,6 +259,11 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
+  materialesrelacionados(params: any): Observable<Object | JsonResponse> {
+    return this.http
+    .post(`${this.API}/materiales/relacionados`, params)
+    .pipe(take(1), retry(2));
+  }
 
   getFichaCadastralMaterial(
     codMaterial: number

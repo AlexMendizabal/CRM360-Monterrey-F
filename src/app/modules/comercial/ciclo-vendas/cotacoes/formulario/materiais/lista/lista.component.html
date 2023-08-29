@@ -25,9 +25,14 @@
             <i class="fas fa-trash"></i>
             <span>Limpiar</span>
           </button>
-          <button type="button" class="btn btn-sm btn-secondary" (click)="onFilter()">
+          <button type="button" class="btn btn-sm btn-secondary mr-3" (click)="onFilterVend()" *ngIf="swVendedor === true">
             <i class="fas fa-search"></i>
             <span>Buscar</span>
+          </button>
+
+          <button type="button" class="btn btn-sm btn-secondary" (click)="onFilter()" *ngIf="swTodos === true">
+            <i class="fas fa-search"></i>
+            <span>Buscar en todos</span>
           </button>
         </div>
       </div>
@@ -52,7 +57,7 @@
               </ng-select>
             </div>
             <div class="form-group col-lg-2">
-              <label for="codLinea">Línea</label>
+              <label for="codLinea">Línea </label>
               <ng-select [searchable]="true" [clearable]="false" placeholder="Selecione..." [items]="lineas" placeholder="Seleccione..."
                 formControlName="codLinea" [virtualScroll]="true" labelForId="ID" bindLabel="NM_SUB_LINH"
                 bindValue="idClasse" (change)="onChangeClasse($event.ID, true, 'application')">
@@ -93,6 +98,8 @@
                 <option>100</option>
                 <option>200</option>
                 <option>300</option>
+                <option>1000</option>
+
               </select>
             </div>
             <!-- <div class="form-group col-lg-1">
@@ -184,9 +191,9 @@
              <!--  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                 Porcentaje Autorizado
               </th> -->
-              <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+              <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                 Precio Neto
-              </th>
+              </th> -->
               <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                 Moneda
               </th>
@@ -236,7 +243,7 @@
               <td class="text-center"> {{material.cantidad}}</td>
               <td class="text-center"> {{ material.precio | number:'1.4-4' }}</td>
               <!-- <td> {{ material.descuento | number:'1.2-2' }}</td> -->
-              <td class="text-center"> {{ material.precio_neto | number:'1.4-4' }}</td>
+              <!-- <td class="text-center"> {{ material.precio_neto | number:'1.4-4' }}</td> -->
               <td class="text-center"> {{material.nombre_moneda}}</td>
               <td class="text-center"> {{material.iva | number:'1.2-2' }} %</td>
              <!--  <td> {{material.columna8}}</td> -->
@@ -264,14 +271,14 @@
     <!--     </div> -->
     <div class="row" *ngIf="searching === true">
       <div class="col">
-        <message icon="fas fa-cog fa-spin" text="Estamos pesquisando os materiais para você...">
+        <message icon="fas fa-cog fa-spin" text="Estamos buscando materiales...">
         </message>
       </div>
     </div>
     <div *ngIf="searching === false">
       <div class="row" *ngIf="dadosEmpty && dadosLoaded">
         <div class="col">
-          <message icon="fas fa-box-open" text="Nenhuma informação encontrada">
+          <message icon="fas fa-box-open" text="Sin stock disponible">
           </message>
         </div>
       </div>

@@ -162,7 +162,9 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   totalItems = 10;
   totalModal = 0;
-  itemsPerPageModal = 20;
+  itemsPerPageModal = 5;
+  maxSizeModal = 5;
+
 
 
   imprimirPdf: boolean = false;
@@ -421,7 +423,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
         this.vendedores.unshift({
           id: 0,
-          nome: 'EXIBIR TODOS',
+          nome: 'EXIBIR TODOS ',
         });
       }
     });
@@ -894,7 +896,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   onPageChanged(event: PageChangedEvent): void {
-    console.log(event)
+    //console.log(event)
     this.currentPage = event.page;
     this.getPaginateData();
   }
@@ -1325,7 +1327,7 @@ export class ComercialCicloVendasCotacoesListaComponent
             this.dadosEmptyModal = false;
 
           } else {
-            this.loaderNavbar = false;
+            this.loaderNavbar = false; 
             this.pnotifyService.notice('Ningún registro encontrado');
             this.dadosEmptyModal = true;
           }
