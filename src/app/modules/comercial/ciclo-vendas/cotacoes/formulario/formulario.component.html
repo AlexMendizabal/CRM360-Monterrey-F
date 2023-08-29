@@ -232,7 +232,7 @@
         </div>
         <div class="row">
           <div class="form-group col-lg-2">
-            <label class="my-auto" for="codEndereco">NIT</label>
+            <label class="my-auto" for="razaoSocial">NIT</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
               <input formControlName="codRazaoSocial" type="text" class="form-control" [disabled]="swExisteCliente" />
 
@@ -274,7 +274,7 @@
             <label class="my-auto" for="codFormaPagamento">Rubro</label>
             <select class="form-control custom-select" formControlName="id_rubro" disabled>
               <ng-container *ngFor="let rubro of rubros">
-                <option [value]="rubro.codigo_rubro" [selected]="rubro.codigo === codigoRubro">
+                <option [value]="rubro.codigo_rubro" [selected]="rubro.codigo_rubro  === codigoRubro">
                   {{ rubro.descricao }}
                 </option>
               </ng-container>
@@ -301,10 +301,10 @@
                   href="javascript:void(0)" (click)="onDetalhesContato()">
                   Detalles
                 </a>
-                <a id="top-links" class="text-primary mr-2" href="javascript:void(0)"
+                <!--<a id="top-links" class="text-primary mr-2" href="javascript:void(0)"
                   [routerLink]="[getLinkAddContato()]" target="_blank">
                   Adicionar
-                </a>
+                </a>-->
                 <!-- <a id="top-links" class="text-primary mr-2" href="javascript:void(0)" tooltip="Recarregar"
                   (click)="onReloadContatos()">
                   <i class="fas fa-redo-alt text-light"></i>
@@ -370,7 +370,7 @@
           </div>
           <div class="form-group col-lg-2">
             <label for="orderBy">Departamento</label>
-            <input formControlName="departamento" type="text" class="form-control" [value]="nombreDepartamento"
+            <input formControlName="nombreDepartamento" type="text" class="form-control" [value]="id_departamento"
               readonly />
           </div>
           <div class="form-group col-lg-2">

@@ -49,4 +49,7 @@ export interface IMateriaisModel {
   quantidadeItem: number;
   controladoPorLote: number;
   sequenciaLote: number;
+  id_linea: number;
+  nombre_linea:string;
+  largo_material:any;
 }

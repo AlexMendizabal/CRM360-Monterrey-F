@@ -447,7 +447,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
           if (queryParams.q) {
             let params = atob(queryParams.q);
             params = JSON.parse(params);
-            this.search();
+            this.search(params);
 
             Object.keys(formValue).forEach((formKey) => {
               Object.keys(params).forEach((paramKey) => {

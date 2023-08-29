@@ -76,7 +76,10 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     // @ts-ignore: Ignorar error TS2339
     valorTotalBruto: 0,
     presentacionSeleccionado: 0,
-
+    totalMaterial: 0,
+    pesoEspecifico: 0,
+    calculo: 0,
+    descuentoAplicado: 0
   };
 
   form: FormGroup;

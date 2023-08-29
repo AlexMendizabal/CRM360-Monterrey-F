@@ -78,6 +78,7 @@ export class ComercialVendedoresService {
   }
 
   getRubros(){
+    
     return this.http
       .get(`${this.API}/rubros`)
       .pipe(take(1), retry(2));
