@@ -178,6 +178,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   contatosLoader: boolean;
   checked: number;
   formasPagamentoLoader: boolean;
+  idvendedor: number = 0;
 
 
   listaPrecios: any[] = [];
@@ -588,6 +589,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   datosVendedor(id_vendedor) {
+    this.idvendedor = id_vendedor;
     this.idListaPrecio = 0;
     const params = {
       id_vendedor: id_vendedor
@@ -1451,7 +1453,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             id_lista_precio: formValue.lista,
             id_modo_entrega: formValue.codEndereco,
             id_cliente: formValue.codCliente,
-            id_vendedor: formValue.ejecutivo_ventas,
+            id_vendedor: this.idvendedor,
             id_almacen: this.id_centro_logistico,
             codigo_oferta: null,
             fecha_final: formValue.dataValidade,
