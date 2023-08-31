@@ -27,8 +27,8 @@ export class ComercialCicloVendasCotacoesFormularioTemplateCardMaterialComponent
   
   onAddMaterial(material: ISimilaridadeModel): void {
     
-    console.log(this.filtro);
-     console.log(material); 
+  /*   console.log(this.filtro);
+     console.log(material);  */
     this.onMaterial.emit(material);
   }
 }
