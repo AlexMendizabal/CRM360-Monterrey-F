@@ -145,7 +145,7 @@ export class ComercialClientesPreCadastroComponent
             this.cnaes = response[1].result.map(cnae => ({
               id: cnae.codigo,
               descricao: cnae.descricao,
-              codigo: cnae.codigo // Agregamos el campo "codigo" aquí
+              codigo: cnae.codigo 
             }));
           } else {
             this.handleFormFieldsError();
@@ -487,11 +487,11 @@ export class ComercialClientesPreCadastroComponent
             } else if (response.responseCode === 403) {
               this.pnotifyService.notice('Falha ao atribuir vendedor ao cadastro.');
             } else {  
-              this.pnotifyService.error(` ${response.detalle}`);
+              this.pnotifyService.notice(` ${response.detalle}`);
             }
           },
           (error: any) => {
-            this.pnotifyService.error('Ocorreu um erro ao cadastrar o cliente.');
+            this.pnotifyService.notice('Ocorreu um erro ao cadastrar o cliente.');
           }
         );
         

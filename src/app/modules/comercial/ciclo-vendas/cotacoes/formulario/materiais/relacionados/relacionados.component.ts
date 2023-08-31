@@ -28,7 +28,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
   materiaisRelacionados: Array<ISimilaridadeModel> = [];
   materiaisRelacionadosLoader: boolean;
 
-  filtro: array = [];
+  filtro: Array<any> = [];
 
 
   vendasGerais: Array<ISimilaridadeModel> = [];

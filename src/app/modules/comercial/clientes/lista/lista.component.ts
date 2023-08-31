@@ -103,18 +103,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   editedFields: any = {};
   vendedoresList: any[] = [];
   editingContacto: boolean = false;
-  // selectedContact: any = {
-  //   contacto: '',
-  //   ds_tipo_cont: '',
-  //   direccion: '',
-  //   ds_cont: '',
-  //   ds_cont_meio: '',
-  //   id_cont: '',
-  // };
-
-  // modalRef: BsModalRef;
-  // modalDetalhes: TemplateRef<any>;
-  // agregarContactoForm: FormGroup;
 
 
   constructor(
@@ -347,13 +335,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     }
   );
 }
-
   
-  
-  
-  
-  
-    
   mapTipoPessoaToTipoPersona(tipoPessoa: string): string {
     const map = {
       'S': 'Sociedades',
@@ -395,6 +377,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.editedFields.ciudad = this.dadosCadastrais.ciudad;
     this.editedFields.NombreVendedor = this.dadosCadastrais.NombreVendedor;
     this.editedFields.sucursal = this.dadosCadastrais.sucursal;
+    this.editedFields.direccion = this.dadosCadastrais.direccion;
     this.editedFields.id_cliente = this.dadosCadastrais.id_cliente;
     this.editedFields.tipo_persona = this.dadosCadastrais.tipo_persona;
     this.editedFields.tipo_pessoa = this.dadosCadastrais.tipo_pessoa;
@@ -413,8 +396,16 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
   saveChanges() {
     const codigoCliente = this.dadosCadastrais.id_cliente;
-    const editedData = this.editedFields; // Datos editados
+    const editedData = {
+      ...this.editedFields, 
+      ubicacion: [
+        {
+          direccion: this.editedFields.direccion
+        }
+      ]
+    };
     this.editedFields.tipo_persona = this.mapTipoPessoaToTipoPersona(this.editedFields.tipo_pessoa);
+    
 
     // Asignar el valor seleccionado del vendedor antes de limpiar los campos editados
     this.dadosCadastrais.id_vendedor = this.editedFields.id_vendedor;
