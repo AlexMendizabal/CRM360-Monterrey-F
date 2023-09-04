@@ -15,7 +15,7 @@ import { ModulosService } from '../requests/modulos.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly API = `http://127.0.0.1:8000/usuario`;
+  private readonly API = `http://23.254.204.187/api/usuario`;
 
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   changePassword(data: any): Observable<any> {
-    return this.http.post(`http://23.254.204.187/core/contra-senha`, data, { observe: 'response' }).pipe(take(1));
+    return this.http.post(`http://23.254.204.187/api/core/contra-senha`, data, { observe: 'response' }).pipe(take(1));
   }
 
   sessionExpired(): void {

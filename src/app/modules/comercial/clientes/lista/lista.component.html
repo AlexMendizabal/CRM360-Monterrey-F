@@ -352,10 +352,10 @@
                           </ng-container>
                           <ng-template #editingVendedor>
                             <select [(ngModel)]="editedFields.id_vendedor">
-                              <option *ngFor="let vendedor of vendedoresList" [value]="vendedor.id">{{ vendedor.nome }}
-                              </option>
+                              <option [value]="originalVendedorId">{{ dadosCadastrais.NombreVendedor }}</option>
+                              <option *ngFor="let vendedor of vendedoresList" [value]="vendedor.id">{{ vendedor.nome }}</option>
                             </select>
-                          </ng-template>
+                          </ng-template>                          
                         </div>
                       </div>
 

@@ -17,7 +17,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCicloVendasCotacoesService {
-  private readonly API = `http://127.0.0.1:8000/comercial/ciclo-vendas/cotacoes`;
+  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
 
   constructor(
     protected http: HttpClient,
@@ -259,7 +259,7 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
-  materialesrelacionados(params: any): Observable<Object | JsonResponse> {
+  postMaterialesRelacionados(params: any): Observable<Object | JsonResponse> {
     return this.http
     .post(`${this.API}/materiales/relacionados`, params)
     .pipe(take(1), retry(2));

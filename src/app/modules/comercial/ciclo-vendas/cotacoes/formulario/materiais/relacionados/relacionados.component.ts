@@ -188,7 +188,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
     this.materiaisRelacionadosLoader = true;
     this.materiaisRelacionados = [];
     this.cotacoesService
-      .materialesrelacionados({
+      .postMaterialesRelacionados({
         codEmpresa: this.codEmpresa,
         codMaterial: materiais.codMaterial,
         codCliente: this.codCliente,

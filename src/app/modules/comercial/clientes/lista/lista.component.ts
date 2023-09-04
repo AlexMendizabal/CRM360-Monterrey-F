@@ -103,7 +103,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   editedFields: any = {};
   vendedoresList: any[] = [];
   editingContacto: boolean = false;
-
+  originalVendedorId: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -385,11 +385,13 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.editedFields.celular = this.dadosCadastrais.celular;
     this.editedFields.nit = this.dadosCadastrais.nit;
     this.editedFields.id_vendedor = this.dadosCadastrais.id_vendedor;
+    this.originalVendedorId = this.dadosCadastrais.id_vendedor; 
     // Repite para otros campos editables...
   }
   cancelEditing() {
     // Reinicia los campos editados a sus valores originales
     this.editedFields = {};
+    this.originalVendedorId = null;
   
     // Desactiva el modo de edición
     this.editingMode = false;
@@ -407,8 +409,10 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.editedFields.tipo_persona = this.mapTipoPessoaToTipoPersona(this.editedFields.tipo_pessoa);
     
 
-    // Asignar el valor seleccionado del vendedor antes de limpiar los campos editados
-    this.dadosCadastrais.id_vendedor = this.editedFields.id_vendedor;
+    if (this.editedFields.id_vendedor !== this.originalVendedorId) {
+      editedData.id_vendedor = this.editedFields.id_vendedor;
+    }
+    
 
     // Llamar a la función para guardar los cambios
     this.clientesService.sapUpdateClient(codigoCliente, editedData).subscribe(

@@ -12,7 +12,7 @@ import { FormaContato } from './models/formas-contato';
   providedIn: 'root',
 })
 export class ComercialCadastrosContatoFormasContatoService {
-  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/contato/forma-contato`;
+  private readonly API = `http://23.254.204.187/api/comercial/cadastros/contato/forma-contato`;
 
   constructor(protected http: HttpClient) {}
 
