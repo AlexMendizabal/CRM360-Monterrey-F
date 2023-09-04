@@ -9,11 +9,11 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class FormRulesService {
-  private readonly API = `http://127.0.0.1:8000/common/services`;
+  private readonly API = `http://23.254.204.187/api/common/services`;
 
   constructor(protected http: HttpClient) {}
 
-  getRules(formRef: number): Observable<any> {
+    getRules(formRef: number): Observable<any> {
     return this.http.get(`${this.API}/form-rules/${formRef}`).pipe(take(1));
   }
 }

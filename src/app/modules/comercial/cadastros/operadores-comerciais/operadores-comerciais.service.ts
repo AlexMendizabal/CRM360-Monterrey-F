@@ -12,7 +12,7 @@ import { OperadorComercial } from './models/operador-comercial';
   providedIn: 'root'
 })
 export class ComercialCadastrosOperadorComercialService {
-  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/operador-comercial`;
+  private readonly API = `http://23.254.204.187/api/comercial/cadastros/operador-comercial`;
 
   constructor(protected http: HttpClient) {}
 

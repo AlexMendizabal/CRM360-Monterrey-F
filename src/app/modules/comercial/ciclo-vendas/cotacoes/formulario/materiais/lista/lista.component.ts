@@ -88,6 +88,10 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   searching = false;
   searchParams: any = {};
 
+  swTodos = false;
+  swVendedor = true;
+
+
   form: FormGroup;
   orderBy = 'nrPedido';
   orderType: 'asc' | 'desc' = 'asc';
@@ -99,6 +103,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   grupos: Array<any> = [];
   materiais: Array<any> = [];
   materiaisLoader: boolean;
+  disabledMaterial = false;
 
   autoScroll = true;
 
@@ -138,7 +143,6 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     this.getFilterValues();
     this.cliente.emit(this.codCliente)
     this.getMateriais(null, 'application')
-
 
   }
 
@@ -298,14 +302,14 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
           id_grupo: this.form.controls.codClasse.value,
           id_linea: codClasse,
           registros: this.form.controls.registros.value
-        };;
+        };
         this.getMateriales(params, src);
       }
     }
   }
 
   getMateriales(params, src) {
-    this.comercialService.getMateriales(params)
+    this.comercialService.getMaterialesLista(params)
       .pipe(
         finalize(() => {
           if (src === 'application') {
@@ -320,12 +324,10 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
             response.responseCode == 200
           ) {
             this.materiais = response.result;
-
             /* this.materiais.unshift({
               id_material: 0,
               nombre: 'EXHIBIR TODOS',
             }); */
-
             this.form.controls.codMaterial.enable();
             this.form.controls.codMaterial.setValue(0);
             this.form.controls.codMaterial.updateValueAndValidity();
@@ -377,7 +379,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       codClasse: null,
       codMaterial: null,
       comEstoque: 1,
-      registros: 100,
+      registros: 7000,
     });
     /* this.form.controls.codMaterial.disable(); */
     this.form.controls.codMaterial.updateValueAndValidity();
@@ -436,7 +438,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       codClasse: null,
       codMaterial: null,
       comEstoque: 1,
-      registros: 100,
+      registros: 7000,
     };
 
     this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
@@ -445,7 +447,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
           if (queryParams.q) {
             let params = atob(queryParams.q);
             params = JSON.parse(params);
-            this.search();
+            this.search(params);
 
             Object.keys(formValue).forEach((formKey) => {
               Object.keys(params).forEach((paramKey) => {
@@ -552,20 +554,31 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
  */  }
 
   onFilter(): void {
-
+    var tipo = 2
     if (this.checkFieldErrors() === false) {
       //console.log(this.checkFieldErrors);
       if (this.searching === false && this.form.valid) {
-        this.setRouterParams(this.getFormFilterValues());
+        this.setRouterParams(this.getFormFilterValues(), tipo);
       }
     } else {
       /*    console.log("hola"); */
-      this.setRouterParams(this.getFormFilterValues());
+      this.setRouterParams(this.getFormFilterValues(), tipo);
       /*   this.scrollToFormOnTop.emit(true); */
     }
   }
 
-  setRouterParams(params: any): void {
+  onFilterVend(): void {
+    var tipo = 1;
+    if (this.checkFieldErrors() === false) {
+      if (this.searching === false && this.form.valid) {
+        this.setRouterParams(this.getFormFilterValues(), tipo);
+      }
+    } else {
+      this.setRouterParams(this.getFormFilterValues(), tipo);
+    }
+  }
+
+  setRouterParams(params: any, tipo: number): void {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: {
@@ -579,7 +592,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       },
       queryParamsHandling: 'merge',
     });
-    this.search();
+    this.search(tipo);
   }
 
   getFormFilterValues(): Object {
@@ -608,7 +621,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     return params;
   }
 
-  search(): void {
+  search(tipo): void {
     /* console.log(this.codCliente) */
     if (!this.codCliente) {
       return;
@@ -624,58 +637,143 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       id_lista: this.id_lista,
       registros: this.form.controls.registros.value
     }
-    this.comercialService
-      .getMaterialesOferta(params)
-      .pipe(
-        finalize(() => {
-          this.loaderNavbar.emit(false);
-          this.searching = false;
-          this.firstSearch = true;
-          this.dadosLoaded = true;
-        })
-      )
-      .subscribe({
-        next: (response: any) => {
-          /*           console.log(response.responseCode);
-           */          /*  if (response.hasOwnProperty('success')
-           && response.success === true
-           && !response.data[0].msg) {
-             this.dados = response.data.map(function (el: any) {
-               var o = Object.assign({}, el);
-               o.checked = 0; 
-               return o;
-             }); */
-          if (response.responseCode === 200) {
-            this.dados = response.result.map((el) => {
-              var o = Object.assign({}, el);
-              o.checked = 0;
-              return o;
-            });
+    if (tipo == 1) {
+
+      this.swTodos = false;
+      this.swVendedor = true;
+
+      this.comercialService
+        .getMaterialesOfertaVendedor(params)
+        .pipe(
+          finalize(() => {
+            this.loaderNavbar.emit(false);
+            this.searching = false;
+            this.firstSearch = true;
+            this.dadosLoaded = true;
+          })
+        )
+        .subscribe({
+          next: (response: any) => {
+            /*           console.log(response.responseCode);
+             */          /*  if (response.hasOwnProperty('success')
+        && response.success === true
+        && !response.data[0].msg) {
+          this.dados = response.data.map(function (el: any) {
+            var o = Object.assign({}, el);
+            o.checked = 0; 
+            return o;
+          }); */
+            if (response.responseCode === 200) {
+              this.dados = response.result.map((el) => {
+                var o = Object.assign({}, el);
+                o.checked = 0;
+                return o;
+              });
+
+              this.dadosEmpty = false;
+              this.form.controls.codMaterial.enable();
 
 
 
 
-            //console.log('dados', this.dados);
+              //console.log('dados', this.dados);
 
-            // if (this.dados.length > 10) {
-            this.tableConfig.fixedHeader = true;
-            // } else {
-            //this.tableConfig.fixedHeader = false;
-            //  }
-            //} else {
-            //this.pnotifyService.notice("Há campos faltando ou não há dados para sua consulta.");
-            //this.dadosEmpty = true;
+              // if (this.dados.length > 10) {
+              this.tableConfig.fixedHeader = true;
+              // } else {
+              //this.tableConfig.fixedHeader = false;
+              //  }
+              //} else {
+              //this.pnotifyService.notice("Há campos faltando ou não há dados para sua consulta.");
+              //this.dadosEmpty = true;
+            } else {
+              this.swTodos = true;
+              this.swVendedor = false;
+              this.dadosEmpty = true;
+              this.form.controls.codMaterial.disable();
+
+
+            }
+          },
+          error: (error: any) => {
+            if (error['error'].hasOwnProperty('mensagem')) {
+              this.pnotifyService.error(error.error.mensagem);
+            } else {
+              this.pnotifyService.error();
+            }
+            this.dadosEmpty = true;
           }
-        },
-        error: (error: any) => {
-          if (error['error'].hasOwnProperty('mensagem')) {
-            this.pnotifyService.error(error.error.mensagem);
-          } else {
-            this.pnotifyService.error();
+        });
+
+    } else if (tipo == 2) {
+      this.swTodos = true;
+      this.swVendedor = false;
+
+      this.form.controls.codMaterial.disable();
+      this.comercialService
+        .getMaterialesOferta(params)
+        .pipe(
+          finalize(() => {
+            this.loaderNavbar.emit(false);
+            this.searching = false;
+            this.firstSearch = true;
+            this.dadosLoaded = true;
+          })
+        )
+        .subscribe({
+          next: (response: any) => {
+            /*           console.log(response.responseCode);
+             */          /*  if (response.hasOwnProperty('success')
+        && response.success === true
+        && !response.data[0].msg) {
+          this.dados = response.data.map(function (el: any) {
+            var o = Object.assign({}, el);
+            o.checked = 0; 
+            return o;
+          }); */
+            if (response.responseCode === 200) {
+              this.form.controls.codMaterial.enable();
+              this.swTodos = false;
+              this.swVendedor = true;
+
+              this.dados = response.result.map((el) => {
+                var o = Object.assign({}, el);
+                o.checked = 0;
+                return o;
+              });
+              this.dadosEmpty = false;
+
+
+
+
+              //console.log('dados', this.dados);
+
+              // if (this.dados.length > 10) {
+              this.tableConfig.fixedHeader = true;
+              // } else {
+              //this.tableConfig.fixedHeader = false;
+              //  }
+              //} else {
+              //this.pnotifyService.notice("Há campos faltando ou não há dados para sua consulta.");
+              //this.dadosEmpty = true;
+            } else {
+              this.swTodos = false;
+              this.swVendedor = true;
+              this.dadosEmpty = true;
+              this.form.controls.codMaterial.enable();
+
+            }
+          },
+          error: (error: any) => {
+            if (error['error'].hasOwnProperty('mensagem')) {
+              this.pnotifyService.error(error.error.mensagem);
+            } else {
+              this.pnotifyService.error();
+            }
+            this.dadosEmpty = true;
           }
-          this.dadosEmpty = true;
-        }
-      });
+        });
+    }
   }
 
   checkFieldErrors(): boolean {
@@ -747,6 +845,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     this.toggleAll = !this.toggleAll;
 
     for (let index = 0; index < this.dados.length; index++) {
+      // @ts-ignore: Ignorar error TS2339
       if (this.dados[index].codigo_situacion == "A") {
         this.dados[index].checked = this.toggleAll === true ? 1 : 0;
       }
@@ -771,7 +870,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     /*  console.log(this.dados[index]);
      if(this.dados[index].codigo_situacion == "A") {
      let materiais = [];
-     materiais.push(this.dados[index]);
+     materiais.push(this.dados[index]); 
      this.formularioService.materiaisSubject.next(materiais);
      this.scrollToCarrinho.emit(this.autoScroll);
      this.dados[index].checked = 0;
@@ -781,6 +880,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
   onCheckMaterial(index: number, material: IMateriaisModel): void {
+    // @ts-ignore: Ignorar error TS2339
     if (this.dados[index].codigo_situacion == "A") {
       this.dados[index].checked = material.checked == 0 ? 1 : 0;
     } else {
@@ -790,6 +890,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
   onAddMaterial(): void {
+    this.swVendedor = true;
+    this.swTodos = false;
     let materiais = [];
     for (let index = 0; index < this.dados.length; index++) {
       if (this.dados[index].checked === 1) {
@@ -806,6 +908,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     } else {
       this.pnotifyService.notice('Seleccione al menos un material');
     }
+    this.dados = [];
   }
 
   onActiveRow(index: number): void {
@@ -824,6 +927,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   onEstoqueDetalhes(material: IMateriaisModel): void {
 
     let params: any = {
+      // @ts-ignore: Ignorar error TS2339
       idMaterial: material.id_material,
     };
     /* console.log(params); */

@@ -12,8 +12,8 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialVendedoresService {
-  private readonly API = `http://127.0.0.1:8000/comercial/vendedor`;
-  private readonly API_CADASTROS = `http://127.0.0.1:8000/comercial/cadastros`;
+  private readonly API = `http://23.254.204.187/api/comercial/vendedor`;
+  private readonly API_CADASTROS = `http://23.254.204.187/api/comercial/cadastros`;
 
 
   constructor(protected http: HttpClient) { }
@@ -28,9 +28,9 @@ export class ComercialVendedoresService {
     return this.http.get(`${this.API}/lista`).pipe(take(1), retry(2));
   }
 
-  getVendedoresSucursal(id: number){
+  getVendedoresSucursal(id: number) {
     return this.http
-    .get(`${this.API}/sucursal-vendedor/${id}`)
+      .get(`${this.API}/sucursal-vendedor/${id}`)
   }
 
   getGestiones() {
@@ -66,6 +66,21 @@ export class ComercialVendedoresService {
   getVinculoOperadores() {
     return this.http
       .get(`${this.API}/vinculo-operadores`)
+      .pipe(take(1), retry(2));
+  }
+  getDetalleVendedor(params) {
+  return this.http
+      .get(`${this.API}/detalles_vendedor`,
+        {
+          params: params
+        })
+      .pipe(take(1), retry(2));
+  }
+
+  getRubros(){
+    
+    return this.http
+      .get(`${this.API}/rubros`)
       .pipe(take(1), retry(2));
   }
 }

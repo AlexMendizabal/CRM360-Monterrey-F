@@ -252,7 +252,7 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
                 body: [
                   [
                     {
-                      text: 'COTAÇÃO',
+                      text: 'COTIZACION',
                       colSpan: 2,
                       bold: true,
                       alignment: 'center',

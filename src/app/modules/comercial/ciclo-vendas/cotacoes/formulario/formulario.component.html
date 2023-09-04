@@ -117,15 +117,21 @@
       <div class="col" [hidden]=showBloco1>
         <div class="form-row">
           <div class="form-group col-lg-2">
-            <label class="mb-1" for="codigo_cliente">N° de Oferta</label>
+            <label class="mb-1" for="codigo_cliente">N° de Oferta SAP.</label>
             <input type="text" id="codigo_cliente" class="form-control" formControlName="codigo_oferta"
               [readonly]="true" [attr.disabled]="true">
           </div>
           <div class="form-group col-lg-2">
-            <label for="dataEncerramento">Fecha de cotización</label>
+            <label class="mb-1" for="codigo_cliente">N° de Oferta CRM.</label>
+            <input type="text" id="codigo_cliente" class="form-control" formControlName="codigo_oferta_crm"
+              [readonly]="true" [attr.disabled]="true">
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="dataEncerramento">Fecha de cotización </label>
             <input class="form-control" id="dataEncerramento" type="text" bsDatepicker [bsConfig]="bsConfig"
               formControlName="dataEncerramento" [readonly]="visualizar"
-              [ngClass]="onFieldError('dataEncerramento') + ' ' + onFieldRequired(form.controls.dataEncerramento)">
+              [ngClass]="onFieldError('dataEncerramento') + ' ' + onFieldRequired(form.controls.dataEncerramento)"
+              disabled>
             <invalid-form-control [show]="onFieldInvalid('dataEncerramento')"
               message="Data de encerramento é obrigatório."></invalid-form-control>
           </div>
@@ -133,19 +139,19 @@
             <label for="dataValidade">Válido hasta</label>
             <input class="form-control" id="dataValidade" type="text" bsDatepicker [bsConfig]="bsConfig"
               formControlName="dataValidade" [readonly]="true" (bsValueChange)="onChangeValidadeProposta($event)"
-              [ngClass]="onFieldError('dataValidade') + ' ' + onFieldRequired(form.controls.dataValidade)">
+              [ngClass]="onFieldError('dataValidade') + ' ' + onFieldRequired(form.controls.dataValidade)" disabled>
             <invalid-form-control [show]="onFieldInvalid('dataValidade') == 'required'"
               message="La fecha de validez es obligatorio."></invalid-form-control>
             <invalid-form-control [show]="onFieldInvalid('dataValidade') == 'maxDate'"
-              message="No debe sobrepasar los 30 días."></invalid-form-control>
+              message="No debe sobrepasar los 30 días ."></invalid-form-control>
           </div>
-          <div class="form-group col-lg-2">
+          <!-- <div class="form-group col-lg-2">
             <label for="dataValidade"> Cambio de estado</label>
             <input class="form-control" id="fechaRecordatorio" type="text" bsDatepicker [bsConfig]="bsConfig"
               formControlName="fechaRecordatorio" [readonly]="true"
-              [ngClass]="onFieldError('fechaRecordatorio') + ' ' + onFieldRequired(form.controls.fechaRecordatorio)">
+              [ngClass]="onFieldError('fechaRecordatorio') + ' ' + onFieldRequired(form.controls.fechaRecordatorio)" >
           </div>
-
+ -->
         </div>
       </div>
     </div>
@@ -226,13 +232,14 @@
         </div>
         <div class="row">
           <div class="form-group col-lg-2">
-            <label class="my-auto" for="codEndereco">NIT</label>
+            <label class="my-auto" for="razaoSocial">NIT</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName="codRazaoSocial" type="text" class="form-control" />
+              <input formControlName="codRazaoSocial" type="text" class="form-control" [disabled]="swExisteCliente" />
+
             </div>
           </div>
           <div class="form-group col-lg-2">
-            <label class="my-auto" for="razaoSocial">Nombre factura</label>
+            <label class="my-auto" for="razaoSocial">Razón social</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
               <input formControlName="razaoSocial" type="text" class="form-control" />
               <input formControlName="id_tipo_cliente" type="hidden" />
@@ -240,20 +247,51 @@
 
             </div>
           </div>
+          <div class="form-group col-lg-3">
+            <label class="my-auto" for="razaoSocial">Correo electrónico</label>
+            <div class="my-1 text-uppercase" style="font-size: 11px">
+              <input formControlName="correo_electronico" type="text" class="form-control" />
+
+            </div>
+          </div>
           <div class="form-group col-lg-2">
-            <label for="orderBy">Lista de precios</label>
-            <select class="form-control custom-select" formControlName="lista" (change)="updateLista()">
-              <ng-container *ngFor="let listaPrecio of listaPrecios">
-                <option [value]="listaPrecio.id" [selected]=" listaPrecio.id==idListaPrecio">{{
-                  listaPrecio.nombre_lista
-                  }}</option>
-              </ng-container>
-            </select>
+            <label class="my-auto" for="razaoSocial">Celular </label>
+            <div class="my-1 text-uppercase" style="font-size: 11px">
+              <input formControlName="celular" type="text" class="form-control" />
+            </div>
+          </div>
+          <div class="form-group col-lg-2">
+            <label class="my-auto" for="razaoSocial">Teléfono </label>
+            <div class="my-1 text-uppercase" style="font-size: 11px">
+              <input formControlName="telefono_cliente" type="text" class="form-control" />
+            </div>
           </div>
 
 
         </div>
         <div class="row">
+          <div class="form-group col-lg-2">
+            <label class="my-auto" for="codFormaPagamento">Rubro</label>
+            <select class="form-control custom-select" formControlName="id_rubro" disabled>
+              <ng-container *ngFor="let rubro of rubros">
+                <option [value]="rubro.codigo_rubro" [selected]="rubro.codigo_rubro  === codigoRubro">
+                  {{ rubro.descricao }}
+                </option>
+              </ng-container>
+            </select>
+          </div>
+
+          <div class="form-group col-lg-2">
+            <label class="my-auto" for="codFormaPagamento">Tipo de pago</label>
+            <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
+              bindLabel="descricao" bindValue="codFormaPagamento" formControlName="codFormaPagamento"
+              [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="true"
+              [virtualScroll]="true" placeholder="Seleccione..." >
+              <!-- [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)"-->
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
+              message="Forma de pago obligatorio"></invalid-form-control>
+          </div>
           <div class="form-group col-lg-3">
             <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
               <label class="my-auto" for="codContato">Persona de contacto</label>
@@ -275,14 +313,15 @@
             </div>
             <ng-select [searchable]="true" [clearable]="false" [items]="contatos" formControlName="codContato"
               placeholder="Selecione..." [virtualScroll]="true" bindLabel="nomeContato" bindValue="codContato"
-              [loading]="contatosLoader" loadingText="Carregando..." [readonly]="visualizar" (change)="changeContacto($event.codContato)" >
+              [loading]="contatosLoader" loadingText="Carregando..." [readonly]="visualizar"
+              (change)="changeContacto($event.codContato)">
             </ng-select>
             <!-- [ngClass]="onFieldError('codContato') + ' ' + onFieldRequired(form.controls.codContato)"-->
             <!-- <invalid-form-control [show]="onFieldInvalid('codContato')" message="Contato responsável é obrigatório."></invalid-form-control>-->
           </div>
           <!-- cambiar formControlName y for="codEndereco"-->
           <div class="form-group col-lg-2">
-            <label class="my-auto" for="codEndereco">numero de celular</label>
+            <label class="my-auto" for="codEndereco">Número de celular</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
               <input formControlName=" " type="text" class="form-control" [readonly]="true" [attr.disabled]="true" />
             </div>
@@ -291,18 +330,53 @@
         <!--novos campos fim-->
         <div class="row">
           <div class="form-group col-lg-2">
-            <label for="orderBy">Ejecutivo de ventas</label>
+            <!-- <label for="orderBy">Ejecutivo de ventas</label>
             <select class="form-control custom-select" formControlName="ejecutivo_ventas" id="orderBy">
               <ng-container *ngFor="let listaEjecutivo of listaEjecutivo">
                 <option [value]="listaEjecutivo.id" [selected]="idVendedor === listaEjecutivo.id">{{
                   listaEjecutivo.nome
                   }}</option>
               </ng-container>
+            </select> -->
+            <label class="my-auto" for="codFormaPagamento">Ejecutivo de venta</label>
+            <ng-select class="" [formControlName]="ejecutivo_ventas" id="orderBy" (change)="datosVendedor($event);">
+              <ng-container *ngFor="let listaEjecutivo of listaEjecutivo">
+                <ng-option [value]="listaEjecutivo.id">
+                  {{ listaEjecutivo.nome}}
+                </ng-option>
+              </ng-container>
+            </ng-select>
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="orderBy">Lista de precios</label>
+            <select class="form-control custom-select" formControlName="lista" (change)="updateLista()" disabled>
+              <ng-container *ngFor="let listaPrecio of listaPrecios">
+                <option [value]="listaPrecio.id" [selected]="listaPrecio.id === idListaPrecio">
+                  {{ listaPrecio.nombre_lista }}
+                </option>
+              </ng-container>
             </select>
+
+            <!-- <label class="my-auto" for="codFormaPagamento">Lista de precios</label> -->
+            <!-- <ng-select class="" [formControlName]="lista" id="orderBy"  [(ngModel)]="idListaPrecio">
+              <ng-container *ng
+              For="let listaPrecio of listaPrecios">
+                <ng-option [value]="listaPrecio.id" >
+                  {{ listaPrecio.nombre_lista }}
+                </ng-option>
+                
+              </ng-container>
+            </ng-select> -->
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="orderBy">Departamento</label>
+            <input formControlName="nombreDepartamento" type="text" class="form-control" [value]="id_departamento"
+              readonly />
           </div>
           <div class="form-group col-lg-2">
             <label for="orderBy">Propietario</label>
-            <input formControlName=" " type="text" class="form-control" [value]="dadosLancamento.nomeVendedor" />
+            <input formControlName=" " type="text" class="form-control" [value]="dadosLancamento.nomeVendedor"
+              readonly />
           </div>
         </div>
       </div>
@@ -389,22 +463,26 @@
               <input formControlName=" " type="text" class="form-control" />
             </div>
           </div> -->
-          <div class="form-group col-lg-1" *ngIf="swEntrega == true"> 
+          <div class="form-group col-lg-1" *ngIf="swEntrega == true">
             <label for="dataEntrega">Referencia</label> <br>
-            <button class="btn btn-primary w-100" type="button"   (click)="openModalUbicacion(seleccionarUbicacion)"> <i class="fas fa-map-marker-alt"></i>Ubicación</button>
+            <button class="btn btn-primary w-100" type="button" (click)="openModalUbicacion(seleccionarUbicacion)"> <i
+                class="fas fa-map-marker-alt"></i>Ubicación </button>
           </div>
           <div class="form-group col-lg-2" *ngIf="swEntrega == true">
             <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
-            <ng-select class="" [formControlName]="centroLogisticoControl" id="orderBy">
-              <ng-option *ngFor="let centroLogistico of centrosLogisticos" [value]="centroLogistico.id">
-                {{ centroLogistico.NOMBRE_DEPOSITO }}
-              </ng-option>
+            <ng-select class="" [formControlName]="centroLogisticoControl" id="orderBy"
+              (change)="onCentroLogisticoChange($event)">
+              <ng-container *ngFor="let centroLogistico of centrosLogisticos">
+                <ng-option [value]="centroLogistico.id">
+                  {{ centroLogistico.NOMBRE_DEPOSITO }}
+                </ng-option>
+              </ng-container>
             </ng-select>
             <!-- <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
               message="Centro Logistico obligatorio."></invalid-form-control> -->
           </div>
-          
-         <!--  <div class="form-group col-lg-2" *ngIf="swEntrega == true">
+
+          <!--  <div class="form-group col-lg-2" *ngIf="swEntrega == true">
             <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
               <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
               <select class="form-control custom-select" formControlName="centroLogistico" id="orderBy">
@@ -419,18 +497,17 @@
             <div class="form-row">
               <div class="form-group col">
                 <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
-                  <label class="my-auto" for="codFormaPagamento">Forma de Pago</label>
-                  <div class="my-auto text-uppercase" style="font-size: 11px">
+<!--                   <label class="my-auto" for="codFormaPagamento">Forma de Pago</label>
+ -->                  <div class="my-auto text-uppercase" style="font-size: 11px">
                   </div>
                 </div>
-                <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
+                <!-- <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
                   bindLabel="descricao" bindValue="codFormaPagamento" formControlName="codFormaPagamento"
                   [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="visualizar"
                   [virtualScroll]="true" placeholder="Selecione...">
-                  <!-- [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)"-->
-                </ng-select>
-                <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
-                  message="El tipo de pago es obligatorio."></invalid-form-control>
+                </ng-select> -->
+                <!-- <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
+                  message="El tipo de pago es obligatorio."></invalid-form-control> -->
               </div>
             </div>
           </div>
@@ -457,34 +534,34 @@
     <!-- Anexos y observaciones  -->
     <!-- <div #scrollToFormOnBottom *ngIf="dependenciesLoaded"> -->
     <!--   <div class="row justify-content-between p x-3">-->
-       
-        <!-- Datos adicionales -->
-        <div class="col shadow-sm mt-4" id="blocos">
-          <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(6)">
-            <span class="fas fa-list-alt d-flex justify-content-center align-items-center" id="icon-gray"></span>
-            <div class="d-flex justify-content-center align-items-center ml-2"><strong>Datos Adicionales</strong>
-            </div>
-            <div class="col"></div>
-            <div class="d-flex justify-content-end align-items-center">
 
-              <div class="d-flex float-end align-items-center mr-4" *ngIf="showBloco6">
-                <i class="fas fa-caret-down"
-                  style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
-              </div>
+    <!-- Datos adicionales -->
+    <div class="col shadow-sm mt-4" id="blocos">
+      <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(6)">
+        <span class="fas fa-list-alt d-flex justify-content-center align-items-center" id="icon-gray"></span>
+        <div class="d-flex justify-content-center align-items-center ml-2"><strong>Datos Adicionales</strong>
+        </div>
+        <div class="col"></div>
+        <div class="d-flex justify-content-end align-items-center">
 
-              <div class="d-flex float-end align-items-center mr-4" *ngIf="!showBloco6">
-                <i class="fas fa-caret-up"
-                  style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
-              </div>
-
-            </div>
+          <div class="d-flex float-end align-items-center mr-4" *ngIf="showBloco6">
+            <i class="fas fa-caret-down"
+              style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
           </div>
-          <div class="col" [hidden]=showBloco6>
 
-            <!-- <div class="row">
+          <div class="d-flex float-end align-items-center mr-4" *ngIf="!showBloco6">
+            <i class="fas fa-caret-up"
+              style="background-color: transparent; color: #7F849C; border-color: transparent;"></i>
+          </div>
+
+        </div>
+      </div>
+      <div class="col" [hidden]=showBloco6>
+
+        <!-- <div class="row">
               <div class="col"><hr></div>
             </div> -->
-            <!--<div class="form-row">
+        <!--<div class="form-row">
               <div class="form-group col">
                 <label for="dadosAdicionais">Dados Adicionais da Nota Fiscal</label>
                 <textarea class="form-control" id="dadosAdicionais" formControlName="dadosAdicionais"
@@ -492,16 +569,16 @@
                 </textarea>
               </div>
             </div>-->
-            <div class="form-row">
-              <div class="form-group col">
-                <label for="observacoes">Observaciones</label>
-                <textarea class="form-control" id="observacoes" formControlName="observacoes" [readonly]="visualizar">
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="observacoes">Observaciones</label>
+            <textarea class="form-control" id="observacoes" formControlName="observacoes" [readonly]="visualizar">
                 </textarea>
-              </div>
-            </div>
           </div>
         </div>
-     <!--  </div> -->
+      </div>
+    </div>
+    <!--  </div> -->
     <!-- </div> -->
   </form>
   <ng-template #selecionarCliente>
@@ -515,10 +592,10 @@
     </comercial-ciclo-vendas-cotacoes-formulario-modal-material-ubicacion>
   </ng-template>
 
-  
-  <!-- <ng-template>
-    <comercial-ciclo-vendas-cotacoes-formulario-modal-finalizacao-finalizacion>
-    </comercial-ciclo-vendas-cotacoes-formulario-modal-finalizacao-finalizacion>
-  </ng-template> -->
+
+  <ng-template #seleccionarAutorizacion>
+    <comercial-ciclo-vendas-cotacoes-formulario-modal-material-autorizar>
+    </comercial-ciclo-vendas-cotacoes-formulario-modal-material-autorizar>
+  </ng-template>
 
 </app-body>

@@ -9,13 +9,13 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class AtividadesService {
-  private readonly API = `http://127.0.0.1:8000/common/atividades`;
+  private readonly API = `http://23.254.204.187/api/common/atividades`;
 
   constructor(protected http: HttpClient, private router: Router) {}
 
   registrarAcesso(idAtividade?: number) {
     return this.http
-      .post(`http://127.0.0.1:8000/core/registrar-acesso`, {
+      .post(`http://23.254.204.187/api/core/registrar-acesso`, {
         idAtividade: idAtividade,
         dsRota: this.router.url,
       })

@@ -35,7 +35,7 @@
           <div class="form-group col-lg-3">
             <label for="empresa"> Almacén </label>
             <ng-select [searchable]="true" [clearable]="false" [items]="almacenes" formControlName="empresa"
-              [virtualScroll]="true" labelForId="empresa" bindLabel="ALMACEN" bindValue="ID"
+              [virtualScroll]="true" labelForId="empresa" bindLabel="ALMACEN" bindValue="id"
               (change)="onChangeAlmacen($event.id)"
               [ngClass]="onFieldError('empresa') + ' ' + onFieldRequired('empresa')">
             </ng-select>
@@ -81,7 +81,6 @@
 
         </div>
         <div class="form-row">
-
           <div class="form-group col-lg-3 mb-0">
             <label for="codMaterial">Código material</label>
             <input type="text" class="form-control" formControlName="codMaterial" (keydown.enter)="onFilter()">
@@ -109,7 +108,6 @@
               <option>300</option>
             </select>
           </div>
-
         </div>
       </form>
     </advanced-filter>
@@ -191,7 +189,6 @@
       </div>
     </div>
   </div>
-
 </app-body>
 <ng-template #modalDetalhes>
   <div class="modal-header">
@@ -240,7 +237,7 @@
                 </tr>
               </ng-template>
               <ng-template #tbody let-tbody>
-                <tr *ngFor="let item of estoqueComprometido">
+                <tr *ngFor="let item of getPaginateDataComprometido()">
                   <td [ngClass]="estoqueComprometidoClassStatusBorder(item.id_oferta)" class="text-center">{{
                     item.codigo_oferta }}</td>
                   <td class="text-center">{{ item.nombre_oferta }}</td>
@@ -259,6 +256,13 @@
           </div>
           <empty-result message="Ninguna información encontrada" class="my-4"
             *ngIf="comprometidoEmpty && !comprometidoLoaded"></empty-result>
+            <div class="d-flex justify-content-center mt-3" >
+              <pagination [maxSize]="maxSizeComprometido" [(totalItems)]="totalComprometido"
+                (pageChanged)="onPageChangedComprometido($event)" [(itemsPerPage)]="itemsPerPageComprometido"
+                [boundaryLinks]="true" [(ngModel)]="currentPageComprometido" previousText="&lsaquo;" nextText="&rsaquo;"
+                firstText="&laquo;" lastText="&raquo;">
+              </pagination>
+            </div>
           <div class="d-flex justify-content-center mb-3" *ngIf="!comprometidoLoaded && !comprometidoEmpty">
             <div class="spinner-border text-dark"></div>
           </div>
@@ -297,6 +301,13 @@
           </custom-table>
           <empty-result message="Ninguna información encontrada" class="my-4"
             *ngIf="suspensoEmpty && !suspensoLoaded"></empty-result>
+            <div class="d-flex justify-content-center mt-3" >
+              <pagination [maxSize]="maxSizeSuspenso" [(totalItems)]="totalSuspenso"
+                (pageChanged)="onPageChangedSuspenso($event)" [(itemsPerPage)]="itemsPerPageSuspenso"
+                [boundaryLinks]="true" [(ngModel)]="currentPageSuspenso" previousText="&lsaquo;" nextText="&rsaquo;"
+                firstText="&laquo;" lastText="&raquo;">
+              </pagination>
+            </div>
           <div class="d-flex justify-content-center mb-3" *ngIf="!suspensoLoaded && !suspensoEmpty">
             <div class="spinner-border text-dark"></div>
           </div>

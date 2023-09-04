@@ -24,7 +24,7 @@ export class ComercialCicloVendasComponent implements OnInit {
       routerLink: '/comercial/home'
     },
     {
-      descricao: 'Ciclo de vendas'
+      descricao: 'Ciclo de ventas'
     }
   ];
 
@@ -42,7 +42,7 @@ export class ComercialCicloVendasComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.titleService.setTitle('Ciclo de vendas');
+    this.titleService.setTitle('Ciclo de ventas');
     this.activatedRoute.params.subscribe((params: any) => {
       this.registrarAcesso();
       this.getAtividadesInternas(params.idSubModulo);
@@ -72,9 +72,9 @@ export class ComercialCicloVendasComponent implements OnInit {
             return
           }
 
-          console.log(response.body["data"][1])
+          console.log(response.body["data"])
 
-          this.atividades = response.body["data"][1];
+          this.atividades = response.body["data"];
           this.loaderFullScreen = false;
 
         },

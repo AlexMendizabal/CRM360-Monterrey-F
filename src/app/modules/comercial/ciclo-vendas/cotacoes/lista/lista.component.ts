@@ -120,6 +120,8 @@ export class ComercialCicloVendasCotacoesListaComponent
   situacoesCores: Array<IAssociacao> = [];
   vendedores: Array<any> = [];
   totalMateriales: Array<any> = [];
+  oferta: Array<any> = [];
+
 
 
   items: Array<any> = [];
@@ -160,7 +162,9 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   totalItems = 10;
   totalModal = 0;
-  itemsPerPageModal = 20;
+  itemsPerPageModal = 5;
+  maxSizeModal = 5;
+
 
 
   imprimirPdf: boolean = false;
@@ -214,7 +218,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.setChangeEvents();
     this.getFilterValues();
     this.setFormFilter();
-    this.titleService.setTitle('Cotações e pedidos');
+    this.titleService.setTitle('Cotizaciones y pedidos');
     this.onDetailPanelEmitter();
     this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente'];
     this.search(null);
@@ -243,11 +247,11 @@ export class ComercialCicloVendasCotacoesListaComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Ciclo de vendas',
+          descricao: 'Ciclo de ventas',
           routerLink: `/comercial/ciclo-vendas/${id}`,
         },
         {
-          descricao: 'Cotações e pedidos',
+          descricao: 'Cotizaciones y pedidos',
         },
       ];
     });
@@ -419,7 +423,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
         this.vendedores.unshift({
           id: 0,
-          nome: 'EXIBIR TODOS',
+          nome: 'EXIBIR TODOS ',
         });
       }
     });
@@ -892,7 +896,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   onPageChanged(event: PageChangedEvent): void {
-    console.log(event)
+    //console.log(event)
     this.currentPage = event.page;
     this.getPaginateData();
   }
@@ -1318,9 +1322,12 @@ export class ComercialCicloVendasCotacoesListaComponent
           if (response.responseCode === 200) {
             this.items = response.result['analitico'];
             this.totalMateriales = response.result.total;
+            this.oferta = response.result.oferta[0];
             this.totalModal = this.items.length;
+            this.dadosEmptyModal = false;
+
           } else {
-            this.loaderNavbar = false;
+            this.loaderNavbar = false; 
             this.pnotifyService.notice('Ningún registro encontrado');
             this.dadosEmptyModal = true;
           }

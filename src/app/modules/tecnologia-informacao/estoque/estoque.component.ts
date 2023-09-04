@@ -23,7 +23,7 @@ export class TecnologiaInformacaoEstoqueComponent implements OnInit {
       routerLink: '/tecnologia-informacao/home',
     },
     {
-      descricao: 'Estoque',
+      descricao: 'Inventario',
     },
   ];
 
@@ -40,7 +40,7 @@ export class TecnologiaInformacaoEstoqueComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.titleService.setTitle('estoque');
+    this.titleService.setTitle('Inventario');
     this.activatedRoute.params.subscribe((params: any) => {
       this.registrarAcesso();
       this.getAtividadesInternas(params['idSubModulo']);

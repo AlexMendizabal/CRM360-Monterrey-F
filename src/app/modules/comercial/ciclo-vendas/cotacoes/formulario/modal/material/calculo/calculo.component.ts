@@ -47,6 +47,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
 
 
   medidaDisable = false;
+  swLargoMaterial: boolean = false;
 
   loaderModal: boolean;
   swDesactivarForm = true;
@@ -72,9 +73,13 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     nrPedidoCliente: '',
     codItemPedidoCliente: '',
     codProdutoCliente: '',
+    // @ts-ignore: Ignorar error TS2339
     valorTotalBruto: 0,
     presentacionSeleccionado: 0,
-
+    totalMaterial: 0,
+    pesoEspecifico: 0,
+    calculo: 0,
+    descuentoAplicado: 0
   };
 
   form: FormGroup;
@@ -95,8 +100,6 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   arrayPresentacion: Array<any> = [];
   swPresentacion = false;
   id_presentacion: number = 0;
-
-
   showImpostos = false;
 
   constructor(
@@ -127,15 +130,18 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.form = this.formBuilder.group({
       quantidade: [
         null,
-        [Validators.required, Validators.min(0.001), Validators.minLength(1)],
+        [Validators.required, Validators.pattern('[0-9]*')],
       ],
+      // @ts-ignore: Ignorar error TS2339
       preco1: [this.material.precio, [Validators.required, Validators.min(0.001)]],
       preco2: [null],
       medida: [
         { value: this.medida, disabled: this.medida > 0 ? true : false },
       ],
+      // @ts-ignore: Ignorar error TS2339
       formPresentacion: this.material.id_presentacion,
       nrPedidoCliente: this.material.nomeMaterial,
+      // @ts-ignore: Ignorar error TS2339
       codItemPedidoCliente: this.material.codigo_material,
       codProdutoCliente: this.material.codProdutoCliente
     });
@@ -192,7 +198,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.opcoesVenda = [];
     this.resetTotais();
 
-    this.descQtde = 'Qtde (' + this.nomeTipoLancamento + ')';
+    this.descQtde = 'Qtde  (' + this.nomeTipoLancamento + ')';
     this.descPreco = 'Preço por ' + this.nomeTipoCalculo1;
     this.currencyMaskOptions.decimal = '';
     this.currencyMaskOptions.precision = 0;
@@ -470,8 +476,17 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     console.log(data);  */
    
     
-
+/*     console.log(data); 
+ */    
     this.calculo.tonelada = (data.pesoEspecifico * this.form.value.quantidade);
+    if(data.largo_material > 0 ){
+      this.swLargoMaterial = true;
+      this.calculo.totalMaterial = this.form.value.quantidade * data.largo_material;
+    }else{
+      this.swLargoMaterial = false;
+
+    }
+    this.calculo.pesoEspecifico = data.pesoEspecifico; 
     this.calculo.qtde = data.qtde;
     this.calculo.valorUnitario = data.precio;
     this.calculo.valorItem = data.valorItem;
@@ -480,20 +495,25 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.calculo.aliquotaIcms = data.aliquotaIcms;
     this.calculo.valorIcms = data.valorIcms;
     this.calculo.valorIcmsSt = data.valorIcmsSt;
+    // @ts-ignore: Ignorar error TS2339
     this.calculo.valorTotalBruto = (data.precio * this.form.value.quantidade);
     this.calculo.valorBaseIcmsSt = data.valorBaseIcmsSt;
     this.calculo.aliquotaReducaoIcms = data.aliquotaReducaoIcms;
     this.calculo.tipoCalculo = tipoCalculo;
     this.calculo.tipoLancamento = tipoLancamento;
+    // @ts-ignore: Ignorar error TS2339
     this.calculo.descuento = data.descuento.toFixed(2);
+    // @ts-ignore: Ignorar error TS2339
     this.calculo.descuentoAplicado = this.calculo.valorTotalBruto * data.descuento;
-    this.calculo.valorTotal = this.calculo.valorTotalBruto - this.calculo.descuentoAplicado;
+    this.calculo.valorTotal = this.calculo.valorTotalBruto - this.calculo.descuentoAplicado ;
     this.calculo.unidade = unidade;
     this.calculo.nrPedidoCliente = this.form.value.nrPedidoCliente,
       this.calculo.codItemPedidoCliente = this.form.value.codItemPedidoCliente,
       this.calculo.codProdutoCliente = this.form.value.codProdutoCliente
     this.calculo.medida = this.form.getRawValue().medida;
+    // @ts-ignore: Ignorar error TS2339
     this.calculo.cantidad = this.form.value.quantidade;
+    // @ts-ignore: Ignorar error TS2339
     this.calculo.id_presentacion = data.id_presentacion;
 
 
@@ -511,6 +531,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       tonelada: 0,
       qtde: 0,
       valorUnitario: 0,
+      // @ts-ignore: Ignorar error TS2339
       descuento: 0.00,
       valorItem: 0,
       aliquotaIpi: 0,
@@ -549,6 +570,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       } else
         /*    console.log('respuesta_calculo')
         console.log(this.calculo); */
+        // @ts-ignore: Ignorar error TS2339
         this.calculo.id_presentacion = this.form.value.formPresentacion;
       this.calculo.index = this.index;
       this.formularioService.calculoSubject.next(this.calculo);
@@ -606,6 +628,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.showImpostos = !this.showImpostos;
   }
   changePresentacion(id) {
+    // @ts-ignore: Ignorar error TS2339
     this.calculo.id_presentacion = id;
   }
 
