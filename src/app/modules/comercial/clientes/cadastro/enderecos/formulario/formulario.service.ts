@@ -15,7 +15,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialClientesCadastroEnderecosFormularioService {
-  private readonly API = `http://127.0.0.1:8000/comercial/clientes/cadastro/formulario/enderecos`;
+  private readonly API = `http://23.254.204.187/api/comercial/clientes/cadastro/formulario/enderecos`;
 
   constructor(
     protected http: HttpClient,
@@ -89,7 +89,7 @@ export class ComercialClientesCadastroEnderecosFormularioService {
   }
 
   getCliente(codCliente){
-    return this.http.get(`http://23.254.204.187/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
+    return this.http.get(`http://23.254.204.187/api/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
   }
 
   postAnexos(
