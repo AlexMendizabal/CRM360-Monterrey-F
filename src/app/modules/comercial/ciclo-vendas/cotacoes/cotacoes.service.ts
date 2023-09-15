@@ -18,7 +18,7 @@ import { JsonResponse } from 'src/app/models/json-response';
 })
 export class ComercialCicloVendasCotacoesService {
   private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
-
+  private readonly API2 = `http://23.254.204.187/api/comercial/ciclo-vendas/autorizaciones`;
   constructor(
     protected http: HttpClient,
     private comercialService: ComercialService,
@@ -58,7 +58,7 @@ export class ComercialCicloVendasCotacoesService {
       })
       .pipe(take(1), retry(2));
   }
-  
+
 
   getDetalleOferta(params: any): Observable<Object | JsonResponse> {
     let httpParams = new HttpParams();
@@ -429,4 +429,9 @@ export class ComercialCicloVendasCotacoesService {
   }
 
 
+  autorizaciones(data: any): Observable<Object>{
+    return this.http
+      .post(`${this.API2}/registrar`, data)
+      .pipe(take(1), retry(2));
+  }
 }

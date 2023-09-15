@@ -29,7 +29,6 @@ import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.
 })
 export class ComercialCicloVendasCotacoesFormularioService {
   private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
-  
 
   private notifySubmit = new Subject<any>();
 
@@ -155,12 +154,12 @@ export class ComercialCicloVendasCotacoesFormularioService {
       .put(`${this.API}/anexo/documentos/excluir`, params)
       .pipe(take(1));
   }
-  
- 
+
+
 
   getCliente(codCliente){
     return this.http.get(`http://23.254.204.187/api/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
   }
-  
+
 
 }

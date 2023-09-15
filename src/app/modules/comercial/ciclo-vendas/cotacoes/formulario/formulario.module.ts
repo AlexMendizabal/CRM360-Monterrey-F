@@ -198,7 +198,7 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoPerdidaComponent,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
     ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent
-    
+
 
 
   ],
@@ -220,7 +220,7 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoService,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoService,
     ComercialCicloVendasCotacoesFormularioService,
-  
+
   ],
 })
 export class ComercialCicloVendasCotacoesFormularioModule {}
