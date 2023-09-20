@@ -124,7 +124,7 @@ export class ComercialPainelBobinasFormularioComponent
         routerLink: '/comercial/home',
       },
       {
-        descricao: 'Ciclo de Vendas',
+        descricao: 'Ciclo de ventas',
         routerLink: `/comercial/ciclo-vendas/${id}`,
       },
       {

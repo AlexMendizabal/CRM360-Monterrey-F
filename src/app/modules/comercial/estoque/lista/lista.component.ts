@@ -55,13 +55,13 @@ export class ComercialEstoqueListaComponent implements OnInit {
       routerLink: '/comercial/home',
     },
     {
-      descricao: 'STOCK',
+      descricao: 'Inventario',
     },
   ];
 
   subtitles: Array<Subtitles> = [
     {
-      text: 'Acciones suspendidas',
+      text: 'Estoque suspenso',
       color: 'red',
     },
   ];
@@ -90,6 +90,19 @@ export class ComercialEstoqueListaComponent implements OnInit {
   idMaterial = 0;
   totalItems = 10;
   showAdvancedFilter = true;
+
+  
+  maxSizeComprometido = 5;
+  itemsPerPageComprometido = 7;
+  totalComprometido = 5;
+  currentPageComprometido = 1;
+
+
+  maxSizeSuspenso = 5;
+  itemsPerPageSuspenso = 7;
+  totalSuspenso = 5;
+  currentPageSuspenso = 1;
+  
 
   materialSelected: string;
   linhaSelected: string;
@@ -135,7 +148,6 @@ export class ComercialEstoqueListaComponent implements OnInit {
   possuiLote: boolean;
   orderBy: string = ''; // Variable para almacenar el nombre de la columna seleccionada para ordenar
   orderType: 'asc' | 'desc' = 'asc'; // Variable para almacenar el tipo de orden (ascendente o descendente)  
-  totalSuspenso: Array<any> = [];
 
   modalDetalhes: TemplateRef<any>;
 
@@ -158,7 +170,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
     this.registrarAcesso();
     this.getFiltros();
     this.setFormFilter();
-    this.titleService.setTitle('Estoque');
+    this.titleService.setTitle('Inventario');
   }
 
   registrarAcesso() {
@@ -197,7 +209,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
             }
             this.linhas.unshift({
               id: 0,
-              descricao: 'EXIBIR TODOS',
+              descricao: 'EXIBIR  TODOS',
             });
           }
 
@@ -212,7 +224,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
           }
         },
         error: (error: any) => {
-          this.handleSearchError('Se ha producido un error al cargar los filtros.');
+          this.handleSearchError('Ocorreu um erro ao carregar filtros.');
         }
       });
   }
@@ -343,6 +355,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
       }
     });
   }
+
   onResetForm() {
     this.form.reset();
     this.form.controls.registros.setValue(300);
@@ -391,7 +404,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
           }
         },
         error: (error: any) => {
-          this.handleSearchError('Error al cargar lista de materiales.');
+          this.handleSearchError('Erro ao carregar lista de materiais.');
         }
       });
   } */
@@ -442,9 +455,38 @@ export class ComercialEstoqueListaComponent implements OnInit {
   getPaginateData(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
     return this.datos.slice(startIndex, endIndex);
   }
+
+  onPageChangedComprometido(event: PageChangedEvent): void {
+    //console.log(event)
+    this.currentPageComprometido = event.page;
+    this.getPaginateDataComprometido();
+  }
+
+
+  getPaginateDataComprometido(): any[] {
+    const startIndex = (this.currentPageComprometido - 1) * this.itemsPerPageComprometido;
+    const endIndex = startIndex + this.itemsPerPageComprometido;
+    //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
+    return this.estoqueComprometido.slice(startIndex, endIndex);
+  }
+
+
+  onPageChangeSuspenso(event: PageChangedEvent): void {
+    //console.log(event)
+    this.currentPageSuspenso = event.page;
+    this.getPaginateDataComprometido();
+  }
+
+
+  getPaginateDatSuspenso(): any[] {
+    const startIndex = (this.currentPageSuspenso - 1) * this.itemsPerPageSuspenso;
+    const endIndex = startIndex + this.itemsPerPageSuspenso;
+    //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
+    return this.estoqueComprometido.slice(startIndex, endIndex);
+  }
+
   onChangeAlmacen(id: number) {
     /* this.form.controls.deposito.reset(); */
     /*  console.log(this.filteredDepositos);
@@ -574,7 +616,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
         }
       },
       error: (error: any) => {
-        this.handleSearchError('Error al cargar stock de otras unidades.');
+        this.handleSearchError('Erro ao carregar estoque de outras unidades.');
       }
     });
   } */
@@ -600,7 +642,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
         }
       },
       error: (error: any) => {
-        this.handleSearchError('Error al cargar los pedidos de compra.');
+        this.handleSearchError('Erro ao carregar pedidos de compra.');
       }
     });
   }
@@ -618,6 +660,8 @@ export class ComercialEstoqueListaComponent implements OnInit {
         if (response.responseCode === 200) {
           this.estoqueComprometido = response.result.analitico;
           this.totaisComprometido = response.result.total;
+          this.totalComprometido =  response.result.analitico.length;
+          console.log(this.totalComprometido)
           this.comprometidoLoaded = true;
         } else {
           this.pnotifyService.notice('Datos no encontrados.');

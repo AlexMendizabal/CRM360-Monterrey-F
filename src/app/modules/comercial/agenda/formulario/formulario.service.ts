@@ -17,7 +17,7 @@ import { JsonResponse } from 'src/app/models/json-response';
 })
 
 export class ComercialAgendaFormularioService {
-  private readonly API = `http://127.0.0.1:8000/comercial/agenda/formulario`;
+  private readonly API = `http://23.254.204.187/api/comercial/agenda/formulario`;
 
   constructor(
     protected http: HttpClient,

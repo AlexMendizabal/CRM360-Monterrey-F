@@ -8,4 +8,7 @@ export interface ISimilaridadeModel extends IMateriaisModel {
   nomeMaterialComplemento: string;
   pathImage: string;
   onCarrinho: boolean;
+  id_linea: number;
+  nombre_linea:string;
+  largo_material:any;
 }

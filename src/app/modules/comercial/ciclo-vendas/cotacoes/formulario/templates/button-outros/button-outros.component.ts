@@ -31,7 +31,8 @@ export class ComercialCicloVendasCotacoesFormularioTemplateButtonOutrosComponent
   ngOnInit(): void {}
 
   onFichaCadastral(): void {
-    this.fichaCadastralService.showModal(this.material.codMaterial);
+    // @ts-ignore: Ignorar error TS2339
+    this.fichaCadastralService.showModal(this.material.id_material);
   }
 
   onSimilaridade(): void {

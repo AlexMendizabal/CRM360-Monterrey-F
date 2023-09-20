@@ -25,13 +25,16 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoService 
     });
   }
 
-  descontoMaterial(index: number, material: ICarrinhoModel): void {
+  descontoMaterial(index: number, material: ICarrinhoModel, descuento): void {
     this.showModal({
       aplicarDesconto: 'material',
       index: index,
       material: material,
+      descuento
     });
   }
+
+
 
   showModal(params: any): void {
     const modalConfig = {

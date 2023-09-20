@@ -11,7 +11,8 @@ import { take } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ComercialCadastroPainelCustosService {
-   private readonly API = `http://127.0.0.1:8000/comercial/cadastros/painel-custos`;
+   private readonly API = `http://23.254.204.187/api/comercial/cadastros/painel-custos`;
+   /*private readonly API = `https://crm360.monterrey.com.bo`;*/
 
   constructor(protected http: HttpClient) {}
 

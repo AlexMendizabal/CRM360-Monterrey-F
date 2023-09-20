@@ -1,6 +1,6 @@
 {
   "/api/*": {
-    "target": "http://127.0.0.1:8000/",
+    "target": "http://23.254.204.187/api/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
@@ -9,7 +9,7 @@
     }
   },
   "/app/*": {
-    "target": "https://crm360.monterrey.com.bo/api/app/",
+    "target": "http://23.254.204.187/api/app/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,

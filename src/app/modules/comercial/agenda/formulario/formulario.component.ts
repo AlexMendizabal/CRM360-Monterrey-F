@@ -303,7 +303,7 @@ export class ComercialAgendaFormularioComponent
           {
             value: detalhes.typeContactId,
             disabled:
-              this.action === 'novo' || this.action === 'editar' ? false : true,
+              this.action === 'novo' || this.action === 'editar' ?  false : true,
           },
         ],
 

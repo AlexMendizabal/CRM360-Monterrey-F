@@ -24,6 +24,8 @@ import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/
 import { JsonResponse } from 'src/app/models/json-response';
 
 import { IMateriaisModel } from '../../models/materiais';
+import { ComercialEstoqueService } from '../../../../../../comercial/estoque/estoque.service';
+
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-formulario-materiais-lista',
@@ -38,6 +40,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   @Input('codDeposito') codDeposito: number;
   @Input('codFormaPagamento') codFormaPagamento: number;
   @Input('freteConta') freteConta: number;
+  @Input('id_lista_precio') id_lista: number;
+  @Output() resetRequested = new EventEmitter<void>();
 
   filas = [
     { columna1: 'Valor 1', columna2: 'Valor 2', columna3: 'Valor 3', columna4: 'Valor 4', columna5: 'Valor 5', columna6: 'Valor 6', columna7: 'Valor 7', columna8: 'Valor 8', columna9: 'Valor 9', columna10: 'Valor 10' },
@@ -66,13 +70,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   subtitles: Array<Subtitles> = [
     {
       id: 1,
-      text: 'Disponible en stock',
+      text: 'Disponibles en stock',
       color: 'green',
-    },
-    {
-      id: 2,
-      text: 'No disponible en stock',
-      color: 'red',
     },
   ];
 
@@ -89,15 +88,22 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   searching = false;
   searchParams: any = {};
 
+  swTodos = false;
+  swVendedor = true;
+
+
   form: FormGroup;
   orderBy = 'nrPedido';
-  orderType = 'desc';
+  orderType: 'asc' | 'desc' = 'asc';
 
   linhas: Array<any> = [];
   classes: Array<any> = [];
   filteredClasses: Array<any> = [];
+  lineas: Array<any> = [];
+  grupos: Array<any> = [];
   materiais: Array<any> = [];
   materiaisLoader: boolean;
+  disabledMaterial = false;
 
   autoScroll = true;
 
@@ -106,6 +112,10 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   dados: Array<IMateriaisModel> = [];
   dadosLoaded = false;
   dadosEmpty = false;
+  idMaterial: number = 0;
+  idLista: number = 0;
+  registros: '';
+
 
   toggleAll = false;
   activeRow: number;
@@ -122,7 +132,9 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     private cotacoesService: ComercialCicloVendasCotacoesService,
     private formularioService: ComercialCicloVendasCotacoesFormularioService,
     private comercialService: ComercialService,
-    private estoqueService: ComercialCicloVendasCotacoesFormularioModalMaterialEstoqueService
+    private estoqueService: ComercialCicloVendasCotacoesFormularioModalMaterialEstoqueService,
+    private estoqueServices: ComercialEstoqueService,
+
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -130,13 +142,14 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   ngOnInit(): void {
     this.getFilterValues();
     this.cliente.emit(this.codCliente)
+    this.getMateriais(null, 'application')
+
   }
 
   getFilterValues(): void {
     this.loaderFullScreen.emit(true);
 
-    this.cotacoesService
-      .getCotacaoFilterValues()
+    this.comercialService.getClasses(null)
       .pipe(
         finalize(() => {
           this.loaderFullScreen.emit(false);
@@ -145,12 +158,18 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         })
       )
       .subscribe((response: any) => {
-        if (response[0].responseCode === 200) {
-          this.linhas = response[0].result;
+        if (response.responseCode === 200) {
+          this.linhas = response.result;
+          /*           console.log(response.result)
+           */
         } else {
           this.pnotifyService.error();
           this.location.back();
         }
+        this.linhas.unshift({
+          idClasse: 0,
+          nomeClasse: 'TODOS',
+        });
 
         if (response[1].responseCode === 200) {
           this.classes = response[1].result;
@@ -159,20 +178,43 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
           this.location.back();
         }
       });
+
   }
 
   onChangeLinha(codLinha: number, reset: boolean) {
     if (reset) {
       this.form.controls.codClasse.reset();
-      this.form.controls.codClasse.setValue(0);
+      /* this.form.controls.codClasse.setValue(0); */
 
       this.form.controls.codMaterial.reset();
-      this.form.controls.codMaterial.disable();
+      /* this.form.controls.codMaterial.disable(); */
       this.form.controls.codMaterial.setValue(null);
       this.form.controls.codMaterial.updateValueAndValidity();
     }
-
+    var idClase = codLinha;
+    this.comercialService.getLinhasId(idClase).subscribe({
+      next: (response: any) => {
+        if (response.responseCode == 200) {
+          this.grupos = response.result;
+        } else {
+          this.grupos = [];
+        }
+        /* this.grupos.unshift({
+          id_linha: '',
+          descricao: 'SELECCIONE',
+        });  */
+        this.grupos.unshift({
+          id_linha: 0,
+          descricao: 'TODOS',
+        });
+      },
+      error: (error: any) => {
+        /*  */
+      }
+    });
     this.form.controls.codClasse.enable();
+    this.form.controls.codLinea.enable();
+
     this.form.controls.codClasse.setValidators([Validators.required]);
     this.form.controls.codClasse.updateValueAndValidity();
 
@@ -185,104 +227,149 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       nomeClasse: 'EXIBIR TODOS',
     });
   }
+  cambioMaterial(idMaterial: number) {
+    this.idMaterial = idMaterial;
+    this.registros = this.form.controls.registros.value
+  }
+  cambioRegistros(registro) {
+    this.registros = registro;
+  }
 
   onChangeClasse(codClasse: number, reset: boolean, src: string) {
     if (reset) {
       this.form.controls.codMaterial.reset();
 
-      if (this.form.value.codClasse === 0) {
-        this.form.controls.codMaterial.reset();
-        this.form.controls.codMaterial.disable();
-        this.form.controls.codMaterial.setValue(null);
-        this.form.controls.codMaterial.updateValueAndValidity();
-      } else {
-        this.getMateriais(codClasse, src);
-      }
+      /*  if (this.form.value.codClasse === 0) {
+         this.form.controls.codMaterial.reset();
+     /*     this.form.controls.codMaterial.disable(); */
+      this.form.controls.codMaterial.setValue(null);
+      this.form.controls.codMaterial.updateValueAndValidity();
+      /*    } else {  */
+      this.getMateriais(codClasse, src);
+      /* } */
     } else {
       if (this.form.value.codClasse !== 0) {
         this.getMateriais(codClasse, src);
       }
     }
+
+  }
+  onChangegrupo(clase: any) {
+    /*      console.log(clase); 
+     */
+    this.form.controls.codMaterial.reset()
+    /*   console.log(clase); */
+    var idClase = clase;
+    this.comercialService.getSublineasId(idClase).subscribe({
+      next: (response: any) => {
+        if (response.responseCode == 200) {
+          this.lineas = response.result;
+        }
+        this.lineas.unshift({
+          ID: 0,
+          NM_SUB_LINH: 'TODOS',
+        });
+      },
+      error: (error: any) => {
+        /* this.handleSearchError('Ocurrió un error al cargar los datos.'); */
+      }
+    });
   }
 
   getMateriais(codClasse: number, src: string): void {
-    if (typeof codClasse !== 'undefined' && codClasse !== null) {
+    /* alert('dasd'); */
+    this.materiais = [];
+    if (codClasse === null || codClasse === undefined) {
       if (src === 'application') {
         this.loaderNavbar.emit(true);
       }
-      this.materiaisLoader = true;
-      this.materiais = [];
-
       const params = {
-        codClasse: codClasse,
-        tipoMaterial: 'Distribuidora',
-        comercializa: 0,
-        situacao: 'A',
+        id_familia: '',
+        id_grupo: '',
+        id_linea: '',
+        registros: this.form.controls.registros.value
       };
+      this.getMateriales(params, src);
+    } else {
+      if (typeof codClasse !== 'undefined' && codClasse !== null) {
+        if (src === 'application') {
+          this.loaderNavbar.emit(true);
+        }
+        this.materiaisLoader = true;
 
-      this.comercialService
-        .getMateriais(params)
-        .pipe(
-          finalize(() => {
-            if (src === 'application') {
-              this.loaderNavbar.emit(false);
-            }
-            this.materiaisLoader = false;
-          })
-        )
-        .subscribe({
-          next: (response: JsonResponse) => {
-            if (
-              response.hasOwnProperty('success') &&
-              response.success === true
-            ) {
-              this.materiais = response.data;
-
-              this.materiais.unshift({
-                codigoMaterial: 0,
-                codigoDescricaoMaterial: 'EXHIBIR TODOS',
-              });
-
-              this.form.controls.codMaterial.enable();
-              this.form.controls.codMaterial.setValue(0);
-              this.form.controls.codMaterial.updateValueAndValidity();
-            } else if (
-              response.hasOwnProperty('success') &&
-              response.success === false &&
-              response.hasOwnProperty('mensagem')
-            ) {
-              this.pnotifyService.notice('Nenhum material encontrado!');
-              this.form.controls.codMaterial.disable();
-              this.form.controls.codMaterial.setValue(null);
-              this.form.controls.codMaterial.updateValueAndValidity();
-            } else {
-              this.pnotifyService.error(response.mensagem);
-            }
-          },
-          error: (error: any) => {
-            if (error['error'].hasOwnProperty('mensagem')) {
-              this.pnotifyService.error(error.error.mensagem);
-            } else {
-              this.pnotifyService.error();
-            }
-          }
-        });
+        const params = {
+          id_familia: this.form.controls.codLinha.value,
+          id_grupo: this.form.controls.codClasse.value,
+          id_linea: codClasse,
+          registros: this.form.controls.registros.value
+        };
+        this.getMateriales(params, src);
+      }
     }
+  }
+
+  getMateriales(params, src) {
+    this.comercialService.getMaterialesLista(params)
+      .pipe(
+        finalize(() => {
+          if (src === 'application') {
+            this.loaderNavbar.emit(false);
+          }
+          this.materiaisLoader = false;
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (
+            response.responseCode == 200
+          ) {
+            this.materiais = response.result;
+            /* this.materiais.unshift({
+              id_material: 0,
+              nombre: 'EXHIBIR TODOS',
+            }); */
+            this.form.controls.codMaterial.enable();
+            this.form.controls.codMaterial.setValue(0);
+            this.form.controls.codMaterial.updateValueAndValidity();
+          } else if (
+            response.hasOwnProperty('success') &&
+            response.success === false &&
+            response.hasOwnProperty('mensagem')
+          ) {
+            this.pnotifyService.notice('Nenhum material encontrado!');
+            this.form.controls.codMaterial.disable();
+            this.form.controls.codMaterial.setValue(null);
+            this.form.controls.codMaterial.updateValueAndValidity();
+          } else {
+            this.pnotifyService.error(response.mensagem);
+          }
+        },
+        error: (error: any) => {
+          if (error['error'].hasOwnProperty('mensagem')) {
+            this.pnotifyService.error(error.error.mensagem);
+          } else {
+            this.pnotifyService.error();
+          }
+        }
+      });
   }
 
 
   onReset(): void {
     this.confirmReset()
-        .subscribe({
-          next: (response: boolean) => {
-            if (response === true) {
-             this.executeReset();
-            }
-          },
-          error: (error: any) => {
-            this.pnotifyService.error();
+      .subscribe({
+        next: (response: boolean) => {
+          if (response === true) {
+            this.executeReset();
           }
-        });
+        },
+        error: (error: any) => {
+          this.pnotifyService.error();
+        }
+      });
+  }
+  limpiarBusqueda(): void {
+    this.dados = [];
   }
 
   executeReset(): void {
@@ -292,22 +379,23 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       codClasse: null,
       codMaterial: null,
       comEstoque: 1,
-      registros: 100,
+      registros: 7000,
     });
-      this.form.controls.codMaterial.disable();
-      this.form.controls.codMaterial.updateValueAndValidity();
+    /* this.form.controls.codMaterial.disable(); */
+    this.form.controls.codMaterial.updateValueAndValidity();
 
-      this.form.controls.codClasse.disable();
-      this.form.controls.codClasse.updateValueAndValidity();
+    this.form.controls.codClasse.disable();
+    this.form.controls.codClasse.updateValueAndValidity();
 
-      this.dados = [];
+    this.dados = [];
+    this.resetRequested.emit();
   }
 
   confirmReset(): any {
     return this.confirmModalService.showConfirm(
       '',
-      'Limpar pesquisa de materiais',
-      'Deseja realmente prosseguir com a ação?',
+      'Limpiar campos de materiales',
+      'Está seguro de continuar con esta acción?',
       'Cancelar',
       'Confirmar'
     );
@@ -326,8 +414,14 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       ],
       codMaterial: [
         {
-          value: formValue.codMaterial,
-          disabled: formValue.codMaterial === null ? true : false,
+          /* value: formValue.codMaterial,
+          disabled: formValue.codMaterial === null ? true : false, */
+        },
+      ],
+      codLinea: [
+        {
+          value: formValue.codLinea,
+          disabled: formValue.codLinea == null ? true : false,
         },
       ],
       comEstoque: [formValue.comEstoque, [Validators.required]],
@@ -344,7 +438,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       codClasse: null,
       codMaterial: null,
       comEstoque: 1,
-      registros: 100,
+      registros: 7000,
     };
 
     this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
@@ -432,33 +526,59 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
   setOrderBy(column: string) {
+    /* console.log(column); */
     if (this.orderBy === column) {
-      if (this.orderType == 'desc') {
-        this.orderType = 'asc';
-      } else if (this.orderType == 'asc') {
-        this.orderType = 'desc';
-      }
+      this.orderType = this.orderType === 'asc' ? 'desc' : 'asc'; // Cambiar el tipo de orden si se hace clic nuevamente en la misma columna
     } else {
       this.orderBy = column;
-      this.orderType = 'asc';
+      this.orderType = 'asc'; // Establecer el orden ascendente por defecto al hacer clic en una nueva columna
     }
-    this.onFilter();
-  }
+
+    // Ordenar la matriz resultcliente en función del orden seleccionado
+    this.dados.sort((a, b) => {
+
+      const valueA = a[column]/* .toUpperCase(); */;
+      const valueB = b[column]/* .toUpperCase() */;
+      /*       console.log(this.datos);
+            console.log(column); */
+      if (valueA < valueB) {
+        return this.orderType === 'asc' ? -1 : 1;
+      }
+      if (valueA > valueB) {
+        return this.orderType === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+
+/*     this.onFilter();
+ */  }
 
   onFilter(): void {
+    var tipo = 2
     if (this.checkFieldErrors() === false) {
       //console.log(this.checkFieldErrors);
-     if (this.searching === false && this.form.valid) {
-       this.setRouterParams(this.getFormFilterValues());
+      if (this.searching === false && this.form.valid) {
+        this.setRouterParams(this.getFormFilterValues(), tipo);
       }
     } else {
-      console.log("hola");
-      this.setRouterParams(this.getFormFilterValues());
-      //this.scrollToFormOnTop.emit(true);
+      /*    console.log("hola"); */
+      this.setRouterParams(this.getFormFilterValues(), tipo);
+      /*   this.scrollToFormOnTop.emit(true); */
     }
   }
 
-  setRouterParams(params: any): void {
+  onFilterVend(): void {
+    var tipo = 1;
+    if (this.checkFieldErrors() === false) {
+      if (this.searching === false && this.form.valid) {
+        this.setRouterParams(this.getFormFilterValues(), tipo);
+      }
+    } else {
+      this.setRouterParams(this.getFormFilterValues(), tipo);
+    }
+  }
+
+  setRouterParams(params: any, tipo: number): void {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: {
@@ -472,28 +592,17 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       },
       queryParamsHandling: 'merge',
     });
-    this.search(params);
+    this.search(tipo);
   }
 
   getFormFilterValues(): Object {
     let params: any = {};
 
-    //if (this.form.value.codLinha) {
-      params.codLinha = this.form.value.codLinha;
-    //}
+    params.codLinha = this.form.value.codLinha;
+    params.codClasse = this.form.value.codClasse;
+    params.codMaterial = this.form.value.codMaterial;
 
-    //if (this.form.value.codClasse && this.form.value.codClasse !== 0) {
-      params.codClasse = this.form.value.codClasse;
-    //}
-
-    //if (this.form.value.codMaterial && this.form.value.codMaterial !== 0) {
-      params.codMaterial = this.form.value.codMaterial;
-    //}
-
-    //if (this.codEmpresa) {
-      params.codEmpresa = this.codEmpresa;
-    //}
-
+    params.codEmpresa = this.codEmpresa;
     if (this.codDeposito) {
       params.codDeposito = this.codDeposito;
     }
@@ -506,92 +615,179 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       params.registros = this.form.value.registros;
     }
 
-    params.orderBy = this.form.value.orderBy;
-    params.orderType = this.orderType;
+/*     params.orderBy = this.form.value.orderBy;
+ */    params.orderType = this.orderType;
 
     return params;
   }
 
-  search(params: any): void {
-    if(!this.codCliente){
+  search(tipo): void {
+    /* console.log(this.codCliente) */
+    if (!this.codCliente) {
       return;
     }
     this.loaderNavbar.emit(true);
     this.searching = true;
-    this.searchParams = params;
+    /* this.searchParams = params; */
     this.dados = [];
     this.dadosLoaded = false;
     this.dadosEmpty = false;
-    const _params = {...params,
-      codCliente:this.codCliente,
-      codEndereco:this.codEndereco,
-      codFormaPagamento:this.codFormaPagamento,
-      freteConta:this.freteConta,
-      situacao: 'A'}
-    this.cotacoesService
-      .getMateriais(_params)
-      .pipe(
-        finalize(() => {
-          this.loaderNavbar.emit(false);
-          this.searching = false;
-          this.firstSearch = true;
-          this.dadosLoaded = true;
-        })
-      )
-      .subscribe({
-        next: (response: any) => {
-          //console.log(response);
-         /*  if (response.hasOwnProperty('success')
-          && response.success === true
-          && !response.data[0].msg) {
-            this.dados = response.data.map(function (el: any) {
-              var o = Object.assign({}, el);
-              o.checked = 0;
-              return o;
-            }); */
-            if ( response.success === true)
-             {
-              this.dados = response.data.map(function (el: any) {
+    const params = {
+      id_material: this.idMaterial,
+      id_lista: this.id_lista,
+      registros: this.form.controls.registros.value
+    }
+    if (tipo == 1) {
+
+      this.swTodos = false;
+      this.swVendedor = true;
+
+      this.comercialService
+        .getMaterialesOfertaVendedor(params)
+        .pipe(
+          finalize(() => {
+            this.loaderNavbar.emit(false);
+            this.searching = false;
+            this.firstSearch = true;
+            this.dadosLoaded = true;
+          })
+        )
+        .subscribe({
+          next: (response: any) => {
+            /*           console.log(response.responseCode);
+             */          /*  if (response.hasOwnProperty('success')
+        && response.success === true
+        && !response.data[0].msg) {
+          this.dados = response.data.map(function (el: any) {
+            var o = Object.assign({}, el);
+            o.checked = 0; 
+            return o;
+          }); */
+            if (response.responseCode === 200) {
+              this.dados = response.result.map((el) => {
                 var o = Object.assign({}, el);
                 o.checked = 0;
                 return o;
               });
 
-            //console.log('dados', this.dados);
+              this.dadosEmpty = false;
+              this.form.controls.codMaterial.enable();
 
-           // if (this.dados.length > 10) {
+
+
+
+              //console.log('dados', this.dados);
+
+              // if (this.dados.length > 10) {
               this.tableConfig.fixedHeader = true;
-           // } else {
+              // } else {
               //this.tableConfig.fixedHeader = false;
-          //  }
-          //} else {
-            //this.pnotifyService.notice("Há campos faltando ou não há dados para sua consulta.");
-            //this.dadosEmpty = true;
+              //  }
+              //} else {
+              //this.pnotifyService.notice("Há campos faltando ou não há dados para sua consulta.");
+              //this.dadosEmpty = true;
+            } else {
+              this.swTodos = true;
+              this.swVendedor = false;
+              this.dadosEmpty = true;
+              this.form.controls.codMaterial.disable();
+
+
+            }
+          },
+          error: (error: any) => {
+            if (error['error'].hasOwnProperty('mensagem')) {
+              this.pnotifyService.error(error.error.mensagem);
+            } else {
+              this.pnotifyService.error();
+            }
+            this.dadosEmpty = true;
           }
-        },
-        error: (error: any) => {
-          if (error['error'].hasOwnProperty('mensagem')) {
-            this.pnotifyService.error(error.error.mensagem);
-          } else {
-            this.pnotifyService.error();
+        });
+
+    } else if (tipo == 2) {
+      this.swTodos = true;
+      this.swVendedor = false;
+
+      this.form.controls.codMaterial.disable();
+      this.comercialService
+        .getMaterialesOferta(params)
+        .pipe(
+          finalize(() => {
+            this.loaderNavbar.emit(false);
+            this.searching = false;
+            this.firstSearch = true;
+            this.dadosLoaded = true;
+          })
+        )
+        .subscribe({
+          next: (response: any) => {
+            /*           console.log(response.responseCode);
+             */          /*  if (response.hasOwnProperty('success')
+        && response.success === true
+        && !response.data[0].msg) {
+          this.dados = response.data.map(function (el: any) {
+            var o = Object.assign({}, el);
+            o.checked = 0; 
+            return o;
+          }); */
+            if (response.responseCode === 200) {
+              this.form.controls.codMaterial.enable();
+              this.swTodos = false;
+              this.swVendedor = true;
+
+              this.dados = response.result.map((el) => {
+                var o = Object.assign({}, el);
+                o.checked = 0;
+                return o;
+              });
+              this.dadosEmpty = false;
+
+
+
+
+              //console.log('dados', this.dados);
+
+              // if (this.dados.length > 10) {
+              this.tableConfig.fixedHeader = true;
+              // } else {
+              //this.tableConfig.fixedHeader = false;
+              //  }
+              //} else {
+              //this.pnotifyService.notice("Há campos faltando ou não há dados para sua consulta.");
+              //this.dadosEmpty = true;
+            } else {
+              this.swTodos = false;
+              this.swVendedor = true;
+              this.dadosEmpty = true;
+              this.form.controls.codMaterial.enable();
+
+            }
+          },
+          error: (error: any) => {
+            if (error['error'].hasOwnProperty('mensagem')) {
+              this.pnotifyService.error(error.error.mensagem);
+            } else {
+              this.pnotifyService.error();
+            }
+            this.dadosEmpty = true;
           }
-          this.dadosEmpty = true;
-        }
-      });
+        });
+    }
   }
 
   checkFieldErrors(): boolean {
 
     //let hasError = false;
     let hasError = true;
-    //if(this.codCliente == null){
-      //this.pnotifyService.notice("Selecione o cliente")
-      //hasError = true;
-    //}
+    if (this.codCliente == null) {
+      this.pnotifyService.notice("Seleccione un cliente")
+      hasError = true;
+    }
 
     //if(this.codFormaPagamento == null){
-      //this.pnotifyService.notice("Selecione a forma de pagamento")
-      //hasError = true;
+    //this.pnotifyService.notice("Selecione a forma de pagamento")
+    //hasError = true;
     //}
 
 
@@ -649,7 +845,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     this.toggleAll = !this.toggleAll;
 
     for (let index = 0; index < this.dados.length; index++) {
-      if (this.dados[index].codSituacao == "A") {
+      // @ts-ignore: Ignorar error TS2339
+      if (this.dados[index].codigo_situacion == "A") {
         this.dados[index].checked = this.toggleAll === true ? 1 : 0;
       }
     }
@@ -670,29 +867,32 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
   onDoubleClickMaterial(index: number): void {
-    if (this.dados[index].codSituacao == "A") {
-      let materiais = [];
-      materiais.push(this.dados[index]);
-      this.formularioService.materiaisSubject.next(materiais);
-      this.scrollToCarrinho.emit(this.autoScroll);
-      this.dados[index].checked = 0;
-    } else {
-      this.pnotifyService.notice('Material inativo, favor entrar em contato com o Marketing');
-    }
+    /*  console.log(this.dados[index]);
+     if(this.dados[index].codigo_situacion == "A") {
+     let materiais = [];
+     materiais.push(this.dados[index]); 
+     this.formularioService.materiaisSubject.next(materiais);
+     this.scrollToCarrinho.emit(this.autoScroll);
+     this.dados[index].checked = 0;
+   } else {
+     this.pnotifyService.notice('Material inativo, favor entrar em contato com o Marketing');
+   } */
   }
 
   onCheckMaterial(index: number, material: IMateriaisModel): void {
-    if(this.dados[index].codSituacao == "A") {
+    // @ts-ignore: Ignorar error TS2339
+    if (this.dados[index].codigo_situacion == "A") {
       this.dados[index].checked = material.checked == 0 ? 1 : 0;
-    }else {
-      this.pnotifyService.notice('Material inativo, favor entrar em contato com o Marketing');
+    } else {
+      this.pnotifyService.notice('Seleccione por lo menos un material');
     }
 
   }
 
   onAddMaterial(): void {
+    this.swVendedor = true;
+    this.swTodos = false;
     let materiais = [];
-
     for (let index = 0; index < this.dados.length; index++) {
       if (this.dados[index].checked === 1) {
         materiais.push(this.dados[index]);
@@ -700,13 +900,15 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       }
     }
 
-    //if (materiais.length > 0) {
-      this.formularioService.materiaisSubject.next(materiais);
+    if (materiais.length > 0) {
+/*       console.log(materiais);
+ */      this.formularioService.materiaisSubject.next(materiais);
       this.toggleAll = this.toggleAll === true ? false : this.toggleAll;
       this.scrollToCarrinho.emit(this.autoScroll);
-    //} else {
-      this.pnotifyService.notice('Selecione ao menos um material.');
-    //}
+    } else {
+      this.pnotifyService.notice('Seleccione al menos un material');
+    }
+    this.dados = [];
   }
 
   onActiveRow(index: number): void {
@@ -723,17 +925,31 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
   onEstoqueDetalhes(material: IMateriaisModel): void {
-      this.estoqueService.showModal({
-        pesquisa: {
-          deposito: material.codDeposito,
-          codMaterial: material.codMaterial,
-          estoqueDisponivel: this.form.value.comEstoque,
-        },
-        material: material,
-      });
+
+    let params: any = {
+      // @ts-ignore: Ignorar error TS2339
+      idMaterial: material.id_material,
+    };
+    /* console.log(params); */
+    this.estoqueServices.getStockComprometido(params).subscribe(
+      (response: any) => {
+/*         console.log(response);
+ */        if (response.responseCode === 200) {
+          /* console.log('ingreso'); */
+          this.estoqueService.showModal({
+            detalhes: response.result.analitico,
+            material: material,
+          });
+
+        } else {
+
+        }
+      },
+
+    );
   }
 
-  onShowBloco(){
+  onShowBloco() {
     this.showBloco2 = !this.showBloco2;
   }
 }

@@ -30,7 +30,7 @@ export class DetailPanelComponent implements OnInit {
     this.title =
       typeof this.title != 'undefined' && this.title.length > 0
         ? this.title
-        : 'Detalhes';
+        : 'Detalles';
   }
 
   onClose(): void {

@@ -30,9 +30,10 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialEstoqueService {
 
   showModal(params: any): void {
     this.loaderNavbar.emit(true);
+    console.log(params);
 
-    this.cotacoesService
-      .getEstoqueDetalhes(params.pesquisa)
+   /*  this.cotacoesService
+      .getEstoqueDetalhes(params.id_material)
       .pipe(
         finalize(() => {
           this.loaderNavbar.emit(false);
@@ -49,21 +50,29 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialEstoqueService {
             const initialState = {
               material: params.material,
               detalhes: response.data[0],
+            }; */
+            const modalConfig = {
+              animated: false,
+              class: 'modal-xxl',
             };
-
+            const initialState = {
+              material: params.material,
+              detalhes : params.detalhes,
+            };
+            /* console.log(initialState.detalhes); */
             this.modalService.show(
               ComercialCicloVendasCotacoesFormularioModalMaterialEstoqueComponent,
               Object.assign({}, modalConfig, {
                 initialState,
               })
             );
-          } else {
+          /* } else {
             this.pnotifyService.error();
           }
         },
         error: (error: any) => {
           this.pnotifyService.error();
         }
-      });
+      }); */
   }
 }

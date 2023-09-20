@@ -644,7 +644,8 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioMateriaisListaCom
       this.estoqueService.showModal({
         pesquisa: {
           deposito: material.codDeposito,
-          codMaterial: material.codMaterial,
+          // @ts-ignore: Ignorar error TS2339
+          codMaterial: material.id_material,
           estoqueDisponivel: this.form.value.comEstoque,
         },
         material: material,

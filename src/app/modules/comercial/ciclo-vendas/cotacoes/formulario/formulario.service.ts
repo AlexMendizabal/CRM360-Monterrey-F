@@ -28,9 +28,7 @@ import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.
   providedIn: 'root',
 })
 export class ComercialCicloVendasCotacoesFormularioService {
-  private readonly API = `http://127.0.0.1:8000/comercial/ciclo-vendas/cotacoes`;
-
-  private readonly URL = 'http://127.0.0.1:8000/comercial';
+  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
 
   private notifySubmit = new Subject<any>();
 
@@ -157,15 +155,11 @@ export class ComercialCicloVendasCotacoesFormularioService {
       .pipe(take(1));
   }
 
+
+
   getCliente(codCliente){
-    return this.http.get(`${this.URL}/clientes/detalhes/${codCliente}`).pipe(take(1));
+    return this.http.get(`http://23.254.204.187/api/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
   }
 
-  getListarPrecios(){
-    return this.http.get(`${this.URL}/vendedor/lista_precio`);
-  }
 
-  getTodosVendedores(){
-    return this.http.get(`${this.URL}/vendedor/allvendedor`);
-  }
 }

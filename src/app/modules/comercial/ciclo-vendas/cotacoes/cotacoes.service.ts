@@ -17,14 +17,20 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCicloVendasCotacoesService {
-  private readonly API = `http://127.0.0.1:8000/comercial/ciclo-vendas/cotacoes`;
-
+  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
+  private readonly API2 = `http://23.254.204.187/api/comercial/ciclo-vendas/autorizaciones`;
   constructor(
     protected http: HttpClient,
     private comercialService: ComercialService,
     private tidSoftwareService: ComercialTidSoftwareService,
     private estoqueService: ComercialEstoqueService
   ) { }
+
+  getIdOferta(){
+    return this.http
+      .get(`${this.API}/oferta_id`)
+      .pipe(take(1), retry(2));
+  }
 
   getPermissoesAcesso(): Observable<Object | JsonResponse> {
     return this.http
@@ -52,6 +58,7 @@ export class ComercialCicloVendasCotacoesService {
       })
       .pipe(take(1), retry(2));
   }
+
 
   getDetalleOferta(params: any): Observable<Object | JsonResponse> {
     let httpParams = new HttpParams();
@@ -202,6 +209,17 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
+  descuentoCliente(params: any) {
+    return this.http
+      .get(
+        `${this.API}/descuento_cliente`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
+
+
+
   getMateriaisCombo(
     codEmpresa: number,
     codMaterial: number,
@@ -241,6 +259,11 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
+  postMaterialesRelacionados(params: any): Observable<Object | JsonResponse> {
+    return this.http
+    .post(`${this.API}/materiales/relacionados`, params)
+    .pipe(take(1), retry(2));
+  }
 
   getFichaCadastralMaterial(
     codMaterial: number
@@ -355,6 +378,9 @@ export class ComercialCicloVendasCotacoesService {
   postCotacao(params: any): Observable<Object | JsonResponse> {
     return this.http.post(`${this.API}/salvar`, params).pipe(take(1), retry(2));
   }
+  postCotizacion(params: any): Observable<Object | JsonResponse> {
+    return this.http.post(`${this.API}/guardar`, params).pipe(take(1), retry(2));
+  }
 
   putCotacao(params: any): Observable<Object | JsonResponse> {
     return this.http.put(`${this.API}/atualizar`, params).pipe(take(1), retry(2));
@@ -403,4 +429,9 @@ export class ComercialCicloVendasCotacoesService {
   }
 
 
+  autorizaciones(data: any): Observable<Object>{
+    return this.http
+      .post(`${this.API2}/registrar`, data)
+      .pipe(take(1), retry(2));
+  }
 }
