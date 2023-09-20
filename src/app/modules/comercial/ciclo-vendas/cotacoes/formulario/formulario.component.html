@@ -225,8 +225,7 @@
           <div class="form-group col-lg-2">
             <label class="my-auto" for="codEndereco">Dirección</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName="codEndereco" type="text" class="form-control" [readonly]="true"
-                [attr.disabled]="true" />
+              <input formControlName="codEndereco" type="text" class="form-control" readonly />
             </div>
           </div>
         </div>
@@ -239,7 +238,7 @@
             </div>
           </div>
           <div class="form-group col-lg-2">
-            <label class="my-auto" for="razaoSocial">Razón social</label>
+            <label class="my-auto" for="razaoSocial">Nombre factura </label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
               <input formControlName="razaoSocial" type="text" class="form-control" />
               <input formControlName="id_tipo_cliente" type="hidden" />
@@ -249,8 +248,8 @@
           </div>
           <div class="form-group col-lg-3">
             <label class="my-auto" for="razaoSocial">Correo electrónico</label>
-            <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName="correo_electronico" type="text" class="form-control" />
+            <div class="my-1" style="font-size: 11px">
+              <input formControlName="correoElectronico" type="text" class="form-control" />
 
             </div>
           </div>
@@ -263,7 +262,7 @@
           <div class="form-group col-lg-2">
             <label class="my-auto" for="razaoSocial">Teléfono </label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName="telefono_cliente" type="text" class="form-control" />
+              <input formControlName="telefonoCliente" type="text" class="form-control" />
             </div>
           </div>
 
@@ -285,8 +284,8 @@
             <label class="my-auto" for="codFormaPagamento">Tipo de pago</label>
             <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"
               bindLabel="descricao" bindValue="codFormaPagamento" formControlName="codFormaPagamento"
-              [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="true"
-              [virtualScroll]="true" placeholder="Seleccione..." >
+              [loading]="formasPagamentoLoader" loadingText="Carregando..." [readonly]="true" [virtualScroll]="true"
+              placeholder="Seleccione...">
               <!-- [ngClass]="onFieldError('codFormaPagamento') + ' ' + onFieldRequired(form.controls.codFormaPagamento)"-->
             </ng-select>
             <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
@@ -323,7 +322,7 @@
           <div class="form-group col-lg-2">
             <label class="my-auto" for="codEndereco">Número de celular</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName=" " type="text" class="form-control" [readonly]="true" [attr.disabled]="true" />
+              <input formControlName="formCelular" type="text" class="form-control" [readonly]="true" [attr.disabled]="true" />
             </div>
           </div>
         </div>
@@ -463,13 +462,21 @@
               <input formControlName=" " type="text" class="form-control" />
             </div>
           </div> -->
-          <div class="form-group col-lg-1" *ngIf="swEntrega == true">
+          <div class="form-group col-lg-1 mb-1" *ngIf="swEntrega == true">
             <label for="dataEntrega">Referencia</label> <br>
             <button class="btn btn-primary w-100" type="button" (click)="openModalUbicacion(seleccionarUbicacion)"> <i
                 class="fas fa-map-marker-alt"></i>Ubicación </button>
           </div>
+
+          <div class="form-group col-lg-4" *ngIf="swEntrega == true">
+            <label class="my-auto" for="razaoSocial">Dirección entrega</label>
+            <div class="my-1 text-uppercase" style="font-size: 11px">
+              <input formControlName="direccionEntrega" type="text" class="form-control" />
+            </div>
+          </div>
+
           <div class="form-group col-lg-2" *ngIf="swEntrega == true">
-            <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
+            <label class="my-auto" for="codFormaPagamento">Centro logistico</label>
             <ng-select class="" [formControlName]="centroLogisticoControl" id="orderBy"
               (change)="onCentroLogisticoChange($event)">
               <ng-container *ngFor="let centroLogistico of centrosLogisticos">
@@ -481,7 +488,7 @@
             <!-- <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
               message="Centro Logistico obligatorio."></invalid-form-control> -->
           </div>
-
+          
           <!--  <div class="form-group col-lg-2" *ngIf="swEntrega == true">
             <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
               <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
@@ -497,8 +504,9 @@
             <div class="form-row">
               <div class="form-group col">
                 <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
-<!--                   <label class="my-auto" for="codFormaPagamento">Forma de Pago</label>
- -->                  <div class="my-auto text-uppercase" style="font-size: 11px">
+                  <!--                   <label class="my-auto" for="codFormaPagamento">Forma de Pago</label>
+ -->
+                  <div class="my-auto text-uppercase" style="font-size: 11px">
                   </div>
                 </div>
                 <!-- <ng-select [searchable]="true" [clearable]="false" [items]="formasPagamento" [searchFn]="customSearchFn"

@@ -90,6 +90,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 
   swTodos = false;
   swVendedor = true;
+  swAppSell = false;
+
 
 
   form: FormGroup;
@@ -283,6 +285,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       if (src === 'application') {
         this.loaderNavbar.emit(true);
       }
+      /* console.log('aqui'); */
       const params = {
         id_familia: '',
         id_grupo: '',
@@ -567,8 +570,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     }
   }
 
-  onFilterVend(): void {
-    var tipo = 1;
+  onFilterVend(a): void {
+    var tipo = a;
     if (this.checkFieldErrors() === false) {
       if (this.searching === false && this.form.valid) {
         this.setRouterParams(this.getFormFilterValues(), tipo);
@@ -656,13 +659,13 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
           next: (response: any) => {
             /*           console.log(response.responseCode);
              */          /*  if (response.hasOwnProperty('success')
-        && response.success === true
-        && !response.data[0].msg) {
-          this.dados = response.data.map(function (el: any) {
-            var o = Object.assign({}, el);
-            o.checked = 0; 
-            return o;
-          }); */
+      && response.success === true
+      && !response.data[0].msg) {
+        this.dados = response.data.map(function (el: any) {
+          var o = Object.assign({}, el);
+          o.checked = 0; 
+          return o;
+        }); */
             if (response.responseCode === 200) {
               this.dados = response.result.map((el) => {
                 var o = Object.assign({}, el);
@@ -687,8 +690,9 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
               //this.pnotifyService.notice("Há campos faltando ou não há dados para sua consulta.");
               //this.dadosEmpty = true;
             } else {
-              this.swTodos = true;
+              this.swTodos = false;
               this.swVendedor = false;
+              this.swAppSell = true;
               this.dadosEmpty = true;
               this.form.controls.codMaterial.disable();
 
@@ -724,17 +728,19 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
           next: (response: any) => {
             /*           console.log(response.responseCode);
              */          /*  if (response.hasOwnProperty('success')
-        && response.success === true
-        && !response.data[0].msg) {
-          this.dados = response.data.map(function (el: any) {
-            var o = Object.assign({}, el);
-            o.checked = 0; 
-            return o;
-          }); */
+      && response.success === true
+      && !response.data[0].msg) {
+        this.dados = response.data.map(function (el: any) {
+          var o = Object.assign({}, el);
+          o.checked = 0; 
+          return o;
+        }); */
             if (response.responseCode === 200) {
               this.form.controls.codMaterial.enable();
               this.swTodos = false;
               this.swVendedor = true;
+              this.swAppSell = false;
+
 
               this.dados = response.result.map((el) => {
                 var o = Object.assign({}, el);
@@ -773,6 +779,60 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
             this.dadosEmpty = true;
           }
         });
+    } else if (tipo === 3) {
+      this.swTodos = false;
+      this.swVendedor = false;
+      this.swAppSell = true;
+      this.form.controls.codMaterial.disable();
+      this.comercialService
+        .getUpSellService(params)
+        .pipe(
+          finalize(() => {
+            this.loaderNavbar.emit(false);
+            this.searching = false;
+            this.firstSearch = true;
+            this.dadosLoaded = true;
+          })
+        )
+        .subscribe({
+          next: (response: any) => {
+            if (response.responseCode === 200) {
+              this.form.controls.codMaterial.enable();
+              this.swTodos = false;
+              this.swVendedor = true;
+              this.swAppSell = false;
+              this.dados = response.result.map((el) => {
+                var o = Object.assign({}, el);
+                o.checked = 0;
+                return o;
+              });
+              this.dadosEmpty = false;
+              this.tableConfig.fixedHeader = true;
+            } else {
+            
+              this.swTodos = true;
+              this.swVendedor = false;
+              this.dadosEmpty = true;
+              this.swAppSell = false;
+              this.form.controls.codMaterial.enable();
+
+            }
+          },
+          error: (error: any) => {
+            this.swTodos = true;
+              this.swVendedor = false;
+              this.dadosEmpty = true;
+              this.swAppSell = false;
+              this.form.controls.codMaterial.enable();
+            if (error['error'].hasOwnProperty('mensagem')) {
+              this.pnotifyService.error(error.error.mensagem);
+            } else {
+              this.pnotifyService.error();
+            }
+            this.dadosEmpty = true;
+          }
+        });
+
     }
   }
 

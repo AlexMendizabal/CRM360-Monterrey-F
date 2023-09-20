@@ -104,6 +104,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   loaderFullScreen = true;
   autoScrollToCarrinho = true;
   exibirClienteT = false;
+  carnet_cliente = '';
 
   activatedRouteSubscription: Subscription;
 
@@ -192,6 +193,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   visualizar = false;
   duplicatasSomenteCarteira = false;
   urlPath: string;
+  direccion_cliente: string;
+
 
   tableConfigAnexos: Partial<CustomTableConfig> = {
     fixedHeader: false,
@@ -227,6 +230,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   showBloco3: boolean = true;
   showBloco4: boolean = true;
   showBloco5: boolean = true;
+
+
   showBloco6: boolean = true;
 
   swEntrega: boolean = false;
@@ -300,7 +305,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.getRubros();
     this.tipoEntrega = [
       { id: 1, nombre: 'entrega en almacen' },
-      { id: 2, nombre: 'entrega en obra' }
+      { id: 2, nombre: 'entrega en obra ' }
     ];
     this.getIdOferta();
     //console.log(this.swExisteCliente);
@@ -562,6 +567,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   onCliente(event) {
+    console.log(event);
     this.form.patchValue(event);
     this.onChangeCliente(event.codCliente, 'user');
     this.onLoadCliente(true);
@@ -574,23 +580,28 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.form.controls['codFormaPagamento'].setValue(1);
 
     this.form.controls['codEndereco'].setValue(event.direccion);
-    this.form.controls['razaoSocial'].setValue(event.razaoSocial);
-    this.form.controls['correo_electronico'].setValue(event.correo_electronico);
+    this.direccion_cliente = event.direccion;
+    this.form.controls['razaoSocial'].setValue(event.nombre_factura);
+    this.form.controls['correoElectronico'].setValue(event.correo_electronico);
     this.form.controls['nomeCliente'].setValue(event.nomeCliente);
     this.form.controls['codigo_cliente'].setValue(event.codigo_cliente);
-    this.form.controls['telefono_cliente'].setValue(event.telefono);
+    this.form.controls['telefonoCliente'].setValue(event.telefono);
     this.form.controls['celular'].setValue(event.celular);
 
     this.form.controls['nombreTipo'].setValue(event.nombreTipo);
     this.form.controls['id_tipo_cliente'].setValue(event.tipoCliente);
     this.form.controls['id_departamento'].setValue(event.id_departamento_lista);
 
+    this.form.controls['celular'].setValue(event.celular);
+    this.form.controls['telefonoCliente'].setValue(event.telefono);
 
+    this.carnet_cliente = event.carnet_cliente;
+    console.log(event);
   }
 
   datosVendedor(id_vendedor) {
     this.idvendedor = id_vendedor;
-    this.idListaPrecio = 0;
+    this.idListaPrecio =  0;
     const params = {
       id_vendedor: id_vendedor
     }
@@ -749,6 +760,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         id_tipo_cliente: [data.tipoCliente],
         id_departamento: [data.id_departamento_lista],
         ejecutivo_ventas: [],
+        direccion_entrega: [],
+        direccionEntrega: [],
         /*  centroLogisticoControl:[], */
 
         /* codEndereco: [data.direccion], */
@@ -781,6 +794,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         dataValidade: [dataValidade, [Validators.required]],
         codFormaContato: [codFormaContato, [Validators.required]],
         codOrigemContato: [codOrigemContato, [Validators.required]],
+        telefonoCliente: [],
         dadosAdicionais: [
           data.dadosAdicionaisNotaFiscal,
           [Validators.required],
@@ -796,6 +810,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         novo: this.activatedRoute.snapshot.url[0].path,
         COD_CLIE_TERC: [data.COD_CLIE_TERC],
         TP_ACAO: [data.TP_ACAO],
+        correoElectronico: []
       });
       if (data.codEnderecoEntrega) {
         this.exibirClienteTerceiro(data.notaFiscalMae);
@@ -1267,7 +1282,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   onHistoricoComprasFieldError(event: boolean): void {
     if (event === true) {
-      this.onScrollToForm('top');
+      this.onScrollToForm('top') ;
 
       // if (this.form.value.codEndereco === null) {
       this.form.controls.codEndereco.markAsTouched();
@@ -1320,7 +1335,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   onSubmit(): void {
-    this.formularioService.onNotifySubmit(true);
+    this.formularioService.onNotifySubmit(true) ;
     this.sendForm();
   }
 
@@ -1464,10 +1479,19 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             carrinho: this.materiais,
             nombre_cliente: formValue.nomeCliente,
             observacion: formValue.observacoes,
+            nit_factura: formValue.codRazaoSocial,
+            nombre_factura: formValue.razaoSocial,
+            direccion_cliente: this.direccion_cliente,
+            direccion_entrega: formValue.direccionEntrega,
+            carnet_cliente: this.carnet_cliente,
+            correo_electronico: formValue.correoElectronico,
+            celular:formValue.celular,
+            telefono:formValue.telefonoCliente
+
           }
 
           /* this.autorizacionService.showModal();  */
-          //console.log(dataCotizacion);
+          /* console.log(dataCotizacion); */
 
           this.finalizacaoService.sendCotizacion(dataCotizacion);
 
@@ -1699,8 +1723,9 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       )
       .subscribe((response: JsonResponse) => {
         if (response.success === true) {
+          
           const _enderecos = response.data.enderecos;
-          const _enderecosAguardando = response.data.enderecosAguardando || [];
+          const _enderecosAguardando = response.data.enderecosAguardando || [] ;
 
           let enderecos = [],
             enderecosAguardando = [];

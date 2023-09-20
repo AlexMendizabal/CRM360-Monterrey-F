@@ -737,13 +737,13 @@ export class ComercialCicloVendasCotacoesListaComponent
 
     if (this.form.value.dataInicial) {
       params.dataInicial = this.dateService.convertToUrlDate(
-        new Date(this.form.value.dataInicial)
+        new Date(this.form.value.dataInicial )
       );
     }
 
     if (this.form.value.dataFinal) {
       params.dataFinal = this.dateService.convertToUrlDate(
-        new Date(this.form.value.dataFinal)
+        new Date(this.form.value.dataFinal )
       );
     }
 

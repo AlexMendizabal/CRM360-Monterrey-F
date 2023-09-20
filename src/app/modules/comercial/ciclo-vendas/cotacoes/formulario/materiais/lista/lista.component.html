@@ -25,7 +25,7 @@
             <i class="fas fa-trash"></i>
             <span>Limpiar</span>
           </button>
-          <button type="button" class="btn btn-sm btn-secondary mr-3" (click)="onFilterVend()" *ngIf="swVendedor === true">
+          <button type="button" class="btn btn-sm btn-secondary mr-3" (click)="onFilterVend(1)" *ngIf="swVendedor === true">
             <i class="fas fa-search"></i>
             <span>Buscar</span>
           </button>
@@ -33,6 +33,11 @@
           <button type="button" class="btn btn-sm btn-secondary" (click)="onFilter()" *ngIf="swTodos === true">
             <i class="fas fa-search"></i>
             <span>Buscar en todos</span>
+          </button>
+
+          <button type="button" class="btn btn-sm btn-primary" (click)="onFilterVend(3)" *ngIf="swAppSell === true">
+            <i class="fas fa-search"></i>
+            <span>UP SELL</span>
           </button>
         </div>
       </div>
