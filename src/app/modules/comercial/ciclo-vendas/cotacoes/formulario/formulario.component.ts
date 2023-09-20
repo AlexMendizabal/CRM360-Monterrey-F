@@ -233,7 +233,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   id_forma_contacto: number = 0;
   centrosLogisticos: any[] = [];
   swExisteCliente: boolean = true;
-
+  id_oferta: number;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -325,8 +325,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.cotacoesService.getIdOferta()
       .subscribe((response: JsonResponse) => {
         if (response.responseCode == 200) {
-          var id_oferta = response.result.id_oferta + 1;
-          this.form.controls['codigo_oferta_crm'].setValue(id_oferta);
+          this.id_oferta = response.result.id_oferta + 1;
+          this.form.controls['codigo_oferta_crm'].setValue(this.id_oferta);
           this.form.controls['codigo_oferta'].setValue(response.result.codigo_oferta);
 
         }
@@ -653,7 +653,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         codDeposito: number,
         codFormaContato: number,
         codOrigemContato: number;
-       
+
 
       if (data.codEmpresa === null) {
         codEmpresa = formValue.codEmpresa;
@@ -1468,6 +1468,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             carrinho: this.materiais,
             nombre_cliente: formValue.nomeCliente,
             observacion: formValue.observacoes,
+            id_oferta:  this.id_oferta,
           }
 
           /* this.autorizacionService.showModal();  */

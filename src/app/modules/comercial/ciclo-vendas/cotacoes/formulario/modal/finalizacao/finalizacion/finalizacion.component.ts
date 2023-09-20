@@ -97,7 +97,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
 
   ngOnInit(): void {
     //this.confirmDuplicatas();
-
+    //this.verificador();
   }
 
   ngAfterViewChecked() {
@@ -127,6 +127,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
         id_oferta: this.id_oferta,
         fecha_solicitud: this.fecha
       };
+
+      console.log(this.formObj );
       this.cotacoesService.autorizaciones(this.formObj)
         .pipe().subscribe(
           (response: any) => {
