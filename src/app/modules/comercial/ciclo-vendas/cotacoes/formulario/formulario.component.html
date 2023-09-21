@@ -388,7 +388,7 @@
         <div class="col">
           <comercial-ciclo-vendas-cotacoes-formulario-materiais-lista [codEndereco]="form.value.codEndereco"
             [codCliente]="form.value.codCliente" [codEmpresa]="form.getRawValue().codEmpresa"
-            [id_lista_precio]="idListaPrecio" [codDeposito]="form.getRawValue().codDeposito"
+            [id_lista_precio]="idListaPrecio" [codDeposito]="form.getRawValue().codDeposito" [id_vendedor] = "this.idvendedor"
             [codFormaPagamento]="form.value.codFormaPagamento" [freteConta]="form.value.freteConta"
             (loaderNavbar)="onLoaderNavbar($event)" (loaderFullScreen)="onLoaderFullScreen($event)"
             (scrollToFormOnTop)="onMateriaisScrollTop($event)" (scrollToCarrinho)="onScrollToCarrinho($event)">
