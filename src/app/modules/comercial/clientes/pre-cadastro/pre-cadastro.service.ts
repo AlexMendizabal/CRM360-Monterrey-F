@@ -6,12 +6,13 @@ import { ComercialVendedoresService } from '../../services/vendedores.service';
 import { ComercialClientesCadastroDadosFaturamentoFormularioService } from '../cadastro/dados-faturamento/formulario/formulario.service';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComercialClientesPreCadastroService {
-  private readonly BASE_URL: string = `https://crm360.monterrey.com.bo/api`;
+  private readonly BASE_URL: string = `https://127.0.0.1:8000/api`;
   
   constructor(
     private vendedoresService: ComercialVendedoresService,
@@ -22,9 +23,16 @@ export class ComercialClientesPreCadastroService {
   loadDependencies() {
     let vendedores = this.vendedoresService.getVendedores();
     let cnaes = this.dadosFaturamentoService.getCnaes();
-
-    return forkJoin([vendedores, cnaes]);
+    let ciudades = this.dadosFaturamentoService.getCiudades(); // Agregar esta línea
+    return forkJoin([vendedores, cnaes, ciudades]); // Agregar ciudades aquí
   }
+  
+  getCiudades() {
+    return this.http.get(`${this.BASE_URL}/ciudades`).pipe(
+      take(1)
+    );
+  }
+  
 
   postAkna(param){
     return this.http.post(
@@ -34,3 +42,7 @@ export class ComercialClientesPreCadastroService {
     );
   }
 }
+function tap(arg0: (data: any) => void): import("rxjs").OperatorFunction<Object, unknown> {
+  throw new Error('Function not implemented.');
+}
+

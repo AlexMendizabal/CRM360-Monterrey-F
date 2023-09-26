@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComercialClientesCadastroDadosFaturamentoFormularioService {
-  private readonly API = `http://127.0.0.1:8000/comercial/clientes/cadastro/formulario/dados-faturamento`;
+  private readonly API = `http://23.254.204.187/api/comercial/clientes/cadastro/formulario/dados-faturamento`;
 
   constructor(protected http: HttpClient) {}
 
@@ -63,4 +63,10 @@ export class ComercialClientesCadastroDadosFaturamentoFormularioService {
   getCnaes() {
     return this.http.get(`${this.API}/cnaes`).pipe(take(1));
   }
+  getCiudades() {
+    return this.http.get(`${this.API}/ciudades`).pipe(
+      take(1)
+    );
+  }
+  
 }

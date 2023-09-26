@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { take, retry } from 'rxjs/operators';
+import { take, retry, tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
@@ -12,7 +12,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialClientesService {
-  private readonly API = `http://127.0.0.1:8000/comercial/clientes`;
+  private readonly API = `http://23.254.204.187/api/comercial/clientes`;
 
   constructor(protected http: HttpClient) {}
 
@@ -47,13 +47,30 @@ export class ComercialClientesService {
   getDetalhes(codCliente: number): Observable<Object | JsonResponse> {
     return this.http
       .get(`${this.API}/pesquisa/detalhes/${codCliente}`)
+      .pipe(
+        take(1),
+        retry(2));
+  }
+  sapUpdateClient(codigo_cliente: number, data: any): Observable<Object> {
+    console.log("update Cliente:", data);
+    return this.http
+      .post(`${this.API}/pesquisa/updatesap`, data)
       .pipe(take(1), retry(2));
   }
+  sapUpdateContacto(codigo_cliente: number, data: any): Observable<Object> {
+    console.log("update Contacto:", data);
+    return this.http
+      .post(`${this.API}/pesquisa/updatesapcontacto`, data)
+      .pipe(take(1), retry(2));
+  }  
+  
 
   getContatosResumido(codCliente: number): Observable<Object> {
     return this.http
-      .get(`${this.API}/pesquisa/contatos/${codCliente}`)
-      .pipe(take(1), retry(2));
+      .get(`${this.API}/pesquisa/contactodetalle/${codCliente}`)
+      .pipe(take(1),
+      retry(2),
+    );
   }
 
   getExisteCpfCnpj(
@@ -72,6 +89,12 @@ export class ComercialClientesService {
   postCliente(data: any): Observable<Object> {
     return this.http
       .post(`${this.API}/pre-cadastro`, data)
+      .pipe(take(1), retry(2));
+  }
+  
+  sapPostClient(data: any): Observable<Object> {
+    return this.http
+      .post(`${this.API}/postsap`, data)
       .pipe(take(1), retry(2));
   }
 

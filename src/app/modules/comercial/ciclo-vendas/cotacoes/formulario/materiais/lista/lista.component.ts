@@ -369,8 +369,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   onReset(): void {
     this.confirmReset()
       .subscribe({
-        next: (response: boolean) => {
-          if (response === true) {
+        next: (response: boolean) =>  {
+          if (response === true)  {
             this.executeReset();
           }
         },

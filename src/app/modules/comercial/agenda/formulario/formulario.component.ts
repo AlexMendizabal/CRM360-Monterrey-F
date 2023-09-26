@@ -807,7 +807,7 @@ export class ComercialAgendaFormularioComponent
   actualizarDireccion(event: any) {
     this.obtenerDireccion(event.coords.lat, event.coords.lng)
       .then((direccion_mapa: string) => {
-        this.form.controls['direccion'].setValue(direccion_mapa);
+        this.form.controls['direccion'].setValue(direccion_mapa );
       })
       .catch((error: any) => {
         this.form.controls['direccion'].setValue(

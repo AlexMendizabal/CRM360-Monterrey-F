@@ -34,6 +34,8 @@ import { ComercialClientesDashboardModule } from './dashboard/dashboard.module';
 import { ComercialClientesHistoricoFinanceiroModule } from './historico-financeiro/historico-financeiro.module';
 import { ComercialClientesPropostaAnaliseCreditoComponent } from './proposta-analise-credito/proposta-analise-credito.component';
 import { ComercialClientesUltimosPrecosComponent } from './ultimos-precos/ultimos-precos.component';
+import { AgmCoreModule } from '@agm/core';
+
 
 @NgModule({
   declarations: [
@@ -61,6 +63,9 @@ import { ComercialClientesUltimosPrecosComponent } from './ultimos-precos/ultimo
     ComercialClientesRoutingModule,
     ComercialClientesDashboardModule,
     ComercialClientesHistoricoFinanceiroModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDl5b7STz9xYNDhybTTer2POVncX9FYqCc' // Reemplaza con tu propia clave de API de Google Maps
+    }),
     
   ]
 })

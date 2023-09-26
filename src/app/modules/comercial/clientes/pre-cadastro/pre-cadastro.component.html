@@ -1,17 +1,11 @@
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
 <app-header appTitle="Pre-Registro">
-  <button
-    type="button"
-    (click)="onCancel()"
-    [disabled]="submittingForm">
+  <button type="button" (click)="onCancel()" [disabled]="submittingForm">
     Cancelar
   </button>
-  <button
-    type="button"
-    (click)="onSubmit()"
-    [disabled]="!form.valid || submittingForm">
-    Salvar
+  <button type="button" (click)="onSubmit()" [disabled]="!form.valid || submittingForm">
+    Guardar
   </button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
@@ -20,303 +14,225 @@
       <form [formGroup]="form" autocomplete="off">
         <div class="form-row">
           <div class="form-group col">
-            <div class="btn-group btn-group-sm">
-              <button
-                type="button"
-                class="btn btn-light active"
-                [ngClass]="{'active': tipoPessoa == 'F'}"
-                (click)="setType('F')">
-                <strong>Persona fisica</strong>
-              </button>
-              
-              <button
-              type="button"
-              class="btn btn-light active"
-              [ngClass]="{'active': tipoPessoa == 'J'}"
-              (click)="setType('J')">
-              <strong>persona Juridica</strong>
-            </button>
 
-            </div>
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-md-6" *ngIf="tipoPessoa == 'F'">
-            <label for="cpf"> CARNET DE IDENTIDAD </label>
-            <input
-              type="text"
-              class="form-control"
-              id="cpf"
-              formControlName="cpf"
-              (input)="onInput()"
-              [ngClass]="onFieldError('cpf') + ' ' + onFieldRequired('cpf')">
-            <invalid-form-control [show]="onFieldInvalid('cpf') == 'required'" message="Carnet inválido."></invalid-form-control>
-          </div>
-          <div class="form-group col-md-6" *ngIf="tipoPessoa == 'J'">
-            <label for="cnpj">NIT</label>
-            <input
-              type="text"
-              class="form-control"
-              id="cnpj"
-              formControlName="cnpj"
-              (input)="onInput()"
-              (blur)="validateCNPJ()"
-              [ngClass]="onFieldError('cnpj') + ' ' + onFieldRequired('cnpj')"
-            >
-            <invalid-form-control [show]="onFieldInvalid('cnpj') == 'required'" message="NIT inválido."></invalid-form-control>
-          </div>
           <div class="form-group col-md-6">
-            <label for="vendedor">Atribuir vendedor</label>
-            <ng-select
-              [searchable]="true"
-              [clearable]="false"
-              [items]="vendedores"
-              [virtualScroll]="true"
-              labelForId="vendedor"
-              bindLabel="nome"
-              bindValue="id"
-              formControlName="vendedor"
-              (change)="onInput()">
+            <label for="nit">CI/NIT</label>
+            <input type="text" class="form-control" id="nit" formControlName="nit" (input)="onInput()"
+              [ngClass]="onFieldError('nit') + ' ' + onFieldRequired('nit')">
+            <invalid-form-control [show]="onFieldInvalid('nit') == 'required'"
+              message="NIT inválido."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="tipopessoa">Tipo de persona</label>
+            <select class="form-control" id="tipopessoa" formControlName="tipopessoa" (change)="onInput()">
+              <option value="S">Sociedades</option>
+              <option value="P">Privado</option>
+              <option value="G">Gobierno</option>
+              <option value="E">Empleado</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="vendedor"> Vendedor</label>
+            <ng-select [searchable]="true" [clearable]="false" [items]="vendedores" [virtualScroll]="true"
+              labelForId="vendedor" bindLabel="nome" bindValue="id" formControlName="vendedor" (change)="onInput()">
             </ng-select>
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-md-6" *ngIf="tipoPessoa == 'F'">
-            <label for="nome">Nombre</label>
-            <input
-              type="text"
-              class="form-control"
-              id="nome"
-              formControlName="nome"
-              (input)="onInput()"
+          <div class="form-group col-md-6">
+            <label for="nome">Nombre completo</label>
+            <input type="text" class="form-control" id="nome" formControlName="nome" (input)="onInput()"
               [ngClass]="onFieldError('nome') + ' ' + onFieldRequired('nome')">
-            <invalid-form-control [show]="onFieldInvalid('nome') == 'required'" message="Nombre es obligatorio."></invalid-form-control>
-            <invalid-form-control [show]="onFieldInvalid('nome') == 'maxlength'" [message]="maxLengthMessages.nome"></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('nome') == 'required'"
+              message="Nombre es obligatorio."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('nome') == 'maxlength'"
+              [message]="maxLengthMessages.nome"></invalid-form-control>
           </div>
-          <div class="form-group col-md-6" *ngIf="tipoPessoa == 'F'">
-            <label for="sobrenome">Apellido</label>
-            <input
-              type="text"
-              class="form-control"
-              id="sobrenome"
-              formControlName="sobrenome"
-              (input)="onInput()"
-              [ngClass]="onFieldError('sobrenome') + ' ' + onFieldRequired('sobrenome')">
-            <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'required'" message="Apellido es obligatorio."></invalid-form-control>
-            <invalid-form-control [show]="onFieldInvalid('sobrenome') == 'maxlength'" [message]="maxLengthMessages.sobrenome"></invalid-form-control>
-          </div>
-          <div class="form-group col-md-6" *ngIf="tipoPessoa == 'J'">
+          <div class="form-group col-md-6">
             <label for="razaoSocial">Razon social</label>
-            <input
-              type="text"
-              class="form-control"
-              id="razaoSocial"
-              formControlName="razaoSocial"
-              (input)="onInput()"
+            <input type="text" class="form-control" id="razaoSocial" formControlName="razaoSocial" (input)="onInput()"
               [ngClass]="onFieldError('razaoSocial') + ' ' + onFieldRequired('razaoSocial')">
-            <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'required'" message="Razon social es obligatorio."></invalid-form-control>
-            <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'maxlength'" [message]="maxLengthMessages.razaoSocial"></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'required'"
+              message="Razon social es obligatorio."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'maxlength'"
+              [message]="maxLengthMessages.razaoSocial"></invalid-form-control>
           </div>
-          <div class="form-group col-md-6" *ngIf="tipoPessoa == 'J'">
-            <label for="nomeFantasia">Nombre</label>
-            <input
-              type="text"
-              class="form-control"
-              id="nomeFantasia"
-              formControlName="nomeFantasia"
-              (input)="onInput()"
+          <div class="form-group col-md-6">
+            <label for="nomeFantasia">Nombre de Fantasia</label>
+            <input type="text" class="form-control" id="nomeFantasia" formControlName="nomeFantasia" (input)="onInput()"
               [ngClass]="onFieldError('nomeFantasia') + ' ' + onFieldRequired('nomeFantasia')">
-            <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'required'" message="Nombre es obligatorio."></invalid-form-control>
-            <invalid-form-control [show]="onFieldInvalid('nomeFantasia') == 'maxlength'" [message]="maxLengthMessages.nomeFantasia"></invalid-form-control>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="celular">Celular</label>
+            <input type="text" class="form-control" id="celular" formControlName="celular" (input)="onInput()"
+              [ngClass]="onFieldError('celular') + ' ' + onFieldRequired('celular')">
+            <invalid-form-control [show]="onFieldInvalid('celular') == 'required'"
+              message="celular es obligatorio."></invalid-form-control>
           </div>
         </div>
-        <div class="form-row" *ngIf="tipoPessoa == 'J'">
-          <div class="form-group col">
-            <label for="cnae">CNAE (Actividad Economica)</label>
-            <ng-select
-              [searchable]="true"
-              [clearable]="false"
-              [items]="cnaes"
-              [virtualScroll]="true"
-              labelForId="cnae"
-              bindLabel="descricao"
-              bindValue="id"
-              formControlName="cnae"
-              (change)="onInput()"
-              [ngClass]="onFieldError('cnae') + ' ' + onFieldRequired('cnae')">
-            </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('cnae') == 'required'" message="CNAE es obligatorio."></invalid-form-control>
-          </div>
-        </div>
+
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="emailNfe">E-mail NFE</label>
-            <input
-              type="email"
-              class="form-control"
-              id="emailNfe"
-              formControlName="emailNfe"
-              (input)="onInput()"
-              [ngClass]="onFieldError('emailNfe') + ' ' + onFieldRequired('emailNfe')">
-            <invalid-form-control [show]="onFieldInvalid('emailNfe') == 'required'" message="E-mail NFE es obligatorio."></invalid-form-control>
-            <invalid-form-control [show]="onFieldInvalid('emailNfe') == 'maxlength'" [message]="maxLengthMessages.emailNfe"></invalid-form-control>
+            <label for="email">E-mail</label>
+            <input type="email" class="form-control" id="email" formControlName="email" (input)="onInput()"
+              [ngClass]="onFieldError('email') + ' ' + onFieldRequired('email')">
+            <invalid-form-control [show]="onFieldInvalid('email') == 'required'"
+              message="E-mail es obligatorio."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('email') == 'maxlength'"
+              [message]="maxLengthMessages.email"></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
             <label for="telefone">Telefono</label>
-            <input
-              type="text"
-              class="form-control"
-              id="telefone"
-              formControlName="telefone"
-              (input)="onInput()"
-              [ngClass]="onFieldError('telefone') + ' ' + onFieldRequired('telefone')"
-            >
-            <invalid-form-control [show]="onFieldInvalid('telefone') == 'required'" message="Telefono es obligatorio."></invalid-form-control>
-          </div>
-          <div class="form-group col-md-6">
-            <!-- <label for="tipopessoa">Tipo de persona</label> -->
-            <!-- <select class="form-control" id="tipopessoa" formControlName="tipopessoa" (change)="onInput()">
-              <option value="F">Persona 1 </option>
-              <option value="J">Persona 2 </option>
-              <option value="J">Persona 3 </option>
-            </select> -->
+            <input type="text" class="form-control" id="telefone" formControlName="telefone" (input)="onInput()"
+              [ngClass]="onFieldError('telefone') + ' ' + onFieldRequired('telefone')">
+            <invalid-form-control [show]="onFieldInvalid('telefone') == 'required'"
+              message="Telefono es obligatorio."></invalid-form-control>
           </div>
         </div>
-        
-        <!-- <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="emailMarketing">E-mail Marketing</label>
-            <input
-              type="email"
-              class="form-control"
-              id="emailMarketing"
-              formControlName="emailMarketing"
-              (input)="onInput()"
-              [ngClass]="onFieldError('emailMarketing') + ' ' + onFieldRequired('emailMarketing')">
-            <invalid-form-control [show]="onFieldInvalid('emailMarketing') == 'maxlength'" [message]="maxLengthMessages.emailMarketing"></invalid-form-control>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="cnae">Rubro (Actividad Economica)</label>
+            <ng-select [searchable]="true" [clearable]="false" [items]="cnaes" [virtualScroll]="true" labelForId="cnae"
+              bindLabel="descripcion" bindValue="id_cnae" formControlName="cnae" (change)="onInput()"
+              [ngClass]="onFieldError('cnae') + ' ' + onFieldRequired('cnae')">
+            </ng-select>
+            <invalid-form-control [show]="onFieldInvalid('cnae') == 'required'"
+              message="CNAE es obligatorio."></invalid-form-control>
           </div>
-        </div> -->
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="cnae">Mapa</label>
+            <div class="embed-responsive embed-responsive-16by9" style="max-height: 350px;">
+              <agm-map (mapClick)="actualizarMapa($event)" [latitude]="latitud" [longitude]="longitud" [zoom]="16"
+                class="embed-responsive-item">
+                <agm-marker *ngFor="let ubicacion of ubicaciones; let i = index" [latitude]="ubicacion.latitud"
+                  [longitude]="ubicacion.longitud" (markerClick)="actualizarMarcador(i)"
+                  (markerDragEnd)="actualizarUbicacion(i, $event.coords.lat, $event.coords.lng)">
+                </agm-marker>
+              </agm-map>
+              <div id="map-zoom-control" class="map-control"></div>
+            </div>
+
+
+          </div>
+        </div>
+        <div class="form-row mt-2">
+          <div class="col-4">
+            <button data-toggle="collapse" data-target="#CollapseUbicacion" class="btn btn-primary"
+              id="btnAgregarUbicacion" (click)="repetirFormulario('Ubicacion')"> <i class="fas fa-plus"></i>
+              Agregar Ubicación</button>
+
+          </div>
+          <div class="col">
+            <button data-toggle="collapse" data-target="#CollapseContacto" class="btn btn-success"
+              id="btnAgregarContacto" (click)="repetirFormulario('Contacto')"> <i class="fas fa-plus"></i>
+              Agregar Contacto</button>
+          </div>
+        </div>
+        <div id="ContenedorFormularios">
+          <div id="Ubicacion" *ngFor="let ubicacionForm of ubicacionFormularios; let i = index">
+            <div id="CollapseUbicacion" [class.collapse]="!ubicacionCollapse">
+              <div class="mt-3"></div>
+              <div class="row " style="border-radius: 13px; background-color: rgb(246, 243, 243);">
+                <div class="form-group col-md-9 mt-1">
+                  <label for="titulo_ubicacion">Nombre de ubicacion</label>
+                  <input type="text" class="form-control" id="titulo_ubicacion" formControlName="titulo_ubicacion"
+                    (input)="onInput()" [(ngModel)]="ubicacionForm.titulo_ubicacion">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="ciudadUbi">Ciudad</label>
+                  <ng-select [searchable]="true" [clearable]="false" [items]="ciudades" [virtualScroll]="true"
+                    labelForId="ciudad" bindLabel="nombre_ciudad" bindValue="id" formControlName="nombre_ciudad"
+                    [ngClass]="onFieldError('ciudad') + ' ' + onFieldRequired('ciudad')"
+                    [(ngModel)]="ubicacionForm.ciudad">
+                  </ng-select>
+                </div>
+                <div class="form-group col-md-6" *ngIf="ubicacionForm.swActivarLatitud === true">
+                  <label for="direccion">Direccion</label>
+                  <input type="text" class="form-control" id="direccion" formControlName="" (input)="onInput()"
+                    [(ngModel)]="ubicacionForm.direccion" [value]="ubicacionForm.direccion">
+                </div>
+                <div class="form-group col-md-6" *ngIf="ubicacionForm.swActivarLatitud === false">
+                  <label for="direccion">Dirección </label> <br>
+                  <button class="btn btn-primary"  (click)="agregarDireccion(i)"> <i class="fas fa-map-marker"></i>
+                    Agregar </button>
+                </div>
+                <div class="form-group col-md-3" *ngIf="ubicacionForm.swActivarLatitud === true">
+                  <label for="ciudadUbi">Latitud</label>
+                  <input type="text" class="form-control" id="titulo_ubicacion" formControlName="latitud"
+                    (input)="onInput()" [(ngModel)]="ubicacionForm.latitud" [value]="ubicacionForm.latitud" [readonly]="true">
+
+
+                </div>
+                <div class="form-group col-md-3" *ngIf="ubicacionForm.swActivarLatitud === true">
+                  <label for="ciudadUbi">Longitud</label>
+                  <input type="text" class="form-control" id="titulo_ubicacion" formControlName="longitud"
+                    (input)="onInput()" [(ngModel)]="ubicacionForm.longitud" [value]="ubicacionForm.longitud" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="Contacto" *ngFor="let contactoForm of contactoFormularios; let i = index">
+            <div id="CollapseContacto" [class.collapse]="!contactoCollapse">
+              <div class="col">
+                <hr class="mt-2">
+              </div>
+              <div class="form-group col-md-6">
+                <label>CONTACTOS</label>
+              </div>
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="titulo_contacto">TITULO DE CONTACTO</label>
+                    <input type="text" class="form-control" id="titulo_contacto" formControlName="titulo_contacto"
+                      (input)="onInput()"
+                      [ngClass]="onFieldError('titulo_contacto') + ' ' + onFieldRequired('titulo_contacto')"
+                      [(ngModel)]="contactoForm.value.titulo_contacto">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="nombres_contacto">NOMBRE</label>
+                    <input type="text" class="form-control" id="nombres_contacto" formControlName="nombres_contacto"
+                      (input)="onInput()" [(ngModel)]="contactoForm.value.nombres_contacto">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="apellido_contacto">APELLIDO PATERNO</label>
+                    <input type="text" class="form-control" id="apellido_contacto" formControlName="apellido_contacto"
+                      (input)="onInput()" [(ngModel)]="contactoForm.value.apellido_contacto">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="apellido2_contacto">APELLIDO MATERNO</label>
+                    <input type="text" class="form-control" id="apellido2_contacto" formControlName="apellido2_contacto"
+                      (input)="onInput()" [(ngModel)]="contactoForm.value.apellido2_contacto">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="telefono_contacto">TELEFONO CONTACTO</label>
+                    <input type="text" class="form-control" id="telefono_contacto" formControlName="telefono_contacto"
+                      (input)="onInput()" [(ngModel)]="contactoForm.value.telefono_contacto">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="celular_contacto">CELULAR DE CONTACTO</label>
+                    <input type="text" class="form-control" id="celular_contacto" formControlName="celular_contacto"
+                      (input)="onInput()" [(ngModel)]="contactoForm.value.celular_contacto">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="direccion_contacto">DIRECCION DE CONTACTO</label>
+                    <input type="text" class="form-control" id="direccion_contacto" formControlName="direccion_contacto"
+                      (input)="onInput()" [(ngModel)]="contactoForm.value.direccion_contacto">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
+
     </div>
   </div>
 </app-body>
-
-<ng-template #modalDetalhesCliente>
-  <div class="modal-header">
-    <h4 class="modal-title">Oops! Ese cliente ya esta registrado</h4>
-    <button type="button" class="close" aria-label="Close" (click)="onCloseDetails()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div class="form-row">
-      <div class="col">
-        <div class="mtc-title">Datos de registro</div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col">
-        <label>Código</label>
-        <div *ngIf="dadosCliente.codCliente == null">Sin informacion</div>
-        <div *ngIf="dadosCliente.codCliente != null">{{ dadosCliente.codCliente }}</div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-lg-6" *ngIf="dadosCliente.tipo == 'F'">
-        <label>CPF</label>
-        <div *ngIf="dadosCliente.cpf == null">Sin informacion</div>
-        <div *ngIf="dadosCliente.cpf != null">{{ dadosCliente.cpf }}</div>
-      </div>
-      <div class="form-group col-lg-6" *ngIf="dadosCliente.tipo == 'J'">
-        <label>NIT</label>
-        <div *ngIf="dadosCliente.cnpj == null">Sin informacion</div>
-        <div *ngIf="dadosCliente.cnpj != null">{{ dadosCliente.cnpj }}</div>
-      </div>
-      <div class="form-group col-lg-6">
-        <label>Nombre fantasia</label>
-        <div *ngIf="dadosCliente.nomeFantasia == null">Sin informacion</div>
-        <div *ngIf="dadosCliente.nomeFantasia != null">{{ dadosCliente.nomeFantasia }}</div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col">
-        <label>Razon social</label>
-        <div *ngIf="dadosCliente.razaoSocial == null">Sin informacion</div>
-        <div *ngIf="dadosCliente.razaoSocial != null">{{ dadosCliente.razaoSocial }}</div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col">
-        <label>Endereço</label>
-        <div *ngIf="dadosCliente.endereco == null">Sin informacion</div>
-        <div *ngIf="dadosCliente.endereco != null">{{ dadosCliente.endereco }}</div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-lg-6">
-        <label>Bairro</label>
-        <div *ngIf="dadosCliente.bairro == null">Sin informacion</div>
-        <div *ngIf="dadosCliente.bairro != null">{{ dadosCliente.bairro }}</div>
-      </div>
-      <div class="form-group col-lg-6">
-        <label>CEP</label>
-        <div *ngIf="dadosCliente.cep == null">Sin informacion</div>
-        <div *ngIf="dadosCliente.cep != null">{{ dadosCliente.cep }}</div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-lg-6">
-        <label>Cidade</label>
-        <div *ngIf="dadosCliente.cidade == null">Sin informacion</div>
-        <div *ngIf="dadosCliente.cidade != null">{{ dadosCliente.cidade }}</div>
-      </div>
-      <div class="form-group col-lg-6">
-        <label>Estado</label>
-        <div *ngIf="dadosCliente.uf == null">Sin informacion</div>
-        <div *ngIf="dadosCliente.uf != null">{{ dadosCliente.uf }}</div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col">
-        <label>Segurado</label>
-        <div *ngIf="dadosCliente.segurado != ''">SI</div>
-        <div *ngIf="dadosCliente.segurado == ''">NO</div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-lg-6">
-        <label>Vendedor</label>
-        <div *ngIf="dadosCliente.vendedor == null">Sin informacion</div>
-        <div *ngIf="dadosCliente.vendedor != null">{{ dadosCliente.vendedor }}</div>
-      </div>
-      <div class="form-group col-lg-6">
-        <label>Escritório</label>
-        <div *ngIf="dadosCliente.escritorio == null">Sin informacion</div>
-        <div *ngIf="dadosCliente.escritorio != null">{{ dadosCliente.escritorio }}</div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-lg-4" *ngIf="dadosCliente.codSAP != '' && dadosCliente.codSAP != null">
-        <label>Código DBA</label>
-        <div>{{ dadosCliente.codSAP }}</div>
-      </div>
-      <div class="form-group col-lg-4" *ngIf="dadosCliente.escritorioDba != '' && dadosCliente.escritorioDba != null">
-        <label>Sucursal</label>
-        <div>{{ dadosCliente.escritorioDba }}</div>
-      </div>
-      <div class="form-group col-lg-4" *ngIf="dadosCliente.ultimaCompraDba != '' && dadosCliente.ultimaCompraDba != null">
-        <label>Última compra</label>
-        <div>{{ dadosCliente.ultimaCompraDba }}</div>
-      </div>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-light" (click)="onCloseDetails()">Fechar</button>
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="onNavigateDetail()">
-      Detalles
-    </button>
-  </div>
-</ng-template>

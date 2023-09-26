@@ -34,6 +34,8 @@ import { CnpjService } from 'src/app/shared/services/ws/cnpj.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { FunctionsService } from 'src/app/shared/services/core/functions.service';
+import { array } from '@amcharts/amcharts4/core';
+import { number } from 'ng-brazil/number/validator';
 
 @Component({
   selector: 'comercial-clientes-pre-cadastro',
@@ -41,8 +43,7 @@ import { FunctionsService } from 'src/app/shared/services/core/functions.service
   styleUrls: ['./pre-cadastro.component.scss'],
 })
 export class ComercialClientesPreCadastroComponent
-  implements OnInit, IFormCanDeactivate
-{
+  implements OnInit, IFormCanDeactivate {
   @ViewChild('modalDetalhesCliente', {}) modalDetalhesCliente: TemplateRef<any>;
 
   modalRef: BsModalRef;
@@ -74,13 +75,28 @@ export class ComercialClientesPreCadastroComponent
 
   form: FormGroup;
   formChanged = false;
-  tipoPessoa = 'F';
+  tipoPessoa: any = {};
   submittingForm = false;
-
+  latitud: number = -17.78629;
+  longitud: number = -63.18117;
+  swActivarLatitud: boolean = false;
   maxLengthRules: any = {};
   maxLengthMessages: any = {};
+  id_marcador: number = 0;
 
   dadosCliente: any = {};
+  ciudades: any = [];
+
+  ubicacionCollapse: boolean = false; // Inicialmente oculto
+  contactoCollapse: boolean = false; // Inicialmente oculto
+
+  ubicacionFormularios: any[] = [];
+  contactoFormularios: FormGroup[] = [];
+  formObj: FormGroup;
+  formObjArray: any[] = [];
+  ubicaciones : any[] = [];
+
+
 
   constructor(
     private preCadastroService: ComercialClientesPreCadastroService,
@@ -95,30 +111,81 @@ export class ComercialClientesPreCadastroComponent
     private titleService: TitleService,
     private functionsService: FunctionsService,
     private modalService: BsModalService
+
   ) {
     this.pnotifyService.getPNotify();
   }
 
   ngOnInit() {
-    this.titleService.setTitle('Pré-cadastro');
+    this.titleService.setTitle('Pre-Registro');
     this.getFormFields();
     this.activatedRoute.queryParams.subscribe((queryParams: any) => {
       let documento = null;
 
-      if (Object.keys(queryParams).length > 0) {
-        if (queryParams['cpf']) {
-          this.tipoPessoa = 'F';
-          documento = queryParams['cpf'];
-        } else if (queryParams['cnpj']) {
-          this.tipoPessoa = 'J';
-          documento = queryParams['cnpj'];
-        }
-      }
 
       this.registrarAcesso();
       this.setMaxLengthRules();
       this.setFormBuilder(documento);
+      this.formObj = this.formBuilder.group({
+        ubicacion: this.formBuilder.array([]), // Debes configurar esto según tu estructura
+        contactos: this.formBuilder.array([]), // Debes configurar esto según tu estructura
+        // Otros campos del formulario principal aquí
+      });
     });
+  }
+
+  /* actualizarMarcador(event: any) {
+    this.latitud = event.coords.lat;
+    this.longitud = event.coords.lng;
+  } */
+  actualizarMarcador( index: number) {
+    /* console.log(this.latitud); */
+    this.id_marcador = index; 
+    // Actualizar solo la ubicación del marcador en la posición 'index'
+    this.ubicaciones[index].latitud = this.latitud;
+    this.ubicacionFormularios[index].latitud = this.latitud;
+    this.ubicaciones[index].longitud = this.longitud
+    this.ubicacionFormularios[index].longitud = this.longitud;
+
+
+    
+  }
+ actualizarMapa(event: any){
+  console.log(event);
+  this.latitud = event.coords.lat;
+  this.longitud = event.coords.lng;
+  this.actualizarMarcador(this.id_marcador);
+  this.actualizarDireccion(this.id_marcador, event);
+ }
+
+  actualizarDireccion(index, event: any) {
+    this.obtenerDireccion(event.coords.lat, event.coords.lng)
+      .then((direccion_mapa: string) => {
+        this.ubicacionFormularios[index].direccion= direccion_mapa;
+      })
+      .catch((error: any) => {
+       /*  this.form.controls['direccion'].setValue(
+          'Error al obtener la dirección'
+        ); */
+      });
+  }
+
+  public obtenerDireccion(latitud: number, longitud: number): Promise<string> {
+    return fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitud},${longitud}&key=AIzaSyDl5b7STz9xYNDhybTTer2POVncX9FYqCc`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const resultado = data.results[0];
+        if (resultado) {
+          return resultado.formatted_address;
+        } else {
+          return 'Dirección no encontrada';
+        }
+      })
+      .catch((error) => {
+        return 'Error al obtener la dirección';
+      });
   }
 
   registrarAcesso() {
@@ -135,6 +202,8 @@ export class ComercialClientesPreCadastroComponent
       )
       .subscribe(
         (response: any) => {
+          console.log('Datos obtenidos en loadDependencies():', response);
+
           if (response[0].responseCode === 200) {
             this.vendedores = response[0].result;
           } else {
@@ -142,16 +211,28 @@ export class ComercialClientesPreCadastroComponent
           }
 
           if (response[1].responseCode === 200) {
-            this.cnaes = response[1].result;
+            this.cnaes = response[1].result.map(cnae => ({
+              id_cnae: cnae.id,
+              descripcion: cnae.descricao,
+              codigo: cnae.codigo
+            })); console.log("cnaes: ", this.cnaes);
           } else {
             this.handleFormFieldsError();
           }
+          if (response[2].responseCode === 200) {
+            this.ciudades = response[2].result;
+            console.log(this.ciudades);
+          } else {
+            this.handleFormFieldsError();
+          } console.log("cnaes: ", this.ciudades);
         },
-        (error: any) => {
+        (error) => {
+          console.error('Error al cargar dependencias:', error);
           this.handleFormFieldsError();
         }
       );
   }
+
 
   handleFormFieldsError() {
     this.pnotifyService.error();
@@ -161,169 +242,221 @@ export class ComercialClientesPreCadastroComponent
   setMaxLengthRules() {
     this.maxLengthRules = this.activatedRoute.snapshot.data.rules.data;
     this.maxLengthMessages = {
-      nome: `Nome deve conter até ${this.maxLengthRules.nome} caracteres.`,
-      sobrenome: `Sobrenome deve conter até ${this.maxLengthRules.sobrenome} caracteres.`,
-      razaoSocial: `Razão social deve conter até ${this.maxLengthRules.razaoSocial} caracteres.`,
-      nomeFantasia: `Nome fantasia deve conter até ${this.maxLengthRules.nomeFantasia} caracteres.`,
-      emailNfe: `E-mail NF-e deve conter até ${this.maxLengthRules.emailNfe} caracteres.`,
-      // emailMarketing: `E-mail Marketing deve conter até ${this.maxLengthRules.emailNfe} caracteres.`,
+      nome: `El nombre debe contener ${this.maxLengthRules.nome} caracteres.`,
+      apellido1: `Apellido debe contener ${this.maxLengthRules.apellido1} caracteres.`,
+      apellido2: `Apellido debe contener ${this.maxLengthRules.apellido1} caracteres.`,
+      razaoSocial: `El nombre de la empresa debe contener ${this.maxLengthRules.razaoSocial} caracteres.`,
+      nomeFantasia: `El nombre comercial debe contener hasta ${this.maxLengthRules.nomeFantasia} caracteres.`,
+      email: `El correo electrónico debe llegar a ${this.maxLengthRules.email} caracteres.`,
     };
   }
+  agregarUbicacionALaFormObj(datosUbicacion: any) {
+    const ubicacionFormArray = this.formObj.get('ubicacion') as FormArray;
+    ubicacionFormArray.push(this.formBuilder.group(datosUbicacion));
+  }
+
+  // Crea una función para agregar datos de contacto al formulario principal
+  agregarContactoALaFormObj(datosContacto: any) {
+    const contactoFormArray = this.formObj.get('contactos') as FormArray;
+    contactoFormArray.push(this.formBuilder.group(datosContacto));
+  }
+
+  repetirFormulario(tipoFormulario: string) {
+    this.swActivarLatitud = false;
+    if (tipoFormulario === 'Ubicacion' && this.ubicacionFormularios.length < 5) {
+      const nuevoFormulario = this.crearFormularioUbicacionConDatosIngresados();
+
+      this.agregarUbicacionALaFormObj(nuevoFormulario);
+      this.ubicacionFormularios.push(nuevoFormulario);
+
+      console.log(this.ubicacionFormularios);
+
+
+      // También debes agregar este formulario al formulario principal.
+      this.formObjArray[0].ubicacion.push(nuevoFormulario);
+    } else if (tipoFormulario === 'Contacto' && this.contactoFormularios.length < 5) {
+      const nuevoFormulario = this.crearFormularioContactoConDatosIngresados();
+      this.agregarContactoALaFormObj(nuevoFormulario.value);
+      this.contactoFormularios.push(nuevoFormulario);
+      (this.formObj.get('contactos') as FormArray).push(nuevoFormulario);
+    } else {
+      console.log('Se alcanzó el máximo de formularios permitidos para este tipo.');
+    }
+  }
+
+
+
+  crearFormularioUbicacionConDatosIngresados(): any {
+
+    return {
+      titulo_ubicacion: '',
+      direccion: '',
+      ciudad:   '',   
+      latitud: '',
+      longitud: '' ,
+      swActivarLatitud : this.swActivarLatitud
+    };
+
+  }
+
+  crearFormularioContactoConDatosIngresados(): FormGroup {
+    return this.formBuilder.group({
+      titulo_contacto: [''],
+      nombres_contacto: [''],
+      apellido_contacto: [''],
+      apellido2_contacto: [''],
+      telefono_contacto: [''],
+      celular_contacto: [''],
+      direccion_contacto: [''],
+    });
+  }
+
+
+
 
   setFormBuilder(documento: string) {
-    let cpf = null;
-    let cnpj = null;
-
-    if (documento != null) {
-      if (this.tipoPessoa == 'F') {
-        cpf = documento;
-      } else if (this.tipoPessoa == 'J') {
-        cnpj = documento;
-      }
-    }
 
     this.form = this.formBuilder.group({
-      cpf: [cpf, [Validators.nullValidator]],
+      //cnpj_cpf: [null,Validators.required],
+      nit: [null, Validators.required],
       nome: [
         null,
         [Validators.required, Validators.maxLength(this.maxLengthRules.nome)],
       ],
-      sobrenome: [
-        null,
-        [
-          Validators.required,
-          Validators.maxLength(this.maxLengthRules.sobrenome),
-        ],
-      ],
-      cnpj: [cnpj, [NgBrazilValidators.cnpj]],
+
+      contacto: [null],
       razaoSocial: [null],
       nomeFantasia: [null],
-      vendedor: [null],
+      vendedor: [null, Validators.required],
       cnae: [null],
-      emailNfe: [
-        null,
+      email: [null,
         [
-          Validators.required,
           Validators.email,
-          Validators.maxLength(this.maxLengthRules.emailNfe),
+          Validators.maxLength(this.maxLengthRules.email),
         ],
       ],
-      // emailMarketing: [
-      //   null,
-      //   [Validators.email, Validators.maxLength(this.maxLengthRules.emailNfe)],
-      // ],
-      telefone: [null, [Validators.required]],
-      atividadePrincipal: this.formBuilder.array([]),
-      atividadeSecundaria: this.formBuilder.array([]),
+      telefone: [null],
+      celular: [null],
+      direccion: [null],
+      tipopessoa: [null],
+      nombres_contacto: [null],
+      apellido_contacto: [null],
+      apellido2_contacto: [null],
+      telefono_contacto: [null],
+      celular_contacto: [null],
+      ciudad: [null],
+      direccion_contacto: [null],
+      ciudadUbi: [null],
+      titulo_contacto: [null],
+      titulo_ubicacion: [],
+      ubicacion: this.formBuilder.array([]),
+      contactos: this.formBuilder.array([]),
+      nombre_ciudad : []
+
+
+
     });
 
-    this.setType(this.tipoPessoa);
-
-    if (documento != null) {
-      if (this.tipoPessoa == 'F') {
-        this.validateCPF();
-      } else if (this.tipoPessoa == 'J') {
-        this.validateCNPJ();
+    this.form.get('tipopessoa').valueChanges.subscribe((value) => {
+      if (value === 'P' || value === 'G' || value === 'E') {
+        this.form.get('nit').setValidators([Validators.required]);
+        this.form.get('razaoSocial').setValidators([Validators.required]);
+      } else {
+        this.form.get('nit').clearValidators();
+        this.form.get('razaoSocial').clearValidators();
       }
+      this.form.get('nit').updateValueAndValidity();
+      this.form.get('razaoSocial').updateValueAndValidity();
+    });
+
+  }
+  onSubmit() {
+    /* this.postAkna(20081);
+    return; */
+
+    const tipoPessoaOptions = {
+      S: 'Sociedades',
+      P: 'Privado',
+      G: 'Gobierno',
+      E: 'Empleado'
+    };
+    const tipopessoa = this.form.value.tipopessoa;
+    const tipopersona = tipoPessoaOptions[tipopessoa];
+    const data = {
+      ubicacion: [],
+      contactos: [],
+    };
+    this.ubicacionFormularios.forEach((formulario) => {
+
+      data.ubicacion.push(formulario.value);
+    });
+
+    // Agregar datos de contactos desde contactoFormularios
+    this.contactoFormularios.forEach((formulario) => {
+      data.contactos.push(formulario.value);
+    });
+
+    if (this.form.valid) {
+      this.loaderNavbar = true;
+      this.submittingForm = true;
+      let formObj = {};
+
+      formObj = {
+        tipo_pessoa: tipopessoa,
+        tipo_persona: tipopersona,
+        id_vendedor: this.form.value.vendedor,
+        nombres: this.form.value.nome,
+        razonSocial: this.form.value.razaoSocial,
+        nomeFantasia: this.form.value.nomeFantasia,
+        nit: this.form.value.nit,
+        id_rubro: this.form.value.cnae,
+        email: this.form.value.email,
+        telefono: this.form.value.telefone,
+        celular: this.form.value.celular,
+        nombre_factura: '',
+        ubicacion: data.ubicacion, // Asigna los datos de ubicación directamente aquí
+        contactos: data.contactos,
+
+      }; console.log('Datos antes de enviarlos:', formObj);
+
+      this.clientesService
+
+        .sapPostClient(formObj)
+        .pipe(
+          finalize(() => {
+            this.loaderNavbar = false;
+            this.submittingForm = false;
+          })
+        )
+        .subscribe(
+          (response: any) => {
+
+            if (response.response === 200) {
+              this.pnotifyService.success('Cliente registrado.');
+              this.formChanged = false;
+              this.router.navigate(['../cadastro', response.result], {
+                relativeTo: this.activatedRoute,
+              });
+            } else if (response.response === 204) {
+              this.pnotifyService.notice('No se registro.');
+            } else {
+              this.pnotifyService.notice(` ${response.detalle}`);
+            }
+          },
+          (error: any) => {
+            this.pnotifyService.notice('Ocurrio un error.');
+          }
+        );
+
     }
   }
 
   setType(type: string) {
-    this.tipoPessoa = type;
+    // this.tipoPessoa = type;
     this.form.reset();
-
-    if (this.tipoPessoa == 'F') {
-      this.form.controls.cpf.setValidators([Validators.required]);
-      this.form.controls.cpf.updateValueAndValidity();
-      this.form.controls.nome.setValidators([
-        Validators.required,
-        Validators.maxLength(this.maxLengthRules.nome),
-      ]);
-      this.form.controls.nome.updateValueAndValidity();
-      this.form.controls.sobrenome.setValidators([
-        Validators.required,
-        Validators.maxLength(this.maxLengthRules.sobrenome),
-      ]);
-      this.form.controls.sobrenome.updateValueAndValidity();
-
-      this.form.controls.cnpj.clearValidators();
-      this.form.controls.cnpj.updateValueAndValidity();
-      this.form.controls.razaoSocial.clearValidators();
-      this.form.controls.razaoSocial.updateValueAndValidity();
-      this.form.controls.nomeFantasia.clearValidators();
-      this.form.controls.nomeFantasia.updateValueAndValidity();
-      this.form.controls.cnae.clearValidators();
-      this.form.controls.cnae.updateValueAndValidity();
-    } else if (this.tipoPessoa == 'J') {
-      this.form.controls.cnpj.setValidators([Validators.required]);
-      this.form.controls.cnpj.updateValueAndValidity();
-      this.form.controls.razaoSocial.setValidators([
-        Validators.required,
-        Validators.maxLength(this.maxLengthRules.razaoSocial),
-      ]);
-      this.form.controls.razaoSocial.updateValueAndValidity();
-      this.form.controls.nomeFantasia.setValidators([
-        Validators.required,
-        Validators.maxLength(this.maxLengthRules.nomeFantasia),
-      ]);
-      this.form.controls.nomeFantasia.updateValueAndValidity();
-      this.form.controls.cnae.setValidators([Validators.required]);
-      this.form.controls.cnae.updateValueAndValidity();
-
-      this.form.controls.cpf.clearValidators();
-      this.form.controls.cpf.updateValueAndValidity();
-      this.form.controls.nome.clearValidators();
-      this.form.controls.nome.updateValueAndValidity();
-      this.form.controls.sobrenome.clearValidators();
-      this.form.controls.sobrenome.updateValueAndValidity();
-    }
   }
 
-  get atividadePrincipal() {
-    return this.form.get('atividadePrincipal') as FormArray;
-  }
 
-  get atividadeSecundaria() {
-    return this.form.get('atividadeSecundaria') as FormArray;
-  }
-
-  pushAtividadePrincipal(atividade: any) {
-    while (this.atividadePrincipal.length !== 0) {
-      this.atividadePrincipal.removeAt(0);
-    }
-
-    atividade.code = atividade.code.replace(/\D/g, '');
-
-    if (atividade.code != '0000000') {
-      this.atividadePrincipal.push(
-        this.formBuilder.group({
-          cnae: [atividade.code],
-          descricao: [atividade.text],
-        })
-      );
-    }
-  }
-
-  pushAtividadeSecundaria(atividades: any) {
-    while (this.atividadeSecundaria.length !== 0) {
-      this.atividadeSecundaria.removeAt(0);
-    }
-
-    if (atividades.length > 0) {
-      for (let i = 0; i < atividades.length; i++) {
-        atividades[i].code = atividades[i].code.replace(/\D/g, '');
-
-        if (atividades[i].code != '0000000') {
-          this.atividadeSecundaria.push(
-            this.formBuilder.group({
-              cnae: [atividades[i].code],
-              descricao: [atividades[i].text],
-            })
-          );
-        }
-      }
-    }
-  }
 
   onFieldError(field: string) {
     if (this.onFieldInvalid(field) != '') {
@@ -333,6 +466,19 @@ export class ComercialClientesPreCadastroComponent
     return '';
   }
 
+  agregarDireccion(index: number) {
+   this.ubicaciones[index] =  { latitud: -17.78629, longitud: -63.18117 }
+    if (index >= 0) {
+      this.ubicacionFormularios[index].swActivarLatitud= true
+    } else {
+      this.ubicacionFormularios[index].swActivarLatitud= false
+    }
+  }
+  actualizarUbicacion(index: number) {
+    // Actualiza las coordenadas de la ubicación en el arreglo
+    this.ubicaciones[index].latitud = this.latitud;
+    this.ubicaciones[index].longitud = this.longitud;
+  }
   onFieldInvalid(field: any) {
     field = this.form.get(field);
 
@@ -364,90 +510,6 @@ export class ComercialClientesPreCadastroComponent
     }
   }
 
-  validateCPF() {
-    if (this.form.controls.cpf.valid) {
-      this.loaderNavbar = true;
-      this.dadosCliente = {};
-
-      this.clientesService
-        .getExisteCpfCnpj(this.form.value.cpf.replace(/\D/g, ''), true)
-        .pipe(
-          finalize(() => {
-            this.loaderNavbar = false;
-          })
-        )
-        .subscribe((response: any) => {
-          if (response.responseCode === 200) {
-            if (response.result.verificacao == 1) {
-              this.form.controls.cpf.setErrors({
-                incorrect: true,
-              });
-              this.pnotifyService.notice('O CPF informado já está cadastrado.');
-
-              if (Object.keys(response.result.dadosCliente).length > 0) {
-                this.formChanged = false;
-                this.dadosCliente = response.result.dadosCliente;
-                this.showDetails();
-              }
-            }
-          }
-        });
-    }
-  }
-
-  validateCNPJ() {
-    if (this.form.controls.cnpj.valid) {
-      this.loaderNavbar = true;
-      this.dadosCliente = {};
-
-      this.clientesService
-        .getExisteCpfCnpj(this.form.value.cnpj.replace(/\D/g, ''), true)
-        .pipe(
-          finalize(() => {
-            this.loaderNavbar = false;
-          })
-        )
-        .subscribe((response: any) => {
-          if (response.responseCode === 200) {
-            if (response.result.verificacao == 1) {
-              this.form.controls.cnpj.setErrors({
-                incorrect: true,
-              });
-              this.pnotifyService.notice(
-                'O CNPJ informado já está cadastrado.'
-              );
-
-              if (Object.keys(response.result.dadosCliente).length > 0) {
-                this.formChanged = false;
-                this.dadosCliente = response.result.dadosCliente;
-                this.showDetails();
-              }
-            } else {
-              this.loaderNavbar = true;
-
-              this.getCnpjData(this.form.value.cnpj)
-                .pipe(
-                  finalize(() => {
-                    this.loaderNavbar = false;
-                  })
-                )
-                .subscribe((response: any) => {
-                  this.form.controls.razaoSocial.setValue(response.nome);
-                  this.form.controls.nomeFantasia.setValue(response.fantasia);
-
-                  if (response.atividade_principal[0].code) {
-                    this.checkCnae(response.atividade_principal[0]);
-                  }
-
-                  this.pushAtividadePrincipal(response.atividade_principal[0]);
-                  this.pushAtividadeSecundaria(response.atividades_secundarias);
-                });
-            }
-          }
-        });
-    }
-  }
-
   showDetails(): void {
     this.modalRef = this.modalService.show(
       this.modalDetalhesCliente,
@@ -470,109 +532,9 @@ export class ComercialClientesPreCadastroComponent
     }
   }
 
-  checkCnae(data: any) {
-    const cnae = {
-      id: parseInt(data.code.replace(/\D/g, '')),
-      descricao: data.text,
-    };
-
-    let exists = false;
-
-    for (let i = 0; i < this.cnaes.length; i++) {
-      if (this.cnaes[i].id == cnae.id) {
-        exists = true;
-      }
-    }
-
-    if (!exists) {
-      this.cnaes.push(cnae);
-    }
-
-    this.form.controls.cnae.setValue(cnae.id);
-  }
-
-  getCnpjData(cnpj: string) {
-    return this.cnpjService.getData(cnpj);
-  }
-
-  onSubmit() {
-    /* this.postAkna(20081);
-    return; */
-
-    if (this.form.valid) {
-      this.loaderNavbar = true;
-      this.submittingForm = true;
-      let formObj = {};
-
-      if (this.tipoPessoa == 'F') {
-        formObj = {
-          tipoPessoa: this.tipoPessoa,
-          cpf: this.form.value.cpf,
-          vendedor: this.form.value.vendedor,
-          nome: this.form.value.nome,
-          sobrenome: this.form.value.sobrenome,
-          emailNfe: this.form.value.emailNfe,
-          // emailMarketing: this.form.value.emailMarketing,
-          telefone: this.form.value.telefone,
-        };
-      } else if (this.tipoPessoa == 'J') {
-        formObj = {
-          tipoPessoa: this.tipoPessoa,
-          cnpj: this.form.value.cnpj,
-          vendedor: this.form.value.vendedor,
-          razaoSocial: this.form.value.razaoSocial,
-          nomeFantasia: this.form.value.nomeFantasia,
-          cnae: this.functionsService.completaZeroEsquerda(
-            this.form.value.cnae,
-            7
-          ),
-          emailNfe: this.form.value.emailNfe,
-          // emailMarketing: this.form.value.emailMarketing,
-          telefone: this.form.value.telefone,
-          atividadePrincipal: this.form.value.atividadePrincipal,
-          atividadeSecundaria: this.form.value.atividadeSecundaria,
-        };
-      }
-
-      this.clientesService
-        .postCliente(formObj)
-        .pipe(
-          finalize(() => {
-            this.loaderNavbar = false;
-            this.submittingForm = false;
-          })
-        )
-        .subscribe(
-          (response: any) => {
-            if (response.responseCode === 200) {
-              this.pnotifyService.success('O cliente foi cadastrado.');
-              this.formChanged = false;
-
-              /* this.postAkna(response.result); */
-              this.router.navigate(['../cadastro', response.result], {
-                relativeTo: this.activatedRoute,
-              });
-            } else if (response.responseCode === 403) {
-              this.pnotifyService.notice(
-                'Falha ao atribuir vendedor ao cadastro.'
-              );
-            } else {
-              this.pnotifyService.error(
-                'Ocorreu um erro ao cadastrar o cliente.'
-              );
-            }
-          },
-          (error: any) => {
-            this.pnotifyService.error(
-              'Ocorreu um erro ao cadastrar o cliente.'
-            );
-          }
-        );
-    }
-  }
-
   onInput() {
     this.formChanged = true;
+
   }
 
   formCanDeactivate() {
@@ -590,28 +552,4 @@ export class ComercialClientesPreCadastroComponent
     this.location.back();
   }
 
-  // Função que envia e-mail de boas vindas  para um novo cliente e grava o log dessa ação.
-  /* postAkna(cliente){
-    let param = {};
-
-    if(this.form.value['nome']){
-      param = {
-        'codigoCliente'   : cliente,
-        'nomeRemetente'   : this.form.value['nome'] + ' ' + this.form.value['sobrenome'],
-        'emailRemetente'  : this.form.value['emailNfe']
-      }
-    } else {
-      param = {
-        'codigoCliente'   : cliente,
-        'nomeRemetente'   : this.form.value['razaoSocial'],
-        'emailRemetente'  : this.form.value['emailNfe']
-      }
-    }
-
-    this.preCadastroService
-      .postAkna(param)
-      .subscribe((response) => {
-      console.log(response)
-    });
-  } */
 }
