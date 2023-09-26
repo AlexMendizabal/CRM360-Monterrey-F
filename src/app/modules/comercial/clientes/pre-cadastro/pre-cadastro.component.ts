@@ -94,8 +94,14 @@ export class ComercialClientesPreCadastroComponent
   contactoFormularios: FormGroup[] = [];
   formObj: FormGroup;
   formObjArray: any[] = [];
-  ubicaciones : any[] = [];
-
+  ubicaciones: any[] = [];
+  private coloresDisponibles: string[] = [
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000',
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FC9F3A',
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00',
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00',
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFFFF',
+  ];
 
 
   constructor(
@@ -138,35 +144,44 @@ export class ComercialClientesPreCadastroComponent
     this.latitud = event.coords.lat;
     this.longitud = event.coords.lng;
   } */
-  actualizarMarcador( index: number) {
+  actualizarMarcador(index: number, latitud, longitud): void {
     /* console.log(this.latitud); */
-    this.id_marcador = index; 
+
+
+    this.id_marcador = index;
+    //this.ubicacionFormularios[index].color = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00';
     // Actualizar solo la ubicación del marcador en la posición 'index'
-    this.ubicaciones[index].latitud = this.latitud;
-    this.ubicacionFormularios[index].latitud = this.latitud;
-    this.ubicaciones[index].longitud = this.longitud
-    this.ubicacionFormularios[index].longitud = this.longitud;
+    this.ubicaciones[index].latitud = latitud;
+    this.ubicacionFormularios[index].latitud = latitud;
+    this.ubicaciones[index].longitud = longitud
+    this.ubicacionFormularios[index].longitud = longitud;
 
 
-    
+    //this.cambiarColorMarcador(index);
   }
- actualizarMapa(event: any){
-  console.log(event);
-  this.latitud = event.coords.lat;
-  this.longitud = event.coords.lng;
-  this.actualizarMarcador(this.id_marcador);
-  this.actualizarDireccion(this.id_marcador, event);
- }
+
+  cambiarColorMarcador(i: number) {
+    this.ubicaciones[i].color = 'blue';
+  }
+
+
+  actualizarMapa(event: any) {
+    //console.log(event);
+    this.latitud = event.coords.lat;
+    this.longitud = event.coords.lng;
+    this.actualizarMarcador(this.id_marcador, this.latitud, this.longitud);
+    this.actualizarDireccion(this.id_marcador, event);
+  }
 
   actualizarDireccion(index, event: any) {
     this.obtenerDireccion(event.coords.lat, event.coords.lng)
       .then((direccion_mapa: string) => {
-        this.ubicacionFormularios[index].direccion= direccion_mapa;
+        this.ubicacionFormularios[index].direccion = direccion_mapa;
       })
       .catch((error: any) => {
-       /*  this.form.controls['direccion'].setValue(
-          'Error al obtener la dirección'
-        ); */
+        /*  this.form.controls['direccion'].setValue(
+            'Error al obtener la dirección'
+         ); */
       });
   }
 
@@ -269,7 +284,7 @@ export class ComercialClientesPreCadastroComponent
       this.agregarUbicacionALaFormObj(nuevoFormulario);
       this.ubicacionFormularios.push(nuevoFormulario);
 
-      console.log(this.ubicacionFormularios);
+      /*  console.log(this.ubicacionFormularios); */
 
 
       // También debes agregar este formulario al formulario principal.
@@ -280,7 +295,7 @@ export class ComercialClientesPreCadastroComponent
       this.contactoFormularios.push(nuevoFormulario);
       (this.formObj.get('contactos') as FormArray).push(nuevoFormulario);
     } else {
-      console.log('Se alcanzó el máximo de formularios permitidos para este tipo.');
+      /* console.log('Se alcanzó el máximo de formularios permitidos para este tipo.'); */
     }
   }
 
@@ -291,10 +306,10 @@ export class ComercialClientesPreCadastroComponent
     return {
       titulo_ubicacion: '',
       direccion: '',
-      ciudad:   '',   
+      ciudad: '',
       latitud: '',
-      longitud: '' ,
-      swActivarLatitud : this.swActivarLatitud
+      longitud: '',
+      swActivarLatitud: this.swActivarLatitud
     };
 
   }
@@ -351,7 +366,7 @@ export class ComercialClientesPreCadastroComponent
       titulo_ubicacion: [],
       ubicacion: this.formBuilder.array([]),
       contactos: this.formBuilder.array([]),
-      nombre_ciudad : []
+      nombre_ciudad: []
 
 
 
@@ -467,12 +482,22 @@ export class ComercialClientesPreCadastroComponent
   }
 
   agregarDireccion(index: number) {
-   this.ubicaciones[index] =  { latitud: -17.78629, longitud: -63.18117 }
+    this.ubicaciones[index] = { latitud: -17.78629, longitud: -63.18117, color: this.generarColorAleatorio() }
     if (index >= 0) {
-      this.ubicacionFormularios[index].swActivarLatitud= true
+      this.ubicacionFormularios[index].swActivarLatitud = true
     } else {
-      this.ubicacionFormularios[index].swActivarLatitud= false
+      this.ubicacionFormularios[index].swActivarLatitud = false
     }
+  }
+
+  generarColorAleatorio(): string {
+    if (this.coloresDisponibles.length === 0) {
+      return null; // No quedan colores disponibles
+    }
+
+    const indiceAleatorio = Math.floor(Math.random() * this.coloresDisponibles.length);
+    const colorAleatorio = this.coloresDisponibles.splice(indiceAleatorio, 1)[0];
+    return colorAleatorio;
   }
   actualizarUbicacion(index: number) {
     // Actualiza las coordenadas de la ubicación en el arreglo

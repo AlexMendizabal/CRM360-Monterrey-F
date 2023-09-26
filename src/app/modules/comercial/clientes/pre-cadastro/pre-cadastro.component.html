@@ -34,7 +34,6 @@
               <option value="E">Empleado</option>
             </select>
           </div>
-
           <div class="form-group col-md-3">
             <label for="vendedor"> Vendedor</label>
             <ng-select [searchable]="true" [clearable]="false" [items]="vendedores" [virtualScroll]="true"
@@ -74,7 +73,6 @@
               message="celular es obligatorio."></invalid-form-control>
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="email">E-mail</label>
@@ -107,18 +105,16 @@
         <div class="form-row">
           <div class="form-group col">
             <label for="cnae">Mapa</label>
-            <div class="embed-responsive embed-responsive-16by9" style="max-height: 350px;">
+            <div class="embed-responsive embed-responsive-16by9">
               <agm-map (mapClick)="actualizarMapa($event)" [latitude]="latitud" [longitude]="longitud" [zoom]="16"
                 class="embed-responsive-item">
                 <agm-marker *ngFor="let ubicacion of ubicaciones; let i = index" [latitude]="ubicacion.latitud"
-                  [longitude]="ubicacion.longitud" (markerClick)="actualizarMarcador(i)"
+                  [longitude]="ubicacion.longitud" (markerClick)="actualizarMarcador(i)" [iconUrl]="ubicacion.color"
                   (markerDragEnd)="actualizarUbicacion(i, $event.coords.lat, $event.coords.lng)">
                 </agm-marker>
               </agm-map>
               <div id="map-zoom-control" class="map-control"></div>
             </div>
-
-
           </div>
         </div>
         <div class="form-row mt-2">
@@ -159,13 +155,14 @@
                 </div>
                 <div class="form-group col-md-6" *ngIf="ubicacionForm.swActivarLatitud === false">
                   <label for="direccion">Dirección </label> <br>
-                  <button class="btn btn-primary"  (click)="agregarDireccion(i)"> <i class="fas fa-map-marker"></i>
+                  <button class="btn btn-primary" (click)="agregarDireccion(i)"> <i class="fas fa-map-marker"></i>
                     Agregar </button>
                 </div>
                 <div class="form-group col-md-3" *ngIf="ubicacionForm.swActivarLatitud === true">
                   <label for="ciudadUbi">Latitud</label>
                   <input type="text" class="form-control" id="titulo_ubicacion" formControlName="latitud"
-                    (input)="onInput()" [(ngModel)]="ubicacionForm.latitud" [value]="ubicacionForm.latitud" [readonly]="true">
+                    (input)="onInput()" [(ngModel)]="ubicacionForm.latitud" [value]="ubicacionForm.latitud"
+                    [readonly]="true">
 
 
                 </div>
@@ -179,60 +176,59 @@
           </div>
           <div id="Contacto" *ngFor="let contactoForm of contactoFormularios; let i = index">
             <div id="CollapseContacto" [class.collapse]="!contactoCollapse">
-              <div class="col">
-                <hr class="mt-2">
+              <div class="col mt-3">
+                <!--  -->
               </div>
-              <div class="form-group col-md-6">
-                <label>CONTACTOS</label>
-              </div>
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="titulo_contacto">TITULO DE CONTACTO</label>
-                    <input type="text" class="form-control" id="titulo_contacto" formControlName="titulo_contacto"
-                      (input)="onInput()"
-                      [ngClass]="onFieldError('titulo_contacto') + ' ' + onFieldRequired('titulo_contacto')"
-                      [(ngModel)]="contactoForm.value.titulo_contacto">
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="nombres_contacto">NOMBRE</label>
-                    <input type="text" class="form-control" id="nombres_contacto" formControlName="nombres_contacto"
-                      (input)="onInput()" [(ngModel)]="contactoForm.value.nombres_contacto">
+              <div class="row" style="border-radius: 13px; background-color: rgb(246, 243, 243);">
+                <div class="form-group col-md-12">
+                  <div class="form-row">
+                    <div class="form-group col-md-3 mt-2">
+                      <label for="titulo_contacto">TÍTULO DE CONTACTO</label>
+                      <input type="text" class="form-control" id="titulo_contacto" formControlName="titulo_contacto"
+                        (input)="onInput()"
+                        [ngClass]="onFieldError('titulo_contacto') + ' ' + onFieldRequired('titulo_contacto')"
+                        [(ngModel)]="contactoForm.value.titulo_contacto">
+                    </div>
+                    <div class="form-group col-md-3 mt-2">
+                      <label for="nombres_contacto">NOMBRE</label>
+                      <input type="text" class="form-control" id="nombres_contacto" formControlName="nombres_contacto"
+                        (input)="onInput()" [(ngModel)]="contactoForm.value.nombres_contacto">
+                    </div>
+                    <div class="form-group col-md-3 mt-2">
+                      <label for="apellido_contacto">APELLIDO PATERNO</label>
+                      <input type="text" class="form-control" id="apellido_contacto" formControlName="apellido_contacto"
+                        (input)="onInput()" [(ngModel)]="contactoForm.value.apellido_contacto">
+                    </div>
+                    <div class="form-group col-md-3 mt-2">
+                      <label for="apellido2_contacto">APELLIDO MATERNO</label>
+                      <input type="text" class="form-control" id="apellido2_contacto"
+                        formControlName="apellido2_contacto" (input)="onInput()"
+                        [(ngModel)]="contactoForm.value.apellido2_contacto">
+                    </div>
+                    <div class="form-group col-md-3 mt-2">
+                      <label for="telefono_contacto">TELÉFONO CONTACTO</label>
+                      <input type="text" class="form-control" id="telefono_contacto" formControlName="telefono_contacto"
+                        (input)="onInput()" [(ngModel)]="contactoForm.value.telefono_contacto">
+                    </div>
+                    <div class="form-group col-md-3 mt-2">
+                      <label for="celular_contacto">CELULAR DE CONTACTO</label>
+                      <input type="text" class="form-control" id="celular_contacto" formControlName="celular_contacto"
+                        (input)="onInput()" [(ngModel)]="contactoForm.value.celular_contacto">
+                    </div>
+                    <div class="form-group col-md-6 mt-2">
+                      <label for="direccion_contacto">DIRECCIÓN DE CONTACTO</label>
+                      <input type="text" class="form-control" id="direccion_contacto"
+                        formControlName="direccion_contacto" (input)="onInput()"
+                        [(ngModel)]="contactoForm.value.direccion_contacto">
+                    </div>
                   </div>
                 </div>
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="apellido_contacto">APELLIDO PATERNO</label>
-                    <input type="text" class="form-control" id="apellido_contacto" formControlName="apellido_contacto"
-                      (input)="onInput()" [(ngModel)]="contactoForm.value.apellido_contacto">
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="apellido2_contacto">APELLIDO MATERNO</label>
-                    <input type="text" class="form-control" id="apellido2_contacto" formControlName="apellido2_contacto"
-                      (input)="onInput()" [(ngModel)]="contactoForm.value.apellido2_contacto">
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="telefono_contacto">TELEFONO CONTACTO</label>
-                    <input type="text" class="form-control" id="telefono_contacto" formControlName="telefono_contacto"
-                      (input)="onInput()" [(ngModel)]="contactoForm.value.telefono_contacto">
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="celular_contacto">CELULAR DE CONTACTO</label>
-                    <input type="text" class="form-control" id="celular_contacto" formControlName="celular_contacto"
-                      (input)="onInput()" [(ngModel)]="contactoForm.value.celular_contacto">
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="direccion_contacto">DIRECCION DE CONTACTO</label>
-                    <input type="text" class="form-control" id="direccion_contacto" formControlName="direccion_contacto"
-                      (input)="onInput()" [(ngModel)]="contactoForm.value.direccion_contacto">
-                  </div>
-                </div>
+                <!-- <label>CONTACTOS</label> -->
               </div>
             </div>
           </div>
         </div>
       </form>
-
     </div>
   </div>
 </app-body>
