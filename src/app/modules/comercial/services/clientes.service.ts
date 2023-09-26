@@ -179,7 +179,7 @@ export class ComercialClientesService {
     idContato: number
   ): Observable<Object | JsonResponse> {
     return this.http
-      .get(`${this.API}/cadastro/carregar/contato/${idContato}/${codCliente}`)
+      .get(`${this.API}/cadastro/carregar/contato/${codCliente}/${idContato}`)
       .pipe(take(1), retry(2));
   }
 

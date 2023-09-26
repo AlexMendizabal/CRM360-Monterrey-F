@@ -30,7 +30,7 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
   @Output('loading') loading: EventEmitter<boolean> = new EventEmitter();
   @Input('cotacao') cotacao: ICotacao;
 
-  @Input('imprimirPdf') imprimirPdf: boolean; 
+  @Input('imprimirPdf') imprimirPdf: boolean;
   @Output('resetImprimir') resetImprimir: EventEmitter<boolean> = new EventEmitter();
   @Output('pdfData') pdfData: EventEmitter<any> = new EventEmitter();
 
@@ -66,16 +66,16 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
   ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges) {
-    
+
       if(this.imprimirPdf && changes.imprimirPdf.currentValue) {
-        
+
         this.onImprimir();
       } else {
           this.imprimirPdf = false;
       }
-  }   
+  }
 
-  onImprimir(): void {   
+  onImprimir(): void {
     this.loading.emit(true);
     this.setDocumentConfig();
   }
@@ -89,31 +89,31 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
     const milliseconds = new Date().getTime();
 
     this.cotacoesService
-      .getImprimirCotacao(this.cotacao.nrPedido, this.cotacao.codEmpresa)
+      .getImprimirCotacao(this.cotacao.nrPedido)
       .pipe(
         finalize(() => {
           setTimeout(() => {
             if(this.imprimirPdf) {
               let doc;
-              new Promise((resolve) => {    
-                
-                resolve(doc = this.pdfService.generateEmailPdf(this.getDocument()));               
-                               
+              new Promise((resolve) => {
+
+                resolve(doc = this.pdfService.generateEmailPdf(this.getDocument()));
+
               }).then(() => {
                 doc.getBase64((data) => {
 
-                doc = data;                  
+                doc = data;
                 this.pdfData.emit(doc);
-            
+
                 });
                 this.loading.emit(false);
                 this.resetImprimir.emit(false);
-                
+
               }).catch(console.error);
-              
+
             } else {
               this.pdfService.generatePdf(this.getDocument(), `${this.cotacao['nrPedido']}_${milliseconds}`);
-              this.loading.emit(false);              
+              this.loading.emit(false);
             }
           }, 1000);
         })
@@ -176,7 +176,7 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
     ]);
   }
 
-  getDocument(): any {    
+  getDocument(): any {
     return {
       content: [
         this.getDocumentHeader(),
@@ -221,7 +221,7 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
                   body: [[{ text: '' }], [{ text: '' }]],
                 },
                 layout: 'lightHorizontalLines',
-              },               
+              },
               { text: 'CONTATO', style: 'title' },
               {
                 text: `Nome: ${this.contatos[0]['nomeContato'] ? this.contatos[0]['nomeContato'] : 'Não cadastrado'}`,
@@ -260,7 +260,7 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
                       margin: [0, 3, 0, 3],
                     },
                     {},
-                    
+
                   ],
                   [
                     { text: 'NÚM.', bold: true, alignment: 'center' },
@@ -270,8 +270,8 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
                       alignment: 'center',
                       fontSize: 9,
                     },
-                    
-                    
+
+
                   ],
                   [
                     { text: 'DATA', bold: true, alignment: 'center' },
@@ -281,7 +281,7 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
                       alignment: 'center',
                       fontSize: 9,
                     },
-                    
+
                   ],
                   [
                     { text: 'VALID.', bold: true, alignment: 'center' },
@@ -418,7 +418,7 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
           text: `${this.pedido[0]['observacao'] ? this.pedido[0]['observacao'] : "Nada informado"}`,
           fontSize: 9,
           margin: [0, 0, 0, 4],
-        }       
+        }
       ],
       styles: {
         title: {
@@ -453,7 +453,7 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
     };
   }
 
-  
+
   getImagePath(imagePath: string): Promise<any> {
     return this.windowService.getBase64ImageFromUrl(
       `${this.windowService.getHost()}/assets/images/impressoes/${imagePath}`
@@ -600,13 +600,13 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
         { text: 'VALOR TOTAL', style: 'tableHeader', alignment: 'center' },
       ],
     ];
-    
+
     let isLastRow: boolean;
 
     for (let i = 0; i < this.materiais.length; i++) {
       let rowMaterial = [];
       isLastRow = i + 1 === this.materiais.length ? true : false;
-      
+
       for (const key in this.materiais[i]) {
         rowMaterial.push({
           text: this.columnText(key, this.materiais[i][key],),
@@ -617,7 +617,7 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
         body[i][3].style = '';
         body[i][3].alignment = '';
       }
-      
+
       body.push(rowMaterial);
     }
 
@@ -641,7 +641,7 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
   formatWithSlashes(stringDate: any, type?: string): string {
     const dateSplit = stringDate.split('-');
     let date: string;
-    
+
     if(type == 'br'){
       date = `${dateSplit[0]}/${dateSplit[1]}/${dateSplit[2]}`;
     }else{
@@ -670,7 +670,7 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
     stringSplit[2] = stringSplit[2].slice(0,2);
 
     let res: string;
-    
+
     res = `${stringSplit[2]}/${stringSplit[1]}/${stringSplit[0]}`;
 
     //2021-05-28 03:00:00.000
@@ -681,7 +681,7 @@ export class ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent
     valor = valor.toString();
 
     let CpfCnpj = '';
-    
+
     if(valor.length == 11) {
       CpfCnpj = valor.replace(
         /(\d{3})(\d{3})(\d{3})(\d{2})/g,

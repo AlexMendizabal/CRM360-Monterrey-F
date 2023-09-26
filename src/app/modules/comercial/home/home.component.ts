@@ -91,8 +91,6 @@ export class ComercialHomeComponent implements OnInit {
         next: (response: any) => {
           if (response['responseCode'] === 200) {
             this.compromissos = response['result'];
-            console.log(this.compromissos);
-
           }
         },
         error: (error: any) => {

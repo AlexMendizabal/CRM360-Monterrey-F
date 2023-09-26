@@ -1,0 +1,123 @@
+<div class="modal-content " id="contentToConvert" >
+  <div class="modal-body ">
+    <div #contentToConvert>
+      <div class="header monterrey-info">
+        <div class="group col">
+          <img [src]="imageSrc" alt="Logo" [style.width.px]="imageWidth" [style.height.px]="imageHeight" />
+          <p>
+
+          </p>
+          <p class="direccion-font"> {{ dataFromParent.pedido[0].nombre_almacen }}</p>
+        </div>
+        <div class="title customer-info custinf-weight custom-modal-content" >
+          <div class="vertical-text form-row">
+            <div>
+              <h3 class="cotizacion-font">COTIZACIÓN</h3>
+            </div>
+          </div>
+          <div>
+            <div>
+              <div class="no-bullet datcotizacion-font">N°: <span class="text-right">{{dataFromParent.pedido[0].codigo_oferta}}</span> </div>
+              <div class="no-bullet datcotizacion-font">Fecha: <span class="text-right"> {{dataFromParent.pedido[0].fecha_inicial | date:'short'}}</span>  </div>
+              <div class="no-bullet datcotizacion-font">Almacén: <span class="text-right">{{dataFromParent.pedido[0].codigo_almacen}}</span>  </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="customer-info custom-modal-content ">
+        <h4 class="medium-font"> Señor(es): {{ dataFromParent.pedido[0].nombre_cliente }} </h4>
+      </div>
+      <div class="customer-info custom-modal-content">
+        <p class="mensaje-font">
+          De nuestra mayor consideración tenemos a bien hacerle llegar nuestra
+          cotización de los materiales solicitados, esperando sea de su
+          utilidad. Para cualquier consulta no dude en comunicarse con nosotros
+        </p>
+      </div>
+      <div>
+        <table class="table tr">
+          <tr class="customer-info">
+            <th>NRO</th>
+            <th>COD</th>
+            <th>DESCRIPCIÓN</th>
+            <th>UND</th>
+            <th>CANT</th>
+            <th>PRECIO</th>
+            <th>%</th>
+            <th>PRECIO NETO</th>
+            <th>TOTAL USD.</th>
+            <th>PESO</th>
+          </tr>
+          <tr *ngFor="let material of materiais; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ material.codigo_material }}</td>
+            <td class="descripcion-font">{{ material.descripcion }}</td>
+            <td>{{ material.unidad }}</td>
+            <td>{{ material.cantidad }}</td>
+            <td>{{ material.precio }}</td>
+            <td>{{ material.descuento }}</td>
+            <td>{{ (material.subtotal).toFixed(2) }}</td>
+            <td>{{ (material.total).toFixed(2) }}</td>
+            <td>{{ material.preso }}</td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <p>
+
+        </p>
+      </div>
+      <div class="flex-container">
+        <p class="totalpeso-font"> TOTAL PESO Kg . {{ dataFromParent.pedido[0].peso_total }}</p>
+        <p class="total">Total Bs. <span class="customer-info custom-modal-content"> BS.{{ (dataFromParent.pedido[0].total * 6.96).toFixed(2) }}</span> </p>
+      </div>
+      <style>
+        .total p {
+          margin-bottom: 17px; /* You can adjust the value to control the amount of space */
+        }
+      </style>
+      <div class="total">
+        <p>Total  USD. <span class="customer-info custom-modal-content"> USD.{{ dataFromParent.pedido[0].total }}</span> </p>
+      </div>
+      <div class="form-row">
+        <div class="group col upspace">
+          <div class="left-div customer-info custom-modal-content">
+            <div class="entrega-font">
+              <div class="no-bullet">Lugar de entrega: {{ dataFromParent.parcelas[0].direccion_entrega }}</div>
+              <div class="no-bullet">Forma de pago: {{ dataFromParent.parcelas[0].forma_pago }} </div>
+              <div class="no-bullet">Tiempo de entrega: 48 Hrs.</div>
+            </div>
+          </div>
+        </div>
+        <div class="group col negrita-font upspace">
+          <div class="left-div customer-info custom-modal-content ">
+            <div >
+              Esta cotización está sujeta a stock.
+            </div>
+            <div class="espaciobot-font">
+              Comentario:
+            </div>
+          </div>
+          TODOS NUESTROS PRECIOS INCLUYEN IMPUESTOS DE LEY.
+        </div>
+      </div>
+      <div class="footer">
+        <div class="footer-line">
+          <div class="signature-line"></div>
+          <div class="negrita-font">Vendedor</div>
+          <div>{{ dataFromParent.dadosVendedor[0].nombre_vendedor }} {{dataFromParent.dadosVendedor[0].apellido_vendedor}}</div>
+        </div>
+        <div class="footer-line">
+          <div class="signature-line"></div>
+          <div>Visto Bueno</div>
+          <div>Cliente</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" #captureButton (click)="onPrint()">PDF</button>
+      <button type="button" class="btn btn-secondary" (click)="captureScreen()">IMPRIMIR</button>
+    </div>
+  </div>
+</div>
+

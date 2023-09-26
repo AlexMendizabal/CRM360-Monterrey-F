@@ -140,9 +140,9 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
-  getImprimirCotacao(nrPedido: number, codEmpresa: number): Observable<Object | JsonResponse> {
+  getImprimirCotacao(nrPedido: number): Observable<Object | JsonResponse> {
     return this.http
-      .get(`${this.API}/imprimir-cotacao/${nrPedido}/${codEmpresa}`)
+      .get(`${this.API}/imprimir-cotacao/${nrPedido}`)
       .pipe(take(1), retry(2));
   }
 

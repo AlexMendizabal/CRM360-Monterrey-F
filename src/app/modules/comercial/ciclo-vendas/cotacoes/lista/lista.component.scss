@@ -2,7 +2,13 @@
     @import 'src/assets/scss/colors.scss';
     @import 'src/assets/scss/variables';
 
+    .modal-dialog {
+      max-width: 60%; /* Establece el ancho máximo del modal en relación al viewport */
+    }
 
+    .modal-content {
+      width: 100%; /* Asegura que el contenido del modal ocupe todo el ancho disponible */
+    }
 
     #actions {
         button {
@@ -59,4 +65,13 @@
         }
         }
 
+        .parallel-divs {
+          display: flex; /* Crea un contenedor flex */
+          justify-content: space-between; /* Distribuye los elementos con espacio entre ellos */
+          align-items: flex-start; /* Alinea los elementos en la parte superior del contenedor */
+        }
+
+        .left-div, .right-div {
+          flex: 1; /* Distribuye el espacio disponible de manera uniforme entre los dos divs */
+        }
 }

@@ -97,7 +97,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
 
   ngOnInit(): void {
     //this.confirmDuplicatas();
-    //this.verificador();
+    this.verificador();
   }
 
   ngAfterViewChecked() {

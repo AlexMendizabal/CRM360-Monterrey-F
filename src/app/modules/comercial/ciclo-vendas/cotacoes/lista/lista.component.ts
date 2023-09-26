@@ -5,6 +5,9 @@ import {
   ElementRef,
   OnDestroy,
   TemplateRef,
+  ViewContainerRef,
+  ComponentFactoryResolver,
+  ComponentRef
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -23,6 +26,7 @@ import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -46,6 +50,7 @@ import { ComercialCicloVendasCotacoesListaModalEmailCotacaoService } from './mod
 import { ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService } from './modal/transfere-faturamento/transfere-faturamento.service';
 import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
 
+
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { Subtitles } from 'src/app/shared/modules/subtitles/subtitles';
@@ -53,6 +58,7 @@ import { ICotacao } from './models/cotacao';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { JsonResponse } from 'src/app/models/json-response';
 import { IAssociacao } from '../../../cadastros/propostas/associacao-situacoes-proposta/models/associacao-situacoes-proposta';
+import { PdfComponent } from './pdf/pdf.component';
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-lista',
@@ -120,20 +126,15 @@ export class ComercialCicloVendasCotacoesListaComponent
   situacoesCores: Array<IAssociacao> = [];
   vendedores: Array<any> = [];
   totalMateriales: Array<any> = [];
-  oferta: Array<any> = [];
-
 
 
   items: Array<any> = [];
 
   dados: Array<any> = [];
+
+  cotizacion: Array<any> = [];
   dadosLoaded = false;
   dadosEmpty = false;
-  dadosEmptyModal = false;
-  dadosReturned: Array<any> = [];
-  dadosTotal: Array<any> = [];
-
-
 
   detalhes: any = {
     dataFaturamento: Date,
@@ -157,14 +158,11 @@ export class ComercialCicloVendasCotacoesListaComponent
   activeCotacao: ICotacao;
 
   maxSize = 10;
-  itemsPerPage =  10;
+  itemsPerPage = 20;
   currentPage = 1;
-
-  totalItems = 10;
+  totalItems = 0;
   totalModal = 0;
-  itemsPerPageModal = 5;
-  maxSizeModal = 5;
-
+  itemsPerPageModal = 20;
 
 
   imprimirPdf: boolean = false;
@@ -198,7 +196,9 @@ export class ComercialCicloVendasCotacoesListaComponent
     private desdobrarPropostaService: ComercialCicloVendasCotacoesListaModalDesdobrarPropostaService,
     private trocarEmpresaService: ComercialCicloVendasCotacoesListaModalTrocarEmpresaService,
     private emailCotacaoService: ComercialCicloVendasCotacoesListaModalEmailCotacaoService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private resolver: ComponentFactoryResolver
+   // private pdfService: PdfService
   ) {
     this.localeService.use('pt-br');
     this.bsConfig = Object.assign(
@@ -210,6 +210,8 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.pnotifyService.getPNotify();
   }
 
+
+
   ngOnInit(): void {
     this.registrarAcesso();
     this.setBreadCrumb();
@@ -218,7 +220,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.setChangeEvents();
     this.getFilterValues();
     this.setFormFilter();
-    this.titleService.setTitle('Cotizaciones y pedidos');
+    this.titleService.setTitle('Ofertas');
     this.onDetailPanelEmitter();
     this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente'];
     this.search(null);
@@ -247,11 +249,11 @@ export class ComercialCicloVendasCotacoesListaComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Ciclo de ventas',
+          descricao: 'Ciclo de vendas',
           routerLink: `/comercial/ciclo-vendas/${id}`,
         },
         {
-          descricao: 'Cotizaciones y pedidos',
+          descricao: 'Ofertas',
         },
       ];
     });
@@ -268,6 +270,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       this.activeCotacao.nrPedido
     );
   }
+
 
   setLoaderEvents(): void {
     this.loaderConsultaLiberacaoSubscription =
@@ -423,7 +426,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
         this.vendedores.unshift({
           id: 0,
-          nome: 'EXIBIR TODOS ',
+          nome: 'EXIBIR TODOS',
         });
       }
     });
@@ -457,7 +460,7 @@ export class ComercialCicloVendasCotacoesListaComponent
             codParametroSituacaoProposta: 0,
             situacaoProposta: 'EXIBIR TODOS',
           });
-          
+
  */
 /*           console.log(response);
  */          this.situacoes = [
@@ -501,7 +504,7 @@ export class ComercialCicloVendasCotacoesListaComponent
           {
             id: 1,
             text: 'Propuesta borrador',
-            hex: '#0000FF' // Rojo 
+            hex: '#0000FF' // Rojo
           },
           {
             id: 2,
@@ -539,7 +542,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       codSituacao: [formValue.codSituacao],
       cliente: [formValue.cliente],
       codVendedor: [formValue.codVendedor, [Validators.required]],
-      /* pagina: [formValue.pagina], */
+      pagina: [formValue.pagina],
       registros: [this.itemsPerPage, Validators.required],
       statusCliente: ['Ativo'],
     });
@@ -574,9 +577,9 @@ export class ComercialCicloVendasCotacoesListaComponent
           params = JSON.parse(params);
           this.search(params);
 
-         /*  if (params['pagina']) {
+          if (params['pagina']) {
             this.currentPage = params['pagina'];
-          } */
+          }
 
           Object.keys(formValue).forEach((formKey) => {
             Object.keys(params).forEach((paramKey) => {
@@ -706,13 +709,12 @@ export class ComercialCicloVendasCotacoesListaComponent
     });
 
   }
-  onFilter(): void {
 
+  onFilter(): void {
     /* if (this.form?.valid) { */
-    /* this.itemsPerPage = 10;
+    this.itemsPerPage = this.form.value.registros;
     this.currentPage = 1;
- */
-    /* this.totalItems = 0; */
+
     this.detailPanelService.hide();
 
     this.setRouterParams(this.getFormFilterValues());
@@ -814,7 +816,6 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.dados = [];
     this.dadosLoaded = true;
     this.dadosEmpty = false;
-    this.dadosTotal = [];
 
     this.cotacoesService
       .getOfertas(params)
@@ -828,11 +829,13 @@ export class ComercialCicloVendasCotacoesListaComponent
         next: (response: any) => {
           if (response.responseCode === 200) {
             this.loaderNavbar = false;
-
+            console.log(response.result);
             this.dados = [];
             this.dados = response.result;
-            this.dadosTotal = this.dados.slice(0, this.itemsPerPage);
+            this.dados = this.dados.slice(0, this.itemsPerPage);
             this.totalItems = this.dados.length;
+
+            /* console.log(this.datos); */
             this.dadosEmpty = false;
           } else {
             this.loaderNavbar = false;
@@ -896,17 +899,20 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   onPageChanged(event: PageChangedEvent): void {
-    //console.log(event)
     this.currentPage = event.page;
     this.getPaginateData();
   }
-
 
   getPaginateData(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
     return this.dados.slice(startIndex, endIndex);
+  }
+
+  onPageChangedModal(event: PageChangedEvent): void {
+    this.currentPage = event.page;
+    this.getPaginateDataModal();
   }
 
   getPaginateDataModal(): any[] {
@@ -1169,29 +1175,29 @@ export class ComercialCicloVendasCotacoesListaComponent
 
     /* if (materiais.length > 0) {
       this.itensLoaded = false;
-  
+
       const filteredMateriais = this.detalhes.itens['materiais'].filter(
         (_material: any) =>
           !materiais.some(
             (material: any) => material.codigo === _material.codigo
           )
       );
-  
+
       let total = {
         quantidade: 0,
         valor: 0,
       };
-  
+
       filteredMateriais.map((material: any) => {
         total.quantidade += material.quantidade;
         total.valor += material.valorTotal;
       });
-  
+
       this.detalhes.itens = {
         materiais: filteredMateriais,
         total: total,
       };
-  
+
       setTimeout(() => {
         this.itensLoaded = true;
       }, 1000);
@@ -1271,35 +1277,42 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.onFilter();
   }
 
-  // onImprimir(): void {
-  //   this.loaderNavbar = true;
+ onImprimir(nmpedido: number): void {
+    this.loaderNavbar = true;
+    this.cotacoesService
+     .getImprimirCotacao(nmpedido)
+       .pipe(
+        finalize(() => {
+         this.loaderNavbar = false;
+         })
+       )
+      .subscribe(
+         (response: JsonResponse) => {
 
-  //   console.log('aqui');
+           if (response.hasOwnProperty('success') && response.success === true)
+           {
 
-  //   this.cotacoesService
-  //     .getImprimirCotacao(this.activeCotacao.nrPedido)
-  //     .pipe(
-  //       finalize(() => {
-  //         this.loaderNavbar = false;
-  //       })
-  //     )
-  //     .subscribe(
-  //       (response: JsonResponse) => {
-  //         if (response.hasOwnProperty('success') && response.success === true) {
-  //           this.pnotifyService.success();
-  //         } else {
-  //           this.pnotifyService.error();
-  //         }
-  //       },
-  //       (error: any) => {
-  //         if (error.error.hasOwnProperty('mensagem')) {
-  //           this.pnotifyService.error(error.error.mensagem);
-  //         } else {
-  //           this.pnotifyService.error();
-  //         }
-  //       }
-  //     );
-  // }
+            this.modalRef = this.modalService.show(PdfComponent, {
+            initialState: { dataFromParent: response.data },
+            });
+
+            this.modalRef.content.onClose.subscribe(result => {
+              console.log('Modal closed with result:', result);
+            });
+
+            } else {
+              this.pnotifyService.error();
+            }
+         },
+         (error: any) => {
+           if (error.error.hasOwnProperty('mensagem')) {
+             this.pnotifyService.error(error.error.mensagem);
+           } else {
+             this.pnotifyService.error();
+           }
+         }
+       );
+   }
 
   onEmailCotacao(): void {
     if (
@@ -1322,14 +1335,11 @@ export class ComercialCicloVendasCotacoesListaComponent
           if (response.responseCode === 200) {
             this.items = response.result['analitico'];
             this.totalMateriales = response.result.total;
-            this.oferta = response.result.oferta[0];
             this.totalModal = this.items.length;
-            this.dadosEmptyModal = false;
-
           } else {
-            this.loaderNavbar = false; 
+            this.loaderNavbar = false;
             this.pnotifyService.notice('Ningún registro encontrado');
-            this.dadosEmptyModal = true;
+            this.dadosEmpty = true;
           }
         }
       });
@@ -1347,6 +1357,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.form.controls.codEmpresaAdd.clearValidators();
     this.form.controls.codEmpresaAdd.updateValueAndValidity();
   }
+
   nuevo() {
     this.router.navigate(
       [
@@ -1358,6 +1369,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       }
     );
   }
+
   onAdd(): void {
     /* alert('click'); */
     let empresa = this.form.get('codEmpresaAdd').value;
@@ -1493,4 +1505,5 @@ export class ComercialCicloVendasCotacoesListaComponent
 
     return '';
   }
+
 }

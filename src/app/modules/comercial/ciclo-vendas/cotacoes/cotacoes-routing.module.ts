@@ -9,6 +9,7 @@ import { ComercialCicloVendasCotacoesFormularioDataResolverGuard } from './formu
 import { ComercialCicloVendasCotacoesFormularioPermissoesResolverGuard } from './formulario/guards/permissoes-resolver.guard';
 import { ComercialCicloVendasCotacoesFormularioProfilesResolverGuard } from './formulario/guards/profile-resolver.guard';
 import { ComercialCicloVendasCotacoesListaFinalizacaoResolverGuard } from './lista/guards/finalizacao-resolver.guard';
+import { PdfComponent } from './lista/pdf/pdf.component';
 
 // Modules
 import { ComercialCicloVendasCotacoesListaModule } from './lista/lista.module';
@@ -25,8 +26,9 @@ const routes: Routes = [
     component: ComercialCicloVendasCotacoesListaComponent,
     resolve: {
       profile: ComercialCicloVendasCotacoesListaProfilesResolverGuard,
-    },
+    }
   },
+
   {
     path: 'lista/:codCotacao/:codEmpresa',
     component: ComercialCicloVendasCotacoesListaComponent,
@@ -57,6 +59,7 @@ const routes: Routes = [
     },
     canDeactivate: [FormDeactivateGuard],
   },
+
   {
     path: 'editar/:codCotacao/:idEmpresa',
     component: ComercialCicloVendasCotacoesFormularioComponent,
@@ -83,6 +86,13 @@ const routes: Routes = [
     path: '',
     redirectTo: 'lista',
     pathMatch: 'full',
+    children: [
+      {
+        path: 'pdf',
+        component: PdfComponent,
+        pathMatch: 'full',
+      },
+    ]
   },
 ];
 
@@ -90,7 +100,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     ComercialCicloVendasCotacoesListaModule,
-    ComercialCicloVendasCotacoesFormularioModule,
+    ComercialCicloVendasCotacoesFormularioModule
   ],
   exports: [RouterModule],
 })

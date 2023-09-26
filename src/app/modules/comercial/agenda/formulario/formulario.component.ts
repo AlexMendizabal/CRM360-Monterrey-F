@@ -85,9 +85,6 @@ export class ComercialAgendaFormularioComponent
   longitud: number = -63.18117;
 
   direccion: string;
-  //imagen y prebisualizacion
-  selectedImage: File;
-  previewImage: string | ArrayBuffer;
 
   breadCrumbTree: Array<Breadcrumb> = [];
 
@@ -470,7 +467,7 @@ export class ComercialAgendaFormularioComponent
         }
         // @ts-ignore: Ignorar error TS2339
         if (response[5].responseCode == 200) {
-          //console.log(response[5].data);
+          console.log(response[5].data);
           // @ts-ignore: Ignorar error TS2339
           this.promotores = response[5].result;
         } else {
@@ -585,7 +582,7 @@ export class ComercialAgendaFormularioComponent
       this.loaderNavbar = true;
       this.submittingForm = true;
       const formValue = this.form.getRawValue();
-      //console.log(formValue);
+      console.log(formValue);
       const obsFinalizar = this.form.get('Obsfinalizar');
       let client: string,
         formContactDesc: string,
@@ -689,7 +686,7 @@ export class ComercialAgendaFormularioComponent
           : null;
 
       let formObj = {
-        id_agenda: formValue.id,
+        id: formValue.id,
         color: {
           primary: formValue.cor,
         },
@@ -714,8 +711,8 @@ export class ComercialAgendaFormularioComponent
         /* id_status: id_status, */
         obsFinalizar: formValue.Obsfinalizar,
       };
-      //console.log(formObj.codClient);
-      //console.log(formObj.idVendedor);
+      console.log(formObj.codClient);
+      console.log(formObj.idVendedor);
       this.agendaService.save(this.action, formObj).subscribe({
         next: (response: any) => {
           if (response.responseCode === 200) {
@@ -745,21 +742,6 @@ export class ComercialAgendaFormularioComponent
         },
       });
     }
-    const formData = new FormData();
-    formData.append('imagen', this.selectedImage);
-    //console.log('imagen')
-    //console.log(formData)
-  }
-
-  onImageSelected(event: any) {
-    this.selectedImage = event.target.files[0];
-
-    // Generar la vista previa de la imagen
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.previewImage = reader.result;
-    };
-    reader.readAsDataURL(this.selectedImage);
   }
 
   handleErrorOnSubmit(message: string): void {
@@ -918,11 +900,8 @@ export class ComercialAgendaFormularioComponent
   }
   filtrovendedor(): void {
 
-    //console.log(this.form.value.promotor)
+    console.log(this.form.value.promotor)
     var params = this.form.value.promotor
     this.agendaService.reporte(params);
   }
 }
-
-
-

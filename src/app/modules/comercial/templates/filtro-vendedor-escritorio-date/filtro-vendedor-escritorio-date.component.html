@@ -2,22 +2,19 @@
 
 <form [formGroup]="form">
   <div class="form-row">
-    <div class="form-group col">
-      <label for="idEscritorio">Sucursal</label>
+    <div class="form-group col-lg-3">
+      <label for="buscarPor">Sucursal</label>
       <ng-select
         [searchable]="true"
         [clearable]="false"
         [items]="escritorios"
         [virtualScroll]="true"
-        [closeOnSelect]="true"
-        labelForId="escritorio"
+        labelForId="vendedor"
         bindLabel="nome"
         bindValue="id"
-        formControlName="idEscritorio"
-        (change)="onEscritorioChange($event.id)"
-        style="z-index: 1;"
-        >
-      </ng-select>
+        (change)="filtrarClientes()"
+        formControlName="sucursal_id"
+      ></ng-select>
     </div>
     <div class="form-group col-lg-3">
       <label for="pesquisa">Promotor</label>

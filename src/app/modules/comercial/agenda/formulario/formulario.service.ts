@@ -15,7 +15,6 @@ import { JsonResponse } from 'src/app/models/json-response';
 @Injectable({
   providedIn: 'root',
 })
-
 export class ComercialAgendaFormularioService {
   private readonly API = `http://23.254.204.187/api/comercial/agenda/formulario`;
 
@@ -58,5 +57,5 @@ export class ComercialAgendaFormularioService {
     return this.http
       .get(`${this.API}/motivos-reagendamento`)
       .pipe(take(1), retry(2));
-}
+  }
 }
