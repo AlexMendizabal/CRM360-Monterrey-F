@@ -7,7 +7,7 @@ import { observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LogisticaEstoqueInventarioFiltroService {
-  private readonly API: string = `http://127.0.0.1:8000/api`;
+  private readonly API: string = `http://23.254.204.187/api/api`;
 
   constructor(private http: HttpClient) {}
 

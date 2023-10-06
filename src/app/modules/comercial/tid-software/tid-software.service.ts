@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ComercialTidSoftwareService {
-  private readonly API = `http://127.0.0.1:8000/comercial/tid-software`;
+  private readonly API = `http://23.254.204.187/api/comercial/tid-software`;
 
   constructor(protected http: HttpClient) {}
 

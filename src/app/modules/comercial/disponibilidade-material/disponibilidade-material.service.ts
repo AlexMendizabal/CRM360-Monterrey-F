@@ -15,7 +15,7 @@ import { DisponibilidadeMaterial } from './models/disponibilidade-material';
   providedIn: 'root'
 })
 export class ComercialDisponibilidadeMaterialService {
-  private readonly API = `http://127.0.0.1:8000/comercial/disponibilidade-material`;
+  private readonly API = `http://23.254.204.187/api/comercial/disponibilidade-material`;
 
   constructor(
     protected http: HttpClient,

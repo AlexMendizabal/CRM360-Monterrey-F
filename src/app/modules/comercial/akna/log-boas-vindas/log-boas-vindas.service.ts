@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ControladoriaAknaLogBoasVindasService {
-  private readonly BASE_URL: string = `http://127.0.0.1:8000`;
+  private readonly BASE_URL: string = `http://23.254.204.187/api`;
 
   constructor(private http: HttpClient) {}
 
