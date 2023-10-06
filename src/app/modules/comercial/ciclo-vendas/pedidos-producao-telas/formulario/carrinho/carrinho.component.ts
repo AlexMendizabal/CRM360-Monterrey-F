@@ -54,6 +54,10 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioCarrinhoComponent
   @Input('codCliente') codCliente: number;
   @Input('initialValue') initialValue: Array<ICarrinhoModel>;
   @Input('dadosCalculo') dadosCalculo: Array<any>;
+  @Input('id_tipo_cliente') id_cliente: number;
+  @Input('id_departamento') id_departamento: number;
+
+
 
 
   @Output('loaderNavbar') loaderNavbar: EventEmitter<
@@ -339,7 +343,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioCarrinhoComponent
 
         if (qtdeAdicionados > 0) {
           this.setLocalStorage(this.form.value.materiais);
-          console.log(this.form.value.materiais);
+          (this.form.value.materiais);
           this.onCalcularTotais(true);
           setTimeout(() => {
           }, 500);
@@ -388,6 +392,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioCarrinhoComponent
                   medida2: [materiais[0][i].medida2],
                   pesoEspecifico: [materiais[0][i].peso],
                   materialAssociado: [materiais[0][i].materialAssociado],
+
                 })
               );
 
@@ -400,7 +405,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioCarrinhoComponent
 
         if (qtdeAdicionados > 0) {
           this.setLocalStorage(this.form.value.materiais);
-          console.log(this.form.value.materiais);
+          (this.form.value.materiais);
           this.onCalcularTotais(true);
           setTimeout(() => {
           }, 500);
@@ -435,6 +440,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioCarrinhoComponent
 
   onDescontoMaterial(index: number, material: ICarrinhoModel): void {
     if (material.valorTotal > 0) {
+      // @ts-ignore: Ignorar error TS2339
       this.descontoService.descontoMaterial(index, material);
     } else {
       this.pnotifyService.notice(
@@ -446,6 +452,8 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioCarrinhoComponent
   onDescontoCarrinho(): void {
     let hasError = false;
     const materiais: Array<ICarrinhoModel> = this.form.value.materiais;
+    ('aqui');
+    (materiais);
 
     for (let i = 0; i < materiais.length; i++) {
       if (materiais[i].valorTotal === 0) {
@@ -541,6 +549,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioCarrinhoComponent
         {
           idReservado: this.idReservado !== null ? this.idReservado : null,
           codCotacao: this.codCotacao !== null ? this.codCotacao : null,
+          // @ts-ignore: Ignorar error TS2339
           codMaterial: data[index].codMaterial,
           nomeMaterial: data[index].nomeMaterial,
           quantidade: 0,
@@ -583,7 +592,8 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioCarrinhoComponent
         {
           idReservado: this.idReservado !== null ? this.idReservado : null,
           codCotacao: this.codCotacao !== null ? this.codCotacao : null,
-          codMaterial: data[index].codMaterial,
+          // @ts-ignore: Ignorar error TS2339
+          codMaterial: data[index].id_material,
           nomeMaterial: data[index].nomeMaterial,
           quantidade: 0,
           valorUnit: data[index].valorUnit,

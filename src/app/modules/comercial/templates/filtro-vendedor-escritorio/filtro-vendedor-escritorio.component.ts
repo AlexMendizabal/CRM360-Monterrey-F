@@ -233,7 +233,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
   }
 
   onEscritorioChange(escritorio: any) {
-    //alert(1)
+    // alert(1)
     //console.log(escritorio);
     //if (escritorio> 0){
       this.vendedoresService.getVendedoresSucursal(escritorio).subscribe(

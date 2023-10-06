@@ -1,20 +1,13 @@
 <loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
 <app-header appTitle="Cotações">
-  <button
-    type="button"
-    (click)="onReset()">
+  <button type="button" (click)="onReset()">
     Limpar
   </button>
-  <button   
-    type="button"
-    (click)="openModal(addCotacao)">
+  <button type="button" (click)="nuevo()">
     Adicionar
   </button>
-  <button
-    type="button"
-    (click)="onFilter()"
-    [disabled]="loaderNavbar || !form.valid">
+  <button type="button" (click)="onFilter()" [disabled]="loaderNavbar ">
     Filtrar
   </button>
 </app-header>
@@ -25,59 +18,37 @@
         <div class="form-row">
           <div class="form-group col-lg-3">
             <label for="tipoData">Buscar por</label>
-            <select
-              class="form-control custom-select"
-              id="tipoData"
-              formControlName="tipoData">
+            <select class="form-control custom-select" id="tipoData" formControlName="tipoData">
               <option value="1">Fecha de publicacion</option>
             </select>
           </div>
           <div class="form-group col-lg-2">
             <label for="dataInicial">Fecha inicial</label>
-            <input
-              class="form-control"
-              id="dataInicial"
-              type="text"
-              bsDatepicker
-              [bsConfig]="bsConfig"
+            <input class="form-control" id="dataInicial" type="text" bsDatepicker [bsConfig]="bsConfig"
               formControlName="dataInicial">
           </div>
           <div class="form-group col-lg-2">
             <label for="dataFinal">Fecha final</label>
-            <input
-              class="form-control"
-              id="dataFinal"
-              type="text"
-              bsDatepicker
-              [bsConfig]="bsConfig"
+            <input class="form-control" id="dataFinal" type="text" bsDatepicker [bsConfig]="bsConfig"
               formControlName="dataFinal">
           </div>
           <div class="form-group col-lg-3">
             <label for="codStatus">Situacion</label>
-            <ng-select
-              type='text'
-              [items]="situacoes"
-              [searchable]="true"
-              [clearable]="false"
-              bindLabel="situacaoProposta"
-              bindValue="codParametroSituacaoProposta"
-              formControlName="codSituacao"
-            >
+            <ng-select [items]="situacoes" [searchable]="true" [clearable]="false" labelForId="id" bindLabel="nombre"
+              formControlName="codSituacao" [(ngModel)]="defaultSelection">
             </ng-select>
+
+
+
           </div>
           <div class="form-group col-lg-2">
             <label for="nrPedido">Núm. pedido</label>
-            <input
-              type="text"
-              id="nrPedido"
-              placeholder="Digite..."
-              class="form-control"
-              formControlName="nrPedido"
+            <input type="text" id="nrPedido" placeholder="Digite..." class="form-control" formControlName="nrPedido"
               (keydown.enter)="onFilter()">
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-lg-3">
+          <!-- <div class="form-group col-lg-3">
             <label for="codEmpresa">Empresa</label>
             <ng-select
               [searchable]="true"
@@ -93,8 +64,8 @@
               [ngClass]="onFieldError('codEmpresa') + ' ' + onFieldRequired(form.controls.codEmpresa)">
             </ng-select>
             <invalid-form-control [show]="onFieldInvalid('codEmpresa')" message="Empresa é obrigatório."></invalid-form-control>
-          </div>
-          <div class="form-group col-lg-2">
+          </div> -->
+          <!-- <div class="form-group col-lg-2">
             <label for="codDeposito">Depósito</label>
             <ng-select
               [searchable]="true"
@@ -110,8 +81,8 @@
               [ngClass]="onFieldError('codDeposito') + ' ' + onFieldRequired(form.controls.codDeposito)">
             </ng-select>
             <invalid-form-control [show]="onFieldInvalid('codDeposito')" message="Depósito é obrigatório."></invalid-form-control>
-          </div>
-          <div class="form-group col-lg-2">
+          </div> -->
+          <!-- <div class="form-group col-lg-2">
             <label for="cliente">Cliente</label>
             <input
               type="text"
@@ -120,27 +91,17 @@
               placeholder="Digite..."
               formControlName="cliente"
               (keydown.enter)="onFilter()">
-          </div>
+          </div> -->
           <div class="form-group col-lg-3">
             <label for="codVendedor">Vendedor</label>
-            <ng-select
-              [searchable]="true"
-              [clearable]="false"
-              placeholder="Selecione..."
-              [items]="vendedores"
-              formControlName="codVendedor"
-              [virtualScroll]="true"
-              labelForId="codVendedor"
-              bindLabel="nome"
+            <ng-select [searchable]="true" [clearable]="false" placeholder="Selecione..." [items]="vendedores"
+              formControlName="codVendedor" [virtualScroll]="true" labelForId="codVendedor" bindLabel="nome"
               bindValue="id">
             </ng-select>
           </div>
           <div *ngIf="filtroCotacoes" class="form-group col-lg-1">
             <label for="statusCliente">Status Cliente</label>
-            <select
-              class="form-control custom-select"
-              id="statusCliente"
-              formControlName="statusCliente">
+            <select class="form-control custom-select" id="statusCliente" formControlName="statusCliente">
               <option>TODOS</option>
               <option value="Ativo">ACTIVO</option>
               <option value="Inativo">INACTIVO</option>
@@ -148,10 +109,7 @@
           </div>
           <div class="form-group " [ngClass]="{'col-lg-2': !filtroCotacoes , 'col-lg-1': filtroCotacoes}">
             <label for="registros">Registros</label>
-            <select
-              class="form-control custom-select"
-              id="registros"
-              formControlName="registros">
+            <select class="form-control custom-select" id="registros" formControlName="registros">
               <option>100</option>
               <option>200</option>
               <option>300</option>
@@ -161,455 +119,191 @@
       </form>
     </advanced-filter>
   </div>
-  <subtitles
-    [data]="subtitles"
-    [allowActivation]="false"
-    [show]="dados.length > 0 && !dadosEmpty">
+  <subtitles [data]="leyendas" [allowActivation]="false" [show]="dados.length > 0 && !dadosEmpty">
+
   </subtitles>
   <div class="row" *ngIf="dados.length > 0 && !dadosEmpty">
-    <div [ngClass]="{'col-12': !showDetailPanel, 'col-6 pr-0': showDetailPanel}" >
-      <custom-table [config]="tableConfig">
-        <ng-template #thead let-thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col" class="text-center">
-              <thead-sorter
-                value="Núm."
-                [active]="orderBy == 'nrPedido'"
-                [sort]="orderType"
-                (click)="setOrderBy('nrPedido')">
-              </thead-sorter>
-            </th>
-            <th scope="col" class="text-center">
-              <thead-sorter
-                value="Lançamento"
-                [active]="orderBy == 'dataLancamento'"
-                [sort]="orderType"
-                (click)="setOrderBy('dataLancamento')">
-              </thead-sorter>
-            </th>
-            <th scope="col">
-              <thead-sorter
-                value="Cliente"
-                [active]="orderBy == 'razaoSocial'"
-                [sort]="orderType"
-                (click)="setOrderBy('razaoSocial')">
-              </thead-sorter>
-            </th>
-            <th scope="col" [hidden]="showDetailPanel">Empresa</th>
-            <th scope="col" [hidden]="showDetailPanel">Cartera de vendedor</th>
-          </tr>
-        </ng-template>
-        <ng-template #tbody let-tbody>
-          <tr *ngFor="let pedido of dados; let i = index" [class.table-active]="i == activeRow">
+    <div [ngClass]="{'col-12': !showDetailPanel, 'col-6 pr-0': showDetailPanel}">
+      <div class="table-responsive">
+        <custom-table [config]="tableConfig">
+          <ng-template #thead let-thead>
+            <tr>
+              <!--  <th scope="col"></th> -->
+              <th scope="col" class="text-center">
+                <thead-sorter value="Núm." [active]="orderBy == 'codigo_oferta'" [sort]="orderType"
+                  (click)="setOrderBy('codigo_oferta')">
+                </thead-sorter>
+              </th>
+              <th scope="col" class="text-center">
+                <thead-sorter value="Fecha inicial" [active]="orderBy == 'fecha_inicial'" [sort]="orderType"
+                  (click)="setOrderBy('fecha_inicial')">
+                </thead-sorter>
+              </th>
+              <th scope="col" class="text-center">
+                <thead-sorter value="Fecha final" [active]="orderBy == 'fecha_final'" [sort]="orderType"
+                  (click)="setOrderBy('fecha_final')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter value="Cliente" [active]="orderBy == 'cliente'" [sort]="orderType"
+                  (click)="setOrderBy('cliente')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter value="Vendedor" [active]="orderBy == 'vendedor'" [sort]="orderType"
+                  (click)="setOrderBy('vendedor')">
+                </thead-sorter>
+              </th>
+              <!--  <th scope="col">
+                <thead-sorter value="Monto total bruto" [active]="orderBy == 'monto_total_bruto'" [sort]="orderType"
+                  (click)="setOrderBy('monto_total_bruto')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter value="Descuento" [active]="orderBy == 'descuento'" [sort]="orderType"
+                  (click)="setOrderBy('descuento')">
+                </thead-sorter>
+              </th> -->
+              <th scope="col">
+                <thead-sorter value="Monto total" [active]="orderBy == 'monto_total'" [sort]="orderType"
+                  (click)="setOrderBy('monto_total')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter value="Peso total kg." [active]="orderBy == 'peso'" [sort]="orderType"
+                  (click)="setOrderBy('peso_total')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter value="Lista" [active]="orderBy == 'lista_precio'" [sort]="orderType"
+                  (click)="setOrderBy('lista_precio')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter value="Modo de entrega" [active]="orderBy == 'modo_entrega'" [sort]="orderType"
+                  (click)="setOrderBy('modo_entrega')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter value="Estado" [active]="orderBy == 'estado_oferta'" [sort]="orderType"
+                  (click)="setOrderBy('estado_oferta')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter value="Acciones" [active]="orderBy == 'Acciones'" [sort]="orderType"
+                  (click)="setOrderBy('Acciones')">
+                </thead-sorter>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let pedido of dados; let i = index"[class.table-active]="i == activeRow">
+
             <td class="text-center" [ngStyle]="styleStatusBorder(pedido)">
-              <span class="d-inline-flex">
+                <span class="d-inline-flex">
               <ng-template #tooltipLiberacao>
-                <p class="mb-2">ESPERANDO LIBERACION:</p><br>
-                <div *ngIf="pedido.travas.length > 0">
-                  <dl>
-                    <ng-container *ngFor="let trava of pedido.travas">
-                      <dd><i class="fas fa-exclamation-triangle small mr-1"></i> {{ trava['desTrava'] }}</dd>
-                    </ng-container>
-                  </dl>
-                </div>
-              </ng-template>
+                    <p class="mb-2">ESPERANDO LIBERACION:</p><br>
+                    <div *ngIf="pedido.travas.length > 0">
+                      <dl>
+                        <ng-container *ngFor="let trava of pedido.travas">
+                          <dd><i class="fas fa-exclamation-triangle small mr-1"></i> {{ trava['desTrava'] }}</dd>
+                        </ng-container>
+                      </dl>
+                    </div>
+                  </ng-template>
 
               <ng-template #tooltipLiberacaoAberto>
-                <p class="mb-2">ESPERANDO LIBERACION:</p><br>
-                <div>
-                  <dl>
-                    <ng-container>
-                      <dd><i class="fas fa-exclamation-triangle small mr-1"></i> PEDIDO EN ABIERTO</dd>
-                    </ng-container>
-                  </dl>
-                </div>
-              </ng-template>
+                    <p class="mb-2">ESPERANDO LIBERACION:</p><br>
+                    <div>
+                      <dl>
+                        <ng-container>
+                          <dd><i class="fas fa-exclamation-triangle small mr-1"></i> PEDIDO EN ABIERTO</dd>
+                        </ng-container>
+                      </dl>
+                    </div>
+                  </ng-template>
+
+              <i class="mr-2 text-warning fas fa-random" *ngIf="pedido.estado_oferta === 1"
+                    tooltip="Pedido transferido" placement="right"></i>
 
 
+                  <i class="mr-2 text-black-50 fas fa-random" *ngIf="pedido.estado_oferta === 0"
+                    tooltip="Pedido não transferido" placement="right"></i>
 
-              <i class="mr-2 text-warning fas fa-random" *ngIf="pedido.pedidoTransferido === 1" tooltip="Pedido transferido" placement="right"></i>
-              <i class="mr-2 text-black-50 fas fa-random" *ngIf="pedido.pedidoTransferido === 0" tooltip="Pedido não transferido" placement="right"></i>
+                  <i class="mr-2 text-black-50 fas fa-lock" *ngIf="pedido.pedidoEmLiberacao === 1"
+                    [tooltip]="tooltipLiberacao" placement="right"></i>
+                  <i class="mr-2 text-warning fas fa-unlock"
+                    *ngIf="pedido.pedidoEmLiberacao === 0 && pedido.codSituacao !== 1" tooltip="Pedido liberado"
+                    placement="right"></i>
+                  <i class="mr-2 text-black-50 fas fa-lock"
+                    *ngIf="pedido.pedidoEmLiberacao === 0 && pedido.codSituacao == 1" [tooltip]="tooltipLiberacaoAberto"
+                    placement="right"></i>
 
-              <i class="mr-2 text-black-50 fas fa-lock" *ngIf="pedido.pedidoEmLiberacao === 1" [tooltip]="tooltipLiberacao" placement="right"></i>
-              <i class="mr-2 text-warning fas fa-unlock" *ngIf="pedido.pedidoEmLiberacao === 0 && pedido.codSituacao !== 1" tooltip="Pedido liberado" placement="right"></i>
-              <i class="mr-2 text-black-50 fas fa-lock" *ngIf="pedido.pedidoEmLiberacao === 0 && pedido.codSituacao == 1" [tooltip]="tooltipLiberacaoAberto" placement="right"></i>
+                  <i class="mr-2 text-warning fas fa-dollar-sign" *ngIf="pedido.pedidoPreFaturado === 1"
+                    tooltip="Pré-faturado" placement="right"></i>
+                  <i class="mr-2 text-black-50 fas fa-dollar-sign" *ngIf="pedido.pedidoPreFaturado === 0"
+                    tooltip="Pré-faturado" placement="right"></i>
 
-              <i class="mr-2 text-warning fas fa-dollar-sign" *ngIf="pedido.pedidoPreFaturado === 1" tooltip="Pré-faturado" placement="right"></i>
-              <i class="mr-2 text-black-50 fas fa-dollar-sign" *ngIf="pedido.pedidoPreFaturado === 0" tooltip="Pré-faturado" placement="right"></i>
-
-              <i class="mr-2 text-warning fas fa-check-square" *ngIf="pedido.pedidoFaturado === 1" tooltip="Pedido faturado" placement="right"></i>
-              <i class="mr-2 text-black-50 far fa-check-square" *ngIf="pedido.pedidoFaturado === 0" tooltip="Pedido não faturado" placement="right"></i>
-            </span>
+                  <i class="mr-2 text-warning fas fa-check-square" *ngIf="pedido.pedidoFaturado === 1"
+                    tooltip="Pedido faturado" placement="right"></i>
+                  <i class="mr-2 text-black-50 far fa-check-square" *ngIf="pedido.pedidoFaturado === 0"
+                    tooltip="Pedido não faturado" placement="right"></i>
+                </span>
             </td>
-            <td class="text-center hover" (click)="viewRegister(i, pedido)">{{ pedido.nrPedido }}</td>
-            <td class="text-center hover" (click)="viewRegister(i, pedido)">{{ pedido.dataLancamento | date: 'dd/MM/yyyy' }}</td>
-            <td class="hover" (click)="viewRegister(i, pedido)">{{ pedido.razaoSocial | uppercase }}</td>
-            <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeEmpresa | uppercase }}</td>
-            <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeVendedor | uppercase }}</td>
-          </tr>
-        </ng-template>
-      </custom-table>
-      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage ">
-        <pagination
-          [maxSize]="maxSize"
-          [(totalItems)]="totalItems"
-          (pageChanged)="onPageChanged($event)"
-          [(itemsPerPage)]="itemsPerPage"
-          [boundaryLinks]="true"
-          [(ngModel)]="currentPage"
-          previousText="&lsaquo;"
-          nextText="&rsaquo;"
-          firstText="&laquo;"
-          lastText="&raquo;">
-        </pagination>
+
+
+              <td class="text-center hover" (click)="openModal(modalDetalhes, pedido.id_oferta)"
+                [ngClass]="estoqueSuspensoClassStatusBorder(pedido.estado_oferta)">
+                {{ pedido.codigo_oferta }}
+              </td>
+              <td class="text-center hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.fecha_inicial
+                | date:
+                'dd/MM/yyyy'
+                }}</td>
+              <td class="text-center hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.fecha_final |
+                date: 'dd/MM/yyyy'
+                }}</td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.cliente | uppercase }}
+              </td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.vendedor | uppercase }}
+              </td>
+              <!-- <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.monto_total_bruto }}</td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.descuento }}</td> -->
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.monto_total }}</td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.peso_total }}</td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.lista_precio }}</td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.modo_entrega }}</td>
+              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.estado_oferta }}</td>
+              <td class="">
+                <a class="dropdown-item" routerLink="/pdf" (click)="onImprimir(pedido.id_oferta)"><i class="fas fa-print"></i><span class="text-uppercase">
+                  PDF</span></a>
+                <a class="dropdown-item" routerLink="/vista" (click)="onVista(pedido.id_oferta)"><i class="fas fa-print"></i><span class="text-uppercase">
+                    Vista</span></a>
+              </td>
+              <!--
+              <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeEmpresa | uppercase }}</td>
+              <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeVendedor | uppercase }}</td> -->
+            </tr>
+          </ng-template>
+        </custom-table>
+        <div class="d-flex justify-content-center mt-3" >
+          <pagination [maxSize]="maxSize" [(totalItems)]="totalItems" (pageChanged)="onPageChanged($event)"
+            [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
+            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+          </pagination>
+        </div>
       </div>
     </div>
-    <div class="col-6" [hidden]="!showDetailPanel" #scrollToDetails>
-      <detail-panel [panelTitle]="detailPanelTitle">
-        <div class="row mt-1">
-          <div class="col">
-            <button
-              type="button"
-              class="btn-icon mr-3"
-              tooltip="Visualizar"
-              placement="right"
-              (click)="onView()">
-              <i class="fas fa-search"></i>
-            </button>
-            <button
-              type="button"
-              class="btn-icon mr-3"
-              tooltip="Editar"
-              placement="right"
-              (click)="onEdit()"
-              [disabled]="pedidoTransferido == 1">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button
-              type="button"
-              class="btn-icon mr-3"
-              tooltip="Transfere para faturamento"
-              placement="right"
-              (click)="onValidarDuplicatas()"
-              [disabled]="pedidoTransferido == 1">
-              <i class="fas fa-random"></i>
-            </button>
-            <button
-              type="button"
-              class="btn-icon mr-3"
-              tooltip="Trocar cliente"
-              placement="right"
-              (click)="onTrocarCliente()"
-              [disabled]="pedidoTransferido == 1">
-              <i class="fas fa-sync-alt"></i>
-            </button>
-            <button
-              type="button"
-              class="btn-icon mr-3"
-              tooltip="Desdobrar proposta"
-              placement="right"
-              (click)="onDesdobrarProposta()"
-              [disabled]="pedidoTransferido == 1">
-              <i class="fas fa-columns"></i>
-            </button>
-            <button
-              type="button"
-              class="btn-icon mr-3"
-              tooltip="Duplicar proposta"
-              placement="right"
-              (click)="onDuplicarProposta()">
-              <i class="far fa-clone"></i>
-            </button>
-            <div class="d-inline-block" dropdown>
-              <button
-                type="button"
-                class="btn-icon"
-                dropdownToggle>
-                <i class="fas fa-ellipsis-v"></i>
-              </button>
-              <ul *dropdownMenu class="dropdown-menu">
-                <li>
-                  <!--href="/comercial/clientes/historico-financeiro/{{ nrCliente }}">
-                  <a class="dropdown-item hover" target="_blank" (click)="navegarDashboard()">
-                    <i class="fas fa-chart-pie"></i-->
-                    <span class="text-uppercase">Dashboard</span>
-                  <!-- </a> -->
-                </li>
-                <li>
-                  <a class="dropdown-item hover" target="_blank" (click)="navegarHistorico()" >
-                    <i class="fas fa-chart-bar"></i>
-                    <span class="text-uppercase">Histórico financiero</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="javascript:void(0)"
-                    (click)="onHistoricoComercial()">
-                    <i class="fas fa-dollar-sign"></i>
-                    <span class="text-uppercase">Histórico comercial</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="javascript:void(0)"
-                    (click)="onHistoricoExclusao()">
-                    <i class="fas fa-trash"></i>
-                    <span class="text-uppercase">Exclusión histórica</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="javascript:void(0)"
-                    (click)="onConsultarLiberacao()">
-                    <i class="fas fa-search"></i>
-                    <span class="text-uppercase">Consultar liberacion</span>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item hover" target="_blank" (click)="navegarEstoque()">
-                    <i class="fas fa-boxes"></i>
-                    <span class="text-uppercase">Consultar Stock</span>
-                  </a>
-                </li>
-                <li *ngIf="pedidoTransferido == 0">
-                  <a
-                    class="dropdown-item"
-                    href="javascript:void(0)"
-                    (click)="onTrocarEmpresa()"
-                    >
-                    <i class="fas fa-building"></i>
-                    <span class="text-uppercase">Cambiar empresa</span>
-                  </a>
-                </li>
-                <li *ngIf="pedidoTransferido == 1">
-                  <a
-                    class="dropdown-item disabled"
-                    href="javascript:void(0)"
-                    (click)="onTrocarEmpresa()"
-                   >
-                    <i class="fas fa-building"></i>
-                    <span class="text-uppercase">Cambiar empresa</span>
-                  </a>
-                </li>
-                <li>
-                  <div class="dropdown-divider"></div>
-                </li>
-                <li>
-                  <comercial-ciclo-vendas-cotacoes-lista-templates-button-imprimir
-                    (loading)="showLoaderNavbar($event)"
-                    [cotacao]="activeCotacao"
-                    [imprimirPdf]="imprimirPdf"
-                    (resetImprimir)="resetImprimir($event)"
-                    (pdfData)="getPdfBase64($event)"
-                  >
-                  </comercial-ciclo-vendas-cotacoes-lista-templates-button-imprimir>
-                </li>
-                <li *ngIf="imprimirSeparacao == 1">
-                  <comercial-ciclo-vendas-cotacoes-lista-templates-button-imprimir-separacao
-                    (loading)="showLoaderNavbar($event)"
-                    [cotacao]="activeCotacao"
-                  >
-                  </comercial-ciclo-vendas-cotacoes-lista-templates-button-imprimir-separacao>
-                </li>
-                <li *ngIf="imprimirSeparacao == 0">
-                  <a
-                    class="dropdown-item disabled"
-                    href="javascript:void(0)"
-                    >
-                    <i class="fas fa-print"></i>
-                    <span class="text-uppercase">Imprimir separacion</span>
-                  </a>
-                </li>
-                <!-- <li *ngIf="pedidoTransferido == 1 && pedidoFaturado == 1">
-                  <a
-                    class="dropdown-item disabled"
-                    href="javascript:void(0)"
-                    >
-                    <i class="fas fa-print"></i>
-                    <span class="text-uppercase">Imprimir Separação</span>
-                  </a>
-                </li> -->
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="javascript:void(0)"
-                    (click)="onEmailCotacao()"
-                    >
-                    <i class="far fa-paper-plane"></i>
-                    <span class="text-uppercase">Enviar por e-mail</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col"><hr></div>
-        </div>
-        <div class="mtc-title">Contatos de propuesta</div>
-        <div class="row">
-          <div class="col">
-            <div *ngIf="contatosLoaded && !contatosEmpty">
-              <custom-table>
-                <ng-template #thead let-thead>
-                  <tr>
-                    <th scope="col" class="text-center">Fecha</th>
-                    <th scope="col" class="text-center">Tipo de contacto</th>
-                    <th scope="col">Operador</th>
-                  </tr>
-                </ng-template>
-                <ng-template #tbody let-tbody>
-                  <tr
-                    *ngFor="let contato of detalhes.contatos"
-                    [class.table-active]="contatoSelected.id == contato.id"
-                    (click)="viewContato(contato)">
-                    <td class="text-center hover">{{ contato.data | date: 'dd/MM/yyyy' }}</td>
-                    <td class="text-center hover">{{ contato.tipoContato | uppercase }}</td>
-                    <td class="hover">{{ contato.operador | uppercase }}</td>
-                  </tr>
-                </ng-template>
-              </custom-table>
-              <div class="form-row mt-3">
-                <div class="form-group col">
-                  <label>Nota Fiscal</label>
-                  <div *ngIf="activeCotacao.nrNotaFiscal == null || activeCotacao.nrNotaFiscal == ''">
-                    NO EMITIDA
-                  </div>
-                  <div *ngIf="activeCotacao.nrNotaFiscal != null && activeCotacao.nrNotaFiscal != ''">
-                    {{ activeCotacao.nrNotaFiscal }}
-                  </div>
-                </div>
-                <div class="form-group col">
-                  <label>Data Faturamento</label>
-                  <div *ngIf="!detalhes.dataFaturamento">
-                    NO FACTURADA
-                  </div>
-                  <div *ngIf="detalhes.dataFaturamento">
-                    {{ detalhes.dataFaturamento | date: 'dd/MM/yyyy' }}
-                  </div>
-                </div>
-                <div class="form-group col mb-0">
-                  <label>Contato</label>
-                  <div *ngIf="contatoSelected.nomeContato == null || contatoSelected.nomeContato == ''">
-                    NÃO INFORMADO
-                  </div>
-                  <div *ngIf="contatoSelected.nomeContato != null && contatoSelected.nomeContato != ''">
-                    {{ contatoSelected.nomeContato }}
-                  </div>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col">
-                  <label>Observaciones</label>
-                  <div *ngIf="contatoSelected.observacao == null || contatoSelected.observacao == ''">
-                    NO INFORMADO
-                  </div>
-                  <div *ngIf="contatoSelected.observacao != null && contatoSelected.observacao != ''">
-                    {{ contatoSelected.observacao }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="contatosLoaded && contatosEmpty">
-              <empty-result message="Nenhuma informação encontrada"></empty-result>
-            </div>
-            <div class="d-flex w-100" *ngIf="!contatosLoaded">
-              <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
-              <strong>Carregando contatos...</strong>
-            </div>
-          </div>
-        </div>
 
-        <div class="row">
-          <div class="col"><hr></div>
-        </div>
-
-        <div class="row" *ngIf="contatosLoaded && !contatosEmpty">
-          <div class="col">
-            <div class="mtc-title">Direccion de entrega</div>
-            <div class="form-row mt-3">
-              <div class="form-group col">
-                <label>NOMBRE DEL LUGAR DE ENTREGA</label>
-                <div *ngIf="activeCotacao.tituloEntrega == null || activeCotacao.tituloEntrega == ''">
-                  NO INFORMADO
-                </div>
-                <div *ngIf="activeCotacao.tituloEntrega != null && activeCotacao.tituloEntrega != ''">
-                  {{ activeCotacao.tituloEntrega }}
-                </div>
-              </div>
-              <div class="form-group col mb-0">
-                <label>Endereço Completo</label>
-                <div *ngIf="activeCotacao.enderecoEntrega == null || activeCotacao.enderecoEntrega == ''">
-                  NO INFORMADO
-                </div>
-                <div *ngIf="activeCotacao.enderecoEntrega != null && activeCotacao.enderecoEntrega != ''">
-                  <div>{{ activeCotacao.enderecoEntrega }}</div>
-                  <div>{{ activeCotacao.bairroEntrega }}</div>
-                  <div>{{ transformNumberToCEP(activeCotacao.cepEntrega) }} {{ activeCotacao.cidadeEntrega }} - {{ activeCotacao.ufEntrega }}</div>
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col"><hr></div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="mtc-title">Elementos de propuesta</div>
-            <custom-table *ngIf="itensLoaded && !itensEmpty">
-              <ng-template #thead let-thead>
-                <tr>
-                  <th scope="col" class="text-center">Item</th>
-                  <th scope="col" class="text-truncate">Material</th>
-                  <th scope="col" class="text-center">Qtde. (Ton)</th>
-                  <th scope="col" class="text-center">Qtde. (Items)</th>
-                  <th scope="col" class="text-center">Total</th>
-                </tr>
-              </ng-template>
-              <ng-template #tbody let-tbody>
-                <tr *ngFor="let item of detalhes.itens.materiais">
-                  <td class="text-center">{{ item.codItem }}</td>
-                  <td>{{ item.codMaterial }} - {{ item.nomeMaterial | uppercase }}</td>
-                  <td class="text-center">{{ item.quantidade | number: '1.3-3' }} Ton</td>
-                  <td class="text-center" *ngIf="item.qtdePecas != 0" >{{ item.qtdePecas }}</td>
-                  <td class="text-center" *ngIf="item.qtdePecas == 0"> - </td>
-                  <td class="text-center">{{ item.valorTotal | currency:'BRL' }}</td>
-                </tr>
-                <tr>
-                  <td class="bg-dark text-white text-center"></td>
-                  <td class="bg-dark text-white text-center">TOTAL</td>
-                  <td class="bg-dark text-white text-center">{{ detalhes.itens.total.quantidade | number: '1.3-3' }} Ton</td>
-                  <td class="bg-dark text-white text-center" *ngIf="detalhes.itens.total.qtdePecas != 0">{{ detalhes.itens.total.qtdePecas }} </td>
-                  <td class="bg-dark text-white text-center" *ngIf="detalhes.itens.total.qtdePecas == 0"> - </td>
-                  <td class="bg-dark text-white text-center">{{ detalhes.itens.total.valor | currency:'BRL' }}</td>
-                </tr>
-              </ng-template>
-            </custom-table>
-            <div *ngIf="itensLoaded && itensEmpty">
-              <empty-result message="Nenhuma informação encontrada"></empty-result>
-            </div>
-            <div class="d-flex w-100" *ngIf="!itensLoaded">
-              <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
-              <strong>Cargando items...</strong>
-            </div>
-          </div>
-        </div>
-      </detail-panel>
-    </div>
   </div>
-  <div *ngIf="dadosEmpty && !dadosLoaded" class="text-center d-flex justify-content-center align-items-center" style="height: 80%">
-    <empty-result message="Nenhuma informação encontrada"></empty-result>
+
+  <div *ngIf="dadosEmpty && !dadosLoaded" class="text-center d-flex justify-content-center align-items-center"
+    style="height: 80%">
+    <empty-result message="Ninguna información encontrada"></empty-result>
   </div>
-  <ng-template #addCotacao>
+  <ng-template #modalDetalhes>
     <div class="modal-header">
-      <h4 class="modal-title pull-left">Seleccione la empresa de la cotización</h4>
+      <h4 class="modal-title pull-left">Detalle de la oferta</h4>
       <div class="d-flex justify-content-center align-items-center">
         <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
           <span aria-hidden="true">&times;</span>
@@ -617,36 +311,95 @@
       </div>
     </div>
     <div class="modal-body">
-      <div class="col-12">
-        <form [formGroup]="form" autocomplete="off">
-          <div class="form-row justify-content-center">
-            <div class="form-group col pl-0">
-              <label for="codEmpresaAdd">Empresa</label>
-              <ng-select
-                [searchable]="true"
-                [clearable]="false"
-                [items]="empresas"
-                placeholder="Selecione..."
-                formControlName="codEmpresaAdd"
-                [virtualScroll]="true"
-                labelForId="codEmpresaAdd"
-                bindLabel="nomeEmpresa"
-                bindValue="idEmpresa"
-                [ngClass]="onFieldError('codEmpresaAdd') + ' ' + onFieldRequired(form.controls.codEmpresaAdd)">
-              </ng-select>
-              <invalid-form-control [show]="onFieldInvalid('codEmpresaAdd')" message="Empresa é obrigatório."></invalid-form-control>
-            </div>
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <custom-table [config]="tableConfig" *ngIf="dados.length > 0 && !dadosEmpty">
+            <ng-template #thead let-thead>
+              <tr>
+                <th class="text-truncate text-center" (click)="setOrderByModal('codigo_material')">
+                  <thead-sorter value="Articulo" [active]="orderBy == 'Articulo'" [sort]="orderType"> Código
+                  </thead-sorter>
+                </th>
+                <th class="text-truncate text-left" (click)="setOrderByModal('nombre_material')">
+                  <thead-sorter value="Descripcion" [active]="orderBy == 'nombre_material'"
+                    [sort]="orderType"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderByModal('cantidad')">
+                  <thead-sorter value="cantidad" [active]="orderBy == 'cantidad'" [sort]="orderType"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderByModal('unidad')">
+                  <thead-sorter value="unidad " [active]="orderBy == 'unidad'" [sort]="orderType"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderByModal('precio')">
+                  <thead-sorter value="precio" [active]="orderBy == 'precio'" [sort]="orderType"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderByModal('total_bruto')">
+                  <thead-sorter value="total_bruto" [active]="orderBy == 'total_bruto'"
+                    [sort]="orderType"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderByModal('nombre_almacen')">
+                  <thead-sorter value="% Descuento" [active]="orderBy == 'descuento'" [sort]="orderType"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderByModal('precio_descuento')">
+                  <thead-sorter value="Precio descuento" [active]="orderBy == 'precio_descuento'"
+                    [sort]="orderType"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderByModal('nombre_almacen')">
+                  <thead-sorter value="Almacen" [active]="orderBy == 'nombre_almacen'"
+                    [sort]="orderType"></thead-sorter>
+                </th>
+                <th class="text-truncate text-center" (click)="setOrderByModal('nombre_moneda')">
+                  <thead-sorter value="Total con descuento" [active]="orderBy == 'nombre_moneda'"
+                    [sort]="orderType"></thead-sorter>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <ng-container>
+                <tr *ngFor="let item of items">
+                  <td class="font-weight-bold hover text-center">
+                    {{item.codigo_material}}</td>
+                  <td class="font-weight-bold hover text-left">
+                    {{item.nombre_material}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.cantidad}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.unidad}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.precio}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.total_bruto}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    0.00</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.precio_descuento}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.nombre_almacen}}</td>
+                  <td class="font-weight-bold hover text-center">
+                    {{item.total_bruto}} {{item.nombre_moneda}}</td>
+                </tr>
+                <tr class="bg-dark text-center text-dark">
+                  <td colspan="8" class="border-dark"></td>
+                  <td><strong>Total</strong></td>
+                  <td class="text-center"><strong>{{ totalMateriales.cantidad | number:'1.4-4' }} DOLARES </strong></td>
+                </tr>
+              </ng-container>
+            </ng-template>
+          </custom-table>
+          <empty-result message="Ningún registro encontrado." *ngIf="dadosEmpty"></empty-result>
+          <div class="d-flex justify-content-center mt-3" >
+            <pagination [maxSize]="maxSize" [(totalItems)]="totalModal" (pageChanged)="onPageChangedModal($event)"
+              [(itemsPerPage)]="itemsPerPageModal" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
+              nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+            </pagination>
           </div>
-        </form>
-        <div  class="form-row justify-content-center text-center" id="actions">
-          <button
-            type="button"
-            (click)="onAdd()"
-            [disabled]="form.controls.codEmpresaAdd.valid === false || loaderNavbar === true"
-            >
+        </div>
+        <!-- <div class="form-row justify-content-center text-center" id="actions">
+          <button type="button" (click)="onAdd()"
+            [disabled]="form.controls.codEmpresaAdd.valid === false || loaderNavbar === true">
             Avançar
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
   </ng-template>

@@ -31,7 +31,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialComboService {
 
   showModal(material: ICarrinhoModel, codCliente?, codEndereco?, codFormaPagamento?, freteConta?): void {
     this.loaderNavbar.emit(true);
-
+    /* console.log('datos');  */
     this.cotacoesService
       .getMateriaisCombo(material.codEmpresa, material.codMaterial, codCliente, codEndereco, codFormaPagamento, freteConta)
       .pipe(

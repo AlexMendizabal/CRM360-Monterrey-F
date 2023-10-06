@@ -6,13 +6,14 @@ import { Subject } from 'rxjs';
 import html2canvas from 'html2canvas';
 import { VERSION, ViewChild, ElementRef } from '@angular/core';
 
+
+
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'pdf',
   templateUrl: './pdf.component.html',
   styleUrls: ['./pdf.component.scss']
 })
-
 export class PdfComponent implements OnInit {
 
   @ViewChild('captureButton', { static: true }) captureButtonRef: ElementRef;

@@ -7,6 +7,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 // Components
 import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoPadraoComponent } from './padrao/padrao.component';
 import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoPerdidaComponent } from './perdida/perdida.component';
+import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion } from './finalizacion/finalizacion.component';
 
 // Services
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
@@ -68,6 +69,47 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
         }
       );
   }
+
+  sendCotizacion(dataCotacao: any): void{
+    this.loaderNavbar.emit(true);
+
+    this.cotacoesService
+      .postCotizacion(dataCotacao)
+      .pipe(
+        finalize(() => {
+          this.loaderNavbar.emit(false);
+        })
+      )
+      .subscribe(
+        (response: JsonResponse) => {
+          this.eventDirty.emit(true)
+          // @ts-ignore: Ignorar error TS2339
+          if (response.responseCode == 200) {
+            /* dataCotacao.carrinho = [];
+            dataCotacao.carrinho = response.data; */
+            setTimeout(()=>{
+              /* if (dataCotacao.id_oferta.codTipoFinalizacao >0) {
+                this.showModal(
+                  ComercialCicloVendasCotacoesFormularioModalFinalizacaoPerdidaComponent,
+                  dataCotacao
+                );
+              } else { */
+                this.showModal(
+                  ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
+                  dataCotacao
+                );
+             /*  } */
+            }, 200)
+          } else {
+            this.pnotifyService.error(response.mensagem);
+          }
+        },
+        (error: any) => {
+          this.pnotifyService.error(error.error.mensagem);
+        }
+      );
+  }
+
 
   showModal(component: any, dataCotacao: Object): void {
     const modalConfig = {

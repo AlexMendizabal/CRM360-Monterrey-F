@@ -24,26 +24,58 @@ import { array } from '@amcharts/amcharts4/core';
   templateUrl: './detalhes.component.html',
   styleUrls: ['./detalhes.component.scss']
 })
-export class ComercialAgendaDetalhesComponent implements OnInit {
 
+export class ComercialAgendaDetalhesComponent implements OnInit {
+latitud: any;
+longitud: any;
+modalRef: BsModalRef | undefined;
+actualizarMarcador($event: any) {
+throw new Error('Method not implemented.');
+}
+  breadCrumbTree: Array<Breadcrumb> = [
+
+    {
+      descricao: 'Home',
+      routerLink: '/comercial/home'
+    },
+
+    {
+      descricao: 'Agenda',
+      routerLink: `/comercial/agenda/compromissos`
+    },
+
+    {
+      descricao: 'Detalles de cita'
+    }
+
+  ];
+
+  detalhes: any = {
+    status: null
+  };
+
+  imagenes: any = [];
+  img: any = [];
+  //mostrarElemento: boolean = true;
+  //ocultarFormulario(){
+   // this.mostrarElemento = false;
+ // }
+
+  switchEdit: boolean;
+  private user = this.authservice.getCurrentUser();
+  posiciones: any;
 
 
 
   constructor(
-
     private activatedRoute: ActivatedRoute,
-
     private atividadesService: AtividadesService,
-
     private authservice: AuthService,
-
     private router: Router,
-
     private dateService: DateService,
+    private http: HttpClient,
     private agendaService: ComercialAgendaService,
-
     private confirmModalService: ConfirmModalService,
-
     private pnotifyService: PNotifyService,
     private titleService: TitleService,
     private modalService: BsModalService
@@ -51,61 +83,6 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
 
     this.pnotifyService.getPNotify();
 
-  }
-  latitud: any;
-  longitud: any;
-  modalRef: BsModalRef | undefined;
-  breadCrumbTree: Array<Breadcrumb> = [
-
-    {
-
-      descricao: 'Home',
-
-      routerLink: '/comercial/home'
-
-    },
-
-    {
-
-      descricao: 'Agenda',
-
-      routerLink: `/comercial/agenda/compromissos`
-
-    },
-
-    {
-
-      descricao: 'Detalles de cita'
-
-    }
-
-  ];
-
-
-
-
-  detalhes: any = {
-
-    status: null
-
-  };
-
-  imagenes: any = [];
-  img: any = [];
-  // mostrarElemento: boolean = true;
-
-  // ocultarFormulario(){
-
-  // this.mostrarElemento = false;
-
-  // }
-
-  switchEdit: boolean;
-
-  private user = this.authservice.getCurrentUser();
-  posiciones: any;
-  actualizarMarcador($event: any) {
-    throw new Error('Method not implemented.');
   }
 
 
@@ -116,9 +93,9 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
 
     this.registrarAcesso();
     this.titleService.setTitle('Detalles de cita');
-    const detalhes = this.activatedRoute.snapshot.data.detalhes.result;
-    const inicio = new Date(detalhes.start);
-    const fim = new Date(detalhes.end);
+    const detalhes = this.activatedRoute.snapshot.data['detalhes']['result'];
+    const inicio = new Date(detalhes['start']);
+    const fim = new Date(detalhes['end']);
     this.detalhes.status = detalhes.status;
     if (this.user.info.matricula == 1) {
       this.switchEdit = true;
@@ -139,8 +116,8 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
     this.longitud = detalhes.longitud;
     this.detalhes.url_web = detalhes.url_web;
 
-    this.filtrarPosiciones(detalhes.id);
-    this.imagenesAnexo(detalhes.id);
+    this.filtrarPosiciones(detalhes.id)
+    this.imagenesAnexo(detalhes.id)
     console.log(this.imagenesAnexo(detalhes.id));
 
 
@@ -171,35 +148,21 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   }
 
   registrarAcesso() {
-
     this.atividadesService.registrarAcesso().subscribe();
-
   }
 
   onEliminar(detalhes: any) {
-
     this.router.navigate(['../../eliminar', detalhes.id], {
-
       relativeTo: this.activatedRoute
-
     });
-
   }
-
 
   onEdit(detalhes: any) {
-
     detalhes.status = 2;
-
     this.router.navigate(['../../editar', detalhes.id], {
-
       relativeTo: this.activatedRoute
-
     });
-
   }
-
-
 
   onReschedule(detalhes: any) {
 
@@ -213,93 +176,57 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
 
   }
 
-
-
-
   onFinish(detalhes: any) {
-
     detalhes.status = 3;
-
     this.router.navigate(['../../finalizar', detalhes.id], {
-
       relativeTo: this.activatedRoute
-
     });
-
   }
-
-
-
 
   onDelete(detalhes: any) {
 
-    const confirm$ = this.confirmModalService.showConfirm(
-
+    let confirm$ = this.confirmModalService.showConfirm(
       'Borrar',
-
       'Confirmar borrado',
-
       'Desea realmente borrar la cita?',
-
       'Cancelar',
-
       'Confirmar'
-
     );
 
 
 
 
     confirm$
-
       .asObservable()
-
       .pipe(
-
         take(1),
-
         switchMap(result =>
-
           result ? this.agendaService.deleteCompromisso(detalhes.id) : EMPTY
-
         )
-
       )
 
       .subscribe({
-
         next: (success) => {
-
           this.pnotifyService.success('Cita borrada con exito!');
-
           this.router.navigate(['../../compromissos'], {
-
             relativeTo: this.activatedRoute
-
           });
-
         },
 
         error: (error) => {
-
           this.pnotifyService.error(
-
             'Error al borrar, intente nuevamente!'
-
           );
-
         }
-
       });
-
   }
-
 
   filtrarPosiciones(id_agenda: any) {
     this.agendaService.getPosicionPromotor(id_agenda).subscribe(
       (response: any) => {
         this.posiciones = response.result;
-      });
+      }
+    )
   }
 
   imagenesAnexo(id_agenda: any) {
@@ -330,11 +257,11 @@ export class ComercialAgendaDetalhesComponent implements OnInit {
   }
 
   mostrarImagen(urlImagen: string) {
-    this.abrirVentana('data:image/jpeg;base64;' + urlImagen);
+    this.abrirVentana("data:image/jpeg;base64;"+urlImagen);
   }
 
   abrirVentana(urlImagen: string) {
-    window.open(urlImagen, '_blank');
+    window.open(urlImagen, "_blank");
   }
 
   abrirModal(template: any) {

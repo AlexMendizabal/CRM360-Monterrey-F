@@ -34,6 +34,10 @@ export class ComercialCicloVendasCotacoesListaService {
   private onChangeEmpresaCotacao = new BehaviorSubject([]);
   empresaCotacao = this.onChangeEmpresaCotacao.asObservable();
 
+  private onPdf = new BehaviorSubject([]);
+  datosPdf = this.onPdf.asObservable();
+
+
   constructor(
     protected http: HttpClient,
     private comercialService: ComercialService,
@@ -79,4 +83,9 @@ export class ComercialCicloVendasCotacoesListaService {
       nrProposta,
     ]);
   }
+
+  datosPdfService(datosPdfTOdo) {
+    this.onPdf.next(datosPdfTOdo);
+  }
+
 }

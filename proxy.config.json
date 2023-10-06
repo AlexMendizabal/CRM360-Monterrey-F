@@ -9,7 +9,7 @@
     }
   },
   "/app/*": {
-    "target": "https://23.254.204.187/api/app/",
+    "target": "http://23.254.204.187/api/app/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,

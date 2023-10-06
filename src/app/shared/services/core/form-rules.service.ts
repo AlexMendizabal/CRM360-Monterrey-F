@@ -13,7 +13,7 @@ export class FormRulesService {
 
   constructor(protected http: HttpClient) {}
 
-  getRules(formRef: number): Observable<any> {
+    getRules(formRef: number): Observable<any> {
     return this.http.get(`${this.API}/form-rules/${formRef}`).pipe(take(1));
   }
 }

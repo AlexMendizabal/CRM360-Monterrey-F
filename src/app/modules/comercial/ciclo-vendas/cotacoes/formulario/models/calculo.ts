@@ -19,4 +19,10 @@ export interface ICalculoModel {
   nrPedidoCliente: string;
   codItemPedidoCliente: string;
   codProdutoCliente: string;
+  totalMaterial:number;
+  pesoEspecifico:number;
+  valorTotalBruto:number;
+  presentacionSeleccionado:number;
+  calculo: number;
+  descuentoAplicado: number;
 }

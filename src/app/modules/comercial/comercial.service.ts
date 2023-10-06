@@ -14,7 +14,7 @@ import { JsonResponse } from 'src/app/models/json-response';
 export class ComercialService {
   private readonly API = `http://23.254.204.187/api/comercial`;
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient) { }
 
   getEmpresas(params?: any): Observable<Object> {
     let httpParams = new HttpParams();
@@ -44,6 +44,57 @@ export class ComercialService {
       .pipe(take(1), retry(2));
   }
 
+  getAlmacen(params?: any): Observable<Object | JsonResponse> {
+    return this.http
+      .get(`${this.API}/almacen`)
+      .pipe(take(1), retry(2));
+  }
+  getLinhasId(id: any) {
+    return this.http.get(`${this.API}/linhas/${id}`).pipe(take(1), retry(2));
+  }
+
+  getSublineasId(id: any) {
+    return this.http.get(`${this.API}/sublineas/${id}`).pipe(take(1), retry(2));
+  }
+
+  sincronizarMateriales() {
+    return this.http.get(`${this.API}/sincronizar`).pipe(take(1), retry(2));
+  }
+  getMateriales(params: any) {
+    return this.http
+      .get(
+        `${this.API}/materiales`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
+  getMaterialesLista(params: any) {
+    return this.http
+      .get(
+        `${this.API}/materiales/lista`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
+  
+  
+
+  getMaterialesOferta(params: any) {
+    return this.http
+      .get(
+        `${this.API}/materiales_lista_precio`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
+  getMaterialesOfertaVendedor(params: any) {
+    return this.http
+      .get(
+        `${this.API}/materiales_lista_precio_vendedor`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
   getLinhas(params: any): Observable<Object> {
     let httpParams = new HttpParams();
 
@@ -90,5 +141,27 @@ export class ComercialService {
 
   getEscritorios(): Observable<Object> {
     return this.http.get(`${this.API}/escritorios`).pipe(take(1), retry(2));
+  }
+  getPresentacionMaterial(): Observable<Object> {
+    return this.http
+      .get(`${this.API}/presentacion_materiales`)
+      .pipe(take(1), retry(2));
+  }
+
+  getCliente(codCliente) {
+    return this.http.get(`${this.API}/clientes/detalhes/${codCliente}`).pipe(take(1));
+  }
+
+  getListarPrecios() {
+    return this.http.get(`${this.API}/vendedor/lista_precio`)
+    .pipe(take(1), retry(2));
+  }
+
+  getTodosVendedores() {
+    return this.http.get(`${this.API}/vendedor/allvendedor`)
+    .pipe(take(1), retry(2));
+  }
+  getCentrosLogisticos(){
+    return this.http.get(`${this.API}/almacen/centros_logisticos`);
   }
 }

@@ -80,7 +80,7 @@ export class ComercialAgendaService {
 
   private finalizarCompromisso(record: any) {
     return this.http
-      .post(`${this.API}/compromisso/finalizar`, record)
+      .post(`${this.API}/compromiso/actualizar`, record)
       .pipe(take(1), retry(2));
   }
 
@@ -103,21 +103,22 @@ export class ComercialAgendaService {
       .pipe(take(1), retry(2));
   }
 
-    reporte(params: any) {
-      console.log(params);
-        return this.http.post(`${this.API}/reporte`, params ).pipe(
-          take(1),
-          retry(2)
-        );
-      }
-    reporte_cliente(params: any) {
-      console.log('entro432')
-      console.log(params);
-        return this.http.post(`${this.API}/reportecliente`, params ).pipe(
-          take(1),
-          retry(2)
-        );
-      }
+  reporte(params: any) {
+    console.log(params);
+      return this.http.post(`${this.API}/reporte`, params ).pipe(
+        take(1),
+        retry(2)
+      );
+  }
+
+  reporte_cliente(params: any) {
+    console.log('entro432')
+    console.log(params);
+      return this.http.post(`${this.API}/reportecliente`, params ).pipe(
+        take(1),
+        retry(2)
+      );
+  }
 
   getPosicionPromotor(id: any) {
     return this.http.get(`${this.API}/getruta/${id}`).pipe(

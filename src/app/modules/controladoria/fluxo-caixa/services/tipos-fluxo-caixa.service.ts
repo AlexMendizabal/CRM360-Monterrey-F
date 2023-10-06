@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class ControladoriaTiposFluxoCaixaService {
-  private readonly BASE_URL: string = `http://23.254.204.187/api/api`;
+  private readonly BASE_URL: string = `https://crm360.monterrey.com.bo/api`;
   constructor(private http: HttpClient) {}
 
   getTiposFluxoCaixa(param) {

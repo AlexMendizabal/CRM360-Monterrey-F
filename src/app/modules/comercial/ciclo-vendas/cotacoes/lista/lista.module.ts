@@ -35,6 +35,7 @@ import { ComercialCicloVendasCotacoesListaModalTransfereFaturamentoComponent } f
 import { ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent } from './templates/button-imprimir/button-imprimir.component';
 import { ComercialCicloVendasCotacoesListaTemplatesButtonImprimirSeparacaoComponent } from './templates/button-imprimir-separacao/button-imprimir-separacao.component';
 import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoComponent } from './modal/historico-exclusao/historico-exclusao.component';
+import { PdfComponent } from './pdf/pdf.component';
 
 // Services
 import { ComercialCicloVendasCotacoesListaModalHistoricoComercialService } from './modal/historico-comercial/historico-comercial.service';
@@ -46,12 +47,14 @@ import { ComercialCicloVendasCotacoesListaModalDesdobrarPropostaService } from '
 import { ComercialCicloVendasCotacoesListaModalTrocarClienteService } from './modal/trocar-cliente/trocar-cliente.service';
 import { ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService } from './modal/transfere-faturamento/transfere-faturamento.service';
 import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
-
-
+import { RouterModule } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
+import { VistaComponent } from './vista/vista.component';
 
 
 @NgModule({
   declarations: [
+    PdfComponent,
     ComercialCicloVendasCotacoesListaComponent,
     ComercialCicloVendasCotacoesListaModalHistoricoComercialComponent,
     ComercialCicloVendasCotacoesListaModalHistoricoExclusaoComponent,
@@ -63,7 +66,8 @@ import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from '
     ComercialCicloVendasCotacoesListaModalDuplicarPropostaComponent,
     ComercialCicloVendasCotacoesListaModalDesdobrarPropostaComponent,
     ComercialCicloVendasCotacoesListaModalTrocarClienteComponent,
-    ComercialCicloVendasCotacoesListaModalTransfereFaturamentoComponent
+    ComercialCicloVendasCotacoesListaModalTransfereFaturamentoComponent,
+    VistaComponent,
   ],
   imports: [
     CommonModule,
@@ -80,8 +84,9 @@ import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from '
     SharedModule,
     TemplatesModule,
     ComercialClientesDashboardModule,
-    ComercialCicloVendasCotacoesFormularioModule,
-  ],
+    ComercialCicloVendasCotacoesFormularioModule
+
+    ],
   exports: [
     ComercialCicloVendasCotacoesListaComponent,
     ComercialCicloVendasCotacoesListaModalHistoricoComercialComponent,
@@ -107,6 +112,7 @@ import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from '
     ComercialCicloVendasCotacoesListaModalDesdobrarPropostaComponent,
     ComercialCicloVendasCotacoesListaModalTrocarClienteComponent,
     ComercialCicloVendasCotacoesListaModalTransfereFaturamentoComponent,
+
   ],
   providers: [
     ComercialCicloVendasCotacoesListaModalHistoricoComercialService,
@@ -117,7 +123,8 @@ import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from '
     ComercialCicloVendasCotacoesListaModalDuplicarPropostaService,
     ComercialCicloVendasCotacoesListaModalDesdobrarPropostaService,
     ComercialCicloVendasCotacoesListaModalTrocarClienteService,
-    ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService
+    ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService,
+
   ],
 })
 export class ComercialCicloVendasCotacoesListaModule {}

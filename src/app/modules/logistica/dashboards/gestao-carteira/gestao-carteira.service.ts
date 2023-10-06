@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class LogisticaDashboardGestaoCarteiraService {
-  private readonly API = `http://23.254.204.187/api/api`;
+  private readonly API = `https://crm360.monterrey.com.bo/api`;
 
   constructor(private http: HttpClient) { }
 
@@ -27,7 +27,7 @@ export class LogisticaDashboardGestaoCarteiraService {
     });
   }
 
-
+  
   getEmpresas() {
     const empresas = [
       {

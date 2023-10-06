@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class LogisticaDashboardFaturamentoFinanceiroService {
-  private readonly API = `http://23.254.204.187/api/api`;
+  private readonly API = `https://crm360.monterrey.com.bo/api`;
 
   constructor(private http: HttpClient) { }
 
@@ -39,7 +39,7 @@ export class LogisticaDashboardFaturamentoFinanceiroService {
       observe: 'response',
     });
   }
-
+  
   getFaturamentoCteComplementar(params?) {
     return this.http.get(`${this.API}/logistica/indicadores/faturamento/complementares`, {
       params: params,

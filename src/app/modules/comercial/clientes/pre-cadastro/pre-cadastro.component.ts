@@ -74,7 +74,7 @@ export class ComercialClientesPreCadastroComponent
 
   form: FormGroup;
   formChanged = false;
-  tipoPessoa = 'F';
+  tipoPessoa : any = {};
   submittingForm = false;
 
   maxLengthRules: any = {};
@@ -100,20 +100,20 @@ export class ComercialClientesPreCadastroComponent
   }
 
   ngOnInit() {
-    this.titleService.setTitle('Pré-cadastro');
+    this.titleService.setTitle('Pre-Registro');
     this.getFormFields();
     this.activatedRoute.queryParams.subscribe((queryParams: any) => {
       let documento = null;
 
-      if (Object.keys(queryParams).length > 0) {
-        if (queryParams['cpf']) {
-          this.tipoPessoa = 'F';
-          documento = queryParams['cpf'];
-        } else if (queryParams['cnpj']) {
-          this.tipoPessoa = 'J';
-          documento = queryParams['cnpj'];
-        }
-      }
+      // if (Object.keys(queryParams).length > 0) {
+      //   if (queryParams['cpf']) {
+      //     this.tipoPessoa = 'F';
+      //     documento = queryParams['cpf'];
+      //   } else if (queryParams['cnpj']) {
+      //     this.tipoPessoa = 'J';
+      //     documento = queryParams['cnpj'];
+      //   }
+      // }
 
       this.registrarAcesso();
       this.setMaxLengthRules();
@@ -142,7 +142,11 @@ export class ComercialClientesPreCadastroComponent
           }
 
           if (response[1].responseCode === 200) {
-            this.cnaes = response[1].result;
+            this.cnaes = response[1].result.map(cnae => ({
+              id: cnae.codigo,
+              descricao: cnae.descricao,
+              codigo: cnae.codigo 
+            }));
           } else {
             this.handleFormFieldsError();
           }
@@ -161,169 +165,184 @@ export class ComercialClientesPreCadastroComponent
   setMaxLengthRules() {
     this.maxLengthRules = this.activatedRoute.snapshot.data.rules.data;
     this.maxLengthMessages = {
-      nome: `Nome deve conter até ${this.maxLengthRules.nome} caracteres.`,
-      sobrenome: `Sobrenome deve conter até ${this.maxLengthRules.sobrenome} caracteres.`,
-      razaoSocial: `Razão social deve conter até ${this.maxLengthRules.razaoSocial} caracteres.`,
-      nomeFantasia: `Nome fantasia deve conter até ${this.maxLengthRules.nomeFantasia} caracteres.`,
-      emailNfe: `E-mail NF-e deve conter até ${this.maxLengthRules.emailNfe} caracteres.`,
-      // emailMarketing: `E-mail Marketing deve conter até ${this.maxLengthRules.emailNfe} caracteres.`,
+      nome: `El nombre debe contener ${this.maxLengthRules.nome} caracteres.`,
+      apellido1: `Apellido debe contener ${this.maxLengthRules.apellido1} caracteres.`,
+      apellido2: `Apellido debe contener ${this.maxLengthRules.apellido1} caracteres.`,
+      razaoSocial: `El nombre de la empresa debe contener ${this.maxLengthRules.razaoSocial} caracteres.`,
+      nomeFantasia: `El nombre comercial debe contener hasta ${this.maxLengthRules.nomeFantasia} caracteres.`,
+      email: `El correo electrónico debe llegar a ${this.maxLengthRules.email} caracteres.`,
     };
   }
 
   setFormBuilder(documento: string) {
-    let cpf = null;
-    let cnpj = null;
+    
 
-    if (documento != null) {
-      if (this.tipoPessoa == 'F') {
-        cpf = documento;
-      } else if (this.tipoPessoa == 'J') {
-        cnpj = documento;
-      }
-    }
+    // if (documento != null) {
+    //   if (this.tipoPessoa == 'F') {
+    //     cpf = documento;
+    //   } else if (this.tipoPessoa == 'J') {
+    //     cnpj = documento;
+    //   }
+    // }
 
     this.form = this.formBuilder.group({
-      cpf: [cpf, [Validators.nullValidator]],
+      cnpj_cpf: [null,Validators.required],
       nome: [
         null,
         [Validators.required, Validators.maxLength(this.maxLengthRules.nome)],
       ],
-      sobrenome: [
+      apellido1: [
         null,
         [
           Validators.required,
-          Validators.maxLength(this.maxLengthRules.sobrenome),
+          Validators.maxLength(this.maxLengthRules.apellido1),
         ],
       ],
-      cnpj: [cnpj, [NgBrazilValidators.cnpj]],
+      apellido2: [
+        null,
+        [
+          Validators.required,
+          Validators.maxLength(this.maxLengthRules.apellido2),
+        ],
+      ],
+      
+      nit: [null],
+      contacto:[null],
       razaoSocial: [null],
       nomeFantasia: [null],
       vendedor: [null],
       cnae: [null],
-      emailNfe: [
-        null,
+      email: [null,
         [
-          Validators.required,
           Validators.email,
-          Validators.maxLength(this.maxLengthRules.emailNfe),
+          Validators.maxLength(this.maxLengthRules.email),
         ],
       ],
-      // emailMarketing: [
-      //   null,
-      //   [Validators.email, Validators.maxLength(this.maxLengthRules.emailNfe)],
-      // ],
-      telefone: [null, [Validators.required]],
-      atividadePrincipal: this.formBuilder.array([]),
-      atividadeSecundaria: this.formBuilder.array([]),
+      telefone: [null],
+      celular: [null],
+      direccion: [null],
+      tipopessoa: [null],
+      // atividadePrincipal: this.formBuilder.array([]),
+      // atividadeSecundaria: this.formBuilder.array([]),
+      //CAMPOS DE CONTACTO 
+      nombrecontacto: [null],
+      apellido_contacto: [null],
+      apellido2_contacto: [null],
+      telefonocontacto: [null],
+      celularcontacto: [null],
+      direccion_contacto: [null],
     });
 
-    this.setType(this.tipoPessoa);
-
-    if (documento != null) {
-      if (this.tipoPessoa == 'F') {
-        this.validateCPF();
-      } else if (this.tipoPessoa == 'J') {
-        this.validateCNPJ();
+    this.form.get('tipopessoa').valueChanges.subscribe((value) => {
+      if (value === 'P' || value === 'G' || value === 'E') {
+        this.form.get('nit').setValidators([Validators.required]);
+        this.form.get('razaoSocial').setValidators([Validators.required]);
+      } else {
+        this.form.get('nit').clearValidators();
+        this.form.get('razaoSocial').clearValidators();
       }
-    }
+      this.form.get('nit').updateValueAndValidity();
+      this.form.get('razaoSocial').updateValueAndValidity();
+    });
+     
   }
 
   setType(type: string) {
-    this.tipoPessoa = type;
+    // this.tipoPessoa = type;
     this.form.reset();
 
-    if (this.tipoPessoa == 'F') {
-      this.form.controls.cpf.setValidators([Validators.required]);
-      this.form.controls.cpf.updateValueAndValidity();
-      this.form.controls.nome.setValidators([
-        Validators.required,
-        Validators.maxLength(this.maxLengthRules.nome),
-      ]);
-      this.form.controls.nome.updateValueAndValidity();
-      this.form.controls.sobrenome.setValidators([
-        Validators.required,
-        Validators.maxLength(this.maxLengthRules.sobrenome),
-      ]);
-      this.form.controls.sobrenome.updateValueAndValidity();
+    // if (this.tipoPessoa == 'F') {
+    //   this.form.controls.cpf.setValidators([Validators.required]);
+    //   this.form.controls.cpf.updateValueAndValidity();
+    //   this.form.controls.nome.setValidators([
+    //     Validators.required,
+    //     Validators.maxLength(this.maxLengthRules.nome),
+    //   ]);
+    //   this.form.controls.nome.updateValueAndValidity();
+    //   this.form.controls.sobrenome.setValidators([
+    //     Validators.required,
+    //     Validators.maxLength(this.maxLengthRules.sobrenome),
+    //   ]);
+    //   this.form.controls.sobrenome.updateValueAndValidity();
 
-      this.form.controls.cnpj.clearValidators();
-      this.form.controls.cnpj.updateValueAndValidity();
-      this.form.controls.razaoSocial.clearValidators();
-      this.form.controls.razaoSocial.updateValueAndValidity();
-      this.form.controls.nomeFantasia.clearValidators();
-      this.form.controls.nomeFantasia.updateValueAndValidity();
-      this.form.controls.cnae.clearValidators();
-      this.form.controls.cnae.updateValueAndValidity();
-    } else if (this.tipoPessoa == 'J') {
-      this.form.controls.cnpj.setValidators([Validators.required]);
-      this.form.controls.cnpj.updateValueAndValidity();
-      this.form.controls.razaoSocial.setValidators([
-        Validators.required,
-        Validators.maxLength(this.maxLengthRules.razaoSocial),
-      ]);
-      this.form.controls.razaoSocial.updateValueAndValidity();
-      this.form.controls.nomeFantasia.setValidators([
-        Validators.required,
-        Validators.maxLength(this.maxLengthRules.nomeFantasia),
-      ]);
-      this.form.controls.nomeFantasia.updateValueAndValidity();
-      this.form.controls.cnae.setValidators([Validators.required]);
-      this.form.controls.cnae.updateValueAndValidity();
+    //   this.form.controls.cnpj.clearValidators();
+    //   this.form.controls.cnpj.updateValueAndValidity();
+    //   this.form.controls.razaoSocial.clearValidators();
+    //   this.form.controls.razaoSocial.updateValueAndValidity();
+    //   this.form.controls.nomeFantasia.clearValidators();
+    //   this.form.controls.nomeFantasia.updateValueAndValidity();
+    //   this.form.controls.cnae.clearValidators();
+    //   this.form.controls.cnae.updateValueAndValidity();
+    // } else if (this.tipoPessoa == 'J') {
+    //   this.form.controls.cnpj.setValidators([Validators.required]);
+    //   this.form.controls.cnpj.updateValueAndValidity();
+    //   this.form.controls.razaoSocial.setValidators([
+    //     Validators.required,
+    //     Validators.maxLength(this.maxLengthRules.razaoSocial),
+    //   ]);
+    //   this.form.controls.razaoSocial.updateValueAndValidity();
+    //   this.form.controls.nomeFantasia.setValidators([
+    //     Validators.required,
+    //     Validators.maxLength(this.maxLengthRules.nomeFantasia),
+    //   ]);
+    //   this.form.controls.nomeFantasia.updateValueAndValidity();
+    //   this.form.controls.cnae.setValidators([Validators.required]);
+    //   this.form.controls.cnae.updateValueAndValidity();
 
-      this.form.controls.cpf.clearValidators();
-      this.form.controls.cpf.updateValueAndValidity();
-      this.form.controls.nome.clearValidators();
-      this.form.controls.nome.updateValueAndValidity();
-      this.form.controls.sobrenome.clearValidators();
-      this.form.controls.sobrenome.updateValueAndValidity();
-    }
+    //   this.form.controls.cpf.clearValidators();
+    //   this.form.controls.cpf.updateValueAndValidity();
+    //   this.form.controls.nome.clearValidators();
+    //   this.form.controls.nome.updateValueAndValidity();
+    //   this.form.controls.sobrenome.clearValidators();
+    //   this.form.controls.sobrenome.updateValueAndValidity();
+    // }
   }
 
-  get atividadePrincipal() {
-    return this.form.get('atividadePrincipal') as FormArray;
-  }
+  // get atividadePrincipal() {
+  //   return this.form.get('atividadePrincipal') as FormArray;
+  // }
 
-  get atividadeSecundaria() {
-    return this.form.get('atividadeSecundaria') as FormArray;
-  }
+  // get atividadeSecundaria() {
+  //   return this.form.get('atividadeSecundaria') as FormArray;
+  // }
 
-  pushAtividadePrincipal(atividade: any) {
-    while (this.atividadePrincipal.length !== 0) {
-      this.atividadePrincipal.removeAt(0);
-    }
+  // pushAtividadePrincipal(atividade: any) {
+  //   while (this.atividadePrincipal.length !== 0) {
+  //     this.atividadePrincipal.removeAt(0);
+  //   }
 
-    atividade.code = atividade.code.replace(/\D/g, '');
+  //   atividade.code = atividade.code.replace(/\D/g, '');
 
-    if (atividade.code != '0000000') {
-      this.atividadePrincipal.push(
-        this.formBuilder.group({
-          cnae: [atividade.code],
-          descricao: [atividade.text],
-        })
-      );
-    }
-  }
+  //   if (atividade.code != '0000000') {
+  //     this.atividadePrincipal.push(
+  //       this.formBuilder.group({
+  //         cnae: [atividade.code],
+  //         descricao: [atividade.text],
+  //       })
+  //     );
+  //   }
+  // }
 
-  pushAtividadeSecundaria(atividades: any) {
-    while (this.atividadeSecundaria.length !== 0) {
-      this.atividadeSecundaria.removeAt(0);
-    }
+  // pushAtividadeSecundaria(atividades: any) {
+  //   while (this.atividadeSecundaria.length !== 0) {
+  //     this.atividadeSecundaria.removeAt(0);
+  //   }
 
-    if (atividades.length > 0) {
-      for (let i = 0; i < atividades.length; i++) {
-        atividades[i].code = atividades[i].code.replace(/\D/g, '');
+  //   if (atividades.length > 0) {
+  //     for (let i = 0; i < atividades.length; i++) {
+  //       atividades[i].code = atividades[i].code.replace(/\D/g, '');
 
-        if (atividades[i].code != '0000000') {
-          this.atividadeSecundaria.push(
-            this.formBuilder.group({
-              cnae: [atividades[i].code],
-              descricao: [atividades[i].text],
-            })
-          );
-        }
-      }
-    }
-  }
+  //       if (atividades[i].code != '0000000') {
+  //         this.atividadeSecundaria.push(
+  //           this.formBuilder.group({
+  //             cnae: [atividades[i].code],
+  //             descricao: [atividades[i].text],
+  //           })
+  //         );
+  //       }
+  //     }
+  //   }
+  // }
 
   onFieldError(field: string) {
     if (this.onFieldInvalid(field) != '') {
@@ -364,90 +383,6 @@ export class ComercialClientesPreCadastroComponent
     }
   }
 
-  validateCPF() {
-    if (this.form.controls.cpf.valid) {
-      this.loaderNavbar = true;
-      this.dadosCliente = {};
-
-      this.clientesService
-        .getExisteCpfCnpj(this.form.value.cpf.replace(/\D/g, ''), true)
-        .pipe(
-          finalize(() => {
-            this.loaderNavbar = false;
-          })
-        )
-        .subscribe((response: any) => {
-          if (response.responseCode === 200) {
-            if (response.result.verificacao == 1) {
-              this.form.controls.cpf.setErrors({
-                incorrect: true,
-              });
-              this.pnotifyService.notice('O CPF informado já está cadastrado.');
-
-              if (Object.keys(response.result.dadosCliente).length > 0) {
-                this.formChanged = false;
-                this.dadosCliente = response.result.dadosCliente;
-                this.showDetails();
-              }
-            }
-          }
-        });
-    }
-  }
-
-  validateCNPJ() {
-    if (this.form.controls.cnpj.valid) {
-      this.loaderNavbar = true;
-      this.dadosCliente = {};
-
-      this.clientesService
-        .getExisteCpfCnpj(this.form.value.cnpj.replace(/\D/g, ''), true)
-        .pipe(
-          finalize(() => {
-            this.loaderNavbar = false;
-          })
-        )
-        .subscribe((response: any) => {
-          if (response.responseCode === 200) {
-            if (response.result.verificacao == 1) {
-              this.form.controls.cnpj.setErrors({
-                incorrect: true,
-              });
-              this.pnotifyService.notice(
-                'O CNPJ informado já está cadastrado.'
-              );
-
-              if (Object.keys(response.result.dadosCliente).length > 0) {
-                this.formChanged = false;
-                this.dadosCliente = response.result.dadosCliente;
-                this.showDetails();
-              }
-            } else {
-              this.loaderNavbar = true;
-
-              this.getCnpjData(this.form.value.cnpj)
-                .pipe(
-                  finalize(() => {
-                    this.loaderNavbar = false;
-                  })
-                )
-                .subscribe((response: any) => {
-                  this.form.controls.razaoSocial.setValue(response.nome);
-                  this.form.controls.nomeFantasia.setValue(response.fantasia);
-
-                  if (response.atividade_principal[0].code) {
-                    this.checkCnae(response.atividade_principal[0]);
-                  }
-
-                  this.pushAtividadePrincipal(response.atividade_principal[0]);
-                  this.pushAtividadeSecundaria(response.atividades_secundarias);
-                });
-            }
-          }
-        });
-    }
-  }
-
   showDetails(): void {
     this.modalRef = this.modalService.show(
       this.modalDetalhesCliente,
@@ -470,72 +405,70 @@ export class ComercialClientesPreCadastroComponent
     }
   }
 
-  checkCnae(data: any) {
-    const cnae = {
-      id: parseInt(data.code.replace(/\D/g, '')),
-      descricao: data.text,
-    };
-
-    let exists = false;
-
-    for (let i = 0; i < this.cnaes.length; i++) {
-      if (this.cnaes[i].id == cnae.id) {
-        exists = true;
-      }
-    }
-
-    if (!exists) {
-      this.cnaes.push(cnae);
-    }
-
-    this.form.controls.cnae.setValue(cnae.id);
-  }
-
-  getCnpjData(cnpj: string) {
-    return this.cnpjService.getData(cnpj);
-  }
 
   onSubmit() {
     /* this.postAkna(20081);
     return; */
-
+    
+    const tipoPessoaOptions = {
+      S: 'Sociedades',
+      P: 'Privado',
+      G: 'Gobierno',
+      E: 'Empleado'
+    };
+    const tipopessoa = this.form.value.tipopessoa;
+    const tipopersona = tipoPessoaOptions[tipopessoa];
+  
     if (this.form.valid) {
       this.loaderNavbar = true;
       this.submittingForm = true;
       let formObj = {};
+  
+      
+      formObj = {
+        tipo_pessoa: tipopessoa,
+        tipo_persona: tipopersona,
+        carnet: this.form.value.cnpj_cpf,
+        id_vendedor: this.form.value.vendedor,
+        nombre: this.form.value.nome,
+        apellido1: this.form.value.apellido1,
+        apellido2: this.form.value.apellido2,
+        razonSocial: this.form.value.razaoSocial,
+        nomeFantasia: this.form.value.nomeFantasia,
+        nit: this.form.value.nit,
+        id_rubro: this.form.value.cnae,
+        email: this.form.value.email,
+        // emailMarketing: this.form.value.emailMarketing,
+        telefono: this.form.value.telefone,
+        celular: this.form.value.celular,
+        // atividadePrincipal: this.form.value.atividadePrincipal,
+        // atividadeSecundaria: this.form.value.atividadeSecundaria,
+        Ubicacion: [
+          {
+              direccion: this.form.value.direccion,
+              id_ciudad: ''
+          }
+        ],
+        nombre_factura:'',
+        contactos:[
+          {
+        contacto:this.form.value.contacto,
+        nombres_contacto:this.form.value.nombrecontacto,
+        apellido_contacto:this.form.value.apellido_contacto,
+        apellido2_contacto:this.form.value.apellido2_contacto,
+        telefono_contacto:this.form.value.telefonocontacto,
+        celular_contacto:this.form.value.celularcontacto,
+        direccion_contacto:this.form.value.direccion_contacto,
+        latitude_contacto:0,
+        longitude_contacto:0,
+        codigo_cliente:'',
+        }
+      ],
 
-      if (this.tipoPessoa == 'F') {
-        formObj = {
-          tipoPessoa: this.tipoPessoa,
-          cpf: this.form.value.cpf,
-          vendedor: this.form.value.vendedor,
-          nome: this.form.value.nome,
-          sobrenome: this.form.value.sobrenome,
-          emailNfe: this.form.value.emailNfe,
-          // emailMarketing: this.form.value.emailMarketing,
-          telefone: this.form.value.telefone,
-        };
-      } else if (this.tipoPessoa == 'J') {
-        formObj = {
-          tipoPessoa: this.tipoPessoa,
-          cnpj: this.form.value.cnpj,
-          vendedor: this.form.value.vendedor,
-          razaoSocial: this.form.value.razaoSocial,
-          nomeFantasia: this.form.value.nomeFantasia,
-          cnae: this.functionsService.completaZeroEsquerda(
-            this.form.value.cnae,
-            7
-          ),
-          emailNfe: this.form.value.emailNfe,
-          // emailMarketing: this.form.value.emailMarketing,
-          telefone: this.form.value.telefone,
-          atividadePrincipal: this.form.value.atividadePrincipal,
-          atividadeSecundaria: this.form.value.atividadeSecundaria,
-        };
-      }
-
+      };
+  
       this.clientesService
-        .postCliente(formObj)
+        .sapPostClient(formObj)
         .pipe(
           finalize(() => {
             this.loaderNavbar = false;
@@ -544,32 +477,26 @@ export class ComercialClientesPreCadastroComponent
         )
         .subscribe(
           (response: any) => {
-            if (response.responseCode === 200) {
-              this.pnotifyService.success('O cliente foi cadastrado.');
+            console.log(response);
+            if (response.responseCode === 200 && response.detalle === "Se creo registro") {
+              this.pnotifyService.success('Cliente registrado.');
               this.formChanged = false;
-
-              /* this.postAkna(response.result); */
               this.router.navigate(['../cadastro', response.result], {
                 relativeTo: this.activatedRoute,
               });
             } else if (response.responseCode === 403) {
-              this.pnotifyService.notice(
-                'Falha ao atribuir vendedor ao cadastro.'
-              );
-            } else {
-              this.pnotifyService.error(
-                'Ocorreu um erro ao cadastrar o cliente.'
-              );
+              this.pnotifyService.notice('Falha ao atribuir vendedor ao cadastro.');
+            } else {  
+              this.pnotifyService.notice(` ${response.detalle}`);
             }
           },
           (error: any) => {
-            this.pnotifyService.error(
-              'Ocorreu um erro ao cadastrar o cliente.'
-            );
+            this.pnotifyService.notice('Ocorreu um erro ao cadastrar o cliente.');
           }
         );
+        
     }
-  }
+  }  
 
   onInput() {
     this.formChanged = true;
@@ -590,28 +517,4 @@ export class ComercialClientesPreCadastroComponent
     this.location.back();
   }
 
-  // Função que envia e-mail de boas vindas  para um novo cliente e grava o log dessa ação.
-  /* postAkna(cliente){
-    let param = {};
-
-    if(this.form.value['nome']){
-      param = {
-        'codigoCliente'   : cliente,
-        'nomeRemetente'   : this.form.value['nome'] + ' ' + this.form.value['sobrenome'],
-        'emailRemetente'  : this.form.value['emailNfe']
-      }
-    } else {
-      param = {
-        'codigoCliente'   : cliente,
-        'nomeRemetente'   : this.form.value['razaoSocial'],
-        'emailRemetente'  : this.form.value['emailNfe']
-      }
-    }
-
-    this.preCadastroService
-      .postAkna(param)
-      .subscribe((response) => {
-      console.log(response)
-    });
-  } */
 }

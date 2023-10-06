@@ -8,6 +8,7 @@ import { ComercialCicloVendasCotacoesFormularioService } from '../../formulario.
 // Interfaces
 import { ISimilaridadeModel } from '../../models/similaridade';
 import { JsonResponse } from 'src/app/models/json-response';
+import { array } from '@amcharts/amcharts4/core';
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-formulario-materiais-relacionados',
@@ -22,18 +23,20 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
   @Input('codEndereco') codEndereco: number;
   @Input('codFormaPagamento') codFormaPagamento: number;
   @Input('freteConta') freteConta: number;
-  
+
 
   materiaisRelacionados: Array<ISimilaridadeModel> = [];
   materiaisRelacionadosLoader: boolean;
-  
+
+  filtro: Array<any> = [];
+
 
   vendasGerais: Array<ISimilaridadeModel> = [];
   vendasGeraisLoader: boolean;
-  
+
   vendasCliente: Array<ISimilaridadeModel> = [];
   vendasClienteLoader: boolean;
-  
+
   show: boolean = true;
 
   itemsPerSlide = 4;
@@ -42,39 +45,53 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
   constructor(
     private cotacoesService: ComercialCicloVendasCotacoesService,
     private formularioService: ComercialCicloVendasCotacoesFormularioService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.onSelectVendasGerais();
+    //this.onSelectVendasGerais();
+    this.onSelectMateriaisRelacionados();
+  }
+  cambiar(){
+    this.onSelectMateriaisRelacionados();
   }
 
   ngOnChanges(event: any): void {
-    this.onSelectVendasGerais();
-    // if (event.materiais) {
-    //   const previousValue = event.materiais.previousValue || [];
-    //   const currentValue = event.materiais.currentValue;
+    //this.onSelectVendasGerais();
+    //this.onSelectMateriaisRelacionados();
+    
+
+    //this.onSelectMateriaisRelacionados();
+    /* if (event.materiais) {
+      const previousValue = event.materiais.previousValue || [];
+      const currentValue = event.materiais.currentValue;
 
 
-    //   /* const materiais = currentValue.filter(
-    //     (codMaterial: number) => !previousValue.includes(codMaterial)
-    //   ); */
+      const materiais = currentValue.filter(
+        (codMaterial: number) => !previousValue.includes(codMaterial)
+      );
 
-    //   previousValue.includes(event.materiais.codMaterial);
+      previousValue.includes(event.materiais.codMaterial);
 
-    //   this.postVendasGerais(currentValue);
+      console.log(currentValue);
 
-    // }
+      this.postMateriaisRelacionados(currentValue);
+
+    } */
   }
 
-  onSelectVendasGerais(){
+  onSelectVendasGerais() {
     this.postVendasGerais(this.materiais);
   }
 
-  onSelectVendasCliente(){
+  onSelectVendasCliente() {
     this.postVendasCliente(this.materiais);
   }
 
-  onSelectMateriaisRelacionados(){
+  onSelectMateriaisRelacionados() {
+    /* console.log('click');
+    alert('click'); */
+    /* console.log('aqui');
+    console.log(this.materiais) */
     this.postMateriaisRelacionados(this.materiais);
   }
 
@@ -105,8 +122,9 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
               return o;
             }
           );
-          
-          
+
+
+
           this.vendasGerais = [
             ...this.vendasGerais,
             ...vendasGerais,
@@ -119,7 +137,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
         }
       });
 
-    
+
   }
 
   postVendasCliente(materiais: any): void {
@@ -149,7 +167,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
               return o;
             }
           );
-          
+
           this.vendasCliente = [
             ...this.vendasCliente,
             ...vendasCliente,
@@ -160,15 +178,17 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
             this.noWrapSlides = false;
           }
         }
-    });
+      });
   }
 
   postMateriaisRelacionados(materiais: any): void {
-    
+
+    /* console.log(materiais); */
+
     this.materiaisRelacionadosLoader = true;
     this.materiaisRelacionados = [];
     this.cotacoesService
-      .postMateriaisRelacionados({
+      .postMaterialesRelacionados({
         codEmpresa: this.codEmpresa,
         codMaterial: materiais.codMaterial,
         codCliente: this.codCliente,
@@ -182,15 +202,17 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
         })
       )
       .subscribe((response: JsonResponse) => {
-        if (response.success === true) {
-          const materiaisRelacionados = response.data.map(
+        if (response.responseCode == 200) {
+          //console.log(response.result);
+          const materiaisRelacionados = response.result.materiales.map(
             (material: ISimilaridadeModel) => {
               let o = Object.assign({}, material);
               o.onCarrinho = false;
               return o;
             }
           );
-          
+          this.filtro = response.result.filtro;
+
           this.materiaisRelacionados = [
             ...this.materiaisRelacionados,
             ...materiaisRelacionados,
@@ -227,7 +249,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
       : 'px-5';
   }
 
-  onShow(){
+  onShow() {
     this.show = !this.show;
   }
 }

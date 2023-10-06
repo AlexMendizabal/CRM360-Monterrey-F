@@ -45,4 +45,5 @@ export interface ICarrinhoModel {
   nrPedidoCliente: string;
   codItemPedidoCliente: string;
   codProdutoCliente: string;
+  precio:number;
 }

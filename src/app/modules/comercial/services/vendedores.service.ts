@@ -28,9 +28,9 @@ export class ComercialVendedoresService {
     return this.http.get(`${this.API}/lista`).pipe(take(1), retry(2));
   }
 
-  getVendedoresSucursal(id: number){
+  getVendedoresSucursal(id: number) {
     return this.http
-    .get(`${this.API}/sucursal-vendedor/${id}`)
+      .get(`${this.API}/sucursal-vendedor/${id}`)
   }
 
   getGestiones() {
@@ -40,6 +40,15 @@ export class ComercialVendedoresService {
   getCarteiraClientes(params?): Observable<Object | JsonResponse> {
     return this.http
       .get(`${this.API}/carteira-clientes`,
+        {
+          params: params
+        })
+      .pipe(take(1), retry(2));
+  }
+
+  getCarteiraClientesCotizacion(params?): Observable<Object | JsonResponse> {
+    return this.http
+      .get(`${this.API}/carteira-clientes-cotizacion`,
         {
           params: params
         })
@@ -57,6 +66,21 @@ export class ComercialVendedoresService {
   getVinculoOperadores() {
     return this.http
       .get(`${this.API}/vinculo-operadores`)
+      .pipe(take(1), retry(2));
+  }
+  getDetalleVendedor(params) {
+  return this.http
+      .get(`${this.API}/detalles_vendedor`,
+        {
+          params: params
+        })
+      .pipe(take(1), retry(2));
+  }
+
+  getRubros(){
+    
+    return this.http
+      .get(`${this.API}/rubros`)
       .pipe(take(1), retry(2));
   }
 }

@@ -159,7 +159,7 @@ export class TecnologiaInformacaoEstoqueModeloListaComponent
         routerLink: `/tecnologia-informacao/home`,
       },
       {
-        descricao: 'Estoque',
+        descricao: 'Inventario',
         routerLink: `/tecnologia-informacao/estoque/${id}`,
       },
       {

@@ -209,7 +209,7 @@ export class ComercialCicloVendasPedidosProducaoTelasListaComponent
     this.setBreadCrumb();
     this.getFilterValues();
     this.setFormFilter();
-    this.titleService.setTitle('Cotizaciones y Ofertas');
+    this.titleService.setTitle('Cotizaciones y pedidos');
     this.onDetailPanelEmitter();
     // this.setFormProducao();
     // this.setFormExpedicao();
@@ -233,7 +233,7 @@ export class ComercialCicloVendasPedidosProducaoTelasListaComponent
         routerLink: `/comercial/home`,
       },
       {
-        descricao: 'Ciclo de Vendas',
+        descricao: 'Ciclo de ventas',
         routerLink: `/comercial/ciclo-vendas`,
       },
       {
