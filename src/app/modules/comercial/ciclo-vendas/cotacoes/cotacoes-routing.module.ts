@@ -18,7 +18,7 @@ import { ComercialCicloVendasCotacoesFormularioModule } from './formulario/formu
 // Components
 import { ComercialCicloVendasCotacoesListaComponent } from './lista/lista.component';
 import { ComercialCicloVendasCotacoesFormularioComponent } from './formulario/formulario.component';
-
+import { VistaComponent } from './lista/vista/vista.component';
 
 const routes: Routes = [
   {
@@ -37,6 +37,7 @@ const routes: Routes = [
       profile: ComercialCicloVendasCotacoesListaProfilesResolverGuard
     },
   },
+
   {
     path: 'novo/:idReservado/:codEmpresa',
     component: ComercialCicloVendasCotacoesFormularioComponent,
@@ -91,6 +92,10 @@ const routes: Routes = [
         path: 'pdf',
         component: PdfComponent,
         pathMatch: 'full',
+      },
+      {
+        path: 'vista/:id_oferta',
+        component: VistaComponent
       },
     ]
   },

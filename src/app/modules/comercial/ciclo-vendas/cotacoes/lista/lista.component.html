@@ -274,8 +274,11 @@
               <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.lista_precio }}</td>
               <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.modo_entrega }}</td>
               <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.estado_oferta }}</td>
-              <td class=""><a class="dropdown-item" routerLink="/pdf" (click)="onImprimir(pedido.id_oferta)"><i class="fas fa-print"></i><span class="text-uppercase">
+              <td class="">
+                <a class="dropdown-item" routerLink="/pdf" (click)="onImprimir(pedido.id_oferta)"><i class="fas fa-print"></i><span class="text-uppercase">
                   PDF</span></a>
+                <a class="dropdown-item" routerLink="/vista" (click)="onVista(pedido.id_oferta)"><i class="fas fa-print"></i><span class="text-uppercase">
+                    Vista</span></a>
               </td>
               <!--
               <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeEmpresa | uppercase }}</td>

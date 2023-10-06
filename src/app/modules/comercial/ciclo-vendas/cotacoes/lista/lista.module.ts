@@ -49,6 +49,7 @@ import { ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService } fro
 import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
+import { VistaComponent } from './vista/vista.component';
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import { BrowserModule } from '@angular/platform-browser';
     ComercialCicloVendasCotacoesListaModalDesdobrarPropostaComponent,
     ComercialCicloVendasCotacoesListaModalTrocarClienteComponent,
     ComercialCicloVendasCotacoesListaModalTransfereFaturamentoComponent,
+    VistaComponent,
   ],
   imports: [
     CommonModule,

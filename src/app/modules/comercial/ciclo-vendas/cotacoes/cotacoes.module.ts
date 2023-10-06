@@ -6,6 +6,7 @@ import { ComercialCicloVendasCotacoesRoutingModule } from './cotacoes-routing.mo
 import { ComercialCicloVendasCotacoesListaModule } from './lista/lista.module';
 import { ComercialCicloVendasCotacoesFormularioModule } from './formulario/formulario.module';
 
+
 // Interfaces
 import { FormDeactivateGuard } from 'src/app/guards/form-deactivate.guard';
 

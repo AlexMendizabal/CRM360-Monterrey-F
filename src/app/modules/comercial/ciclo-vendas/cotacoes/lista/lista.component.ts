@@ -50,7 +50,6 @@ import { ComercialCicloVendasCotacoesListaModalEmailCotacaoService } from './mod
 import { ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService } from './modal/transfere-faturamento/transfere-faturamento.service';
 import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
 
-
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { Subtitles } from 'src/app/shared/modules/subtitles/subtitles';
@@ -59,6 +58,7 @@ import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/
 import { JsonResponse } from 'src/app/models/json-response';
 import { IAssociacao } from '../../../cadastros/propostas/associacao-situacoes-proposta/models/associacao-situacoes-proposta';
 import { PdfComponent } from './pdf/pdf.component';
+import { VistaComponent } from './vista/vista.component';
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-lista',
@@ -146,6 +146,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   };
 
   modalRef: BsModalRef;
+  modalRef2:BsModalRef;
   loadingModal = false;
 
   contatosLoaded = false;
@@ -198,7 +199,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     private emailCotacaoService: ComercialCicloVendasCotacoesListaModalEmailCotacaoService,
     private modalService: BsModalService,
     private resolver: ComponentFactoryResolver
-   // private pdfService: PdfService
+    // private pdfService: PdfService
   ) {
     this.localeService.use('pt-br');
     this.bsConfig = Object.assign(
@@ -1276,43 +1277,80 @@ export class ComercialCicloVendasCotacoesListaComponent
 
     this.onFilter();
   }
+  onVista(id_oferta: number): void {
+    //this.router.navigate([]).then(result => {  window.open("/comercial/ciclo-vendas/23/cotacoes-pedidos/lista/vista", '_blank'); });
 
- onImprimir(nmpedido: number): void {
+    var params = {
+      "id_oferta": id_oferta
+    };
+
     this.loaderNavbar = true;
     this.cotacoesService
-     .getImprimirCotacao(nmpedido)
-       .pipe(
+      .getDetalleOferta(params)
+      .pipe(
         finalize(() => {
-         this.loaderNavbar = false;
-         })
-       )
+          this.loaderNavbar = false;
+        })
+      )
       .subscribe(
-         (response: JsonResponse) => {
+        (response: JsonResponse) => {
+          if (response.estado === true) {
+            this.modalRef2 = this.modalService.show(VistaComponent, {
+              initialState: { resultFromParent: response.result },
+            });
 
-           if (response.hasOwnProperty('success') && response.success === true)
-           {
+            this.modalRef2.content.onClose.subscribe(result => {
+              console.log('Modal closed with result:', result);
+            });
+          } else {
+            this.pnotifyService.error();
+          }
+        },
+        (error: any) => {
+          if (error.error.hasOwnProperty('mensagem')) {
+            this.pnotifyService.error(error.error.mensagem);
+          } else {
+            this.pnotifyService.error();
+          }
+        }
+      );
+  }
+
+  onImprimir(nmpedido: number): void {
+    this.loaderNavbar = true;
+    this.cotacoesService
+      .getImprimirCotacao(nmpedido)
+      .pipe(
+        finalize(() => {
+          this.loaderNavbar = false;
+        })
+      )
+      .subscribe(
+        (response: JsonResponse) => {
+
+          if (response.hasOwnProperty('success') && response.success === true) {
 
             this.modalRef = this.modalService.show(PdfComponent, {
-            initialState: { dataFromParent: response.data },
+              initialState: { dataFromParent: response.data },
             });
 
             this.modalRef.content.onClose.subscribe(result => {
               console.log('Modal closed with result:', result);
             });
 
-            } else {
-              this.pnotifyService.error();
-            }
-         },
-         (error: any) => {
-           if (error.error.hasOwnProperty('mensagem')) {
-             this.pnotifyService.error(error.error.mensagem);
-           } else {
-             this.pnotifyService.error();
-           }
-         }
-       );
-   }
+          } else {
+            this.pnotifyService.error();
+          }
+        },
+        (error: any) => {
+          if (error.error.hasOwnProperty('mensagem')) {
+            this.pnotifyService.error(error.error.mensagem);
+          } else {
+            this.pnotifyService.error();
+          }
+        }
+      );
+  }
 
   onEmailCotacao(): void {
     if (
