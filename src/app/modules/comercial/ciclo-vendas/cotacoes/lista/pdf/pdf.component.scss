@@ -1,0 +1,236 @@
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.data {
+  text-align: right;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.col {
+  flex: 1;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.custom-modal-content {
+  margin: auto;
+  border: 2px solid black;
+  padding: 20px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 5px;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+input[type='button'] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header img {
+  width: 100px;
+  height: auto;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.customer-info,
+.company-info {
+  margin-top: 4px;
+  border: 2px solid #000000;
+  padding: 10px;
+}
+
+.monterrey-info{
+  margin-bottom: 0px;
+}
+
+.totalpeso-font{
+  font-weight: bold;
+  margin-right: 50px;
+}
+.total {
+  margin-top: 5px;
+  text-align: right;
+  font-weight: bold;
+}
+
+input[type='button'] {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.left-div {
+  flex: 1;
+}
+
+
+.right-div {
+  flex: 1;
+  text-align: right;
+}
+
+.smaller-font {
+  font-size: 10px;
+}
+
+.tiny-font{
+  font-size: 15px;
+}
+
+.medium-font{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.cotizacion-font{
+  font-size: 30px;
+  text-decoration: underline;
+  font-weight: bold;
+  margin-right: 50px;
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+.descripcion-font{
+  font-size: 10px;
+}
+
+.mensaje-font{
+  font-size: 15px;
+}
+
+.custinf-weight{
+  font-weight: bold;
+}
+
+.datcotizacion-font{
+  font-size: 15px;
+}
+
+.left-align {
+  text-align: left;
+}
+
+.direccion-font{
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.entrega-font{
+  font-weight: bold;
+}
+
+.negrita-font{
+  font-weight: bold;
+}
+
+.upspace{
+  margin-top: 10px;
+}
+
+.espaciobot-font{
+  margin-bottom: 20px;
+}
+
+.espaciotop-font{
+  border-top: 50px;
+}
+
+table tr {
+  height: 1px;
+}
+
+.form-row {
+  margin-bottom: 20px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 380px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.footer-line {
+  text-align: center;
+  flex: 1;
+  position: relative;
+}
+
+.signature-line {
+  position: absolute;
+  bottom: 40px;
+  left: 80px;
+  right: 80px;
+  border-top: 2px solid #000;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+}
