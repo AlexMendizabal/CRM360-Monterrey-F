@@ -1,0 +1,126 @@
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<app-header appTitle="Autorizaciones">
+  <!-- <button type="button" (click)="onReset()">
+    Limpiar
+  </button>
+   <button type="button" (click)="nuevo()">
+    Adicionar
+  </button> -->
+  <button type="button" (click)="onFilter()" [disabled]="loaderNavbar ">
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div #scrollToFilter>
+    <advanced-filter>
+      <form [formGroup]="formGroup">
+        <div class="form-row">
+          <div class="form-group col-lg-2">
+            <label for="dataInicial">Fecha inicial</label>
+            <input class="form-control" id="dataInicial" type="datetime" bsDatepicker [bsConfig]="bsConfig"
+              formControlName="dataInicial">
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="dataFinal">Fecha final</label>
+            <input class="form-control" id="dataFinal" type="datetime" bsDatepicker [bsConfig]="bsConfig"
+              formControlName="dataFinal">
+          </div>
+          <div class="form-group col-lg-3">
+            <label for="codVendedor">Vendedor</label>
+            <ng-select [searchable]="true" [clearable]="false" placeholder="Seleccione..." [items]="vendedores"
+              formControlName="codVendedor" [virtualScroll]="true" labelForId="codVendedor" bindLabel="nome"
+              bindValue="id">
+            </ng-select>
+          </div>
+          <div class="form-group col-lg-3">
+            <label for="codStatus">Estado Oferta</label>
+            <ng-select [items]="estado_oferta" [searchable]="true" [clearable]="false" labelForId="id"
+              bindLabel="nombre" formControlName="estado_oferta" [(ngModel)]="defaultSelection" (keydown.enter)="onFilter()">
+            </ng-select>
+          </div>
+          <div class="form-group " [ngClass]="{'col-lg-2': !filtroCotacoes , 'col-lg-1': filtroCotacoes}">
+            <label for="registros">Registros</label>
+            <select class="form-control custom-select" id="registros" formControlName="registros">
+              <option>100</option>
+              <option>200</option>
+              <option>300</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </advanced-filter>
+  </div>
+  <custom-table [config]="tableConfig">
+    <ng-template #thead let-thead>
+      <tr>
+        <th scope="col" class="text-center hover" (click)="setOrderBy('fecha_creacion')">
+          <thead-sorter value="Fecha" [active]="orderBy == 'fecha_creacion'" [sort]="orderType"></thead-sorter>
+        </th>
+        <th scope="col" class="text-center hover" (click)="setOrderBy('codigo_oferta')">
+          <thead-sorter value="Código Oferta" [active]="orderBy == 'codigo_oferta'" [sort]="orderType"></thead-sorter>
+        </th>
+        <th scope="col" class="text-center hover" (click)="setOrderBy('id_cliente')">
+          <thead-sorter value="Código Cliente" [active]="orderBy == 'id_cliente'" [sort]="orderType"></thead-sorter>
+        </th>
+        <th scope="col" class="text-center hover" (click)="setOrderBy('nombre_cliente')">
+          <thead-sorter value="Cliente" [active]="orderBy == 'nombre_cliente'"
+            [sort]="orderType"></thead-sorter>
+        </th>
+        <th scope="col" class="text-center hover" (click)="setOrderBy('monto_total')" *ngIf="!showDetailPanel">
+          <thead-sorter value="Total" [active]="orderBy == 'monto_total'" [sort]="orderType"></thead-sorter>
+        </th>
+        <th scope="col" class="text-center hover" (click)="setOrderBy('monto_total_bruto')" *ngIf="!showDetailPanel">
+          <thead-sorter value="Total Bruto" [active]="orderBy == 'monto_total_bruto'"
+            [sort]="orderType"></thead-sorter>
+        </th>
+        <th scope="col" class="text-center hover" (click)="setOrderBy('descuento_total')" *ngIf="!showDetailPanel">
+          <thead-sorter value="Descuento" [active]="orderBy == 'descuento_total'"
+            [sort]="orderType"></thead-sorter>
+        </th>
+        <th scope="col" class="text-center hover" (click)="setOrderBy('estado_oferta')" *ngIf="!showDetailPanel">
+          <thead-sorter value="Estado" [active]="orderBy == 'estado_oferta'" [sort]="orderType"></thead-sorter>
+        </th>
+        <th scope="col"></th>
+
+    </ng-template>
+    <ng-template #tbody let-tbody>
+      <tr *ngFor="let autorizacion of autorizaciones; let i = index"
+        [class.table-active]="autorizacion.id_cliente == clienteSelecionado">
+        <td class="text-center hover">
+          {{ autorizacion.fecha_creacion | date: 'dd/MM/yyyy' }}
+        </td>
+        <td class="text-center hover">
+          {{ autorizacion.codigo_oferta }}
+        </td>
+        <td class="text-center hover">
+          {{ autorizacion.id_cliente }}
+        </td>
+        <td class="text-center hover">
+          {{ autorizacion.nombre_cliente | uppercase}}
+        </td>
+        <td class="text-center hover">
+          {{ autorizacion.monto_total }}
+        </td>
+        <td class="text-center hover">
+          {{ autorizacion.monto_total_bruto }}
+        </td>
+        <td class="text-center hover">
+          {{ autorizacion.descuento_total }}
+        </td>
+        <td class="text-center hover">
+          {{ autorizacion.estado_oferta | uppercase }}
+        </td>
+        <a type="button" class="btn-icon-sm"  routerLink="/modal-autorizacion" (click)="openModal(autorizacion.id_autorizacion)">
+          <i class="fas fa-book"></i>
+        </a>
+      </tr>
+    </ng-template>
+  </custom-table>
+  <div class="d-flex justify-content-center mt-3">
+    <pagination [maxSize]="maxSize" [(totalItems)]="totalItems" (pageChanged)="onPageChanged($event)"
+      [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
+      nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+    </pagination>
+  </div>
+</app-body>

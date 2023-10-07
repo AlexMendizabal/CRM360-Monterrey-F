@@ -1,0 +1,226 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">HISTÓRICO DE COMPRAS</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <tabset>
+      <tab heading="Últimas compras">
+        <div class="border-left border-right border-bottom px-3 py-4">
+          <!-- <div class="row mb-2">
+            <div class="col-6">
+              <comercial-ciclo-vendas-cotacoes-formulario-template-clientes
+                [isDisabled]="loader"
+                [codCliente]="codCliente"
+                (onChange)="onChangeCliente($event)">
+              </comercial-ciclo-vendas-cotacoes-formulario-template-clientes>
+            </div>
+          </div> -->
+          <div *ngIf="ultimasCompras.length > 0 && !loader">
+            <div class="row">
+              <div class="col">
+                <subtitles
+                  [data]="subtitlesUltimasCompras"
+                  [show]="true">
+                </subtitles>
+              </div>
+            </div>
+            <div class="row" *ngFor="let ultimaCompra of ultimasCompras; let j = index">
+              <div class="col">
+                <div class="row" *ngIf="j > 0">
+                  <div class="col"><hr class="mt-4 mb-3"></div>
+                </div>
+                <div class="row mb-3" [ngClass]="{'mt-3': j === 0}">
+                  <div class="col d-flex">
+                    <button
+                      type="button"
+                      class="btn-icon mr-3"
+                      tooltip="Clonar compra"
+                      (click)="onClonarCompra(ultimaCompra)">
+                      <i class="far fa-copy"></i>
+                    </button>
+                    <b class="my-auto">Pedido: {{ ultimaCompra.nrPedido }} - {{ ultimaCompra.data | date: 'dd/MM/yyyy' }}</b>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <custom-table [config]="tableConfigUltimasCompras">
+                      <ng-template #tbody let-tbody>
+                        <tr *ngFor="let material of ultimaCompra.materiais; let i = index" [class.table-active]="classTableActive(j, i)">
+                          <td 
+                          class="text-center"
+                          [ngClass]="classStatusBorder(material.disponibilidade)">
+                            <button
+                              type="button"
+                              class="btn-icon-sm"
+                              placement="left"
+                              container="body"
+                              (click) = "material.checked = !material.checked"
+                              >
+                              <i [ngClass]="material.checked ? 'fas fa-check-square' : 'far fa-square'" ></i>
+                            </button>
+                          </td>
+                          <td
+                            class="text-truncate"
+                            width="40%">
+                            {{ material.codMaterial }} - {{ material.nomeMaterial | uppercase }}
+                          </td>
+                          <td class="text-truncate text-center" width="20%">{{ material.nomeLinha | uppercase }}</td>
+                          <td class="text-truncate text-center" width="12%">{{ material.quantidade | number:'1.3-3' }} TON</td>
+                          <td class="text-truncate text-center" width="12%">{{ material.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</td>
+                          <td class="text-truncate text-right" width="10%">
+                            <comercial-ciclo-vendas-cotacoes-formulario-template-button-disponibilidade
+                              [index]="j + '_' + i"
+                              [codMaterial]="material.codMaterial"
+                              (activeRow)="onActiveRow($event)">
+                            </comercial-ciclo-vendas-cotacoes-formulario-template-button-disponibilidade>
+                            <comercial-ciclo-vendas-cotacoes-formulario-template-button-outros
+                              [index]="j + '_' + i"
+                              [material]="material"
+                              (activeRow)="onActiveRow($event)">
+                            </comercial-ciclo-vendas-cotacoes-formulario-template-button-outros>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </custom-table>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+
+            <br>
+            <hr>
+            <div class="row justify-content-end">
+              <div class="col-lg-2">
+                <button
+                  type="button"
+                  class="btn btn-block btn-success"
+                  (click)="onAddMaterial('ultimasCompras')"
+                  *ngIf="!addedMaterial">
+                  Adicionar ao carrinho
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-block btn-success"
+                  disabled="disabled"
+                  *ngIf="addedMaterial">
+                  Adicionado ao carrinho
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row justify-content-center" *ngIf="ultimasCompras.length == 0 && !loader">
+            <empty-result message="Nenhuma informação encontrada"></empty-result>
+          </div>
+          <div class="pt-4 d-flex w-100" *ngIf="loader">
+            <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+            <strong>Carregando últimas compras...</strong>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Materiais mais comprados">
+        <div class="border-left border-right border-bottom px-3 py-4">
+          <!-- <div class="row mb-4">
+            <div class="col-6">
+              <comercial-ciclo-vendas-cotacoes-formulario-template-clientes
+                [isDisabled]="loader"
+                [codCliente]="codCliente"
+                (onChange)="onChangeCliente($event)">
+              </comercial-ciclo-vendas-cotacoes-formulario-template-clientes>
+            </div>
+          </div> -->
+          <div *ngIf="maisComprados.length > 0 && !loader">
+            <div class="row">
+              <div class="col">
+                <subtitles
+                  [data]="subtitlesMaisComprados"
+                  [show]="true">
+                </subtitles>
+              </div>
+            </div>
+            <div class="row" >
+              <div class="col">
+                <div class="row mb-4">
+                  <div class="col">
+                    <custom-table [config]="tableConfigMaisComprados">
+                      <ng-template #tbody let-tbody>
+                        <tr *ngFor="let material of maisComprados; let i = index" [class.table-active]="i == activeRow">
+                          <td
+                              class="text-truncate text-center"
+                              [ngClass]="classStatusBorder(material.disponibilidade)"
+                              [ngStyle]="{ width: columSize('disponibilidade') }">
+                              #{{ i + 1 }}
+                              <ng-template #tooltipMaterialSemEstoqueTemplate>
+                                <p class="text-nowrap mb-0">Material sem estoque</p>
+                              </ng-template>
+                              <btn-icon
+                                [icon]="material.checked == 1 ? 'fas fa-check-square' : 'far fa-square'"
+                                size="small"
+                                [isDisabled]="material.disponibilidade === 1"
+                                [tooltip]="tooltipMaterialSemEstoqueTemplate"
+                                placement="left"
+                                (click)="onCheckMaterialMaisComprados(i, material)">
+                              </btn-icon>
+                            </td>
+                          <td>
+                            {{ material.codMaterial }} - {{ material.nomeMaterial | uppercase }}
+                          </td>
+                          <td class="text-center">{{ material.nomeLinha | uppercase }}</td>
+                          <td class="text-center">{{ material.maisComprados.quantidade | number:'1.3-3' }} TON</td>
+                          <td class="text-center">{{ material.maisComprados.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
+                          <td class="text-right">
+                            <comercial-ciclo-vendas-cotacoes-formulario-template-button-disponibilidade
+                              [index]="i"
+                              [codMaterial]="material.codMaterial"
+                              (activeRow)="onActiveRow($event)">
+                            </comercial-ciclo-vendas-cotacoes-formulario-template-button-disponibilidade>
+                            <comercial-ciclo-vendas-cotacoes-formulario-template-button-outros
+                              [index]="i"
+                              [material]="material"
+                              (activeRow)="onActiveRow($event)">
+                            </comercial-ciclo-vendas-cotacoes-formulario-template-button-outros>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </custom-table>
+                  </div>
+                </div>
+                <hr>
+                <div class="row justify-content-end">
+                  <div class="col-lg-2">
+                    <button
+                      type="button"
+                      class="btn btn-block btn-success"
+                      (click)="onAddMaterial('maisComprados')"
+                      *ngIf="!addedMaterial">
+                      Adicionar ao carrinho
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-block btn-success"
+                      disabled="disabled"
+                      *ngIf="addedMaterial">
+                      Adicionado ao carrinho
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center" *ngIf="maisComprados.length == 0 && !loader">
+            <empty-result message="Nenhuma informação encontrada"></empty-result>
+          </div>
+          
+          <div class="d-flex w-100" *ngIf="loader">
+            <div class="spinner-border spinner-border-sm text-dark my-auto mr-2"></div>
+            <strong>Carregando últimas compras...</strong>
+          </div>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">#{{ cotacao.nrPedido }} / TROCAR EMPRESA</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form">
+      <div class="form-row">
+        <div class="form-group col-lg-6">
+          <label>Empresa atual</label>
+          <p>{{ cotacao.nomeEmpresa | uppercase }}</p>
+        </div>
+        <div class="form-group col-lg-6">
+          <label>Depósito atual</label>
+          <p>{{ cotacao.nomeDeposito | uppercase }}</p>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="codEmpresa">Selecione a nova empresa</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="empresas"
+            formControlName="codEmpresa"
+            [virtualScroll]="true"
+            labelForId="codEmpresa"
+            bindLabel="nomeEmpresa"
+            bindValue="idEmpresa"
+            (change)="onChangeEmpresa($event.idEmpresa)"
+            [ngClass]="onFieldError('codEmpresa') + ' ' + onFieldRequired(form.controls.codEmpresa)">
+          </ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col mb-0">
+          <label for="codDeposito">Selecione o novo depósito</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="filteredDepositos"
+            formControlName="codDeposito"
+            [virtualScroll]="true"
+            labelForId="codDeposito"
+            bindLabel="nomeDeposito"
+            bindValue="idDeposito"
+            [ngClass]="onFieldError('codDeposito') + ' ' + onFieldRequired(form.controls.codDeposito)">
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      [disabled]="submittingForm"
+      (click)="onClose()">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="submittingForm"
+      (click)="onSubmit()">
+      <span *ngIf="!submittingForm">Confirmar</span>
+      <span *ngIf="submittingForm">Aguarde</span>
+    </button>
+  </div>
+</div>
+
+

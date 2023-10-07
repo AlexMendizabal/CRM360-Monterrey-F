@@ -1,0 +1,28 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">Detalhes do Concorrente</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col">
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Nome do concorrente</label>
+            <div *ngIf="concorrente.nomeConcorrente == null">NÃO INFORMADO</div>
+            <div *ngIf="concorrente.nomeConcorrente != null">{{ concorrente.nomeConcorrente | uppercase }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Nome da marca de aço</label>
+            <div *ngIf="concorrente.nomeMarcaAco == null">NÃO INFORMADO</div>
+            <div *ngIf="concorrente.nomeMarcaAco != null">{{ concorrente.nomeMarcaAco | uppercase }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

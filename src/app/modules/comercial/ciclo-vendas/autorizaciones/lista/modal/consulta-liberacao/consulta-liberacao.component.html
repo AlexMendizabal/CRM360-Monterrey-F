@@ -1,0 +1,269 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">SITUAÇÃO DA LIBERAÇÃO DO PEDIDO</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body pb-0">
+    <div class="form-row">
+      <div class="form-group col-lg">
+        <label>Cód. cliente</label>
+        <div>{{ dadosLiberacao.codCliente }}</div>
+      </div>
+      <div class="form-group col-lg">
+        <label>Razon Social</label>
+        <div class="text-truncate">{{ dadosLiberacao.razaoSocial }}</div>
+      </div>
+      <div class="form-group col-lg">
+        <label>Nome fantasia</label>
+        <div class="text-truncate">{{ dadosLiberacao.nomeCliente }}</div>
+      </div>
+      <!-- <div class="form-group col-lg">
+        <label>Transferido em</label>
+        <div>{{ dadosLiberacao.dataTransferencia | date: 'dd/MM/yyyy \'às\' HH:mm' }}</div>
+      </div> -->
+    </div>
+    <hr>
+    <!-- Comercial -->
+    <div class="col-12" *ngIf="dadosLiberacao.pedidoEmLiberacaoComercial != null"  >
+      <label><strong>COMERCIAL</strong></label>
+
+      <div class="mb-1" *ngIf="dadosLiberacao.pedidoEmLiberacaoComercial == 1">
+        <strong><label>Situação</label></strong>
+        <div class="font-weight-bolder text-danger mb-1">
+          <i class="fas fa-exclamation-triangle mr-1"></i> AGUARDANDO LIBERAÇÃO
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-2">
+            <label>Criado em</label>
+            <div>{{ dadosLiberacao.dataCriacaoComercial | date: 'dd/MM/yyyy \'às\' HH:mm' }}</div>
+          </div>
+          <div class="form-group col-lg">
+            <label>Comentário</label>
+            <div *ngIf="dadosLiberacao.comentariosComercial != null" >{{ dadosLiberacao.comentariosComercial }}</div>
+            <div *ngIf="dadosLiberacao.comentariosComercial == ''" >NÃO INFORMADO</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Motivos da trava</label>
+            <ul class="pl-3 ml-1" *ngIf="travasComercial.length > 0" >
+              <li *ngFor="let trava of travasComercial">
+                <p class="text-danger font-weight-bolder mb-1">
+                  {{ trava.desTrava }}
+                </p>
+              </li>
+            </ul>
+            <div class="mb-1" *ngIf="travasComercial.length == 0">NÃO INFORMADO</div>
+          </div>
+        </div>
+        <hr>
+      </div>
+      
+      <div class="mb-1" *ngIf="dadosLiberacao.pedidoEmLiberacaoComercial == 0">
+        <strong><label>Situação</label></strong>
+        <div class="font-weight-bolder text-success mb-1">
+          <i class="fas fa-check-circle mr-1"></i> PEDIDO LIBERADO
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-2">
+            <label>Criado em</label>
+            <div>{{ dadosLiberacao.dataCriacaoComercial | date: 'dd/MM/yyyy \'às\' HH:mm' }}</div>
+          </div>
+          <div class="form-group col-lg-2">
+            <label>Liberado em</label>
+            <div>{{ dadosLiberacao.dataLiberacaoComercial | date: 'dd/MM/yyyy \'às\' HH:mm' }}</div>
+          </div>
+          <div class="form-group col-lg">
+            <label>Usuário</label>
+            <div>{{ dadosLiberacao.nomeUsuarioLiberacaoComercial }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg">
+            <label>Comentário</label>
+            <div *ngIf="dadosLiberacao.comentariosComercial != null" >{{ dadosLiberacao.comentariosComercial }}</div>
+            <div *ngIf="dadosLiberacao.comentariosComercial == ''" >NÃO INFORMADO</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Motivos da trava</label>
+            <ul class="pl-3 ml-1" *ngIf="travasComercial.length > 0" >
+              <li *ngFor="let trava of travasComercial">
+                <p class="text-danger font-weight-bolder mb-1">
+                  {{ trava.desTrava }}
+                </p>
+              </li>
+            </ul>
+            <div class="mb-1" *ngIf="travasComercial.length == 0">NÃO INFORMADO</div>
+          </div>
+        </div>
+        <hr>
+      </div>
+    </div>
+
+    <!-- Financeira -->
+    <div class="col-12" *ngIf="dadosLiberacao.pedidoEmLiberacaoFinanceira != null"  >
+      <label><strong>Financeira</strong></label>
+
+      <div class="mb-1" *ngIf="dadosLiberacao.pedidoEmLiberacaoFinanceira == 1">
+        <strong><label>Situação</label></strong>
+        <div class="font-weight-bolder text-danger mb-1">
+          <i class="fas fa-exclamation-triangle mr-1"></i> AGUARDANDO LIBERAÇÃO
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-2">
+            <label>Criado em</label>
+            <div>{{ dadosLiberacao.dataCriacaoFinanceira | date: 'dd/MM/yyyy \'às\' HH:mm' }}</div>
+          </div>
+          <div class="form-group col-lg">
+            <label>Comentário</label>
+            <div *ngIf="dadosLiberacao.comentariosFinanceira != null" >{{ dadosLiberacao.comentariosFinanceira }}</div>
+            <div *ngIf="dadosLiberacao.comentariosFinanceira == ''" >NÃO INFORMADO</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Motivos da trava</label>
+            <ul class="pl-3 ml-1" *ngIf="travasFinanceira.length > 0" >
+              <li *ngFor="let trava of travasFinanceira">
+                <p class="text-danger font-weight-bolder mb-1">
+                  {{ trava.desTrava }}
+                </p>
+              </li>
+            </ul>
+            <div class="mb-1" *ngIf="travasFinanceira.length == 0">NÃO INFORMADO</div>
+          </div>
+        </div>
+        <hr>
+      </div>
+      
+      <div class="mb-1" *ngIf="dadosLiberacao.pedidoEmLiberacaoFinanceira == 0">
+        <strong><label>Situação</label></strong>
+        <div class="font-weight-bolder text-success mb-1">
+          <i class="fas fa-check-circle mr-1"></i> PEDIDO LIBERADO
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-2">
+            <label>Criado em</label>
+            <div>{{ dadosLiberacao.dataCriacaoFinanceira | date: 'dd/MM/yyyy \'às\' HH:mm' }}</div>
+          </div>
+          <div class="form-group col-lg-2">
+            <label>Liberado em</label>
+            <div>{{ dadosLiberacao.dataLiberacaoFinanceira | date: 'dd/MM/yyyy \'às\' HH:mm' }}</div>
+          </div>
+          <div class="form-group col-lg">
+            <label>Usuário</label>
+            <div>{{ dadosLiberacao.nomeUsuarioLiberacaoFinanceira }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg">
+            <label>Comentário</label>
+            <div *ngIf="dadosLiberacao.comentariosFinanceira != null" >{{ dadosLiberacao.comentariosFinanceira }}</div>
+            <div *ngIf="dadosLiberacao.comentariosFinanceira == ''" >NÃO INFORMADO</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Motivos da trava</label>
+            <ul class="pl-3 ml-1" *ngIf="travasFinanceira.length > 0" >
+              <li *ngFor="let trava of travasFinanceira">
+                <p class="text-danger font-weight-bolder mb-1" *ngIf="trava.desTrava !== 'Faturamento inferior a 750 Kg (Liberação Logística)'" >
+                  {{ trava.desTrava }}
+                </p>
+              </li>
+            </ul>
+            <div class="mb-1" *ngIf="travasFinanceira.length == 0">NÃO INFORMADO</div>
+          </div>
+        </div>
+        <hr>
+      </div>
+    </div>
+
+    <!-- Logistica -->
+    <div class="col-12" *ngIf="dadosLiberacao.pedidoEmLiberacaoLogistica != null"  >
+      <label><strong>Logistica</strong></label>
+
+      <div class="mb-1" *ngIf="dadosLiberacao.pedidoEmLiberacaoLogistica == 1">
+        <strong><label>Situação</label></strong>
+        <div class="font-weight-bolder text-danger mb-1">
+          <i class="fas fa-exclamation-triangle mr-1"></i> AGUARDANDO LIBERAÇÃO
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-2">
+            <label>Criado em</label>
+            <div>{{ dadosLiberacao.dataCriacaoLogistica | date: 'dd/MM/yyyy \'às\' HH:mm' }}</div>
+          </div>
+          <div class="form-group col-lg">
+            <label>Comentário</label>
+            <div *ngIf="dadosLiberacao.comentariosLogistica != null" >{{ dadosLiberacao.comentariosLogistica }}</div>
+            <div *ngIf="dadosLiberacao.comentariosLogistica == ''" >NÃO INFORMADO</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Motivos da trava</label>
+            <ul class="pl-3 ml-1" *ngIf="travasLogistica.length > 0" >
+              <li *ngFor="let trava of travasLogistica">
+                <p class="text-danger font-weight-bolder mb-1">
+                  {{ trava.desTrava }}
+                </p>
+              </li>
+            </ul>
+            <div class="mb-1" *ngIf="travasLogistica.length == 0">NÃO INFORMADO</div>
+          </div>
+        </div>
+        <hr>
+      </div>
+      
+      <div class="mb-1" *ngIf="dadosLiberacao.pedidoEmLiberacaoLogistica == 0">
+        <strong><label>Situação</label></strong>
+        <div class="font-weight-bolder text-success mb-1">
+          <i class="fas fa-check-circle mr-1"></i> PEDIDO LIBERADO
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-2">
+            <label>Criado em</label>
+            <div>{{ dadosLiberacao.dataCriacaoLogistica | date: 'dd/MM/yyyy \'às\' HH:mm' }}</div>
+          </div>
+          <div class="form-group col-lg-2">
+            <label>Liberado em</label>
+            <div>{{ dadosLiberacao.dataLiberacaoLogistica | date: 'dd/MM/yyyy \'às\' HH:mm' }}</div>
+          </div>
+          <div class="form-group col-lg">
+            <label>Usuário</label>
+            <div>{{ dadosLiberacao.nomeUsuarioLiberacaoLogistica }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg">
+            <label>Comentário</label>
+            <div *ngIf="dadosLiberacao.comentariosLogistica != null" >{{ dadosLiberacao.comentariosLogistica }}</div>
+            <div *ngIf="dadosLiberacao.comentariosLogistica == ''" >NÃO INFORMADO</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Motivos da trava</label>
+            <ul class="pl-3 ml-1" *ngIf="travasLogistica.length > 0" >
+              <li *ngFor="let trava of travasLogistica">
+                <p class="text-danger font-weight-bolder mb-1">
+                  {{ trava.desTrava }}
+                </p>
+              </li>
+            </ul>
+            <div class="mb-1" *ngIf="travasLogistica.length == 0">NÃO INFORMADO</div>
+          </div>
+        </div>
+        <hr>
+      </div>
+    </div>
+
+    
+  </div>
+</div>
+
+

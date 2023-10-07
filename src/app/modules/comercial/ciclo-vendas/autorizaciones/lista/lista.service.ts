@@ -16,8 +16,9 @@ import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.
 @Injectable({
   providedIn: 'root',
 })
-export class ComercialCicloVendasCotacoesListaService {
-  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
+export class ComercialCicloVendasAutorizacionesListaService {
+  private readonly APIAutorizacion = `http://23.254.204.187/api/comercial/ciclo-vendas/autorizaciones`;
+
 
   private onChangeClienteCotacao = new BehaviorSubject([]);
   clienteCotacao = this.onChangeClienteCotacao.asObservable();
@@ -33,10 +34,6 @@ export class ComercialCicloVendasCotacoesListaService {
 
   private onChangeEmpresaCotacao = new BehaviorSubject([]);
   empresaCotacao = this.onChangeEmpresaCotacao.asObservable();
-
-  private onPdf = new BehaviorSubject([]);
-  datosPdf = this.onPdf.asObservable();
-
 
   constructor(
     protected http: HttpClient,
@@ -83,9 +80,4 @@ export class ComercialCicloVendasCotacoesListaService {
       nrProposta,
     ]);
   }
-
-  datosPdfService(datosPdfTOdo) {
-    this.onPdf.next(datosPdfTOdo);
-  }
-
 }

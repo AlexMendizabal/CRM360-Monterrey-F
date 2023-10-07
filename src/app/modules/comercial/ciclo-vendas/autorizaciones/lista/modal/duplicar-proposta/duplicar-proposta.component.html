@@ -1,0 +1,46 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">#{{ cotacao.nrPedido }} / DUPLICAR PROPOSTA</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <label>Deseja prosseguir com a duplicação da proposta?</label>
+    <!-- <form [formGroup]="form">
+      <div class="form-group col mb-0">
+        <label for="codVendedor">Selecione um vendedor</label>
+        <ng-select
+          [searchable]="true"
+          [clearable]="false"
+          [items]="vendedores"
+          formControlName="codVendedor"
+          [virtualScroll]="true"
+          labelForId="codVendedor"
+          bindLabel="nome"
+          bindValue="id"
+          [ngClass]="onFieldError('codVendedor') + ' ' + onFieldRequired(form.controls.codVendedor)">
+        </ng-select>
+      </div>
+    </form> -->
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      [disabled]="submittingForm"
+      (click)="onClose()">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="submittingForm"
+      (click)="onSubmit()">
+      <span *ngIf="!submittingForm">Confirmar</span>
+      <span *ngIf="submittingForm">Aguarde</span>
+    </button>
+  </div>
+</div>
+
+

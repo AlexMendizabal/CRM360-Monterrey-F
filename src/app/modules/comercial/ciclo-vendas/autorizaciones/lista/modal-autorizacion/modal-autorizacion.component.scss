@@ -1,0 +1,15 @@
+.custom-modal {
+    position: fixed;
+    top: 50%; /* Centrar verticalmente en la mitad de la pantalla */
+    left: 50%; /* Centrar horizontalmente en la mitad de la pantalla */
+    transform: translate(-50%, -50%); /* Ajustar para centrar completamente */
+    width: 80%; /* Ajusta el ancho según tus necesidades */
+    max-width: 800px; /* Ancho máximo si es necesario */
+    margin: auto;
+}
+
+  /* If you want to adjust the table's width as well */
+  .custom-modal table {
+    width: 100%; /* Make the table fill the modal's width */
+  }
+

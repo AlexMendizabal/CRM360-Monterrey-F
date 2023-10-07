@@ -1,0 +1,34 @@
+export interface ICotacao {
+  codCliente: number;
+  codDeposito: number;
+  codEmpresa: number;
+  codSituacao: number;
+  codUsuarioLiberacaoComercial: number;
+  codUsuarioLiberacaoFinanceira: number;
+  codUsuarioTid: number;
+  codVendedor: number;
+  comentarioLiberacaoComercial: string;
+  comentarioLiberacaoFinanceira: string;
+  cor: string;
+  dataEncerramento: string;
+  dataLancamento: string;
+  dataLiberacaoComercial: string;
+  dataLiberacaoFinanceira: string;
+  dataTransferenciaComercial: string;
+  dataTransferenciaFinanceira: string;
+  descPedidoEmLiberacao: string;
+  imprimirSeparacao: number;
+  nomeDeposito: string;
+  nomeEmpresa: string;
+  nomeFantasia: string;
+  nomeUsuarioLiberacaoComercial: string;
+  nomeUsuarioLiberacaoFinanceira: string;
+  nomeVendedor: string;
+  nrPedido: number;
+  pedidoEmLiberacao: number;
+  pedidoFaturado: number;
+  pedidoTransferido: number;
+  qtdeRegistros: number;
+  razaoSocial: string;
+  situacao: string;
+}

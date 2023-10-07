@@ -1,0 +1,33 @@
+<div
+  class="d-inline-block mr-2"
+  dropdown
+  container="body"
+  (onShown)="setActiveRow()"
+  (onHidden)="resetActiveRow()">
+  <btn-icon
+    icon="fas fa-ellipsis-v"
+    size="small"
+    dropdownToggle>
+  </btn-icon>
+  <ul *dropdownMenu class="dropdown-menu left">
+    <li>
+      <a
+        class="dropdown-item"
+        href="javascript:void(0)"
+        (click)="onFichaCadastral()">
+        <i class="fas fa-file-alt"></i>
+        <span class="text-uppercase">Ficha cadastral</span>
+      </a>
+    </li>
+    <li class="divider dropdown-divider"></li>
+    <li>
+      <a
+        class="dropdown-item"
+        href="javascript:void(0)"
+        (click)="onSimilaridade()">
+        <i class="fas fa-exchange-alt"></i>
+        <span class="text-uppercase">Similaridade</span>
+      </a>
+    </li>
+  </ul>
+</div>

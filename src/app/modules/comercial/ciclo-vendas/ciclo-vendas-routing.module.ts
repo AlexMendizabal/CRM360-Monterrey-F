@@ -13,6 +13,13 @@ const routes: Routes = [
         component: ComercialCicloVendasComponent,
       },
       {
+        path: 'autorizaciones',
+        loadChildren: () =>
+          import('./autorizaciones/autorizaciones.module').then(
+            (m) => m.ComercialCicloVendasAutorizacionesModule
+      ),
+    },
+      {
         path: 'cotacoes-pedidos',
         loadChildren: () =>
           import('./cotacoes/cotacoes.module').then(

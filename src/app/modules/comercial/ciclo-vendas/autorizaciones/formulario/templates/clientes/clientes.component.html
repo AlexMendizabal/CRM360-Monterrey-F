@@ -1,0 +1,39 @@
+<form [formGroup]="form">
+  <div class="form-row">
+    <!-- <div class="form-group col">
+      <ng-select
+        [searchable]="true"
+        [clearable]="true"
+        [items]="carteiraClientes$ | async"
+        formControlName="codCliente"
+        [virtualScroll]="true"
+        bindLabel="razaoSocial"
+        bindValue="codCliente"
+        [loading]="clientesLoader"
+        loadingText="Carregando..."
+        [typeahead]="input$"
+        typeToSearchText="Informe o código ou razão social do cliente"
+        (change)="onChangeCliente()"
+        (clear)="onClear()"
+        [ngClass]="onFieldError('codCliente') + ' ' + onFieldRequired('codCliente')">
+      </ng-select>
+      <invalid-form-control [show]="onFieldInvalid('codCliente')" message="Cliente é obrigatório."></invalid-form-control>
+    </div> -->
+    <div class="form-group col mb-0">
+      <ng-select
+        [searchable]="true"
+        [clearable]="false"
+        [items]="carteiraClientes"
+        formControlName="codCliente"
+        [virtualScroll]="true"
+        bindLabel="codRazaoSocial"
+        bindValue="codCliente"
+        [loading]="clientesLoader"
+        loadingText="Carregando..."
+        (change)="onChangeCliente()"
+        [ngClass]="onFieldError('codCliente') + ' ' + onFieldRequired('codCliente')">
+      </ng-select>
+      <invalid-form-control [show]="onFieldInvalid('codCliente')" message="Cliente é obrigatório."></invalid-form-control>
+    </div>
+  </div>
+</form>
