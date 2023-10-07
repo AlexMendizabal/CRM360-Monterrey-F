@@ -1,0 +1,42 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">
+      #{{ material.codMaterial }} - {{ material.nomeMaterial | uppercase }} ({{ material.nomeDeposito | uppercase }})
+    </h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col">
+        <custom-table>
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col">Material</th>
+              <th class="text-center" scope="col">Unidade</th>
+              <th class="text-center" scope="col">Compra</th>
+              <th class="text-center" scope="col">Atual</th>
+              <th class="text-center" scope="col">Comprometido</th>
+              <th class="text-center" scope="col">Pedido</th>
+              <th class="text-center" scope="col">Disponível</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr>
+              <td>
+                {{ material.codMaterial }} - {{ material.nomeMaterial | uppercase }}
+              </td>
+              <td class="text-center">{{ detalhes.medida | uppercase }}</td>
+              <td class="text-center">{{ detalhes.pedCompra | number:'1.3-3' }}</td>
+              <td class="text-center">{{ detalhes.estoqueAtual | number:'1.3-3' }}</td>
+              <td class="text-center">{{ detalhes.estoqueComprometido | number:'1.3-3' }}</td>
+              <td class="text-center">{{ detalhes.pedido | number:'1.3-3' }}</td>
+              <td class="text-center">{{ detalhes.estoqueDisponivel | number:'1.3-3' }}</td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -11,8 +11,8 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ComercialClientesPreCadastroService {
-  private readonly BASE_URL: string = `https://127.0.0.1:8000/api`;
-  
+  private readonly BASE_URL: string = `https://23.254.204.187/api/api`;
+
   constructor(
     private vendedoresService: ComercialVendedoresService,
     private dadosFaturamentoService: ComercialClientesCadastroDadosFaturamentoFormularioService,

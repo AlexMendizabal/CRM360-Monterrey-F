@@ -1,0 +1,55 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">Detalhes do Cliente</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row" *ngIf="cliente">
+      <div class="col">
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label><strong>NOMBRE</strong></label>
+            <div *ngIf="cliente.nomeFantasia == null">SIN INFORMACION</div>
+            <div *ngIf="cliente.nomeFantasia != null">{{ cliente.nomeFantasia }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label><strong>RAZON SOCIAL</strong></label>
+            <div *ngIf="cliente.razaoSocial == null">SIN INFORMACION</div>
+            <div *ngIf="cliente.razaoSocial != null">{{ cliente.razaoSocial }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label><strong>DIRECCION</strong></label>
+            <div *ngIf="cliente.endereco == null">SIN INFORMACION</div>
+            <div *ngIf="cliente.endereco != null">{{ cliente.endereco }}</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-8">
+            <label><strong>CIUDAD</strong></label>
+            <div *ngIf="cliente.cidade == null">SIN INFORMACION</div>
+            <div *ngIf="cliente.cidade != null">{{ cliente.cidade }} </div>
+          </div>
+
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6">
+            <label><strong>PROMOTOR</strong></label>
+            <div *ngIf="cliente.vendedor == null">SIN INFORMACION</div>
+            <div *ngIf="cliente.vendedor != null">{{ cliente.vendedor }}</div>
+          </div>
+          <div class="form-group col-lg-6">
+            <label><strong>SUCURSAL</strong></label>
+            <div *ngIf="cliente.escritorio == null">SIN INFORMACION</div>
+            <div *ngIf="cliente.escritorio != null">{{ cliente.escritorio }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+</div>

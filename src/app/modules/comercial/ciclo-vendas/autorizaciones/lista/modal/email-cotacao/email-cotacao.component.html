@@ -1,0 +1,52 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">ENVIO DA COTAÇÃO POR E-MAIL</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form">
+      <div class="form-group col">
+        <label for="emails">Selecione os e-mails</label>
+        <ng-select
+          [items]="emailsCliente"
+          [multiple]="true"
+          [closeOnSelect]="true"
+          labelForId="emails"
+          bindValue="email"
+          bindLabel="email"
+          formControlName="emails"
+          [ngClass]="onFieldError('emails') + ' ' + onFieldRequired(form.controls.emails)">
+        </ng-select>
+      </div>
+      <div class="form-group col mb-0">
+        <div class="custom-control custom-checkbox">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="copiaUsuario"
+            formControlName="copiaUsuario">
+          <label class="custom-control-label" for="copiaUsuario">Quero receber uma cópia em meu e-mail</label>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light"
+      [disabled]="submittingForm"
+      (click)="onClose()">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="submittingForm"
+      (click)="onSubmit()">
+      <span *ngIf="!submittingForm">Salvar</span>
+      <span *ngIf="submittingForm">Aguarde</span>
+    </button>
+  </div>
+</div>

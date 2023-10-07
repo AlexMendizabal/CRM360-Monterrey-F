@@ -1,0 +1,89 @@
+<!-- <div class="border rounded p-3">
+  <div class="row">
+    <div class="col text-truncate">
+      <div class="mtc-title mb-3 text-center">{{ material.codMaterial }} - {{ material.nomeMaterial | uppercase }}</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6 my-auto">
+      <div >
+        <button
+          type="button"
+          class="btn btn-block btn-secondary"
+          (click)="onAddMaterial(material)"
+          *ngIf="material.onCarrinho === false">
+          <div *ngIf="size == 'small'">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Incluir</span>
+          </div>
+          <span *ngIf="size == ''">Incluir no carrinho</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-block btn-secondary"
+          disabled="disabled"
+          *ngIf="material.onCarrinho === true">
+          <div *ngIf="size == 'small'">
+            <i class="far fa-check-circle"></i>
+            <span>Incluído</span>
+          </div>
+          <span *ngIf="size == ''">Incluído no carrinho</span>
+        </button>
+      </div>
+    </div>
+    <div class="col-6 text-center">
+      <img
+        class="img-fluid"
+        [src]="material.pathImage"
+        *ngIf="size == ''">
+      <img
+        class="my-auto"
+        [src]="material.pathImage"
+        *ngIf="size == 'small'"
+        height="100"
+        width="auto">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <p class="text-dark mb-0">Relacionado com:</p>
+      <p class="text-dark text-truncate mb-0">{{ material.codMaterialSimilaridade }} - {{ material.nomeMaterialSimilaridade | uppercase }}</p>
+    </div>
+  </div>
+</div> -->
+
+<div class="card">
+  <div class="card-header">
+    {{ material.codMaterial }} - {{ material.nomeMaterial }}
+  </div>
+  <div class="card-body">
+    <p class="text-dark mb-0">Relacionado com:</p>
+    <p class="text-dark mb-0">{{ material.codMaterialSimilaridade }} - {{ material.nomeMaterialSimilaridade }}</p>
+    <div class="d-flex justify-content-end mt-2">
+      <div >
+        <button
+          type="button"
+          class="btn btn-block btn-success"
+          (click)="onAddMaterial(material)"
+          *ngIf="material.onCarrinho === false">
+          <div *ngIf="size == 'small'">
+            <i class="fas fa-cart-plus"></i>
+            <span>Incluir</span>
+          </div>
+          <span *ngIf="size == ''">Incluir no carrinho</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-block btn-success"
+          disabled="disabled"
+          *ngIf="material.onCarrinho === true">
+          <div *ngIf="size == 'small'">
+            <i class="far fa-check-circle"></i>
+            <span>Incluído</span>
+          </div>
+          <span *ngIf="size == ''">Incluído no carrinho</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

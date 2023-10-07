@@ -1,0 +1,330 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-auto">#{{ material.codMaterial }} - {{ material.nomeMaterial | uppercase }}</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true" *ngIf="!loaderModal">&times;</span>
+      <div class="spinner-border spinner-border-sm text-dark ml-auto" *ngIf="loaderModal"></div>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row" *ngIf="material && tipoCalculo1">
+      <div class="col">
+        <form [formGroup]="form" autocomplete="off">
+          <div class="row">
+            <div class="col-6">
+              <div class="row">
+                <div class="col-7">
+                  <div class="form-row">
+                    <div class="form-group col">
+                      <div class="mtc-title mb-2 text-uppercase text-primary">Unidade para cálculo</div>
+                      <p>{{nomeTipoLancamento | titlecase}}</p>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col">
+                      <label class="font-weight-bold"for="quantidade">{{ descQtde }}</label>
+                      <input
+                        type="text"
+                        id="quantidade"
+                        class="form-control"
+                        formControlName="quantidade"
+                        currencyMask [options]="currencyMaskOptions"
+                        [ngClass]="onFieldError('quantidade') + ' ' + onFieldRequired(form.controls.quantidade)">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col">
+                      <label for="preco1">{{ descPreco }}</label>
+                      <input
+                        type="text"
+                        id="preco1"
+                        class="form-control"
+                        formControlName="preco1"
+                        placeholder="R$ 0,00"
+                        currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',', precision: 2 }"
+                        [ngClass]="onFieldError('preco1') + ' ' + onFieldRequired(form.controls.preco1)"
+                        aria-describedby="preco1-help"
+                        (ngModelChange)="onDisablePreco2()">
+                      <small *ngIf="tipoCalculo1 == 6 && material.valorMaterialContrato == 0"  id="preco1-help" class="text-muted" style="font-size: 11px">
+                        Preço ideal acima de <strong>{{ material.valorUnit | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                      </small>
+                      <small *ngIf="tipoCalculo1 != 6 && material.valorMaterialContrato == 0" id="preco1-help" class="text-muted" style="font-size: 11px">
+                        Preço ideal acima de <strong *ngIf="material.valorMaterialBarra > 0">{{ material.valorMaterialBarra | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                        <strong *ngIf="material.valorMaterialBarra == 0">{{ material.valorUnit | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                      </small>
+                      <small *ngIf="material.valorMaterialContrato > 0 && tipoCalculo1 == 6" id="preco1-help" class="text-muted" style="font-size: 11px">
+                        Preço do contrato <strong>{{ material.valorMaterialContrato | currency:'BRL':'symbol':'1.2-2' }}</strong> por tonelada
+                      </small>
+                      <small *ngIf="material.valorMaterialContrato > 0 && tipoCalculo1 != 6" id="preco1-help" class="text-muted" style="font-size: 11px">
+                        Preço do contrato <strong>{{ material.valorMaterialContrato | currency:'BRL':'symbol':'1.2-2' }}</strong> por tonelada, calcular o preço por {{ nomeTipoCalculo1 | titlecase }}
+                      </small>
+                    </div>
+                  </div>
+                  <div class="form-row" *ngIf="tipoCalculo2 > 0 && material.valorMaterialContrato == 0" >
+                    <div class="form-group col">
+                      <label for="preco2">Preço por Tonelada</label>
+                      <input
+                        type="text"
+                        id="preco2"
+                        class="form-control"
+                        formControlName="preco2"
+                        placeholder="R$ 0,00"
+                        currencyMask [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',', precision: 2 }"
+                        [ngClass]="onFieldError('preco2') + ' ' + onFieldRequired(form.controls.preco2)"
+                        aria-describedby="preco2-help"
+                        (ngModelChange)="onDisablePreco1()">
+                      <small id="preco2-help" class="text-muted" style="font-size: 11px">
+                        Preço ideal acima de <strong>{{ material.valorUnit | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                      </small>
+                    </div>
+                  </div>
+                  <div class="form-row" *ngIf="showInputMedida()">
+                    <div class="form-group col">
+                      <label for="medida">Medida (metros)</label>
+                      <input
+                        type="text"
+                        id="medida"
+                        class="form-control"
+                        formControlName="medida"
+                        currencyMask [options]="{ align: 'left', prefix: '', thousands: '.', decimal: ',', precision: 2 }"
+                        [ngClass]="onFieldError('medida') + ' ' + onFieldRequired(form.controls.medida)"
+                      >
+                    </div>
+                  </div>
+                  <div class="form-row mt-1">
+                    <div class="form-group col mb-0">
+                      <button
+                        type="button"
+                        class="btn btn-block btn-secondary mt-auto"
+                        (click)="onCalcular()"
+                        [disabled]="loaderModal">
+                        <div *ngIf="!loaderModal">
+                          <i class="fas fa-calculator"></i>
+                          <span>Calcular</span>
+                        </div>
+                        <div *ngIf="loaderModal">
+                          <i class="fas fa-cog fa-spin"></i>
+                          <span>Aguarde</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div *ngIf="showInfoMetragem()">
+                    <div class="form-row">
+                      <div class="col"><hr></div>
+                    </div>
+                    <div class="form-row" *ngIf="!showInputMedida()">
+                      <div class="form-group col mb-0">
+                        <label class="mr-1">Medida 01:</label>
+                        <span>{{ material.medida1 | number:'1.2-2' }} metro(s)</span>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col mb-0">
+                        <label class="mr-1">Medida 02:</label>
+                        <span>{{ material.medida2 | number:'1.2-2' }} metro(s)</span>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col mb-0">
+                        <label class="mb-0 mr-1">Peso específico:</label>
+                        <span>{{ material.pesoEspecifico | number:'1.2-2' }} kg(s)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="showInfoFatorMultiplo()">
+                    <div class="form-row">
+                      <div class="col"><hr></div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col mb-0">
+                        <label class="mr-1">Fator múltiplo:</label>
+                        <span>{{ material.fatorMultiplo | number:'1.3-3' }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="opcoesVenda.length > 0">
+                    <div class="form-row">
+                      <div class="col"><hr></div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col">
+                        <label>Selecione uma opção</label>
+                      </div>
+                    </div>
+                    <div class="form-row" *ngFor="let opcaoVenda of opcoesVenda; let i = index">
+                      <div class="form-group col mb-0">
+                        <div class="custom-control custom-radio">
+                          <input
+                            type="radio"
+                            id="opcaoVenda_{{ i }}"
+                            name="opcaoVenda"
+                            class="custom-control-input"
+                            (click)="calcularTotais(opcaoVenda)">
+                          <label class="custom-control-label" for="opcaoVenda_{{ i }}">
+                            {{ opcaoVenda.tonelada | number }} Toneladas ({{ opcaoVenda.qtde }} {{ nomeTipoLancamento | titlecase }})
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 pl-0 my-auto">
+              <div class="text-right text-uppercase mr-1 mb-2" style="font-size: 11px">
+                <a class="text-primary" href="javascript:void(0)" (click)="onShowImpostos()">
+                  <i class="fas mr-2" [ngClass]="{'fa-chevron-up': showImpostos, 'fa-chevron-down': !showImpostos}"></i>
+                  <strong>Detalhes</strong>
+                </a>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="my-auto">
+                      <strong>Peso item</strong>
+                    </div>
+                    <strong class="text-secondary">{{ calculo.tonelada | number }} Ton</strong>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="my-auto">
+                      <strong>Valor unitário</strong>
+                    </div>
+                    <strong class="text-secondary">{{ calculo.valorUnitario | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="my-auto">
+                      <strong>Valor item</strong>
+                    </div>
+                    <strong class="text-secondary">{{ calculo.valorItem | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                  </div>
+                </li>
+                <li class="list-group-item" [hidden]="!showImpostos">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="my-auto">
+                      <strong class="mr-1">Alíquota IPI</strong>
+                      <ng-template #tooltipAliquotaIpiTemplate>
+                        <p class="mb-0">Incide nas mercadorias que passaram por algum processo de transformação ou de beneficiamento (5% no caso dos produtos Manetoni).</p>
+                      </ng-template>
+                      <i class="far fa-question-circle" [tooltip]="tooltipAliquotaIpiTemplate"></i>
+                    </div>
+                    <strong class="text-secondary">{{ calculo.aliquotaIpi | number:'1.2-2' }}%</strong>
+                  </div>
+                </li>
+                <li class="list-group-item" [hidden]="!showImpostos">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="my-auto">
+                      <strong class="mr-1">Valor IPI</strong>
+                      <ng-template #tooltipValorIpiTemplate>
+                        <p class="mb-0">Calculado em relação ao valor da NF da mercadoria despachada, que eventualmente pode incluir valores sobre o frete e despesas acessórias (juros, taxas e outras).</p>
+                      </ng-template>
+                      <i class="far fa-question-circle" [tooltip]="tooltipValorIpiTemplate"></i>
+                    </div>
+                    <strong class="text-secondary">{{ calculo.valorIpi | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                  </div>
+                </li>
+                <li class="list-group-item" [hidden]="!showImpostos">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="my-auto">
+                      <strong class="mr-1">Alíquota ICMS</strong>
+                      <ng-template #tooltipAliquotaIcmsTemplate>
+                        <p class="mb-0">Ocorre quando existe transporte interestadual, intermunicipal e de comunicação. É de competência estadual e incide em diversas operações, principalmente em compras e vendas de produtos.</p>
+                      </ng-template>
+                      <i class="far fa-question-circle" [tooltip]="tooltipAliquotaIcmsTemplate"></i>
+                    </div>
+                    <strong class="text-secondary">{{ calculo.aliquotaIcms | number:'1.2-2' }}%</strong>
+                  </div>
+                </li>
+                <li class="list-group-item" [hidden]="!showImpostos">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="my-auto">
+                      <strong class="mr-1">Valor ICMS</strong>
+                      <ng-template #tooltipValorIcmsTemplate>
+                        <p class="mb-0">Os percentuais variam por estado, operação, regime de tributação e produto.</p>
+                      </ng-template>
+                      <i class="far fa-question-circle" [tooltip]="tooltipValorIcmsTemplate"></i>
+                    </div>
+                    <strong class="text-secondary">{{ calculo.valorIcms | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                  </div>
+                </li>
+                <li class="list-group-item" [hidden]="!showImpostos">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="my-auto">
+                      <strong class="mr-1">Valor ICMS Substituto</strong>
+                      <ng-template #tooltipValorIcmsStTemplate>
+                        <p class="mb-0">Acontece quando a cobrança do ICMS é feita de forma antecipada. Varia de estado para estado.</p>
+                      </ng-template>
+                      <i class="far fa-question-circle" [tooltip]="tooltipValorIcmsStTemplate"></i>
+                    </div>
+                    <strong class="text-secondary">{{ calculo.valorIcmsSt | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="my-auto">
+                      <strong>Valor total</strong>
+                    </div>
+                    <strong class="text-secondary">{{ calculo.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                  </div>
+                </li>
+              </ul>
+
+              <div class="col mt-3">
+                <div class="mtc-title mb-3 text-uppercase text-primary">Detalhes do Pedido</div>
+                <div class="row">
+                  <div class="form-group col-lg-4">
+                    <label for="nrPedidoCliente" class="fontBold">Nr. Pedido</label>
+                    <input
+                      class="form-control"
+                      id="nrPedidoCliente"
+                      type="text"
+                      formControlName="nrPedidoCliente">
+                  </div>
+                  <div class="form-group col-lg-4 font-weight-bold">
+                    <label for="codItemPedidoCliente" class="fontBold">Cód. Item</label>
+                    <input
+                      class="form-control"
+                      id="codItemPedidoCliente"
+                      type="text"
+                      formControlName="codItemPedidoCliente">
+                  </div>
+                  <div class="form-group col-lg-4 font-weight-bold">
+                    <label for="codProdutoCliente" class="fontBold">Cód. Produto</label>
+                    <input
+                      class="form-control"
+                      id="codProdutoCliente"
+                      type="text"
+                      formControlName="codProdutoCliente">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="onClose()">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="onSubmit()"
+      [disabled]="calculo.valorTotal === 0">
+      Confirmar
+    </button>
+  </div>
+</div>

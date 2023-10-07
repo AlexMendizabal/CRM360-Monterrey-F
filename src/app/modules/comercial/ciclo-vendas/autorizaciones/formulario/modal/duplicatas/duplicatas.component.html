@@ -1,0 +1,102 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-0 my-auto">VISUALIZAR DUPLICATAS</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true" *ngIf="!loaderModal">&times;</span>
+      <div class="spinner-border spinner-border-sm text-dark ml-auto" *ngIf="loaderModal"></div>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row" *ngIf="showDuplicatas === true" >
+      <div class="col">
+        <custom-table [config]="tableConfig">
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center" style="width: 10%">#</th>
+              <th scope="col" class="text-center" style="width: 35%">Vencimento</th>
+              <th scope="col" class="text-center" style="width: 35%">Valor</th>
+              <th scope="col" class="text-center" style="width: 20%" *ngIf="podeEditarDuplicata"></th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let duplicata of duplicatas; let i = index">
+              <td class="text-center" style="width: 20%"> {{ i + 1 }}</td>
+              <td class="text-center" style="width: 30%"> {{ duplicata.dataVencimento | date:'dd/MM/yyyy' }}</td>
+              <td class="text-center" style="width: 35%"> {{ duplicata.valorParcela | currency:'BRL':'symbol':'1.2-2' }}</td>
+              <td class="text-center" style="width: 20%" *ngIf="podeEditarDuplicata">
+                <button 
+                type="button" 
+                class="btn btn-sm" 
+                [disabled]="loaderModal"
+                (click)="onAlterar(i)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+      </div>
+    </div>
+    <div class="row" *ngIf="showDuplicatas === false">
+      <div class="col">
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row justify-content-center">
+            <div class="form-group col-lg-6">
+              <label for="dataVencimento">
+                <span class="mr-1">Data vencimento - Parcela {{index + 1}}</span>
+              </label>
+              <input
+                class="form-control"
+                id="dataVencimento"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="dataVencimento"
+                [ngClass]="onFieldError('dataVencimento') + ' ' + onFieldRequired(form.controls.dataVencimento)">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer" *ngIf="showDuplicatas === true">
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="onClose()">
+      Fechar
+    </button>
+    <!-- <div *ngIf="podeEditarDuplicata">
+      <button
+      type="button"
+      class="btn btn-primary"
+      (click)="onSubmit()">
+      Alterar
+      </button>
+    </div>
+    <div *ngIf="!podeEditarDuplicata" data-toggle="tooltip" data-placement="top" title="Duplicata não editavel">
+      <button
+      type="button"
+      class="btn btn-primary"
+      disabled>
+      Alterar
+      </button>
+    </div> -->
+  </div>
+  <div class="modal-footer" *ngIf="showDuplicatas === false">
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="onCancel()">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-success"
+      (click)="checkDatasError()"
+      [disabled]="loaderModal">
+      <span *ngIf="!loaderModal">Confirmar</span>
+      <span *ngIf="loaderModal">Aguarde</span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,149 @@
+<div class="modal-content custom-modal">
+  <div class="modal-header">
+    <h6 class="modal-title pull-left">Resumen de autorización </h6>
+    <div class="d-flex justify-content-center align-items-center">
+      <button type="button" class="close pull-right" aria-label="Close" (click)="cerrar()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="col-14 mt-2">
+      <div class="row">
+        <div class="col-md-12 mt-2">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title"> Datos de autorización</h6>
+              <div class="row">
+                <div class="col-md-2">
+                  <label for="id_autorizacion"> <strong> N°:</strong></label>
+                  <input type="text" id="id_autorizacion" class="form-control" readonly value="{{data.id_autorizacion}}">
+                </div>
+                <div class="col-md-4">
+                  <label for="fecha_solicitud"> <strong> Fecha Solicitada</strong></label>
+                  <input type="text" id="fecha_solicitud" class="form-control" readonly
+                    value="{{data.fecha_solicitud | date: 'dd/MM/yyyy'}}">
+                </div>
+                <div class="col-md-5">
+                  <label for="vendedor"> <strong> Vendedor</strong></label>
+                  <input type="text" id="vendedor" class="form-control" readonly
+                    value="{{data.nombre_vendedor | uppercase}}">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form [formGroup]="myGroup">
+      <div>
+        <input formControlName="firstName">
+      </div>
+    </form>
+
+    <div class="col-14 mt-2">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="card-title">Detalle</h6>
+          <div class="row">
+            <div class="col-12 mt-2">
+              <div class="">
+                <custom-table [config]="tableConfig">
+                  <ng-template #thead let-thead>
+                    <tr>
+                      <th class="text-truncate text-center">
+                        Código
+                      </th>
+                      <th class="text-truncate text-center">
+                        Material
+                      </th>
+                      <th class="text-truncate text-center">
+                        Cantidad
+                      </th>
+                      <th class="text-truncate text-center">
+                        Subtotal
+                      </th>
+                      <th class="text-truncate text-center">
+                        D. Solicitado
+                      </th>
+                      <th class="text-truncate text-center">
+                        D. Permitido
+                      </th>
+                      <th class="text-truncate text-center">
+                        Excedente
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody>
+                    <ng-container>
+                      <tr *ngFor="let data of dataForm">
+                        <td class="font-weight-bold  text-center">
+                          {{data.CODIGOMATERIAL}}</td>
+                        <td class="font-weight-bold  text-center">
+                          {{data.descricao | uppercase}}</td>
+                        <td class="font-weight-bold  text-center">
+                          {{data.cantidad_total}}</td>
+                        <td class="font-weight-bold  text-center">
+                          {{data.subtotal}}</td>
+                        <td class="font-weight-bold  text-center">
+                          {{data.descuento_solicitado}}</td>
+                        <td class="font-weight-bold  text-center">
+                          {{data.descuento_permitido}}</td>
+                        <td class="font-weight-bold  text-center text-danger">
+                          {{data.excedente}}</td>
+                      </tr>
+                    </ng-container>
+                  </ng-template>
+                </custom-table>
+                <!-- <empty-result message="Ningún registro encontrado." ></empty-result> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-6 mt-2">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title"> Descripción</h6>
+              <div class="row">
+                <div class="col-md-9">
+                  <input type="text" id="customerName" class="form-control" readonly
+                    value="{{data.descripcion_vend | uppercase}}">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mt-2">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title"> Observaciones</h6>
+              <div class="row">
+                <div class="col-md-12" >
+                  <input type="text" id="observacion2" [formGroup]="myGroup" formControlName="observacion" class="form-control"
+                    value="{{data.descripcion_usua}}">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" id="aprobado">
+          Aprobar
+        </button>
+        <button type="button" class="btn btn-danger" id="rechazado" (click)="rechazar(data.id)">
+          Rechazar
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+

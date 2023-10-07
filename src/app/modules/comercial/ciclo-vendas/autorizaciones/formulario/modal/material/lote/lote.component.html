@@ -1,0 +1,54 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="mtc-title mb-auto">#{{ material.codMaterial }} - {{ material.nomeMaterial }}</h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true" *ngIf="!loaderModal">&times;</span>
+      <div class="spinner-border spinner-border-sm text-dark ml-auto" *ngIf="loaderModal"></div>
+    </button>
+  </div>
+  <div class="modal-body">
+    
+    <div class="mb-3">Selecione o lote abaixo:</div>
+
+    <div >
+      <custom-table [config]="tableConfig">
+        <ng-template #thead let-thead>
+          <tr>
+            <th scope="col" class="text-center">Lote Sequencial</th>
+            <th scope="col" class="text-center">Lote de Fabricação</th>
+            <th scope="col" class="text-center">N. Relatório Recebimento</th>
+            <th scope="col" class="text-center">Estoque</th>
+            <th scope="col" class="text-center"></th>
+          </tr>
+        </ng-template>
+        <ng-template #tbody let-tbody>
+          <tr *ngFor="let lote of lotes ; let i = index">
+            <td class="text-center"> {{ lote.sequenciaLote }}</td>
+            <td class="text-center"> {{ lote.loteFabricacao }}</td>
+            <td class="text-center"> {{ lote.nrRelatorioRecebimento }}</td>
+            <td class="text-center"> {{ lote.estoque | number:'1.3-3'}}</td>
+            <td class="text-center">
+              <button 
+              type="button" 
+              class="btn btn-sm  btn-success" 
+              [disabled]="loaderModal"
+              (click)="onSubmit(i)">
+                <i class="fas fa-check"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </custom-table>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="onClose()">
+      Cancelar
+    </button>
+
+  </div>
+</div>
