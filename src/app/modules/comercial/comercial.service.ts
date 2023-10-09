@@ -82,7 +82,7 @@ export class ComercialService {
   getMaterialesOferta(params: any) {
     return this.http
       .get(
-        `${this.API}/materiales_lista_precio`, {
+        `${this.API}/materiales_lista_precio`,  {
         params: params,
       })
       .pipe(take(1), retry(2));
