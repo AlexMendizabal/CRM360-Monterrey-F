@@ -4,6 +4,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import html2canvas from 'html2canvas';
+import * as jsPDF from 'jspdf';
 import { VERSION, ViewChild, ElementRef } from '@angular/core';
 
 
@@ -42,7 +43,7 @@ export class PdfComponent implements OnInit {
     this.materiais = this.dataFromParent.materiais;
     this.onClose = new Subject();
     this.imageSrc = this.sanitizer.bypassSecurityTrustUrl('assets/images/logo/logo-monterrey.png');
-    console.log('Received data in modal:', this.data);
+    // console.log('Received data in modal:', this.data);
   }
 
   public onPrint(): void {
@@ -60,6 +61,26 @@ export class PdfComponent implements OnInit {
     this._bsModalRef.hide();
   }
 
+  onDownloadPDF() {
+    const content = this.contentToConvert.nativeElement;
+
+    // Use html2canvas to capture the content as an image
+    html2canvas(content).then(canvas => {
+      // Create a new PDF document
+      const pdf = new jsPDF('p', 'mm', 'a4');
+
+      // Calculate the image dimensions to fit the PDF page
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // Add the captured image to the PDF
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgWidth, imgHeight);
+
+      // Download the PDF
+      pdf.save('your_pdf_filename.pdf');
+    });
+  }
+
   public captureScreen() {
     const content = this.contentToConvert.nativeElement;
 
@@ -72,7 +93,6 @@ export class PdfComponent implements OnInit {
       console.error('No content found inside the contentToConvert element.');
       return;
     }
-
     html2canvas(content).then((canvas) => {
       const imgWidth = 980;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
