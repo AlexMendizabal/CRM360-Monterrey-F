@@ -104,7 +104,10 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   vendedoresList: any[] = [];
   editingContacto: boolean = false;
   originalVendedorId: number;
-
+  ciudades: any = [];
+  cnaes: any = [];
+  codigoClienteSap: any = [];
+  
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -119,7 +122,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     private modalService: BsModalService
   ) {
     this.pnotifyService.getPNotify();
-    
+
   }
 
   ngOnInit(): void {
@@ -128,15 +131,18 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.setFormFilter();
     this.titleService.setTitle('Busqueda de clientes');
     this.onDetailPanelEmitter();
+    
     this.vendedoresService.getVendedores().subscribe(
-      (response: any) => {
+      (response: any) => { 
         this.vendedoresList = response.result;
-        console.log('Lista de vendedores:', this.vendedoresList);
+        if (this.vendedoresList.length > 0) {
+          this.editedFields.id_vendedor = this.vendedoresList[0].id;
+        }
       },
       (error) => {
         console.error('Error al obtener la lista de vendedores:', error);
       }
-    );    
+    );
 
   }
 
@@ -159,7 +165,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
+
 
   getFormFilters(): void {
     this.dadosFaturamentoService
@@ -193,16 +199,77 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       carteira: [formValue['carteira'], Validators.required],
       pagina: [formValue['pagina']],
       registros: [formValue['registros'], Validators.required],
-      id_group_econ: [formValue['grupoEconomico'], Validators.required], // Se Agrega este campo
+      cnae: [formValue['cnae'], Validators.required],
     });
+  }
+  viewDetails(cliente: any): void {
+    this.detailPanelService.loadedFinished(false);
+  
+    this.clienteSelecionado = cliente.codCliente;
+  
+    this.dadosCadastraisLoaded = false;
+    this.dadosCadastraisEmpty = false;
+  
+    this.contatosLoaded = false;
+    this.contatosEmpty = false;
+  
+    this.clientesService
+      .getDetalhes(cliente.codCliente)
+      .pipe(
+        finalize(() => {
+          this.dadosCadastraisLoaded = true;
+        })
+      )
+      .subscribe((response: JsonResponse) => {
+        if (response.data) {
+          this.dadosCadastrais = response.data;
+  
+          // Mover la asignación de id_vendedor aquí
+          this.editedFields.id_vendedor = this.dadosCadastrais.id_vendedor;
+  
+          console.log("Datos de dadosCadastrais:", this.dadosCadastrais); // Agrega el console.log aquí
+        } else {
+          this.dadosCadastraisEmpty = true;
+        }
+      });
+  
+    this.clientesService
+      .getContatosResumido(cliente.codCliente)
+      .subscribe((response: any) => {
+        this.contatosLoaded = true;
+  
+        if (response['responseCode'] === 200) {
+          if (Object.keys(response['data']).length > 0) {
+            this.contatos = response['data'];
+          } else {
+            this.contatosEmpty = true;
+          }
+        } else {
+          this.contatosEmpty = true;
+        }
+      });
+  }
+  
+  onCloseDetailPanel() {
+    this.resetClienteSelecionado();
+
+    setTimeout(() => {
+      this.dadosCadastraisLoaded = false;
+      this.dadosCadastraisEmpty = false;
+      this.dadosCadastrais = {};
+
+      this.contatosEmpty = false;
+      this.contatosLoaded = false;
+      this.contatos = [];
+    }, 500);
   }
   searchInputValue: string;
 
   checkRouterParams(): Object {
     var aux_cartera;
-    if (this.matricula == 1){
-      aux_cartera ='T'
-    }else{
+    if (this.matricula == 1) {
+      aux_cartera = 'T'
+    } else {
       aux_cartera = 'S'
     }
     let formValue = {
@@ -253,30 +320,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
     return formValue;
   }
-  // openAgregarContactoModal() {
-  //   console.log("openAgregarContactoModal() se ha ejecutado.");
-  //   // Resto del código para abrir el modal
-  //   this.modalRef = this.modalService.show(this.modalDetalhes, {
-  //     class: 'modal-x1',
-  //   });
-  // }
-  
 
-  // closeModal() {
-  //   // Cierra el modal
-  //   this.modalRef.hide();
-  // }
-  // guardarContacto() {
-  //   if (this.agregarContactoForm.valid) {
-  //     const nuevoContacto = this.agregarContactoForm.value;
-  //     // Realiza aquí la lógica para guardar el nuevo contacto en el backend
-  //     // Luego, cierra el modal
-  //     this.closeModal();
-  //   } else {
-  //     // Marcar los campos inválidos en el formulario
-  //     this.agregarContactoForm.markAllAsTouched();
-  //   }
-  // }
   editarContacto(contato: any) {
     contato.editedIdCont = contato.id_cont;
     contato.editedContacto = contato.contacto;
@@ -284,7 +328,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     contato.editedDireccion = contato.direccion;
     contato.editedDsCont = contato.ds_cont;
     contato.originalDsTipoCont = contato.ds_tipo_cont;
-    contato.editing = true; // Indicar que este contacto está en modo de edición
+    contato.editing = true;
     this.editingContacto = true;
   }
   
@@ -371,7 +415,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.editingMode = true;
 
     // Guardar los valores actuales de los campos editables
-    this.editedFields.carnet = this.dadosCadastrais.cnpj_cpf;
+    this.editedFields.nit = this.dadosCadastrais.cnpj_cpf;
     this.editedFields.nombres = this.dadosCadastrais.nombres;
     this.editedFields.razonSocial = this.dadosCadastrais.razaoSocial;
     this.editedFields.ciudad = this.dadosCadastrais.ciudad;
@@ -380,10 +424,11 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.editedFields.direccion = this.dadosCadastrais.direccion;
     this.editedFields.id_cliente = this.dadosCadastrais.id_cliente;
     this.editedFields.tipo_persona = this.dadosCadastrais.tipo_persona;
+    this.editedFields.codigo_cliente = this.clientes.codigo_cliente;
     this.editedFields.tipo_pessoa = this.dadosCadastrais.tipo_pessoa;
     this.editedFields.telefono = this.dadosCadastrais.telefono;
     this.editedFields.celular = this.dadosCadastrais.celular;
-    this.editedFields.nit = this.dadosCadastrais.nit;
+    // this.editedFields.nit = this.dadosCadastrais.nit;
     this.editedFields.id_vendedor = this.dadosCadastrais.id_vendedor;
     this.originalVendedorId = this.dadosCadastrais.id_vendedor; 
     // Repite para otros campos editables...
@@ -398,14 +443,17 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
   saveChanges() {
     const codigoCliente = this.dadosCadastrais.id_cliente;
+    const codigo_cliente = this.dadosCadastrais.codigo_cliente;
     const editedData = {
       ...this.editedFields, 
+      codigo_cliente: this.dadosCadastrais.codigo_cliente,
       ubicacion: [
         {
           direccion: this.editedFields.direccion
         }
       ]
     };
+    
     this.editedFields.tipo_persona = this.mapTipoPessoaToTipoPersona(this.editedFields.tipo_pessoa);
     
 
@@ -413,7 +461,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       editedData.id_vendedor = this.editedFields.id_vendedor;
     }
     
-
+    console.log('Datos antes de enviarlos a sapUpdateClient:', editedData);
     // Llamar a la función para guardar los cambios
     this.clientesService.sapUpdateClient(codigoCliente, editedData).subscribe(
       (response) => {
@@ -572,67 +620,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     } else {
       this.pnotifyService.notice('Este cliente no pertenece a su cartera.');
     }
-  }
-
-  viewDetails(cliente: any): void {
-    this.detailPanelService.loadedFinished(false);
-
-    this.clienteSelecionado = cliente.codCliente;
-
-    this.dadosCadastraisLoaded = false;
-    this.dadosCadastraisEmpty = false;
-
-    this.contatosLoaded = false;
-    this.contatosEmpty = false;
-
-    this.clientesService
-      .getDetalhes(cliente.codCliente)
-      .pipe(
-        finalize(() => {
-          
-          this.dadosCadastraisLoaded = true;
-        })
-      )
-      .subscribe((response: JsonResponse) => {
-        if (response.data) {
-          this.dadosCadastrais = response.data;
-          console.log(this.dadosCadastrais);
-        } else {
-          this.dadosCadastraisEmpty = true;
-        }
-      });
-
-    this.clientesService
-      .getContatosResumido(cliente.codCliente)
-      .subscribe((response: any) => {
-        console.log('Datos recibidos desde getContatosResumido:', response);  
-        this.contatosLoaded = true;
-
-        if (response['responseCode'] === 200) {
-          if (Object.keys(response['data']).length > 0) {
-            this.contatos = response['data'];
-          } else {
-            this.contatosEmpty = true;
-          }
-        } else {
-          this.contatosEmpty = true;
-        }
-      });
-  }
-  
-  
-    onCloseDetailPanel() {
-    this.resetClienteSelecionado();
-
-    setTimeout(() => {
-      this.dadosCadastraisLoaded = false;
-      this.dadosCadastraisEmpty = false;
-      this.dadosCadastrais = {};
-
-      this.contatosEmpty = false;
-      this.contatosLoaded = false;
-      this.contatos = [];
-    }, 500);
   }
 
   onPageChanged(event: PageChangedEvent) {

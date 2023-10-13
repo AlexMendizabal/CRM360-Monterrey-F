@@ -12,9 +12,9 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialClientesService {
-  private readonly API = `http://23.254.204.187/api/comercial/clientes`;
+  private readonly API = `http://127.0.0.1:8000/comercial/clientes`;
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient) { }
 
   getStatus(): Observable<Object> {
     return this.http.get(`${this.API}/pesquisa/status`).pipe(take(1), retry(2));
@@ -38,6 +38,13 @@ export class ComercialClientesService {
       .pipe(take(1), retry(2));
   }
 
+  getVendedorCiudad(id_vendedor): Observable<Object> {
+    const httpParams = new HttpParams().set('id_vendedor', id_vendedor); 
+    return this.http
+      .get(`${this.API}/vendedor/ciudad`, { params: httpParams }) 
+      .pipe(take(1), retry(2));
+  }
+
   getPermissaoAcesso(id: any): Observable<Object> {
     return this.http
       .get(`${this.API}/permissao-acesso/${id}`)
@@ -54,22 +61,28 @@ export class ComercialClientesService {
   sapUpdateClient(codigo_cliente: number, data: any): Observable<Object> {
     console.log("update Cliente:", data);
     return this.http
-      .post(`${this.API}/updatesap`, data)
+      .post(`${this.API}/pesquisa/updatesap`, data)
       .pipe(take(1), retry(2));
   }
   sapUpdateContacto(codigo_cliente: number, data: any): Observable<Object> {
     console.log("update Contacto:", data);
     return this.http
-      .post(`${this.API}/updatesapcontacto`, data)
+      .post(`${this.API}/pesquisa/updatesapcontacto`, data)
       .pipe(take(1), retry(2));
-  }  
-  
+  }
+
 
   getContatosResumido(codCliente: number): Observable<Object> {
     return this.http
       .get(`${this.API}/pesquisa/contactodetalle/${codCliente}`)
       .pipe(take(1),
-      retry(2),
+        retry(2),
+      );
+  }
+
+  getTipoClientes() {
+    return this.http.get(`${this.API}/tipo_cliente`).pipe(
+      take(1)
     );
   }
 
@@ -79,8 +92,7 @@ export class ComercialClientesService {
   ): Observable<Object> {
     return this.http
       .get(
-        `${this.API}/verificar-cpf-cnpj/${documento}?getDadosCliente=${
-          getDadosCliente === true ? 1 : 0
+        `${this.API}/verificar-cpf-cnpj/${documento}?getDadosCliente=${getDadosCliente === true ? 1 : 0
         }`
       )
       .pipe(take(1), retry(2));
@@ -91,7 +103,7 @@ export class ComercialClientesService {
       .post(`${this.API}/pre-cadastro`, data)
       .pipe(take(1), retry(2));
   }
-  
+
   sapPostClient(data: any): Observable<Object> {
     return this.http
       .post(`${this.API}/postsap`, data)
@@ -247,7 +259,7 @@ export class ComercialClientesService {
     return this.http
       .get(`${this.API}/cadastro/carregar/anexos/${codCliente}`)
       .pipe(take(1)
-      // , retry(2)
+        // , retry(2)
       );
   }
 
@@ -255,7 +267,7 @@ export class ComercialClientesService {
     return this.http
       .post(`${this.API}/cadastro/upload/anexo`, data)
       .pipe(take(1)
-      // , retry(2)
+        // , retry(2)
       );
   }
 

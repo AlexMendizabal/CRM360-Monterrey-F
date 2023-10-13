@@ -76,13 +76,13 @@ export class ComercialService {
       })
       .pipe(take(1), retry(2));
   }
-  
-  
+
+
 
   getMaterialesOferta(params: any) {
     return this.http
       .get(
-        `${this.API}/materiales_lista_precio`, {
+        `${this.API}/materiales_lista_precio`,  {
         params: params,
       })
       .pipe(take(1), retry(2));
@@ -91,6 +91,15 @@ export class ComercialService {
     return this.http
       .get(
         `${this.API}/materiales_lista_precio_vendedor`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
+
+  getUpSellService(params: any) {
+    return this.http
+      .get(
+        `${this.API}/materiales_suplementarios`, {
         params: params,
       })
       .pipe(take(1), retry(2));
@@ -154,14 +163,14 @@ export class ComercialService {
 
   getListarPrecios() {
     return this.http.get(`${this.API}/vendedor/lista_precio`)
-    .pipe(take(1), retry(2));
+      .pipe(take(1), retry(2));
   }
 
   getTodosVendedores() {
     return this.http.get(`${this.API}/vendedor/allvendedor`)
-    .pipe(take(1), retry(2));
+      .pipe(take(1), retry(2));
   }
-  getCentrosLogisticos(){
+  getCentrosLogisticos() {
     return this.http.get(`${this.API}/almacen/centros_logisticos`);
   }
 }
