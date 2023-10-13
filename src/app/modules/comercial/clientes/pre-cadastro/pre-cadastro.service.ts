@@ -12,7 +12,7 @@ import { take } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ComercialClientesPreCadastroService {
-  private readonly BASE_URL: string = `https://127.0.0.1:8000/api`;
+  private readonly BASE_URL: string = `https://127.0.0.1:8000/api`   ;
   
   constructor(
     private vendedoresService: ComercialVendedoresService,
@@ -21,7 +21,7 @@ export class ComercialClientesPreCadastroService {
   ) {}
 
   loadDependencies() {
-    let vendedores = this.vendedoresService.getVendedores();
+    let vendedores = this.vendedoresService.getVendedores() ;
     let cnaes = this.dadosFaturamentoService.getCnaes();
     let ciudades = this.dadosFaturamentoService.getCiudades(); // Agregar esta línea
     return forkJoin([vendedores, cnaes, ciudades]); // Agregar ciudades aquí
