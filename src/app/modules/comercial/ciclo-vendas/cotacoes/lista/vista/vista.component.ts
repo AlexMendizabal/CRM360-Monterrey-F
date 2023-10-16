@@ -4,6 +4,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import html2canvas from 'html2canvas';
+import * as jsPDF from 'jspdf';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -34,6 +35,7 @@ export class VistaComponent implements OnInit, AfterViewInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    // tslint:disable-next-line:variable-name
     private _bsModalRef: BsModalRef,
     private sanitizer: DomSanitizer
   ) { }
@@ -43,12 +45,12 @@ export class VistaComponent implements OnInit, AfterViewInit {
     this.analiticos = this.resultFromParent.analitico;
     this.onClose = new Subject();
     this.imageSrc = this.sanitizer.bypassSecurityTrustUrl('assets/images/logo/logo-monterrey.png');
-    console.log('Received data in modal:', this.result);
+    // console.log('Received data in modal:', this.result);
   }
 
   ngAfterViewInit(): void {
     // Capture the content when the modal opens
-    this.captureScreen();
+    // this.captureScreen();
   }
 
   public onConfirm(): void {
@@ -61,13 +63,13 @@ export class VistaComponent implements OnInit, AfterViewInit {
     this._bsModalRef.hide();
   }
 
-  public openInNewTab() {
+  /*public openInNewTab() {
     // Construct the URL with the 'ofertaId' parameter
     const url = `/comercial/ciclo-vendas/23/cotacoes-pedidos/lista/vista/${this.ofertaId}`;
 
     // Open the URL in a new tab
     window.open(url, '_blank');
-  }
+  }*/
 
   public captureScreen() {
     const content = this.contentToConvert.nativeElement;
@@ -82,20 +84,41 @@ export class VistaComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    setTimeout(() => {
-      html2canvas(content).then((canvas) => {
-        const contentDataURL = canvas.toDataURL('image/png');
+    html2canvas(content).then((canvas) => {
+      const imgWidth = 980;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        console.log('Captured content:', contentDataURL);
+      const contentDataURL = canvas.toDataURL('image/png');
 
-        const newTab = window.open();
-        newTab.document.open();
-        newTab.document.write(`<html><body><img src="${contentDataURL}" /></body></html>`);
-        newTab.document.close();
+      // Create a new window and open the PDF in a new tab
+      const newWindow = window.open('', '_blank');
+      newWindow.document.open();
+      newWindow.document.write(`<html><body><img src="${contentDataURL}" width="${imgWidth}" height="${imgHeight}" /></body></html>`);
+      newWindow.document.close();
 
-        //this.onConfirm();
+      setTimeout(() => {
+        newWindow.print();
+      }, 500);
+    });
+  }
 
-      });
-    }, 100);
+  onDownloadPDF() {
+    const content = this.contentToConvert.nativeElement;
+
+    // Use html2canvas to capture the content as an image
+    html2canvas(content).then(canvas => {
+      // Create a new PDF document
+      const pdf = new jsPDF('p', 'mm', 'a4');
+
+      // Calculate the image dimensions to fit the PDF page
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // Add the captured image to the PDF
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgWidth, imgHeight);
+
+      // Download the PDF
+      pdf.save('your_pdf_filename.pdf');
+    });
   }
 }

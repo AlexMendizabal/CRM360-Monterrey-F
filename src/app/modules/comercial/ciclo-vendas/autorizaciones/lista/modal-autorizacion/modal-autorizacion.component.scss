@@ -12,4 +12,8 @@
   .custom-modal table {
     width: 100%; /* Make the table fill the modal's width */
   }
-
+  .table-container {
+    max-height: 400px; /* Altura máxima para el scroll vertical */
+    overflow-y: auto; /* Añade el scroll vertical si la tabla excede la altura máxima */
+    border: 1px solid #ccc; /* Opcional: un borde para el contenedor */
+  }

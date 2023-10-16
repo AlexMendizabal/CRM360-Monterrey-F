@@ -82,7 +82,7 @@
         >
           <span aria-hidden="true">
            <i class=" text-primary fas fa-user"></i>
-          </span>Detalhes do Cliente
+          </span>Detalles do Cliente
         </a>
         </div>
       </div>
@@ -368,7 +368,7 @@
       </div>
     </div>
     <hr>
-    
+
     <div class="col-12" *ngIf="profile.liberacoesAdm || profile.liberacoesPadrao">
       <form [formGroup]="form" autocomplete="off">
         <div class="form-group col-12">
@@ -376,7 +376,7 @@
           <input
             class="form-control"
             id="descObs"
-            formControlName="descObs" 
+            formControlName="descObs"
             placeholder="Digite..."
             [ngClass]="onFieldError('descObs') + ' ' + onFieldRequired('form.controls.descObs')">
           <invalid-form-control [show]="onFieldInvalid('descObs')" message="Descrição é obrigatório e deve conter no mínimo 3 dígitos."></invalid-form-control>
@@ -384,13 +384,13 @@
         <div class="checkbox col-1">
           <label class="checkbox-inline">
             <input
-            type="checkbox" 
+            type="checkbox"
             id="excluiPedido"
             formControlName="excluiPedido"
             > Excluir pedido
           </label>
         </div>
-      </form>  
+      </form>
       <div class="form-row justify-content-center">
         <button
           type="button"
@@ -512,7 +512,7 @@
             </div>
           </div>
           <div [hidden]="!loadingDetalhes" class="col-lg-12 text-muted ">
-            <p><strong>Buscando os detalhes do cliente...</strong></p>
+            <p><strong>Buscando los detalles del cliente...</strong></p>
           </div>
         </div>
       </div>

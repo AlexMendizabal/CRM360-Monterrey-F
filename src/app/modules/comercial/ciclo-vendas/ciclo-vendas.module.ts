@@ -10,6 +10,7 @@ import { ComercialCicloVendasRoutingModule } from './ciclo-vendas-routing.module
 // Components
 import { ComercialCicloVendasComponent } from './ciclo-vendas.component';
 
+
 @NgModule({
   declarations: [ComercialCicloVendasComponent],
   imports: [

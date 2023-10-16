@@ -128,7 +128,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   depositos: Array<any> = [];
   filteredDepositos: Array<any> = [];
   situacoesCores: Array<IAssociacao> = [];
-  vendedores: Array<any> = [];
+  vendedores: any = [];
   dataInicial:  Array<any> = []; //////aumente esto para usar en la funcion getFilterValues
   dataFinal: Array<any> = []; //////aumente esto para usar en la funcion getFilterValues
   totalMateriales: Array<any> = [];
@@ -203,7 +203,8 @@ export class ComercialCicloVendasCotacoesListaComponent
     private desdobrarPropostaService: ComercialCicloVendasCotacoesListaModalDesdobrarPropostaService,
     private emailCotacaoService: ComercialCicloVendasCotacoesListaModalEmailCotacaoService,
     private modalService: BsModalService,
-    private modalAutorizacionService:  ModalAutorizacionService
+    private modalAutorizacionService:  ModalAutorizacionService,
+
   ) {
     this.localeService.use('es');
     this.bsConfig = Object.assign(
@@ -226,19 +227,9 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.titleService.setTitle('Autorizaciones');
     this.onDetailPanelEmitter();
    //this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente'];
+   this.getVendedores();
     this.getDatosAutorizaciones();
     this.search(null);
-
-
-    /* this.formGroup = this.formBuilder.group({
-      dataInicial: [''], // Valor inicial del campo dataInicial
-      dataFinal: [''], // Valor inicial del campo fechaFinal
-      estado_oferta: [''],
-      nrPedido: [''],
-      codVendedor: [''],
-      pagina: [''],
-      registros: ['']
-    }); */
   }
 
   ngOnDestroy(): void {
@@ -380,14 +371,13 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   getVendedores(): void {
-    this.vendedoresService.getVendedores().subscribe((response: any) => {
-      if (response.responseCode === 200) {
-        this.vendedores = response.result;
-
-        this.vendedores.unshift({
-          id: 0,
-          nome: 'EXHIBIR TODOS',
-        });
+    this.vendedoresService.getVendedores()
+    .subscribe({
+      next: (response: JsonResponse) => {
+        //console.log(response);
+        if (response.hasOwnProperty('success') && response.success === true) {
+          this.vendedores = response.data;
+        }
       }
     });
   }
@@ -457,9 +447,9 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   checkRouterParams(): Object {
     let formValue = {
-      dataInicial: this.dateService.getFirstDayMonth(),
-      dataFinal: this.dateService.getLastDayMonth(),
-      codVendedor: 0,
+      dataInicial: this.dateService.getStartOfWeek(),
+      dataFinal: this.dateService.getToday(),
+      codVendedor: this.vendedores,
       estado_oferta: this.estado_oferta,
       nrPedido: null,
       pagina: 1,
@@ -476,7 +466,7 @@ export class ComercialCicloVendasCotacoesListaComponent
         }
       }
     );
-  
+
     this.activatedRouteSubscription.unsubscribe();
     return formValue;
   }
@@ -523,19 +513,19 @@ setOrderByModal(column: string) {
 filterByFechaInicialStatus(status: string): void {
   this.formGroup.get('dataInicial').setValue(status);
   this.onFilter();
-} 
+}
 filterByFechaFinalStatus(status: string): void {
   this.formGroup.get('dataFinal').setValue(status);
   this.onFilter();
-} 
+}
 filterByCodVendedorStatus(status: string): void {
   this.formGroup.get('codVendedor').setValue(status);
   this.onFilter();
-} 
+}
  filterByEstadoStatus(status: string): void {
   this.formGroup.get('estado_oferta').setValue(status);
   this.onFilter();
-} 
+}
 
 
 onFilter(): void {
@@ -545,7 +535,7 @@ onFilter(): void {
     this.detailPanelService.hide();
     this.setRouterParams(this.getFormFilterValues());
     this.getDatosAutorizaciones();
-  return; 
+  return;
 }
 
 
@@ -582,7 +572,7 @@ getFormFilterValues(): Object {
     const idEstadoOferta = this.formGroup.value.estado_oferta.id;
     params['estado_oferta'] = idEstadoOferta;
   }
-  
+
   if (this.formGroup.value.nrPedido) {
     params.nrPedido = this.formGroup.value.nrPedido;
   }
@@ -601,7 +591,7 @@ getFormFilterValues(): Object {
 
   params.orderBy = this.orderBy;
   params.orderType = this.orderType;
-  return params; 
+  return params;
 }
 
 populaDadosResolver() {
@@ -856,40 +846,10 @@ onPropostaDesdobrada(data: [number, ICotacao, []]): void {
   this.form.controls.nrPedido.setValue(nrProposta);
   this.form.controls.codEmpresa.setValue(cotacao.codEmpresa);
   this.onFilter();
-
-  /* if (materiais.length > 0) { 
-    this.itensLoaded = false;
-
-    const filteredMateriais = this.detalhes.itens['materiais'].filter(
-      (_material: any) =>
-        !materiais.some(
-          (material: any) => material.codigo === _material.codigo
-        )
-    );
-
-    let total = {
-      quantidade: 0,
-      valor: 0,
-    };
-
-    filteredMateriais.map((material: any) => {
-      total.quantidade += material.quantidade;
-      total.valor += material.valorTotal;
-    });
-
-    this.detalhes.itens = {
-      materiais: filteredMateriais,
-      total: total,
-    };
-
-    setTimeout(() => {
-      this.itensLoaded = true;
-    }, 1000);
-  } */
 }
 
 openModal(id_autorizacion) {
-   //console.log(id_autorizacion); 
+   //console.log(id_autorizacion);
   this.modalAutorizacionService.showModal(id_autorizacion);
 }
 
@@ -942,31 +902,5 @@ nuevo() {
         this.pnotifyService.error();
       }
     );
-} 
-
-/* registrarAutorizacion(): void {
-  const nombreVendedor = this.form.value['nombreVendedor'];
-  const estado = this.form.value['estado'];
-  const fechaInicial = this.form.value['fechaInicial'];
-  const fechaFinal = this.form.value['fechaFinal'];
-
-  const data = {
-    id_vendedor: nombreVendedor,
-    estado: estado,
-    fechaInicial: fechaInicial ? fechaInicial : null,
-    fechaFinal: fechaFinal ? fechaFinal : null,
-  };
-  // Llamada al servicio reporteAgenda
-  this.cotacoesService.getAutorizaciones(data).subscribe(
-    (response: any) => {
-      this.totalItems = response.result.length;
-      //console.log('respuesta|132123');
-      //console.log(this.totalItems);
-      // Realizar las acciones necesarias con la respuesta
-    },
-    (error: any) => {
-      console.error(error);
-    }
-  );
-} */
+}
 }

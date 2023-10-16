@@ -1,6 +1,6 @@
 <loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
-<app-header appTitle="Cotações">
+<app-header appTitle="Cotizaciones">
   <button type="button" (click)="onReset()">
     Limpar
   </button>
@@ -198,21 +198,19 @@
           </ng-template>
           <ng-template #tbody let-tbody>
             <tr *ngFor="let pedido of dados; let i = index"[class.table-active]="i == activeRow">
-
-            <td class="text-center" [ngStyle]="styleStatusBorder(pedido)">
+              <td class="text-center" [ngStyle]="styleStatusBorder(pedido)">
                 <span class="d-inline-flex">
-              <ng-template #tooltipLiberacao>
-                    <p class="mb-2">ESPERANDO LIBERACION:</p><br>
-                    <div *ngIf="pedido.travas.length > 0">
-                      <dl>
-                        <ng-container *ngFor="let trava of pedido.travas">
-                          <dd><i class="fas fa-exclamation-triangle small mr-1"></i> {{ trava['desTrava'] }}</dd>
-                        </ng-container>
-                      </dl>
-                    </div>
-                  </ng-template>
-
-              <ng-template #tooltipLiberacaoAberto>
+                <ng-template #tooltipLiberacao>
+                  <p class="mb-2">ESPERANDO LIBERACION:</p><br>
+                  <div *ngIf="pedido.travas.length > 0">
+                    <dl>
+                      <ng-container *ngFor="let trava of pedido.travas">
+                        <dd><i class="fas fa-exclamation-triangle small mr-1"></i> {{ trava['desTrava'] }}</dd>
+                      </ng-container>
+                    </dl>
+                  </div>
+                </ng-template>
+                <ng-template #tooltipLiberacaoAberto>
                     <p class="mb-2">ESPERANDO LIBERACION:</p><br>
                     <div>
                       <dl>
@@ -223,10 +221,8 @@
                     </div>
                   </ng-template>
 
-              <i class="mr-2 text-warning fas fa-random" *ngIf="pedido.estado_oferta === 1"
+                  <i class="mr-2 text-warning fas fa-random" *ngIf="pedido.estado_oferta === 1"
                     tooltip="Pedido transferido" placement="right"></i>
-
-
                   <i class="mr-2 text-black-50 fas fa-random" *ngIf="pedido.estado_oferta === 0"
                     tooltip="Pedido não transferido" placement="right"></i>
 
@@ -249,13 +245,12 @@
                   <i class="mr-2 text-black-50 far fa-check-square" *ngIf="pedido.pedidoFaturado === 0"
                     tooltip="Pedido não faturado" placement="right"></i>
                 </span>
-            </td>
+              </td>
 
-
-              <td class="text-center hover" (click)="openModal(modalDetalhes, pedido.id_oferta)"
+              <!--<td class="text-center hover" (click)="openModal(modalDetalhes, pedido.id_oferta)"
                 [ngClass]="estoqueSuspensoClassStatusBorder(pedido.estado_oferta)">
                 {{ pedido.codigo_oferta }}
-              </td>
+              </td>-->
               <td class="text-center hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.fecha_inicial
                 | date:
                 'dd/MM/yyyy'

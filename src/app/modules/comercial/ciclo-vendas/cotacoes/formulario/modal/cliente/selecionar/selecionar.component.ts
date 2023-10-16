@@ -14,10 +14,10 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
   templateUrl: './selecionar.component.html',
   styleUrls: ['./selecionar.component.scss']
 })
-export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent   
+export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
   implements OnInit {
   loaderNavbar: EventEmitter<boolean> = new EventEmitter();
-  
+
   @Output() cliente = new EventEmitter();
   @Output() fecharModal = new EventEmitter();
   @Output() clientesParams = new EventEmitter();
@@ -50,7 +50,7 @@ export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
   }
 
   getClientes(params?){
-    
+
     const _params = params ?? {};
     const _obj = this.formClientes.value;
     this.loadingClientes = true;
@@ -93,7 +93,7 @@ export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
     this.formClientes = this.formBuilder.group({
       buscarPor: ['NM_CLIE'],
       pesquisa: [null, Validators.required],
-      NM_CLIE:[null],
+      NM_CLIE: [null],
       registros: [this.itemsPerPage],
     });
   }

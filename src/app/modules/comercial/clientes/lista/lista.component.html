@@ -244,12 +244,22 @@
                         </div>
                       </div>
                       <div class="form-group col-lg-6">
+                        <label>Codigo Cliente SAP</label>
+                        <div *ngIf="!editingMode">
+                          {{ dadosCadastrais.codigo_cliente == null ? 'NO INFORMADO' : dadosCadastrais.codigo_cliente }}
+                        </div>
+                        <div *ngIf="editingMode">
+                          <input [(ngModel)]="editedFields.codigo_cliente" type="hidden">
+                        </div>
+                      </div>
+                      
+                      <div class="form-group col-lg-6">
                         <label>C.I.</label>
                         <div>
                           <div>
                             <div *ngIf="!editingMode">{{ dadosCadastrais.cnpj_cpf == null ? 'NO INFORMADO' :
                               dadosCadastrais.cnpj_cpf }}</div>
-                            <div *ngIf="editingMode"><input [(ngModel)]="editedFields.carnet"></div>
+                            <div *ngIf="editingMode"><input [(ngModel)]="editedFields.nit"></div>
                           </div>
                         </div>
                       </div>
@@ -321,6 +331,30 @@
                     </div>
                     <div class="form-row">
                       <div class="form-group col-lg-6">
+                        <label>Lista Ciudad</label>
+                        <div>
+                          <div *ngIf="!editingMode">{{ vendedoresList.length > 0 ? (vendedoresList[0].nombre_lista ||
+                            'NO INFORMADO') : 'NO INFORMADO' }}</div>
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-6">
+                        <label for="rubro">Rubro</label>
+                        <div>
+                          <ng-container *ngIf="!editingMode; else editingRubro">
+                            {{ dadosCadastrais.rubro || 'NO INFORMADO' }}
+                          </ng-container>
+                          <ng-template #editingRubro>
+                            <select [(ngModel)]="editedFields.id_rubro" id="rubro">
+                              <option [value]="dadosCadastrais.id_rubro">{{ dadosCadastrais.rubro }}</option>
+                              <option *ngFor="let rubro of rubros" [value]="rubro.id">{{ rubro.descripcion }}</option>
+                            </select>
+                          </ng-template>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-lg-6">
                         <label>Sucursal</label>
                         <div>
                           <div *ngIf="!editingMode">{{ dadosCadastrais.sucursal == null ? 'NO INFORMADO' :
@@ -332,7 +366,7 @@
                         <div>
                           <div *ngIf="!editingMode">{{ dadosCadastrais.direccion == null ? 'NO INFORMADO' :
                             dadosCadastrais.direccion}}</div>
-                            <div *ngIf="editingMode"><input [(ngModel)]="editedFields.direccion"></div>
+                          <div *ngIf="editingMode"><input [(ngModel)]="editedFields.direccion"></div>
                         </div>
                       </div>
                     </div>
@@ -353,9 +387,10 @@
                           <ng-template #editingVendedor>
                             <select [(ngModel)]="editedFields.id_vendedor">
                               <option [value]="originalVendedorId">{{ dadosCadastrais.NombreVendedor }}</option>
-                              <option *ngFor="let vendedor of vendedoresList" [value]="vendedor.id">{{ vendedor.nome }}</option>
+                              <option *ngFor="let vendedor of vendedoresList" [value]="vendedor.id">{{ vendedor.nome }}
+                              </option>
                             </select>
-                          </ng-template>                          
+                          </ng-template>
                         </div>
                       </div>
 
@@ -433,43 +468,13 @@
                     <div *ngIf="contato.editing">
                       <button type="button" class="btn btn-secondary"
                         (click)="cancelEditingContact(contato)">Cancelar</button>
-                      <button type="button" class="btn btn-primary" (click)="saveEditedContact(contato)">Guardar Cambios</button>
+                      <button type="button" class="btn btn-primary" (click)="saveEditedContact(contato)">Guardar
+                        Cambios</button>
                     </div>
                   </div>
                 </div>
               </div>
-              <!-- <button type="button" class="btn btn-primary" (click)="openAgregarContactoModal()">
-                Abrir Modal
-            </button> -->
-                            
-            </tab>  
-            <!-- <ng-template #modalDetalhes>
-              <div class="modal-header">
-                  <h4 class="modal-title pull-left">Agregar Contacto</h4>
-                  <div class="d-flex justify-content-center align-items-center">
-                      <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                  </div>
-              </div>
-              <div class="modal-body">
-
-                  <form [formGroup]="agregarContactoForm">
-                      <div class="form-group">
-                          <label>Contacto</label>
-                          <input type="text" class="form-control" formControlName="contacto">
-                      </div>
-
-                      <div class="text-center">
-                          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-                          <button type="button" class="btn btn-primary" (click)="guardarContacto()">Guardar Contacto</button>
-                      </div>
-                  </form>
-              </div>
-          </ng-template> -->
-            
-            
-
+            </tab>
           </tabset>
         </detail-panel>
       </div>

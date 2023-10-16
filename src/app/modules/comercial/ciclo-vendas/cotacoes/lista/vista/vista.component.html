@@ -1,6 +1,6 @@
 <div class="modal-content custom-modal" id="contentToConvert">
   <div #contentToConvert>
-    <div class="wrapper">
+    <div class="wrapper card-bodyy">
       <!-- Main content -->
       <section class="invoice">
         <!-- title row -->
@@ -28,10 +28,6 @@
                     <div class="col-md-12">
                       <div class="row">
                         <div class="col-md-3">
-                          <label for="">Codigo de Oferta:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].id_oferta}}" class="form-control" readonly>
-                        </div>
-                        <div class="col-md-3">
                           <label for="">Nombre de Oferta:</label>
                           <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_oferta }}" class="form-control" readonly>
                         </div>
@@ -48,10 +44,6 @@
                           <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].fecha_creacion }}" class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
-                          <label for="">Cantidad Total:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].cantidad_total }}" class="form-control" readonly>
-                        </div>
-                        <div class="col-md-3">
                           <label for="">Monto total Bruto:</label>
                           <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total_bruto }}" class="form-control" readonly>
                         </div>
@@ -66,10 +58,6 @@
                         <div class="col-md-3">
                           <label for="">Observación:</label>
                           <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].observacion}}" class="form-control" readonly>
-                        </div>
-                        <div class="col-md-3">
-                          <label for="">Codigo de Oferta:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].codigo_oferta}}" class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">Peso Total:</label>
@@ -98,10 +86,6 @@
                   <div class="card-body">
                     <div class="col-md-12">
                       <div class="row">
-                        <div class="col-md-3">
-                          <label for="">ID del cliente:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].id_cliente}}" class="form-control" readonly>
-                        </div>
                         <div class="col-md-3">
                           <label for="">Codigo del cliente:</label>
                           <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].codigo_cliente}}" class="form-control" readonly>
@@ -223,5 +207,9 @@
       </section>
       <!-- /.content -->
     </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" #captureButton (click)="onDownloadPDF()">DESCARGAR</button>
+    <button type="button" class="btn btn-secondary" (click)="captureScreen()">IMPRIMIR</button>
   </div>
 </div>

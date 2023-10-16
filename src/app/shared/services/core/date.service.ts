@@ -106,6 +106,28 @@ export class DateService {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
 
+  // Función para obtener la fecha de inicio de la semana actual (lunes)
+  getStartOfWeek(): Date {
+    const currentDate = new Date();
+    const startOfWeek = new Date(currentDate);
+
+    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1));
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    return startOfWeek;
+  }
+
+  // Función para obtener la fecha de fin de la semana actual (domingo)
+  getEndOfWeek(): Date {
+    const currentDate = new Date();
+    const endOfWeek = new Date(currentDate);
+
+    endOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + 7);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    return endOfWeek;
+  }
+
   convert2PhpDate(date: Date): string {
     const y = date.getFullYear();
     let m: any = date.getMonth() + 1;
