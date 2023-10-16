@@ -32,7 +32,6 @@ export class ModalAutorizacionService {
   }
 
   showModal(id_autorizacion): void{
-    //console.log("modal ",id_autorizacion);
     this.loaderNavbar.emit(true);
     this.autorizacionService
     .traerAutorizacion(id_autorizacion)
@@ -40,7 +39,7 @@ export class ModalAutorizacionService {
       finalize(() => {
         this.loaderNavbar.emit(false);
       })
-    )     
+    )
      .subscribe({
       next: (response: JsonResponse) => {
         if (response.success === true) {
@@ -52,10 +51,11 @@ export class ModalAutorizacionService {
             ignoreBackdropClick: true,
             keyboard: false,
           };
-          
+
           this.modalAutorizacionService.show( ModalAutorizacionComponent,{
             initialState: { dataForm: response.data},
           });
+
         } else {
           this.pnotifyService.error();
         }
@@ -66,11 +66,4 @@ export class ModalAutorizacionService {
     });
   }
 
-  modificarBoton(){
-    
-  }
-
-  modificarAutorizacion(params: any){
-    //this.id_oferta = this.data.id_oferta;
-  }
 }

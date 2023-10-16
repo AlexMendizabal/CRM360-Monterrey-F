@@ -197,7 +197,7 @@
             </tr>
           </ng-template>
           <ng-template #tbody let-tbody>
-            <tr *ngFor="let pedido of dados; let i = index"[class.table-active]="i == activeRow">d
+            <tr *ngFor="let pedido of dados; let i = index"[class.table-active]="i == activeRow">
               <td class="text-center" [ngStyle]="styleStatusBorder(pedido)">
                 <span class="d-inline-flex">
                 <ng-template #tooltipLiberacao>
