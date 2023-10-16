@@ -131,17 +131,17 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
       console.log(this.formObj );
       this.cotacoesService.autorizaciones(this.formObj)
         .pipe().subscribe(
-          (response: any) => {
-            console.log(response);
-          }
-        );
-          this.onClose();
+        (response: any) => {
+          console.log(response);
+        }
+      );
+      this.onClose();
     }
     else
     {
-        this.onClose();
+      this.onClose();
     }
- }
+  }
 
   onClose(): void {
     this.formularioService.limparCarrinhoSubject.next(true);
