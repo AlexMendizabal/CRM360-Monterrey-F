@@ -17,8 +17,8 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCicloVendasAutorizacionesService {
-  private readonly API = `http://127.0.0.1:8000/comercial/ciclo-vendas/cotacoes`;
-  private readonly APIAutorizacion = `http://127.0.0.1:8000/comercial/ciclo-vendas/autorizaciones`;
+  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
+  private readonly APIAutorizacion = `http://23.254.204.187/api/comercial/ciclo-vendas/autorizaciones`;
 
 
   constructor(

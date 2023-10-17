@@ -233,10 +233,10 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   ngOnDestroy(): void {
-    this.unsetLoaderEvents();
+   /*  this.unsetLoaderEvents();
     this.unsetChangeEvents();
     this.activatedRouteSubscription.unsubscribe();
-    this.showDetailPanelSubscription.unsubscribe();
+    this.showDetailPanelSubscription.unsubscribe(); */
   }
 
  /*  navigateToNuevo() {

@@ -12,7 +12,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialClientesService {
-  private readonly API = `http://127.0.0.1:8000/comercial/clientes`;
+  private readonly API = `http://23.254.204.187/api/comercial/clientes`;
 
   constructor(protected http: HttpClient) { }
 
@@ -39,9 +39,9 @@ export class ComercialClientesService {
   }
 
   getVendedorCiudad(id_vendedor): Observable<Object> {
-    const httpParams = new HttpParams().set('id_vendedor', id_vendedor); 
+    const httpParams = new HttpParams().set('id_vendedor', id_vendedor);
     return this.http
-      .get(`${this.API}/vendedor/ciudad`, { params: httpParams }) 
+      .get(`${this.API}/vendedor/ciudad`, { params: httpParams })
       .pipe(take(1), retry(2));
   }
 
