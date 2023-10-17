@@ -53,7 +53,7 @@ export class ModalAutorizacionComponent implements OnInit {
     const params = {
       estado: estado,
       id_autorizacion: id_autorizacion,
-      descripcion_usua: observacion.value
+      descripcion_usua: observacion
     };
 
     this.loaderNavbar = true;

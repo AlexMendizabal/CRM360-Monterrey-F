@@ -99,7 +99,7 @@ export class ComercialClientesPreCadastroComponent
   apellido_p_contacto_array: string = '';
   apellido_m_contacto_array: string = '';
   telefono_contacto_array: string = '';
-  celular_contacto_array: string = '';; 
+  celular_contacto_array: string = '';;
   direccion_contacto_array: string = '';;
 
 
@@ -277,10 +277,11 @@ export class ComercialClientesPreCadastroComponent
       )
       .subscribe(
         (response: any) => {
-/*           console.log('Datos obtenidos en loadDependencies():', response);
- */
+          console.log('Datos obtenidos en loadDependencies():', response[0].data);
+
           if (response[0].responseCode === 200) {
-            this.vendedores = response[0].result;
+            this.vendedores = response[0].data;
+
           } else {
             this.handleFormFieldsError();
           }
@@ -498,7 +499,7 @@ export class ComercialClientesPreCadastroComponent
     };
     /*  console.log(this.ubicacionFormularios); */
     /* this.ubicacionFormularios.forEach((formulario) => {
-  
+
       data.ubicacion.push(formulario.value);
     }); */
     data.ubicacion = this.ubicacionFormularios
@@ -531,8 +532,7 @@ export class ComercialClientesPreCadastroComponent
         contactos: data.contactos,
         id_tipo_cliente: this.form.value.tipo_cliente
 
-      }; /* console.log('Datos antes de enviarlos:', formObj);
- */
+      }; /* console.log('Datos antes de enviarlos:', formObj);*/
       this.clientesService
 
         .sapPostClient(formObj)
@@ -563,6 +563,7 @@ export class ComercialClientesPreCadastroComponent
         );
 
     }
+    this.form.reset()
   }
 
   setType(type: string) {
@@ -664,10 +665,10 @@ export class ComercialClientesPreCadastroComponent
   }
 
   actualizarPosicion(atributo, index) {
-    //this.ubicacionFormularios[index].titulo_ubicacion = atributo;  
+    //this.ubicacionFormularios[index].titulo_ubicacion = atributo;
     //console.log(this.ubicacionFormularios[index].titulo_ubicacion)
    this.titulo_ubicacion_array = atributo;
-    this.index_array_ubicacion = index; 
+    this.index_array_ubicacion = index;
 
     this.ubicacionFormularios[index].titulo_ubicacion = atributo
   }

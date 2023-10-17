@@ -97,7 +97,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
 
   ngOnInit(): void {
     //this.confirmDuplicatas();
-    this.verificador();
+   // this.verificador();
   }
 
   ngAfterViewChecked() {
@@ -178,8 +178,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
       titulo_observacionElement.style.display = deshabilitar ? 'none' : 'block';
       console.log(deshabilitar);
       return;
-    }
-  }
+    }
+  }
 
   onData(event: any): void {
     if (event.corrente && Object.entries(event.corrente).length > 0) {

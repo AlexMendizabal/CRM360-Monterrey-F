@@ -127,8 +127,12 @@ export class ComercialCicloVendasCotacoesListaComponent
   vendedores: Array<any> = [];
   totalMateriales: Array<any> = [];
 
+  resultFromParent: any;
+  result: [];
+  analiticos: any[];
 
   items: Array<any> = [];
+  ofer: Array<any> = [];
 
   dados: Array<any> = [];
 
@@ -228,6 +232,8 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.formGroup = this.formBuilder.group({
       codSituacao: [this.defaultSelection]
     });
+    this.result = this.resultFromParent;
+    this.analiticos = this.resultFromParent.analitico;
   }
 
   ngOnDestroy(): void {
@@ -1371,7 +1377,8 @@ export class ComercialCicloVendasCotacoesListaComponent
       .subscribe({
         next: (response: any) => {
           if (response.responseCode === 200) {
-            this.items = response.result['analitico'];
+            this.ofer = response.result.oferta[0];
+            this.items = response.result.analitico;
             this.totalMateriales = response.result.total;
             this.totalModal = this.items.length;
           } else {

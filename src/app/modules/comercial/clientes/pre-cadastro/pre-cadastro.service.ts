@@ -12,8 +12,8 @@ import { take } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ComercialClientesPreCadastroService {
-  private readonly BASE_URL: string = `https://127.0.0.1:8000/api`   ;
-  
+  private readonly BASE_URL: string = `https://23.254.204.187/apiapi`   ;
+
   constructor(
     private vendedoresService: ComercialVendedoresService,
     private dadosFaturamentoService: ComercialClientesCadastroDadosFaturamentoFormularioService,
@@ -26,14 +26,14 @@ export class ComercialClientesPreCadastroService {
     let ciudades = this.dadosFaturamentoService.getCiudades(); // Agregar esta línea
     return forkJoin([vendedores, cnaes, ciudades]); // Agregar ciudades aquí
   }
-  
+
   getCiudades() {
     return this.http.get(`${this.BASE_URL}/ciudades`).pipe(
       take(1)
     );
   }
 
-  
+
 
   postAkna(param){
     return this.http.post(

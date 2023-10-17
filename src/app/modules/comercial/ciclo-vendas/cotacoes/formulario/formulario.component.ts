@@ -2029,13 +2029,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     }
 
     if (abstractControlField) {
-      for (const controlName in abstractControl.controls) {
-        if (abstractControl.controls[controlName]) {
-          // @ts-ignore
+      for (const controlName in abstractControl['controls']) {
+        if (abstractControl['controls'][controlName]) {
           if (
-            // @ts-ignore
-            this.onFieldRequired(abstractControl.controls[controlName]) &&
-            // @ts-ignore
+            this.onFieldRequired(abstractControl['controls'][controlName]) &&
             controlName == abstractControlField
           ) {
             return 'is-required';

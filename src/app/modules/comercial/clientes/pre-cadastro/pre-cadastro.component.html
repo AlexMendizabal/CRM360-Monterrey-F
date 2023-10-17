@@ -37,8 +37,8 @@
           <div class="form-group col-md-3">
             <label for="vendedor"> Vendedor</label>
             <ng-select [searchable]="true" [clearable]="false" [items]="vendedores" [virtualScroll]="true"
-              labelForId="vendedor" bindLabel="nome" bindValue="id" formControlName="vendedor"
-              (change)="changeVendedor($event.id)">
+              labelForId="vendedor" bindLabel="nombre" bindValue="ID" formControlName="vendedor"
+              (change)="changeVendedor($event.ID)">
             </ng-select>
           </div>
         </div>
