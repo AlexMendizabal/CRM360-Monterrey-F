@@ -336,7 +336,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         this.appTitle = 'Editar cotação/pedido';
       } else if (params.idReservado) {
         this.idReservado = parseInt(params.idReservado);
-        this.appTitle = 'Nova cotação/pedido';
+        this.appTitle = '/pedido';
       }
 
       if (this.activatedRoute.snapshot.url[0].path == 'visualizar') {
@@ -351,11 +351,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Ciclo de vendas',
+          descricao: 'Ciclo de ventas',
           routerLink: `/comercial/ciclo-vendas/${id}`,
         },
         {
-          descricao: 'Cotações e pedidos',
+          descricao: 'Cotizaciones y Pedidos',
           routerLink: `/comercial/ciclo-vendas/${id}/cotacoes-pedidos/lista`,
         },
         {
@@ -390,7 +390,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       .pipe(
         finalize(() => {
           this.dependenciesLoaded = true;
-          if (this.appTitle == 'Nova cotação/pedido') {
+          if (this.appTitle == 'Nueva Cotización/pedido') {
             this.setEmpresa();
             this.setTransportadora();
           }
@@ -1603,11 +1603,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   onHistoricoExclusao(): void {
     const params = this.form.value;
 
-    if (this.appTitle == 'Editar cotação/pedido' || this.appTitle == 'visualizar cotação/pedido') {
+    if (this.appTitle == 'Editar Cotización/pedido' || this.appTitle == 'visualizar cotação/pedido') {
       this.historicoExclusaoService.showModal(
         this.setParamsHistoricoExclusao(params)
       );
-    } else if (this.appTitle == 'Nova cotação/pedido') {
+    } else if (this.appTitle == 'Nueva Cotización/pedido') {
       this.pnotifyService.notice('Cotação nova, não possui histórico');
     }
   }

@@ -145,6 +145,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   form: FormGroup;
   codClientErrors = false;
 
+  id_oferta: number;
+
   situacoes: Array<SituacaoProposta> = [];
   empresas: Array<any> = [];
   depositos: Array<any> = [];
@@ -330,8 +332,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.cotacoesService.getIdOferta()
       .subscribe((response: JsonResponse) => {
         if (response.responseCode == 200) {
-          const id_oferta = response.result.id_oferta + 1;
-          this.form.controls.codigo_oferta_crm.setValue(id_oferta);
+          this.id_oferta = response.result.id_oferta + 1;
+          this.form.controls.codigo_oferta_crm.setValue(this.id_oferta);
           this.form.controls.codigo_oferta.setValue(response.result.codigo_oferta);
 
         }
@@ -460,14 +462,14 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.activatedRoute.params.subscribe((params: any) => {
       if (params.codCotacao) {
         this.codCotacao = parseInt(params.codCotacao);
-        this.appTitle = 'Editar cotação/pedido';
+        this.appTitle = 'Editar Cotización/pedido';
       } else if (params.idReservado) {
         this.idReservado = parseInt(params.idReservado);
-        this.appTitle = 'Nova cotação/pedido';
+        this.appTitle = 'Nueva Cotización/pedido';
       }
 
       if (this.activatedRoute.snapshot.url[0].path == 'visualizar') {
-        this.appTitle = 'visualizar cotação/pedido';
+        this.appTitle = 'visualizar Cotizacion/pedido';
       }
 
       this.titleService.setTitle(this.appTitle);
@@ -478,11 +480,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Ciclo de vendas',
+          descricao: 'Ciclo de Ventas',
           routerLink: `/comercial/ciclo-vendas/${id}`,
         },
         {
-          descricao: 'Cotações e pedidos',
+          descricao: 'Cotizaciones y Pedidos',
           routerLink: `/comercial/ciclo-vendas/${id}/cotacoes-pedidos/lista`,
         },
         {
@@ -517,7 +519,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       .pipe(
         finalize(() => {
           this.dependenciesLoaded = true;
-          if (this.appTitle == 'Nova cotação/pedido') {
+          if (this.appTitle == 'Nueva Cotización/pedido') {
             /*  this.setEmpresa();
              this.setTransportadora(); */
           }
@@ -1484,6 +1486,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             carnet_cliente: this.carnet_cliente,
             correo_electronico: formValue.correoElectronico,
             celular: formValue.celular,
+            id_oferta: this.id_oferta,
             telefono: formValue.telefonoCliente
 
           };
@@ -1920,7 +1923,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.historicoExclusaoService.showModal(
         this.setParamsHistoricoExclusao(params)
       );
-    } else if (this.appTitle == 'Nova cotação/pedido') {
+    } else if (this.appTitle == 'Nueva Cotización/pedido') {
       this.pnotifyService.notice('Cotação nova, não possui histórico');
     }
   }

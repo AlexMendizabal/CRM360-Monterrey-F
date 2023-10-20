@@ -245,7 +245,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
       }
     } */
     /*     this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
-    
+
      */
 
     this.calcularTotais();
@@ -296,7 +296,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
   onClose(): void {
     this.showModal = false;
     if (this.bsModalRef) {
-      /* this.bsModalRef.hide(); */
+    this.bsModalRef.hide();
     }
   }
 }

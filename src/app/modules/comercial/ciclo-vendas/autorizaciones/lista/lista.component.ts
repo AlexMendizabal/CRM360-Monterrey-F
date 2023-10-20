@@ -256,7 +256,7 @@ export class ComercialCicloVendasCotacoesListaComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Ciclo de vendas',
+          descricao: 'Ciclo de Ventas',
           routerLink: `/comercial/ciclo-vendas/${id}`,
         },
         {

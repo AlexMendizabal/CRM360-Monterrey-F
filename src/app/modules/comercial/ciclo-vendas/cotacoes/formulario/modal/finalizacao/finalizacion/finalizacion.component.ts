@@ -97,7 +97,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
 
   ngOnInit(): void {
     //this.confirmDuplicatas();
-   // this.verificador();
+
   }
 
   ngAfterViewChecked() {
@@ -122,13 +122,25 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
       this.fecha = this.dataCotacao.fecha_inicial;
       const observacion_vendedor = customerData.observacion;
 
+      let mayor = null;
+      let item = null;
+      this.dataCotacao.carrinho.forEach((data) => {
+          if (data.percentualDesc > data.descuento_permitido) {
+              if (mayor === null || data.percentualDesc > mayor) {
+                  item = data.codMaterial;
+                  mayor = data.percentualDesc;
+              }
+          }
+      });
+
       this.formObj = {
         descripcion_vend: observacion_vendedor,
         id_oferta: this.id_oferta,
-        fecha_solicitud: this.fecha
+        fecha_solicitud: this.fecha,
+        rango: mayor,
+        id_item:item
       };
-
-      console.log(this.formObj );
+      console.log(this.formObj);
       this.cotacoesService.autorizaciones(this.formObj)
         .pipe().subscribe(
           (response: any) => {
@@ -178,8 +190,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
       titulo_observacionElement.style.display = deshabilitar ? 'none' : 'block';
       console.log(deshabilitar);
       return;
-    }
-  }
+    }
+  }
 
   onData(event: any): void {
     if (event.corrente && Object.entries(event.corrente).length > 0) {

@@ -59,15 +59,12 @@
       </div>
     </div>
       <div class="row">
-        <div class="col-md-6 callout callout-danger" >
-          <span class="mtc-title" id="titulo_observacio">Observación del Ejecutivo de venta:</span>
+        <div class="col-md-6" >
+          <span class="mtc-title"  id="titulo_observacio">Observación del Ejecutivo de venta:</span>
           <br>
-         <input type="text" name="observacion" formControlName="observacion" id="observacion" class="form-control" disabled="verificador()">
+            <input type="text" name="observacion" formControlName="observacion" id="observacion" class="form-control" [disabled]="verificador()">
         </div>
       </div>
   </div>
 </form>
 </div>
-
-
-
