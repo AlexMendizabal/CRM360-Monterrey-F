@@ -12,7 +12,7 @@ import { TitulosAgenda } from './models/titulos-agenda';
   providedIn: 'root',
 })
 export class ComercialCadastrosTitulosAgendaService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/titulos-agenda`;
+  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/titulos-agenda`;
 
   constructor(protected http: HttpClient) {}
 

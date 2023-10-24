@@ -1,10 +1,11 @@
 .custom-modal {
     position: fixed;
-    top: 50%; /* Centrar verticalmente en la mitad de la pantalla */
+    top: 45%; /* Centrar verticalmente en la mitad de la pantalla */
     left: 50%; /* Centrar horizontalmente en la mitad de la pantalla */
     transform: translate(-50%, -50%); /* Ajustar para centrar completamente */
     width: 80%; /* Ajusta el ancho según tus necesidades */
-    max-width: 800px; /* Ancho máximo si es necesario */
+    max-width: 1000px; /* Ancho máximo si es necesario */
+    max-height: 1500px;
     margin: auto;
 }
 
@@ -13,7 +14,7 @@
     width: 100%; /* Make the table fill the modal's width */
   }
   .table-container {
-    max-height: 400px; /* Altura máxima para el scroll vertical */
+    max-height: 700px; /* Altura máxima para el scroll vertical */
     overflow-y: auto; /* Añade el scroll vertical si la tabla excede la altura máxima */
     border: 1px solid #ccc; /* Opcional: un borde para el contenedor */
   }

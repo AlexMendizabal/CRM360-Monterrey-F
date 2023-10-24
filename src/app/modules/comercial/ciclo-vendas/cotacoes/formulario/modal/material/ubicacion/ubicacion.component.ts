@@ -36,6 +36,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
   /* @Input('id_presentacion') id_presentacion : number; */
 
   @Output() latLngChanged = new EventEmitter<{ latitud: number, longitud: number }>();
+  @Output() fecharModal = new EventEmitter();
 
 
   loaderModal: boolean;
@@ -287,16 +288,15 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
   }
   emitLatLng() {
     this.latLngChanged.emit({ latitud: this.latitud, longitud: this.longitud });
+    this.onClose();
   }
   onSubmit(): void {
     this.emitLatLng();
-    this.onClose();
+    //
   }
 
   onClose(): void {
-    this.showModal = false;
-    if (this.bsModalRef) {
-      /* this.bsModalRef.hide(); */
-    }
+  this.fecharModal.emit(true);
+    
   }
 }

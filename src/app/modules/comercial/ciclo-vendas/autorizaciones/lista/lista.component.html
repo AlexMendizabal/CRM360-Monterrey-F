@@ -84,7 +84,7 @@
 
     </ng-template>
     <ng-template #tbody let-tbody>
-      <tr *ngFor="let autorizacion of autorizaciones; let i = index"
+      <tr *ngFor="let autorizacion of getPaginateData(); let i = index"
         [class.table-active]="autorizacion.id_cliente == clienteSelecionado">
         <td class="text-center hover">
           {{ autorizacion.fecha_creacion | date: 'dd/MM/yyyy' }}

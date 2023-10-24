@@ -14,7 +14,7 @@ import { PNotifyService } from './shared/services/core/pnotify.service';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
+  templateUrl: './app.component.html' ,
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewChecked, OnDestroy {
@@ -68,7 +68,7 @@ export class AppComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.pnotifyService.error();
 
             setTimeout(() => {
-              this.showingRouteConfigError = false;
+              this.showingRouteConfigError = false ;
             }, 5000);
           }
         }

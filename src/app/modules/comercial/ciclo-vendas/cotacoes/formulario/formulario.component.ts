@@ -76,6 +76,7 @@ import { Transportadora } from '../../../cadastros/transportadoras/models/transp
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { ComercialService } from '../../../comercial.service';
 import { timeStamp } from 'console';
+import { ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionService } from '../formulario/modal/material/ubicacion/ubicacion.service';
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-formulario',
@@ -123,6 +124,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   loaderDuplicatasSubscription: Subscription;
   loaderHistoricoExclusaoSubscription: Subscription;
   loaderFinalizacaoSubscription: Subscription;
+
 
 
   appTitle: string;
@@ -275,6 +277,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     private bsModalRef: BsModalRef,
     private router: Router,
     private comercialService: ComercialService,
+    private ubicacionService: ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionService
+
 
 
 
@@ -561,7 +565,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.modalRef = this.modalService.show(template, {
       animated: false,
       class: 'modal-lg',
-    });
+    }); 
+
+    //this.ubicacionService.showModal();
+
+
   }
 
   onCliente(event) {
@@ -599,7 +607,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   datosVendedor(id_vendedor) {
     this.idvendedor = id_vendedor;
-    this.idListaPrecio =  0;
+    this.idListaPrecio = 0;
     const params = {
       id_vendedor
     };
@@ -1280,7 +1288,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   onHistoricoComprasFieldError(event: boolean): void {
     if (event === true) {
-      this.onScrollToForm('top') ;
+      this.onScrollToForm('top');
 
       // if (this.form.value.codEndereco === null) {
       this.form.controls.codEndereco.markAsTouched();
@@ -1333,7 +1341,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   onSubmit(): void {
-    this.formularioService.onNotifySubmit(true) ;
+    this.formularioService.onNotifySubmit(true);
     this.sendForm();
   }
 
@@ -1724,7 +1732,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         if (response.success === true) {
 
           const _enderecos = response.data.enderecos;
-          const _enderecosAguardando = response.data.enderecosAguardando || [] ;
+          const _enderecosAguardando = response.data.enderecosAguardando || [];
 
           const enderecos = [],
             enderecosAguardando = [];

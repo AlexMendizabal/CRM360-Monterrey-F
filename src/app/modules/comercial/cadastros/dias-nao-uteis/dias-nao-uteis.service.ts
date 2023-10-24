@@ -12,7 +12,7 @@ import { DiaNaoUtil } from './models/dia-nao-util';
   providedIn: 'root'
 })
 export class ComercialCadastrosDiaNaoUtilService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/dias-nao-uteis`;
+  private readonly API = `http://127.0.0.1:8000/comercial/cadastros/dias-nao-uteis`;
 
   constructor(protected http: HttpClient) {}
 

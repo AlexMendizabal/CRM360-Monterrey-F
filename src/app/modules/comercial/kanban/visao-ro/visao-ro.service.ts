@@ -15,7 +15,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialKanbanVisaoRoService {
-  private readonly API = `http://23.254.204.187/api/comercial/kanban/visao-ro`;
+  private readonly API = `http://127.0.0.1:8000/comercial/kanban/visao-ro`;
 
   constructor(
     protected http: HttpClient,

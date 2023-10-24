@@ -48,10 +48,18 @@ const routes: Routes = [
         path: 'clientes',
         redirectTo: '/comercial/clientes/lista',
       },
+
       {
         path: 'reporte',
         redirectTo: '/comercial/reporte',
       },
+      {
+        path: 'autorizaciones',
+        loadChildren: () =>
+          import('./autorizaciones/autorizaciones.module').then(
+            (m) => m.ComercialCicloVendasAutorizacionesModule
+      ),
+    },
     ],
   }
 ];

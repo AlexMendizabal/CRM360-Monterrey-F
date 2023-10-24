@@ -7,7 +7,7 @@
       </button>
     </div>
   </div>
-  <div class="modal-body">
+  <div class="modal-body table-container">
     <div class="col-14 mt-2">
       <div class="row">
         <div class="col-md-12 mt-2">
@@ -46,7 +46,7 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th class="text-truncate text-center">Código</th>
+                  <th class="text-truncate text-center">Código</th>  
                   <th class="text-truncate text-center">Material</th>
                   <th class="text-truncate text-center">Cantidad</th>
                   <th class="text-truncate text-center">Subtotal</th>
@@ -97,12 +97,14 @@
         </div>
         <div class="col-md-6 mt-2">
           <div class="card">
-            <div class="card-body">
+            <div class="card-body"> 
               <h6 class="card-title"> Observaciones</h6>
               <div class="row">
-                <div class="col-md-12">
-                  <input type="text" id="observacion" formControlName="observacion" class="form-control">
-                </div>
+                <form [formGroup]="myForm" (ngSubmit)="submitForm()">
+                  <div class="col-md-12">
+                    <input type="text" id="observacion" formControlName="observacion" class="form-control">
+                  </div>
+                </form>
               </div>
             </div>
           </div>

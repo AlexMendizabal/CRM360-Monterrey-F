@@ -135,7 +135,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   dataFromParent: any;
   data: [];
-  autorizaciones: any = [];
+  autorizaciones:Array<any> = [];
   items: Array<any> = [];
 
   dados: Array<any> = [];
@@ -170,7 +170,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   totalModal = 0;
   itemsPerPageModal = 20;
   /* Pagination */
-  itemsPerPage = 100;
+  itemsPerPage = 25;
   totalItems = 10;
   currentPage = 1;
   /* Pagination */
@@ -233,15 +233,12 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   ngOnDestroy(): void {
-    this.unsetLoaderEvents();
+   /*  this.unsetLoaderEvents();
     this.unsetChangeEvents();
     this.activatedRouteSubscription.unsubscribe();
-    this.showDetailPanelSubscription.unsubscribe();
+    this.showDetailPanelSubscription.unsubscribe(); */
   }
 
- /*  navigateToNuevo() {
-    this.router.navigate(['./nuevo']);
-  } */
 
   registrarAcesso(): void {
     this.atividadesService.registrarAcesso().subscribe();
@@ -667,7 +664,7 @@ onReset() {
 }
 
 onPageChanged(event: PageChangedEvent) {
-  if (this.formGroup.value.pagina != event.page) {
+  /* if (this.formGroup.value.pagina != event.page) {
     this.formGroup.controls.pagina.setValue(event.page);
 
     this.onCloseDetailPanel();
@@ -677,7 +674,9 @@ onPageChanged(event: PageChangedEvent) {
     this.scrollToFilter.nativeElement.scrollIntoView({
       behavior: 'instant',
     });
-  }
+  } */
+  this.currentPage = event.page;
+  this.getPaginateData();
 }
 
 getPaginateData(): any[] {

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';``
 import { BsModalRef } from 'ngx-bootstrap';
 import { finalize } from 'rxjs/operators';
 
@@ -16,21 +17,26 @@ export class ModalAutorizacionComponent implements OnInit {
   loaderNavbar: boolean;
   loaderFullScreen = true;
   datosAutorizacion: any = {};
+  myForm: FormGroup;
   checkoutForm;
 
   constructor(
     private _BsModalRef: BsModalRef,
-
     private autorizacionService: ComercialCicloVendasAutorizacionesService, //de dataFromParent
     private pnotifyService: PNotifyService,
+    private formBuilder: FormBuilder
 
-
-  ) { }
+  ) { 
+    
+    this.myForm = this.formBuilder.group({
+    observacion: ['', Validators.required]  // inicializa con un valor por defecto y agrega validador
+  });}
   dataForm: any;
   data: [];
   oferta: Array<any> = [];
   detalle: any[];
   observacion: string = '';
+  
 
   ngOnInit(): void {
     //this.data[0] = this.dataForm;
@@ -49,13 +55,13 @@ export class ModalAutorizacionComponent implements OnInit {
   }
 
   boton(id_autorizacion: number, estado: number) {
-    var observacion = document.getElementById('observacion');
+    const observacionValue = this.myForm.get('observacion').value;
     const params = {
       estado: estado,
       id_autorizacion: id_autorizacion,
-      descripcion_usua: observacion.value
+      descripcion_usua: observacionValue
     };
-
+    
     this.loaderNavbar = true;
     this.autorizacionService
       .updateAutorizacion(params)

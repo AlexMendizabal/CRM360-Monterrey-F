@@ -148,10 +148,11 @@ const routes: Routes = [
             (m) => m.ComercialAuditoriaModule
           ),
       },
+      
       {
         path: '',
         redirectTo: 'home',
-        pathMatch: 'full',
+        pathMatch: 'full'  ,
       },
       {
         path: '**',

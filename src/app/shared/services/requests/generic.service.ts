@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class GenericService {
-  private readonly API = `http://23.254.204.187/api/common`;
+  private readonly API = `http://127.0.0.1:8000/common`;
 
   constructor(protected http: HttpClient) {}
 

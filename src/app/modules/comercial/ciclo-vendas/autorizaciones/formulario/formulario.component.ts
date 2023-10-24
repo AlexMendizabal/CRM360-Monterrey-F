@@ -12,7 +12,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { Location } from '@angular/common' ;
 import {
   FormGroup,
   FormBuilder,

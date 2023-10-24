@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ComercialClientesUltimosPrecosService {
-  private readonly API = `http://23.254.204.187/api/comercial/clientes/ultimos-precos`;
+  private readonly API = `http://127.0.0.1:8000/comercial/clientes/ultimos-precos`;
 
   constructor(protected http: HttpClient) {}
 
