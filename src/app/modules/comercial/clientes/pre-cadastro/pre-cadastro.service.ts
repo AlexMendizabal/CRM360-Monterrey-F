@@ -33,6 +33,12 @@ export class ComercialClientesPreCadastroService {
     );
   }
 
+
+  getCenaes(){
+    let cnaes = this.dadosFaturamentoService.getCnaes();
+    return forkJoin(cnaes);
+  }
+
   
 
   postAkna(param){
