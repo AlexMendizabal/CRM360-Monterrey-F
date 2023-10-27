@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ModalModule, BsModalRef } from 'ngx-bootstrap/modal';
+
 
 // ngx-bootstrap
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -34,6 +36,8 @@ import { ComercialClientesDashboardModule } from './dashboard/dashboard.module';
 import { ComercialClientesHistoricoFinanceiroModule } from './historico-financeiro/historico-financeiro.module';
 import { ComercialClientesPropostaAnaliseCreditoComponent } from './proposta-analise-credito/proposta-analise-credito.component';
 import { ComercialClientesUltimosPrecosComponent } from './ultimos-precos/ultimos-precos.component';
+import { EditarClienteComponent } from './editar/editar.component';
+
 import { AgmCoreModule } from '@agm/core';
 
 
@@ -43,7 +47,8 @@ import { AgmCoreModule } from '@agm/core';
     ComercialClientesPreCadastroComponent,
     ComercialClientesDetalhesComponent,
     ComercialClientesPropostaAnaliseCreditoComponent,
-    ComercialClientesUltimosPrecosComponent
+    ComercialClientesUltimosPrecosComponent,
+    EditarClienteComponent
   ],
   imports: [
     CommonModule,
@@ -62,11 +67,17 @@ import { AgmCoreModule } from '@agm/core';
     TemplatesModule.forRoot(),
     ComercialClientesRoutingModule,
     ComercialClientesDashboardModule,
-    ComercialClientesHistoricoFinanceiroModule,
+    ComercialClientesHistoricoFinanceiroModule, 
+  
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDl5b7STz9xYNDhybTTer2POVncX9FYqCc' // Reemplaza con tu propia clave de API de Google Maps
     }),
     
+  ],
+  exports: [EditarClienteComponent],
+  entryComponents: [EditarClienteComponent],
+  providers: [
+    BsModalRef
   ]
 })
 export class ComercialClientesModule {}

@@ -28,9 +28,8 @@ export class ComercialClientesPreCadastroService {
   }
   
   getCiudades() {
-    return this.http.get(`${this.BASE_URL}/ciudades`).pipe(
-      take(1)
-    );
+    let ciudades = this.dadosFaturamentoService.getCiudades();
+    return forkJoin(ciudades);
   }
 
 

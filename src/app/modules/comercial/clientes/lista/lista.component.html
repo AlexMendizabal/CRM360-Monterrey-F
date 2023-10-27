@@ -322,6 +322,12 @@
                           <input value="{{ dadosCadastrais.vendedor || 'NO INFORMADO' }}" class="form-control" readonly>
                         </div>
                       </div>
+                      <div class="form-group col-lg-6">
+                        <label>Tipo cliente</label>
+                        <div>
+                          <input value="{{ dadosCadastrais.tipo_cliente || 'NO INFORMADO' }}" class="form-control" readonly>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="mb-3" *ngIf="dadosCadastraisLoaded && dadosCadastraisEmpty">
@@ -339,7 +345,7 @@
                 </div>
                 <div *ngIf="!editingMode">
                   <div class="text-right mt-3">
-                    <button type="button" class="btn btn-light mb-2 text-center" (click)="enableEditing()">Editar
+                    <button type="button" class="btn btn-light mb-2 text-center" (click)="openModalEditar(editarCliente)">Editar
                       Cliente</button>
                   </div>
                 </div>
@@ -489,4 +495,13 @@
       </div>
     </div>
   </div>
+
+  <ng-template #editarCliente>
+    <editar-cliente (fecharModal)="onFecharModal($event)" [datos_cliente]="cliente" 
+    [vendedoresList] ="vendedoresList" [cnaes] ="cnaes" [tipos_clientes] ="tipos_clientes"
+    [ciudades]="ciudades" [latitudPromedio]="latitudPromedio" [longitudPromedio]="longitudPromedio">
+    </editar-cliente>
+  </ng-template>
+
+
 </app-body>

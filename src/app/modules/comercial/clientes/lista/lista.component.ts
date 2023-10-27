@@ -19,6 +19,8 @@ import { DetailPanelService } from 'src/app/shared/templates/detail-panel/detal-
 import { ComercialVendedoresService } from 'src/app/modules/comercial/services/vendedores.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ComercialClientesPreCadastroService } from '../pre-cadastro/pre-cadastro.service';
+import { EditarClienteService } from '../editar/editar.service';
+
 
 
 
@@ -94,7 +96,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   itemsPerPage = 50;
   currentPage = 1;
   totalItems = 0;
-
+  modalRef: BsModalRef;
   clientes: any = [];
   clientesPagination: any = [];
 
@@ -102,6 +104,10 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   dadosCadastrais: any = {};
   contato: any = [];
   contatos: any = [];
+  tipos_clientes: any = [];
+
+  cliente: any = [];
+
   direcciones: any = [];
   editingMode: boolean = false;
   editedFields: any = {};
@@ -130,6 +136,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     private vendedoresService: ComercialVendedoresService,
     private modalService: BsModalService,
     private preCadastroService: ComercialClientesPreCadastroService,
+    private editarClienteService: EditarClienteService
   ) {
     this.pnotifyService.getPNotify();
 
@@ -142,6 +149,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.titleService.setTitle('Busqueda de clientes');
     this.onDetailPanelEmitter();
     this.getCenaes();
+    this.obtenerTiposClientes();
+    this.getCiudades();
 
     this.vendedoresService.getVendedores().subscribe(
       (response: any) => {
@@ -163,6 +172,19 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
   registrarAcesso(): void {
     this.atividadesService.registrarAcesso().subscribe();
+  }
+
+  onFecharModal(event) {
+    this.modalRef.hide();
+  }
+
+
+  openModalEditar(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {
+      animated: false,
+      class: 'modal-lg',
+    });
+
   }
 
   onDetailPanelEmitter(): void {
@@ -195,6 +217,21 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
             })
             );
             console.log("cnaes: ", this.cnaes);
+          }
+        }
+      )
+  }
+
+  getCiudades(): void {
+    this.preCadastroService.getCiudades()
+      .pipe(
+        finalize(() => {
+        })
+      )
+      .subscribe(
+        (response: any) => {
+          if (response[0].responseCode === 200) {
+            this.ciudades = response[0].result;
           }
         }
       )
@@ -256,6 +293,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       .subscribe((response: JsonResponse) => {
         this.informacionMarcador = null;
         if (response.responseCode === 200) {
+          this.cliente = response.result;
+
           this.contatosLoaded = true;
           this.dadosCadastrais = response.result.datos_cliente;
           if (response.result && response.result.datos_contacto && response.result.datos_contacto.length > 0) {
@@ -266,7 +305,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
           }
           if (response.result && response.result.datos_direccion && response.result.datos_direccion.length > 0) {
             this.direccionEmpty = false;
-            
+
           } else {
             this.direcciones = [];
             this.direccionEmpty = true;
@@ -275,13 +314,14 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
           this.direcciones = response.result.datos_direccion;
           this.editedFields.id_vendedor = this.dadosCadastrais.id_vendedor;
           this.calcularPromedioUbicaciones(response.result.datos_direccion);
-          
+
 
           //console.log("Datos de dadosCadastrais:", this.dadosCadastrais); // Agrega el console.log aquí
         } else {
           this.dadosCadastraisEmpty = true;
           this.contatosEmpty = true;
-          
+          this.cliente = [];
+
         }
       });
 
@@ -302,7 +342,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }); */
   }
 
-  calcularPromedioUbicaciones( direcciones) {
+  calcularPromedioUbicaciones(direcciones) {
     let sumLatitud = 0;
     let sumLongitud = 0;
     for (const ubicacion of direcciones) {
@@ -311,6 +351,22 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     }
     this.latitudPromedio = sumLatitud / this.direcciones.length;
     this.longitudPromedio = sumLongitud / this.direcciones.length;
+  }
+
+  obtenerTiposClientes() {
+    this.clientesService.getTipoClientes()
+      .subscribe(
+        (response: any) => {
+          if (response.responseCode === 200) {
+            this.tipos_clientes = response.result;
+
+          } else {
+
+          }
+        },
+        (error) => {
+        }
+      )
   }
 
   verInformacion(index: number) {
@@ -483,7 +539,10 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   enableEditing() {
-    this.editingMode = true;
+    this.editarClienteService.showModal();
+
+
+    /* this.editingMode = true;
 
     // Guardar los valores actuales de los campos editables
     this.editedFields.carnet = this.dadosCadastrais.carnet;
@@ -504,7 +563,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
     // this.editedFields.nit = this.dadosCadastrais.nit;
     this.editedFields.id_vendedor = this.dadosCadastrais.id_vendedor;
-    this.originalVendedorId = this.dadosCadastrais.id_vendedor;
+    this.originalVendedorId = this.dadosCadastrais.id_vendedor; */
     // Repite para otros campos editables...
   }
   cancelEditing() {

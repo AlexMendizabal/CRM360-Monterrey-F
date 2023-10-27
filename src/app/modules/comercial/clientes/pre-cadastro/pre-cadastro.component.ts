@@ -581,7 +581,7 @@ export class ComercialClientesPreCadastroComponent
   }
 
   agregarDireccion(index: number) {
-    console.log(index);
+    //console.log(index);
     this.ubicaciones[index] = { latitud: this.latitud, longitud: this.longitud, color: this.generarColorAleatorio() }
     if (index >= 0) {
       this.ubicacionFormularios[index].swActivarLatitud = true
