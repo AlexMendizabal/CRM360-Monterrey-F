@@ -6,6 +6,7 @@ import { JsonResponse } from 'src/app/models/json-response';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { number } from 'ng-brazil/number/validator';
 
+import { ComercialClientesPreCadastroService } from '../pre-cadastro/pre-cadastro.service';
 
 @Component({
     selector: 'editar-cliente',
@@ -25,6 +26,8 @@ export class EditarClienteComponent implements OnInit {
     @Input() latitudPromedio: number = 0;
     @Input() longitudPromedio: number = 0;
 
+    @Input() tipos_personas: any[];
+
 
     latitud: number = 0;
     longitud: number = 0;
@@ -34,7 +37,7 @@ export class EditarClienteComponent implements OnInit {
 
 
     loaderFullScreen = true;
-    myForm: FormGroup;
+    form: FormGroup;
     checkoutForm;
 
 
@@ -48,15 +51,15 @@ export class EditarClienteComponent implements OnInit {
 
 
     nuevoContacto = {
-        titulo: '',
-        nombre: '',
-        direccion: '',
-        celular: '',
-        telefono: ''
+        contacto: '',
+        nombres_contacto: '',
+        direccion_contacto: '',
+        celular_contacto: '',
+        telefono_contacto: ''
     };
 
     nuevaDireccion = {
-        titulo: '',
+        ubicacion: '',
         direccion: '',
         latitud: 0,
         longitud: 0,
@@ -69,12 +72,28 @@ export class EditarClienteComponent implements OnInit {
         private _BsModalRef: BsModalRef,
         private pnotifyService: PNotifyService,
         private formBuilder: FormBuilder,
+        private preCadastroService: ComercialClientesPreCadastroService,
 
     ) {
-        this.myForm = this.formBuilder.group({
-            observacion: ['', Validators.required]   // inicializa con un valor por defecto y agrega validador
+        this.form = this.formBuilder.group({
+            //observacion: ['', Validators.required],
+            codigo_cliente: [''],
+            carnet: [''],
+            nit: [''],
+            nombre: [''],
+            nombre_factura: [''],
+            id_tipo_persona: [],
+            email: [''],
+            telefono: [''],
+            celular: [''],
+            id_rubro: [],
+            id_tipo_cliente: [],
+            id_vendedor: [''],
         });
     }
+
+
+
 
 
 
@@ -88,9 +107,11 @@ export class EditarClienteComponent implements OnInit {
 
     ngOnInit(): void {
         this.categorizarUbicacion();
-        /* //this.data[0] = this.dataForm;
-        this.data = this.dataForm;
-        this.detalle = this.dataForm.detalle; */
+        console.log(this.datos_cliente);
+        /*  */        /* //thi        console.log(this.cnaes);
+        s.data[0] = this.dataForm;
+                this.data = this.dataForm;
+                this.detalle = this.dataForm.detalle; */
     }
 
     getVendedorNome(id_vendedor: number): string {
@@ -102,23 +123,38 @@ export class EditarClienteComponent implements OnInit {
         return vendedor ? vendedor.nome : 'NO INFORMADO';
     }
 
+
     agregarContacto() {
-        if (this.datos_cliente.datos_contacto.length < 5) {
+/*         console.log(this.datos_cliente)
+ */        if (this.datos_cliente.datos_contacto > 0) {
+            if (this.datos_cliente.datos_contacto.length < 5) {
+                this.datos_cliente.datos_contacto.push({ ...this.nuevoContacto });
+                this.nuevoContacto = {
+                    contacto: '',
+                    nombres_contacto: '',
+                    direccion_contacto: '',
+                    celular_contacto: '',
+                    telefono_contacto: ''
+                };
+            }
+        } else {
             this.datos_cliente.datos_contacto.push({ ...this.nuevoContacto });
             this.nuevoContacto = {
-                titulo: '',
-                nombre: '',
-                direccion: '',
-                celular: '',
-                telefono: ''
+                contacto: '',
+                nombres_contacto: '',
+                direccion_contacto: '',
+                celular_contacto: '',
+                telefono_contacto: ''
             };
         }
     }
 
     categorizarUbicacion() {
-        this.datos_cliente.datos_direccion.forEach((direccion) => {
-            direccion['color'] = this.generarColorAleatorio();
-        });
+        if (this.datos_cliente.datos_direccion && this.datos_cliente.datos_direccion.length > 0) {
+            this.datos_cliente.datos_direccion.forEach((direccion) => {
+                direccion['color'] = this.generarColorAleatorio();
+            });
+        }
     }
 
     eliminarContacto(index: number) {
@@ -127,7 +163,7 @@ export class EditarClienteComponent implements OnInit {
 
     agregarUbicacion() {
         this.nuevaDireccion = {
-            titulo: '',
+            ubicacion: '',
             direccion: '',
             latitud: this.latitudPromedio,
             longitud: this.longitudPromedio,
@@ -138,7 +174,7 @@ export class EditarClienteComponent implements OnInit {
         if (this.datos_cliente.datos_direccion.length < 5) {
             this.datos_cliente.datos_direccion.push({ ...this.nuevaDireccion });
             this.nuevaDireccion = {
-                titulo: '',
+                ubicacion: '',
                 direccion: '',
                 latitud: 0,
                 longitud: 0,
@@ -169,8 +205,8 @@ export class EditarClienteComponent implements OnInit {
         this.datos_cliente.datos_direccion[index].longitud = longitud;
     }
     actualizarUbicacion(index: number) {
-        console.log(this.datos_cliente.datos_direccion[index])
-        this.datos_cliente.datos_direccion[index].latitud = this.latitud;
+/*         console.log(this.datos_cliente.datos_direccion[index])
+ */        this.datos_cliente.datos_direccion[index].latitud = this.latitud;
         this.datos_cliente.datos_direccion[index].longitud = this.longitud;
     }
 
@@ -216,5 +252,68 @@ export class EditarClienteComponent implements OnInit {
         this.fecharModal.emit(true);
     }
 
+    actualizarCiudad(index: number, id_ciudad: number) {
+        this.datos_cliente.datos_direccion[index].id_ciudad = id_ciudad
+    }
 
+    actualizarCliente() {
+
+        var idClienteInput = document.getElementById('id_cliente').value;
+        var codigoClienteInput = document.getElementById('codigo_cliente').value;
+        var ciInput = document.getElementById('carnet').value;
+        var nitInput = document.getElementById('nit').value;
+        var nombreInput = document.getElementById('nombre').value;
+        var nombreFacturaInput = document.getElementById('nombre_factura').value;
+        var idTipoPersonaInput = document.getElementById('id_tipo_persona').value;
+        var emailInput = document.getElementById('email').value;
+        var telefonoInput = document.getElementById('telefono').value;
+        var celularInput = document.getElementById('celular').value;
+        var tipoClienteInput = document.getElementById('id_tipo_cliente').value;
+        var idVendedorInput = document.getElementById('id_vendedor').value;
+
+        const ubicacion = this.datos_cliente.datos_direccion;
+        const contactos = this.datos_cliente.datos_contacto
+        const data = {
+            'codigo_cliente': codigoClienteInput,
+            'id_cliente': idClienteInput,
+            'nit': nitInput,
+            'ci': ciInput,
+            'nombres': nombreInput,
+            'tipo_pessoa': idTipoPersonaInput,
+            'id_vendedor': idVendedorInput,
+            'situacion': 1,
+            'telefono': telefonoInput,
+            'celular': celularInput,
+            'nombre_factura': nombreFacturaInput,
+            'email': emailInput,
+            'id_tipo_cliente': tipoClienteInput,
+            'ubicacion': ubicacion,
+            'contactos': contactos
+        };
+        this.enviarPeticion(data);
+/*         console.log(data);
+ */    }
+
+    enviarPeticion(data: any): void {
+        this.preCadastroService
+            .updateCliente(data)
+            .pipe(
+                finalize(() => {
+                })
+            )
+            .subscribe(
+                (response: JsonResponse) => {
+                    if (response.codigoRespuesta == 200) {
+                        setTimeout(() => {
+                            this.onClose();
+                        }, 200)
+                    } else {
+                        this.pnotifyService.error(response.mensagem);
+                    }
+                },
+                (error: any) => {
+                    this.pnotifyService.error(error.error.mensagem);
+                }
+            );
+    }
 }

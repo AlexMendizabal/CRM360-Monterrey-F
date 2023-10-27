@@ -325,7 +325,8 @@
                       <div class="form-group col-lg-6">
                         <label>Tipo cliente</label>
                         <div>
-                          <input value="{{ dadosCadastrais.tipo_cliente || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <input value="{{ dadosCadastrais.tipo_cliente || 'NO INFORMADO' }}" class="form-control"
+                            readonly>
                         </div>
                       </div>
                     </div>
@@ -345,7 +346,8 @@
                 </div>
                 <div *ngIf="!editingMode">
                   <div class="text-right mt-3">
-                    <button type="button" class="btn btn-light mb-2 text-center" (click)="openModalEditar(editarCliente)">Editar
+                    <button type="button" class="btn btn-light mb-2 text-center"
+                      (click)="openModalEditar(editarCliente)">Editar
                       Cliente</button>
                   </div>
                 </div>
@@ -354,30 +356,31 @@
             <tab heading="Contactos">
               <div class="border-right border-left border-bottom px-3 pt-3">
                 <div *ngIf="contatosLoaded && !contatosEmpty">
-                  <div class="form-row" *ngFor="let contato of contatos">
-                    <!-- <div class="form-group col" [ngClass]="{'hidden': contato.editing}">
+                  <div *ngIf="contatos.lenght !==  0">
+                    <div class="form-row" *ngFor="let contato of contatos">
+                      <!-- <div class="form-group col" [ngClass]="{'hidden': contato.editing}">
                       <label>ID Contacto</label>
                       <div>
                         {{ contato.id_cont }}
                       </div>
                     </div> -->
-                    <div class="form-group col-lg-4">
-                      <label>título</label>
-                      <div>
-                        <input value="{{ contato.titulo || 'NO INFORMADO' }}" class="form-control" readonly>
-                        <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
+                      <div class="form-group col-lg-4">
+                        <label>título</label>
+                        <div>
+                          <input value="{{ contato.contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
                         <div *ngIf="contato.editing"></div> -->
+                        </div>
                       </div>
-                    </div>
-                    <div class="form-group col-lg-4">
-                      <label>Nombre</label>
-                      <div>
-                        <input value="{{ contato.nombre || 'NO INFORMADO' }}" class="form-control" readonly>
-                        <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
+                      <div class="form-group col-lg-4">
+                        <label>Nombre</label>
+                        <div>
+                          <input value="{{ contato.nombres_contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
                         <div *ngIf="contato.editing"></div> -->
+                        </div>
                       </div>
-                    </div>
-                    <!-- <div class="form-group col">
+                      <!-- <div class="form-group col">
                       <label>Tipo de Contacto</label>
                       <div>
                         <div *ngIf="!editingContacto">{{ contato.ds_tipo_cont }} {{ contato.ds_cont_meio }}</div>
@@ -387,35 +390,37 @@
                       </div>
                     </div> -->
 
-                    <div class="form-group col-lg-4">
-                      <label>Dirección</label>
-                      <div>
-                        <input value="{{ contato.direccion || 'NO INFORMADO' }}" class="form-control" readonly>
-                        <!--  <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
+                      <div class="form-group col-lg-4">
+                        <label>Dirección</label>
+                        <div>
+                          <input value="{{ contato.direccion_contacto || 'NO INFORMADO' }}" class="form-control"
+                            readonly>
+                          <!--  <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
                         <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedDireccion"></div> -->
+                        </div>
                       </div>
-                    </div>
-                    <div class="form-group col-lg-4">
-                      <label>Celular</label>
-                      <div>
-                        <input value="{{ contato.celular || 'NO INFORMADO' }}" class="form-control" readonly>
-                        <!--  <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
+                      <div class="form-group col-lg-4">
+                        <label>Celular</label>
+                        <div>
+                          <input value="{{ contato.celular_contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <!--  <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
                         <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedDireccion"></div> -->
+                        </div>
                       </div>
-                    </div>
-                    <div class="form-group col-lg-4 mb-3">
-                      <label>Teléfono</label>
-                      <div>
-                        <input value="{{ contato.telefono || 'NO INFORMADO' }}" class="form-control" readonly>
-                        <!--  <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
+                      <div class="form-group col-lg-4 mb-3">
+                        <label>Teléfono</label>
+                        <div>
+                          <input value="{{ contato.telefono_contacto || 'NO INFORMADO' }}" class="form-control"
+                            readonly>
+                          <!--  <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
                         <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedDireccion"></div> -->
+                        </div>
                       </div>
-                    </div>
 
 
 
 
-                    <!-- <div class="form-group col">
+                      <!-- <div class="form-group col">
                       <label>Nombre</label>
                       <div>
                         <ng-container *ngIf="!editingContacto">
@@ -427,7 +432,7 @@
                         </ng-container>
                       </div>
                     </div> -->
-                    <!-- <button type="button" class="btn btn-light" (click)="editarContacto(contato)"
+                      <!-- <button type="button" class="btn btn-light" (click)="editarContacto(contato)"
                       *ngIf="!contato.editing">Editar Contacto</button>
                     <div *ngIf="contato.editing">
                       <button type="button" class="btn btn-secondary"
@@ -436,6 +441,7 @@
                         Cambios</button>
                     </div> -->
 
+                    </div>
                   </div>
                 </div>
                 <div *ngIf="contatosEmpty">
@@ -446,43 +452,46 @@
             <tab heading="Dirección">
               <div class="border-right border-left border-bottom px-3 pt-3">
                 <div *ngIf="contatosLoaded && !direccionEmpty">
-                  <div class="col-lg-12 mb-4">
+                  <div class="col-lg-12 mb-4" *ngIf="direcciones.lenght !==  0">
+                    
                     <div class="embed-responsive embed-responsive-16by9">
-                      <agm-map  [latitude]="latitudPromedio" [longitude]="longitudPromedio" [zoom]="16"
+                      <agm-map [latitude]="latitudPromedio" [longitude]="longitudPromedio" [zoom]="16"
                         class="embed-responsive-item">
-                        <agm-marker *ngFor="let ubicacion of direcciones; let i = index" [latitude]="ubicacion.latitud" (markerClick)="verInformacion(i)"
-                          [longitude]="ubicacion.longitud" >
+                        <agm-marker *ngFor="let ubicacion of direcciones; let i = index" [latitude]="ubicacion.latitud"
+                          (markerClick)="verInformacion(i)" [longitude]="ubicacion.longitud">
                         </agm-marker>
                       </agm-map>
                       <div id="map-zoom-control" class="map-control"></div>
                     </div>
                     <div *ngIf="informacionMarcador" class="info-box mt-3">
                       <h6>Información de la ubicación</h6>
-                      <p style="font-size: 13px;"> <strong>Título:  </strong> {{ informacionMarcador.nombre }}</p>
-                      <p style="font-size: 13px;"> <strong>Dirección:  </strong> {{ informacionMarcador.direccion }}</p>
+                      <p style="font-size: 13px;"> <strong>Título: </strong> {{ informacionMarcador.nombre }}</p>
+                      <p style="font-size: 13px;"> <strong>Dirección: </strong> {{ informacionMarcador.direccion }}</p>
                     </div>
                   </div>
-                  <div class="form-row" *ngFor="let direccion of direcciones">
+                  <div *ngIf="direcciones.lenght !==  0">
+                    <div class="form-row" *ngFor="let direccion of direcciones">
 
-                    <div class="form-group col-lg-4">
-                      <label>título</label>
-                      <div>
-                        <input value="{{ direccion.nombre || 'NO INFORMADO' }}" class="form-control" readonly>
+                      <div class="form-group col-lg-4">
+                        <label>título</label>
+                        <div>
+                          <input value="{{ direccion.ubicacion || 'NO INFORMADO' }}" class="form-control" readonly>
+                        </div>
                       </div>
-                    </div>
-                    <div class="form-group col-lg-4">
-                      <label>dirección</label>
-                      <div>
-                        <input value="{{ direccion.direccion || 'NO INFORMADO' }}" class="form-control" readonly>
+                      <div class="form-group col-lg-4">
+                        <label>dirección</label>
+                        <div>
+                          <input value="{{ direccion.direccion || 'NO INFORMADO' }}" class="form-control" readonly>
+                        </div>
                       </div>
-                    </div>
-                    <div class="form-group col-lg-4 mb-3">
-                      <label>ciudad</label>
-                      <div>
-                        <input value="{{ direccion.ciudad || 'NO INFORMADO' }}" class="form-control" readonly>
+                      <div class="form-group col-lg-4 mb-3">
+                        <label>ciudad</label>
+                        <div>
+                          <input value="{{ direccion.ciudad || 'NO INFORMADO' }}" class="form-control" readonly>
+                        </div>
                       </div>
-                    </div>
 
+                    </div>
                   </div>
                 </div>
                 <div *ngIf="direccionEmpty">
@@ -497,9 +506,9 @@
   </div>
 
   <ng-template #editarCliente>
-    <editar-cliente (fecharModal)="onFecharModal($event)" [datos_cliente]="cliente" 
-    [vendedoresList] ="vendedoresList" [cnaes] ="cnaes" [tipos_clientes] ="tipos_clientes"
-    [ciudades]="ciudades" [latitudPromedio]="latitudPromedio" [longitudPromedio]="longitudPromedio">
+    <editar-cliente (fecharModal)="onFecharModal($event)" [datos_cliente]="cliente" [vendedoresList]="vendedoresList"
+      [cnaes]="cnaes" [tipos_clientes]="tipos_clientes" [ciudades]="ciudades" [latitudPromedio]="latitudPromedio"
+      [longitudPromedio]="longitudPromedio" [tipos_personas] ="tipos_personas">
     </editar-cliente>
   </ng-template>
 

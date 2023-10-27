@@ -118,6 +118,14 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   cnaes: any = [];
   codigoClienteSap: any = [];
 
+  tipos_personas: { [key: string]: string } = {
+    'S': 'Sociedades',
+    'P': 'Privado',
+    'G': 'Gobierno',
+    'E': 'Empleado'
+  };
+
+
   latitudPromedio: number;
   longitudPromedio: number;
   informacionMarcador: { nombre: string, direccion: string } | null = null;
@@ -216,8 +224,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
             })
             );
-            console.log("cnaes: ", this.cnaes);
-          }
+/*             console.log("cnaes: ", this.cnaes);
+ */          }
         }
       )
   }
@@ -345,12 +353,15 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   calcularPromedioUbicaciones(direcciones) {
     let sumLatitud = 0;
     let sumLongitud = 0;
-    for (const ubicacion of direcciones) {
-      sumLatitud += ubicacion.latitud;
-      sumLongitud += ubicacion.longitud;
+    if (direcciones && direcciones.length > 0) {
+      for (const ubicacion of direcciones) {
+        sumLatitud += ubicacion.latitud;
+        sumLongitud += ubicacion.longitud;
+      }
+      this.latitudPromedio = sumLatitud / this.direcciones.length;
+      this.longitudPromedio = sumLongitud / this.direcciones.length;
     }
-    this.latitudPromedio = sumLatitud / this.direcciones.length;
-    this.longitudPromedio = sumLongitud / this.direcciones.length;
+
   }
 
   obtenerTiposClientes() {
