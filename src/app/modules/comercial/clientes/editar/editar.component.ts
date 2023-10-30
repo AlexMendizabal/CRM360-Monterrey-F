@@ -53,6 +53,7 @@ export class EditarClienteComponent implements OnInit {
     nuevoContacto = {
         contacto: '',
         nombres_contacto: '',
+        apellido_contacto: '',
         direccion_contacto: '',
         celular_contacto: '',
         telefono_contacto: ''
@@ -132,6 +133,7 @@ export class EditarClienteComponent implements OnInit {
                 this.nuevoContacto = {
                     contacto: '',
                     nombres_contacto: '',
+                    apellido_contacto: '',
                     direccion_contacto: '',
                     celular_contacto: '',
                     telefono_contacto: ''
@@ -142,6 +144,7 @@ export class EditarClienteComponent implements OnInit {
             this.nuevoContacto = {
                 contacto: '',
                 nombres_contacto: '',
+                apellido_contacto: '',
                 direccion_contacto: '',
                 celular_contacto: '',
                 telefono_contacto: ''
@@ -291,8 +294,8 @@ export class EditarClienteComponent implements OnInit {
             'contactos': contactos
         };
         this.enviarPeticion(data);
-/*         console.log(data);
- */    }
+        console.log(data);
+    }
 
     enviarPeticion(data: any): void {
         this.preCadastroService

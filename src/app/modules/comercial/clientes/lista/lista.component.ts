@@ -168,7 +168,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        console.error('Error al obtener la lista de vendedores:', error);
+        console.error('Error al obtener la lista de vendedores:', error );
       }
     );
 
