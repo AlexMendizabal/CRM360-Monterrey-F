@@ -741,6 +741,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       } else {
         data.duplicatasSomenteCarteira = 0;
       }
+      console.log(data);
 
       this.form = this.formBuilder.group({
         codCotacao: [{ value: codCotacao, disabled: true }],

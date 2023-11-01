@@ -129,10 +129,10 @@ export class EditarClienteComponent implements OnInit {
 /*         console.log(this.datos_cliente)
  */        if (this.datos_cliente.datos_contacto > 0) {
             if (this.datos_cliente.datos_contacto.length < 5) {
-                this.datos_cliente.datos_contacto.push({ ...this.nuevoContacto });
+                this.datos_cliente.datos_contacto.push({ ...this.nuevoContacto } );
                 this.nuevoContacto = {
                     contacto: '',
-                    nombres_contacto: '',
+                    nombres_contacto:  '',
                     apellido_contacto: '',
                     direccion_contacto: '',
                     celular_contacto: '',
