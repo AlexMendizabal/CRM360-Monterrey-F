@@ -18,6 +18,7 @@ import { ComercialCicloVendasCotacoesFormularioModule } from './formulario/formu
 import { ComercialCicloVendasCotacoesListaComponent } from './lista/lista.component';
 import { ComercialCicloVendasCotacoesFormularioComponent } from './formulario/formulario.component';
 import { ModalAutorizacionComponent } from './lista/modal-autorizacion/modal-autorizacion.component';
+import { VistaComponent } from '../cotacoes/lista/vista/vista.component';
 
 
 const routes: Routes = [
@@ -92,6 +93,18 @@ const routes: Routes = [
       {
         path: 'modal-autorizacion',
         component: ModalAutorizacionComponent,
+        pathMatch: 'full',
+      }
+    ]
+  },
+  {
+    path: '',
+    redirectTo: 'lista',
+    pathMatch: 'full',
+    children: [
+      {
+        path: 'vista',
+        component: VistaComponent,
         pathMatch: 'full',
       }
     ]

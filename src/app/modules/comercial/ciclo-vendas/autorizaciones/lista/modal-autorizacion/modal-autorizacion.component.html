@@ -17,7 +17,8 @@
               <div class="row">
                 <div class="col-md-2">
                   <label for="id_autorizacion"> <strong> N°:</strong></label>
-                  <input type="text" id="id_autorizacion" class="form-control" readonly value="{{data.oferta[0].id_autorizacion}}">
+                  <input type="text" id="id_autorizacion" class="form-control" readonly
+                    value="{{data.oferta[0].id_autorizacion}}">
                 </div>
                 <div class="col-md-4">
                   <label for="fecha_solicitud"> <strong> Fecha Solicitada</strong></label>
@@ -35,7 +36,6 @@
         </div>
       </div>
     </div>
-
     <div class="row">
       <div class="col-12 ">
         <div class="card">
@@ -56,29 +56,27 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let detalles of detalle; let i = index">
-                  <!--  <td>{{i + 1}}</td> -->
-                   <td class="font-weight-bold  text-center">
-                     {{detalles.CODIGOMATERIAL}}</td>
-                   <td class="font-weight-bold  text-center">
-                     {{detalles.DESCRICAO | uppercase}}</td>
-                   <td class="font-weight-bold  text-center">
-                     {{detalles.cantidad_total}}</td>
-                   <td class="font-weight-bold  text-center">
-                     {{detalles.subtotal}}</td>
-                   <td class="font-weight-bold  text-center">
-                     {{detalles.descuento_solicitado}}</td>
-                   <td class="font-weight-bold  text-center">
-                     {{detalles.descuento_permitido}}</td>
-                   <td class="font-weight-bold  text-center text-danger">
-                     {{detalles.excedente}}</td>
-                 </tr>
+                <tr *ngFor="let detalles of detalle">
+                  <td class="font-weight-bold  text-center">
+                    {{detalles.CODIGOMATERIAL}}</td>
+                  <td class="font-weight-bold  text-center">
+                    {{detalles.DESCRICAO | uppercase}}</td>
+                  <td class="font-weight-bold  text-center">
+                    {{detalles.cantidad_total}}</td>
+                  <td class="font-weight-bold  text-center">
+                    {{detalles.subtotal}}</td>
+                  <td class="font-weight-bold  text-center">
+                    {{detalles.descuento_solicitado}}</td>
+                  <td class="font-weight-bold  text-center">
+                    {{detalles.descuento_permitido}}</td>
+                  <td class="font-weight-bold  text-center text-danger">
+                    {{detalles.excedente}}</td>
+                </tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
-      <!-- /.col -->
     </div>
     <div class="col-md-12">
       <div class="row">
@@ -100,9 +98,11 @@
             <div class="card-body">
               <h6 class="card-title"> Observaciones</h6>
               <div class="row">
-                <div class="col-md-12">
-                  <input type="text" id="observacion" formControlName="observacion" class="form-control">
-                </div>
+                <form [formGroup]="myForm" (ngSubmit)="submitForm()">
+                  <div class="col-md-12">
+                    <input type="text" id="observacion" formControlName="observacion" class="form-control">
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -111,12 +111,12 @@
     </div>
     <div class="col-md-12">
       <div class="modal-footer">
-        <button type="submit" class="btn btn-success" (click)="boton(data.oferta[0].id_autorizacion, 2)">
-          Aprobar
-        </button>
-        <button type="button" class="btn btn-danger" (click)="boton(data.oferta[0].id_autorizacion, 3)">
-          Rechazar
-        </button>
+          <button type="submit" class="btn btn-success" (click)="boton(data.oferta[0].id_autorizacion, 2)">
+            Aprobar
+          </button>
+          <button type="button" class="btn btn-danger" (click)="boton(data.oferta[0].id_autorizacion, 3)">
+            Rechazar
+          </button>
       </div>
     </div>
   </div>

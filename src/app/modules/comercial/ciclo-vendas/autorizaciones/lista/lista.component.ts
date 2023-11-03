@@ -34,6 +34,7 @@ import { TitleService } from 'src/app/shared/services/core/title.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
 import { ComercialCicloVendasAutorizacionesService } from '../autorizaciones.service';
 import { ComercialCicloVendasCotacoesListaService } from '../../cotacoes/lista/lista.service';
+import { ComercialCicloVendasCotacoesService } from '../../cotacoes/cotacoes.service';   /////para la funcion onVista
 import { ComercialCicloVendasAutorizacionesListaService } from './lista.service';
 import { ComercialVendedoresService } from '../../../services/vendedores.service';
 import { DetailPanelService } from 'src/app/shared/templates/detail-panel/detal-panel.service';
@@ -55,6 +56,7 @@ import { ICotacao } from './models/cotacao';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { JsonResponse } from 'src/app/models/json-response';
 import { IAssociacao } from '../../../cadastros/propostas/associacao-situacoes-proposta/models/associacao-situacoes-proposta';
+import { VistaComponent } from '../../cotacoes/lista/vista/vista.component';
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-lista',
@@ -91,9 +93,9 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   estado_oferta = [
     { "id": "T", "nombre": "Todos" },
-    { "id": 0, "nombre": "Aprobado" },
     { "id": 1, "nombre": "Pendiente" },
-    { "id": 2, "nombre": "Rechazado" },
+    { "id": 2, "nombre": "Aprobado" },
+    { "id": 3, "nombre": "Rechazado" },
   ];
 
   formGroup: FormGroup;
@@ -131,11 +133,12 @@ export class ComercialCicloVendasCotacoesListaComponent
   vendedores: any = [];
   dataInicial:  Array<any> = []; //////aumente esto para usar en la funcion getFilterValues
   dataFinal: Array<any> = []; //////aumente esto para usar en la funcion getFilterValues
+  id_vendedor: any;
   totalMateriales: Array<any> = [];
 
   dataFromParent: any;
   data: [];
-  autorizaciones: any = [];
+  autorizaciones:Array<any> = [];
   items: Array<any> = [];
 
   dados: Array<any> = [];
@@ -155,6 +158,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   };
 
   modalRef: BsModalRef;
+  modalRef2:BsModalRef;
   loadingModal = false;
 
   contatosLoaded = false;
@@ -170,7 +174,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   totalModal = 0;
   itemsPerPageModal = 20;
   /* Pagination */
-  itemsPerPage = 100;
+  itemsPerPage = 25;
   totalItems = 10;
   currentPage = 1;
   /* Pagination */
@@ -204,7 +208,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     private emailCotacaoService: ComercialCicloVendasCotacoesListaModalEmailCotacaoService,
     private modalService: BsModalService,
     private modalAutorizacionService:  ModalAutorizacionService,
-
+    private vistaService: ComercialCicloVendasCotacoesService
   ) {
     this.localeService.use('es');
     this.bsConfig = Object.assign(
@@ -226,22 +230,18 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.setFormFilter();
     this.titleService.setTitle('Autorizaciones');
     this.onDetailPanelEmitter();
-   //this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente'];
-   this.getVendedores();
-    this.getDatosAutorizaciones();
+    this.getVendedores();
     this.search(null);
+     //this.getDatosAutorizaciones();
   }
 
   ngOnDestroy(): void {
-/*     this.unsetLoaderEvents();
+   /*  this.unsetLoaderEvents();
     this.unsetChangeEvents();
     this.activatedRouteSubscription.unsubscribe();
     this.showDetailPanelSubscription.unsubscribe(); */
   }
 
- /*  navigateToNuevo() {
-    this.router.navigate(['./nuevo']);
-  } */
 
   registrarAcesso(): void {
     this.atividadesService.registrarAcesso().subscribe();
@@ -256,7 +256,7 @@ export class ComercialCicloVendasCotacoesListaComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Ciclo de Ventas',
+          descricao: 'Ciclo de vendas',
           routerLink: `/comercial/ciclo-vendas/${id}`,
         },
         {
@@ -392,7 +392,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     });
   }
 
-  getFilterValues(): void {
+   getFilterValues(): void {
     let params: any;
     this.cotacoesService
       .getAutorizaciones(params)
@@ -428,7 +428,7 @@ export class ComercialCicloVendasCotacoesListaComponent
           this.location.back();
         }
       );
-  }
+  } 
 
 
   setFormFilter(): void {
@@ -488,10 +488,10 @@ setOrderBy(column: string) {
 setOrderByModal(column: string) {
   //console.log(column);
   if (this.orderBy === column) {
-    this.orderType = this.orderType === 'asc' ? 'desc' : 'asc'; // Cambiar el tipo de orden si se hace clic nuevamente en la misma columna
+    this.orderType = this.orderType === 'ASC' ? 'DESC' : 'ASC'; // Cambiar el tipo de orden si se hace clic nuevamente en la misma columna
   } else {
     this.orderBy = column;
-    this.orderType = 'asc'; // Establecer el orden ascendente por defecto al hacer clic en una nueva columna
+    this.orderType = 'ASC'; // Establecer el orden ascendente por defecto al hacer clic en una nueva columna
   }
 
   this.items.sort((a, b) => {
@@ -501,40 +501,26 @@ setOrderByModal(column: string) {
     /*       console.log(this.datos);
           console.log(column); */
     if (valueA < valueB) {
-      return this.orderType === 'asc' ? -1 : 1;
+      return this.orderType === 'ASC' ? -1 : 1;
     }
     if (valueA > valueB) {
-      return this.orderType === 'asc' ? 1 : -1;
+      return this.orderType === 'ASC' ? 1 : -1;
     }
     return 0;
   });
 
 }
-filterByFechaInicialStatus(status: string): void {
-  this.formGroup.get('dataInicial').setValue(status);
-  this.onFilter();
-}
-filterByFechaFinalStatus(status: string): void {
-  this.formGroup.get('dataFinal').setValue(status);
-  this.onFilter();
-}
-filterByCodVendedorStatus(status: string): void {
-  this.formGroup.get('codVendedor').setValue(status);
-  this.onFilter();
-}
- filterByEstadoStatus(status: string): void {
-  this.formGroup.get('estado_oferta').setValue(status);
-  this.onFilter();
-}
 
 
 onFilter(): void {
-    this.itemsPerPage = this.formGroup.value.registros;
+ 
+   this.itemsPerPage = this.formGroup.value.registros;
     this.currentPage = 1;
 
     this.detailPanelService.hide();
     this.setRouterParams(this.getFormFilterValues());
-    this.getDatosAutorizaciones();
+    this.getDatosAutorizaciones(); 
+    
   return;
 }
 
@@ -555,11 +541,19 @@ setRouterParams(params: any): void {
 
 getFormFilterValues(): Object {
   let params: any = {};
+  let data_user =  localStorage.getItem('currentUser');
+  const {info} = JSON.parse(data_user);
+    //console.log("Info de usuario local", info);
+    let idUsuario = info.id;
 
   if (this.formGroup.value.dataInicial) {
     params.dataInicial = this.dateService.convertToUrlDate(
       new Date(this.formGroup.value.dataInicial)
     );
+  }
+
+  if (idUsuario) {
+    params.idUsuario = idUsuario;
   }
 
   if (this.formGroup.value.dataFinal) {
@@ -599,17 +593,7 @@ populaDadosResolver() {
     const resolver = this.activatedRoute.snapshot.data.data;
     if (resolver.success === true) {
       this.autorizaciones.push(resolver.data[0]);
-      this.formGroup.controls.nrPedido.setValue(resolver.data[0].nrPedido);
-      /* this.form.controls.codEmpresa.setValue(resolver.data[0].codEmpresa);
-      this.filteredDepositos = this.depositos.filter(
-        (value: any) => value.idEmpresa == resolver.data[0].codEmpresa
-      );
-
-      if (this.filteredDepositos.length === 1) {
-        this.form.controls.codDeposito.setValue(
-          this.filteredDepositos[0]['idDeposito']
-        );
-      } */
+      this.formGroup.controls.nrPedido.setValue(resolver.data.nrPedido);
     }
   }
 }
@@ -667,22 +651,14 @@ onReset() {
 }
 
 onPageChanged(event: PageChangedEvent) {
-  if (this.formGroup.value.pagina != event.page) {
-    this.formGroup.controls.pagina.setValue(event.page);
-
-    this.onCloseDetailPanel();
-    this.detailPanelService.hide();
-    this.setRouterParams(this.getFormFilterValues());
-
-    this.scrollToFilter.nativeElement.scrollIntoView({
-      behavior: 'instant',
-    });
-  }
+  this.currentPage = 1;
+  this.getPaginateData();
 }
 
 getPaginateData(): any[] {
   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
   const endIndex = startIndex + this.itemsPerPage;
+
   return this.autorizaciones.slice(startIndex, endIndex);
 }
 
@@ -853,6 +829,45 @@ openModal(id_autorizacion) {
   this.modalAutorizacionService.showModal(id_autorizacion);
 }
 
+onVista(id_oferta: number): void {
+  //this.router.navigate([]).then(result => {  window.open("/comercial/ciclo-vendas/23/cotacoes-pedidos/lista/vista", '_blank'); });
+
+  var params = {
+    "id_oferta": id_oferta
+  };
+
+  this.loaderNavbar = true;
+  this.vistaService
+    .getDetalleOferta(params)
+    .pipe(
+      finalize(() => {
+        this.loaderNavbar = false;
+      })
+    )
+    .subscribe(
+      (response: JsonResponse) => {
+        if (response.estado === true) {
+          this.modalRef2 = this.modalService.show(VistaComponent, {
+            initialState: { resultFromParent: response.result },
+          });
+
+          this.modalRef2.content.onClose.subscribe(result => {
+            console.log('Modal closed with result:', result);
+          });
+        } else {
+          this.pnotifyService.error();
+        }
+      },
+      (error: any) => {
+        if (error.error.hasOwnProperty('mensagem')) {
+          this.pnotifyService.error(error.error.mensagem);
+        } else {
+          this.pnotifyService.error();
+        }
+      }
+    );
+}
+
 hideModal() {
   this.modalRef.hide();
   this.formGroup.controls.codEmpresaAdd.reset();
@@ -891,7 +906,6 @@ nuevo() {
         if (response['success'] !== true) {
           this.autorizaciones = [];
           this.noResult = true;
-          this.pnotifyService.notice('No hay registros de su búsqueda');
         } else {
           this.autorizaciones = response['data'];
         }

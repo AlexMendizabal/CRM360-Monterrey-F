@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';``
 import { BsModalRef } from 'ngx-bootstrap';
 import { finalize } from 'rxjs/operators';
 
@@ -6,6 +7,7 @@ import { ComercialCicloVendasAutorizacionesService } from '../../autorizaciones.
 
 import { JsonResponse } from 'src/app/models/json-response';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
+
 
 @Component({
   selector: 'modal-autorizacion',
@@ -16,21 +18,25 @@ export class ModalAutorizacionComponent implements OnInit {
   loaderNavbar: boolean;
   loaderFullScreen = true;
   datosAutorizacion: any = {};
+  myForm: FormGroup;
   checkoutForm;
 
   constructor(
     private _BsModalRef: BsModalRef,
-
     private autorizacionService: ComercialCicloVendasAutorizacionesService, //de dataFromParent
     private pnotifyService: PNotifyService,
-
-
-  ) { }
+    private formBuilder: FormBuilder,
+  
+  ) { 
+    this.myForm = this.formBuilder.group({
+    observacion: ['', Validators.required]  // inicializa con un valor por defecto y agrega validador
+  });}
   dataForm: any;
   data: [];
   oferta: Array<any> = [];
   detalle: any[];
   observacion: string = '';
+  
 
   ngOnInit(): void {
     //this.data[0] = this.dataForm;
@@ -38,7 +44,7 @@ export class ModalAutorizacionComponent implements OnInit {
     this.detalle = this.dataForm.detalle;
   }
 
-  cerrar(customerData): void {
+  cerrar(): void {
     const observacion = (document.getElementById('observacion') as HTMLInputElement).value;
     //alert(observacion);
     //observacion.required;
@@ -48,14 +54,18 @@ export class ModalAutorizacionComponent implements OnInit {
     }
   }
 
+  onClose() {
+    this._BsModalRef.hide();
+  }
+
   boton(id_autorizacion: number, estado: number) {
-    var observacion = document.getElementById('observacion');
+    const observacionValue = this.myForm.get('observacion').value;
     const params = {
       estado: estado,
       id_autorizacion: id_autorizacion,
-      descripcion_usua: observacion
+      descripcion_usua: observacionValue
     };
-
+    
     this.loaderNavbar = true;
     this.autorizacionService
       .updateAutorizacion(params)
@@ -68,8 +78,9 @@ export class ModalAutorizacionComponent implements OnInit {
         (response: JsonResponse) => {
           if (response.success === true) {
             this.pnotifyService.success("Operación exitosa");
+            this.onClose();
           } else {
-            this.pnotifyService.error();
+            this.pnotifyService.error("No hay datos relacionado al valor introducido");
           }
         },
         (error: any) => {

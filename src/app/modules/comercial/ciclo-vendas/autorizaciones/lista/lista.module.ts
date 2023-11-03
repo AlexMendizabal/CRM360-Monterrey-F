@@ -21,6 +21,7 @@ import { SharedModule } from 'src/app/shared/modules/shared.module';
 import { TemplatesModule } from 'src/app/shared/templates/templates.module';
 import { ComercialClientesDashboardModule } from '../../../clientes/dashboard/dashboard.module';
 import { ComercialCicloVendasCotacoesFormularioModule } from '../formulario/formulario.module';
+//import { MatDialogModule } from '@angular/material/dialog';
 
 // Components
 import { ComercialCicloVendasCotacoesListaComponent } from './lista.component';
@@ -82,6 +83,7 @@ import { ModalAutorizacionService } from './modal-autorizacion/modal-autorizacio
     TemplatesModule,
     ComercialClientesDashboardModule,
     ComercialCicloVendasCotacoesFormularioModule,
+    
   ],
   exports: [
     ComercialCicloVendasCotacoesListaComponent,

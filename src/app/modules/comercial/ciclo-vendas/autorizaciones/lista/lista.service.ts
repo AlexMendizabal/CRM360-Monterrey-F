@@ -17,7 +17,7 @@ import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.
   providedIn: 'root',
 })
 export class ComercialCicloVendasAutorizacionesListaService {
-  private readonly APIAutorizacion = `http://23.254.204.187/api/comercial/ciclo-vendas/autorizaciones`;
+  private readonly APIAutorizacion = `http://23.254.204.187/comercial/ciclo-vendas/autorizaciones`;
 
 
   private onChangeClienteCotacao = new BehaviorSubject([]);

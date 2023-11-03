@@ -115,7 +115,6 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
   }
 
   onSubmit(customerData) {
-
     if (customerData !== undefined && customerData !== null) {
       this.checkoutForm.reset();
       this.id_oferta = this.dataCotacao.id_oferta;
@@ -158,6 +157,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
   onClose(): void {
     this.formularioService.limparCarrinhoSubject.next(true);
     this.bsModalRef.hide();
+    location.reload();
     this.router.navigate([`/comercial/ciclo-vendas/23/cotacoes-pedidos/lista`]);
   }
 

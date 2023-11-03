@@ -18,7 +18,7 @@ const routes: Routes = [
           import('./autorizaciones/autorizaciones.module').then(
             (m) => m.ComercialCicloVendasAutorizacionesModule
       ),
-    },
+      },
       {
         path: 'cotacoes-pedidos',
         loadChildren: () =>
