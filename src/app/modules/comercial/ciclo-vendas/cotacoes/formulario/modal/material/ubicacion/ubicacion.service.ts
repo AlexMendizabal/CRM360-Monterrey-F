@@ -38,14 +38,14 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionService
             keyboard: false,
         };
         const initialState = {
-
+   
         };
         this.modalService.show(
             ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent,
             Object.assign({}, modalConfig, {
-                initialState,
+              initialState,
             })
-        );
+          );
 
     }
 }

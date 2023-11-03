@@ -80,7 +80,7 @@ import { ComercialCicloVendasCotacoesFormularioModalDuplicatasService } from './
 import { ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
 import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoService } from './modal/finalizacao/finalizacao.service';
 import { ComercialCicloVendasCotacoesFormularioModalSelecionarComponent } from './modal/cliente/selecionar/selecionar.component';
-import { ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent } from './modal/material/ubicacion/ubicacion.component';
+import { ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent } from '../formulario/modal/material/ubicacion/ubicacion.component';
 import { ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent } from './modal/material/autorizar/autorizar.component';
 
 
@@ -116,9 +116,9 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioTemplateButtonOutrosComponent,
     ComercialCicloVendasCotacoesFormularioTemplateProgressBarComponent,
     ComercialCicloVendasCotacoesFormularioModalSelecionarComponent,
-    ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
-    ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent
+    ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent,
+    ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent,
   ],
   imports: [
     CommonModule,
@@ -173,7 +173,9 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioTemplateProgressBarComponent,
     ComercialCicloVendasCotacoesFormularioModalSelecionarComponent,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
-    ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent
+    ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent,
+    ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent,
+
 
 
 
@@ -197,7 +199,9 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoPadraoComponent,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoPerdidaComponent,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
-    ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent
+    ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent,
+    ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent,
+
 
 
 
@@ -220,7 +224,6 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoService,
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoService,
     ComercialCicloVendasCotacoesFormularioService,
-
   ],
 })
 export class ComercialCicloVendasCotacoesFormularioModule {}

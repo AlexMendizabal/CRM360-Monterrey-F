@@ -596,10 +596,10 @@
   </ng-template>
   <ng-template #seleccionarUbicacion>
     <comercial-ciclo-vendas-cotacoes-formulario-modal-material-ubicacion
-      (latLngChanged)="changeLatitudLongitud($event)">
+      (latLngChanged)="changeLatitudLongitud($event)" (fecharModal)="onFecharModal($event)">
     </comercial-ciclo-vendas-cotacoes-formulario-modal-material-ubicacion>
   </ng-template>
-
+ 
 
   <ng-template #seleccionarAutorizacion>
     <comercial-ciclo-vendas-cotacoes-formulario-modal-material-autorizar>

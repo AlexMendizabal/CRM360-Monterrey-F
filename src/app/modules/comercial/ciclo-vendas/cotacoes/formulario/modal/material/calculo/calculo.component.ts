@@ -571,7 +571,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
         /*    console.log('respuesta_calculo')
         console.log(this.calculo); */
         // @ts-ignore: Ignorar error TS2339
-        this.calculo.id_presentacion = this.form.value.formPresentacion;
+        this.calculo.id_presentacion =  0/* this.form.value.formPresentacion */;
       this.calculo.index = this.index;
       this.formularioService.calculoSubject.next(this.calculo);
       /*  console.log(this.calculo); */

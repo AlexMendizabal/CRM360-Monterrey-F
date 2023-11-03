@@ -18,6 +18,10 @@ import { TitleService } from 'src/app/shared/services/core/title.service';
 import { DetailPanelService } from 'src/app/shared/templates/detail-panel/detal-panel.service';
 import { ComercialVendedoresService } from 'src/app/modules/comercial/services/vendedores.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ComercialClientesPreCadastroService } from '../pre-cadastro/pre-cadastro.service';
+import { EditarClienteService } from '../editar/editar.service';
+
+
 
 
 
@@ -65,6 +69,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   dadosCadastraisEmpty = false;
   contatosLoaded = false;
   contatosEmpty = false;
+  direccionEmpty = false;
   searchSubmitted = false;
   showAdvancedFilter = true;
 
@@ -91,7 +96,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   itemsPerPage = 50;
   currentPage = 1;
   totalItems = 0;
-
+  modalRef: BsModalRef;
   clientes: any = [];
   clientesPagination: any = [];
 
@@ -99,6 +104,11 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   dadosCadastrais: any = {};
   contato: any = [];
   contatos: any = [];
+  tipos_clientes: any = [];
+
+  cliente: any = [];
+
+  direcciones: any = [];
   editingMode: boolean = false;
   editedFields: any = {};
   vendedoresList: any[] = [];
@@ -107,7 +117,20 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   ciudades: any = [];
   cnaes: any = [];
   codigoClienteSap: any = [];
-  
+
+  tipos_personas: { [key: string]: string } = {
+    'S': 'Sociedades',
+    'P': 'Privado',
+    'G': 'Gobierno',
+    'E': 'Empleado'
+  };
+
+
+  latitudPromedio: number;
+  longitudPromedio: number;
+  informacionMarcador: { nombre: string, direccion: string } | null = null;
+
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -119,7 +142,9 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     private titleService: TitleService,
     private detailPanelService: DetailPanelService,
     private vendedoresService: ComercialVendedoresService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private preCadastroService: ComercialClientesPreCadastroService,
+    private editarClienteService: EditarClienteService
   ) {
     this.pnotifyService.getPNotify();
 
@@ -131,16 +156,19 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.setFormFilter();
     this.titleService.setTitle('Busqueda de clientes');
     this.onDetailPanelEmitter();
-    
+    this.getCenaes();
+    this.obtenerTiposClientes();
+    this.getCiudades();
+
     this.vendedoresService.getVendedores().subscribe(
-      (response: any) => { 
+      (response: any) => {
         this.vendedoresList = response.result;
         if (this.vendedoresList.length > 0) {
           this.editedFields.id_vendedor = this.vendedoresList[0].id;
         }
       },
       (error) => {
-        console.error('Error al obtener la lista de vendedores:', error);
+        console.error('Error al obtener la lista de vendedores:', error );
       }
     );
 
@@ -152,6 +180,19 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
   registrarAcesso(): void {
     this.atividadesService.registrarAcesso().subscribe();
+  }
+
+  onFecharModal(event) {
+    this.modalRef.hide();
+  }
+
+
+  openModalEditar(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {
+      animated: false,
+      class: 'modal-lg',
+    });
+
   }
 
   onDetailPanelEmitter(): void {
@@ -166,6 +207,43 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
 
+  getCenaes(): void {
+    this.preCadastroService.getCenaes()
+      .pipe(
+        finalize(() => {
+
+        })
+      )
+      .subscribe(
+        (response: any) => {
+          if (response[0].responseCode === 200) {
+            this.cnaes = response[0].result.map(cnae => ({
+              id_cnae: cnae.id,
+              descripcion: cnae.descricao,
+              codigo: cnae.codigo
+
+            })
+            );
+/*             console.log("cnaes: ", this.cnaes);
+ */          }
+        }
+      )
+  }
+
+  getCiudades(): void {
+    this.preCadastroService.getCiudades()
+      .pipe(
+        finalize(() => {
+        })
+      )
+      .subscribe(
+        (response: any) => {
+          if (response[0].responseCode === 200) {
+            this.ciudades = response[0].result;
+          }
+        }
+      )
+  }
 
   getFormFilters(): void {
     this.dadosFaturamentoService
@@ -204,15 +282,15 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
   viewDetails(cliente: any): void {
     this.detailPanelService.loadedFinished(false);
-  
+
     this.clienteSelecionado = cliente.codCliente;
-  
+
     this.dadosCadastraisLoaded = false;
     this.dadosCadastraisEmpty = false;
-  
+
     this.contatosLoaded = false;
     this.contatosEmpty = false;
-  
+
     this.clientesService
       .getDetalhes(cliente.codCliente)
       .pipe(
@@ -221,19 +299,41 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((response: JsonResponse) => {
-        if (response.data) {
-          this.dadosCadastrais = response.data;
-  
-          // Mover la asignación de id_vendedor aquí
+        this.informacionMarcador = null;
+        if (response.responseCode === 200) {
+          this.cliente = response.result;
+
+          this.contatosLoaded = true;
+          this.dadosCadastrais = response.result.datos_cliente;
+          if (response.result && response.result.datos_contacto && response.result.datos_contacto.length > 0) {
+            this.contatosEmpty = false;
+          } else {
+            this.contatos = [];
+            this.contatosEmpty = true;
+          }
+          if (response.result && response.result.datos_direccion && response.result.datos_direccion.length > 0) {
+            this.direccionEmpty = false;
+
+          } else {
+            this.direcciones = [];
+            this.direccionEmpty = true;
+          }
+          this.contatos = response.result.datos_contacto;
+          this.direcciones = response.result.datos_direccion;
           this.editedFields.id_vendedor = this.dadosCadastrais.id_vendedor;
-  
-          console.log("Datos de dadosCadastrais:", this.dadosCadastrais); // Agrega el console.log aquí
+          this.calcularPromedioUbicaciones(response.result.datos_direccion);
+
+
+          //console.log("Datos de dadosCadastrais:", this.dadosCadastrais); // Agrega el console.log aquí
         } else {
           this.dadosCadastraisEmpty = true;
+          this.contatosEmpty = true;
+          this.cliente = [];
+
         }
       });
-  
-    this.clientesService
+
+    /* this.clientesService
       .getContatosResumido(cliente.codCliente)
       .subscribe((response: any) => {
         this.contatosLoaded = true;
@@ -247,9 +347,47 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         } else {
           this.contatosEmpty = true;
         }
-      });
+      }); */
   }
-  
+
+  calcularPromedioUbicaciones(direcciones) {
+    let sumLatitud = 0;
+    let sumLongitud = 0;
+    if (direcciones && direcciones.length > 0) {
+      for (const ubicacion of direcciones) {
+        sumLatitud += ubicacion.latitud;
+        sumLongitud += ubicacion.longitud;
+      }
+      this.latitudPromedio = sumLatitud / this.direcciones.length;
+      this.longitudPromedio = sumLongitud / this.direcciones.length;
+    }
+
+  }
+
+  obtenerTiposClientes() {
+    this.clientesService.getTipoClientes()
+      .subscribe(
+        (response: any) => {
+          if (response.responseCode === 200) {
+            this.tipos_clientes = response.result;
+
+          } else {
+
+          }
+        },
+        (error) => {
+        }
+      )
+  }
+
+  verInformacion(index: number) {
+    const ubicacion = this.direcciones[index];
+    this.informacionMarcador = {
+      nombre: ubicacion.nombre || 'NO INFORMADO',
+      direccion: ubicacion.direccion || 'NO INFORMADO'
+    };
+  }
+
   onCloseDetailPanel() {
     this.resetClienteSelecionado();
 
@@ -331,55 +469,55 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     contato.editing = true;
     this.editingContacto = true;
   }
-  
+
   cancelEditingContact(contato: any) {
     contato.editing = false; // Salir del modo de edición
-    this.editingContacto = false; 
+    this.editingContacto = false;
   }
-  
+
   saveEditedContact(contato: any) {
-  const codigoCliente = contato.id_cliente;
+    const codigoCliente = contato.id_cliente;
 
-  const editedData = {
-    id_cont: contato.editedIdCont !== undefined ? contato.editedIdCont : contato.id_cont,
-    contacto: contato.editedContacto !== undefined ? contato.editedContacto : contato.contacto,
-    ds_tipo_cont: contato.originalDsTipoCont,
-    direccion: contato.editedDireccion !== undefined ? contato.editedDireccion : contato.direccion,
-    ds_cont: contato.editedDsCont !== undefined ? contato.editedDsCont : contato.ds_cont,
-  };
+    const editedData = {
+      id_cont: contato.editedIdCont !== undefined ? contato.editedIdCont : contato.id_cont,
+      contacto: contato.editedContacto !== undefined ? contato.editedContacto : contato.contacto,
+      ds_tipo_cont: contato.originalDsTipoCont,
+      direccion: contato.editedDireccion !== undefined ? contato.editedDireccion : contato.direccion,
+      ds_cont: contato.editedDsCont !== undefined ? contato.editedDsCont : contato.ds_cont,
+    };
 
-  const tipo_medio = contato.originalDsTipoCont === 'TELEFONO' ? 5 : 2;
+    const tipo_medio = contato.originalDsTipoCont === 'TELEFONO' ? 5 : 2;
 
-  if (contato.originalDsTipoCont === 'TELEFONO') {
-    editedData['telefono_contacto'] = contato.editedds_cont_meio !== undefined ? contato.editedds_cont_meio : contato.ds_cont_meio;
-  } else {
-    editedData['celular_contacto'] = contato.editedds_cont_meio !== undefined ? contato.editedds_cont_meio : contato.ds_cont_meio;
+    if (contato.originalDsTipoCont === 'TELEFONO') {
+      editedData['telefono_contacto'] = contato.editedds_cont_meio !== undefined ? contato.editedds_cont_meio : contato.ds_cont_meio;
+    } else {
+      editedData['celular_contacto'] = contato.editedds_cont_meio !== undefined ? contato.editedds_cont_meio : contato.ds_cont_meio;
+    }
+
+    editedData['tipo_medio'] = tipo_medio;
+    editedData['id_cont_meio'] = contato.id_cont_meio;
+    editedData['id_cont'] = contato.id_cont;
+
+    this.clientesService.sapUpdateContacto(codigoCliente, editedData).subscribe(
+      (response) => {
+        console.log('Cambios en el contacto guardados exitosamente:', response);
+        contato.editing = false; // Salir del modo de edición
+        this.editingContacto = false;
+        // Actualizar los valores del contacto en el objeto local
+        contato.contacto = editedData.contacto;
+        contato.ds_tipo_cont = editedData.ds_tipo_cont;
+        contato.ds_cont_meio = editedData['telefono_contacto'] || editedData['celular_contacto'];
+        contato.direccion = editedData.direccion;
+        contato.ds_cont = editedData.ds_cont;
+
+        this.clientesService.getDetalhes(codigoCliente);
+      },
+      (error) => {
+        console.error('Error al guardar cambios en el contacto:', error);
+      }
+    );
   }
 
-  editedData['tipo_medio'] = tipo_medio;
-  editedData['id_cont_meio'] = contato.id_cont_meio;
-  editedData['id_cont'] = contato.id_cont;
-
-  this.clientesService.sapUpdateContacto(codigoCliente, editedData).subscribe(
-    (response) => {
-      console.log('Cambios en el contacto guardados exitosamente:', response);
-      contato.editing = false; // Salir del modo de edición
-      this.editingContacto = false; 
-      // Actualizar los valores del contacto en el objeto local
-      contato.contacto = editedData.contacto;
-      contato.ds_tipo_cont = editedData.ds_tipo_cont;
-      contato.ds_cont_meio = editedData['telefono_contacto'] || editedData['celular_contacto'];
-      contato.direccion = editedData.direccion;
-      contato.ds_cont = editedData.ds_cont;
-
-      this.clientesService.getDetalhes(codigoCliente);
-    },
-    (error) => {
-      console.error('Error al guardar cambios en el contacto:', error);
-    }
-  );
-}
-  
   mapTipoPessoaToTipoPersona(tipoPessoa: string): string {
     const map = {
       'S': 'Sociedades',
@@ -388,7 +526,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       'E': 'Empleado'
       // Agrega más mapeos si es necesario...
     };
-  
+
     return map[tipoPessoa] || '';
   }
   tipoPersonaOptions = [
@@ -397,7 +535,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     { label: 'Gobierno', value: 'G' },
     { label: 'Empleado', value: 'E' }
   ];
-  
+
   getTipoPersonaLabel(value: string): string {
     const option = this.tipoPersonaOptions.find(opt => opt.value === value);
     return option ? option.label : 'NO INFORMADO';
@@ -406,38 +544,44 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     if (isNaN(id_vendedor)) {
       return 'NO INFORMADO';
     }
-  
+
     const vendedor = this.vendedoresList.find(v => v.id_vendedor === id_vendedor);
     return vendedor ? vendedor.nome : 'NO INFORMADO';
   }
-  
+
   enableEditing() {
-    this.editingMode = true;
+    this.editarClienteService.showModal();
+
+
+    /* this.editingMode = true;
 
     // Guardar los valores actuales de los campos editables
-    this.editedFields.nit = this.dadosCadastrais.cnpj_cpf;
-    this.editedFields.nombres = this.dadosCadastrais.nombres;
-    this.editedFields.razonSocial = this.dadosCadastrais.razaoSocial;
+    this.editedFields.carnet = this.dadosCadastrais.carnet;
+    this.editedFields.nit = this.dadosCadastrais.nit;
+    this.editedFields.nombres = this.dadosCadastrais.nombre;
+    this.editedFields.razonSocial = this.dadosCadastrais.razon_social;
     this.editedFields.ciudad = this.dadosCadastrais.ciudad;
     this.editedFields.NombreVendedor = this.dadosCadastrais.NombreVendedor;
     this.editedFields.sucursal = this.dadosCadastrais.sucursal;
     this.editedFields.direccion = this.dadosCadastrais.direccion;
     this.editedFields.id_cliente = this.dadosCadastrais.id_cliente;
-    this.editedFields.tipo_persona = this.dadosCadastrais.tipo_persona;
+    this.editedFields.tipo_persona = this.dadosCadastrais.id_tipo_persona;
     this.editedFields.codigo_cliente = this.clientes.codigo_cliente;
     this.editedFields.tipo_pessoa = this.dadosCadastrais.tipo_pessoa;
     this.editedFields.telefono = this.dadosCadastrais.telefono;
     this.editedFields.celular = this.dadosCadastrais.celular;
+    this.editedFields.id_rubro = this.dadosCadastrais.id_rubro;
+
     // this.editedFields.nit = this.dadosCadastrais.nit;
     this.editedFields.id_vendedor = this.dadosCadastrais.id_vendedor;
-    this.originalVendedorId = this.dadosCadastrais.id_vendedor; 
+    this.originalVendedorId = this.dadosCadastrais.id_vendedor; */
     // Repite para otros campos editables...
   }
   cancelEditing() {
     // Reinicia los campos editados a sus valores originales
     this.editedFields = {};
     this.originalVendedorId = null;
-  
+
     // Desactiva el modo de edición
     this.editingMode = false;
   }
@@ -445,7 +589,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     const codigoCliente = this.dadosCadastrais.id_cliente;
     const codigo_cliente = this.dadosCadastrais.codigo_cliente;
     const editedData = {
-      ...this.editedFields, 
+      ...this.editedFields,
       codigo_cliente: this.dadosCadastrais.codigo_cliente,
       ubicacion: [
         {
@@ -453,14 +597,14 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         }
       ]
     };
-    
+
     this.editedFields.tipo_persona = this.mapTipoPessoaToTipoPersona(this.editedFields.tipo_pessoa);
-    
+
 
     if (this.editedFields.id_vendedor !== this.originalVendedorId) {
       editedData.id_vendedor = this.editedFields.id_vendedor;
     }
-    
+
     console.log('Datos antes de enviarlos a sapUpdateClient:', editedData);
     // Llamar a la función para guardar los cambios
     this.clientesService.sapUpdateClient(codigoCliente, editedData).subscribe(
@@ -476,9 +620,9 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         console.error('Error al guardar cambios:', error);
       }
     );
-}
+  }
 
-  
+
 
   listStatus(): void {
     this.clientesService.getStatus().subscribe({
@@ -492,13 +636,13 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
     });
   }
-  
+
 
   setStatus(status: any): void {
     for (let i = 0; i < status.length; i++) {
       if (status[i]['situacao'] == 'Ativo') {
         this.ativos = status[i]['quantidade'];
-      } else if (status[i]['situacao'] == 'Inativo'|| status[i]['situacao'] == null) {
+      } else if (status[i]['situacao'] == 'Inativo' || status[i]['situacao'] == null) {
         this.inativos += status[i]['quantidade'];
       } else if (status[i]['situacao'] == 'Potenci') {
         this.potencial = status[i]['quantidade'];

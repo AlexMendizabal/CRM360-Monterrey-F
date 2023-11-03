@@ -235,166 +235,100 @@
                   <div class="container">
                     <div class="form-row">
                       <div class="form-group col-lg-6">
-                        <label>Codigo Cliente CRM360</label>
-                        <div *ngIf="!editingMode">
-                          {{ dadosCadastrais.id_cliente == null ? 'NO INFORMADO' : dadosCadastrais.id_cliente }}
-                        </div>
-                        <div *ngIf="editingMode">
-                          <input [(ngModel)]="editedFields.id_cliente" type="hidden">
-                        </div>
+                        <label>Codigo Cliente </label>
+                        <input
+                          value="{{ dadosCadastrais.id_cliente == null ? 'NO INFORMADO' : dadosCadastrais.id_cliente }}"
+                          class="form-control" readonly>
                       </div>
                       <div class="form-group col-lg-6">
                         <label>Codigo Cliente SAP</label>
-                        <div *ngIf="!editingMode">
-                          {{ dadosCadastrais.codigo_cliente == null ? 'NO INFORMADO' : dadosCadastrais.codigo_cliente }}
-                        </div>
-                        <div *ngIf="editingMode">
-                          <input [(ngModel)]="editedFields.codigo_cliente" type="hidden">
-                        </div>
+                        <input
+                          value="{{ dadosCadastrais.codigo_cliente == '' ? 'NO INFORMADO' : dadosCadastrais.codigo_cliente }}"
+                          class="form-control" readonly>
                       </div>
-                      
+
                       <div class="form-group col-lg-6">
                         <label>C.I.</label>
                         <div>
                           <div>
-                            <div *ngIf="!editingMode">{{ dadosCadastrais.cnpj_cpf == null ? 'NO INFORMADO' :
-                              dadosCadastrais.cnpj_cpf }}</div>
-                            <div *ngIf="editingMode"><input [(ngModel)]="editedFields.nit"></div>
+                            <input value="{{ dadosCadastrais.carnet == null ? 'NO INFORMADO' :
+                            dadosCadastrais.carnet }}" class="form-control" readonly>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="form-row">
+                      <!--  </div>
+                    <div class="form-row"> -->
                       <div class="form-group col-lg-6">
                         <label>Nombre</label>
                         <div>
                           <div>
-                            <div *ngIf="!editingMode">{{ dadosCadastrais.nombres == null ? 'NO INFORMADO' :
-                              dadosCadastrais.nombres }}</div>
-                            <div *ngIf="editingMode"><input [(ngModel)]="editedFields.nombres"></div>
+                            <input value="{{ dadosCadastrais.nombre == null ? 'NO INFORMADO' :
+                            dadosCadastrais.nombre }}" class="form-control" readonly>
                           </div>
                         </div>
                       </div>
-                      <div class="form-group col">
+                      <div class="form-group col-lg-6">
                         <label>Razon social</label>
                         <div>
                           <div>
-                            <div *ngIf="!editingMode">{{ dadosCadastrais.razaoSocial == null ? 'NO INFORMADO' :
-                              dadosCadastrais.razaoSocial }}</div>
-                            <div *ngIf="editingMode"><input [(ngModel)]="editedFields.razonSocial"></div>
+
+                            <input value="{{ dadosCadastrais.razon_social == null ? 'NO INFORMADO' :
+                            dadosCadastrais.razon_social }}" class="form-control" readonly>
+
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col">
+                      <!--  </div> -->
+                      <!-- <div class="form-row"> -->
+                      <div class="form-group col-lg-6">
                         <label>Tipo Persona</label>
                         <div>
-                          <div *ngIf="!editingMode">{{ getTipoPersonaLabel(dadosCadastrais.tipo_pessoa) }}</div>
-                          <div *ngIf="editingMode">
-                            <select [(ngModel)]="editedFields.tipo_pessoa">
-                              <option *ngFor="let option of tipoPersonaOptions" [value]="option.value">{{ option.label
-                                }}</option>
-                            </select>
-                          </div>
+                          <input value="{{ getTipoPersonaLabel(dadosCadastrais.id_tipo_persona) }}" class="form-control"
+                            readonly>
                         </div>
                       </div>
                       <div class="form-group col-lg-6">
                         <label>NIT.</label>
                         <div>
-                          <div *ngIf="!editingMode">{{ dadosCadastrais.nit == null ? 'NO INFORMADO' :
-                            dadosCadastrais.nit }}</div>
-                          <div
-                            *ngIf="editingMode && (dadosCadastrais.tipo_pessoa === 'P' || dadosCadastrais.tipo_pessoa === 'G' || dadosCadastrais.tipo_pessoa === 'E')">
-                            <input [(ngModel)]="editedFields.nit">
-                          </div>
+                          <input value="{{ dadosCadastrais.nit == null ? 'NO INFORMADO' :
+                          dadosCadastrais.nit }}" class="form-control" readonly>
                         </div>
                       </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col">
+                      <!--  </div> -->
+                      <!--  <div class="form-row"> -->
+                      <div class="form-group col-lg-6">
                         <label>Celular</label>
                         <div>
-                          <div *ngIf="!editingMode">{{ dadosCadastrais.celular == null ? 'NO INFORMADO' :
-                            dadosCadastrais.celular }}</div>
-                          <div *ngIf="editingMode"><input [(ngModel)]="editedFields.celular"></div>
+                          <input value="{{ dadosCadastrais.celular == null ? 'NO INFORMADO' :
+                          dadosCadastrais.celular }}" class="form-control" readonly>
                         </div>
                       </div>
-                      <div class="form-group col">
+                      <div class="form-group col-lg-6">
                         <label>Telefono</label>
                         <div>
-                          <div *ngIf="!editingMode">{{ dadosCadastrais.telefono == null ? 'NO INFORMADO' :
-                            dadosCadastrais.telefono }}</div>
-                          <div *ngIf="editingMode"><input [(ngModel)]="editedFields.telefono"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col-lg-6">
-                        <label>Lista Ciudad</label>
-                        <div>
-                          <div *ngIf="!editingMode">{{ vendedoresList.length > 0 ? (vendedoresList[0].nombre_lista ||
-                            'NO INFORMADO') : 'NO INFORMADO' }}</div>
+                          <input value="{{ dadosCadastrais.telefono == null ? 'NO INFORMADO' :
+                          dadosCadastrais.telefono }}" class="form-control" readonly>
                         </div>
                       </div>
                       <div class="form-group col-lg-6">
                         <label for="rubro">Rubro</label>
                         <div>
-                          <ng-container *ngIf="!editingMode; else editingRubro">
-                            {{ dadosCadastrais.rubro || 'NO INFORMADO' }}
-                          </ng-container>
-                          <ng-template #editingRubro>
-                            <select [(ngModel)]="editedFields.id_rubro" id="rubro">
-                              <option [value]="dadosCadastrais.id_rubro">{{ dadosCadastrais.rubro }}</option>
-                              <option *ngFor="let rubro of rubros" [value]="rubro.id">{{ rubro.descripcion }}</option>
-                            </select>
-                          </ng-template>
-                        </div>
-                      </div>
-
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col-lg-6">
-                        <label>Sucursal</label>
-                        <div>
-                          <div *ngIf="!editingMode">{{ dadosCadastrais.sucursal == null ? 'NO INFORMADO' :
-                            dadosCadastrais.sucursal }}</div>
-                        </div>
-                      </div>
-                      <div class="form-group col-lg-6">
-                        <label>Direccion</label>
-                        <div>
-                          <div *ngIf="!editingMode">{{ dadosCadastrais.direccion == null ? 'NO INFORMADO' :
-                            dadosCadastrais.direccion}}</div>
-                          <div *ngIf="editingMode"><input [(ngModel)]="editedFields.direccion"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col-lg-6">
-                        <label>Ciudad</label>
-                        <div>
-                          <div *ngIf="!editingMode">{{ dadosCadastrais.ciudad == null ? 'NO INFORMADO' :
-                            dadosCadastrais.ciudad }}</div>
+                          <input value="{{ dadosCadastrais.rubro || 'NO INFORMADO' }}" class="form-control" readonly>
                         </div>
                       </div>
                       <div class="form-group col-lg-6">
                         <label>Vendedor</label>
                         <div>
-                          <ng-container *ngIf="!editingMode; else editingVendedor">
-                            {{ dadosCadastrais.NombreVendedor || 'NO INFORMADO' }}
-                          </ng-container>
-                          <ng-template #editingVendedor>
-                            <select [(ngModel)]="editedFields.id_vendedor">
-                              <option [value]="originalVendedorId">{{ dadosCadastrais.NombreVendedor }}</option>
-                              <option *ngFor="let vendedor of vendedoresList" [value]="vendedor.id">{{ vendedor.nome }}
-                              </option>
-                            </select>
-                          </ng-template>
+                          <input value="{{ dadosCadastrais.vendedor || 'NO INFORMADO' }}" class="form-control" readonly>
                         </div>
                       </div>
-
-
+                      <div class="form-group col-lg-6">
+                        <label>Tipo cliente</label>
+                        <div>
+                          <input value="{{ dadosCadastrais.tipo_cliente || 'NO INFORMADO' }}" class="form-control"
+                            readonly>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="mb-3" *ngIf="dadosCadastraisLoaded && dadosCadastraisEmpty">
@@ -412,7 +346,9 @@
                 </div>
                 <div *ngIf="!editingMode">
                   <div class="text-right mt-3">
-                    <button type="button" class="btn btn-light" (click)="enableEditing()">Editar Cliente</button>
+                    <button type="button" class="btn btn-light mb-2 text-center"
+                      (click)="openModalEditar(editarCliente)">Editar
+                      Cliente</button>
                   </div>
                 </div>
               </div>
@@ -420,21 +356,31 @@
             <tab heading="Contactos">
               <div class="border-right border-left border-bottom px-3 pt-3">
                 <div *ngIf="contatosLoaded && !contatosEmpty">
-                  <div class="form-row" *ngFor="let contato of contatos">
-                    <!-- <div class="form-group col" [ngClass]="{'hidden': contato.editing}">
+                  <div *ngIf="contatos.lenght !==  0">
+                    <div class="form-row" *ngFor="let contato of contatos">
+                      <!-- <div class="form-group col" [ngClass]="{'hidden': contato.editing}">
                       <label>ID Contacto</label>
                       <div>
                         {{ contato.id_cont }}
                       </div>
                     </div> -->
-                    <div class="form-group col">
-                      <label>Contacto</label>
-                      <div>
-                        <div *ngIf="!editingContacto">{{ contato.contacto }}</div>
-                        <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedContacto"></div>
+                      <div class="form-group col-lg-4">
+                        <label>título</label>
+                        <div>
+                          <input value="{{ contato.contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
+                        <div *ngIf="contato.editing"></div> -->
+                        </div>
                       </div>
-                    </div>
-                    <div class="form-group col">
+                      <div class="form-group col-lg-4">
+                        <label>Nombre</label>
+                        <div>
+                          <input value="{{ contato.nombres_contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
+                        <div *ngIf="contato.editing"></div> -->
+                        </div>
+                      </div>
+                      <!-- <div class="form-group col">
                       <label>Tipo de Contacto</label>
                       <div>
                         <div *ngIf="!editingContacto">{{ contato.ds_tipo_cont }} {{ contato.ds_cont_meio }}</div>
@@ -442,16 +388,39 @@
                           <input [(ngModel)]="contato.editedds_cont_meio">
                         </div>
                       </div>
-                    </div>
+                    </div> -->
 
-                    <div class="form-group col">
-                      <label>Dirección</label>
-                      <div>
-                        <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
-                        <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedDireccion"></div>
+                      <div class="form-group col-lg-4">
+                        <label>Dirección</label>
+                        <div>
+                          <input value="{{ contato.direccion_contacto || 'NO INFORMADO' }}" class="form-control"
+                            readonly>
+                          <!--  <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
+                        <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedDireccion"></div> -->
+                        </div>
                       </div>
-                    </div>
-                    <div class="form-group col">
+                      <div class="form-group col-lg-4">
+                        <label>Celular</label>
+                        <div>
+                          <input value="{{ contato.celular_contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <!--  <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
+                        <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedDireccion"></div> -->
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-4 mb-3">
+                        <label>Teléfono</label>
+                        <div>
+                          <input value="{{ contato.telefono_contacto || 'NO INFORMADO' }}" class="form-control"
+                            readonly>
+                          <!--  <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
+                        <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedDireccion"></div> -->
+                        </div>
+                      </div>
+
+
+
+
+                      <!-- <div class="form-group col">
                       <label>Nombre</label>
                       <div>
                         <ng-container *ngIf="!editingContacto">
@@ -462,16 +431,71 @@
                           <input [(ngModel)]="contato.editedDsCont">
                         </ng-container>
                       </div>
-                    </div>
-                    <button type="button" class="btn btn-light" (click)="editarContacto(contato)"
+                    </div> -->
+                      <!-- <button type="button" class="btn btn-light" (click)="editarContacto(contato)"
                       *ngIf="!contato.editing">Editar Contacto</button>
                     <div *ngIf="contato.editing">
                       <button type="button" class="btn btn-secondary"
                         (click)="cancelEditingContact(contato)">Cancelar</button>
                       <button type="button" class="btn btn-primary" (click)="saveEditedContact(contato)">Guardar
                         Cambios</button>
+                    </div> -->
+
                     </div>
                   </div>
+                </div>
+                <div *ngIf="contatosEmpty">
+                  <label> <strong>Sin datos de contacto</strong></label>
+                </div>
+              </div>
+            </tab>
+            <tab heading="Dirección">
+              <div class="border-right border-left border-bottom px-3 pt-3">
+                <div *ngIf="contatosLoaded && !direccionEmpty">
+                  <div class="col-lg-12 mb-4" *ngIf="direcciones.lenght !==  0">
+                    
+                    <div class="embed-responsive embed-responsive-16by9">
+                      <agm-map [latitude]="latitudPromedio" [longitude]="longitudPromedio" [zoom]="16"
+                        class="embed-responsive-item">
+                        <agm-marker *ngFor="let ubicacion of direcciones; let i = index" [latitude]="ubicacion.latitud"
+                          (markerClick)="verInformacion(i)" [longitude]="ubicacion.longitud">
+                        </agm-marker>
+                      </agm-map>
+                      <div id="map-zoom-control" class="map-control"></div>
+                    </div>
+                    <div *ngIf="informacionMarcador" class="info-box mt-3">
+                      <h6>Información de la ubicación</h6>
+                      <p style="font-size: 13px;"> <strong>Título: </strong> {{ informacionMarcador.nombre }}</p>
+                      <p style="font-size: 13px;"> <strong>Dirección: </strong> {{ informacionMarcador.direccion }}</p>
+                    </div>
+                  </div>
+                  <div *ngIf="direcciones.lenght !==  0">
+                    <div class="form-row" *ngFor="let direccion of direcciones">
+
+                      <div class="form-group col-lg-4">
+                        <label>título</label>
+                        <div>
+                          <input value="{{ direccion.ubicacion || 'NO INFORMADO' }}" class="form-control" readonly>
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-4">
+                        <label>dirección</label>
+                        <div>
+                          <input value="{{ direccion.direccion || 'NO INFORMADO' }}" class="form-control" readonly>
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-4 mb-3">
+                        <label>ciudad</label>
+                        <div>
+                          <input value="{{ direccion.ciudad || 'NO INFORMADO' }}" class="form-control" readonly>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="direccionEmpty">
+                  <label> <strong>Sin datos de dirección</strong></label>
                 </div>
               </div>
             </tab>
@@ -480,4 +504,13 @@
       </div>
     </div>
   </div>
+
+  <ng-template #editarCliente>
+    <editar-cliente (fecharModal)="onFecharModal($event)" [datos_cliente]="cliente" [vendedoresList]="vendedoresList"
+      [cnaes]="cnaes" [tipos_clientes]="tipos_clientes" [ciudades]="ciudades" [latitudPromedio]="latitudPromedio"
+      [longitudPromedio]="longitudPromedio" [tipos_personas] ="tipos_personas">
+    </editar-cliente>
+  </ng-template>
+
+
 </app-body>

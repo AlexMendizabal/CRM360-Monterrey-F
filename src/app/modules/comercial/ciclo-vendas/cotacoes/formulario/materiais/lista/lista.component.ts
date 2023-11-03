@@ -125,6 +125,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   idMaterial: number = 0;
   idLista: number = 0;
   registros: '';
+  swActivarBusqueda = false;
 
 
   toggleAll = false;
@@ -238,6 +239,12 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     });
   }
   cambioMaterial(idMaterial: number) {
+    if(idMaterial > 0) {
+      this.swActivarBusqueda = true;
+    }else{
+      this.swActivarBusqueda = false;
+    }
+    
     this.idMaterial = idMaterial;
     this.registros = this.form.controls.registros.value
   }

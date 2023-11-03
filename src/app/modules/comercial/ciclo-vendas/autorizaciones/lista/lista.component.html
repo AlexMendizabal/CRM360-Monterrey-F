@@ -54,7 +54,7 @@
     <ng-template #thead let-thead>
       <tr>
         <th scope="col" class="text-center hover" (click)="setOrderBy('fecha_creacion')">
-          <thead-sorter value="F. Solicitada" [active]="orderBy == 'fecha_solicitud'" [sort]="orderType"></thead-sorter>
+          <thead-sorter value="Fecha" [active]="orderBy == 'fecha_creacion'" [sort]="orderType"></thead-sorter>
         </th>
         <th scope="col" class="text-center hover" (click)="setOrderBy('codigo_oferta')">
           <thead-sorter value="Código Oferta" [active]="orderBy == 'codigo_oferta'" [sort]="orderType"></thead-sorter>
@@ -84,9 +84,10 @@
 
     </ng-template>
     <ng-template #tbody let-tbody>
-      <tr *ngFor="let autorizacion of getPaginateData()">
+      <tr *ngFor="let autorizacion of getPaginateData(); let i = index"
+        [class.table-active]="autorizacion.id_cliente == clienteSelecionado">
         <td class="text-center hover">
-          {{ autorizacion.fecha_solicitud | date: 'dd/MM/yyyy' }}
+          {{ autorizacion.fecha_creacion | date: 'dd/MM/yyyy' }}
         </td>
         <td class="text-center hover">
           {{ autorizacion.codigo_oferta }}
@@ -113,21 +114,13 @@
           <a class="dropdown-item"  routerLink="/modal-autorizacion" (click)="openModal(autorizacion.id_autorizacion)">
             <i class="fas fa-book"></i><span class="text-uppercase"> Detalles</span>
           </a>
-          <a class="dropdown-item"  routerLink="/modal-autorizacion" (click)="onVista(autorizacion.id_oferta)">
+          <a class="dropdown-item"  routerLink="/modal-autorizacion" (click)="openModal(autorizacion.id_autorizacion)">
             <i class="fas fa-book"></i><span class="text-uppercase"> Vista</span>
           </a>
         </td>
       </tr>
     </ng-template>
   </custom-table>
-  <div class="row" *ngIf="noResult !== false">
-    <div class="col">
-      <message
-        icon="fas fa-exchange-alt"
-        text="No hay registros de su búsqueda">
-      </message>
-    </div>
-  </div>
   <div class="d-flex justify-content-center mt-3">
     <pagination [maxSize]="maxSize" [(totalItems)]="totalItems" (pageChanged)="onPageChanged($event)"
       [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
