@@ -300,7 +300,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       )
       .subscribe((response: JsonResponse) => {
         this.informacionMarcador = null;
-        if (response.responseCode === 200) {
+        if (response.responseCode == 200) {
+          console.log(response);
           this.cliente = response.result;
 
           this.contatosLoaded = true;
@@ -337,7 +338,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       .getContatosResumido(cliente.codCliente)
       .subscribe((response: any) => {
         this.contatosLoaded = true;
-  
+
         if (response['responseCode'] === 200) {
           if (Object.keys(response['data']).length > 0) {
             this.contatos = response['data'];

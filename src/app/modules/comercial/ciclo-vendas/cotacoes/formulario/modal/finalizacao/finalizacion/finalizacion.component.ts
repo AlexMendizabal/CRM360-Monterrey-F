@@ -40,6 +40,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
     idEscritorio: 58,
   };
 
+  deshabilitar = true;
   loaderFullScreen = true;
 
   tableConfig: Partial<CustomTableConfig> = {
@@ -174,21 +175,20 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
   }
 
   verificador(): boolean {
-    let deshabilitar = true;
     this.dataCotacao.carrinho.forEach((data) => {
       if (data.percentualDesc > data.descuento_permitido) {
-        deshabilitar = false;
+        this.deshabilitar = false;
         return;
       }
     });
-    if (deshabilitar) {
+    if (this.deshabilitar) {
       const observacionElement = document.getElementById('observacion') as HTMLButtonElement;
       const titulo_observacionElement = document.getElementById('titulo_observacio') as HTMLButtonElement;
-      observacionElement.disabled = deshabilitar;
-      observacionElement.style.display = deshabilitar ? 'none' : 'block';
-      titulo_observacionElement.disabled = deshabilitar;
-      titulo_observacionElement.style.display = deshabilitar ? 'none' : 'block';
-      console.log(deshabilitar);
+      observacionElement.disabled = this.deshabilitar;
+      observacionElement.style.display = this.deshabilitar ? 'none' : 'block';
+      titulo_observacionElement.disabled = this.deshabilitar;
+      titulo_observacionElement.style.display = this.deshabilitar ? 'none' : 'block';
+      console.log(this.deshabilitar);
       return;
     }
   }

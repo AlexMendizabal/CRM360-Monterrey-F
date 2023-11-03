@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class CnpjService {
-  private readonly API = `http://127.0.0.1:8000/common/services/cnpj`;
+  private readonly API = `http://23.254.204.187/api/common/services/cnpj`;
 
   constructor(protected http: HttpClient) {}
 

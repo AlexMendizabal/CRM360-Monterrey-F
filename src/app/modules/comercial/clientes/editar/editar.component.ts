@@ -261,19 +261,31 @@ export class EditarClienteComponent implements OnInit {
 
     actualizarCliente() {
 
+        // @ts-ignore
         var idClienteInput = document.getElementById('id_cliente').value;
+        // @ts-ignore
         var codigoClienteInput = document.getElementById('codigo_cliente').value;
-        var ciInput = document.getElementById('carnet').value;
+        // @ts-ignore
+        var ciInput = document.getElementById('carnet').value;3
+      // @ts-ignore
         var nitInput = document.getElementById('nit').value;
+      // @ts-ignore
         var nombreInput = document.getElementById('nombre').value;
+      // @ts-ignore
         var nombreFacturaInput = document.getElementById('nombre_factura').value;
+      // @ts-ignore
         var idTipoPersonaInput = document.getElementById('id_tipo_persona').value;
+      // @ts-ignore
         var emailInput = document.getElementById('email').value;
+              // @ts-ignore
         var telefonoInput = document.getElementById('telefono').value;
+      // @ts-ignore
         var celularInput = document.getElementById('celular').value;
+      // @ts-ignore
         var tipoClienteInput = document.getElementById('id_tipo_cliente').value;
+      // @ts-ignore
         var idVendedorInput = document.getElementById('id_vendedor').value;
-
+      // @ts-ignore
         const ubicacion = this.datos_cliente.datos_direccion;
         const contactos = this.datos_cliente.datos_contacto
         const data = {

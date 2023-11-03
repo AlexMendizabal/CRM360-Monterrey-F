@@ -8,7 +8,7 @@ import { forkJoin } from 'rxjs';
   providedIn: 'root'
 })
 export class ComercialClientesCadastroDadosFaturamentoFormularioService {
-  private readonly API = `http://127.0.0.1:8000/comercial/clientes/cadastro/formulario/dados-faturamento`;
+  private readonly API = `http://23.254.204.187/api/comercial/clientes/cadastro/formulario/dados-faturamento`;
 
   constructor(protected http: HttpClient) {}
 
@@ -68,5 +68,5 @@ export class ComercialClientesCadastroDadosFaturamentoFormularioService {
       take(1)
     );
   }
-  
+
 }

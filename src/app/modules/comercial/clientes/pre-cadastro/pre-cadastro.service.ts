@@ -15,8 +15,8 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root'
 })
 export class ComercialClientesPreCadastroService {
-  private readonly BASE_URL: string = `http://127.0.0.1:8000/api`   ;
-  
+  private readonly BASE_URL: string = `http://23.254.204.187/api`   ;
+
   constructor(
     private vendedoresService: ComercialVendedoresService,
     private dadosFaturamentoService: ComercialClientesCadastroDadosFaturamentoFormularioService,
@@ -29,7 +29,7 @@ export class ComercialClientesPreCadastroService {
     let ciudades = this.dadosFaturamentoService.getCiudades(); // Agregar esta línea
     return forkJoin([vendedores, cnaes, ciudades]); // Agregar ciudades aquí
   }
-  
+
   getCiudades() {
     let ciudades = this.dadosFaturamentoService.getCiudades();
     return forkJoin(ciudades);
@@ -51,11 +51,11 @@ export class ComercialClientesPreCadastroService {
 
   updateCliente(params: any){
     return this.http
-      .post(`http://127.0.0.1:8000/sap/cliente_update`, params)
+      .post(`http://23.254.204.187/api/sap/cliente_update`, params)
       .pipe(take(1), retry(2));
   }
 
-  
+
 
   postAkna(param){
     return this.http.post(

@@ -10,7 +10,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialAuditoriaService {
-  private readonly API = `http://127.0.0.1:8000/comercial/auditoria/enderecos-entrega`;
+  private readonly API = `http://23.254.204.187/api/comercial/auditoria/enderecos-entrega`;
 
   constructor(protected http: HttpClient) {}
 
@@ -74,6 +74,6 @@ export class ComercialAuditoriaService {
   }
 
   getCliente(codCliente){
-    return this.http.get(`http://127.0.0.1:8000/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
+    return this.http.get(`http://23.254.204.187/api/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
   }
 }

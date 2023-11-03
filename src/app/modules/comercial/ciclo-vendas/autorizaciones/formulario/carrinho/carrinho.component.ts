@@ -800,7 +800,10 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   setLocalStorage(data: Array<ICarrinhoModel>): void {
     if (this.idReservado !== null) {
       this.clearLocalStorage();
-      localStorage.setItem('materiais', btoa(JSON.stringify(data)));
+      const textEncoder = new TextEncoder();
+      const utf8Data = textEncoder.encode(JSON.stringify(data));
+      const base64Data = btoa(String.fromCharCode.apply(null, utf8Data));
+      localStorage.setItem('materiais', base64Data);
     }
   }
 

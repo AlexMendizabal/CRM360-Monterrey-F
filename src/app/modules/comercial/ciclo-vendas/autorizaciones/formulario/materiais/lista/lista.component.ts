@@ -459,7 +459,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
   setRouterParams(params: any): void {
-    this.router.navigate([], {
+    /* this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: {
         f: btoa(
@@ -471,7 +471,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         q: btoa(JSON.stringify(params)),
       },
       queryParamsHandling: 'merge',
-    });
+    }); */
     this.search(params);
   }
 

@@ -59,6 +59,11 @@
       </div>
     </div>
       <div class="row">
+        <div class="alert alert-warning col-md-6 ml-3" *ngIf="deshabilitar === false">
+          <strong>Al superar el límite permitido, su solicitud debe ser aprobada, describa el motivo del descuento solicitado.</strong>
+        </div>
+        <div class="col-md-5" *ngIf="deshabilitar === false">
+        </div>
         <div class="col-md-6" >
           <span class="mtc-title"  id="titulo_observacio">Observación del Ejecutivo de venta:</span>
           <br>
