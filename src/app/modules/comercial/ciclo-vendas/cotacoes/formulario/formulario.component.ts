@@ -1336,7 +1336,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.onScrollToForm('top');
     this.codClientErrors = true;
     this.form.controls.codCliente.markAsTouched();
-    this.form.controls.codCliente.setErrors({ required: true });
+    this.form.controls.codCliente.setErrors({ required: true }) ;
     // this.pnotifyService.notice('Selecione um cliente.');
     // }
   }

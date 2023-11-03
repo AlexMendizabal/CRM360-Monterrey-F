@@ -18,8 +18,15 @@
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="nit">CI/NIT</label>
+          <div class="form-group col-md-3">
+            <label for="nit">CI</label>
+            <input type="text" class="form-control" id="ci" formControlName="ci" (input)="onInput()"
+              [ngClass]="onFieldError('ci') + ' ' + onFieldRequired('ci')">
+            <invalid-form-control [show]="onFieldInvalid('ci') == 'required'"
+              message="NIT inválido."></invalid-form-control>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="nit">NIT</label>
             <input type="text" class="form-control" id="nit" formControlName="nit" (input)="onInput()"
               [ngClass]="onFieldError('nit') + ' ' + onFieldRequired('nit')">
             <invalid-form-control [show]="onFieldInvalid('nit') == 'required'"
@@ -53,6 +60,11 @@
               [message]="maxLengthMessages.nome"></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
+            <label for="nomeFantasia">Nombre Factura</label>
+            <input type="text" class="form-control" id="nombre_factura" formControlName="nombre_factura" (input)="onInput()"
+              [ngClass]="onFieldError('nomeFantasia') + ' ' + onFieldRequired('nomeFantasia')">
+          </div>
+          <div class="form-group col-md-6">
             <label for="razaoSocial">Razon social</label>
             <input type="text" class="form-control" id="razaoSocial" formControlName="razaoSocial" (input)="onInput()"
               [ngClass]="onFieldError('razaoSocial') + ' ' + onFieldRequired('razaoSocial')">
@@ -61,11 +73,11 @@
             <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'maxlength'"
               [message]="maxLengthMessages.razaoSocial"></invalid-form-control>
           </div>
-          <div class="form-group col-md-6">
+         <!--  <div class="form-group col-md-6">
             <label for="nomeFantasia">Nombre de Fantasia</label>
             <input type="text" class="form-control" id="nomeFantasia" formControlName="nomeFantasia" (input)="onInput()"
               [ngClass]="onFieldError('nomeFantasia') + ' ' + onFieldRequired('nomeFantasia')">
-          </div>
+          </div> -->
           <div class="form-group col-md-6">
             <label for="celular">Celular</label>
             <input type="text" class="form-control" id="celular" formControlName="celular" (input)="onInput()"

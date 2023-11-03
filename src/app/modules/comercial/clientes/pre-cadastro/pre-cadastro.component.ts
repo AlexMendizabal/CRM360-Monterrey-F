@@ -428,6 +428,8 @@ export class ComercialClientesPreCadastroComponent
     this.form = this.formBuilder.group({
       //cnpj_cpf: [null,Validators.required],
       nit: [null, Validators.required],
+      ci: [null, Validators.required],
+
       nome: [
         null,
         [Validators.required, Validators.maxLength(this.maxLengthRules.nome)],
@@ -436,6 +438,7 @@ export class ComercialClientesPreCadastroComponent
       contacto: [null],
       razaoSocial: [null],
       nomeFantasia: [null],
+      nombre_factura: [null],
       vendedor: [null, Validators.required],
       cnae: [null],
       email: [null,
@@ -520,13 +523,13 @@ export class ComercialClientesPreCadastroComponent
         id_vendedor: this.form.value.vendedor,
         nombres: this.form.value.nome,
         razonSocial: this.form.value.razaoSocial,
-        nomeFantasia: this.form.value.nomeFantasia,
+        nombre_factura: this.form.value.nombre_factura,
         nit: this.form.value.nit,
+        cnpj_cpf: this.form.value.ci,
         id_rubro: this.form.value.cnae,
         email: this.form.value.email,
         telefono: this.form.value.telefone,
         celular: this.form.value.celular,
-        nombre_factura: '',
         ubicacion: data.ubicacion, // Asigna los datos de ubicación directamente aquí
         contactos: data.contactos,
         id_tipo_cliente: this.form.value.tipo_cliente
