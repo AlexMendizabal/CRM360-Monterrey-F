@@ -277,7 +277,7 @@ export class ComercialClientesPreCadastroComponent
       )
       .subscribe(
         (response: any) => {
-          console.log('Datos obtenidos en loadDependencies():', response[0].data);
+          //console.log('Datos obtenidos en loadDependencies():', response[0].data);
 
           if (response[0].responseCode === 200) {
             this.vendedores = response[0].data;
@@ -349,7 +349,7 @@ export class ComercialClientesPreCadastroComponent
       this.agregarUbicacionALaFormObj(nuevoFormulario);
       this.ubicacionFormularios.push(nuevoFormulario);
       if (this.ubicacionFormularios.length > 0) {
-        this.ubicacionFormularios[this.index_array_ubicacion].titulo_ubicacion = this.titulo_ubicacion_array;
+        this.ubicacionFormularios[this.index_array_ubicacion].ubicacion = this.titulo_ubicacion_array;
         this.ubicacionFormularios[this.index_array_ubicacion].id_ciudad = this.id_ciudad;
 
 
@@ -399,7 +399,7 @@ export class ComercialClientesPreCadastroComponent
   crearFormularioUbicacionConDatosIngresados(): any {
 
     return {
-      titulo_ubicacion: '',
+      ubicacion: '',
       direccion: '',
       id_ciudad: this.ciudad_vendedor,
       latitud: '',
@@ -505,6 +505,7 @@ export class ComercialClientesPreCadastroComponent
 
       data.ubicacion.push(formulario.value);
     }); */
+    //console.log(this.ubicacionFormularios)
     data.ubicacion = this.ubicacionFormularios
 
     // Agregar datos de contactos desde contactoFormularios
@@ -668,12 +669,14 @@ export class ComercialClientesPreCadastroComponent
   }
 
   actualizarPosicion(atributo, index) {
+    //console.log(atributo)
     //this.ubicacionFormularios[index].titulo_ubicacion = atributo;
     //console.log(this.ubicacionFormularios[index].titulo_ubicacion)
    this.titulo_ubicacion_array = atributo;
     this.index_array_ubicacion = index;
 
-    this.ubicacionFormularios[index].titulo_ubicacion = atributo
+    this.ubicacionFormularios[index].ubicacion= atributo
+    //console.log(this.ubicacionFormularios)
   }
   actualizarContacto(atributo, tipo, index) {
     /*  console.log(atributo) */

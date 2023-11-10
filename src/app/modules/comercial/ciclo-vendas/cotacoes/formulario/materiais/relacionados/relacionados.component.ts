@@ -23,6 +23,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
   @Input('codEndereco') codEndereco: number;
   @Input('codFormaPagamento') codFormaPagamento: number;
   @Input('freteConta') freteConta: number;
+  @Input('id_vendedor') id_vendedor: number;
+
 
 
   materiaisRelacionados: Array<ISimilaridadeModel> = [];
@@ -106,7 +108,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
         codCliente: this.codCliente,
         codEndereco: this.codEndereco,
         codFormaPagamento: this.codFormaPagamento,
-        freteConta: this.freteConta
+        freteConta: this.freteConta,
+        id_vendedor: this.id_vendedor,
       })
       .pipe(
         finalize(() => {
@@ -183,7 +186,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
 
   postMateriaisRelacionados(materiais: any): void {
 
-    /* console.log(materiais); */
+    /* console.log(this.id_vendedor); */
 
     this.materiaisRelacionadosLoader = true;
     this.materiaisRelacionados = [];
@@ -194,7 +197,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
         codCliente: this.codCliente,
         codEndereco: this.codEndereco,
         codFormaPagamento: this.codFormaPagamento,
-        freteConta: this.freteConta
+        freteConta: this.freteConta,
+        id_vendedor: this.id_vendedor
       })
       .pipe(
         finalize(() => {

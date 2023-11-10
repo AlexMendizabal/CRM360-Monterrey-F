@@ -567,7 +567,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.modalRef = this.modalService.show(template, {
       animated: false,
       class: 'modal-lg',
-    }); 
+    });
 
     //this.ubicacionService.showModal();
 
@@ -590,6 +590,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.form.controls.codEndereco.setValue(event.direccion);
     this.direccion_cliente = event.direccion;
     this.form.controls.razaoSocial.setValue(event.nombre_factura);
+    this.form.controls.codRazaoSocial.setValue(event.carnet);
+
     this.form.controls.correoElectronico.setValue(event.correo_electronico);
     this.form.controls.nomeCliente.setValue(event.nomeCliente);
     this.form.controls.codigo_cliente.setValue(event.codigo_cliente);
@@ -619,6 +621,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           if (response.responseCode == 200) {
             this.idListaPrecio = response.detalle[0].id_lista;
             this.nombreDepartamento = response.detalle[0].nombre_departamento;
+            this.form.controls.nombreDepartamento.setValue(this.nombreDepartamento);
+
             /*  this.form.controls['lista'].setValue(response.detalle[0].id_lista); */
             // this.form.value.lista = response.detalle[0].id_lista;
           } else {
@@ -658,6 +662,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     const resolver = this.activatedRoute.snapshot.data.data;
     if (resolver.success === true) {
       const data = resolver.data;
+      /* console.log(data.carnet); */
       const formValue: any = this.checkRouterParams();
       /* ('datos');
          (data); */
@@ -743,7 +748,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       } else {
         data.duplicatasSomenteCarteira = 0;
       }
-      console.log(data);
+      //console.log(data);
 
       this.form = this.formBuilder.group({
         codCotacao: [{ value: codCotacao, disabled: true }],
@@ -753,11 +758,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           data.codSituacao != 0 ? data.codSituacao : null,
           [Validators.required],
         ],
+        nombreDepartamento:[],
         codCliente: [data.codCliente],
         razaoSocial: [data.razaoSocial],
         correo_electronico: [data.correo_electronico],
         nomeCliente: [data.nomeCliente],
-        codRazaoSocial: [data.codRazaoSocial],
+        codRazaoSocial: [data.carnet],
         nombreVendedor: [data.nombreVendedor],
         codigo_oferta: [],
         codigo_oferta_crm: [],
@@ -768,7 +774,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         nombreTipo: [data.nombreTipo],
         id_tipo_cliente: [data.tipoCliente],
         id_departamento: [data.id_departamento_lista],
-        ejecutivo_ventas: [],
+        ejecutivo_ventas: [null, [Validators.required]],
         direccion_entrega: [],
         direccionEntrega: [],
         /*  centroLogisticoControl:[], */
@@ -1338,14 +1344,20 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.onScrollToForm('top');
     this.codClientErrors = true;
     this.form.controls.codCliente.markAsTouched();
-    this.form.controls.codCliente.setErrors({ required: true }) ;
+    this.form.controls.codCliente.setErrors({ required: true });
     // this.pnotifyService.notice('Selecione um cliente.');
     // }
   }
 
   onSubmit(): void {
-    this.formularioService.onNotifySubmit(true);
-    this.sendForm();
+    const formValue = this.form.getRawValue();
+    console.log(this.idvendedor);
+    if (this.idvendedor > 0 && this.idListaPrecio > 0 && formValue.codEndereco > 0) {
+      this.formularioService.onNotifySubmit(true);
+      this.sendForm();
+    } else {
+      this.pnotifyService.notice("Debe llenar todos los campos requeridos")
+    }
   }
 
 
@@ -1474,7 +1486,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             descuento_total: this.descuentoTotal,
             cantidad_total: this.cantidadTotal,
             id_forma_pago: this.id_forma_contacto,
-            id_lista_precio: formValue.lista,
+            id_lista_precio: this.idListaPrecio,
             id_modo_entrega: formValue.codEndereco,
             id_cliente: formValue.codCliente,
             id_vendedor: this.idvendedor,
@@ -2014,15 +2026,16 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     return '';
   }
 
-  onFieldInvalid(field: any): string {
+  onFieldInvalid(field: any) {
     field = this.form.get(field);
+
     if (field.errors != null) {
       if (field.errors.hasOwnProperty('required') && field.touched) {
         return 'required';
       }
 
-      if (field.errors.hasOwnProperty('maxDate') && field.touched) {
-        return 'maxDate';
+      if (field.errors.hasOwnProperty('maxlength') && field.touched) {
+        return 'maxlength';
       }
     }
 
@@ -2129,7 +2142,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
               this.pnotifyService.notice('Cliente arquivado, favor entrar em contato com o Marketing');
             }
             else {
-              this.form.controls.codRazaoSocial.setValue(this.clientes[0].codRazaoSocial);
+              this.form.controls.codRazaoSocial.setValue(this.clientes[0].carnet);
               /*               this.form.controls.codigoCliente.setValue(this.clientes[0].codRazaoSocial);
                */
               this.onChangeCliente(this.clientes[0].codCliente, 'user');

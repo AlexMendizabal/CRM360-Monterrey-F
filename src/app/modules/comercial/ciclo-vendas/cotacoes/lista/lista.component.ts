@@ -833,10 +833,11 @@ export class ComercialCicloVendasCotacoesListaComponent
         })
       )
       .subscribe({
+        
         next: (response: any) => {
           if (response.responseCode === 200) {
             this.loaderNavbar = false;
-            console.log(response.result);
+            console.log(response.result); 
             this.dados = [];
             this.dados = response.result;
             this.dados = this.dados.slice(0, this.itemsPerPage);

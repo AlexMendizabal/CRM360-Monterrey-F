@@ -231,9 +231,13 @@
         </div>
         <div class="row">
           <div class="form-group col-lg-2">
-            <label class="my-auto" for="razaoSocial">NIT</label>
+            <label class="my-auto" for="razaoSocial">Carnet</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName="codRazaoSocial" type="text" class="form-control" [disabled]="swExisteCliente" />
+              <input formControlName="codRazaoSocial" type="text" id="codRazaoSocial"  class="form-control" 
+              [disabled]="swExisteCliente" />
+              
+              <invalid-form-control [show]="onFieldInvalid('codRazaoSocial') == 'required'"
+              message="Nit requerido."></invalid-form-control>
 
             </div>
           </div>
@@ -391,7 +395,7 @@
             [id_lista_precio]="idListaPrecio" [codDeposito]="form.getRawValue().codDeposito" [id_vendedor] = "this.idvendedor"
             [codFormaPagamento]="form.value.codFormaPagamento" [freteConta]="form.value.freteConta"
             (loaderNavbar)="onLoaderNavbar($event)" (loaderFullScreen)="onLoaderFullScreen($event)"
-            (scrollToFormOnTop)="onMateriaisScrollTop($event)" (scrollToCarrinho)="onScrollToCarrinho($event)">
+            (scrollToFormOnTop)="onMateriaisScrollTop($event)" (scrollToCarrinho)="onScrollToCarrinho($event)" >
           </comercial-ciclo-vendas-cotacoes-formulario-materiais-lista>
         </div>
       </div>
@@ -412,7 +416,7 @@
             [idReservado]="idReservado" [codCotacao]="codCotacao" [codCliente]="form.value.codCliente"
             [codEndereco]="form.value.codEndereco" [initialValue]="carrinho" (loaderNavbar)="onLoaderNavbar($event)"
             (hasError)="onCarrinhoError($event)" (scrollTop)="onCarrinhoScrollTop($event)"
-            (carrinho)="onCarrinho($event)">
+            (carrinho)="onCarrinho($event)" [id_vendedor] ="this.idvendedor">
           </comercial-ciclo-vendas-cotacoes-formulario-carrinho>
         </div>
       </div>

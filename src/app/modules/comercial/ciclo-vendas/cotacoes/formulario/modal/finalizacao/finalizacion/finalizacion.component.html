@@ -3,7 +3,7 @@
   <form [formGroup]="checkoutForm" autocomplete="off" #autorizaciones (ngSubmit)="onSubmit(checkoutForm.value)">
   <div class="modal-header" id="actions">
     <h4 class="mtc-title mb-0 my-auto">Cotización #{{ dataCotacao.id_oferta }} / Realizada con éxito</h4>
-    <button class="btn btn-success" type="submit">Finalizar</button>
+    <button class="btn btn-success" type="button" (click)="enviar()">Finalizar</button>
   </div>
   <div class="modal-body py-5">
     <div class="row">

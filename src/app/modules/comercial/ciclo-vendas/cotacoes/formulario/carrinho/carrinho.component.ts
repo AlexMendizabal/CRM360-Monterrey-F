@@ -62,6 +62,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   @Input('codFormaPagamento') codFormaPagamento: number;
   @Input('freteConta') freteConta: number;
   @Input('initialValue') initialValue: Array<ICarrinhoModel>;
+  @Input('id_vendedor') id_vendedor: number;
+
 
   @Output('loaderNavbar')
   loaderNavbar: EventEmitter<boolean> = new EventEmitter();

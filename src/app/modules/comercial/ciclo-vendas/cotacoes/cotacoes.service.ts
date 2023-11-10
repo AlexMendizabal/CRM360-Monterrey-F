@@ -50,14 +50,14 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
-  getOfertas(params: any): Observable<Object | JsonResponse> {
-    let httpParams = new HttpParams();
-    return this.http
-      .get(`${this.API}/lista_cotizacion`, {
-        params: params,
-      })
-      .pipe(take(1), retry(2));
-  }
+    getOfertas(params: any): Observable<Object | JsonResponse> {
+      let httpParams = new HttpParams();
+      return this.http
+        .get(`${this.API}/lista_cotizacion`, {
+          params: params,
+        })
+        .pipe(take(1), retry(2));
+    }
 
 
   getDetalleOferta(params: any): Observable<Object | JsonResponse> {
@@ -260,6 +260,7 @@ export class ComercialCicloVendasCotacoesService {
   }
 
   postMaterialesRelacionados(params: any): Observable<Object | JsonResponse> {
+    console.log(params)
     return this.http
     .post(`${this.API}/materiales/relacionados`, params)
     .pipe(take(1), retry(2));

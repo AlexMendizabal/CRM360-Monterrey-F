@@ -132,6 +132,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   activeRow: number;
 
   clickCounter = 0;
+  codigo_material: any;
 
   constructor(
     private router: Router,
@@ -619,6 +620,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     params.codLinha = this.form.value.codLinha;
     params.codClasse = this.form.value.codClasse;
     params.codMaterial = this.form.value.codMaterial;
+    params.codigo_material = this.form.value.codigo_material;
 
     params.codEmpresa = this.codEmpresa;
     if (this.codDeposito) {
@@ -661,6 +663,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     }else if (tipo == 2) {
       params = {
         id_material: this.idMaterial,
+        codigo_material: this.codigo_material,
         id_lista: this.id_lista,
         registros: this.form.controls.registros.value
       }
@@ -822,7 +825,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       this.swVendedor = false;
       this.swAppSell = true;
       this.form.controls.codMaterial.disable();
-      //console.log(params);
+      console.log(params);
       this.comercialService
         .getUpSellService(params)
         .pipe(

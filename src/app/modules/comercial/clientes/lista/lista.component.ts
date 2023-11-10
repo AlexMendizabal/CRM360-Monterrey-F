@@ -162,7 +162,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
     this.vendedoresService.getVendedores().subscribe(
       (response: any) => {
-        this.vendedoresList = response.result;
+        this.vendedoresList = response.data;
+        console.log(response)
         if (this.vendedoresList.length > 0) {
           this.editedFields.id_vendedor = this.vendedoresList[0].id;
         }

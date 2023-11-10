@@ -106,7 +106,7 @@
                                             <select name="vendedor" class="form-control" id="id_vendedor">
                                                 <option *ngFor="let vendedor of vendedoresList" [value]="vendedor.id"
                                                     [selected]="vendedor.id === datos_cliente.datos_cliente.id_vendedor">
-                                                    {{ vendedor.nome }}
+                                                    {{ vendedor.nombre }}
                                                 </option>
                                             </select>
                                         </div>

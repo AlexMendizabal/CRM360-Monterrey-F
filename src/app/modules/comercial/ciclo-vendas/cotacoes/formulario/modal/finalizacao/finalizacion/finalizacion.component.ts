@@ -115,6 +115,45 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
     this.getComissao();
   }
 
+  enviar() {
+    if (this.checkoutForm.get('observacion').value !== null && this.deshabilitar === false) {
+      this.checkoutForm.reset();
+      this.id_oferta = this.dataCotacao.id_oferta;
+      this.fecha = this.dataCotacao.fecha_inicial;
+      const observacion_vendedor = this.checkoutForm.get('observacion').value;
+
+      let mayor = null;
+      let item = null;
+      this.dataCotacao.carrinho.forEach((data) => {
+        if (data.percentualDesc > data.descuento_permitido) {
+          if (mayor === null || data.percentualDesc > mayor) {
+            item = data.codigo_material;
+            mayor = data.percentualDesc;
+          }
+        }
+      });
+
+      this.formObj = {
+        descripcion_vend: this.checkoutForm.get('observacion').value,
+        id_oferta: this.id_oferta,
+        fecha_solicitud: this.fecha,
+        rango: mayor,
+        id_item: item
+      };
+      console.log(this.formObj);
+      this.cotacoesService.autorizaciones(this.formObj)
+        .pipe().subscribe(
+          (response: any) => {
+            console.log(response);
+          }
+        );
+      //this.onClose();
+    }
+    else {
+      this.onClose();
+    }
+  }
+
   onSubmit(customerData) {
     if (customerData !== undefined && customerData !== null) {
       this.checkoutForm.reset();
@@ -125,12 +164,12 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
       let mayor = null;
       let item = null;
       this.dataCotacao.carrinho.forEach((data) => {
-          if (data.percentualDesc > data.descuento_permitido) {
-              if (mayor === null || data.percentualDesc > mayor) {
-                  item = data.codMaterial;
-                  mayor = data.percentualDesc;
-              }
+        if (data.percentualDesc > data.descuento_permitido) {
+          if (mayor === null || data.percentualDesc > mayor) {
+            item = data.codigo_material;
+            mayor = data.percentualDesc;
           }
+        }
       });
 
       this.formObj = {
@@ -138,7 +177,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
         id_oferta: this.id_oferta,
         fecha_solicitud: this.fecha,
         rango: mayor,
-        id_item:item
+        id_item: item
       };
       console.log(this.formObj);
       this.cotacoesService.autorizaciones(this.formObj)
@@ -147,13 +186,12 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
             console.log(response);
           }
         );
-          this.onClose();
+      this.onClose();
     }
-    else
-    {
-        this.onClose();
+    else {
+      this.onClose();
     }
- }
+  }
 
   onClose(): void {
     this.formularioService.limparCarrinhoSubject.next(true);

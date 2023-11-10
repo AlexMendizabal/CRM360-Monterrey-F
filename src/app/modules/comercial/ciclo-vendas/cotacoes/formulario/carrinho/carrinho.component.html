@@ -251,7 +251,7 @@
     <div class="my-5" style="background-color: #FBFCFF;" *ngIf="canLoadRelacionados === true" [hidden]="visualizar">
       <comercial-ciclo-vendas-cotacoes-formulario-materiais-relacionados [codEmpresa]="selectedCodEmpresa"
         [materiais]="materiaisRelacionados" [codCliente]="codCliente" [codEndereco]="codEndereco"
-        [codFormaPagamento]="codFormaPagamento" [freteConta]="freteConta">
+        [codFormaPagamento]="codFormaPagamento" [freteConta]="freteConta" [id_vendedor] = "this.id_vendedor">
       </comercial-ciclo-vendas-cotacoes-formulario-materiais-relacionados>
     </div>
     <div class="row my-5">
