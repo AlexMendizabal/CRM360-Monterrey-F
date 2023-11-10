@@ -6,12 +6,9 @@ import { ComercialCicloVendasAutorizacionesRoutingModule } from './autorizacione
 import { ComercialCicloVendasCotacoesListaModule } from './lista/lista.module';
 import { ComercialCicloVendasCotacoesFormularioModule } from './formulario/formulario.module';
 import { FormDeactivateGuard } from 'src/app/guards/form-deactivate.guard';
-import { VistaComponent } from '../cotacoes/lista/vista/vista.component'; 
 
 @NgModule({
-  declarations: [
-    VistaComponent, 
-  ],
+  declarations: [],
   imports: [
     CommonModule,
     ComercialCicloVendasAutorizacionesRoutingModule,

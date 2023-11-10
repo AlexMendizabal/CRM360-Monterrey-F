@@ -132,6 +132,13 @@ export class ComercialCicloVendasCotacoesFormularioService {
     return this.clientesService.getEnderecos(codCliente, { localEntrega: 1 });
   }
 
+  getVerificaOfertasCliente(codCliente: number): Observable<Object | JsonResponse> {
+    return this.http
+      .get(`${this.API}/verifica-oferta/${codCliente}`)
+      .pipe(take(1));
+  }
+
+
   getAnexos(codCotacao: number): Observable<any> {
     return this.http
       .get(`${this.API}/anexo/documentos/${codCotacao}`)

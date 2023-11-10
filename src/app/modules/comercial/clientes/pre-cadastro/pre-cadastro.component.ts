@@ -718,6 +718,11 @@ export class ComercialClientesPreCadastroComponent
   cambiarCiudad(id, index) {
     this.id_ciudad = id;
     this.index_array_ubicacion = index;
+    this.ubicacionFormularios[index].id_ciudad= id
+
+
+    //console.log(this.id_ciudad);
+    
   }
 
   formCanDeactivate() {

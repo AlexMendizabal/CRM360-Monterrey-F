@@ -1,4 +1,5 @@
 <div class="modal-content custom-modal" id="contentToConvert">
+  <form [formGroup]="checkoutForm" autocomplete="off" #autorizaciones (ngSubmit)="onSubmit(checkoutForm.value)">
   <div #contentToConvert>
     <div class="wrapper card-bodyy">
       <!-- Main content -->
@@ -29,43 +30,54 @@
                       <div class="row">
                         <div class="col-md-3">
                           <label for="">Nombre de Oferta:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_oferta }}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_oferta }}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">Fecha Inicial:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].fecha_inicial }}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].fecha_inicial }}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">Fecha Final:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].fecha_final }}" class="form-control" readonly>
+                          <input class="form-control" id="dataFinal" type="text" bsDatepicker [bsConfig]="bsConfig"
+                          formControlName="dataFinal" value="{{ resultFromParent.oferta[0].fecha_inicial }}">
                         </div>
                         <div class="col-md-3">
                           <label for="">Fecha de Creación:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].fecha_creacion }}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].fecha_creacion }}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">Monto total Bruto:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total_bruto }}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total_bruto }}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">Monto Total:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total}}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total}}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">Descuento Total:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].descuento_total}}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].descuento_total}}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">Observación:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].observacion}}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].observacion}}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">Peso Total:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].peso_total}}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].peso_total}}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
-                          <label for="">Nombre del modo de entrega:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_modo_entrega}}" class="form-control" readonly>
+                          <label for=""> Modo de entrega:</label>
+                          
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_modo_entrega}}"
+                            class="form-control" readonly>
                         </div>
                       </div>
                     </div>
@@ -88,27 +100,28 @@
                       <div class="row">
                         <div class="col-md-3">
                           <label for="">Codigo del cliente:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].codigo_cliente}}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].codigo_cliente}}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">Nombre del cliente:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_cliente}}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_cliente}}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">Celular:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].celular_clie}}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].celular_clie}}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">E-mail:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].e_mail}}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].e_mail}}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">Contacto del cliente:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_cont }}" class="form-control" readonly>
-                        </div>
-                        <div class="col-md-3">
-                          <label for="">Nombre lista:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_lista }}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_cont }}"
+                            class="form-control" readonly>
                         </div>
                       </div>
                     </div>
@@ -131,15 +144,18 @@
                       <div class="row">
                         <div class="col-md-3">
                           <label for="">Nombre vendedor:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_vendedor}}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_vendedor}}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
                           <label for="">Ubicacion almacen:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].ubicacion_almacen}}" class="form-control" readonly>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].ubicacion_almacen}}"
+                            class="form-control" readonly>
                         </div>
                         <div class="col-md-3">
-                          <label for="">Codigo almacen:</label>
-                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].codigo_almacen}}" class="form-control" readonly>
+                          <label for="">Nombre lista:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_lista }}"
+                            class="form-control" readonly>
                         </div>
                       </div>
                     </div>
@@ -192,11 +208,13 @@
                 </table>
                 <div class="col-md-3">
                   <label for="">Monto total Bruto:</label>
-                  <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total_bruto }}" class="form-control" readonly>
+                  <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total_bruto }}"
+                    class="form-control" readonly>
                 </div>
                 <div class="col-md-3">
                   <label for="">Monto Total:</label>
-                  <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total}}" class="form-control" readonly>
+                  <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total}}"
+                    class="form-control" readonly>
                 </div>
               </div>
             </div>
@@ -204,12 +222,36 @@
           <!-- /.col -->
         </div>
         <!-- /.row -->
+        <div class="row" *ngIf="showDescripcionCard">
+          <div class="col-12">
+            <div class="card wider-card">
+              <div class="card-header">
+                <h5>
+                  CIERRE DE OFERTA
+                </h5>
+              </div>
+              <div class="card-body table-container">
+                <div class="col-md-3">
+                  <label for="">perdió la venta:</label>
+                  <select type="text" class="form-control" formControlName="estadoOfert">
+                  </select>
+                </div>
+                <div class="col-md-9">
+                  <textarea [(ngModel)]="textAreaValue" formControlName="descripcion" class="form-control mt-2" id="description" style="width: 750px;"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
       <!-- /.content -->
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" #captureButton (click)="onDownloadPDF()">DESCARGAR</button>
-    <button type="button" class="btn btn-secondary" (click)="captureScreen()">IMPRIMIR</button>
+    <a class="btn btn-secondary" *ngIf="showCierreButton" (click)="toggleDescripcionCard()">CIERRE</a>
+    <button type="submit" class="btn btn-secondary" *ngIf="showGuardarButton">GUARDAR</button>
+    <a class="btn btn-secondary" #captureButton (click)="onDownloadPDF()">DESCARGAR</a>
+    <a class="btn btn-secondary" (click)="captureScreen()">IMPRIMIR</a>
   </div>
+</form>
 </div>

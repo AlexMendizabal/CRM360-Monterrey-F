@@ -23,7 +23,7 @@
                   <div class="form-row">
                     <div class="form-group col">
                       <label class="font-weight-bold" for="quantidade">Cantidad</label>
-                      <input type="text" id="quantidade" class="form-control" formControlName="quantidade"
+                      <input type="number" [(ngModel)]="valorInput" id="quantidade" class="form-control" formControlName="quantidade"
                         [ngClass]="onFieldError('quantidade') + ' ' + onFieldRequired(form.controls.quantidade)">
                     </div>
                   </div>
@@ -81,7 +81,7 @@
                   <div class="form-row mt-1">
                     <div class="form-group col mb-0">
                       <button type="button" class="btn btn-block btn-secondary mt-auto" (click)="onCalcular()"
-                        [disabled]="loaderModal">
+                      [disabled]="valorInput === 0 || loaderModal">
                         <div *ngIf="!loaderModal">
                           <i class="fas fa-calculator"></i>
                           <span>Calcular</span>
@@ -345,7 +345,7 @@
     <button type="button" class="btn btn-danger" (click)="onClose()">
       Cancelar
     </button>
-    <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="calculo.valorTotal === 0">
+    <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="calculo.valorTotal === 0 || valorInput === 0">
       Confirmar
     </button>
   </div>

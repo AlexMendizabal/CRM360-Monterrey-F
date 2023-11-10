@@ -101,6 +101,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   swPresentacion = false;
   id_presentacion: number = 0;
   showImpostos = false;
+  valorInput: number = 0;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -340,94 +341,6 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   onCalcular(): void {
 
     this.swDesactivarForm == false;
-
-
-    /* this.form.controls['formPresentacion'].enable(); */
-    /* this.form.controls['formPresentacion'].setValue(3); */
-
-
-
-    /* if (this.checkFormValidators() === false && this.form.valid) {
-      if (this.material.valorMaterialContrato > 0) {
-        this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
-      } else if (this.form.value.preco2 > 0) {
-        if (
-          Math.floor(this.material.valorUnit * 100) / 100 >
-          this.form.value.preco2
-          ) {
-            this.confirmModalService
-            .showConfirm(
-              null,
-              'Preço abaixo do mínimo',
-              'O preço informado está abaixo do valor mínimo. Deseja continuar mesmo assim?',
-              'Cancelar',
-              'Confirmar'
-              )
-            .subscribe((response: boolean) =>
-            response
-            ? this.postCalculoMaterial(
-              this.tipoCalculo2,
-              this.form.value.preco2
-              )
-              : EMPTY
-              );
-            } else {
-              this.postCalculoMaterial(this.tipoCalculo2, this.form.value.preco2);
-            }
-          } else if (this.form.value.preco1 > 0 && this.tipoLancamento == 6) {
-            if (
-              Math.floor(this.material.valorUnit * 100) / 100 >
-              this.form.value.preco1
-              ) {
-                this.confirmModalService
-            .showConfirm(
-              null,
-              'Preço abaixo do mínimo',
-              'O preço informado está abaixo do valor mínimo. Deseja continuar mesmo assim?',
-              'Cancelar',
-              'Confirmar'
-            )
-            .subscribe((response: boolean) =>
-              response
-                ? this.postCalculoMaterial(
-                  this.tipoCalculo1,
-                  this.form.value.preco1
-                )
-                : EMPTY
-            );
-        } else {
-          ///ewqeqweqwqw////////////////
-          this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
-        }
-      } else {
-        if (
-          Math.floor(this.material.valorMaterialBarra * 100) / 100 >
-          this.form.value.preco1
-        ) {
-          this.confirmModalService
-            .showConfirm(
-              null,
-              'Preço abaixo do mínimo',
-              'O preço informado está abaixo do valor mínimo. Deseja continuar mesmo assim?',
-              'Cancelar',
-              'Confirmar'
-            )
-            .subscribe((response: boolean) =>
-              response
-                ? this.postCalculoMaterial(
-                  this.tipoCalculo1,
-                  this.form.value.preco1
-                )
-                : EMPTY
-            );
-        } else {
-          this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
-        }
-      }
-    } */
-    /*     this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
-    
-     */
 
     this.calcularTotais(this.material, 1, this.tipoLancamento, this.material.unidade);
 

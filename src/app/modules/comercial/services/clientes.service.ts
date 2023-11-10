@@ -106,8 +106,8 @@ export class ComercialClientesService {
 
   sapPostClient(data: any): Observable<Object> {
     return this.http
-      .post(`${this.API}/postsap`, data)
-      .pipe(take(1), retry(2));
+      .post(`${this.API}/postsap`, data )
+      .pipe(take(1), retry(0));
   }
 
   getPropostaAnaliseCredito(codCliente: number): Observable<Object> {

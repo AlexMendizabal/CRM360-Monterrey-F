@@ -5,6 +5,40 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import html2canvas from 'html2canvas';
 import * as jsPDF from 'jspdf';
+import { formatDate } from '@angular/common';
+
+interface EstadoOferta {
+    id: string;
+    name: string;
+}
+
+const estadoOferta: EstadoOferta[] = [
+    {
+      id: '1',
+      name: 'precio'
+    },
+    {
+      id: '2',
+      name: 'Stock'
+    },
+    {
+      id: '3',
+      name: 'Entrega'
+    },
+    {
+      id: '4',
+      name: 'Credito'
+    },
+    {
+      id: '5',
+      name: 'Transferencia/VentaParcial'
+    },
+    {
+      id: '6',
+      name: 'Baja de ejecutivo de ventas'
+    }
+  ];
+
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -15,6 +49,7 @@ import * as jsPDF from 'jspdf';
 export class VistaComponent implements OnInit, AfterViewInit {
 
   @ViewChild('contentToConvert', { static: true }) contentToConvert: ElementRef;
+  
 
   name = 'Angular ' + VERSION.major;
 
@@ -22,8 +57,15 @@ export class VistaComponent implements OnInit, AfterViewInit {
   imageSrc: any;
   result: [];
   analiticos: any[];
-  total: any[];
+  total: any[]; 
+  formObj = {};
 
+
+  textAreaValue: string;
+  showDescripcionCard: boolean = false;
+  showCierreButton: boolean = true;
+  showGuardarButton: boolean = false;
+ 
   public onClose: Subject<boolean>;
 
   imageWidth = 300;
@@ -42,6 +84,7 @@ export class VistaComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.result = this.resultFromParent;
+    //this.estadoOferta;
     this.analiticos = this.resultFromParent.analitico;
     this.onClose = new Subject();
     this.imageSrc = this.sanitizer.bypassSecurityTrustUrl('assets/images/logo/logo-monterrey.png');
@@ -51,6 +94,12 @@ export class VistaComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     // Capture the content when the modal opens
     // this.captureScreen();
+  }
+
+  toggleDescripcionCard() {
+    this.showCierreButton = false;
+    this.showGuardarButton = true;
+    this.showDescripcionCard = true; // Show the "CIERRE DE OFERTA" card
   }
 
   public onConfirm(): void {
@@ -121,4 +170,17 @@ export class VistaComponent implements OnInit, AfterViewInit {
       pdf.save('your_pdf_filename.pdf');
     });
   }
+
+  onSubmit(customerData) {
+    const dataFinal = customerData.dataFinal;
+    const estadoOferta = customerData.estadoOferta;
+    const descripcion = customerData.descripcion;
+    this.formObj = {
+        fecha_final: dataFinal,
+        estado_oferta: estadoOferta,
+        descripcion_texto: descripcion 
+    };
+    console.log(this.formObj);
+  }
 }
+

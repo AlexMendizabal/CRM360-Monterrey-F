@@ -8,6 +8,7 @@ import { ComercialCicloVendasAutorizacionesService } from '../../autorizaciones.
 import { JsonResponse } from 'src/app/models/json-response';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 
+
 @Component({
   selector: 'modal-autorizacion',
   templateUrl: './modal-autorizacion.component.html',
@@ -24,10 +25,9 @@ export class ModalAutorizacionComponent implements OnInit {
     private _BsModalRef: BsModalRef,
     private autorizacionService: ComercialCicloVendasAutorizacionesService, //de dataFromParent
     private pnotifyService: PNotifyService,
-    private formBuilder: FormBuilder
-
+    private formBuilder: FormBuilder,
+  
   ) { 
-    
     this.myForm = this.formBuilder.group({
     observacion: ['', Validators.required]  // inicializa con un valor por defecto y agrega validador
   });}
@@ -36,22 +36,32 @@ export class ModalAutorizacionComponent implements OnInit {
   oferta: Array<any> = [];
   detalle: any[];
   observacion: string = '';
-  
+  loader: boolean = false;
 
   ngOnInit(): void {
-    //this.data[0] = this.dataForm;
+   
     this.data = this.dataForm;
     this.detalle = this.dataForm.detalle;
+    this.oferta = this.data['oferta'][0];
+
+    if(this.oferta['estado'] > 1)
+    {
+        this.loader = true;
+    }
+    else
+    {  
+      this.loader = false;
+    }
   }
 
-  cerrar(customerData): void {
-    const observacion = (document.getElementById('observacion') as HTMLInputElement).value;
-    //alert(observacion);
-    //observacion.required;
-    if (observacion !== '') {
-      const rechazar = document.getElementById('rechazado') as HTMLButtonElement;
-      rechazar.disabled = false;
-    }
+
+  cerrar(): void {
+    this._BsModalRef.hide();
+  }
+  
+
+  onClose() {
+    this._BsModalRef.hide();
   }
 
   boton(id_autorizacion: number, estado: number) {
@@ -74,8 +84,9 @@ export class ModalAutorizacionComponent implements OnInit {
         (response: JsonResponse) => {
           if (response.success === true) {
             this.pnotifyService.success("Operación exitosa");
+            this.onClose();
           } else {
-            this.pnotifyService.error();
+            this.pnotifyService.error("No hay datos relacionado al valor introducido");
           }
         },
         (error: any) => {
@@ -87,4 +98,6 @@ export class ModalAutorizacionComponent implements OnInit {
         }
       );
   }
+
+  
 }

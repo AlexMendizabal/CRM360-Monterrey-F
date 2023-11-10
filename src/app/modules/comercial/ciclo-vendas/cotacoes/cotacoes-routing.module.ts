@@ -28,7 +28,6 @@ const routes: Routes = [
       profile: ComercialCicloVendasCotacoesListaProfilesResolverGuard,
     }
   },
-
   {
     path: 'lista/:codCotacao/:codEmpresa',
     component: ComercialCicloVendasCotacoesListaComponent,

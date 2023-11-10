@@ -10,11 +10,18 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class ComercialCicloVendasCotacoesFormularioModalDetalhesClienteComponent
   implements OnInit {
-  @Input('cliente') cliente: any;
 
+  @Input('cliente') cliente: any;
+    
+  datoscliente: any;
   constructor(private bsModalRef: BsModalRef) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+    this.datoscliente = this.cliente.datos_cliente;
+    // @ts-ignore: Ignorar error TS2339
+    this.datosdireccion = this.cliente.datos_direccion;
+  }
 
   onClose(): void {
     this.bsModalRef.hide();

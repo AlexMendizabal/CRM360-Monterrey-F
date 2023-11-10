@@ -54,14 +54,12 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="mb-0 mt-2"> <strong> Tipo persona </strong> </label>
-                                            <select name="" id="id_tipo_persona" class="form-control"
-                                                >
+                                            <select name="" id="id_tipo_persona" class="form-control">
                                                 <option *ngFor="let tipo of tipos_personas | keyvalue"
                                                     [value]="tipo.key"
                                                     [selected]="tipo.key === datos_cliente.datos_cliente.id_tipo_persona">
                                                     {{ tipo.value }}
                                                 </option>
-
                                             </select>
                                         </div>
                                         <div class="col-md-6">
@@ -104,8 +102,8 @@
                                         <div class="col-md-6">
                                             <label class="mb-0 mt-2"> <strong> Vendedor </strong> </label>
                                             <select name="vendedor" class="form-control" id="id_vendedor">
-                                                <option *ngFor="let vendedor of vendedoresList" [value]="vendedor.id"
-                                                    [selected]="vendedor.id === datos_cliente.datos_cliente.id_vendedor">
+                                                <option *ngFor="let vendedor of vendedoresList" [value]="vendedor.ID"
+                                                    [selected]="vendedor.ID === datos_cliente.datos_cliente.id_vendedor">
                                                     {{ vendedor.nombre }}
                                                 </option>
                                             </select>

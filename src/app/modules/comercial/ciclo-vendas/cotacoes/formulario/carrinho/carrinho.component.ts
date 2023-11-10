@@ -63,6 +63,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   @Input('freteConta') freteConta: number;
   @Input('initialValue') initialValue: Array<ICarrinhoModel>;
   @Input('id_vendedor') id_vendedor: number;
+  @Input('id_lista') id_lista: number;
+
 
 
   @Output('loaderNavbar')

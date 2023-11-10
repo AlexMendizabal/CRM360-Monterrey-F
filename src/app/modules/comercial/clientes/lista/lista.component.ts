@@ -128,7 +128,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
   latitudPromedio: number;
   longitudPromedio: number;
-  informacionMarcador: { nombre: string, direccion: string } | null = null;
+  informacionMarcador: { ubicacion: string, direccion: string } | null = null;
 
 
   constructor(
@@ -302,7 +302,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       .subscribe((response: JsonResponse) => {
         this.informacionMarcador = null;
         if (response.responseCode == 200) {
-          console.log(response);
+          //console.log(response);
           this.cliente = response.result;
 
           this.contatosLoaded = true;
@@ -385,7 +385,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   verInformacion(index: number) {
     const ubicacion = this.direcciones[index];
     this.informacionMarcador = {
-      nombre: ubicacion.nombre || 'NO INFORMADO',
+      // @ts-ignore: Ignorar error TS2339
+      nombre: ubicacion.ubicacion || 'NO INFORMADO',
       direccion: ubicacion.direccion || 'NO INFORMADO'
     };
   }

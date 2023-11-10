@@ -24,11 +24,11 @@ import { Subscription } from 'rxjs';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
-import { ptBrLocale } from 'ngx-bootstrap/locale';
+import { esLocale } from 'ngx-bootstrap/locale';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 
-defineLocale('pt-br', ptBrLocale);
+defineLocale('es', esLocale);
 
 // Services
 import { AuthService } from 'src/app/shared/services/core/auth.service';
@@ -176,6 +176,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   detalhesCodCliente: any;
 
   filtroCotacoes: boolean;
+  tipoEntregaSeleccionado: boolean = false;
 
   constructor(
     private router: Router,
@@ -205,7 +206,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     private resolver: ComponentFactoryResolver
     // private pdfService: PdfService
   ) {
-    this.localeService.use('pt-br');
+    this.localeService.use('es');
     this.bsConfig = Object.assign(
       {},
       { containerClass: 'theme-dark-blue' },
@@ -597,7 +598,7 @@ export class ComercialCicloVendasCotacoesListaComponent
                 if (formKey === 'dataInicial' || formKey === 'dataFinal') {
                   formValue[formKey] = this.dateService.convertStringToDate(
                     params[paramKey],
-                    'pt-br'
+                    'es'
                   );
                 } else {
                   if (!isNaN(Number(params[paramKey]))) {
@@ -1511,8 +1512,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   onFieldInvalid(field: any): string {
     field = this.form.get(field);
-
-    if (field.errors != null) {
+     if (field.errors != null) {
       if (field.errors.hasOwnProperty('required') && field.touched) {
         return 'required';
       }
@@ -1520,8 +1520,8 @@ export class ComercialCicloVendasCotacoesListaComponent
       if (field.errors.hasOwnProperty('maxDate') && field.touched) {
         return 'maxDate';
       }
-    }
-
+    } 
+    //return field.status == 'INVALID' && field.touched;
     return '';
   }
 

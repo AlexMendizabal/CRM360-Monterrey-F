@@ -21,6 +21,11 @@
                     value="{{data.oferta[0].id_autorizacion}}">
                 </div>
                 <div class="col-md-4">
+                  <label for="cliente"> <strong> Cliente</strong></label>
+                  <input type="text" id="cliente" class="form-control" readonly
+                    value="{{data.oferta[0].nombre_cliente | uppercase}}">
+                </div>
+                <div class="col-md-4">
                   <label for="fecha_solicitud"> <strong> Fecha Solicitada</strong></label>
                   <input type="text" id="fecha_solicitud" class="form-control" readonly
                     value="{{data.oferta[0].fecha_solicitud | date: 'dd/MM/yyyy'}}">
@@ -46,7 +51,7 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th class="text-truncate text-center">Código</th>  
+                  <th class="text-truncate text-center">Código</th>
                   <th class="text-truncate text-center">Material</th>
                   <th class="text-truncate text-center">Cantidad</th>
                   <th class="text-truncate text-center">Subtotal</th>
@@ -95,12 +100,12 @@
         </div>
         <div class="col-md-6 mt-2">
           <div class="card">
-            <div class="card-body"> 
+            <div class="card-body">
               <h6 class="card-title"> Observaciones</h6>
               <div class="row">
                 <form [formGroup]="myForm" (ngSubmit)="submitForm()">
-                  <div class="col-md-12">
-                    <input type="text" id="observacion" formControlName="observacion" class="form-control">
+                  <div class="col-md-9">
+                    <input type="text" size="300" id="observacion" formControlName="observacion" class="form-control">
                   </div>
                 </form>
               </div>
@@ -111,12 +116,14 @@
     </div>
     <div class="col-md-12">
       <div class="modal-footer">
-          <button type="submit" class="btn btn-success" (click)="boton(data.oferta[0].id_autorizacion, 2)">
-            Aprobar
-          </button>
-          <button type="button" class="btn btn-danger" (click)="boton(data.oferta[0].id_autorizacion, 3)">
-            Rechazar
-          </button>
+        <button type="submit" id="aceptado" class="btn btn-success" (click)="boton(data.oferta[0].id_autorizacion, 2)"
+          [disabled]="loader">
+          Aprobar
+        </button>
+        <button type="button" id="rechazado" class="btn btn-danger" (click)="boton(data.oferta[0].id_autorizacion, 3)"
+          [disabled]="loader">
+          Rechazar
+        </button>
       </div>
     </div>
   </div>

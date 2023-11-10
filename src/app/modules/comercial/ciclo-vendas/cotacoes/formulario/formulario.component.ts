@@ -575,38 +575,47 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   onCliente(event) {
-    console.log(event);
-    this.form.patchValue(event);
-    this.onChangeCliente(event.codCliente, 'user');
-    this.onLoadCliente(true);
+    //console.log(event);
+    this.formularioService.getVerificaOfertasCliente(event.codCliente).subscribe(
+        (response: JsonResponse) => {
+        if (response.success == false) {
+            
+          this.form.patchValue(event);
+          this.onChangeCliente(event.codCliente, 'user');
+          this.onLoadCliente(true);
+          // Llama a la función exibirClienteTerceiro con los datos del cliente seleccio nado
+          this.exibirClienteTerceiro(event);
+          // Carga la dirección del cliente en el campo codEndereco del formulario
+          /*     this.idListaPrecio = event.id_lista_precio; */
+          this.codigoRubro = event.codigo_rubro;
+          this.form.controls.codFormaPagamento.setValue(1);
 
-    // Llama a la función exibirClienteTerceiro con los datos del cliente seleccio nado
-    this.exibirClienteTerceiro(event);
-    // Carga la dirección del cliente en el campo codEndereco del formulario
-    /*     this.idListaPrecio = event.id_lista_precio; */
-    this.codigoRubro = event.codigo_rubro;
-    this.form.controls.codFormaPagamento.setValue(1);
+          this.form.controls.codEndereco.setValue(event.direccion);
+          this.direccion_cliente = event.direccion;
+          this.form.controls.razaoSocial.setValue(event.nombre_factura);
+          this.form.controls.codRazaoSocial.setValue(event.carnet);
 
-    this.form.controls.codEndereco.setValue(event.direccion);
-    this.direccion_cliente = event.direccion;
-    this.form.controls.razaoSocial.setValue(event.nombre_factura);
-    this.form.controls.codRazaoSocial.setValue(event.carnet);
+          this.form.controls.correoElectronico.setValue(event.correo_electronico);
+          this.form.controls.nomeCliente.setValue(event.nomeCliente);
+          this.form.controls.codigo_cliente.setValue(event.codigo_cliente);
+          this.form.controls.telefonoCliente.setValue(event.telefono);
+          this.form.controls.celular.setValue(event.celular);
 
-    this.form.controls.correoElectronico.setValue(event.correo_electronico);
-    this.form.controls.nomeCliente.setValue(event.nomeCliente);
-    this.form.controls.codigo_cliente.setValue(event.codigo_cliente);
-    this.form.controls.telefonoCliente.setValue(event.telefono);
-    this.form.controls.celular.setValue(event.celular);
+          this.form.controls.nombreTipo.setValue(event.nombreTipo);
+          this.form.controls.id_tipo_cliente.setValue(event.tipoCliente);
+          this.form.controls.id_departamento.setValue(event.id_departamento_lista);
 
-    this.form.controls.nombreTipo.setValue(event.nombreTipo);
-    this.form.controls.id_tipo_cliente.setValue(event.tipoCliente);
-    this.form.controls.id_departamento.setValue(event.id_departamento_lista);
+          this.form.controls.celular.setValue(event.celular);
+          this.form.controls.telefonoCliente.setValue(event.telefono);
 
-    this.form.controls.celular.setValue(event.celular);
-    this.form.controls.telefonoCliente.setValue(event.telefono);
-
-    this.carnet_cliente = event.carnet_cliente;
-    console.log(event);
+          this.carnet_cliente = event.carnet_cliente;
+          //console.log(event);
+          }
+          else
+          {
+            this.pnotifyService.error("El Cliente tiene una oferta pendiente");
+          }
+        });
   }
 
   datosVendedor(id_vendedor) {
@@ -1351,7 +1360,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   onSubmit(): void {
     const formValue = this.form.getRawValue();
-    console.log(this.idvendedor);
+    //console.log(this.idvendedor);
     if (this.idvendedor > 0 && this.idListaPrecio > 0 && formValue.codEndereco > 0) {
       this.formularioService.onNotifySubmit(true);
       this.sendForm();
@@ -1831,7 +1840,9 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   onClienteDetalhes(): void {
+    
     this.clienteDetalhesService.showModal(this.form.value.codCliente);
+
   }
 
   onFecharModal(event) {
@@ -2029,7 +2040,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   onFieldInvalid(field: any) {
     field = this.form.get(field);
 
-    if (field.errors != null) {
+/*     if (field.errors != null) {
       if (field.errors.hasOwnProperty('required') && field.touched) {
         return 'required';
       }
@@ -2038,8 +2049,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         return 'maxlength';
       }
     }
-
-    return '';
+    return ''; */
+     //return field.status == 'INVALID' && field.touched;
   }
 
   onFieldRequired(
@@ -2221,6 +2232,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         next: (response: JsonResponse) => {
           const data = [];
           data[0] = response;
+          
           if (data[0].responseCode === 200) {
             const codRazao = (data[0].result.codCliente + ' - ' + data[0].result.razaoSocial);
             this.form.controls.COD_CLIE_TERC.setValue(codRazao);

@@ -47,6 +47,7 @@ import { ComercialCicloVendasCotacoesListaModalEmailCotacaoService } from './mod
 import { ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService } from './modal/transfere-faturamento/transfere-faturamento.service';
 import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
 import { ModalAutorizacionService} from '../../autorizaciones/lista/modal-autorizacion/modal-autorizacion.service';
+import { ComercialCicloVendasCotacoesService } from '../../cotacoes/cotacoes.service';   /////para la funcion onVista
 
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
@@ -55,6 +56,8 @@ import { ICotacao } from './models/cotacao';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { JsonResponse } from 'src/app/models/json-response';
 import { IAssociacao } from '../../../cadastros/propostas/associacao-situacoes-proposta/models/associacao-situacoes-proposta';
+import { VistaComponent } from './vista/vista.component';
+
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-lista',
@@ -91,9 +94,9 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   estado_oferta = [
     { "id": "T", "nombre": "Todos" },
-    { "id": 0, "nombre": "Aprobado" },
-    { "id": 1, "nombre": "Pendiente" },
-    { "id": 2, "nombre": "Rechazado" },
+    { "id": 1, "nombre": "Aprobado" },
+    { "id": 2, "nombre": "Pendiente" },
+    { "id": 3, "nombre": "Rechazado" },
   ];
 
   formGroup: FormGroup;
@@ -155,6 +158,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   };
 
   modalRef: BsModalRef;
+  modalRef2:BsModalRef;
   loadingModal = false;
 
   contatosLoaded = false;
@@ -204,7 +208,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     private emailCotacaoService: ComercialCicloVendasCotacoesListaModalEmailCotacaoService,
     private modalService: BsModalService,
     private modalAutorizacionService:  ModalAutorizacionService,
-
+   
   ) {
     this.localeService.use('es');
     this.bsConfig = Object.assign(
@@ -902,4 +906,44 @@ nuevo() {
       }
     );
 }
+
+onVista(id_oferta: number): void {
+  //this.router.navigate([]).then(result => {  window.open("/comercial/ciclo-vendas/23/cotacoes-pedidos/lista/vista", '_blank'); });
+
+  var params = {
+    "id_oferta": id_oferta
+  };
+
+  this.loaderNavbar = true;
+  this.cotacoesService
+    .getDetalleOferta(params)
+    .pipe(
+      finalize(() => {
+        this.loaderNavbar = false;
+      })
+    )
+    .subscribe(
+      (response: JsonResponse) => {
+        if (response.estado === true) {
+          this.modalRef2 = this.modalService.show(VistaComponent, {
+            initialState: { resultFromParent: response.result },
+          });
+
+          this.modalRef2.content.onClose.subscribe(result => {
+            console.log('Modal closed with result:', result);
+          });
+        } else {
+          this.pnotifyService.error();
+        }
+      },
+      (error: any) => {
+        if (error.error.hasOwnProperty('mensagem')) {
+          this.pnotifyService.error(error.error.mensagem);
+        } else {
+          this.pnotifyService.error();
+        }
+      }
+    );
+}
+
 }

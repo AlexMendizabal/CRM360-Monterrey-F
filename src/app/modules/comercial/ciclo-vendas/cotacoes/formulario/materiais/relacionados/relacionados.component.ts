@@ -24,6 +24,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
   @Input('codFormaPagamento') codFormaPagamento: number;
   @Input('freteConta') freteConta: number;
   @Input('id_vendedor') id_vendedor: number;
+  @Input('id_lista') id_lista: number;
+
 
 
 
@@ -198,7 +200,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
         codEndereco: this.codEndereco,
         codFormaPagamento: this.codFormaPagamento,
         freteConta: this.freteConta,
-        id_vendedor: this.id_vendedor
+        id_vendedor: this.id_vendedor,
+        id_lista: this.id_lista,
       })
       .pipe(
         finalize(() => {

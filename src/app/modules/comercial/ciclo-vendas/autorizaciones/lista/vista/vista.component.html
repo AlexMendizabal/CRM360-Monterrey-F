@@ -1,0 +1,207 @@
+<div class="modal-content custom-modal" id="contentToConvert">
+  <div #contentToConvert>
+    <div class="wrapper card-bodyy">
+      <!-- Main content -->
+      <section class="invoice">
+        <!-- title row -->
+        <div class="row">
+          <div class="col-12">
+            <h2 class="page-header">
+              <img [src]="imageSrc" alt="Logo" [style.width.px]="imageWidth" [style.height.px]="imageHeight" />
+              <small class="float-right">Nº Oferta: {{ resultFromParent.oferta[0].id_oferta}}</small>
+            </h2>
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- info row -->
+        <div class="row invoice-info">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card wider-card">
+                  <div class="card-header">
+                    <h5>
+                      DATOS DE OFERTA
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label for="">Nombre de Oferta:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_oferta }}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Fecha Inicial:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].fecha_inicial }}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Fecha final:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].fecha_final }}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Fecha de Creación:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].fecha_creacion }}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Monto total Bruto:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total_bruto }}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Monto Total:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total}}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Descuento Total:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].descuento_total}}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Observación:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].observacion}}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Peso Total:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].peso_total}}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Modo de entrega:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_modo_entrega}}" class="form-control" readonly>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="cardwider-card">
+                  <div class="card-header">
+                    <h5>
+                      DATOS DEL CLIENTE
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label for="">Codigo del cliente:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].codigo_cliente}}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Nombre del cliente:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_cliente}}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Celular:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].celular_clie}}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">E-mail:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].e_mail}}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Contacto del cliente:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_cont }}" class="form-control" readonly>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card wider-card">
+                  <div class="card-header">
+                    <h5>
+                      DATOS DEL VENDEDOR
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label for="">Nombre vendedor:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_vendedor}}" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="">Nombre lista:</label>
+                          <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_lista }}" class="form-control" readonly>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- Table row -->
+        <div class="row">
+          <div class="col-12 ">
+            <div class="card wider-card">
+              <div class="card-header">
+                <h5>
+                  DETALLE
+                </h5>
+              </div>
+              <div class="card-body table-container">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>CODIGO MATERIAL</th>
+                      <th>NOMBRE MATERIAL</th>
+                      <th>UNIDAD</th>
+                      <th>PRECIO</th>
+                      <th>CANTIDAD</th>
+                      <th>TOTAL BRUTO</th>
+                      <th>PRECIO DESCUENTO</th>
+                      <th>SUBTOTAL</th>
+                      <th>NOMBRE ALMACEN</th>
+                      <th>NOMBRE MONEDA</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let analitico of analiticos; let i = index">
+                      <td>{{ analitico.codigo_material }}</td>
+                      <td>{{ analitico.nombre_material }}</td>
+                      <td>{{ analitico.unidad }}</td>
+                      <td>{{ (analitico.precio).toFixed(2) }}</td>
+                      <td>{{ (analitico.cantidad).toFixed(2) }}</td>
+                      <td>{{ analitico.total_bruto }}</td>
+                      <td>{{ analitico.precio_descuento}}</td>
+                      <td>{{ analitico.subtotal }}</td>
+                      <td>{{ analitico.nombre_almacen }}</td>
+                      <td>{{ analitico.nombre_moneda }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="col-md-3">
+                  <label for="">Monto total Bruto:</label>
+                  <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total_bruto }}" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                  <label for="">Monto Total:</label>
+                  <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].monto_total}}" class="form-control" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </section>
+      <!-- /.content -->
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" #captureButton (click)="onDownloadPDF()">DESCARGAR</button>
+    <button type="button" class="btn btn-secondary" (click)="captureScreen()">IMPRIMIR</button>
+  </div>  
+</div>

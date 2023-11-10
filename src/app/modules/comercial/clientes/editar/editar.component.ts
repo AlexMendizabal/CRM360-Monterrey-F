@@ -7,7 +7,7 @@ import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { number } from 'ng-brazil/number/validator';
 
 import { ComercialClientesPreCadastroService } from '../pre-cadastro/pre-cadastro.service';
-
+    
 @Component({
     selector: 'editar-cliente',
     templateUrl: './editar.component.html',
@@ -260,32 +260,31 @@ export class EditarClienteComponent implements OnInit {
     }
 
     actualizarCliente() {
-
-        // @ts-ignore
+        // @ts-ignore: Ignorar error TS2339
         var idClienteInput = document.getElementById('id_cliente').value;
-        // @ts-ignore
+        // @ts-ignore: Ignorar error TS2339
         var codigoClienteInput = document.getElementById('codigo_cliente').value;
-        // @ts-ignore
-        var ciInput = document.getElementById('carnet').value;3
-      // @ts-ignore
+        // @ts-ignore: Ignorar error TS2339
+        var ciInput = document.getElementById('carnet').value;
+        // @ts-ignore: Ignorar error TS2339
         var nitInput = document.getElementById('nit').value;
-      // @ts-ignore
+        // @ts-ignore: Ignorar error TS2339
         var nombreInput = document.getElementById('nombre').value;
-      // @ts-ignore
+        // @ts-ignore: Ignorar error TS2339
         var nombreFacturaInput = document.getElementById('nombre_factura').value;
-      // @ts-ignore
+        // @ts-ignore: Ignorar error TS2339      
         var idTipoPersonaInput = document.getElementById('id_tipo_persona').value;
-      // @ts-ignore
+        // @ts-ignore: Ignorar error TS2339
         var emailInput = document.getElementById('email').value;
-              // @ts-ignore
+        // @ts-ignore: Ignorar error TS2339
         var telefonoInput = document.getElementById('telefono').value;
-      // @ts-ignore
+        // @ts-ignore: Ignorar error TS2339
         var celularInput = document.getElementById('celular').value;
-      // @ts-ignore
+        // @ts-ignore: Ignorar error TS2339
         var tipoClienteInput = document.getElementById('id_tipo_cliente').value;
-      // @ts-ignore
+        // @ts-ignore: Ignorar error TS2339
         var idVendedorInput = document.getElementById('id_vendedor').value;
-      // @ts-ignore
+
         const ubicacion = this.datos_cliente.datos_direccion;
         const contactos = this.datos_cliente.datos_contacto
         const data = {
