@@ -602,6 +602,9 @@ export class ComercialEstoqueListaComponent implements OnInit {
   onSelectEstoqueSuspenso() {
     this.onGetEstoqueSuspenso(this.codMaterial);
   }
+ /*  onSelectEstoqueAlmacenes() {
+    this.onGetEstoqueSuspenso(this.codMaterial);
+  } */
 
   /* onGetOutrasUnidades(idMaterial: number) {
     this.unidadesLoaded = false;

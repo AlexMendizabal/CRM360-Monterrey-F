@@ -269,7 +269,7 @@
         </div>
       </tab>
       <tab heading="Stock en suspenso" class="border-right border-left border-bottom"
-        (selectTab)="onSelectEstoqueSuspenso()" *ngIf="possuiLote">
+        (selectTab)="onSelectEstoqueSuspenso()" *ngIf="true">
         <div class="p-3" >
           <div class="d-flex" *ngIf="suspensoLoaded">
             <div class="legend red">
@@ -313,6 +313,8 @@
           </div>
         </div>
       </tab>
+
+      
     </tabset>
   </div>
 </ng-template>
