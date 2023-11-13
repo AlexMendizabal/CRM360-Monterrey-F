@@ -53,7 +53,10 @@
 </div> -->
 
 <div class="card">
-  <div class="card-header">
+  <div class="card-header" *ngIf="material.onCarrinho === false" >
+    {{ material.codigo_material }} - {{ material.nombre_material }}
+  </div>
+  <div class="card-header" *ngIf="material.onCarrinho === true" style="background-color: #28a745; color:white">
     {{ material.codigo_material }} - {{ material.nombre_material }}
   </div>
   <div class="card-body">
