@@ -7,7 +7,7 @@ import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { number } from 'ng-brazil/number/validator';
 
 import { ComercialClientesPreCadastroService } from '../pre-cadastro/pre-cadastro.service';
-    
+
 @Component({
     selector: 'editar-cliente',
     templateUrl: './editar.component.html',
@@ -93,11 +93,6 @@ export class EditarClienteComponent implements OnInit {
         });
     }
 
-
-
-
-
-
     dataForm: any;
     data: [];
     oferta: Array<any> = [];
@@ -108,11 +103,12 @@ export class EditarClienteComponent implements OnInit {
 
     ngOnInit(): void {
         this.categorizarUbicacion();
-        console.log(this.datos_cliente);
-        /*  */        /* //thi        console.log(this.cnaes);
-        s.data[0] = this.dataForm;
-                this.data = this.dataForm;
-                this.detalle = this.dataForm.detalle; */
+        if (this.latitudPromedio === null || this.latitudPromedio === undefined) {
+            this.latitudPromedio = -17.7834799;
+        }
+        if (this.longitudPromedio === null || this.longitudPromedio === undefined) {
+            this.longitudPromedio = -63.1819648;
+        }
     }
 
     getVendedorNome(id_vendedor: number): string {
@@ -126,13 +122,12 @@ export class EditarClienteComponent implements OnInit {
 
 
     agregarContacto() {
-/*         console.log(this.datos_cliente)
- */        if (this.datos_cliente.datos_contacto > 0) {
+        if (this.datos_cliente.datos_contacto > 0) {
             if (this.datos_cliente.datos_contacto.length < 5) {
-                this.datos_cliente.datos_contacto.push({ ...this.nuevoContacto } );
+                this.datos_cliente.datos_contacto.push({ ...this.nuevoContacto });
                 this.nuevoContacto = {
                     contacto: '',
-                    nombres_contacto:  '',
+                    nombres_contacto: '',
                     apellido_contacto: '',
                     direccion_contacto: '',
                     celular_contacto: '',
@@ -208,8 +203,7 @@ export class EditarClienteComponent implements OnInit {
         this.datos_cliente.datos_direccion[index].longitud = longitud;
     }
     actualizarUbicacion(index: number) {
-/*         console.log(this.datos_cliente.datos_direccion[index])
- */        this.datos_cliente.datos_direccion[index].latitud = this.latitud;
+        this.datos_cliente.datos_direccion[index].latitud = this.latitud;
         this.datos_cliente.datos_direccion[index].longitud = this.longitud;
     }
 
@@ -218,7 +212,6 @@ export class EditarClienteComponent implements OnInit {
         this.longitud = event.coords.lng;
         this.actualizarMarcador(this.id_marcador, this.latitud, this.longitud);
         this.actualizarDireccion(this.id_marcador, event);
-
     }
 
     actualizarDireccion(index, event: any) {
@@ -305,7 +298,6 @@ export class EditarClienteComponent implements OnInit {
             'contactos': contactos
         };
         this.enviarPeticion(data);
-        console.log(data);
     }
 
     enviarPeticion(data: any): void {
@@ -319,8 +311,11 @@ export class EditarClienteComponent implements OnInit {
                 (response: JsonResponse) => {
                     if (response.codigoRespuesta == 200) {
                         setTimeout(() => {
+                            this.pnotifyService.success('Cliente editado exitosamente');
                             this.onClose();
+
                         }, 200)
+                        location.reload();
                     } else {
                         this.pnotifyService.error(response.mensagem);
                     }

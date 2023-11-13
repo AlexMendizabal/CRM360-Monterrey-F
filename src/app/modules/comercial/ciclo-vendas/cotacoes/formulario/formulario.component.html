@@ -233,11 +233,11 @@
           <div class="form-group col-lg-2">
             <label class="my-auto" for="razaoSocial">Carnet</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName="codRazaoSocial" type="text" id="codRazaoSocial" class="form-control"
-                [disabled]="swExisteCliente" />
-
+              <input formControlName="codRazaoSocial" type="text" id="codRazaoSocial"  class="form-control" 
+              [disabled]="swExisteCliente" />
+              
               <invalid-form-control [show]="onFieldInvalid('codRazaoSocial') == 'required'"
-                message="Nit requerido."></invalid-form-control>
+              message="Nit requerido."></invalid-form-control>
 
             </div>
           </div>
@@ -273,7 +273,7 @@
 
         </div>
         <div class="row">
-          <!-- <div class="form-group col-lg-2">
+          <div class="form-group col-lg-2">
             <label class="my-auto" for="codFormaPagamento">Rubro</label>
             <select class="form-control custom-select" formControlName="id_rubro" disabled>
               <ng-container *ngFor="let rubro of rubros">
@@ -282,7 +282,7 @@
                 </option>
               </ng-container>
             </select>
-          </div> -->
+          </div>
 
           <div class="form-group col-lg-2">
             <label class="my-auto" for="codFormaPagamento">Tipo de pago</label>
@@ -326,8 +326,7 @@
           <div class="form-group col-lg-2">
             <label class="my-auto" for="codEndereco">Número de celular</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
-              <input formControlName="formCelular" type="text" class="form-control" [readonly]="true"
-                [attr.disabled]="true" />
+              <input formControlName="formCelular" type="text" class="form-control" [readonly]="true" [attr.disabled]="true" />
             </div>
           </div>
         </div>
@@ -342,19 +341,16 @@
                   }}</option>
               </ng-container>
             </select> -->
-            <label class="my-auto" for="orderBy">Ejecutivo de venta</label>
-            <ng-select [searchable]="true" [clearable]="false" formControlName="ejecutivo_ventas" id="orderBy"
-              (change)="datosVendedor($event);" [virtualScroll]="true" [loading]="locaisEntregaLoader"
-              loadingText="Carregando..." [readonly]="visualizar" 
-              [ngClass]="onFieldError('ejecutivo_ventas') + ' ' + onFieldRequired(form.controls.ejecutivo_ventas)">
+            <label class="my-auto" for="codFormaPagamento">Ejecutivo de venta</label>
+            <ng-select class="" [formControlName]="ejecutivo_ventas" id="orderBy" (change)="datosVendedor($event);" 
+            [ngClass]="onFieldError('ejecutivo_ventas') + ' ' + onFieldRequired(form.controls.ejecutivo_ventas)">
               <ng-container *ngFor="let listaEjecutivo of listaEjecutivo">
                 <ng-option [value]="listaEjecutivo.id">
                   {{ listaEjecutivo.nome}}
                 </ng-option>
               </ng-container>
+              <invalid-form-control [show]="onFieldInvalid('ejecutivo_ventas')" message="Ejecutivo de ventas es obligatorio."></invalid-form-control>
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('ejecutivo_ventas')"
-              message="Ejecutivo de ventas es obligatorio."></invalid-form-control>
           </div>
           <div class="form-group col-lg-2">
             <label for="orderBy">Lista de precios</label>
@@ -398,11 +394,10 @@
         <div class="col">
           <comercial-ciclo-vendas-cotacoes-formulario-materiais-lista [codEndereco]="form.value.codEndereco"
             [codCliente]="form.value.codCliente" [codEmpresa]="form.getRawValue().codEmpresa"
-            [id_lista_precio]="idListaPrecio" [codDeposito]="form.getRawValue().codDeposito"
-            [id_vendedor]="this.idvendedor" [codFormaPagamento]="form.value.codFormaPagamento"
-            [freteConta]="form.value.freteConta" (loaderNavbar)="onLoaderNavbar($event)"
-            (loaderFullScreen)="onLoaderFullScreen($event)" (scrollToFormOnTop)="onMateriaisScrollTop($event)"
-            (scrollToCarrinho)="onScrollToCarrinho($event)">
+            [id_lista_precio]="idListaPrecio" [codDeposito]="form.getRawValue().codDeposito" [id_vendedor] = "this.idvendedor"
+            [codFormaPagamento]="form.value.codFormaPagamento" [freteConta]="form.value.freteConta"
+            (loaderNavbar)="onLoaderNavbar($event)" (loaderFullScreen)="onLoaderFullScreen($event)"
+            (scrollToFormOnTop)="onMateriaisScrollTop($event)" (scrollToCarrinho)="onScrollToCarrinho($event)" >
           </comercial-ciclo-vendas-cotacoes-formulario-materiais-lista>
         </div>
       </div>
@@ -423,7 +418,7 @@
             [idReservado]="idReservado" [codCotacao]="codCotacao" [codCliente]="form.value.codCliente"
             [codEndereco]="form.value.codEndereco" [initialValue]="carrinho" (loaderNavbar)="onLoaderNavbar($event)"
             (hasError)="onCarrinhoError($event)" (scrollTop)="onCarrinhoScrollTop($event)"
-            (carrinho)="onCarrinho($event)" [id_vendedor]="this.idvendedor" [id_lista]="this.idListaPrecio">
+            (carrinho)="onCarrinho($event)" [id_vendedor] ="this.idvendedor" [id_lista] ="this.idListaPrecio">
           </comercial-ciclo-vendas-cotacoes-formulario-carrinho>
         </div>
       </div>
@@ -454,21 +449,17 @@
         <div class="form-row">
           <div class="form-group col-lg-2">
             <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
-              <label class="my-auto" for="codEnderecoEntrega">Tipo de entrega</label>
+              <label class="my-auto" for="codEndereco">Tipo de entrega</label>
               <div class="my-auto text-uppercase" style="font-size: 11px">
                 <!-- *ngIf="form.value.codCliente != null && !visualizar"-->
               </div>
             </div>
-            <ng-select [searchable]="true" [clearable]="false" formControlName="codEnderecoEntrega" id="orderBy" [items]="tipoEntrega" 
-              (change)="datoEntrega($event)" [virtualScroll]="true" bindLabel="nombre" bindValue="id"
-              placeholder="Selecione..."   groupBy="tipo"
-              [readonly]="visualizar"
-              [ngClass]="onFieldError('codEnderecoEntrega') + ' ' + onFieldRequired(form.controls.codEnderecoEntrega)">
-
+            <ng-select [searchable]="true" [clearable]="false" [items]="tipoEntrega" (change)="datoEntrega($event)"
+              formControlName="codEndereco" [virtualScroll]="true" bindLabel="nombre" bindValue="id"
+              placeholder="Selecione..." [loading]="locaisEntregaLoader" loadingText="Carregando..." groupBy="tipo"
+              [readonly]="visualizar"  [ngClass]="onFieldError('codEndereco') + ' ' + onFieldRequired(form.controls.codEndereco)">
             </ng-select>
-
-            <invalid-form-control [show]="onFieldInvalid('codEnderecoEntrega')"
-              message="Local de entrega es obligatorio."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('codEndereco')" message="Local de entrega es obligatorio."></invalid-form-control>
           </div>
           <!-- <div *ngIf="swReferencia == true" class="form-group col-lg-2">
             <label class="my-auto" for="codEndereco">Dirección de destino</label>
@@ -478,8 +469,8 @@
           </div> -->
           <div class="form-group col-lg-1 mb-1" *ngIf="swEntrega == true">
             <label for="dataEntrega">Referencia</label> <br>
-            <button class="btn btn-primary w-100" type="button" (click)="openModalUbicacion(seleccionarUbicacion)"> 
-              <i class="fas fa-map-marker-alt"></i>Ubicación </button>
+            <button class="btn btn-primary w-100" type="button" (click)="openModalUbicacion(seleccionarUbicacion)"> <i
+                class="fas fa-map-marker-alt"></i>Ubicación </button>
           </div>
 
           <div class="form-group col-lg-4" *ngIf="swEntrega == true">
@@ -502,7 +493,7 @@
             <!-- <invalid-form-control [show]="onFieldInvalid('codFormaPagamento')"
               message="Centro Logistico obligatorio."></invalid-form-control> -->
           </div>
-
+          
           <!--  <div class="form-group col-lg-2" *ngIf="swEntrega == true">
             <div class="mb-1 d-flex justify-content-between w-100" style="height: 19px">
               <label class="my-auto" for="codFormaPagamento">Centro Logistico</label>
@@ -609,11 +600,11 @@
     </comercial-ciclo-vendas-cotacoes-formulario-modal-selecionar>
   </ng-template>
   <ng-template #seleccionarUbicacion>
-    <comercial-ciclo-vendas-cotacoes-formulario-modal-material-ubicacion (latLngChanged)="changeLatitudLongitud($event)"
-      (fecharModal)="onFecharModal($event)">
+    <comercial-ciclo-vendas-cotacoes-formulario-modal-material-ubicacion
+      (latLngChanged)="changeLatitudLongitud($event)" (fecharModal)="onFecharModal($event)">
     </comercial-ciclo-vendas-cotacoes-formulario-modal-material-ubicacion>
   </ng-template>
-
+ 
 
   <ng-template #seleccionarAutorizacion>
     <comercial-ciclo-vendas-cotacoes-formulario-modal-material-autorizar>
