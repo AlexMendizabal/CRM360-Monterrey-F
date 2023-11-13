@@ -257,9 +257,8 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
   }
 
   filterVendedores(idEscritorio: any) {
-    this.form.controls['idVendedor'].setValue(null);
-
-    if (idEscritorio == 0) {
+   this.form.controls['idVendedor'].setValue(null);
+     if (idEscritorio == 0) {
       this.filteredVendedores = [
         {
           id: 0,
