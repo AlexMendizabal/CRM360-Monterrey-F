@@ -574,7 +574,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   }
 
- 
+
   onCliente(event) {
     //console.log(event);
     this.formularioService.getVerificaOfertasCliente(event.codCliente).subscribe(
@@ -2041,11 +2041,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   onFieldInvalid(field: any) {
     field = this.form.get(field);
 
-<<<<<<< HEAD
- if (field.errors != null) {
-=======
     if (field.errors != null) {
->>>>>>> b499361549247b9acb6a56b2f1b1461c7a41bed5
       if (field.errors.hasOwnProperty('required') && field.touched) {
         return 'required';
       }
@@ -2054,12 +2050,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         return 'maxlength';
       }
     }
-<<<<<<< HEAD
-    return ''; 
-=======
+    return '';
 
     return '';
->>>>>>> b499361549247b9acb6a56b2f1b1461c7a41bed5
+
   }
 
   onFieldRequired(
@@ -2241,10 +2235,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         next: (response: JsonResponse) => {
           const data = [];
           data[0] = response;
-<<<<<<< HEAD
-
-=======
->>>>>>> b499361549247b9acb6a56b2f1b1461c7a41bed5
           if (data[0].responseCode === 200) {
             const codRazao = (data[0].result.codCliente + ' - ' + data[0].result.razaoSocial);
             this.form.controls.COD_CLIE_TERC.setValue(codRazao);

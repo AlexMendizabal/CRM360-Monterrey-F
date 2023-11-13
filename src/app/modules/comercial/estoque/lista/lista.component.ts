@@ -566,14 +566,13 @@ export class ComercialEstoqueListaComponent implements OnInit {
     this.possuiLote = false;
     this.nomeMaterial = `(${codigoMaterial}) ${titulo}`;
     this.codMaterial = idMaterial;
+    console.log(idMaterial)
 
     if (estoqueSuspenso > 0) {
       this.possuiLote = true;
     }
     this.onSelectComprometidos();
-
     /*     this.onGetOutrasUnidades(idMaterial); */
-
 
     setTimeout(() => {
       this.loaderNavbar = false;
@@ -760,9 +759,9 @@ export class ComercialEstoqueListaComponent implements OnInit {
   onGetEstoqueAlmacen() {
     this.suspensoLoaded = false;
     this.suspensoEmpty = false;
-
-    let params: any = {
+      let params: any = {
       idMaterial: this.codMaterial,
+
     };
 
     this.estoqueService.getStockAlmacenes(params).subscribe(
