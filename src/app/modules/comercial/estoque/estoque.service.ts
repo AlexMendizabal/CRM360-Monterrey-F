@@ -109,4 +109,12 @@ export class ComercialEstoqueService {
       )
       .pipe(take(1), retry(2));
   }
+
+  getStockAlmacenes(params: any): Observable<Object | JsonResponse> {
+    return this.http
+      .get(
+        `${this.API}/estoquealmacen/${params.idMaterial}`
+      )
+      .pipe(take(1), retry(2));
+  }
 }
