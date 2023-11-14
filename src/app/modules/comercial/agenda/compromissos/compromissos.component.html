@@ -54,14 +54,14 @@
   <div class="row" *ngIf="showCalendar">
     <div class="col">
       <div class="row mb-3"
-        *ngIf="(nomeEscritorio != null && nomeEscritorio.length > 0) || (nomeVendedor != null && nomeVendedor.length > 0)">
+        *ngIf="(nomeEscritorio != null ) || (nomeVendedor != null )">
         <div class="col">
           <div class="d-flex">
             <h6 class="mb-0 mr-2"
-              *ngIf="nomeVendedor != null && nomeEscritorio != null && nomeEscritorio.length > 0">
+              *ngIf="nomeVendedor != null && nomeEscritorio != null ">
               <span class="badge badge-secondary">{{ nomeEscritorio }}</span>
             </h6>
-            <h6 class="mb-0" *ngIf="nomeVendedor.length > 0">
+            <h6 class="mb-0">
               <span class="badge badge-primary">{{ nomeVendedor }}</span>
             </h6>
           </div>
@@ -79,7 +79,6 @@
                 [activeDayIsOpen]="activeDayIsOpen"
                 (dayClicked)="dayClicked($event.day)"
                 (eventClicked)="eventClicked($event.event)">
-
               </mwl-calendar-month-view>
             </div>
           </div>

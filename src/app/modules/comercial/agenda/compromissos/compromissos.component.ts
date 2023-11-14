@@ -164,7 +164,6 @@ ngOnDestroy(): void {
         next: (response: any) => {
           if (response.responseCode === 200) {
             this.profile = response.result;
-
             if (
               this.profile.coordenador === true ||
               this.profile.gestor === true ||
