@@ -574,7 +574,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   }
 
- 
+
   onCliente(event) {
     //console.log(event);
     this.formularioService.getVerificaOfertasCliente(event.codCliente).subscribe(
@@ -2050,8 +2050,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         return 'maxlength';
       }
     }
+    return '';
 
     return '';
+
   }
 
   onFieldRequired(

@@ -26,8 +26,8 @@ export class ModalAutorizacionComponent implements OnInit {
     private autorizacionService: ComercialCicloVendasAutorizacionesService, //de dataFromParent
     private pnotifyService: PNotifyService,
     private formBuilder: FormBuilder,
-  
-  ) { 
+
+  ) {
     this.myForm = this.formBuilder.group({
     observacion: ['', Validators.required]  // inicializa con un valor por defecto y agrega validador
   });}
@@ -39,7 +39,7 @@ export class ModalAutorizacionComponent implements OnInit {
   loader: boolean = false;
 
   ngOnInit(): void {
-   
+
     this.data = this.dataForm;
     this.detalle = this.dataForm.detalle;
     this.oferta = this.data['oferta'][0];
@@ -49,7 +49,7 @@ export class ModalAutorizacionComponent implements OnInit {
         this.loader = true;
     }
     else
-    {  
+    {
       this.loader = false;
     }
   }
@@ -58,7 +58,7 @@ export class ModalAutorizacionComponent implements OnInit {
   cerrar(): void {
     this._BsModalRef.hide();
   }
-  
+
 
   onClose() {
     this._BsModalRef.hide();
@@ -71,7 +71,7 @@ export class ModalAutorizacionComponent implements OnInit {
       id_autorizacion: id_autorizacion,
       descripcion_usua: observacionValue
     };
-    
+
     this.loaderNavbar = true;
     this.autorizacionService
       .updateAutorizacion(params)
@@ -99,5 +99,5 @@ export class ModalAutorizacionComponent implements OnInit {
       );
   }
 
-  
+
 }

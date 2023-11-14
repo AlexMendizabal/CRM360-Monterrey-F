@@ -128,22 +128,9 @@
               <thead-sorter value="Nombre Material"  [active]="orderBy == 'Nombre Material'" [sort]="orderType"></thead-sorter>
             </th>
             <th class="text-truncate text-center"
-            (click)="setOrderBy('cantidad')">
-              <thead-sorter value="Cantidad Disp."></thead-sorter>
-            </th>
-            <th class="text-truncate text-center"
             (click)="setOrderBy('sigla')">
-              <thead-sorter value="Un."></thead-sorter>
+              <thead-sorter value="Unidad"></thead-sorter>
             </th>
-            <th class="text-truncate text-center"
-            (click)="setOrderBy('codigo_almacen')">
-              <thead-sorter value="Almacén"></thead-sorter>
-            </th>
-            <th class="text-truncate text-center"
-            (click)="setOrderBy('nombre_almacen')">
-              <thead-sorter value="Nombre almacén"></thead-sorter>
-            </th>
-            <th></th>
           </tr>
         </ng-template>
         <ng-template #tbody let-tbody>
@@ -157,16 +144,7 @@
                 {{dato.nombre}}</td>
               <td class="font-weight-bold hover text-center"
                 (click)="openModal(modalDetalhes, dato.nombre, dato.id_material, dato.codigo_material, dato.cantidad)">
-                {{dato.cantidad}}</td>
-              <td class="font-weight-bold hover text-center"
-                (click)="openModal(modalDetalhes, dato.nombre, dato.id_material, dato.codigo_material, dato.cantidad)">
                 {{dato.sigla}}</td>
-              <td class="font-weight-bold hover text-center"
-                (click)="openModal(modalDetalhes, dato.nombre, dato.id_material, dato.codigo_material, dato.cantidad)">
-                {{dato.codigo_almacen}}</td>
-              <td class="font-weight-bold hover text-center"
-                (click)="openModal(modalDetalhes, dado.nombre, dato.codigo_material, dato.cantidad)">
-                {{dato.nombre_almacen}}</td>
             </tr>
           </ng-container>
         </ng-template>
@@ -314,9 +292,9 @@
         </div>
       </tab>
       <tab heading="Stock en almacenes" class="border-right border-left border-bottom"
-        (selectTab)="onGetEstoqueAlmacen()" *ngIf="true">
+        (selectTab)="onGetEstoqueAlmacen()" >
         <div class="p-3" >
-          <div class="d-flex" *ngIf="suspensoLoaded">
+          <div class="d-flex" >
             <div class="legend yellow">
               <div class="square"></div>
               <div class="text">STOCK EN ALMACENES</div>
@@ -363,7 +341,7 @@
         </div>
       </tab>
 
-      
+
     </tabset>
   </div>
 </ng-template>
