@@ -302,6 +302,7 @@ ngOnDestroy(): void {
             nomeVendedor: params.nomeVendedor,
             statusnome : params.statusnome
           };
+          alert(paramsObj);
         } else {
           this.viewDate = new Date();
 
