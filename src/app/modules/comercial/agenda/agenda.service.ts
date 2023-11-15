@@ -25,7 +25,6 @@ export class ComercialAgendaService {
 
   getCompromissos(params: any) {
     let httpParams = new HttpParams();
-
     for (let param in params) {
       httpParams = httpParams.append(param, params[param]);
     }

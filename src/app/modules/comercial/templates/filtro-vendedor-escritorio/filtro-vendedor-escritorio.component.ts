@@ -189,7 +189,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
     if (this.form.valid) {
       if (this.adminOnly()) {
         var id_vendedor = this.form.value['idVendedor'];
-        var id_sucursal = this.form.value['idEscritorio']
+        var id_sucursal = this.form.value['idEscritorio'];
           //datos de sucursal 
           this.vendedoresService.getSucursalVendedor(id_sucursal).pipe(
             finalize(() => {
@@ -200,10 +200,8 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
             (response: any) => {
               if (response['success'] === true) {
                 this.escritorios = response['data'];
-                const nombreSucursal = `${this.escritorios['nm_escr']}`
-                this.form
-                  .get('nomeEscritorio')
-                  .setValue(nombreSucursal);
+                const nombreSucursal = `${this.escritorios['nm_escr']}`;
+                this.form.get('nomeEscritorio').setValue(nombreSucursal);
               } else {
                 this.handleLoadDependenciesError();
               }
@@ -222,10 +220,8 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
             (response: any) => {
               if (response['success'] === true) {
                 this.filteredVendedores = response['data'];
-                const nombreVendedor = `${this.filteredVendedores['NM_VEND']} ${this.filteredVendedores['NM_RAZA_SOCI']}`;
-                this.form
-                .get('nomeVendedor')
-                .setValue(nombreVendedor);
+                const nombresVendedor = `${this.filteredVendedores['NM_VEND']} ${this.filteredVendedores['NM_RAZA_SOCI']}`;
+                this.form.get('nomeVendedor').setValue(nombresVendedor);
               } else {
                 this.handleLoadDependenciesError();
               }
@@ -234,6 +230,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
               this.handleLoadDependenciesError();
             }
           );
+          
       } else {
        //metodos para traer el vendedor con su sucursal
        this.vendedoresService.getVendedorSucursal(id_vendedor).pipe(
@@ -246,13 +243,10 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
             if (response['responseCode'] === 200) {
               this.filteredVendedores = response['data'];
               const nombreVendedor = `${this.filteredVendedores['NM_VEND']} ${this.filteredVendedores['NM_RAZA_SOCI']}`;
-                
-              this.form
-              .get('idEscritorio')
-              .setValue(this.filteredVendedores['ID_ESCR'])
-              this.form
-              .get('nomeVendedor')
-              .setValue(nombreVendedor);
+              this.form.get('idEscritorio').setValue(this.filteredVendedores['ID_ESCR']);
+              this.form.get('nomeVendedor').setValue(nombreVendedor);
+
+             
             } else {
               this.handleLoadDependenciesError();
             }
@@ -262,6 +256,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
           }
         );
       }
+     
       this.formValue.emit(this.form.value);
     }
   }
@@ -304,7 +299,6 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
       this.filteredVendedores = this.vendedores.filter(
         value => value.idEscritorio == idEscritorio
       );
-      console.log(this.filteredVendedores);
       if (this.filteredVendedores.length > 0 && this.showAll === true) {
         this.filteredVendedores.unshift({
           id: 0,

@@ -213,7 +213,7 @@ ngOnDestroy(): void {
 
 
   dataFilter(event: any): void {
-    console.log(event)
+   // console.log(event)
     this.idVendedor = event.idVendedor;
     this.nomeEscritorio = this.user.info.nomeCompleto;
     this.idEscritorio = event.idEscritorio;
@@ -232,7 +232,9 @@ ngOnDestroy(): void {
       (queryParams: any) => {
         if (Object.keys(queryParams).length > 0) {
           let params: any = atob(queryParams['q']);
+          
           params = JSON.parse(params);
+          console.log(params);
 
           this.idEscritorio = parseInt(params.idEscritorio);
           this.idVendedor = parseInt(params.idVendedor);
@@ -280,7 +282,7 @@ ngOnDestroy(): void {
     }[this.view];
 
     let paramsObj = {};
-
+   
     if (!this.queryParamsChecked) {
       this.activatedRoute.queryParams.subscribe((queryParams: any) => {
         if (Object.keys(queryParams).length > 0) {
@@ -288,11 +290,10 @@ ngOnDestroy(): void {
           params = JSON.parse(params);
 
           const queryDate = params.inicio.split('-');
-
           this.viewDate.setFullYear(queryDate[0]);
           this.viewDate.setMonth(queryDate[1] - 1);
           this.viewDate.setDate(queryDate[2]);
-
+        
           paramsObj = {
             inicio: params.inicio,
             fim: params.fim,
@@ -302,10 +303,10 @@ ngOnDestroy(): void {
             nomeVendedor: params.nomeVendedor,
             statusnome : params.statusnome
           };
-          alert(paramsObj);
+          
+
         } else {
           this.viewDate = new Date();
-
           paramsObj = {
             inicio: format(getStart(this.viewDate), 'yyyy-MM-dd'),
             fim: format(getEnd(this.viewDate), 'yyyy-MM-dd'),
@@ -313,8 +314,8 @@ ngOnDestroy(): void {
             idVendedor: this.idVendedor,
             nomeEscritorio: this.nomeEscritorio,
             nomeVendedor: this.nomeVendedor,
-
           };
+          
         }
       });
     } else {
@@ -325,8 +326,8 @@ ngOnDestroy(): void {
         idVendedor: this.idVendedor,
         nomeEscritorio: this.nomeEscritorio,
         nomeVendedor: this.nomeVendedor
-
       };
+    
     }
 
     this.queryParamsChecked = true;
@@ -400,7 +401,6 @@ ngOnDestroy(): void {
       this.showCalendar = false;
       this.setRouterParams(null);
     }
-
     this.showFilter = !this.showFilter;
   }
 

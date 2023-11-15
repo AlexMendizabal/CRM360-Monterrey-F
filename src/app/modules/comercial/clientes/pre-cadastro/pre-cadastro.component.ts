@@ -409,6 +409,15 @@ export class ComercialClientesPreCadastroComponent
 
   }
 
+  openModalUbicacion(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {
+      animated: false,
+      class: 'modal-lg',
+    });
+
+    //this.ubicacionService.showModal();
+  }
+
   crearFormularioContactoConDatosIngresados(): any {
     return {
       titulo_contacto: '',

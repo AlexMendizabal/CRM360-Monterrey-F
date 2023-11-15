@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import {
   FormGroup,
   FormBuilder,
@@ -17,6 +18,7 @@ import { esLocale } from 'ngx-bootstrap/locale';
 defineLocale('es', esLocale);
 
 // Services
+import { AuthService } from 'src/app/shared/services/core/auth.service';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { DateService } from 'src/app/shared/services/core/date.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
@@ -46,6 +48,7 @@ import { compileDirectiveFromRender2 } from '@angular/compiler/src/render3/view/
 export class ComercialAgendaFormularioComponent
   implements OnInit, IFormCanDeactivate
 {
+  private user = this.authService.getCurrentUser();
   permissoesAcesso: {
     simuladorVendas: boolean;
   };
@@ -113,6 +116,7 @@ export class ComercialAgendaFormularioComponent
   showFormulario = true;
   hideFormulario = true;
   color: string;
+  userData: any;
 
   bsConfig: Partial<BsDatepickerConfig>;
   mostrarElemento: any;
@@ -133,7 +137,8 @@ export class ComercialAgendaFormularioComponent
     private dateService: DateService,
     private titleService: TitleService,
     private cotacoesService: ComercialCicloVendasCotacoesService,
-    private ComercialVendedoresService: ComercialVendedoresService
+    private ComercialVendedoresService: ComercialVendedoresService,
+    private authService: AuthService,
   ) {
     this.localeService.use('es');
     this.bsConfig = Object.assign(
@@ -143,6 +148,7 @@ export class ComercialAgendaFormularioComponent
       { showWeekNumbers: false }
     );
     this.pnotifyService.getPNotify();
+    
   }
 
   ngOnInit() {
@@ -185,7 +191,6 @@ export class ComercialAgendaFormularioComponent
         this.action = 'novo';
         this.setBreadCrumb(this.action);
       }
-
       this.setFormBuilder();
     });
   }
@@ -216,7 +221,8 @@ export class ComercialAgendaFormularioComponent
   }
 
   setFormBuilder(): void {
-    if (this.activatedRoute.snapshot.data.detalhes.responseCode === 200) {
+    if (this.activatedRoute.snapshot.data.detalhes.responseCode === 200) 
+    {
       const detalhes = this.activatedRoute.snapshot.data.detalhes.result;
       const isFinalizarAction = this.action === 'finalizar';
       let inicioData: Date,
@@ -424,9 +430,11 @@ export class ComercialAgendaFormularioComponent
         })
       )
       .subscribe((response: Array<JsonResponse>) => {
-        if (response[0].success === true) {
+        if (response[0].success === true)
+        {
           this.clientes = response[0].data;
-        } else if (response[0].success === false) {
+        } else if (response[0].success === false) 
+        {
           this.showInputClientes = false;
         } else {
           this.handleLoadDependenciesError();
@@ -434,7 +442,6 @@ export class ComercialAgendaFormularioComponent
 
         if (response[1].success === true) {
           this.formasContato = response[1].data;
-
           this.formasContato.unshift({
             codFormaContato: null,
             nomeFormaContato: '',
@@ -465,13 +472,20 @@ export class ComercialAgendaFormularioComponent
         } else {
           this.handleLoadDependenciesError();
         }
-        // @ts-ignore: Ignorar error TS2339
-        if (response[5].responseCode == 200) {
-          console.log(response[5].data);
-          // @ts-ignore: Ignorar error TS2339
-          this.promotores = response[5].result;
-        } else {
-          this.showInputVendedores = false;
+        if(this.user.info.matricula != 1)
+        {
+          this.promotores =[{
+            'id': this.user.info.idVendedor,
+            'nombre': this.user.info.nomeCompleto
+          }];
+        }
+        else
+        {
+          if (response[5].success == true) {
+            this.promotores = response[5].data;
+          } else {
+            this.showInputVendedores = false;
+          }
         }
       });
   }
@@ -549,12 +563,6 @@ export class ComercialAgendaFormularioComponent
     return control && control.invalid && (control.touched || control.dirty);
   }
 
-
-
-
-
-
-
   onFieldRequired(field: string): string {
     let required = false;
     let formControl = new FormControl();
@@ -582,7 +590,6 @@ export class ComercialAgendaFormularioComponent
       this.loaderNavbar = true;
       this.submittingForm = true;
       const formValue = this.form.getRawValue();
-      console.log(formValue);
       const obsFinalizar = this.form.get('Obsfinalizar');
       let client: string,
         formContactDesc: string,
@@ -711,8 +718,6 @@ export class ComercialAgendaFormularioComponent
         /* id_status: id_status, */
         obsFinalizar: formValue.Obsfinalizar,
       };
-      console.log(formObj.codClient);
-      console.log(formObj.idVendedor);
       this.agendaService.save(this.action, formObj).subscribe({
         next: (response: any) => {
           if (response.responseCode === 200) {
@@ -755,7 +760,6 @@ export class ComercialAgendaFormularioComponent
     const idVendedor = this.form.value.promotor;
     let params = {
       idVendedor: idVendedor,
-
     }
     this.ComercialVendedoresService.getCarteiraClientes(params).subscribe((response: JsonResponse) => {
       if(response.success== true){
@@ -899,8 +903,6 @@ export class ComercialAgendaFormularioComponent
       });
   }
   filtrovendedor(): void {
-
-    console.log(this.form.value.promotor)
     var params = this.form.value.promotor
     this.agendaService.reporte(params);
   }

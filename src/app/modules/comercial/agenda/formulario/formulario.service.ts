@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 // Services
 import { ComercialCadastrosTitulosAgendaService } from './../../cadastros/titulos-agenda/titulos-agenda.service';
 import { ComercialVendedoresService } from '../../services/vendedores.service';
-
+import { AuthService } from 'src/app/shared/services/core/auth.service';
 // Interfaces
 import { JsonResponse } from 'src/app/models/json-response';
 

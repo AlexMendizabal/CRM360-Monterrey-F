@@ -152,11 +152,12 @@
               Agregar Contacto</button>
           </div>
         </div>
-        <div id="ContenedorFormularios">
-          <div id="Ubicacion" *ngFor="let ubicacionForm of ubicacionFormularios; let i = index">
+        <div id="ContenedorFormularios" style="max-height: 400px; overflow-y: auto;"  class="col-md-12">
+          <div class="alert alert-warning mt-3" *ngIf="ubicacionFormularios.length > 0"> <strong> La primera ubicación se tomará como la principal </strong> </div>
+          <div id="Ubicacion"  *ngFor="let ubicacionForm of ubicacionFormularios; let i = index" >
             <div id="CollapseUbicacion" [class.collapse]="!ubicacionCollapse">
               <div class="mt-3"></div>
-              <div class="row " style="border-radius: 13px; background-color: rgb(246, 243, 243);">
+              <div class="row " style="border-radius: 13px; background-color: rgb(246, 243, 243);  border: 1px solid #007BFF;">
                 <div class="form-group col-md-12 mt-2" align="right">
                   <button class="btn btn-danger btn-sm" (click)="eliminarContacto(i, 2)" style="text-decoration: none">
                     X
@@ -214,7 +215,7 @@
               <div class="col mt-3">
                 <!--  -->
               </div>
-              <div class="row" style="border-radius: 13px; background-color: rgb(246, 243, 243);">
+              <div class="row" style="border-radius: 13px; background-color: rgb(246, 243, 243);  border: 2px solid #33CD56;">
                 <div class="form-group col-md-12">
                   <div class="form-row">
                     <div class="form-group col-md-12 mt-2" align="right">
@@ -264,6 +265,9 @@
                       <input type="text" class="form-control" id="direccion_contacto"
                         formControlName="direccion_contacto" (input)="onInput()"
                         [value]="contactoForm.direccion_contacto" (ngModelChange)="actualizarContacto($event, 7,  i)">
+                    </div>
+                    <div class="form-group col-md-12 mt-2 text-center">
+                       <button class="btn btn-warning " (click)="openModalUbicacion(seleccionarUbicacion)"> Agregar Ubicación </button>
                     </div>
 
 

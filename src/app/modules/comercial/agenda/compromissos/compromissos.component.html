@@ -54,12 +54,11 @@
   <div class="row" *ngIf="showCalendar">
     <div class="col">
       <div class="row mb-3"
-        *ngIf="(nomeEscritorio != null ) || (nomeVendedor != null )">
+        *ngIf="(this.nomeEscritorio !== null ) || (this.nomeVendedor != null )">
         <div class="col">
           <div class="d-flex">
-            <h6 class="mb-0 mr-2"
-              *ngIf="nomeVendedor != null && nomeEscritorio != null ">
-              <span class="badge badge-secondary">{{ nomeEscritorio }}</span>
+            <h6 class="mb-0 mr-2" *ngIf="this.nomeVendedor != null || this.nomeEscritorio != null ">
+              <span class="badge badge-secondary">{{ this.nomeEscritorio }}</span>
             </h6>
             <h6 class="mb-0">
               <span class="badge badge-primary">{{ nomeVendedor }}</span>

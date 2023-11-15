@@ -173,17 +173,14 @@ export class LoginComponent implements OnInit {
             response.result.matricula_tid != null
               ? response.result.matricula_tid
               : 1642;
-
           idVendedor =
             response.result.id_vendedor != null
               ? response.result.id_vendedor
               : 88;
-          console.log(response.result.id_vendedor)
           idEscritorio =
             response.result.id_escritorio != null
               ? response.result.id_escritorio
               : 58;
-
           idModuloPrincipal =
             response.result.id_modulo_home != null
               ? response.result.id_modulo_home
@@ -202,7 +199,6 @@ export class LoginComponent implements OnInit {
           idEscritorio = response.result.id_escritorio
             ? response.result.id_escritorio
             : null;
-
           idModuloPrincipal = response.result.id_modulo_home;
           nomeModuloPrincipal = response.result.modu_nome;
           rotaModuloPrincipal = response.result.modu_rota;
@@ -242,7 +238,6 @@ export class LoginComponent implements OnInit {
     const urlAfterLogin = routerParams?.urlAfterLogin
 
     const modulo = urlAfterLogin ? urlAfterLogin?.split('/')[1] : undefined;
-    console.log(modulo)
     if (!modulo) {
       this.modulosService.setCurrentModule(moduloPrincipal);
       this.router.navigate([moduloPrincipal.rota]);
