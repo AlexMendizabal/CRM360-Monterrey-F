@@ -505,27 +505,33 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   setSubtitles(): void {
     if (this.situacoesCores.length > 0) {
-      this.situacoesCores.map((situacao) => {
+     
+      this.dados.forEach(oferta => {
+        const situacao = oferta.id_oferta_estado;
+        
+        this.situacoesCores.map((situacao) => {
 
-        this.leyendas = [
+          this.leyendas = [
+            {
+              id: 1,
+              text: 'Propuesta borrador',
+              hex: '#0000FF' // Rojo
+            },
+            {
+              id: 2,
+              text: 'Propuesta aceptada',
+              hex: '#00FF00' // Azul 00FF00
+            },
+            {
+              id: 3,
+              text: 'Propuesta rechazada',
+              hex: '#FF0000' // Verde
+            }
+  
+          ];
+      });
 
-          {
-            id: 1,
-            text: 'Propuesta borrador',
-            hex: '#0000FF' // Rojo
-          },
-          {
-            id: 2,
-            text: 'Propuesta aceptada',
-            hex: '#00FF00' // Azul 00FF00
-          },
-          {
-            id: 3,
-            text: 'Propuesta rechazada',
-            hex: '#FF0000' // Verde
-          }
-
-        ];
+    
 
         /*  this.subtitles.push({
            id: situacao.codAssociacao,
@@ -838,7 +844,6 @@ export class ComercialCicloVendasCotacoesListaComponent
         next: (response: any) => {
           if (response.responseCode === 200) {
             this.loaderNavbar = false;
-            console.log(response.result); 
             this.dados = [];
             this.dados = response.result;
             this.dados = this.dados.slice(0, this.itemsPerPage);

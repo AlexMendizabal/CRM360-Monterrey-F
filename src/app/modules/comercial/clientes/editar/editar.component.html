@@ -118,6 +118,19 @@
                     <div class="col mb-0">
                         <label for=""> <strong> DATOS DE CONTACTO </strong> </label>
                     </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <agm-map [latitude]="latitudPromedioContacto" [longitude]="longitudPromedioContacto" [zoom]="16"
+                                (mapClick)="actualizarMapaContacto($event)" class="embed-responsive-item">
+                                <agm-marker *ngFor="let ubicacion of datos_cliente.datos_contacto; let i = index"
+                                    [latitude]="ubicacion.latitude_contacto" [longitude]="ubicacion.longitude_contacto"
+                                    [iconUrl]="ubicacion.color" (markerClick)="actualizarMarcadorContacto(i)"
+                                    (markerDragEnd)="actualizarUbicacion(i, $event.coords.lat, $event.coords.lng)">
+                                </agm-marker>
+                            </agm-map>
+                            <div id="map-zoom-control" class="map-control"></div>
+                        </div>
+                    </div>
                     <div style="max-height: 350px; overflow-y: auto;">
                         <div class="form-group col-md-12"
                             *ngFor="let contacto of datos_cliente.datos_contacto; let i = index">

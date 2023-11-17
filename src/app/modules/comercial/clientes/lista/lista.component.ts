@@ -109,6 +109,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   cliente: any = [];
 
   direcciones: any = [];
+  direcciones_contacto: any = [];
+
   editingMode: boolean = false;
   editedFields: any = {};
   vendedoresList: any[] = [];
@@ -128,6 +130,10 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
   latitudPromedio: number;
   longitudPromedio: number;
+
+
+  latitudPromedioContacto: number;
+  longitudPromedioContacto: number;
   informacionMarcador: { ubicacion: string, direccion: string } | null = null;
 
 
@@ -321,6 +327,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
             this.direccionEmpty = true;
           }
           this.contatos = response.result.datos_contacto;
+          this.calcularPromedioContacto(response.result.datos_contacto);
+
           this.direcciones = response.result.datos_direccion;
           this.editedFields.id_vendedor = this.dadosCadastrais.id_vendedor;
           this.calcularPromedioUbicaciones(response.result.datos_direccion);
@@ -362,6 +370,22 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       }
       this.latitudPromedio = sumLatitud / this.direcciones.length;
       this.longitudPromedio = sumLongitud / this.direcciones.length;
+    }
+
+  }
+
+  calcularPromedioContacto(contatos) {
+    //console.log(contatos);
+    let sumLatitud = 0;
+    let sumLongitud = 0;
+    if (contatos && contatos.length > 0) {
+      for (const ubicacion of contatos) {
+        sumLatitud += ubicacion.latitude_contacto;
+        sumLongitud += ubicacion.longitude_contacto;
+      }
+      console.log(sumLatitud)
+      this.latitudPromedioContacto = sumLatitud / this.contatos.length;
+      this.longitudPromedioContacto = sumLongitud / this.contatos.length;
     }
 
   }

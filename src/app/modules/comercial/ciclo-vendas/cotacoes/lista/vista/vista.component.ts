@@ -5,7 +5,14 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import html2canvas from 'html2canvas';
 import * as jsPDF from 'jspdf';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
+
+import { AuthService } from 'src/app/shared/services/core/auth.service';
+import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
+import { ComercialCicloVendasCotacoesService } from '../../cotacoes.service';
+
+import { JsonResponse } from 'src/app/models/json-response';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -13,10 +20,13 @@ import * as jsPDF from 'jspdf';
   templateUrl: './vista.component.html',
   styleUrls: ['./vista.component.scss']
 })
-export class VistaComponent implements OnInit, AfterViewInit {
 
+export class VistaComponent implements OnInit, AfterViewInit {
+  myForm: FormGroup; 
   @ViewChild('contentToConvert', { static: true }) contentToConvert: ElementRef;
 
+  loaderNavbar: boolean;
+  loaderFullScreen = true;
   name = 'Angular ' + VERSION.major;
 
   resultFromParent: any;
@@ -24,35 +34,46 @@ export class VistaComponent implements OnInit, AfterViewInit {
   result: [];
   analiticos: any[];
   total: any[];
+  cierre_oferta: any[];
 
   formObj: any = {};
 
   showCierreButton: boolean = true;
   showDescripcionCard: boolean = false;
   showGuardarButton: boolean = false;
-
+  dadosEmpty = false;
   public onClose: Subject<boolean>;
 
   imageWidth = 300;
   imageHeight = 85;
+  
 
   @Input() ofertaId: number; // Input property to receive the 'id_oferta'
-
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     // tslint:disable-next-line:variable-name
     private _bsModalRef: BsModalRef,
-    private sanitizer: DomSanitizer
+    private cotacoesService: ComercialCicloVendasCotacoesService,
+    private sanitizer: DomSanitizer,
+    private pnotifyService: PNotifyService,
+    private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
+   
     this.result = this.resultFromParent;
+    this.cierreOferta();
     this.analiticos = this.resultFromParent.analitico;
     this.onClose = new Subject();
     this.imageSrc = this.sanitizer.bypassSecurityTrustUrl('assets/images/logo/logo-monterrey.png');
-    // console.log('Received data in modal:', this.result);
+
+    this.myForm = this.fb.group({
+      id_oferta:  [this.resultFromParent.oferta[0].id_oferta],
+      estadoOfert: [''],
+      descripcion: ['']
+    });
   }
 
   ngAfterViewInit(): void {
@@ -60,7 +81,24 @@ export class VistaComponent implements OnInit, AfterViewInit {
     // this.captureScreen();
   }
 
-  public onConfirm(): void {
+  public cierreOferta()
+  {
+    this.cotacoesService.getCierreOferta().pipe()
+    .subscribe({
+      next: (response: any) => {
+        if (response.responseCode === 200) {
+          this.cierre_oferta = response.result;
+        } else {
+          this.loaderNavbar = false;
+          this.pnotifyService.notice('Ningun dato encontrado');
+          this.dadosEmpty = true;
+        }
+      }
+    });
+  }
+
+  public onConfirm(): void 
+  {
     this.onClose.next(true);
     this._bsModalRef.hide();
   }
@@ -135,17 +173,17 @@ export class VistaComponent implements OnInit, AfterViewInit {
     this.showGuardarButton = true;
   }
 
-  onSubmit(customerData) {
-    const dataFinal = customerData.dataFinal;
-    const estadoOferta = customerData.estadoOferta;
-    const descripcion = customerData.descripcion;
-    this.formObj = {
-        fecha_final: dataFinal,
-        estado_oferta: estadoOferta,
-        descripcion_texto: descripcion
-    };
-    console.log(this.formObj);
-
-    window.location.reload();
+  onSubmit() {
+    this.cotacoesService.finalizarOferta(this.myForm.value).subscribe((response: JsonResponse) => {
+      if (response.success == false) {
+        this.pnotifyService.error(response.message);
+      }
+      else{
+        this.pnotifyService.success(response.message);
+      }
+    });
+    this._bsModalRef.hide();
+    return '/comercial/ciclo-vendas/23/cotacoes-pedidos/lista';
   }
+
 }

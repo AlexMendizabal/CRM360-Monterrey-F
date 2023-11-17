@@ -355,6 +355,23 @@
             </tab>
             <tab heading="Contactos">
               <div class="border-right border-left border-bottom px-3 pt-3">
+                <div class="col-lg-12 mb-4" *ngIf="contatos.lenght !==  0">
+  
+                  <div class="embed-responsive embed-responsive-16by9">
+                    <agm-map [latitude]="latitudPromedioContacto" [longitude]="longitudPromedioContacto" [zoom]="16"
+                      class="embed-responsive-item">
+                      <agm-marker *ngFor="let ubicacion of contatos; let i = index" [latitude]="ubicacion.latitude_contacto"
+                        (markerClick)="verInformacionContacto(i)" [longitude]="ubicacion.longitude_contacto">
+                      </agm-marker>
+                    </agm-map>
+                    <div id="map-zoom-control" class="map-control"></div>
+                  </div>
+                  <div *ngIf="informacionMarcador" class="info-box mt-3">
+                    <h6>Información de la ubicación</h6>
+                    <p style="font-size: 13px;"> <strong>Título: </strong> {{ informacionMarcador.nombre }}</p>
+                    <p style="font-size: 13px;"> <strong>Dirección: </strong> {{ informacionMarcador.direccion }}</p>
+                  </div>
+                </div>
                 <div *ngIf="contatosLoaded && !contatosEmpty">
                   <div *ngIf="contatos.lenght !==  0">
                     <div class="form-row" *ngFor="let contato of contatos">
@@ -364,6 +381,7 @@
                         {{ contato.id_cont }}
                       </div>
                     </div> -->
+
                       <div class="form-group col-lg-4">
                         <label>título</label>
                         <div>
@@ -453,7 +471,7 @@
               <div class="border-right border-left border-bottom px-3 pt-3">
                 <div *ngIf="contatosLoaded && !direccionEmpty">
                   <div class="col-lg-12 mb-4" *ngIf="direcciones.lenght !==  0">
-                    
+
                     <div class="embed-responsive embed-responsive-16by9">
                       <agm-map [latitude]="latitudPromedio" [longitude]="longitudPromedio" [zoom]="16"
                         class="embed-responsive-item">
@@ -508,7 +526,8 @@
   <ng-template #editarCliente>
     <editar-cliente (fecharModal)="onFecharModal($event)" [datos_cliente]="cliente" [vendedoresList]="vendedoresList"
       [cnaes]="cnaes" [tipos_clientes]="tipos_clientes" [ciudades]="ciudades" [latitudPromedio]="latitudPromedio"
-      [longitudPromedio]="longitudPromedio" [tipos_personas] ="tipos_personas">
+      [longitudPromedio]="longitudPromedio"   [latitudPromedioContacto]="latitudPromedioContacto"
+      [longitudPromedioContacto]="longitudPromedioContacto"  [tipos_personas]="tipos_personas">
     </editar-cliente>
   </ng-template>
 

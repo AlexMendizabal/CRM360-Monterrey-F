@@ -87,5 +87,4 @@ export class ComercialCicloVendasCotacoesListaService {
   datosPdfService(datosPdfTOdo) {
     this.onPdf.next(datosPdfTOdo);
   }
-
 }

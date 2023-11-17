@@ -103,8 +103,8 @@
             <label for="statusCliente">Status Cliente</label>
             <select class="form-control custom-select" id="statusCliente" formControlName="statusCliente">
               <option>TODOS</option>
-              <option value="Ativo">ACTIVO</option>
-              <option value="Inativo">INACTIVO</option>
+              <option value="Ativo">CERRADO</option>
+              <option value="Inativo">BORRADOR</option>
             </select>
           </div>
           <div class="form-group " [ngClass]="{'col-lg-2': !filtroCotacoes , 'col-lg-1': filtroCotacoes}">
@@ -130,8 +130,8 @@
             <tr>
               <!--  <th scope="col"></th> -->
               <th scope="col" class="text-center">
-                <thead-sorter value="Núm." [active]="orderBy == 'codigo_oferta'" [sort]="orderType"
-                  (click)="setOrderBy('codigo_oferta')">
+                <thead-sorter value="Num." [active]="orderBy == 'codigo_oferta'" [sort]="orderType"
+                  (click)="setOrderBy('id_oferta')">
                 </thead-sorter>
               </th>
               <th scope="col" class="text-center">
@@ -186,6 +186,11 @@
               </th>
               <th scope="col">
                 <thead-sorter value="Estado" [active]="orderBy == 'estado_oferta'" [sort]="orderType"
+                  (click)="setOrderBy('estado_oferta')">
+                </thead-sorter>
+              </th>
+              <th scope="col">
+                <thead-sorter value="Estado Oferta" [active]="orderBy == 'estado_oferta'" [sort]="orderType"
                   (click)="setOrderBy('estado_oferta')">
                 </thead-sorter>
               </th>
@@ -263,7 +268,15 @@
               <td class="hover">{{ pedido.peso_total }}</td>
               <td class="hover">{{ pedido.lista_precio }}</td>
               <td class="hover">{{ pedido.modo_entrega }}</td>
-              <td class="hover">{{ pedido.estado_oferta }}</td>
+              <td class="hover">{{ pedido.nombre_lista }}</td>
+              <td class="hover">
+                <ng-container *ngIf="pedido.id_estado_oferta !== 1; else borradorEstado">
+                  <i class="text-danger">CERRADO</i>
+                </ng-container>
+                <ng-template #borradorEstado>
+                  <i class="text-primary">BORRADOR</i>
+                </ng-template>
+              </td>
               <td class="">
                 <a class="dropdown-item" routerLink="/pdf" (click)="onImprimir(pedido.id_oferta)"><i class="fas fa-print"></i><span class="text-uppercase">
                   PDF</span></a>

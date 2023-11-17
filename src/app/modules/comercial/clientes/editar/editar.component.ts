@@ -26,6 +26,9 @@ export class EditarClienteComponent implements OnInit {
     @Input() latitudPromedio: number = 0;
     @Input() longitudPromedio: number = 0;
 
+    @Input() latitudPromedioContacto: number = 0;
+    @Input() longitudPromedioContacto: number = 0;
+
     @Input() tipos_personas: any[];
 
 
@@ -49,6 +52,14 @@ export class EditarClienteComponent implements OnInit {
         'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFFFF',
     ];
 
+    private coloresDisponiblesContacto: string[] = [
+        'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000',
+        'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FC9F3A',
+        'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00',
+        'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00',
+        'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFFFF',
+    ];
+
 
     nuevoContacto = {
         contacto: '',
@@ -56,7 +67,8 @@ export class EditarClienteComponent implements OnInit {
         apellido_contacto: '',
         direccion_contacto: '',
         celular_contacto: '',
-        telefono_contacto: ''
+        telefono_contacto: '',
+        color: '',
     };
 
     nuevaDireccion = {
@@ -103,6 +115,7 @@ export class EditarClienteComponent implements OnInit {
 
     ngOnInit(): void {
         this.categorizarUbicacion();
+        this.categorizarContacto();
         if (this.latitudPromedio === null || this.latitudPromedio === undefined) {
             this.latitudPromedio = -17.7834799;
         }
@@ -122,6 +135,7 @@ export class EditarClienteComponent implements OnInit {
 
 
     agregarContacto() {
+        console.log('aqui');
         if (this.datos_cliente.datos_contacto > 0) {
             if (this.datos_cliente.datos_contacto.length < 5) {
                 this.datos_cliente.datos_contacto.push({ ...this.nuevoContacto });
@@ -131,7 +145,8 @@ export class EditarClienteComponent implements OnInit {
                     apellido_contacto: '',
                     direccion_contacto: '',
                     celular_contacto: '',
-                    telefono_contacto: ''
+                    telefono_contacto: '',
+                    color: this.generarColorAleatorioContacto()
                 };
             }
         } else {
@@ -142,15 +157,25 @@ export class EditarClienteComponent implements OnInit {
                 apellido_contacto: '',
                 direccion_contacto: '',
                 celular_contacto: '',
-                telefono_contacto: ''
+                telefono_contacto: '',
+                color: '',
             };
         }
+        console.log(this.datos_cliente.datos_contacto)
     }
 
     categorizarUbicacion() {
         if (this.datos_cliente.datos_direccion && this.datos_cliente.datos_direccion.length > 0) {
             this.datos_cliente.datos_direccion.forEach((direccion) => {
                 direccion['color'] = this.generarColorAleatorio();
+            });
+        }
+    }
+
+    categorizarContacto() {
+        if (this.datos_cliente.datos_contacto && this.datos_cliente.datos_contacto.length > 0) {
+            this.datos_cliente.datos_contacto.forEach((direccion) => {
+                direccion['color'] = this.generarColorAleatorioContacto();
             });
         }
     }
@@ -192,6 +217,18 @@ export class EditarClienteComponent implements OnInit {
         return colorAleatorio;
     }
 
+    generarColorAleatorioContacto(): string {
+        console.log(this.coloresDisponiblesContacto)
+        if (this.coloresDisponiblesContacto.length === 0) {
+            return null;
+        }
+
+        const indiceAleatorio = Math.floor(Math.random() * this.coloresDisponiblesContacto.length);
+        const colorAleatorio = this.coloresDisponiblesContacto.splice(indiceAleatorio, 1)[0];
+        console.log(colorAleatorio);
+        return colorAleatorio;
+    }
+
     eliminarUbicacion(index: number) {
         this.coloresDisponibles.push(this.datos_cliente.datos_direccion[index].color);
         this.datos_cliente.datos_direccion.splice(index, 1);
@@ -201,6 +238,12 @@ export class EditarClienteComponent implements OnInit {
         this.id_marcador = index;
         this.datos_cliente.datos_direccion[index].latitud = latitud;
         this.datos_cliente.datos_direccion[index].longitud = longitud;
+    }
+
+    actualizarMarcadorContacto(index: number, latitud, longitud): void {
+        this.id_marcador = index;
+        this.datos_cliente.datos_contacto[index].latitude_contacto = latitud;
+        this.datos_cliente.datos_contacto[index].longitude_contacto = longitud;
     }
     actualizarUbicacion(index: number) {
         this.datos_cliente.datos_direccion[index].latitud = this.latitud;
@@ -214,10 +257,29 @@ export class EditarClienteComponent implements OnInit {
         this.actualizarDireccion(this.id_marcador, event);
     }
 
+    actualizarMapaContacto(event: any) {
+        this.latitud = event.coords.lat;
+        this.longitud = event.coords.lng;
+        this.actualizarMarcadorContacto(this.id_marcador, this.latitud, this.longitud);
+        this.actualizarDireccionContacto(this.id_marcador, event);
+    }
+
     actualizarDireccion(index, event: any) {
         this.obtenerDireccion(event.coords.lat, event.coords.lng)
             .then((direccion_mapa: string) => {
                 this.datos_cliente.datos_direccion[index].direccion = direccion_mapa;
+            })
+            .catch((error: any) => {
+                /*  this.form.controls['direccion'].setValue(
+                    'Error al obtener la dirección'
+                 ); */
+            });
+    }
+
+    actualizarDireccionContacto(index, event: any) {
+        this.obtenerDireccion(event.coords.lat, event.coords.lng)
+            .then((direccion_mapa: string) => {
+                this.datos_cliente.datos_contacto[index].direccion = direccion_mapa;
             })
             .catch((error: any) => {
                 /*  this.form.controls['direccion'].setValue(

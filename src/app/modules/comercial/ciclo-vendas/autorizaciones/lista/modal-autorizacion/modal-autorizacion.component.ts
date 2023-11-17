@@ -44,13 +44,13 @@ export class ModalAutorizacionComponent implements OnInit {
     this.detalle = this.dataForm.detalle;
     this.oferta = this.data['oferta'][0];
 
-    if(this.oferta['estado'] > 1)
+    if(this.oferta['estado'] == 10)
     {
-        this.loader = true;
+        this.loader = false;
     }
     else
     {
-      this.loader = false;
+      this.loader = true;
     }
   }
 

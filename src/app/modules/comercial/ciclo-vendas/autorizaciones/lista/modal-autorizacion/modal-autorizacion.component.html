@@ -109,18 +109,18 @@
                   </div>
                 </form>
               </div>
-            </div>
+            </div>  
           </div>
         </div>
       </div>
     </div>
     <div class="col-md-12">
       <div class="modal-footer">
-        <button type="submit" id="aceptado" class="btn btn-success" (click)="boton(data.oferta[0].id_autorizacion, 2)"
+        <button type="submit" id="aceptado" class="btn btn-success" (click)="boton(data.oferta[0].id_autorizacion, 12)"
           [disabled]="loader">
           Aprobar
         </button>
-        <button type="button" id="rechazado" class="btn btn-danger" (click)="boton(data.oferta[0].id_autorizacion, 3)"
+        <button type="button" id="rechazado" class="btn btn-danger" (click)="boton(data.oferta[0].id_autorizacion, 11)"
           [disabled]="loader">
           Rechazar
         </button>

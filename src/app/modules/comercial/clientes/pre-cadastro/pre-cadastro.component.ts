@@ -36,6 +36,8 @@ import { TitleService } from 'src/app/shared/services/core/title.service';
 import { FunctionsService } from 'src/app/shared/services/core/functions.service';
 import { array } from '@amcharts/amcharts4/core';
 import { number } from 'ng-brazil/number/validator';
+import { PreCadastroUbicacionContactosService } from './ubicacion_contacto/ubicacion.service';
+
 
 @Component({
   selector: 'comercial-clientes-pre-cadastro',
@@ -83,6 +85,7 @@ export class ComercialClientesPreCadastroComponent
   maxLengthRules: any = {};
   maxLengthMessages: any = {};
   id_marcador: number = 0;
+  disabled_form: boolean = true;
 
   dadosCliente: any = {};
   ciudades: any = [];
@@ -99,8 +102,18 @@ export class ComercialClientesPreCadastroComponent
   apellido_p_contacto_array: string = '';
   apellido_m_contacto_array: string = '';
   telefono_contacto_array: string = '';
-  celular_contacto_array: string = '';;
-  direccion_contacto_array: string = '';;
+  celular_contacto_array: string = '';
+  direccion_contacto_array: string = '';
+  latitud_contacto_array: number = 0;
+  longitud_contacto_array: number = 0;
+
+  direccion_mapa: string = '';
+  tipo_peticion: number = 0;
+
+  latitud_inicial: number = 0;
+  longitud_inicial: number = 0;
+
+
 
 
   ubicacionCollapse: boolean = false; // Inicialmente oculto
@@ -111,6 +124,8 @@ export class ComercialClientesPreCadastroComponent
   formObj: FormGroup;
   formObjArray: any[] = [];
   ubicaciones: any[] = [];
+  indice: number = 0;
+  //bloquearSeleccion: boolean = true;
   ciudad_vendedor: number = 0;
   private coloresDisponibles: string[] = [
     'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000',
@@ -133,7 +148,10 @@ export class ComercialClientesPreCadastroComponent
     private atividadesService: AtividadesService,
     private titleService: TitleService,
     private functionsService: FunctionsService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private ubicacionService: PreCadastroUbicacionContactosService,
+    private bsModalRef: BsModalRef,
+
 
   ) {
     this.pnotifyService.getPNotify();
@@ -142,6 +160,7 @@ export class ComercialClientesPreCadastroComponent
   ngOnInit() {
     this.titleService.setTitle('Pre-Registro');
     this.getFormFields();
+    //this.determinarBloqueo();
     this.obtenerTiposClientes();
     this.activatedRoute.queryParams.subscribe((queryParams: any) => {
       let documento = null;
@@ -158,18 +177,25 @@ export class ComercialClientesPreCadastroComponent
       });
 
     });
+    this.disabled_form = true;
   }
+
+  /* determinarBloqueo() {
+    if (this.miFormulario.get('tipo_cliente').value === 0) {
+      this.bloquearSeleccion = this.true;
+    }
+  } */
 
   changeVendedor(a) {
     this.clientesService.getVendedorCiudad(a)
       .subscribe(
         (response: any) => {
           if (response.responseCode === 200) {
-           // console.log(response.result.latitud);
-            this.latitud = response.result.latitud;
-            this.longitud = response.result.longitud;
+            // console.log(response.result.latitud);
+            this.latitud_inicial = response.result.latitud;
+            this.longitud_inicial = response.result.longitud;
             this.ciudad_vendedor = response.result.id_ciudad
-           // console.log(this.ciudad_vendedor);
+            // console.log(this.ciudad_vendedor);
           } else {
             this.handleFormFieldsError();
           }
@@ -187,6 +213,7 @@ export class ComercialClientesPreCadastroComponent
       .subscribe(
         (response: any) => {
           if (response.responseCode === 200) {
+
             this.tipos_clientes = response.result;
 
           } else {
@@ -204,28 +231,28 @@ export class ComercialClientesPreCadastroComponent
     this.latitud = event.coords.lat;
     this.longitud = event.coords.lng;
   } */
-  actualizarMarcador(index: number, latitud, longitud): void {
-    /* console.log(this.latitud); */
+  /*  actualizarMarcador(index: number, latitud, longitud): void {
+     /* console.log(this.latitud); */
 
 
-    this.id_marcador = index;
-    //this.ubicacionFormularios[index].color = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00';
-    // Actualizar solo la ubicación del marcador en la posición 'index'
-    this.ubicaciones[index].latitud = latitud;
-    this.ubicacionFormularios[index].latitud = latitud;
-    this.ubicaciones[index].longitud = longitud
-    this.ubicacionFormularios[index].longitud = longitud;
+  /* this.id_marcador = index;
+  this.ubicacionFormularios[index].color = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00';
+   Actualizar solo la ubicación del marcador en la posición 'index'
+  this.ubicaciones[index].latitud = latitud;
+  this.ubicacionFormularios[index].latitud = latitud;
+  this.ubicaciones[index].longitud = longitud
+  this.ubicacionFormularios[index].longitud = longitud;
 
 
-    //this.cambiarColorMarcador(index);
-  }
+  this.cambiarColorMarcador(index);
+} */
 
-  cambiarColorMarcador(i: number) {
+  /* cambiarColorMarcador(i: number) {
     this.ubicaciones[i].color = 'blue';
-  }
+  } */
 
 
-  actualizarMapa(event: any) {
+  /* actualizarMapa(event: any) {
     //console.log(event);
     this.latitud = event.coords.lat;
     this.longitud = event.coords.lng;
@@ -242,10 +269,10 @@ export class ComercialClientesPreCadastroComponent
         /*  this.form.controls['direccion'].setValue(
             'Error al obtener la dirección'
          ); */
-      });
-  }
+/*       });
+  } */ 
 
-  public obtenerDireccion(latitud: number, longitud: number): Promise<string> {
+  /* public obtenerDireccion(latitud: number, longitud: number): Promise<string> {
     return fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitud},${longitud}&key=AIzaSyDl5b7STz9xYNDhybTTer2POVncX9FYqCc`
     )
@@ -261,7 +288,7 @@ export class ComercialClientesPreCadastroComponent
       .catch((error) => {
         return 'Error al obtener la dirección';
       });
-  }
+  } */
 
   registrarAcesso() {
     this.atividadesService.registrarAcesso().subscribe();
@@ -374,6 +401,11 @@ export class ComercialClientesPreCadastroComponent
         this.contactoFormularios[this.index_array_contactos].apellido2_contacto = this.apellido_m_contacto_array;
         this.contactoFormularios[this.index_array_contactos].telefono_contacto = this.telefono_contacto_array;
         this.contactoFormularios[this.index_array_contactos].direccion_contacto = this.direccion_contacto_array;
+        this.contactoFormularios[this.index_array_contactos].latitude_contacto = this.latitud_contacto_array;
+        this.contactoFormularios[this.index_array_contactos].longitude_contacto = this.longitud_contacto_array;
+
+
+
       }
 
       //console.log(this.contactoFormularios);
@@ -402,20 +434,40 @@ export class ComercialClientesPreCadastroComponent
       ubicacion: '',
       direccion: '',
       id_ciudad: this.ciudad_vendedor,
-      latitud: '',
-      longitud: '',
+      latitud: 0,
+      longitud: 0,
       swActivarLatitud: this.swActivarLatitud
     };
 
   }
 
-  openModalUbicacion(template: TemplateRef<any>) {
+  openModalUbicacion(template: TemplateRef<any>, index: number, tipo: number): void {
+
+    this.indice = index;
+    if (tipo === 1) {
+      this.tipo_peticion = tipo;
+      this.latitud = this.contactoFormularios[index].latitude_contacto;
+      this.longitud = this.contactoFormularios[index].longitude_contacto;
+    } else if (tipo === 2) {
+      this.tipo_peticion = tipo;
+      this.latitud = this.ubicacionFormularios[index].latitud
+      this.longitud = this.ubicacionFormularios[index].longitud;
+    }
+    //console.log(this.latitud);
+
     this.modalRef = this.modalService.show(template, {
       animated: false,
-      class: 'modal-lg',
+      class: 'modal-md',
     });
 
+
+
     //this.ubicacionService.showModal();
+  }
+
+  onFecharModal(event) {
+    //console.log(this.modalRef);
+    this.modalRef.hide();
   }
 
   crearFormularioContactoConDatosIngresados(): any {
@@ -427,10 +479,36 @@ export class ComercialClientesPreCadastroComponent
       telefono_contacto: '',
       celular_contacto: '',
       direccion_contacto: '',
+      latitude_contacto: 0,
+      longitude_contacto: 0,
     }
   }
 
 
+  changeLatitudLongitud(event: { latitud: number, longitud: number, direccion: any, index: number, tipo: number }) {
+    //console.log(event.tipo)
+
+    if (event.tipo === 1) {
+      
+      this.latitud_contacto_array = event.latitud;
+      this.longitud_contacto_array = event.longitud;
+      this.direccion_contacto_array = event.direccion;
+
+      this.contactoFormularios[event.index].latitude_contacto = this.latitud_contacto_array;
+      this.contactoFormularios[event.index].longitude_contacto = this.longitud_contacto_array;
+      this.contactoFormularios[event.index].direccion_contacto = this.direccion_contacto_array;
+
+    } else if (event.tipo === 2) {
+   
+
+      this.latitud = event.latitud;
+      this.longitud = event.longitud;
+      this.direccion_mapa = event.direccion;
+      this.ubicacionFormularios[event.index].latitud = this.latitud;
+      this.ubicacionFormularios[event.index].longitud = this.longitud;
+      this.ubicacionFormularios[event.index].direccion = this.direccion_mapa;
+    }
+  }
 
 
   setFormBuilder(documento: string) {
@@ -474,7 +552,7 @@ export class ComercialClientesPreCadastroComponent
       ubicacion: this.formBuilder.array([]),
       contactos: this.formBuilder.array([]),
       nombre_ciudad: [],
-      tipo_cliente: []
+      tipo_cliente: [0]
 
 
 
@@ -518,7 +596,7 @@ export class ComercialClientesPreCadastroComponent
     data.ubicacion = this.ubicacionFormularios
 
     // Agregar datos de contactos desde contactoFormularios
-   /*  console.log(this.contactoFormularios); */
+    /*  console.log(this.contactoFormularios); */
     data.contactos = this.contactoFormularios
 
 
@@ -543,7 +621,7 @@ export class ComercialClientesPreCadastroComponent
         celular: this.form.value.celular,
         ubicacion: data.ubicacion, // Asigna los datos de ubicación directamente aquí
         contactos: data.contactos,
-        id_tipo_cliente: this.form.value.tipo_cliente
+        id_tipo_cliente: 0
 
       }; /* console.log('Datos antes de enviarlos:', formObj);*/
       this.clientesService
@@ -649,7 +727,7 @@ export class ComercialClientesPreCadastroComponent
     }
   }
 
-  showDetails(): void {
+  /* showDetails(): void {
     this.modalRef = this.modalService.show(
       this.modalDetalhesCliente,
       this.modalConfig
@@ -658,7 +736,7 @@ export class ComercialClientesPreCadastroComponent
 
   onCloseDetails(): void {
     this.modalRef.hide();
-  }
+  } */
 
   onNavigateDetail(): void {
     if (this.dadosCliente.podeAcessar == 1) {
@@ -681,10 +759,10 @@ export class ComercialClientesPreCadastroComponent
     //console.log(atributo)
     //this.ubicacionFormularios[index].titulo_ubicacion = atributo;
     //console.log(this.ubicacionFormularios[index].titulo_ubicacion)
-   this.titulo_ubicacion_array = atributo;
+    this.titulo_ubicacion_array = atributo;
     this.index_array_ubicacion = index;
 
-    this.ubicacionFormularios[index].ubicacion= atributo
+    this.ubicacionFormularios[index].ubicacion = atributo
     //console.log(this.ubicacionFormularios)
   }
   actualizarContacto(atributo, tipo, index) {
@@ -717,7 +795,7 @@ export class ComercialClientesPreCadastroComponent
         break;
       case 7:
         this.direccion_contacto_array = atributo;
-        this.contactoFormularios[index].direccion_contacto = this.direccion_contacto_array ;
+        this.contactoFormularios[index].direccion_contacto = this.direccion_contacto_array;
         break;
       default:
         break;
@@ -727,11 +805,11 @@ export class ComercialClientesPreCadastroComponent
   cambiarCiudad(id, index) {
     this.id_ciudad = id;
     this.index_array_ubicacion = index;
-    this.ubicacionFormularios[index].id_ciudad= id
+    this.ubicacionFormularios[index].id_ciudad = id
 
 
     //console.log(this.id_ciudad);
-    
+
   }
 
   formCanDeactivate() {

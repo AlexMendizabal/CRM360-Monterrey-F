@@ -94,9 +94,9 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   estado_oferta = [
     { "id": "T", "nombre": "Todos" },
-    { "id": 1, "nombre": "Aprobado" },
-    { "id": 2, "nombre": "Pendiente" },
-    { "id": 3, "nombre": "Rechazado" },
+    { "id": 12, "nombre": "Aprobado" },
+    { "id": 10, "nombre": "Pendiente" },
+    { "id": 11, "nombre": "Rechazado" },
   ];
 
   formGroup: FormGroup;

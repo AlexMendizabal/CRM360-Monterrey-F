@@ -435,4 +435,17 @@ export class ComercialCicloVendasCotacoesService {
       .post(`${this.API2}/registrar`, data)
       .pipe(take(1), retry(2));
   }
+
+  getCierreOferta()
+  {
+    return this.http
+    .get(`${this.API}/cierre`)
+    .pipe(take(1), retry(2));
+  }
+
+  finalizarOferta(data: any): Observable<Object>{
+    return this.http
+      .post(`${this.API}/post_cierre`, data)
+      .pipe(take(1), retry(2));
+  }
 }

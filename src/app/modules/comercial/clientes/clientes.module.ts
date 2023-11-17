@@ -37,6 +37,8 @@ import { ComercialClientesHistoricoFinanceiroModule } from './historico-financei
 import { ComercialClientesPropostaAnaliseCreditoComponent } from './proposta-analise-credito/proposta-analise-credito.component';
 import { ComercialClientesUltimosPrecosComponent } from './ultimos-precos/ultimos-precos.component';
 import { EditarClienteComponent } from './editar/editar.component';
+import { PreCadastroUbicacionContactosComponent } from './pre-cadastro/ubicacion_contacto/ubicacion.component';
+
 
 import { AgmCoreModule } from '@agm/core';
 
@@ -48,7 +50,8 @@ import { AgmCoreModule } from '@agm/core';
     ComercialClientesDetalhesComponent,
     ComercialClientesPropostaAnaliseCreditoComponent,
     ComercialClientesUltimosPrecosComponent,
-    EditarClienteComponent
+    EditarClienteComponent,
+    PreCadastroUbicacionContactosComponent
   ],
   imports: [
     CommonModule,
@@ -68,6 +71,7 @@ import { AgmCoreModule } from '@agm/core';
     ComercialClientesRoutingModule,
     ComercialClientesDashboardModule,
     ComercialClientesHistoricoFinanceiroModule, 
+    
   
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDl5b7STz9xYNDhybTTer2POVncX9FYqCc' // Reemplaza con tu propia clave de API de Google Maps
@@ -75,7 +79,7 @@ import { AgmCoreModule } from '@agm/core';
     
   ],
   exports: [EditarClienteComponent],
-  entryComponents: [EditarClienteComponent],
+  entryComponents: [EditarClienteComponent, PreCadastroUbicacionContactosComponent],
   providers: [
     BsModalRef
   ]
