@@ -96,7 +96,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     { "id": "T", "nombre": "Todos" },
     { "id": 12, "nombre": "Aprobado" },
     { "id": 10, "nombre": "Pendiente" },
-    { "id": 11, "nombre": "Rechazado" },
+    { "id": 1, "nombre": "Rechazado" },
   ];
 
   formGroup: FormGroup;
@@ -406,22 +406,10 @@ export class ComercialCicloVendasCotacoesListaComponent
       .subscribe(
         (response: any | JsonResponse[]) => {
            this.estado_oferta = [
-            {
-              "id": "T",
-              "nombre": "Todos"
-            },
-            {
-              "id": 1,
-              "nombre": "Pendiente"
-            },
-            {
-              "id": 2,
-              "nombre": "Aprobado"
-            },
-            {
-              "id": 3,
-              "nombre": "Rechazado"
-            },
+            { "id": "T", "nombre": "Todos" },
+            { "id": 12, "nombre": "Aprobado" },
+            { "id": 10, "nombre": "Pendiente" },
+            { "id": 11, "nombre": "Rechazado" },
           ]
         },
         (error: any) => {
