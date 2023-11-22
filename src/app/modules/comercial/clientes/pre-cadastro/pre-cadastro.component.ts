@@ -526,7 +526,7 @@ export class ComercialClientesPreCadastroComponent
       contacto: [null],
       razaoSocial: [null],
       nomeFantasia: [null],
-      nombre_factura: [null],
+      nombre_factura: [null, Validators.required],
       vendedor: [null, Validators.required],
       cnae: [null],
       email: [null,
@@ -535,10 +535,10 @@ export class ComercialClientesPreCadastroComponent
           Validators.maxLength(this.maxLengthRules.email),
         ],
       ],
-      telefone: [null],
-      celular: [null],
+      telefone: [null,  Validators.required],
+      celular: [null, Validators.required],
       direccion: [null],
-      tipopessoa: [null],
+      tipopessoa: [null, Validators.required],
       nombres_contacto: [null],
       apellido_contacto: [null],
       apellido2_contacto: [null],
@@ -551,7 +551,7 @@ export class ComercialClientesPreCadastroComponent
       titulo_ubicacion: [],
       ubicacion: this.formBuilder.array([]),
       contactos: this.formBuilder.array([]),
-      nombre_ciudad: [],
+      nombre_ciudad: [null, Validators.required],
       tipo_cliente: [0]
 
 

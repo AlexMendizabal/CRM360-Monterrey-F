@@ -24,12 +24,13 @@
                     <div class="form-group col">
                       <label class="font-weight-bold" for="quantidade">Cantidad</label>
                       <input type="number" [(ngModel)]="valorInput" id="quantidade" class="form-control" formControlName="quantidade"
-                        [ngClass]="onFieldError('quantidade') + ' ' + onFieldRequired(form.controls.quantidade)">
+                        [ngClass]="onFieldError('quantidade') + ' ' + onFieldRequired(form.controls.quantidade)"
+                        (keyup.enter)="onEnterKeyPress()">
                     </div>
                   </div>
                   <div class="form-row">
                     <div class="form-group col">
-                      <label for="preco1">Precio</label>
+                      <label for="preco1">Precio USD</label>
                       <input type="text" id="preco1" class="form-control" formControlName="preco1"
                         placeholder="USD. 0,00"
                         [ngClass]="onFieldError('preco1') + ' ' + onFieldRequired(form.controls.preco1)"

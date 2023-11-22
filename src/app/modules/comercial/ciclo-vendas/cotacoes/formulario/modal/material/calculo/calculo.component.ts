@@ -84,6 +84,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
 
   form: FormGroup;
 
+  enterKeyPressCount = 0;
+
   tipoCalculo: number;
   descPreco: string;
   descQtde: string;
@@ -550,4 +552,16 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       this.calculo.codItemPedidoCliente = this.form.value.codItemPedidoCliente,
       this.calculo.codProdutoCliente = this.form.value.codProdutoCliente
   }
+
+  onEnterKeyPress() {
+    if (this.enterKeyPressCount === 0) {
+        this.onCalcular();
+    } else if (this.enterKeyPressCount === 1) {
+        this.onSubmit();
+    } else {  
+        this.onSubmit();
+    }
+    this.enterKeyPressCount++;
+  }
+
 }

@@ -225,7 +225,7 @@ export class EditarClienteComponent implements OnInit {
 
         const indiceAleatorio = Math.floor(Math.random() * this.coloresDisponiblesContacto.length);
         const colorAleatorio = this.coloresDisponiblesContacto.splice(indiceAleatorio, 1)[0];
-        console.log(colorAleatorio);
+        //console.log(colorAleatorio);
         return colorAleatorio;
     }
 

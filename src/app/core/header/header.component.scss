@@ -11,11 +11,13 @@
     // #logo-manetoni{
     //   background-color: $orangeMtCorp;
     // }
-    .version{
+    .version {
       color: white;
     }
+
     .nav-item {
       margin: 0px 5px;
+
       .nav-link {
         align-items: center;
         background-color: transparent;
@@ -24,27 +26,32 @@
         color: rgba($orangeMtCorp, 0.75) !important;
         display: flex;
         font-size: 1rem;
-      position: relative;
+        position: relative;
         justify-content: center;
         height: 35px;
         padding: 0px !important;
         width: 35px;
+
         &:hover {
           background-color: rgba($white, 0.1);
           color: $white !important;
         }
+
         &:focus {
           outline: unset;
         }
       }
+
       .btn-group {
         border: unset !important;
         border-radius: unset !important;
       }
     }
+
     #spinner {
       display: flex;
       margin-right: 1.25rem;
+
       .spinner-border {
         border-width: 0.2rem;
         color: rgba($white, 0.75);
@@ -56,11 +63,78 @@
     }
   }
 }
+
 @media (min-width: 400px) and (max-width: auto) {
-  .navbar{
+  .navbar {
     padding: 0.4rem 1rem 0.4rem 3.5rem;
   }
-  
+
 }
 
+/* Estilos para el botón de notificaciones */
+.notifications-btn {
+  position: relative;
+  /* Posición relativa para posicionar el badge */
+  background-color: #3498db;
+  /* Color de fondo */
+  color: #ffffff;
+  /* Color del texto */
+  border: 1px solid #2980b9;
+  /* Borde */
+  transition: background-color 0.3s;
+  /* Transición suave del color de fondo */
+}
 
+.notifications-btn:hover {
+  background-color: #2980b9;
+  /* Color de fondo al pasar el ratón */
+}
+
+/* Estilos para el badge */
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #e74c3c;
+  /* Color de fondo del badge */
+  color: #ffffff;
+  /* Color del texto del badge */
+  padding: 3px 6px;
+  /* Espaciado interno */
+  border-radius: 50%;
+  /* Borde redondeado para el badge */
+}
+
+/* Estilos para cada elemento de notificación */
+.notification-item {
+  padding: 10px;
+  /* Espaciado interno */
+  border-bottom: 1px solid #ecf0f1;
+  /* Borde inferior */
+  transition: background-color 0.3s;
+  /* Transición suave del color de fondo */
+}
+
+.notification-item:hover {
+  background-color: #ecf0f1;
+  /* Color de fondo al pasar el ratón */
+}
+
+/* Estilos para el elemento de separador */
+.divider {
+  margin: 5px 0;
+  /* Espaciado exterior */
+}
+
+/* Estilos para el elemento de notificación vacía */
+.empty-notification {
+  padding: 10px;
+  color: #7f8c8d;
+  transition: background-color 0.3s;
+  /* Transición suave del color de fondo */
+}
+
+.empty-notification:hover {
+  background-color: #ecf0f1;
+  /* Color de fondo al pasar el ratón */
+}

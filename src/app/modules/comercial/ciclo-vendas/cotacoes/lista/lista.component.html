@@ -267,7 +267,7 @@
               <td class="hover">{{ pedido.lista_precio }}</td>
               <td class="hover">{{ pedido.modo_entrega }}</td>
               <td class="hover">{{ pedido.nombre_lista }}</td>
-              <td class="hover">
+              <td class="hover" tooltip="Observación: {{ pedido.descripcion }}">
                 <ng-container *ngIf="pedido.id_estado_oferta !== 1; else borradorEstado">
                   <i class="text-danger">CERRADO</i>
                 </ng-container>
@@ -275,10 +275,10 @@
                   <i class="text-primary">BORRADOR</i>
                 </ng-template>
               </td>
-              <td class="">
-                <a class="dropdown-item" routerLink="/pdf" (click)="onImprimir(pedido.id_oferta)"><i class="fas fa-print"></i><span class="text-uppercase">
+              <td class="text-center hover">
+                <a class="dropdown-item" routerLink="/pdf" (click)="onImprimir(pedido.id_oferta)"><i class="fas fa-file"></i><span class="text-uppercase">
                   PDF</span></a>
-                <a class="dropdown-item" routerLink="/vista" (click)="onVista(pedido.id_oferta)"><i class="fas fa-print"></i><span class="text-uppercase">
+                <a class="dropdown-item" routerLink="/vista" (click)="onVista(pedido.id_oferta)"><i class="fas fa-eye"></i><span class="text-uppercase">
                     Vista</span></a>
               </td>
               <!--

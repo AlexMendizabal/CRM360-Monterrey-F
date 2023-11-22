@@ -1521,7 +1521,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             telefono: formValue.telefonoCliente
 
           };
-
+          console.log(this.materiais);
           /* this.autorizacionService.showModal();  */
           /* console.log(dataCotizacion); */
 

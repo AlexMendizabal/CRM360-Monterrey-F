@@ -10,6 +10,8 @@ import { WindowService } from 'src/app/shared/services/core/window.service';
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { AdminModulosService } from 'src/app/modules/admin/modulos/services/modulos.service';
 import { ChangePasswordModalService } from '../change-password-modal/change-password-modal.service';
+import { NotificacionesService } from './notificaciones/notificaciones.service';
+
 
 @Component({
   selector: 'header',
@@ -29,6 +31,7 @@ export class HeaderComponent implements OnInit {
   modulos: any = [];
   modulosLoaded = false;
   modulosError = false;
+  notificaciones: any = [];
 
   constructor(
     private router: Router,
@@ -38,7 +41,8 @@ export class HeaderComponent implements OnInit {
     private pnotifyService: PNotifyService,
     private windowService: WindowService,
     private titleService: TitleService,
-    private changePasswordModalService: ChangePasswordModalService
+    private changePasswordModalService: ChangePasswordModalService,
+    //private notificacionesService: NotificacionesService
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -47,11 +51,40 @@ export class HeaderComponent implements OnInit {
     this.getCurrentUser();
     this.getClienteLogo();
     this.getModulos();
+    /* this.getNotificaciones(); */
   }
 
   getClienteLogo() {
     this.srcLogoCliente = `/assets/images/logo/clientes/${this.windowService.getHostnameLogo()}_branco.png`;
   }
+
+  /* getNotificaciones() {
+    this.notificacionesService.getNotificaciones();
+
+    this.notificacionesService
+
+      .getNotificaciones()
+      .pipe(
+        finalize(() => {
+        
+        })
+      )
+      .subscribe(
+        (response: any) => {
+
+          if (response.responseCode === 200) {
+            this.notificaciones = response.content;
+
+          } else if (response.response === 204) {
+          }
+        },
+        (error: any) => {
+          this.pnotifyService.notice('Ocurrio un error.');
+        }
+      );
+
+
+  } */
 
   onLogoClienteError(event: any) {
     this.showLogoCliente = false;
@@ -60,6 +93,28 @@ export class HeaderComponent implements OnInit {
   checkTipoAcessoUser() {
     return this.user.tipoAcesso == 'Externo' ? false : true;
   }
+
+  /* actualizarNotificacion(id) {
+    this.notificacionesService.updateNotificacion(id)
+      .pipe(
+        finalize(() => {
+          
+        })
+      )
+      .subscribe(
+        (response: any) => {
+
+          if (response.responseCode === 200) {
+            this.getNotificaciones();
+
+          } else if (response.response === 204) {
+          }
+        },
+        (error: any) => {
+          this.pnotifyService.notice('Ocurrio un error.');
+        }
+      );
+  } */
 
   getCurrentUser() {
     this.user = this.authService.getCurrentUser().info;

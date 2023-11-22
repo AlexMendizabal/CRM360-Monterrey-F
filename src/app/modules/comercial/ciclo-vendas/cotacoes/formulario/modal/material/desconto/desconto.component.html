@@ -49,7 +49,7 @@
                 formControlName="descuentoAutorizado"
                 [max]="maxValue"
                 [ngClass]="onFieldError('desconto') + ' ' + onFieldRequired(form.controls.desconto)" 
-                readonly 
+                [readonly]="isDescuentoAutorizadoDisabled()" 
                 >
             </div>
           </div>
@@ -63,7 +63,9 @@
                 formControlName="desconto"
                 currencyMask [options]="currencyMaskOptions"
                 [max]="maxValue"
-                [ngClass]="onFieldError('desconto') + ' ' + onFieldRequired(form.controls.desconto)">
+                [ngClass]="onFieldError('desconto') + ' ' + onFieldRequired(form.controls.desconto)"
+                (keyup.enter)="onEnterKeyPress()"
+                [disabled]="isDescuentoInputDisabled()" >
             </div>
           </div>
         </form>
@@ -80,7 +82,8 @@
     <button
       type="button"
       class="btn btn-success"
-      (click)="onSubmit()">
+      (click)="onSubmit()"
+      [disabled]="isConfirmarButtonDisabled()">
       Confirmar
     </button>
   </div>

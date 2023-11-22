@@ -68,12 +68,17 @@ export class VistaComponent implements OnInit, AfterViewInit {
     this.analiticos = this.resultFromParent.analitico;
     this.onClose = new Subject();
     this.imageSrc = this.sanitizer.bypassSecurityTrustUrl('assets/images/logo/logo-monterrey.png');
-
+    console.log('aqui',this.resultFromParent.oferta[0].estado_of);
     this.myForm = this.fb.group({
       id_oferta:  [this.resultFromParent.oferta[0].id_oferta],
       estadoOfert: [''],
       descripcion: ['']
     });
+   if(this.resultFromParent.oferta[0].estado_of == 3) {
+      this.showCierreButton = false;
+      this.showDescripcionCard = true;
+      this.showGuardarButton = true;
+    }
   }
 
   ngAfterViewInit(): void {

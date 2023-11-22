@@ -65,6 +65,7 @@ import { VistaComponent } from './vista/vista.component';
   templateUrl: './lista.component.html',
   styleUrls: ['./lista.component.scss'],
 })
+
 export class ComercialCicloVendasCotacoesListaComponent
   implements OnInit, OnDestroy {
   user = this.authService.getCurrentUser();
@@ -130,6 +131,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   resultFromParent: any;
   result: [];
   analiticos: any[];
+
 
   items: Array<any> = [];
   ofer: Array<any> = [];
@@ -431,7 +433,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.vendedoresService.getVendedores().subscribe((response: any) => {
       if (response.responseCode === 200) {
         this.vendedores = response.result;
-
+        console.log(response.result);
         this.vendedores.unshift({
           id: 0,
           nome: 'EXIBIR TODOS',
