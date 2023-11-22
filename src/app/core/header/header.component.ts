@@ -214,4 +214,29 @@ export class HeaderComponent implements OnInit {
   openModal(template: TemplateRef<any>) {
     this.changePasswordModalService.show(template);
   }
+
+  conexionSap(){
+    var params = {
+      Usuario: 'crm360',
+      Password: 'M1ddlewareCRM360$/',
+    };
+    this.authService.verificarConexion(params)
+    .subscribe(
+      (respuesta: any) => {
+        if (respuesta.CodigoRespuesta === 0) {
+          //console.log("viendo si hay conexion");
+          if (respuesta.Mensaje) {
+            ///respuesta['tokenSAP'] = respuesta.Mensaje;
+             this.pnotifyService.error(
+              'Conexion con middleware exitosa'
+            ); 
+          }
+        } else {
+          this.pnotifyService.error(
+            'Se ha producido un error al generar su acceso.'
+          );
+        }
+      }
+    );
+  }
 }
