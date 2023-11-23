@@ -432,7 +432,7 @@ export class ComercialCicloVendasCotacoesService {
 
   autorizaciones(data: any): Observable<Object>{
     return this.http
-      .post(`${this.API2}/registrar`, data)
+      .post(`${this.API2}/post_autorizaciones`, data)
       .pipe(take(1), retry(2));
   }
 

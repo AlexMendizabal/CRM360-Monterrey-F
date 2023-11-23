@@ -45,11 +45,24 @@
           </div>
           <div class="form-group col-lg-3">
             <label for="codVendedor">Vendedor</label>
-            <ng-select [searchable]="true" [clearable]="false" [items]="promotores" [virtualScroll]="true"
-            labelForId="promotor" bindLabel="nombre" bindValue="ID" formControlName="promotor"   
-              bindValue="id">
-            </ng-select>
+            <select class="form-control" name="codVendedor" id="codVendedor" formControlName="codVendedor">
+              <option  *ngFor="let vendedor of vendedores" [value]="vendedor.ID"> {{vendedor.nombre}}</option>
+            </select>
           </div>
+          <div class="form-group col-lg-4">
+            <label for="codVendedor">Clientes</label>
+            <select class="form-control" name=" " id="id_cliente" formControlName=" ">
+              <option  *ngFor="let pedido of dados" [value]="pedido.id_cliente"> {{ pedido.cliente | uppercase }}</option>
+            </select>
+          </div>
+          <div class="form-group " [ngClass]="{'col-lg-2': !filtroCotacoes , 'col-lg-1': filtroCotacoes}">
+            <label for="registros">Registros</label>
+            <select class="form-control custom-select" id="registros" formControlName="registros">
+              <option>100</option>
+              <option>200</option>
+              <option>300</option>
+            </select>
+          </div> 
         </div>
         <div class="form-row">
           <!-- <div class="form-group col-lg-3">
@@ -103,14 +116,6 @@
               <option>TODOS</option>
               <option value="Ativo">CERRADO</option>
               <option value="Inativo">BORRADOR</option>
-            </select>
-          </div>
-          <div class="form-group " [ngClass]="{'col-lg-2': !filtroCotacoes , 'col-lg-1': filtroCotacoes}">
-            <label for="registros">Registros</label>
-            <select class="form-control custom-select" id="registros" formControlName="registros">
-              <option>100</option>
-              <option>200</option>
-              <option>300</option>
             </select>
           </div>
         </div>

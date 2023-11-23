@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit {
     private windowService: WindowService,
     private titleService: TitleService,
     private changePasswordModalService: ChangePasswordModalService,
-    //private notificacionesService: NotificacionesService
+    private notificacionesService: NotificacionesService
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -51,14 +51,15 @@ export class HeaderComponent implements OnInit {
     this.getCurrentUser();
     this.getClienteLogo();
     this.getModulos();
-    /* this.getNotificaciones(); */
+    this.getNotificaciones();
+    /*   this.conexionSap(); */
   }
 
   getClienteLogo() {
     this.srcLogoCliente = `/assets/images/logo/clientes/${this.windowService.getHostnameLogo()}_branco.png`;
   }
 
-  /* getNotificaciones() {
+  getNotificaciones() {
     this.notificacionesService.getNotificaciones();
 
     this.notificacionesService
@@ -66,7 +67,7 @@ export class HeaderComponent implements OnInit {
       .getNotificaciones()
       .pipe(
         finalize(() => {
-        
+
         })
       )
       .subscribe(
@@ -74,8 +75,6 @@ export class HeaderComponent implements OnInit {
 
           if (response.responseCode === 200) {
             this.notificaciones = response.content;
-
-          } else if (response.response === 204) {
           }
         },
         (error: any) => {
@@ -84,7 +83,7 @@ export class HeaderComponent implements OnInit {
       );
 
 
-  } */
+  }
 
   onLogoClienteError(event: any) {
     this.showLogoCliente = false;
@@ -94,11 +93,11 @@ export class HeaderComponent implements OnInit {
     return this.user.tipoAcesso == 'Externo' ? false : true;
   }
 
-  /* actualizarNotificacion(id) {
+  actualizarNotificacion(id) {
     this.notificacionesService.updateNotificacion(id)
       .pipe(
         finalize(() => {
-          
+
         })
       )
       .subscribe(
@@ -107,14 +106,13 @@ export class HeaderComponent implements OnInit {
           if (response.responseCode === 200) {
             this.getNotificaciones();
 
-          } else if (response.response === 204) {
           }
         },
         (error: any) => {
           this.pnotifyService.notice('Ocurrio un error.');
         }
       );
-  } */
+  }
 
   getCurrentUser() {
     this.user = this.authService.getCurrentUser().info;
@@ -215,28 +213,60 @@ export class HeaderComponent implements OnInit {
     this.changePasswordModalService.show(template);
   }
 
-  conexionSap(){
-    var params = {
-      Usuario: 'crm360',
-      Password: 'M1ddlewareCRM360$/',
-    };
-    this.authService.verificarConexion(params)
-    .subscribe(
-      (respuesta: any) => {
-        if (respuesta.CodigoRespuesta === 0) {
-          //console.log("viendo si hay conexion");
-          if (respuesta.Mensaje) {
-            ///respuesta['tokenSAP'] = respuesta.Mensaje;
-             this.pnotifyService.error(
-              'Conexion con middleware exitosa'
-            ); 
+  conexionSap() {
+    this.authService.verificarConexion()
+      .subscribe(
+        (respuesta: any) => {
+          if (respuesta.CodigoRespuesta === 0) {
+            //console.log("viendo si hay conexion");
+            if (respuesta.Mensaje) {
+              respuesta['tokenSAP'] = respuesta.Mensaje;
+              this.pnotifyService.success(
+                'Conexion con middleware exitosa'
+              );
+              //console.log("respuesta exitosa con middleware");
+            }
+          } else {
+            this.pnotifyService.error(
+              'Se ha producido un error al generar su acceso.'
+            );
           }
-        } else {
-          this.pnotifyService.error(
-            'Se ha producido un error al generar su acceso.'
-          );
         }
-      }
-    );
+      );
   }
+
+  /*   conexionSap() {
+      var tiempo = 30;
+      this.authService.verificarConexion()
+        .subscribe(
+          (respuesta: any) => {
+            try {
+              if (respuesta.CodigoRespuesta === 0) {
+                if (respuesta.Mensaje) {
+                  this.pnotifyService.success('Conexion con middleware exitosa');
+                  //console.log("respuesta exitosa con middleware");
+                }
+              } else {
+                this.pnotifyService.error('Se ha producido un error al generar su acceso.');
+              }
+            } catch (error) {
+              console.error('Error en el bloque try:', error);
+              this.handleErrorResponse(error);
+            }
+          },
+          (error: any) => {
+            console.error('Error en la suscripción:', error);
+            this.handleErrorResponse(error);
+          }
+        );
+    }
+    
+    private handleErrorResponse(error: any) {
+      console.error('Error en la llamada al servicio:', error);
+    
+      // Por ejemplo, mostrar un mensaje de error al usuario.
+      //this.pnotifyService.error('Error en la conexion a SAP. Por favor, inténtelo de nuevo.');
+    } */
+
+
 }

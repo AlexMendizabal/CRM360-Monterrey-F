@@ -146,10 +146,10 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
             console.log(response);
           }
         );
-      //this.onClose();
+      this.onClose();
     }
     else {
-     //this.onClose();
+      this.onClose();
     }
   }
 

@@ -740,10 +740,10 @@ export class ComercialClientesPreCadastroComponent
 
   onNavigateDetail(): void {
     if (this.dadosCliente.podeAcessar == 1) {
-      this.onCloseDetails();
+      /* this.onCloseDetails();
       this.router.navigate(['../detalhes', this.dadosCliente.codCliente], {
         relativeTo: this.activatedRoute,
-      });
+      }); */
     } else {
       this.pnotifyService.notice('Este cliente no pertenece a su cartera');
     }

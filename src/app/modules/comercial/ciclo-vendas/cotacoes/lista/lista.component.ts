@@ -232,6 +232,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.onDetailPanelEmitter();
     this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente'];
     this.search(null);
+    this.getVendedores();
     this.formGroup = this.formBuilder.group({
       codSituacao: [this.defaultSelection]
     });
@@ -432,12 +433,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   getVendedores(): void {
     this.vendedoresService.getVendedores().subscribe((response: any) => {
       if (response.responseCode === 200) {
-        this.vendedores = response.result;
-        console.log(response.result);
-        this.vendedores.unshift({
-          id: 0,
-          nome: 'EXIBIR TODOS',
-        });
+        this.vendedores = response.data;
       }
     });
   }
