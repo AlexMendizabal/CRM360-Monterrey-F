@@ -41,6 +41,12 @@
                                                 id="nit">
                                         </div>
                                         <div class="col-md-6">
+                                            <label class="mb-0 mt-2"> <strong> Razon social </strong> </label>
+                                            <input type="text" class="form-control"
+                                                value="{{datos_cliente.datos_cliente.razon_social }}" formControlName="razon_social"
+                                                id="razon_social">
+                                        </div>
+                                        <div class="col-md-6">
                                             <label class="mb-0 mt-2"> <strong> Nombre completo </strong> </label>
                                             <input type="text" class="form-control"
                                                 value="{{datos_cliente.datos_cliente.nombre }}" formControlName="nombre"
@@ -108,6 +114,16 @@
                                                 </option>
                                             </select>
                                         </div>
+                                        <div class="col-md-6">
+                                            <label class="mb-0 mt-2"> <strong> Estado </strong> </label>
+                                            <select name="id_estado" class="form-control" id="id_estado">
+                                              <option *ngFor="let estado of estados | keyvalue" [value]="estado.key"
+                                                      [attr.selected]="estado.key === datos_cliente.datos_cliente.id_situacion ? true : null">
+                                                {{ estado.value }}
+                                              </option>
+                                            </select>
+                                          </div>
+                                          
                                     </div>
                                 </div>
                             </div>

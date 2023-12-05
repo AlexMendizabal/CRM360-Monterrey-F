@@ -47,4 +47,11 @@ export class NotificacionesService {
             .post(this.BASE_URL+ `/core/notificaciones/update`, param)
             .pipe(take(1), retry(2));
     }
+
+    postLeerNotificaciones(params: any) {
+        console.log(params);
+        return this.http
+            .post(this.BASE_URL+ `/core/notificaciones/leerNotificaciones`, params)
+            .pipe(take(1), retry(2));
+    }
 }

@@ -134,6 +134,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   vendedores: any = [];
   dataInicial:  Array<any> = []; //////aumente esto para usar en la funcion getFilterValues
   dataFinal: Array<any> = []; //////aumente esto para usar en la funcion getFilterValues
+  listaEjecutivo: any[] = [];
   totalMateriales: Array<any> = [];
 
   dataFromParent: any;
@@ -231,9 +232,10 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.titleService.setTitle('Autorizaciones');
     this.onDetailPanelEmitter();
    //this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente'];
-   this.getVendedores();
+    //this.getVendedores();
     this.getDatosAutorizaciones();
     this.search(null);
+    this.getTodosVendedores();
   }
 
   ngOnDestroy(): void {
@@ -381,7 +383,7 @@ export class ComercialCicloVendasCotacoesListaComponent
         }
       }
     });
-  }
+  } 
 
   getVinculoOperadores(): void {
     this.vendedoresService.getVinculoOperadores().subscribe((response: any) => {
@@ -918,10 +920,11 @@ onVista(id_oferta: number): void {
           });
 
           this.modalRef2.content.onClose.subscribe(result => {
-            console.log('Modal closed with result:', result);
+            //console.log('Modal closed with result:', result);
           });
         } else {
           this.pnotifyService.error();
+          //console.log(this.vendedores);
         }
       },
       (error: any) => {
@@ -933,5 +936,17 @@ onVista(id_oferta: number): void {
       }
     );
 }
+
+  getTodosVendedores(): void {
+    this.cotacoesService.getTodosVendedores().subscribe(
+      (response: any) => {
+        this.vendedores = response.data;
+        //console.log(this.vendedores);
+      },
+      (error: any) => {
+
+      }
+    );
+  }
 
 }

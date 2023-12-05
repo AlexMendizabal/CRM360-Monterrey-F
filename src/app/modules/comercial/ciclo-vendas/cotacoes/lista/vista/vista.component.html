@@ -78,6 +78,10 @@
                             <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].nombre_modo_entrega}}"
                               class="form-control" readonly>
                           </div>
+                          <div class="col-md-3" *ngIf="resultFromParent.oferta[0].descripcion !== undefined && resultFromParent.oferta[0].descripcion !== null">
+                            <label for="">Motivo de Cierre:</label>
+                            <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].descripcion }}" class="form-control" readonly>
+                        </div>                                                
                         </div>
                       </div>
                     </div>
@@ -229,7 +233,7 @@
                   <div class="col-md-3">
                     <label for="">perdió la venta:</label>
                     <select class="form-control" formControlName="estadoOfert">
-                      <option value="" disabled selected>Selecciona una opción</option>
+                      <option value="" disabled selected>Selecciona una opción   </option>
                       <option *ngFor="let item of cierre_oferta" [value]="item.id">{{ item.descripcion }}</option>
                     </select>
                   </div>

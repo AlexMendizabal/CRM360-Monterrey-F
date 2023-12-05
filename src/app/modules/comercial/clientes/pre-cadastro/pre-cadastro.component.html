@@ -80,7 +80,7 @@
           </div> -->
           <div class="form-group col-md-6">
             <label for="celular">Celular</label>
-            <input type="text" class="form-control" id="celular" formControlName="celular" (input)="onInput()"
+            <input type="number" class="form-control" id="celular" formControlName="celular" (input)="onInput()"
               [ngClass]="onFieldError('celular') + ' ' + onFieldRequired('celular')">
             <invalid-form-control [show]="onFieldInvalid('celular') == 'required'"
               message="celular es obligatorio."></invalid-form-control>
@@ -98,7 +98,7 @@
           </div>
           <div class="form-group col-md-6">
             <label for="telefone">Telefono</label>
-            <input type="text" class="form-control" id="telefone" formControlName="telefone" (input)="onInput()"
+            <input type="number" class="form-control" id="telefone" formControlName="telefone" (input)="onInput()"
               [ngClass]="onFieldError('telefone') + ' ' + onFieldRequired('telefone')">
             <invalid-form-control [show]="onFieldInvalid('telefone') == 'required'"
               message="Telefono es obligatorio."></invalid-form-control>

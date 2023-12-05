@@ -80,14 +80,12 @@
             <option value="T">Todos</option>
           </select>
         </div>
-        <div class="form-group col-lg-3">
+        <!-- <div class="form-group col-lg-3">
           <label for="setorAtividade">Sector empresarial</label>
           <ng-select [searchable]="true" [clearable]="false" [items]="setorAtividades" [virtualScroll]="true"
             labelForId="setorAtividade" bindLabel="descricao" bindValue="id" formControlName="setorAtividade">
           </ng-select>
-        </div>
-      </div>
-      <div class="form-row">
+        </div> -->
         <div class="form-group col-lg-3 mb-lg-0">
           <label for="tipoPessoa">Tipo de persona</label>
           <select class="form-control custom-select" id="tipoPessoa" formControlName="tipoPessoa">
@@ -96,6 +94,9 @@
             <option value="T">Todos</option>
           </select>
         </div>
+      </div>
+      <div class="form-row">
+        
         <!-- <div class="form-group col-lg-3 mb-lg-0">
           <label for="grupoEconomico">Esta en grupo economico</label>
           <select
@@ -208,6 +209,12 @@
             <td class="hover" (click)="viewRegister(cliente)" *ngIf="!showDetailPanel">
               {{ cliente.razaoSocial | uppercase }}
             </td>
+            <td>
+              <a tooltip="ir a oferta" href="http://localhost:4200/#/comercial/ciclo-vendas/23/cotacoes-pedidos/novo/1">
+                <i class="fas fa-random"></i>
+              </a>
+            </td>
+            
             <td>
               <span tooltip="Datos registrados" placement="left" container="body">
                 <button type="button" class="btn-icon-sm" (click)="viewDetails(cliente)">

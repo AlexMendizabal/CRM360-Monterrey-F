@@ -25,7 +25,7 @@
                       <label class="font-weight-bold" for="quantidade">Cantidad</label>
                       <input type="number" [(ngModel)]="valorInput" id="quantidade" class="form-control" formControlName="quantidade"
                         [ngClass]="onFieldError('quantidade') + ' ' + onFieldRequired(form.controls.quantidade)"
-                        (keyup.enter)="onEnterKeyPress()">
+                        (keyup.enter)="onEnterKeyPress()" min="0">
                     </div>
                   </div>
                   <div class="form-row">

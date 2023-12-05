@@ -117,6 +117,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
 
   onSubmit() {
     if (this.checkoutForm.value !== undefined && this.checkoutForm.value !== null) {
+      console.log('Llega con autorizacion',this.checkoutForm.value);
       //this.checkoutForm.reset();
       this.id_oferta = this.dataCotacao.id_oferta;
       this.fecha = this.dataCotacao.fecha_inicial;
@@ -146,10 +147,10 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
             console.log(response);
           }
         );
-      this.onClose();
+      //this.onClose();
     }
     else {
-      this.onClose();
+      //this.onClose();
     }
   }
 

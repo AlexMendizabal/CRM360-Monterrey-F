@@ -269,8 +269,8 @@ export class ComercialClientesPreCadastroComponent
         /*  this.form.controls['direccion'].setValue(
             'Error al obtener la dirección'
          ); */
-/*       });
-  } */ 
+  /*       });
+    } */
 
   /* public obtenerDireccion(latitud: number, longitud: number): Promise<string> {
     return fetch(
@@ -443,22 +443,28 @@ export class ComercialClientesPreCadastroComponent
 
   openModalUbicacion(template: TemplateRef<any>, index: number, tipo: number): void {
 
-    this.indice = index;
-    if (tipo === 1) {
-      this.tipo_peticion = tipo;
-      this.latitud = this.contactoFormularios[index].latitude_contacto;
-      this.longitud = this.contactoFormularios[index].longitude_contacto;
-    } else if (tipo === 2) {
-      this.tipo_peticion = tipo;
-      this.latitud = this.ubicacionFormularios[index].latitud
-      this.longitud = this.ubicacionFormularios[index].longitud;
-    }
-    //console.log(this.latitud);
+    if(this.form.value.vendedor > 0){
+      this.indice = index;
+      if (tipo === 1) {
+        this.tipo_peticion = tipo;
+        this.latitud = this.contactoFormularios[index].latitude_contacto;
+        this.longitud = this.contactoFormularios[index].longitude_contacto;
+      } else if (tipo === 2) {
+        this.tipo_peticion = tipo;
+        this.latitud = this.ubicacionFormularios[index].latitud
+        this.longitud = this.ubicacionFormularios[index].longitud;
+      }
+      //console.log(this.latitud);
+  
+      this.modalRef = this.modalService.show(template, {
+        animated: false,
+        class: 'modal-md',
+      });
 
-    this.modalRef = this.modalService.show(template, {
-      animated: false,
-      class: 'modal-md',
-    });
+    }else{
+      this.pnotifyService.notice('Porfavor seleccione un vendedor.');
+    }
+
 
 
 
@@ -489,7 +495,7 @@ export class ComercialClientesPreCadastroComponent
     //console.log(event.tipo)
 
     if (event.tipo === 1) {
-      
+
       this.latitud_contacto_array = event.latitud;
       this.longitud_contacto_array = event.longitud;
       this.direccion_contacto_array = event.direccion;
@@ -499,7 +505,7 @@ export class ComercialClientesPreCadastroComponent
       this.contactoFormularios[event.index].direccion_contacto = this.direccion_contacto_array;
 
     } else if (event.tipo === 2) {
-   
+
 
       this.latitud = event.latitud;
       this.longitud = event.longitud;
@@ -535,7 +541,7 @@ export class ComercialClientesPreCadastroComponent
           Validators.maxLength(this.maxLengthRules.email),
         ],
       ],
-      telefone: [null,  Validators.required],
+      telefone: [null, Validators.required],
       celular: [null, Validators.required],
       direccion: [null],
       tipopessoa: [null, Validators.required],
@@ -621,7 +627,9 @@ export class ComercialClientesPreCadastroComponent
         celular: this.form.value.celular,
         ubicacion: data.ubicacion, // Asigna los datos de ubicación directamente aquí
         contactos: data.contactos,
-        id_tipo_cliente: 0
+        id_tipo_cliente: 0,
+        frontend: 1
+
 
       }; /* console.log('Datos antes de enviarlos:', formObj);*/
       this.clientesService
@@ -636,16 +644,16 @@ export class ComercialClientesPreCadastroComponent
         .subscribe(
           (response: any) => {
 
-            if (response.response === 200) {
-              this.pnotifyService.success('Cliente registrado.');
+            if (response.response === 200 || response.response === 202) {
+              this.pnotifyService.success(response.detalle);
               this.formChanged = false;
               this.router.navigate(['../cadastro', response.result], {
                 relativeTo: this.activatedRoute,
               });
-            } else if (response.response === 204) {
-              this.pnotifyService.notice('No se registro.');
-            } else {
-              this.pnotifyService.notice(` ${response.detalle}`);
+              this.form.reset()
+            }
+            else if (response.response === 204) {
+              this.pnotifyService.notice(response.detalle);
             }
           },
           (error: any) => {
@@ -654,7 +662,6 @@ export class ComercialClientesPreCadastroComponent
         );
 
     }
-    this.form.reset()
   }
 
   setType(type: string) {

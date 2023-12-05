@@ -80,8 +80,11 @@ import { ComercialCicloVendasCotacoesFormularioModalDuplicatasService } from './
 import { ComercialCicloVendasCotacoesFormularioModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
 import { ComercialCicloVendasCotacoesFormularioModalFinalizacaoService } from './modal/finalizacao/finalizacao.service';
 import { ComercialCicloVendasCotacoesFormularioModalSelecionarComponent } from './modal/cliente/selecionar/selecionar.component';
+import { ComercialCicloVendasCotacoesFormularioModalAgregarComponent } from './modal/cliente/agregar/agregar.component';
+
 import { ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent } from '../formulario/modal/material/ubicacion/ubicacion.component';
 import { ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent } from './modal/material/autorizar/autorizar.component';
+import {PreCadastroUbicacionContactosComponent} from '../formulario/modal/cliente/agregar/ubicacion/ubicacion.component';
 
 
 import { AgmCoreModule } from '@agm/core';
@@ -119,6 +122,8 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
     ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent,
     ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent,
+    ComercialCicloVendasCotacoesFormularioModalAgregarComponent,
+    PreCadastroUbicacionContactosComponent
   ],
   imports: [
     CommonModule,
@@ -175,6 +180,8 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
     ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent,
     ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent,
+    ComercialCicloVendasCotacoesFormularioModalAgregarComponent,
+    PreCadastroUbicacionContactosComponent
 
 
 
@@ -201,6 +208,8 @@ import { AgmCoreModule } from '@agm/core';
     ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
     ComercialCicloVendasCotacoesFormularioModalMaterialAutorizarComponent,
     ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionComponent,
+    ComercialCicloVendasCotacoesFormularioModalAgregarComponent,
+    PreCadastroUbicacionContactosComponent
 
 
 

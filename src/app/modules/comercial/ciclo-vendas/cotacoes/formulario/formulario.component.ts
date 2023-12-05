@@ -77,6 +77,9 @@ import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/
 import { ComercialService } from '../../../comercial.service';
 import { timeStamp } from 'console';
 import { ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionService } from '../formulario/modal/material/ubicacion/ubicacion.service';
+import { ComercialClientesCadastroDadosFaturamentoFormularioService } from '../../../clientes/cadastro/dados-faturamento/formulario/formulario.service';
+
+
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-formulario',
@@ -168,11 +171,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   pesoTotal: number;
   cantidadTotal: number;
   descuentoTotal: number;
+  nombreClienteNoTieneInformacion: boolean;
 
   latitud: number;
   longitud: number;
   id_centro_logistico: number;
-  codigoRubro = 0;
+  codigoRubro : any;
   valorIcmsSt: number;
   locaisEntrega: Array<any> = [];
   locaisEntregaLoader: boolean;
@@ -242,6 +246,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   id_forma_contacto = 0;
   centrosLogisticos: any[] = [];
   swExisteCliente = true;
+  ciudades: any = [];
 
 
   constructor(
@@ -279,7 +284,9 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     private bsModalRef: BsModalRef,
     private router: Router,
     private comercialService: ComercialService,
-    private ubicacionService: ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionService
+    private ubicacionService: ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionService,
+    private dadosFaturamentoService: ComercialClientesCadastroDadosFaturamentoFormularioService
+
 
 
 
@@ -304,7 +311,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.getTituloEndereco();
     this.detalhesCodCliente.NM_CLIE = this.activatedRoute.snapshot.queryParams.codCliente;
     this.getClientes(this.detalhesCodCliente);
-
+    this.getCiudades();
     this.getListarPrecios();
     this.getTodosVendedores();
     this.getCentrosLogisticos();
@@ -313,6 +320,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       { id: 1, nombre: 'entrega en almacen' },
       { id: 2, nombre: 'entrega en obra ' }
     ];
+    
+    //this.form.controls.codEndereco.setValue(1);
     this.getIdOferta();
     // console.log(this.swExisteCliente);
     /*     this.swExisteCliente = true;
@@ -320,6 +329,15 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
     /*   this.form.controls.codigoCliente.setValue('Código'); */
 
+  }
+
+  getCiudades() {
+    this.dadosFaturamentoService.getCiudades()
+      .subscribe((response: JsonResponse) => {
+        if (response.responseCode == 200) {
+          this.ciudades= response.result
+        }
+      });
   }
 
   getCarteira(action: string) {
@@ -601,6 +619,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           this.form.controls.codigo_cliente.setValue(event.codigo_cliente);
           this.form.controls.telefonoCliente.setValue(event.telefono);
           this.form.controls.celular.setValue(event.celular);
+          this.form.controls.celularcontacto.setValue(event.celularcontacto);
 
           this.form.controls.nombreTipo.setValue(event.nombreTipo);
           this.form.controls.id_tipo_cliente.setValue(event.tipoCliente);
@@ -1825,13 +1844,14 @@ export class ComercialCicloVendasCotacoesFormularioComponent
               _contatos[i].nomeCompleto.length > 1
             ) {
               contatos.push({
+              
                 codContato: _contatos[i].id,
                 nomeContato: _contatos[i].nomeCompleto,
               });
             }
           }
           this.contatos = contatos;
-          // console.log(contatos);
+          console.log("contactos",contatos);
         }
       });
   }

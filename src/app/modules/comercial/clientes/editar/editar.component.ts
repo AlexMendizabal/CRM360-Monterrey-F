@@ -95,6 +95,7 @@ export class EditarClienteComponent implements OnInit {
             nit: [''],
             nombre: [''],
             nombre_factura: [''],
+            razon_social:[''],
             id_tipo_persona: [],
             email: [''],
             telefono: [''],
@@ -315,6 +316,7 @@ export class EditarClienteComponent implements OnInit {
     }
 
     actualizarCliente() {
+        
         // @ts-ignore: Ignorar error TS2339
         var idClienteInput = document.getElementById('id_cliente').value;
         // @ts-ignore: Ignorar error TS2339
@@ -339,6 +341,23 @@ export class EditarClienteComponent implements OnInit {
         var tipoClienteInput = document.getElementById('id_tipo_cliente').value;
         // @ts-ignore: Ignorar error TS2339
         var idVendedorInput = document.getElementById('id_vendedor').value;
+        // @ts-ignore: Ignorar error TS2339
+        var idRazonSocialInput = document.getElementById('razon_social').value;
+        // @ts-ignore: Ignorar error TS2339
+        var idRubroInput = document.getElementById('id_rubro').value;
+
+        const tipoPessoaOptions = {
+            S: 'Sociedades',
+            P: 'Privado',
+            G: 'Gobierno',
+            E: 'Empleado'
+          };
+          const estados ={
+            1: 'Activo',
+            2: 'Inactivo'
+          }
+          const tipopersona = tipoPessoaOptions[idTipoPersonaInput];
+
 
         const ubicacion = this.datos_cliente.datos_direccion;
         const contactos = this.datos_cliente.datos_contacto
@@ -347,8 +366,10 @@ export class EditarClienteComponent implements OnInit {
             'id_cliente': idClienteInput,
             'nit': nitInput,
             'ci': ciInput,
+            'razon_social': idRazonSocialInput,
             'nombres': nombreInput,
             'tipo_pessoa': idTipoPersonaInput,
+            'tipo_persona': tipopersona,
             'id_vendedor': idVendedorInput,
             'situacion': 1,
             'telefono': telefonoInput,
@@ -357,7 +378,8 @@ export class EditarClienteComponent implements OnInit {
             'email': emailInput,
             'id_tipo_cliente': tipoClienteInput,
             'ubicacion': ubicacion,
-            'contactos': contactos
+            'contactos': contactos,
+            'id_rubro': idRubroInput,
         };
         this.enviarPeticion(data);
     }

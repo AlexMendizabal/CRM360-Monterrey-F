@@ -1,0 +1,52 @@
+<div class="modal-content" [hidden]="!showModal">
+    <div class="modal-header">
+        <h4 class="mtc-title mb-auto">Ubicación de contacto</h4>
+        <button type="button" class="close" (click)="onClose()">
+            <span aria-hidden="true" *ngIf="!loaderModal">&times;</span>
+            <div class="spinner-border spinner-border-sm text-dark ml-auto" *ngIf="loaderModal"></div>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col">
+                <form [formGroup]="form" autocomplete="off">
+                    <div class="row">
+                        <div class="form-group col-lg-2">
+                            <label for="codOrigemContato">Latitud</label>
+                            <input type="text" class="form-control" formControlName="latitud" readonly />
+                        </div>
+                        <div class="form-group col-lg-2">
+                            <label for="codOrigemContato">Longitud</label>
+                            <input type="text" class="form-control" formControlName="longitud" readonly />
+                        </div>
+                        <div class="form-group col-lg-8">
+                            <label for="codOrigemContato">Dirección</label>
+                            <input type="text" class="form-control" formControlName="direccion" readonly />
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="codOrigemContato">Seleccione en el mapa</label>
+
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="16"
+                                    class="embed-responsive-item" (mapClick)="actualizarMarcador($event)">
+                                    <agm-marker [latitude]="latitud" [longitude]="longitud"
+                                        (markerDragEnd)="actualizarDireccion($event)">
+                                    </agm-marker>
+                                </agm-map>
+                                <div id="map-zoom-control" class="map-control"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="onClose()">
+            Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="onSubmit()">
+            Confirmar
+        </button>
+    </div>
+</div>

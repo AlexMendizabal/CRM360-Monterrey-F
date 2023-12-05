@@ -44,7 +44,7 @@ export class AuthService {
 
   loginSAP(data: any): Observable<any> {
     this.hasSession = true;
-    return this.http.post(`http://192.168.0.123:4100/api/Login`, data).pipe(take(1), retry(2));
+  return this.http.post(`http://192.168.0.123:4100/api/Login`, data).pipe(take(1), retry(2));
   }
   
   verificarConexion(): Observable<any> {
