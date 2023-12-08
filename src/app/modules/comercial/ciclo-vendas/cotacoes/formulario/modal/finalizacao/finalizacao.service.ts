@@ -82,24 +82,26 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
       )
       .subscribe(
         (response: JsonResponse) => {
+          console.log(response);
           this.eventDirty.emit(true)
           // @ts-ignore: Ignorar error TS2339
-          if (response.responseCode == 200) {
-            /* dataCotacao.carrinho = [];
-            dataCotacao.carrinho = response.data; */
-            setTimeout(()=>{
-              /* if (dataCotacao.id_oferta.codTipoFinalizacao >0) {
+          if (response.success) {
+             dataCotacao.carrinho = [];
+            dataCotacao.carrinho = response.data;
+            this.showModal(
+              ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
+              dataCotacao
+            );
+            /* setTimeout(()=>{
+               if (dataCotacao.id_oferta.codTipoFinalizacao >0) {
                 this.showModal(
                   ComercialCicloVendasCotacoesFormularioModalFinalizacaoPerdidaComponent,
                   dataCotacao
                 );
-              } else { */
-                this.showModal(
-                  ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
-                  dataCotacao
-                );
-             /*  } */
-            }, 200)
+              } else { 
+                //aqui va el modal de finalizar en la otra version
+               } 
+            }, 200) */
           } else {
             this.pnotifyService.error(response.mensagem);
           }

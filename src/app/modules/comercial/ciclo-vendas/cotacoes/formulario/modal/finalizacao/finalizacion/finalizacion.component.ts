@@ -22,6 +22,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   templateUrl: './finalizacion.component.html',
   styleUrls: ['./finalizacion.component.scss'],
 })
+
 export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
   implements OnInit, AfterViewChecked {
   items;
@@ -116,8 +117,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
   }
 
   onSubmit() {
+    console.log('Llega con autorizacion',this.checkoutForm);
     if (this.checkoutForm.value !== undefined && this.checkoutForm.value !== null) {
-      console.log('Llega con autorizacion',this.checkoutForm.value);
       //this.checkoutForm.reset();
       this.id_oferta = this.dataCotacao.id_oferta;
       this.fecha = this.dataCotacao.fecha_inicial;
@@ -150,6 +151,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
       //this.onClose();
     }
     else {
+      console.log('Llega sin autorizacion');
       //this.onClose();
     }
   }

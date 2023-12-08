@@ -135,6 +135,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   latitudPromedioContacto: number;
   longitudPromedioContacto: number;
   informacionMarcador: { ubicacion: string, direccion: string } | null = null;
+  informacionMarcadorContacto: { ubicacion: string, direccion: string } | null = null;
+
 
 
   constructor(
@@ -412,6 +414,16 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       // @ts-ignore: Ignorar error TS2339
       nombre: ubicacion.ubicacion || 'NO INFORMADO',
       direccion: ubicacion.direccion || 'NO INFORMADO'
+    };
+  }
+
+  verInformacionContacto(index: number) {
+    const ubicacion = this.contatos[index];
+    console.log(ubicacion);
+    this.informacionMarcadorContacto = {
+      // @ts-ignore: Ignorar error TS2339
+      nombre: ubicacion.contacto || 'NO INFORMADO',
+      direccion: ubicacion.direccion_contacto || 'NO INFORMADO'
     };
   }
 
@@ -782,9 +794,10 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     return borderClass;
   }
 
-  viewRegister(cliente: any): void {
+  viewRegister(cliente: any): void { 
+    console.log("acceso",cliente);
     if (cliente['podeAcessar'] == 1 || cliente['podeAcessar'] == 0) {
-      this.router.navigate(['../Detalles', cliente.codCliente], {
+      this.router.navigate(['../detalhes', cliente.codCliente], {
         relativeTo: this.activatedRoute,
 
       });

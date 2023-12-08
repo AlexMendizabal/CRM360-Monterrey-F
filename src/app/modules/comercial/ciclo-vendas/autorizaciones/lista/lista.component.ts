@@ -377,8 +377,9 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.vendedoresService.getVendedores()
     .subscribe({
       next: (response: JsonResponse) => {
-        //console.log(response);
+        console.log(response);
         if (response.hasOwnProperty('success') && response.success === true) {
+
           this.vendedores = response.data;
         }
       }
@@ -499,8 +500,8 @@ setOrderByModal(column: string) {
     }
     return 0;
   });
-
 }
+
 filterByFechaInicialStatus(status: string): void {
   this.formGroup.get('dataInicial').setValue(status);
   this.onFilter();

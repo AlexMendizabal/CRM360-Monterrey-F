@@ -1,257 +1,464 @@
 <div class="modal-content custom-modal">
-    <div class="modal-header">
-        <h6 class="modal-title pull-left">Editar datos de cliente </h6>
-        <div class="d-flex justify-content-center align-items-center">
-            <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+  <div class="modal-header">
+    <h6 class="modal-title pull-left">Editar datos de cliente</h6>
+    <div class="d-flex justify-content-center align-items-center">
+      <button
+        type="button"
+        class="close pull-right"
+        aria-label="Close"
+        (click)="onClose()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <div class="modal-body">
-        <div class="col-md-12">
-            <div class="form row">
-                <div class="col-md-12">
-                    <div class="col mb-0">
-                        <label for=""> <strong> DATOS DE CLIENTE </strong> </label>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <form [formGroup]="form">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="mb-0"> <strong> Codigo cliente </strong></label>
-
-                                            <input type="text" class="form-control" formControlName="codigo_cliente"
-                                                value="{{datos_cliente.datos_cliente.codigo_cliente }}"
-                                                id="codigo_cliente">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0"> <strong> CI </strong></label>
-                                            <input type="text" class="form-control"
-                                                value="{{datos_cliente.datos_cliente.carnet }}" formControlName="carnet"
-                                                id="carnet">
-                                            <input type="hidden" value="{{ datos_cliente.datos_cliente.id_cliente }}"
-                                                id="id_cliente">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0"> <strong> NIT </strong></label>
-                                            <input type="text" class="form-control"
-                                                value="{{datos_cliente.datos_cliente.nit }}" formControlName="nit"
-                                                id="nit">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0 mt-2"> <strong> Razon social </strong> </label>
-                                            <input type="text" class="form-control"
-                                                value="{{datos_cliente.datos_cliente.razon_social }}" formControlName="razon_social"
-                                                id="razon_social">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0 mt-2"> <strong> Nombre completo </strong> </label>
-                                            <input type="text" class="form-control"
-                                                value="{{datos_cliente.datos_cliente.nombre }}" formControlName="nombre"
-                                                id="nombre">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0 mt-2"> <strong> Nombre factura </strong> </label>
-                                            <input type="text" class="form-control"
-                                                value="{{datos_cliente.datos_cliente.nombre_factura  }}"
-                                                formControlName="nombre_factura" id="nombre_factura">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0 mt-2"> <strong> Tipo persona </strong> </label>
-                                            <select name="" id="id_tipo_persona" class="form-control">
-                                                <option *ngFor="let tipo of tipos_personas | keyvalue"
-                                                    [value]="tipo.key"
-                                                    [selected]="tipo.key === datos_cliente.datos_cliente.id_tipo_persona">
-                                                    {{ tipo.value }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0 mt-2"> <strong> Email </strong> </label>
-                                            <input type="text" class="form-control"
-                                                value="{{datos_cliente.datos_cliente.email }}" formControlName="email"
-                                                id="email">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0 mt-2"> <strong>Teléfono </strong> </label>
-                                            <input type="text" class="form-control"
-                                                value="{{datos_cliente.datos_cliente.telefono }}"
-                                                formControlName="telefono" id="telefono">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0 mt-2"> <strong> Celular </strong> </label>
-                                            <input type="text" class="form-control"
-                                                value="{{datos_cliente.datos_cliente.celular }}"
-                                                formControlName="celular" id="celular">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0 mt-2"> <strong> Rubro </strong> </label>
-                                            <select name="" id="id_rubro" class="form-control">
-                                                <option *ngFor="let cnae of cnaes" [value]="cnae.id_cnae"
-                                                    [selected]="cnae.id_cnae === datos_cliente.datos_cliente.id_rubro">
-                                                    {{ cnae.descripcion }}
-                                                </option>
-                                            </select>
-
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0 mt-2"> <strong> Tipo cliente </strong> </label>
-                                            <select name="vendedor" class="form-control" id="id_tipo_cliente">
-                                                <option *ngFor="let tipo of tipos_clientes" [value]="tipo.id"
-                                                    [selected]="tipo.id === datos_cliente.datos_cliente.id_tipo_cliente">
-                                                    {{ tipo.nombre_tipo }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0 mt-2"> <strong> Vendedor </strong> </label>
-                                            <select name="vendedor" class="form-control" id="id_vendedor">
-                                                <option *ngFor="let vendedor of vendedoresList" [value]="vendedor.ID"
-                                                    [selected]="vendedor.ID === datos_cliente.datos_cliente.id_vendedor">
-                                                    {{ vendedor.nombre }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="mb-0 mt-2"> <strong> Estado </strong> </label>
-                                            <select name="id_estado" class="form-control" id="id_estado">
-                                              <option *ngFor="let estado of estados | keyvalue" [value]="estado.key"
-                                                      [attr.selected]="estado.key === datos_cliente.datos_cliente.id_situacion ? true : null">
-                                                {{ estado.value }}
-                                              </option>
-                                            </select>
-                                          </div>
-                                          
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="col mb-0">
-                        <label for=""> <strong> DATOS DE CONTACTO </strong> </label>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <agm-map [latitude]="latitudPromedioContacto" [longitude]="longitudPromedioContacto" [zoom]="16"
-                                (mapClick)="actualizarMapaContacto($event)" class="embed-responsive-item">
-                                <agm-marker *ngFor="let ubicacion of datos_cliente.datos_contacto; let i = index"
-                                    [latitude]="ubicacion.latitude_contacto" [longitude]="ubicacion.longitude_contacto"
-                                    [iconUrl]="ubicacion.color" (markerClick)="actualizarMarcadorContacto(i)"
-                                    (markerDragEnd)="actualizarUbicacion(i, $event.coords.lat, $event.coords.lng)">
-                                </agm-marker>
-                            </agm-map>
-                            <div id="map-zoom-control" class="map-control"></div>
-                        </div>
-                    </div>
-                    <div style="max-height: 350px; overflow-y: auto;">
-                        <div class="form-group col-md-12"
-                            *ngFor="let contacto of datos_cliente.datos_contacto; let i = index">
-                            <div class="card">
-                                <div class="card-body">
-                                    <label>Título</label>
-                                    <div>
-                                        <input [(ngModel)]="contacto.contacto" class="form-control">
-                                    </div>
-                                    <label>Nombre</label>
-                                    <div>
-                                        <input [(ngModel)]="contacto.nombres_contacto" class="form-control">
-                                    </div>
-                                    <label>Dirección</label>
-                                    <div>
-                                        <input [(ngModel)]="contacto.direccion_contacto" class="form-control">
-                                    </div>
-                                    <label>Celular</label>
-                                    <div>
-                                        <input [(ngModel)]="contacto.celular_contacto" class="form-control">
-                                    </div>
-                                    <label>Teléfono</label>
-                                    <div>
-                                        <input [(ngModel)]="contacto.telefono_contacto" class="form-control">
-                                    </div>
-                                    <button (click)="eliminarContacto(i)"
-                                        class="btn btn-danger mt-2 text-center">Eliminar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12 text-center">
-                        <button (click)="agregarContacto()" class="btn btn-primary"
-                            [disabled]="datos_cliente.datos_contacto.length >= 5">Agregar Contacto</button>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="col mb-0">
-                        <label for=""> <strong> DATOS DE UBICACIÓN </strong> </label>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <agm-map [latitude]="latitudPromedio" [longitude]="longitudPromedio" [zoom]="16"
-                                (mapClick)="actualizarMapa($event)" class="embed-responsive-item">
-                                <agm-marker *ngFor="let ubicacion of datos_cliente.datos_direccion; let i = index"
-                                    [latitude]="ubicacion.latitud" [longitude]="ubicacion.longitud"
-                                    [iconUrl]="ubicacion.color" (markerClick)="actualizarMarcador(i)"
-                                    (markerDragEnd)="actualizarUbicacion(i, $event.coords.lat, $event.coords.lng)">
-                                </agm-marker>
-                            </agm-map>
-                            <div id="map-zoom-control" class="map-control"></div>
-                        </div>
-                    </div>
-                    <div style="max-height: 150px; overflow-y: auto;">
-                        <div class="form-group col-md-12"
-                            *ngFor="let direccion of datos_cliente.datos_direccion; let i = index">
-                            <div class="card">
-                                <div class="card-body">
-                                    <label>Título</label>
-                                    <div>
-                                        <input [(ngModel)]="direccion.ubicacion" class="form-control">
-                                    </div>
-                                    <label>Ciudad</label>
-                                    <div>
-                                        <select name="" id="" class="form-control"
-                                            (change)="actualizarCiudad(i, $event.target.value)">
-                                            <option value=""> SELECCIONAR...</option>
-                                            <option *ngFor="let ciudad of ciudades" [value]="ciudad.id"
-                                                [selected]="ciudad.id === direccion.id_ciudad">
-                                                {{ ciudad.nombre_ciudad }}
-                                            </option>
-
-                                        </select>
-                                    </div>
-                                    <label>Dirección</label>
-                                    <div>
-                                        <input [(ngModel)]="direccion.direccion" class="form-control">
-                                    </div>
-                                    <button (click)="eliminarUbicacion(i)"
-                                        class="btn btn-danger mt-2 text-center">Eliminar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12 text-center">
-                        <button (click)="agregarUbicacion()" class="btn btn-primary"
-                            [disabled]="datos_cliente.datos_direccion.length >= 5">Agregar Ubicación</button>
-                    </div>
-                </div>
-
-
-
-            </div>
-        </div>
-
-    </div>
+  </div>
+  <div class="modal-body">
     <div class="col-md-12">
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="onClose()">
-                Cancelar
-            </button>
-            <button type="submit" class="btn btn-success" (click)="actualizarCliente()">
-                Guardar
-            </button>
+      <div class="form row">
+        <div class="col-md-12">
+          <div class="col mb-0">
+            <label for=""> <strong> DATOS DE CLIENTE </strong> </label>
+          </div>
+          <div class="form-group col-md-12">
+            <form [formGroup]="form">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label class="mb-0">
+                        <strong> Codigo cliente </strong> <span class="text-danger">(*)</span> </label
+                      >
+
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="codigo_cliente"
+                        value="{{ datos_cliente.datos_cliente.codigo_cliente }}"
+                        id="codigo_cliente"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0"> <strong> CI </strong> <span class="text-danger">(*)</span> </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        value="{{ datos_cliente.datos_cliente.carnet }}"
+                        formControlName="carnet"
+                        id="carnet"
+                      />
+                      <input
+                        type="hidden"
+                        value="{{ datos_cliente.datos_cliente.id_cliente }}"
+                        id="id_cliente"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0"> <strong> NIT </strong> <span class="text-danger">(*)</span> </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        value="{{ datos_cliente.datos_cliente.nit }}"
+                        formControlName="nit"
+                        id="nit"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0 mt-2">
+                        <strong> Razon social </strong> <span class="text-danger">(*)</span> 
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        value="{{ datos_cliente.datos_cliente.razon_social }}"
+                        formControlName="razon_social"
+                        id="razon_social"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0 mt-2">
+                        <strong> Nombre completo </strong> <span class="text-danger">(*)</span> 
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        value="{{ datos_cliente.datos_cliente.nombre }}"
+                        formControlName="nombre"
+                        id="nombre"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0 mt-2">
+                        <strong> Nombre factura </strong> <span class="text-danger">(*)</span> 
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        value="{{ datos_cliente.datos_cliente.nombre_factura }}"
+                        formControlName="nombre_factura"
+                        id="nombre_factura"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0 mt-2">
+                        <strong> Tipo persona </strong> <span class="text-danger">(*)</span> 
+                      </label>
+                      <select name="" id="id_tipo_persona" class="form-control">
+                        <option
+                          *ngFor="let tipo of tipos_personas | keyvalue"
+                          [value]="tipo.key"
+                          [selected]="
+                            tipo.key ===
+                            datos_cliente.datos_cliente.id_tipo_persona
+                          "
+                        >
+                          {{ tipo.value }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0 mt-2">
+                        <strong> Email </strong> <span class="text-danger">(*)</span> 
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        value="{{ datos_cliente.datos_cliente.email }}"
+                        formControlName="email"
+                        id="email"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0 mt-2">
+                        <strong>Teléfono </strong> <span class="text-danger">(*)</span> 
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        value="{{ datos_cliente.datos_cliente.telefono }}"
+                        formControlName="telefono"
+                        id="telefono"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0 mt-2">
+                        <strong> Celular </strong> <span class="text-danger">(*)</span> 
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        value="{{ datos_cliente.datos_cliente.celular }}"
+                        formControlName="celular"
+                        id="celular"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0 mt-2">
+                        <strong> Rubro </strong> <span class="text-danger">(*)</span> 
+                      </label>
+                      <select name="" id="id_rubro" class="form-control">
+                        <option
+                          *ngFor="let cnae of cnaes"
+                          [value]="cnae.id_cnae"
+                          [selected]="
+                            cnae.id_cnae ===
+                            datos_cliente.datos_cliente.id_rubro
+                          "
+                        >
+                          {{ cnae.descripcion }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0 mt-2">
+                        <strong> Tipo cliente </strong> <span class="text-danger">(*)</span> 
+                      </label>
+                      <select
+                        name="vendedor"
+                        class="form-control"
+                        id="id_tipo_cliente"
+                      >
+                        <option
+                          *ngFor="let tipo of tipos_clientes"
+                          [value]="tipo.id"
+                          [selected]="
+                            tipo.id ===
+                            datos_cliente.datos_cliente.id_tipo_cliente
+                          "
+                        >
+                          {{ tipo.nombre_tipo }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0 mt-2">
+                        <strong> Vendedor </strong> <span class="text-danger">(*)</span> 
+                      </label>
+                      <select
+                        name="vendedor"
+                        class="form-control"
+                        id="id_vendedor"
+                      >
+                        <option
+                          *ngFor="let vendedor of vendedoresList"
+                          [value]="vendedor.ID"
+                          [selected]="
+                            vendedor.ID ===
+                            datos_cliente.datos_cliente.id_vendedor
+                          "
+                        >
+                          {{ vendedor.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="mb-0 mt-2">
+                        <strong> Estado </strong> <span class="text-danger">(*)</span> 
+                      </label>
+                      <select name="" id="id_estado" class="form-control">
+                        <option
+                          *ngFor="let estado of estados | keyvalue"
+                          [value]="estado.key"
+                          [selected]="
+                            estado.key ==
+                            datos_cliente.datos_cliente.id_situacion
+                          "
+                        >
+                          {{ estado.value }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
+        <div class="col-md-6">
+          <div class="col mb-0">
+            <label for=""> <strong> DATOS DE CONTACTO </strong> </label>
+          </div>
+          <div class="col-md-12 mb-3">
+            <div class="embed-responsive embed-responsive-16by9">
+              <agm-map
+                [latitude]="latitudPromedioContacto"
+                [longitude]="longitudPromedioContacto"
+                [zoom]="16"
+                (mapClick)="actualizarMapaContacto($event)"
+                class="embed-responsive-item"
+              >
+                <agm-marker
+                  *ngFor="
+                    let ubicacion of datos_cliente.datos_contacto;
+                    let i = index
+                  "
+                  [latitude]="ubicacion.latitude_contacto"
+                  [longitude]="ubicacion.longitude_contacto"
+                  [iconUrl]="ubicacion.color"
+                  (markerClick)="actualizarMarcadorContacto(i)"
+                  (markerDragEnd)="
+                    actualizarUbicacion(i, $event.coords.lat, $event.coords.lng)
+                  "
+                >
+                </agm-marker>
+              </agm-map>
+              <div id="map-zoom-control" class="map-control"></div>
+            </div>
+          </div>
+          <div style="max-height: 350px; overflow-y: auto">
+            <div
+              class="form-group col-md-12"
+              *ngFor="
+                let contacto of datos_cliente.datos_contacto;
+                let i = index
+              "
+            >
+              <div class="card">
+                <div class="card-body">
+                  <label>Título</label>
+                  <div>
+                    <input
+                      [(ngModel)]="contacto.contacto"
+                      class="form-control"
+                    />
+                  </div>
+                  <label>Nombre<span class="text-danger">(*)</span> </label>
+                  <div>
+                    <input
+                      [(ngModel)]="contacto.nombres_contacto"
+                      class="form-control"
+                    />
+                  </div>
+                  <label>Apellido paterno <span class="text-danger">(*)</span> </label>
+                  <div>
+                    <input
+                      [(ngModel)]="contacto.apellido_contacto"
+                      class="form-control"
+                    />
+                  </div>
+                  <label>Apellido materno <span class="text-danger">(*)</span> </label>
+                  <div>
+                    <input
+                      [(ngModel)]="contacto.apellido2_contacto"
+                      class="form-control"
+                    />
+                  </div>
+                  <label>Dirección <span class="text-danger">(*)</span> </label>
+                  <div>
+                    <input
+                      [(ngModel)]="contacto.direccion_contacto"
+                      class="form-control"
+                    />
+                  </div>
+                  <label>Celular <span class="text-danger">(*)</span> </label>
+                  <div>
+                    <input
+                      [(ngModel)]="contacto.celular_contacto"
+                      class="form-control"
+                    />
+                  </div>
+                  <label>Teléfono <span class="text-danger">(*)</span> </label>
+                  <div>
+                    <input
+                      [(ngModel)]="contacto.telefono_contacto"
+                      class="form-control"
+                    />
+                  </div>
+                  <button
+                    (click)="eliminarContacto(i)"
+                    class="btn btn-danger mt-2 text-center"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-12 text-center">
+            <button
+              (click)="agregarContacto()"
+              class="btn btn-primary"
+              [disabled]="datos_cliente.datos_contacto.length >= 5"
+            >
+              Agregar Contacto
+            </button>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="col mb-0">
+            <label for=""> <strong> DATOS DE UBICACIÓN </strong> </label>
+          </div>
+          <div class="col-md-12 mb-3">
+            <div class="embed-responsive embed-responsive-16by9">
+              <agm-map
+                [latitude]="latitudPromedio"
+                [longitude]="longitudPromedio"
+                [zoom]="16"
+                (mapClick)="actualizarMapa($event)"
+                class="embed-responsive-item"
+              >
+                <agm-marker
+                  *ngFor="
+                    let ubicacion of datos_cliente.datos_direccion;
+                    let i = index
+                  "
+                  [latitude]="ubicacion.latitud"
+                  [longitude]="ubicacion.longitud"
+                  [iconUrl]="ubicacion.color"
+                  (markerClick)="actualizarMarcador(i)"
+                  (markerDragEnd)="
+                    actualizarUbicacion(i, $event.coords.lat, $event.coords.lng)
+                  "
+                >
+                </agm-marker>
+              </agm-map>
+              <div id="map-zoom-control" class="map-control"></div>
+            </div>
+          </div>
+          <div style="max-height: 250px; overflow-y: auto">
+            <div
+              class="form-group col-md-12"
+              *ngFor="
+                let direccion of datos_cliente.datos_direccion;
+                let i = index
+              "
+            >
+              <div class="card">
+                <div class="card-body">
+                  <label>Título <span class="text-danger">(*)</span> </label>
+                  <div>
+                    <input
+                      [(ngModel)]="direccion.ubicacion"
+                      class="form-control"
+                    />
+                  </div>
+                  <label>Ciudad <span class="text-danger">(*)</span> </label>
+                  <div>
+                    <select
+                      name=""
+                      id=""
+                      class="form-control"
+                      (change)="actualizarCiudad(i, $event.target.value)"
+                    >
+                      <option value="">SELECCIONAR...</option>
+                      <option
+                        *ngFor="let ciudad of ciudades"
+                        [value]="ciudad.id"
+                        [selected]="ciudad.id === direccion.id_ciudad"
+                      >
+                        {{ ciudad.nombre_ciudad }}
+                      </option>
+                    </select>
+                  </div>
+                  <label>Dirección <span class="text-danger">(*)</span> </label>
+                  <div>
+                    <input
+                      [(ngModel)]="direccion.direccion"
+                      class="form-control"
+                    />
+                  </div>
+                  <button
+                    (click)="eliminarUbicacion(i)"
+                    class="btn btn-danger mt-2 text-center"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-12 text-center">
+            <button
+              (click)="agregarUbicacion()"
+              class="btn btn-primary"
+              [disabled]="datos_cliente.datos_direccion.length >= 5"
+            >
+              Agregar Ubicación
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="col-md-12">
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="onClose()">
+        Cancelar
+      </button>
+      <button
+        #botonGuardar
+        type="submit"
+        class="btn btn-success"
+        (click)="actualizarCliente()"
+      >
+        <span
+          *ngIf="isLoading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        {{ isLoading ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
+  </div>
 </div>

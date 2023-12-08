@@ -19,21 +19,21 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-3">
-            <label for="nit">CI</label>
+            <label for="nit">CI <span class="text-danger">(*)</span></label>
             <input type="text" class="form-control" id="ci" formControlName="ci" (input)="onInput()"
               [ngClass]="onFieldError('ci') + ' ' + onFieldRequired('ci')">
             <invalid-form-control [show]="onFieldInvalid('ci') == 'required'"
-              message="NIT inválido."></invalid-form-control>
+              message="CI inválido."></invalid-form-control>
           </div>
           <div class="form-group col-md-3">
-            <label for="nit">NIT</label>
+            <label for="nit">NIT <span class="text-danger">(*)</span> </label>
             <input type="text" class="form-control" id="nit" formControlName="nit" (input)="onInput()"
               [ngClass]="onFieldError('nit') + ' ' + onFieldRequired('nit')">
             <invalid-form-control [show]="onFieldInvalid('nit') == 'required'"
               message="NIT inválido."></invalid-form-control>
           </div>
           <div class="form-group col-md-3">
-            <label for="tipopessoa">Tipo de persona</label>
+            <label for="tipopessoa">Tipo de persona <span class="text-danger">(*)</span></label>
             <select class="form-control" id="tipopessoa" formControlName="tipopessoa" (change)="onInput()">
               <option value="S">Sociedades</option>
               <option value="P">Privado</option>
@@ -42,7 +42,7 @@
             </select>
           </div>
           <div class="form-group col-md-3">
-            <label for="vendedor"> Vendedor</label>
+            <label for="vendedor"> Vendedor <span class="text-danger">(*)</span></label>
             <ng-select [searchable]="true" [clearable]="false" [items]="vendedores" [virtualScroll]="true"
               labelForId="vendedor" bindLabel="nombre" bindValue="ID" formControlName="vendedor"
               (change)="changeVendedor($event.ID)">
@@ -51,7 +51,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="nome">Nombre completo</label>
+            <label for="nome">Nombre completo <span class="text-danger">(*)</span></label>
             <input type="text" class="form-control" id="nome" formControlName="nome" (input)="onInput()"
               [ngClass]="onFieldError('nome') + ' ' + onFieldRequired('nome')">
             <invalid-form-control [show]="onFieldInvalid('nome') == 'required'"
@@ -60,12 +60,12 @@
               [message]="maxLengthMessages.nome"></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
-            <label for="nomeFantasia">Nombre Factura</label>
+            <label for="nomeFantasia">Nombre Factura <span class="text-danger">(*)</span></label>
             <input type="text" class="form-control" id="nombre_factura" formControlName="nombre_factura"
               (input)="onInput()" [ngClass]="onFieldError('nomeFantasia') + ' ' + onFieldRequired('nomeFantasia')">
           </div>
           <div class="form-group col-md-6">
-            <label for="razaoSocial">Razon social</label>
+            <label for="razaoSocial">Razon social <span class="text-danger">(*)</span></label>
             <input type="text" class="form-control" id="razaoSocial" formControlName="razaoSocial" (input)="onInput()"
               [ngClass]="onFieldError('razaoSocial') + ' ' + onFieldRequired('razaoSocial')">
             <invalid-form-control [show]="onFieldInvalid('razaoSocial') == 'required'"
@@ -79,7 +79,7 @@
               [ngClass]="onFieldError('nomeFantasia') + ' ' + onFieldRequired('nomeFantasia')">
           </div> -->
           <div class="form-group col-md-6">
-            <label for="celular">Celular</label>
+            <label for="celular">Celular <span class="text-danger">(*)</span></label>
             <input type="number" class="form-control" id="celular" formControlName="celular" (input)="onInput()"
               [ngClass]="onFieldError('celular') + ' ' + onFieldRequired('celular')">
             <invalid-form-control [show]="onFieldInvalid('celular') == 'required'"
@@ -88,7 +88,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="email">E-mail</label>
+            <label for="email">E-mail <span class="text-danger">(*)</span></label>
             <input type="email" class="form-control" id="email" formControlName="email" (input)="onInput()"
               [ngClass]="onFieldError('email') + ' ' + onFieldRequired('email')">
             <invalid-form-control [show]="onFieldInvalid('email') == 'required'"
@@ -97,7 +97,7 @@
               [message]="maxLengthMessages.email"></invalid-form-control>
           </div>
           <div class="form-group col-md-6">
-            <label for="telefone">Telefono</label>
+            <label for="telefone">Telefono <span class="text-danger">(*)</span></label>
             <input type="number" class="form-control" id="telefone" formControlName="telefone" (input)="onInput()"
               [ngClass]="onFieldError('telefone') + ' ' + onFieldRequired('telefone')">
             <invalid-form-control [show]="onFieldInvalid('telefone') == 'required'"
@@ -106,7 +106,7 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-9">
-            <label for="cnae">Rubro (Actividad Economica)</label>
+            <label for="cnae">Rubro (Actividad Economica) <span class="text-danger">(*)</span></label>
             <ng-select [searchable]="true" [clearable]="false" [items]="cnaes" [virtualScroll]="true" labelForId="cnae"
               bindLabel="descripcion" bindValue="id_cnae" formControlName="cnae" (change)="onInput()"
               [ngClass]="onFieldError('cnae') + ' ' + onFieldRequired('cnae')">
@@ -115,7 +115,7 @@
               message="CNAE es obligatorio."></invalid-form-control>
           </div>
           <div class="form-group col-md-3">
-            <label for="cnae">Tipo de cliente</label>
+            <label for="cnae">Tipo de cliente <span class="text-danger">(*)</span></label>
             <!-- <ng-select [searchable]="true" [clearable]="false" [items]="tipos_clientes" [virtualScroll]="true"
               labelForId="cnae" bindLabel="nombre_tipo" bindValue="id" formControlName="tipo_cliente"
               [ngClass]="onFieldError('tipo_cliente') + ' ' + onFieldRequired('tipo_cliente')"
@@ -168,13 +168,13 @@
                   </button>
                 </div>
                 <div class="form-group col-md-9 mt-1">
-                  <label for="titulo_ubicacion">Nombre de ubicacion</label>
+                  <label for="titulo_ubicacion">Nombre de ubicacion <span class="text-danger">(*)</span></label>
                   <input type="text" class="form-control" id="titulo_ubicacion" formControlName="titulo_ubicacion"
                     (input)="onInput()" [value]="ubicacionForm.ubicacion"
                     (ngModelChange)="actualizarPosicion($event, i)">
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="ciudadUbi">Ciudad</label>
+                  <label for="ciudadUbi">Ciudad <span class="text-danger">(*)</span></label>
                   <ng-select [searchable]="true" [clearable]="false" [items]="ciudades" [virtualScroll]="true"
                     (change)="cambiarCiudad($event.id, i)" labelForId="ciudad" bindLabel="nombre_ciudad" bindValue="id"
                     formControlName="nombre_ciudad"
@@ -189,7 +189,7 @@
 
                 </div>
                 <div class="form-group col-md-12 " >
-                  <label for="direccion">Direccion</label>
+                  <label for="direccion">Direccion <span class="text-danger">(*)</span></label>
                   <input type="text" class="form-control" id="direccion" formControlName="" (input)="onInput()"
                     [(ngModel)]="ubicacionForm.direccion" [value]="ubicacionForm.direccion">
                 </div>
@@ -229,44 +229,44 @@
                       </button>
                     </div>
                     <div class="form-group col-md-3 mt-2">
-                      <label for="titulo_contacto">TÍTULO DE CONTACTO</label>
+                      <label for="titulo_contacto">TÍTULO DE CONTACTO <span class="text-danger">(*)</span></label>
                       <input type="text" class="form-control" id="titulo_contacto" formControlName="titulo_contacto"
                         (input)="onInput()"
                         [ngClass]="onFieldError('titulo_contacto') + ' ' + onFieldRequired('titulo_contacto')"
                         [value]="contactoForm.titulo_contacto" (ngModelChange)="actualizarContacto($event, 1, i)">
                     </div>
                     <div class="form-group col-md-3 mt-2">
-                      <label for="nombres_contacto">NOMBRE</label>
+                      <label for="nombres_contacto">NOMBRE <span class="text-danger">(*)</span></label>
                       <input type="text" class="form-control" id="nombres_contacto" formControlName="nombres_contacto"
                         (input)="onInput()" [value]="contactoForm.nombres_contacto"
                         (ngModelChange)="actualizarContacto($event, 2,  i)">
                     </div>
                     <div class="form-group col-md-3 mt-2">
-                      <label for="apellido_contacto">APELLIDO PATERNO</label>
+                      <label for="apellido_contacto">APELLIDO PATERNO <span class="text-danger">(*)</span></label>
                       <input type="text" class="form-control" id="apellido_contacto" formControlName="apellido_contacto"
                         (input)="onInput()" [value]="contactoForm.apellido_contacto"
                         (ngModelChange)="actualizarContacto($event, 3 , i)">
                     </div>
                     <div class="form-group col-md-3 mt-2">
-                      <label for="apellido2_contacto">APELLIDO MATERNO</label>
+                      <label for="apellido2_contacto">APELLIDO MATERNO <span class="text-danger">(*)</span></label>
                       <input type="text" class="form-control" id="apellido2_contacto"
                         formControlName="apellido2_contacto" (input)="onInput()"
                         [value]="contactoForm.apellido2_contacto" (ngModelChange)="actualizarContacto($event, 4, i)">
                     </div>
                     <div class="form-group col-md-3 mt-2">
-                      <label for="telefono_contacto">TELÉFONO CONTACTO</label>
+                      <label for="telefono_contacto">TELÉFONO CONTACTO <span class="text-danger">(*)</span></label>
                       <input type="text" class="form-control" id="telefono_contacto" formControlName="telefono_contacto"
                         (input)="onInput()" [value]="contactoForm.telefono_contacto"
                         (ngModelChange)="actualizarContacto($event,5 , i)">
                     </div>
                     <div class="form-group col-md-3 mt-2">
-                      <label for="celular_contacto">CELULAR DE CONTACTO</label>
+                      <label for="celular_contacto">CELULAR DE CONTACTO <span class="text-danger">(*)</span></label>
                       <input type="text" class="form-control" id="celular_contacto" formControlName="celular_contacto"
                         (input)="onInput()" [value]="contactoForm.celular_contacto"
                         (ngModelChange)="actualizarContacto($event, 6 , i)">
                     </div>
                     <div class="form-group col-md-6 mt-2">
-                      <label for="direccion_contacto">DIRECCIÓN DE CONTACTO</label>
+                      <label for="direccion_contacto">DIRECCIÓN DE CONTACTO <span class="text-danger">(*)</span></label>
                       <input type="text" class="form-control" id="direccion_contacto"
                         formControlName="direccion_contacto" (input)="onInput()"
                         [value]="contactoForm.direccion_contacto" (ngModelChange)="actualizarContacto($event, 7,  i)">

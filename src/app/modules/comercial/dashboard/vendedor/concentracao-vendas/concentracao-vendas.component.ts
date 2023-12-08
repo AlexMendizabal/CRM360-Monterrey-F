@@ -253,7 +253,7 @@ export class ComercialDashboardVendedorConcentracaoVendasComponent
     this.dataEmitter.emit({
       config: {
         type: 'desempenhoCliente',
-        title: 'Concentração de vendas'
+        title: 'Acumulacion de ventas'
       },
       data: {
         tipo: tipo,

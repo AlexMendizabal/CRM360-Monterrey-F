@@ -608,6 +608,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           /*     this.idListaPrecio = event.id_lista_precio; */
           this.codigoRubro = event.codigo_rubro;
           this.form.controls.codFormaPagamento.setValue(1);
+          this.form.controls.tipoEntrega.setValue(1);
 
           this.form.controls.codEndereco.setValue(event.direccion);
           this.direccion_cliente = event.direccion;
@@ -1380,8 +1381,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   onSubmit(): void {
     const formValue = this.form.getRawValue();
-    //console.log(this.idvendedor);
-    if (this.idvendedor > 0 && this.idListaPrecio > 0 && formValue.codEndereco > 0) {
+    if (this.idvendedor > 0 && this.idListaPrecio > 0 && formValue.codEndereco >= 0) {
       this.formularioService.onNotifySubmit(true);
       this.sendForm();
     } else {
@@ -1396,14 +1396,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
       for (let i = 0; i < this.materiais.length; i++) {
         if (
-          Math.floor(this.materiais[i].valorUnit * 100) / 100 >
+          Math.floor(this.materiais[i].valorUn * 100) / 100 >
           this.materiais[i].valor
         ) {
           hasPrecoMinimo = true;
         }
       }
-
-      if (hasPrecoMinimo === true) {
+     if (hasPrecoMinimo) {
         this.confirmModalService
           .showConfirm(
             null,
@@ -1540,7 +1539,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             telefono: formValue.telefonoCliente
 
           };
-          console.log(this.materiais);
           /* this.autorizacionService.showModal();  */
           /* console.log(dataCotizacion); */
 

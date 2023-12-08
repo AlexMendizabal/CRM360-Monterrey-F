@@ -62,6 +62,7 @@ export class ComercialCicloVendasCotacoesFormularioService {
 
   public onNotifySubmit(data: boolean) {
     this.notifySubmit.next(data);
+    console.log(data);
   }
 
   loadDependencies(): Observable<Array<Object | JsonResponse>> {

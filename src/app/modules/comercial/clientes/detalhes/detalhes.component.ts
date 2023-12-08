@@ -47,6 +47,7 @@ export class ComercialClientesDetalhesComponent implements OnInit {
 
   ngOnInit() {
     if (this.activatedRoute.snapshot.data['response']['responseCode'] === 200) {
+      console.log("aqui 2",this.activatedRoute.snapshot.data);
       this.cliente = this.activatedRoute.snapshot.data['response']['result'];
       this.registrarAcesso();
       this.titleService.setTitle('Detalhes');

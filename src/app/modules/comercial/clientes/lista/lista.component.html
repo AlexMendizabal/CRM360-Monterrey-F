@@ -362,7 +362,7 @@
             </tab>
             <tab heading="Contactos">
               <div class="border-right border-left border-bottom px-3 pt-3">
-                <div class="col-lg-12 mb-4" *ngIf="contatos.lenght !==  0">
+                <div class="col-lg-12 mb-4" *ngIf="contatosLoaded && !contatosEmpty">
   
                   <div class="embed-responsive embed-responsive-16by9">
                     <agm-map [latitude]="latitudPromedioContacto" [longitude]="longitudPromedioContacto" [zoom]="16"
@@ -373,10 +373,10 @@
                     </agm-map>
                     <div id="map-zoom-control" class="map-control"></div>
                   </div>
-                  <div *ngIf="informacionMarcador" class="info-box mt-3">
+                  <div *ngIf="informacionMarcadorContacto" class="info-box mt-3">
                     <h6>Información de la ubicación</h6>
-                    <p style="font-size: 13px;"> <strong>Título: </strong> {{ informacionMarcador.nombre }}</p>
-                    <p style="font-size: 13px;"> <strong>Dirección: </strong> {{ informacionMarcador.direccion }}</p>
+                    <p style="font-size: 13px;"> <strong>Título: </strong> {{ informacionMarcadorContacto.nombre }}</p>
+                    <p style="font-size: 13px;"> <strong>Dirección: </strong> {{ informacionMarcadorContacto.direccion }}</p>
                   </div>
                 </div>
                 <div *ngIf="contatosLoaded && !contatosEmpty">
@@ -401,6 +401,22 @@
                         <label>Nombre</label>
                         <div>
                           <input value="{{ contato.nombres_contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
+                        <div *ngIf="contato.editing"></div> -->
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-4">
+                        <label>Apellido paterno</label>
+                        <div>
+                          <input value="{{ contato.apellido_contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
+                        <div *ngIf="contato.editing"></div> -->
+                        </div>
+                      </div>
+                      <div class="form-group col-lg-4">
+                        <label>Apellido materno</label>
+                        <div>
+                          <input value="{{ contato.apellido2_contacto || 'NO INFORMADO' }}" class="form-control" readonly>
                           <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
                         <div *ngIf="contato.editing"></div> -->
                         </div>

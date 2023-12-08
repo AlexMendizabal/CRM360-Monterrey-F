@@ -52,7 +52,7 @@ export class ComercialClientesPreCadastroService {
   updateCliente(params: any){
     return this.http
       .post(`http://23.254.204.187/api/sap/cliente_update`, params)
-      .pipe(take(1), retry(2));
+      .pipe(take(1), retry(0));
   }
 
 
