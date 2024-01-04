@@ -37,7 +37,7 @@
         <div [hidden]="form.getRawValue().codMaterial === null">
           <div class="row mb-3">
             <div class="col mt-auto">
-              <div class="mtc-title mb-0">Principal material da associação</div>
+              <div class="mtc-title mb-0">Material principal de la asociación</div>
             </div>
             <div class="col" *ngIf="form.getRawValue().codMaterial != null">
               <div class="d-flex justify-content-end">
@@ -75,14 +75,14 @@
               <invalid-form-control [show]="onFieldInvalid('nomeMaterial')" message="Material é obrigatório."></invalid-form-control>
             </div>
             <div class="form-group col-lg-3">
-              <label for="codSituacao">Situação</label>
+              <label for="codSituacao">Situación</label>
               <select
                 class="form-control custom-select"
                 id="codSituacao"
                 formControlName="codSituacao"
                 [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
-                <option value="0">Inativo</option>
-                <option value="1">Ativo</option>
+                <option value="0">Inactivo</option>
+                <option value="1">Activo</option>
               </select>
               <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação é obrigatório."></invalid-form-control>
             </div>
@@ -97,7 +97,7 @@
         <div formArrayName="assocMateriais">
           <div class="row" *ngIf="showMateriais && form.value.assocMateriais.length > 0">
             <div class="col">
-              <div class="mtc-title">Materiais associados</div>
+              <div class="mtc-title">Materiales asociados</div>
               <custom-table [config]="tableConfigAssocMateriais">
                 <ng-template #thead let-thead>
                   <tr>
@@ -126,7 +126,7 @@
             <div class="col">
               <message
                 icon="fas fa-exchange-alt"
-                text="Nenhuma associação encontrada">
+                text="No se encontraron asociaciones">
               </message>
             </div>
           </div>
@@ -136,7 +136,7 @@
 
     <div class="col-lg-6 border-left">
       <tabset>
-        <tab heading="Pesquisar materiais">
+        <tab heading="buscar materiales">
           <div class="p-3 border-left border-right border-bottom">
             <comercial-cadastros-materiais-templates-associacoes
               [linhas]="linhas"
@@ -148,12 +148,12 @@
             </comercial-cadastros-materiais-templates-associacoes>
           </div>
         </tab>
-        <tab heading="Materiais mais vendidos" (selectTab)="onSelectTabMaisVendidos()">
+        <tab heading="Materiales más vendidos" (selectTab)="onSelectTabMaisVendidos()">
           <div class="p-3 border-left border-right border-bottom">
             <div *ngIf="form.getRawValue().codMaterial !== null && materiaisLista.length > 0">
               <div class="row mb-2">
                 <div class="col mt-auto">
-                  <div class="mtc-title mb-0">Seleção de materiais</div>
+                  <div class="mtc-title mb-0">Selección de materiales</div>
                 </div>
                 <div class="col">
                   <div class="d-flex justify-content-end">
@@ -163,7 +163,7 @@
                       (click)="onAssociarMateriais()"
                       [disabled]="searching === true">
                       <i class="fas fa-exchange-alt"></i>
-                      <span>Associar</span>
+                      <span>Conectar</span>
                     </button>
                   </div>
                 </div>
@@ -218,7 +218,7 @@
               <div class="col">
                 <message
                   icon="fas fa-cog fa-spin"
-                  text="Estamos pesquisando os materiais para você...">
+                  text="Estamos investigando los materiales para ti...">
                 </message>
               </div>
             </div>
@@ -227,7 +227,7 @@
                 <div class="col">
                   <message
                     icon="fas fa-box-open"
-                    text="Nenhuma informação encontrada">
+                    text="No se encontró información">
                   </message>
                 </div>
               </div>
@@ -235,7 +235,7 @@
                 <div class="col">
                   <message
                     icon="fas fa-exclamation-circle"
-                    text="Selecione um material principal ao lado para pesquisar os materiais mais vendidos">
+                    text="Seleccione un material principal a continuación para buscar los materiales más vendidos">
                   </message>
                 </div>
               </div>

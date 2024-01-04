@@ -614,8 +614,8 @@ search(params: any): void {
   this.datosAutorizaciones = [];
   this.totalItems = 0;
 
-  this.cotacoesService
-    .getAutorizaciones(params)
+  this.cotacoesService 
+    .getAutorizaciones(params) 
     .pipe(
       finalize(() => {
         this.loading = false;
@@ -623,7 +623,7 @@ search(params: any): void {
       })
     )
     .subscribe({
-      next: (response: JsonResponse) => {
+      next: (response: JsonResponse) => {console.log(params);
         if (response.hasOwnProperty('success') && response.success === true) {
           this.datos = response.data;
           this.datosAutorizaciones = this.datos.slice(0, this.itemsPerPage);
@@ -948,6 +948,19 @@ onVista(id_oferta: number): void {
 
       }
     );
+  }
+
+  getColor(estado) {
+    switch (estado) {
+      case 'APROBADO':
+        return 'green';
+      case 'RECHAZADO':
+        return 'red';
+      case 'PENDIENTE':
+        return 'blue';
+      default:
+        return '';
+    }
   }
 
 }

@@ -14,7 +14,7 @@ import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/
 })
 export class ComercialClientesDashboardFaturamentoLinhaComparativoComponent
   implements OnInit {
-  titulo: string = 'Comparativo por linha';
+  titulo: string = 'Comparación por Grupo, Anual';
 
   tableConfig: Partial<CustomTableConfig> = {
     small: false,

@@ -193,9 +193,6 @@ throw new Error('Method not implemented.');
       'Confirmar'
     );
 
-
-
-
     confirm$
       .asObservable()
       .pipe(

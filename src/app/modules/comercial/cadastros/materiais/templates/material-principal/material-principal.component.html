@@ -18,7 +18,7 @@
 <advanced-filter>
   <form [formGroup]="form" autocomplete="off">
     <div class="form-row">
-      <div class="form-group col-lg-6">
+      <div class="form-group col-lg-4">
         <label for="codLinha">Linha</label>
         <ng-select
           [searchable]="true"
@@ -26,13 +26,13 @@
           [items]="linhas"
           formControlName="codLinha"
           [virtualScroll]="true"
-          labelForId="codLinha"
+          labelForId="id"
           bindLabel="descricao"
           bindValue="id"
           (change)="onChangeLinha($event.id)">
         </ng-select>
       </div>
-      <div class="form-group col-lg-6">
+      <div class="form-group col-lg-4">
         <label for="codClasse">Classe</label>
         <ng-select
           [searchable]="true"
@@ -44,6 +44,20 @@
           bindLabel="nomeClasse"
           bindValue="idClasse"
           (change)="onChangeClasse($event.idClasse)">
+        </ng-select>
+      </div>
+      <div class="form-group col-lg-4">
+        <label for="codClasse">Grupo</label>
+        <ng-select
+          [searchable]="true"
+          [clearable]="false"
+          [items]="filteredGrupo"
+          formControlName="codGrupo"
+          [virtualScroll]="true"
+          labelForId="codGrupo"
+          bindLabel="nomeGrupo"
+          bindValue="idGrupo"
+          (change)="onChangeGrupo($event.idClasse)">
         </ng-select>
       </div>
     </div>

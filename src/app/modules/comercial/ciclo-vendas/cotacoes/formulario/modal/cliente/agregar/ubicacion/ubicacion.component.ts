@@ -46,6 +46,8 @@ export class PreCadastroUbicacionContactosComponent
   tipoCalculo: number;
   descPreco: string;
   descQtde: string;
+  swDireccion: boolean = false;
+
 
   currencyMaskOptions = {
     align: 'left',
@@ -125,8 +127,10 @@ export class PreCadastroUbicacionContactosComponent
       .then((data) => {
         const resultado = data.results[0];
         if (resultado) {
+          this.swDireccion = true;
           return resultado.formatted_address;
         } else {
+          this.swDireccion = false;
           return 'Dirección no encontrada';
         }
       })

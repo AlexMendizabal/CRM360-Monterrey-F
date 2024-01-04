@@ -91,18 +91,20 @@ export class ComercialEstoqueListaComponent implements OnInit {
   totalItems = 10;
   showAdvancedFilter = true;
 
-
   maxSizeComprometido = 5;
   itemsPerPageComprometido = 7;
   totalComprometido = 5;
   currentPageComprometido = 1;
-
 
   maxSizeSuspenso = 5;
   itemsPerPageSuspenso = 7;
   totalSuspenso = 5;
   currentPageSuspenso = 1;
 
+  maxSizeAlmacen = 10;
+  itemsPerPageAlmacen = 7;
+  totalAlmacen = 10;
+  currentPageAlmacen = 1;
 
   materialSelected: string;
   linhaSelected: string;
@@ -131,6 +133,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
   pedidos: Array<any> = [];
   totaisPedCompra: Array<any> = [];
   estoqueComprometido: Array<any> = [];
+  estoqueAlmacen: Array<any> = [];
   totaisComprometido: Array<any> = [];
   detalhesLote: Array<any> = [];
   totaisLote: Array<any> = [];
@@ -142,6 +145,10 @@ export class ComercialEstoqueListaComponent implements OnInit {
   pedidosCompraEmpty: boolean;
   comprometidoLoaded: boolean;
   comprometidoEmpty: boolean;
+
+  stockLoaded : boolean;
+  stockEmpty : boolean;
+
   loteLoaded: boolean;
   loteEmpty: boolean;
   suspensoLoaded: boolean;
@@ -162,7 +169,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
     private atividadesService: AtividadesService,
     private estoqueService: ComercialEstoqueService,
     private titleService: TitleService,
-    private comercialService: ComercialService,
+    private comercialService: ComercialService
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -196,7 +203,6 @@ export class ComercialEstoqueListaComponent implements OnInit {
             ALMACEN: 'TODOS',
           });
 
-
           if (response[1].responseCode == 200) {
             this.depositos = response[1].result;
             this.filteredDepositos = this.depositos;
@@ -226,31 +232,21 @@ export class ComercialEstoqueListaComponent implements OnInit {
         },
         error: (error: any) => {
           this.handleSearchError('Ocorreu um erro ao carregar filtros.');
-        }
+        },
       });
   }
 
-
-
   checkRouterParams(): Object {
     let formValue = {
-
       id_almacen: 0,
       id_familia: 0,
       id_grupo: 0,
       id_linea: 0,
       codigo_material: null,
       nombre_material: null,
+      codigo_almacen: null,
+      nombre_almacen: null,
       registros: 300,
-
-      /*  empresa: null,
-       deposito: null,
-       linha: 0,
-       classeMaterial: 0,
-       estoqueDisponivel: 0,
-       codMaterial: null,
-       descMaterial: null,
-       registros: 300, */
     };
 
     this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
@@ -293,25 +289,18 @@ export class ComercialEstoqueListaComponent implements OnInit {
       registros: [formValue.registros],
       codMaterial: [formValue.codMaterial],
       descMaterial: [formValue.descMaterial],
-      estoqueDisponivel: [formValue.estoqueDisponivel]
-
-    });
+      estoqueDisponivel: [formValue.estoqueDisponivel],
+      codigo_almacen: [formValue.codigo_almacen],
+      nombre_almacen: [formValue.nombre_almacen],
+      nombre_lista: [formValue.nombre_lista],
+    }); 
   }
   onFilter() {
-    /*  this.setRouterParams(this.verificaParams());
-     this.currentPage = 1;
-     this.itemsPerPage = this.form.value.registros;
-
-     this.scrollToFilter.nativeElement.scrollIntoView({
-       behavior: 'instant',
-     }); */
     this.totalItems = 0;
     this.dados = [];
     this.dadosReturned = [];
     const formValue = this.form.value;
     this.loaderNavbar = true;
-
-
 
     let params: any = {
       id_almacen: formValue.empresa,
@@ -339,21 +328,22 @@ export class ComercialEstoqueListaComponent implements OnInit {
           this.loaderNavbar = false;
           this.dadosEmpty = true;
         }
-      }
+      },
     });
   }
+
+  
 
   sincronizar() {
     this.comercialService.sincronizarMateriales().subscribe({
       next: (response: any) => {
         if (response.responseCode === 200) {
-
         } else {
-
         }
-      },error: (error: any) => {
+      },
+      error: (error: any) => {
         this.handleSearchError('Ocorreu um erro ao carregar filtros.');
-      }
+      },
     });
   }
 
@@ -377,77 +367,6 @@ export class ComercialEstoqueListaComponent implements OnInit {
     this.showAdvancedFilter = !this.showAdvancedFilter;
   }
 
-  /* search(params: any) {
-    this.loaderNavbar = true;
-    this.idEmpresa = params.deposito;
-    this.dadosLoaded = false;
-    this.dadosEmpty = false;
-    this.dados = [];
-    this.dadosReturned = [];
-    this.totalItems = 0;
-
-    this.estoqueService
-      .getEstoqueAtual(params)
-      .pipe(
-        finalize(() => {
-          this.loaderNavbar = false;
-        })
-      )
-      .subscribe({
-        next: (response: JsonResponse) => {
-          if (response.success === true) {
-            this.dados = response.data;
-            this.dadosReturned = this.dados.slice(0, this.itemsPerPage);
-            this.totalItems = this.dados.length;
-            this.dadosLoaded = true;
-          } else {
-            this.dadosEmpty = true;
-          }
-        },
-        error: (error: any) => {
-          this.handleSearchError('Erro ao carregar lista de materiais.');
-        }
-      });
-  } */
-
-  /* verificaParams() {
-    let params: any = {};
-
-    if (this.form.value.empresa) {
-      params.empresa = parseInt(this.form.value.empresa);
-    }
-
-    if (this.form.value.deposito) {
-      params.deposito = parseInt(this.form.value.deposito);
-    }
-
-    if (this.form.value.linha) {
-      params.linha = parseInt(this.form.value.linha);
-    }
-
-    if (this.form.value.classeMaterial) {
-      params['classe'] = parseInt(this.form.value.classeMaterial);
-    }
-
-    if (this.form.value.estoqueDisponivel) {
-      params.estoqueDisponivel = this.form.value.estoqueDisponivel;
-    }
-
-    if (this.form.value.codMaterial) {
-      params.codMaterial = parseInt(this.form.value.codMaterial);
-    }
-
-    if (this.form.value.descMaterial) {
-      params.descMaterial = btoa(this.form.value.descMaterial);
-    }
-
-    if (this.form.value.registros) {
-      params.registros = this.form.value.registros;
-    }
-
-    return params;
-  } */
-
   onPageChanged(event: PageChangedEvent): void {
     this.currentPage = event.page;
     this.getPaginateData();
@@ -465,14 +384,26 @@ export class ComercialEstoqueListaComponent implements OnInit {
     this.getPaginateDataComprometido();
   }
 
+  onPageChangedAlmacen(event: PageChangedEvent): void {
+    //console.log('onPageChangedAlmacen called:', event)
+    this.currentPageAlmacen = event.page;
+    this.getPaginateDataAlmacen();
+  }
 
   getPaginateDataComprometido(): any[] {
-    const startIndex = (this.currentPageComprometido - 1) * this.itemsPerPageComprometido;
+    const startIndex =
+      (this.currentPageComprometido - 1) * this.itemsPerPageComprometido;
     const endIndex = startIndex + this.itemsPerPageComprometido;
     //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
     return this.estoqueComprometido.slice(startIndex, endIndex);
   }
-
+  getPaginateDataAlmacen(): any[] {
+    const startIndex =
+      (this.currentPageAlmacen - 1) * this.itemsPerPageAlmacen;
+    const endIndex = startIndex + this.itemsPerPageAlmacen;
+    //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
+    return this.estoqueAlmacen.slice(startIndex, endIndex);
+  }
 
   onPageChangeSuspenso(event: PageChangedEvent): void {
     //console.log(event)
@@ -480,24 +411,15 @@ export class ComercialEstoqueListaComponent implements OnInit {
     this.getPaginateDataComprometido();
   }
 
-
   getPaginateDatSuspenso(): any[] {
-    const startIndex = (this.currentPageSuspenso - 1) * this.itemsPerPageSuspenso;
+    const startIndex =
+      (this.currentPageSuspenso - 1) * this.itemsPerPageSuspenso;
     const endIndex = startIndex + this.itemsPerPageSuspenso;
     //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
     return this.estoqueComprometido.slice(startIndex, endIndex);
   }
 
-  onChangeAlmacen(id: number) {
-    /* this.form.controls.deposito.reset(); */
-    /*  console.log(this.filteredDepositos);
-     this.filteredDepositos = this.depositos.filter(
-       (value: any) => value.idEmpresa == id
-     );
-     if(this.filteredDepositos.length == 1){
-       this.form.controls.deposito.setValue(this.filteredDepositos[0].idEmpresa);
-     } */
-  }
+  onChangeAlmacen(id: number) {}
 
   onChangeDeposito(deposito: any) {
     this.form.controls.empresa.setValue(deposito.idEmpresa);
@@ -536,7 +458,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
       },
       error: (error: any) => {
         this.handleSearchError('Ocurrió un error al cargar los datos.');
-      }
+      },
     });
   }
   onChangegrupo(clase: any) {
@@ -552,7 +474,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
       },
       error: (error: any) => {
         this.handleSearchError('Ocurrió un error al cargar los datos.');
-      }
+      },
     });
   }
   openModal(
@@ -566,7 +488,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
     this.possuiLote = false;
     this.nomeMaterial = `(${codigoMaterial}) ${titulo}`;
     this.codMaterial = idMaterial;
-    console.log(idMaterial)
+    
 
     if (estoqueSuspenso > 0) {
       this.possuiLote = true;
@@ -602,31 +524,13 @@ export class ComercialEstoqueListaComponent implements OnInit {
   onSelectEstoqueSuspenso() {
     this.onGetEstoqueSuspenso(this.codMaterial);
   }
- /*  onSelectEstoqueAlmacenes() {
+  /*  onSelectEstoqueAlmacenes() {
     this.onGetEstoqueSuspenso(this.codMaterial);
   } */
 
   onSelectEstoqueAlmacen() {
     this.onGetEstoqueAlmacen();
   }
-
-  /* onGetOutrasUnidades(idMaterial: number) {
-    this.unidadesLoaded = false;
-
-    this.estoqueService.getOutrasUnidades(idMaterial).subscribe({
-      next: (response: any) => {
-        if (response.responseCode === 200) {
-          this.estoqueUnidades = response.result;
-          this.unidadesLoaded = true;
-        } else {
-          this.pnotifyService.notice('Datos no encontrados.');
-        }
-      },
-      error: (error: any) => {
-        this.handleSearchError('Erro ao carregar estoque de outras unidades.');
-      }
-    });
-  } */
 
   onGetPedidosCompra(idEmpresa: number, idMaterial: number) {
     this.pedidosCompraLoaded = false;
@@ -650,7 +554,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
       },
       error: (error: any) => {
         this.handleSearchError('Erro ao carregar pedidos de compra.');
-      }
+      },
     });
   }
 
@@ -667,7 +571,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
         if (response.responseCode === 200) {
           this.estoqueComprometido = response.result.analitico;
           this.totaisComprometido = response.result.total;
-          this.totalComprometido =  response.result.analitico.length;
+          this.totalComprometido = response.result.analitico.length;
           //console.log(this.totalComprometido)
           this.comprometidoLoaded = true;
         } else {
@@ -715,9 +619,8 @@ export class ComercialEstoqueListaComponent implements OnInit {
 
     // Ordenar la matriz resultcliente en función del orden seleccionado
     this.datos.sort((a, b) => {
-
-      const valueA = a[column]/* .toUpperCase(); */;
-      const valueB = b[column]/* .toUpperCase() */;
+      const valueA = a[column]; /* .toUpperCase(); */
+      const valueB = b[column]; /* .toUpperCase() */
       /*       console.log(this.datos);
             console.log(column); */
       if (valueA < valueB) {
@@ -755,31 +658,73 @@ export class ComercialEstoqueListaComponent implements OnInit {
       }
     );
   }
+  onFilterModal() {
+    this.totalItems = 0;
+    this.dados = [];
+    this.dadosReturned = [];
+    const formValue = this.form.value;
+    this.loaderNavbar = true;
 
-  onGetEstoqueAlmacen() {
-    this.suspensoLoaded = false;
-    this.suspensoEmpty = false;
-      let params: any = {
-      idMaterial: this.codMaterial,
-
+    let params: any = {
+      id_almacen: formValue.empresa,
+      id_familia: formValue.classeMaterial,
+      id_grupo: formValue.grupo,
+      id_linea: formValue.linha,
+      codigo_material: formValue.codMaterial,
+      nombre_material: formValue.descMaterial,
+      registros: formValue.registros,
     };
 
-    this.estoqueService.getStockAlmacenes(params).subscribe(
-      (response: any) => {
-        console.log(response);
+    console.log("Parametros", params);
+
+    this.comercialService.getMateriales(params).subscribe({
+      next: (response: any) => {
         if (response.responseCode === 200) {
-          this.detalhesAlmacen = response.result;
-          this.suspensoLoaded = true;
+          this.loaderNavbar = false;
+
+          this.dados = [];
+          this.datos = response.result;
+          this.dadosReturned = this.datos.slice(0, this.itemsPerPage);
+
+          this.totalItems = this.datos.length;
+          /* console.log(this.datos); */
+          this.dadosEmpty = false;
         } else {
-          this.pnotifyService.notice('Datos no encontrados.');
-          this.suspensoEmpty = true;
+          this.loaderNavbar = false;
+          this.dadosEmpty = true;
         }
       },
-      (error: any) => {
-        this.handleSearchError('Error al cargar los datos de Almacen');
-      }
-    );
+    });
   }
+
+  onGetEstoqueAlmacen() {
+    
+    this.stockLoaded = false;
+    this.stockEmpty = false;
+
+    let params: any = {
+      codMaterial: this.codMaterial,
+  
+    };
+    console.log('Form valuesss:', params);
+    this.estoqueService.getStockAlmacenes(params).subscribe(
+        (response: any) => {
+            console.log("respuesta Estoque", response);
+            if (response.responseCode === 200) {
+                this.detalhesAlmacen = response.result;
+                this.stockLoaded = true;
+            } else {
+                this.pnotifyService.notice('Datos no encontrados.');
+                this.stockEmpty = true;
+            }
+        },
+        (error: any) => {
+            this.handleSearchError('Error al cargar los datos de Almacen');
+        }
+    );
+}
+
+
 
   onFieldError(field: string) {
     if (this.onFieldInvalid(field)) {
@@ -802,7 +747,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
     if (this.form.controls[field].validator) {
       let validationResult = this.form.controls[field].validator(formControl);
       required =
-        validationResult !== null && validationResult.required === true;
+        validationResult !== null && validationResult.required ===  true;
     }
 
     if (required) {
@@ -823,6 +768,17 @@ export class ComercialEstoqueListaComponent implements OnInit {
   }
 
   estoqueSuspensoClassStatusBorder(suspenso: number) {
+    let borderClass = '';
+    if (suspenso > 0) {
+      borderClass = 'border-danger';
+    } else {
+      borderClass = 'border-light';
+    }
+
+    return borderClass;
+  }
+
+  StockAlmacenes(suspenso: number) {
     let borderClass = '';
     if (suspenso > 0) {
       borderClass = 'border-danger';

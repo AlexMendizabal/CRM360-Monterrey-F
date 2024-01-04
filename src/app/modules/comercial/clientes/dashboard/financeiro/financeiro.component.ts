@@ -35,7 +35,10 @@ export class ComercialClientesDashboardFinanceiroComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private dashboardService: ComercialClientesDashboardService
   ) {}
-
+  onCountoChange(event: number): void {
+    this.countoCreditoDisponivel = event;
+  }
+  
   ngOnInit() {
     this.activatedRoute.params.subscribe((params) => {
       this.dashboardService
@@ -61,10 +64,10 @@ export class ComercialClientesDashboardFinanceiroComponent implements OnInit {
         .subscribe((response: any) => {
           if (response['responseCode'] === 200) {
             if (
-              response['result']['valor'] &&
-              response['result']['valor'] > 0
+              response['result'] &&
+              response['result']> 0
             ) {
-              this.notasDebito = response['result']['valor'];
+              this.notasDebito = response['result'];
             } else {
               this.notasDebitoEmpty = true;
             }
@@ -77,12 +80,15 @@ export class ComercialClientesDashboardFinanceiroComponent implements OnInit {
       this.dashboardService
         .getCreditoDisponivel(params['id'])
         .subscribe((response: any) => {
+          console.log('Respuesta de getCreditoDisponivel:', response);
           if (response['responseCode'] === 200) {
             if (
               response['result']['valor'] &&
               response['result']['valor'] != 0
             ) {
               this.creditoDisponivel = response['result']['valor'];
+              console.log("Quiero esto", response['result']['valor']);
+
             } else {
               this.creditoDisponivelEmpty = true;
             }

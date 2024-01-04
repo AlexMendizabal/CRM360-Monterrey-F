@@ -44,7 +44,6 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
   };
 
   form: FormGroup;
-
   filteredClasses: Array<any> = [];
   materiais: Array<any> = [];
   materiaisLoader: boolean;
@@ -161,6 +160,7 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
   }
 
   onChangeLinha(codLinha: number) {
+    
     this.form.controls.codClasse.reset();
     this.form.controls.codClasse.setValue(null);
     this.form.controls.codClasse.enable();
@@ -171,11 +171,11 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
     this.form.controls.codMaterial.disable();
     this.form.controls.codMaterial.setValue(null);
     this.form.controls.codMaterial.updateValueAndValidity();
-
+    
     this.filteredClasses = this.classes.filter(
-      (value: any) => value.idLinha == codLinha
+      (value: any) => value.idClasseMt == codLinha
     );
-  }
+ }
 
   onChangeClasse(codClasse: number) {
     this.form.controls.codMaterial.reset();

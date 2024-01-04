@@ -117,9 +117,15 @@
         <td class="text-center hover">
           {{ autorizacion.descuento_total }}
         </td>
-        <td class="text-center hover">
+        <td class="text-center hover" [ngStyle]="{'color': getColor(autorizacion.estado_oferta)}">
           {{ autorizacion.estado_oferta | uppercase }}
         </td>
+       <!--  <td class="text-center hover" *ngIf="autorizacion.estado_oferta === 'RECHAZADO'" style="color: red;">
+          {{ autorizacion.estado_oferta | uppercase }}
+        </td>
+        <td class="text-center hover" *ngIf="autorizacion.estado_oferta === 'PENDIENTE'" style="color: blue;">
+          {{ autorizacion.estado_oferta | uppercase }}
+        </td> -->
         <td>
           <a class="dropdown-item"  routerLink="/modal-autorizacion" (click)="openModal(autorizacion.id_autorizacion)">
             <i class="fas fa-file"></i><span class="text-uppercase"> Detalles</span>

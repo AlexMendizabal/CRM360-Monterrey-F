@@ -41,6 +41,11 @@ export class ComercialClientesPreCadastroService {
     return forkJoin(cnaes);
   }
 
+  getTipoPersona()
+  {
+      return this.http.get(`${this.BASE_URL}/comercial/clientes/tipo_persona/`).pipe(take(1));
+  }
+
   /* updateCliente(params){
     return this.http.post(
       `${this.BASE_URL}/sap/cliente_update`,
@@ -55,7 +60,11 @@ export class ComercialClientesPreCadastroService {
       .pipe(take(1), retry(0));
   }
 
-
+  updateCliente2(params: any){
+    return this.http
+      .post(`http://23.254.204.187/api/sap/cliente_updateSap`, params)
+      .pipe(take(1), retry(0));
+  }
 
   postAkna(param){
     return this.http.post(
@@ -65,6 +74,7 @@ export class ComercialClientesPreCadastroService {
     );
   }
 }
+
 function tap(arg0: (data: any) => void): import("rxjs").OperatorFunction<Object, unknown> {
   throw new Error('Function not implemented.');
 }

@@ -149,6 +149,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   locaisEntrega: Array<any> = [];
   locaisEntregaLoader: boolean;
 
+  descuento_total:any;
+
   clientes: any;
   obsPropostas = [];
   detalhesCodCliente: any = [];
@@ -1186,6 +1188,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             codContato: formValue.codContato,
             codEmpresa: formValue.codEmpresa,
             codDeposito: formValue.codDeposito,
+            descuento_total: formValue.descuento_total,
             notaFiscalMae: Number(formValue.notaFiscalMae),
             codFormaPagamento: formValue.codFormaPagamento,
             duplicatasSomenteCarteira: formValue.duplicatasSomenteCarteira,

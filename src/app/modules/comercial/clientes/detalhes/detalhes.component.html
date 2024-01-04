@@ -26,10 +26,16 @@
     <div class="col-lg-9">
       <div class="row justify-content-center">
         <div class="col-md-3">
-          <card-button
+          <!-- <card-button
             icon="fas fa-folder-open"
             text="Datos de registro"
             [routerLink]="['../../cadastro', cliente.codCliente, 'dados-faturamento']">
+          </card-button> -->
+          <card-button
+            icon="fas fa-shopping-cart"
+            text="Vender"
+            [routerLink]="['../../../ciclo-vendas/139/cotacoes-pedidos/lista/']"
+            [queryParams]="{codCliente: cliente.codCliente}">
           </card-button>
         </div> 
          <div class="col-md-3">
@@ -41,12 +47,19 @@
         </div> 
         <div class="col-md-3">
           <card-button
+            icon="far fa-calendar-alt"
+            text="Agendar"
+            [routerLink]="['../../../agenda/novo', cliente.codCliente]">
+          </card-button>
+        </div>
+        <!-- <div class="col-md-3">
+          <card-button
             icon="fas fa-chart-bar"
             text="Histórico Financeiro"
             [routerLink]="['../../historico-financeiro', cliente.codCliente, 'resumo']">
           </card-button>
         </div> 
-       <!-- <div class="col-md-3">
+       <div class="col-md-3">
           <card-button
             icon="fas fa-handshake"
             text="Ficha PAC"
@@ -56,20 +69,20 @@
       </div> 
      <div class="row justify-content-center">
         <div class="col-md-3">
-          <card-button
+          <!-- <card-button
             icon="fas fa-shopping-cart"
             text="Vender"
             [routerLink]="['../../../ciclo-vendas/139/cotacoes-pedidos/lista/']"
             [queryParams]="{codCliente: cliente.codCliente}">
-          </card-button>
+          </card-button> -->
         </div> 
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
           <card-button
             icon="far fa-calendar-alt"
             text="Agendar"
             [routerLink]="['../../../agenda/novo', cliente.codCliente]">
           </card-button>
-        </div>
+        </div> -->
         <!-- <div class="col-md-3">
           <card-button
             icon="fas fa-tasks"
@@ -78,13 +91,13 @@
             [queryParams]="{ codCliente: cliente.codCliente, sistema: 'vendas', modulo: 3 }">
           </card-button>
         </div>  -->
-       <div class="col-md-3">
+       <!-- <div class="col-md-3">
           <card-button
             icon="fas fa-list"
             text="Últimos precios"
             [routerLink]="['../../../clientes/ultimos-precos', cliente.codCliente]">
           </card-button>
-        </div> 
+        </div>  -->
       </div>
     </div>
   </div>

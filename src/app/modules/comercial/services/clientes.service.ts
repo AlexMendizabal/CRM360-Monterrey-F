@@ -37,6 +37,11 @@ export class ComercialClientesService {
       .get(`${this.API}/pesquisa/grupo-economico/${codCliente}`)
       .pipe(take(1), retry(2));
   }
+  getTipoPersona()
+  {
+      return this.http.get(`${this.API}/tipo_persona/`).pipe(take(1));
+  }
+
 
   getVendedorCiudad(id_vendedor): Observable<Object> {
     const httpParams = new HttpParams().set('id_vendedor', id_vendedor);
@@ -54,6 +59,14 @@ export class ComercialClientesService {
   getDetalhes(codCliente: number): Observable<Object | JsonResponse> {
     return this.http
       .get(`${this.API}/pesquisa/detalhes/${codCliente}`)
+      .pipe(
+        take(1),
+        retry(2));
+  }
+
+  VerificaOfertaAbierta(codCliente: number): Observable<Object | JsonResponse> {
+    return this.http
+      .get(`${this.API}/pesquisa/verificaoferta/${codCliente}`)
       .pipe(
         take(1),
         retry(2));

@@ -12,7 +12,7 @@
     type="button"
     (click)="onReload()"
     *ngIf="showDashboard && profile.vendedor === true">
-    Recarregar
+    Recargar
   </button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
@@ -61,7 +61,7 @@
           </comercial-dashboard-vendedor-concentracao-vendas>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col mb-4">
           <div class="border rounded bg-white shadow-sm p-3">
             <comercial-templates-mapa-metas
@@ -70,28 +70,28 @@
             </comercial-templates-mapa-metas>
           </div>
         </div>
-      </div>
-      <div class="row">
+      </div> -->
+      <!-- <div class="row">
         <div class="col-md-6 mb-4">
           <div class="border rounded bg-white shadow-sm p-3">
             <div class="mtc-title mb-0">
               <ng-template #clientesTooltipTemplate>
-                <p><b><u>Ativos:</u></b> Clientes ativos.</p>
-                <p><b><u>Com compra:</u></b> Clientes ATIVOS que compraram nesse mês.</p>
-                <p><b><u>Sem compra:</u></b> Clientes ATIVOS que não compraram nesse mês.</p>
-                <p><b><u>Potenciais:</u></b> Clientes potenciais.</p>
-                <p><b><u>Novos c/ compra:</u></b> Clientes com primeira compra nesse mês.</p>
-                <p><b><u>Reativados:</u></b> Clientes reativados nesse mês.</p>
-                <p><b><u>À inativar:</u></b> Clientes que irão inativar nesse mês.</p>
-                <p><b><u>Inativos:</u></b> Clientes inativos.</p>
-                <p class="mb-0"><b><u>Inativados:</u></b> Clientes que foram inativados nesse mês.</p>
+                <p><b><u>Activos:</u></b> Clientes activos.</p>
+                <p><b><u>con compra:</u></b> Clientes ATIVOS que compraron ese mes.</p>
+                <p><b><u>Sin compra:</u></b> Clientes ATIVOS que qno compraron ese mes.</p>
+                <p><b><u>Potenciales:</u></b> Clientes potenciales.</p>
+                <p><b><u>Nuevos con compra:</u></b> Clientes que hacen su primera compra ese mes.</p>
+                <p><b><u>Reactivados:</u></b> Clientes reactivados este mes.</p>
+                <p><b><u>Para desactivar:</u></b> Clientes que se desactivarán este mes.</p>
+                <p><b><u>Inactivos:</u></b> Clientes inactivos.</p>
+                <p class="mb-0"><b><u>Inactivados:</u></b> Clientes desactivados ese mes.</p>
               </ng-template>
               <i
                 class="far fa-question-circle p-2"
                 [tooltip]="clientesTooltipTemplate"
                 placement="right">
               </i>
-              Carteira de clientes
+              Cartera de clientes
               <button
                 type="button"
                 class="btn btn-outline-success"
@@ -131,9 +131,9 @@
             </comercial-dashboard-vendedor-registro-ocorrencias>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <!-- <div class="col-md-5"> -->
+      </div> -->
+      <!-- <div class="row">
+        <div class="col-md-5">
         <div class="col-md-6">
           <div class="mtc-title">Financeiro</div>
           <comercial-dashboard-vendedor-financeiro
@@ -143,15 +143,15 @@
           </comercial-dashboard-vendedor-financeiro>
         </div>
 
-        <!-- <div class="col-md-7">
+        <div class="col-md-7">
           <div class="mtc-title">Valor Comissão</div>
           <comercial-dashboard-vendedor-representante
             [idVendedor]="idVendedor"
             (dataEmitter)="onAnalyticsData($event)">
           </comercial-dashboard-vendedor-representante>
-        </div> -->
-      </div>
-      <div class="row" *ngIf="showAnalytic">
+        </div>
+      </div> -->
+      <!-- <div class="row" *ngIf="showAnalytic">
         <div class="col mt-4">
           <div class="border rounded bg-white shadow-sm p-3">
             <comercial-dashboard-vendedor-analitico
@@ -160,7 +160,7 @@
             </comercial-dashboard-vendedor-analitico>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
   <permission-denied

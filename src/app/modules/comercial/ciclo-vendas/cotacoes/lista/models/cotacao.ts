@@ -1,4 +1,5 @@
 export interface ICotacao {
+  id_oferta: any;
   codCliente: number;
   codDeposito: number;
   codEmpresa: number;

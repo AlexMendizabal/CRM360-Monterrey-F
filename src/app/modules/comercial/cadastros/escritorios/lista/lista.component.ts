@@ -111,7 +111,7 @@ export class ComercialCadastrosEscritorioListaComponent
     this.setBreadCrumb();
     this.getFormFields();
     this.setFormFilter();
-    this.titleService.setTitle('Escritórios');
+    this.titleService.setTitle('ALMACENES');
     this.onDetailPanelEmitter();
     this.setEscritorioSelecionado();
   }

@@ -24,24 +24,26 @@
             <label for="dataInicial">Fecha inicial</label>
             <input
               class="form-control"
-              id="dataInicial"
+              id="dataInicial1"
               type="text"
               bsDatepicker
               [bsConfig]="bsConfig"
-              formControlName="dataInicial"
+              formControlName="dataInicial1"
             />
           </div>
+          
           <div class="form-group col-lg-2">
             <label for="dataFinal">Fecha final</label>
             <input
               class="form-control"
-              id="dataFinal"
+              id="dataInicial2"
               type="text"
               bsDatepicker
               [bsConfig]="bsConfig"
-              formControlName="dataFinal"
+              formControlName="dataInicial2"
             />
           </div>
+          
           <div class="form-group col-lg-3">
             <label for="codStatus">Situacion</label>
             <ng-select
@@ -59,7 +61,7 @@
             <label for="nrPedido">Núm. pedido</label>
             <input
               type="text"
-              id="nrPedido"
+              id="id_oferta"
               placeholder="Digite..."
               class="form-control"
               formControlName="nrPedido"
@@ -89,16 +91,16 @@
             <select
               class="form-control"
               name="cliente"
-              id="cliente"
+              id="id_cliente"
               formControlName="cliente"
             >
               <option class="" [value]="0" readonly>
                 TODOS
               </option>
-              <option *ngFor="let pedido of dados" [value]="pedido.id_cliente">
-                {{  pedido.prim_nome | uppercase }}
+              <option *ngFor="let cliente of clientesArray" [value]="cliente">
+                {{ cliente | uppercase }}
               </option>
-            </select>
+           </select>
           </div>
           <div
             class="form-group"
@@ -113,58 +115,13 @@
               id="registros"
               formControlName="registros"
             >
+              <option>25</option>
+              <option>50</option>
               <option>100</option>
-              <option>200</option>
-              <option>300</option>
             </select>
           </div>
         </div>
         <div class="form-row">
-          <!-- <div class="form-group col-lg-3">
-            <label for="codEmpresa">Empresa</label>
-            <ng-select
-              [searchable]="true"
-              [clearable]="false"
-              [items]="empresas"
-              placeholder="Selecione..."
-              formControlName="codEmpresa"
-              [virtualScroll]="true"
-              labelForId="codEmpresa"
-              bindLabel="nomeEmpresa"
-              bindValue="idEmpresa"
-              (change)="onChangeEmpresa($event.idEmpresa)"
-              [ngClass]="onFieldError('codEmpresa') + ' ' + onFieldRequired(form.controls.codEmpresa)">
-            </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('codEmpresa')" message="Empresa é obrigatório."></invalid-form-control>
-          </div> -->
-          <!-- <div class="form-group col-lg-2">
-            <label for="codDeposito">Depósito</label>
-            <ng-select
-              [searchable]="true"
-              [clearable]="false"
-              [items]="filteredDepositos"
-              placeholder="Selecione..."
-              formControlName="codDeposito"
-              [virtualScroll]="true"
-              labelForId="codDeposito"
-              bindLabel="nomeDeposito"
-              bindValue="idDeposito"
-              (change)="onChangeDeposito($event.idDeposito)"
-              [ngClass]="onFieldError('codDeposito') + ' ' + onFieldRequired(form.controls.codDeposito)">
-            </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('codDeposito')" message="Depósito é obrigatório."></invalid-form-control>
-          </div> -->
-          <!-- <div class="form-group col-lg-2">
-            <label for="cliente">Cliente</label>
-            <input
-              type="text"
-              class="form-control"
-              id="cliente"
-              placeholder="Digite..."
-              formControlName="cliente"
-              (keydown.enter)="onFilter()">
-          </div> -->
-
           <div *ngIf="filtroCotacoes" class="form-group col-lg-1">
             <label for="statusCliente">Status Cliente</label>
             <select
@@ -312,95 +269,6 @@
               *ngFor="let pedido of dados; let i = index"
               [class.table-active]="i == activeRow"
             >
-              <!-- <td class="text-center" [ngStyle]="styleStatusBorder(pedido)">
-                <span class="d-inline-flex">
-                  <ng-template #tooltipLiberacao>
-                    <p class="mb-2">ESPERANDO LIBERACION:</p>
-                    <br />
-                    <div *ngIf="pedido.travas.length > 0">
-                      <dl>
-                        <ng-container *ngFor="let trava of pedido.travas">
-                          <dd>
-                            <i
-                              class="fas fa-exclamation-triangle small mr-1"
-                            ></i>
-                            {{ trava['desTrava'] }}
-                          </dd>
-                        </ng-container>
-                      </dl>
-                    </div>
-                  </ng-template>
-                  <ng-template #tooltipLiberacaoAberto>
-                    <p class="mb-2">ESPERANDO LIBERACION:</p>
-                    <br />
-                    <div>
-                      <dl>
-                        <ng-container>
-                          <dd>
-                            <i
-                              class="fas fa-exclamation-triangle small mr-1"
-                            ></i>
-                            PEDIDO EN ABIERTO
-                          </dd>
-                        </ng-container>
-                      </dl>
-                    </div>
-                  </ng-template>
-
-                  <i class="mr-2 text-warning fas fa-random" *ngIf="pedido.estado_oferta === 1"
-                    tooltip="Pedido transferido" placement="right"></i>
-                  <i class="mr-2 text-black-50 fas fa-random" *ngIf="pedido.estado_oferta === 0"
-                    tooltip="Pedido não transferido" placement="right"></i>
-
-                  <i
-                    class="mr-2 text-black-50 fas fa-lock"
-                    *ngIf="pedido.pedidoEmLiberacao === 1"
-                    [tooltip]="tooltipLiberacao"
-                    placement="right"
-                  ></i>
-                  <i
-                    class="mr-2 text-warning fas fa-unlock"
-                    *ngIf="
-                      pedido.pedidoEmLiberacao === 0 && pedido.codSituacao !== 1
-                    "
-                    tooltip="Pedido liberado"
-                    placement="right"
-                  ></i>
-                  <i
-                    class="mr-2 text-black-50 fas fa-lock"
-                    *ngIf="
-                      pedido.pedidoEmLiberacao === 0 && pedido.codSituacao == 1
-                    "
-                    [tooltip]="tooltipLiberacaoAberto"
-                    placement="right"
-                  ></i>
-
-                  <i
-                    class="mr-2 text-warning fas fa-dollar-sign"
-                    *ngIf="pedido.pedidoPreFaturado === 1"
-                    tooltip="Pré-faturado"
-                    placement="right"
-                  ></i>
-                  <i
-                    class="mr-2 text-black-50 fas fa-dollar-sign"
-                    *ngIf="pedido.pedidoPreFaturado === 0"
-                    tooltip="Pré-faturado"
-                    placement="right"
-                  ></i>
-                  <i
-                    class="mr-2 text-warning fas fa-check-square"
-                    *ngIf="pedido.pedidoFaturado === 1"
-                    tooltip="Pedido faturado"
-                    placement="right"
-                  ></i>
-                  <i
-                    class="mr-2 text-black-50 far fa-check-square"
-                    *ngIf="pedido.pedidoFaturado === 0"
-                    tooltip="Pedido não faturado"
-                    placement="right"
-                  ></i>
-                </span>
-              </td> -->
               <td class="hover">{{ pedido.id_oferta }}</td>
               <td class="text-center hover">
                 {{ pedido.fecha_inicial | date : 'dd/MM/yyyy' }}
@@ -415,17 +283,11 @@
               <td class="text-center hover">{{ pedido.nombre_lista }}</td>
               <td class="text-center hover">{{ pedido.nombre_modo_entrega }}</td>
               
-              <td class="text-center hover" [tooltip]="pedido.descripcionofe ? 'Cerrado por: ' + pedido.descripcionofe : ''">
-                <ng-container *ngIf="pedido.descripcion !== 'BORRADOR'; else cerradoEstado">
-                    <i class="text-danger">CERRADO</i>
-                </ng-container>
-                <ng-template #cerradoEstado>
-                    <i class="text-primary">ABIERTO</i>
-                </ng-template>
-            </td>
-            
-            
-            
+              <td class="text-center hover">
+                <i *ngIf="pedido.tipo_estado !== 14" class="text-danger" [tooltip]="'Cerrado por: ' + pedido.descripcionofe">CERRADO</i>
+                <i *ngIf="pedido.tipo_estado === 14" class="text-primary">ABIERTO</i>
+              </td>                                         
+               
               <td class="text-center hover">{{ pedido.descripcion_cierre }}</td>
               <td class="text-center hover">
                 <a
@@ -451,18 +313,18 @@
         </custom-table>
         <div class="d-flex justify-content-center mt-3">
           <pagination
-            [maxSize]="maxSize"
-            [(totalItems)]="totalItems"
-            (pageChanged)="onPageChanged($event)"
-            [(itemsPerPage)]="itemsPerPage"
-            [boundaryLinks]="true"
-            [(ngModel)]="currentPage"
-            previousText="&lsaquo;"
-            nextText="&rsaquo;"
-            firstText="&laquo;"
-            lastText="&raquo;"
-          >
-          </pagination>
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
         </div>
       </div>
     </div>
@@ -761,18 +623,18 @@
                       ></empty-result>
                       <div class="d-flex justify-content-center mt-3">
                         <pagination
-                          [maxSize]="maxSizeModal"
-                          [(totalItems)]="totalModal"
-                          (pageChanged)="onPageChangedModal($event)"
-                          [(itemsPerPage)]="itemsPerPageModal"
-                          [boundaryLinks]="true"
-                          [(ngModel)]="currentPage"
-                          previousText="&lsaquo;"
-                          nextText="&rsaquo;"
-                          firstText="&laquo;"
-                          lastText="&raquo;"
-                        >
-                        </pagination>
+                            [maxSize]="maxSize"
+                            [(totalItems)]="totalModal"
+                            (pageChanged)="onPageChangedModal($event)"
+                            [(itemsPerPage)]="itemsPerPageModal"
+                            [boundaryLinks]="true"
+                            [(ngModel)]="currentPageModal"
+                            previousText="&lsaquo;"
+                            nextText="&rsaquo;"
+                            firstText="&laquo;"
+                            lastText="&raquo;"
+                          >
+                          </pagination>
                       </div>
                     </div>
                   </div>

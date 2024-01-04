@@ -48,6 +48,8 @@ export class EditarClienteComponent implements OnInit {
   latitud_inicial: number;
   longitud_inicial: number;
 
+  id_client: number = 0;
+
   loaderNavbar: boolean;
 
   loaderFullScreen = true;
@@ -95,6 +97,7 @@ export class EditarClienteComponent implements OnInit {
     latitud: 0,
     longitud: 0,
     id_ciudad: '',
+    id_cliente: this.id_client,
     color: '',
   };
 
@@ -134,6 +137,7 @@ export class EditarClienteComponent implements OnInit {
     this.categorizarUbicacion();
     this.categorizarContacto();
     this.ciudadVendedor();
+    this.id_client = this.datos_cliente.datos_cliente.id_cliente;
 
     //console.log(this.latitudPromedio)
   }
@@ -223,14 +227,27 @@ export class EditarClienteComponent implements OnInit {
   }
 
   agregarUbicacion() {
-    this.nuevaDireccion = {
-      ubicacion: '',
-      direccion: '',
-      latitud: this.latitudPromedio,
-      longitud: this.longitudPromedio,
-      id_ciudad: '',
-      color: this.generarColorAleatorio(),
-    };
+    if (this.latitudPromedio > 0 && this.longitudPromedio > 0) {
+      this.nuevaDireccion = {
+        ubicacion: '',
+        direccion: '',
+        latitud: this.latitudPromedio,
+        longitud: this.longitudPromedio,
+        id_ciudad: '',
+        id_cliente: this.id_client,
+        color: this.generarColorAleatorio(),
+      };
+    } else {
+      this.nuevaDireccion = {
+        ubicacion: '',
+        direccion: '',
+        latitud: 0,
+        longitud: 0,
+        id_ciudad: '',
+        id_cliente: this.id_client,
+        color: this.generarColorAleatorio(),
+      };
+    }
 
     if (this.datos_cliente.datos_direccion.length < 5) {
       this.datos_cliente.datos_direccion.push({ ...this.nuevaDireccion });
@@ -240,6 +257,7 @@ export class EditarClienteComponent implements OnInit {
         latitud: 0,
         longitud: 0,
         id_ciudad: '',
+        id_cliente: this.id_client,
         color: '',
       };
     }
@@ -363,19 +381,19 @@ export class EditarClienteComponent implements OnInit {
         this.datos_cliente.datos_direccion[index].direccion = direccion_mapa;
       })
       .catch((error: any) => {
-        console.log(error);
+        //console.log(error);
       });
   }
 
   actualizarDireccionContacto(index, event: any) {
-    console.log(this.datos_cliente);
+    //console.log(this.datos_cliente);
     this.obtenerDireccion(event.coords.lat, event.coords.lng)
       .then((direccion_mapa: string) => {
         this.datos_cliente.datos_contacto[index].direccion_contacto =
           direccion_mapa;
       })
       .catch((error: any) => {
-        console.log(error);
+        //console.log(error);
       });
   }
 
@@ -411,56 +429,86 @@ export class EditarClienteComponent implements OnInit {
     /*  console.log(this.datos_cliente.datos_direccion.lenght)
     console.log(this.datos_cliente.datos_contacto.lenght) */
 
-    if (
+    /*  if (
       this.datos_cliente.datos_direccion.length > 0 &&
       this.datos_cliente.datos_contacto.length > 0
-    ) {
-      const allFieldsFilledExceptIdContacto =
-        this.datos_cliente.datos_contacto.every((contacto) => {
-          // Verificar que todos los campos, excepto id_contacto, en cada objeto estén llenos
-          const fieldsToCheck = Object.keys(contacto).filter(
-            (key) => key !== 'id_contacto'
-          );
-          return fieldsToCheck.every(
-            (key) =>
-              contacto[key] !== null &&
-              contacto[key] !== undefined &&
-              contacto[key] !== ''
-          );
-        });
-      /* console.log(allFieldsFilledExceptIdContacto);
-      console.log(this.datos_cliente.datos_contacto); */
+    ) { */
+    //console.log(this.datos_cliente.datos_direccion.lenght)
+    if (this.datos_cliente.datos_direccion.length > 0) {
+      const isIdCiudadRequired =
+        this.datos_cliente.datos_direccion[0].id_ciudad !== null &&
+        this.datos_cliente.datos_direccion[0].id_ciudad !== undefined &&
+        this.datos_cliente.datos_direccion[0].id_ciudad !== '';
 
-      if (allFieldsFilledExceptIdContacto) {
-        swContacto = true;
+      const isDireccionValid = this.datos_cliente.datos_direccion.every(
+        (direccion) => {
+          // Verificar que la dirección y la ubicación no excedan los 50 caracteres
+          const direccionValida =
+            direccion.direccion === null ||
+            direccion.direccion === undefined ||
+            direccion.direccion.length <= 50;
+          return direccionValida;
+        }
+      );
+
+      const isUbicacionValid = this.datos_cliente.datos_direccion.every(
+        (direccion) => {
+          const ubicacionValida =
+            direccion.ubicacion !== null &&
+            direccion.ubicacion !== undefined &&
+            direccion.ubicacion !== '';
+            return ubicacionValida;
+          
+        }
+      );
+
+      if (isIdCiudadRequired) {
+        if(isUbicacionValid){
+          if (isDireccionValid) {
+            swDireccion = true;
+          } else {
+            this.pnotifyService.error(
+              'La dirección no debe exceder los 50 caracteres ni ser numerica.'
+            );
+          }
+
+        }else{
+          this.pnotifyService.error(
+            'El nombre de la ubicación es un campo obligatorio.'
+          );
+        }
       } else {
         this.pnotifyService.error(
-          'Complete todos los campos requeridos de contacto'
+          'Complete todos los campos requeridos de dirección.'
         );
       }
+    } else {
+      this.pnotifyService.error('Debe registrar al menos una dirección.');
+    }
 
-      console.log(this.datos_cliente.datos_direccion);
-      const allFieldsFilledInDatosDireccion =
-        this.datos_cliente.datos_direccion.every((direccion) => {
-          // Verificar que todos los campos en cada objeto estén llenos
-          return Object.keys(direccion).every(
-            (key) =>
-              direccion[key] !== null &&
-              direccion[key] !== undefined &&
-              direccion[key] !== ''
-          );
-        });
-      if (allFieldsFilledInDatosDireccion) {
-        swDireccion = true;
-      } else {
-        this.pnotifyService.error(
-          'Complete todos los campos requeridos de dirección'
-        );
-      }
-      if (swDireccion === true && swContacto === true) {
-        this.prepararPeticion();
-      }
-    } else if (
+    const direccionContactoValido = this.datos_cliente.datos_contacto.every(
+      (contacto) =>
+        contacto.direccion_contacto === null ||
+        contacto.direccion_contacto === undefined ||
+        (typeof contacto.direccion_contacto === 'string' &&
+          contacto.direccion_contacto.length <= 50)
+    );
+
+
+    if (direccionContactoValido) {
+      swContacto = true;
+    } else {
+      this.pnotifyService.error(
+        'La dirección del contacto no debe exceder los 50 caracteres.'
+      );
+    }
+
+    //console.log(this.datos_cliente.datos_direccion);
+
+    if (swDireccion === true && swContacto === true) {
+      this.prepararPeticion();
+    }
+    /* } else if (
       this.datos_cliente.datos_direccion.length > 0 &&
       this.datos_cliente.datos_contacto.length <= 0
     ) {
@@ -471,12 +519,14 @@ export class EditarClienteComponent implements OnInit {
       this.datos_cliente.datos_direccion.length <= 0 &&
       this.datos_cliente.datos_contacto.length > 0
     ) {
-      this.pnotifyService.error('Debe registrar al menos 1 dirección de cliente');
+      this.pnotifyService.error(
+        'Debe registrar al menos 1 dirección de cliente'
+      );
     } else {
       this.pnotifyService.error(
         'Debe registrar al menos 1 contacto y 1 dirección de cliente'
       );
-    }
+    } */
   }
 
   prepararPeticion() {
@@ -543,7 +593,28 @@ export class EditarClienteComponent implements OnInit {
       id_estado: idEstadoInput,
       frontend: 1,
     };
-    const allFieldsFilled = Object.values(data).every((value) => {
+
+    // Especifica los campos requeridos
+    const requiredFields = [
+      'codigo_cliente',
+      'id_cliente',
+      'nit',
+      'ci',
+      'razon_social',
+      'nombres',
+      'tipo_pessoa',
+      'tipo_persona',
+      'id_vendedor',
+      'telefono',
+      'celular',
+      'ubicacion',
+      'contactos',
+      'id_estado',
+    ];
+
+    // Verifica si todos los campos requeridos tienen un valor válido
+    const allFieldsFilled = requiredFields.every((field) => {
+      const value = data[field];
       return value !== null && value !== undefined && value !== '';
     });
 
@@ -551,7 +622,7 @@ export class EditarClienteComponent implements OnInit {
       this.enviarPeticion(data);
     } else {
       this.pnotifyService.error(
-        'Porfavor complete todos los campos requeridos.'
+        'Por favor, complete todos los campos requeridos.'
       );
     }
   }
@@ -566,14 +637,14 @@ export class EditarClienteComponent implements OnInit {
         (response: JsonResponse) => {
           this.isLoading = false;
           this.botonGuardar.nativeElement.disabled = false;
-          if (response.response == 200) {
+          if (response.CodigoRespuesta == 200) {
             setTimeout(() => {
               this.pnotifyService.success('Cliente editado exitosamente');
               this.onClose();
             }, 200);
             location.reload();
           } else {
-            this.pnotifyService.error(response.detalle);
+            this.pnotifyService.error(response.Mensaje);
           }
         },
         (error: any) => {

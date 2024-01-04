@@ -94,14 +94,6 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
     this.rutaService.indiceVendedor = vendedorSeleccionado
   }
 
-
-
-
-
-
-
-
-
   adminOnly(): boolean {
     if (this.profile.coordenador === true || this.profile.gestor === true) {
       return true;
@@ -124,7 +116,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       .pipe(
         finalize(() => {
           this.loaderFullScreen = false;
-
+            
           if (this.showAll === true) {
             this.formValue.emit({
               idEscritorio: 0,
@@ -138,17 +130,16 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       .subscribe({
         next: (response: any) => {
           if (response[0]['responseCode'] === 200) {
+
             this.setFormFilter();
             this.escritorios = response[0]['result'];
 
             const escritorioNoVacio = this.escritorios.find(item => item.nome !== null && item.nome !== '');
 
             if (escritorioNoVacio) {
-              /*  // Se encontró un valor no vacío
-               console.log(escritorioNoVacio.nome); */
+              /*  // Se encontró un valor no vacío */
             } else {
-              /*   // No se encontró ningún valor no vacío
-              console.log("No hay valores no vacíos en el array"); */
+              /*   // No se encontró ningún valor no vacío*/
             }
 
             if (this.escritorios.length > 1 && this.showAll === true) {
@@ -160,14 +151,14 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
           } else {
             this.handleLoadDependenciesError();
           }
-
           if (response[0]['responseCode'] === 200) {
-            this.vendedores = response[1]['result'];
+            this.vendedores = response[1]['data'];
+           
             this.filteredVendedores = this.vendedores;
             /* if (this.showAll === true) { */
             this.filteredVendedores.unshift({
               id: 0,
-              nome: 'TODOS'
+              nombres: 'TODOS'
             });
             /* } */
           } else {
@@ -218,6 +209,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       )
       .subscribe(
         (response: any) => {
+        
           if (response['responseCode'] === 200) {
             this.setFormFilter();
             this.filteredVendedores = response['result'];

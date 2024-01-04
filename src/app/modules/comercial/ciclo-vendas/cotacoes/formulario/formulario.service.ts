@@ -1,4 +1,4 @@
-
+    
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject, Observable, forkJoin, BehaviorSubject, of } from 'rxjs';
@@ -130,7 +130,7 @@ export class ComercialCicloVendasCotacoesFormularioService {
   }
 
   getLocaisEntrega(codCliente: number): Observable<Object | JsonResponse> {
-    return this.clientesService.getEnderecos(codCliente, { localEntrega: 1 });
+    return this.clientesService.getEnderecos(codCliente, { localEntrega: codCliente});
   }
 
   getVerificaOfertasCliente(codCliente: number): Observable<Object | JsonResponse> {

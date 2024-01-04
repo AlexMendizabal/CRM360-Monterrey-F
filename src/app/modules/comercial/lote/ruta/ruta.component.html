@@ -10,8 +10,7 @@
   <div class="row">
     <div class="col-sm-6">
       <div class="embed-responsive embed-responsive-16by9">
-        <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="13" class="embed-responsive-item"
-          >
+        <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="13" class="embed-responsive-item">
 
           <agm-marker *ngFor="let mapa of mapas" [latitude]="mapa.LATITUD" [longitude]="mapa.LONGITUD"
             [iconUrl]="mapa.markers.icon" (markerDragEnd)="actualizarDireccion($event)"
@@ -20,11 +19,8 @@
               <div class="marker-info-window">
                 <h5 class="marker-name">{{ mapa.NOMBRE }}</h5>
                 <p class="marker-info"><strong>Dirección:</strong> {{ mapa.DIRECCION }}</p>
-                <p class="marker-info"><strong>Fecha de inicio:</strong> {{ mapa.FECHA_INICIO | date:'dd/MM/yyyy
-                  HH:mm:ss' }}</p>
-                <p class="marker-info"><strong>Fecha de fin:</strong> {{ mapa.FECHA_FIN | date:'dd/MM/yyyy HH:mm:ss' }}
-                </p>
-
+                <p class="marker-info"><strong>Fecha de inicio:</strong> {{ mapa.FECHA_INICIO | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+                <p class="marker-info"><strong>Fecha de fin:</strong> {{ mapa.FECHA_FIN | date:'dd/MM/yyyy HH:mm:ss' }} </p>
                 <button class="marker-button" (click)="agregarClienteTemporal(mapa)">
                   <i class="fas fa-plus"></i> &nbsp; Agregar
                 </button>

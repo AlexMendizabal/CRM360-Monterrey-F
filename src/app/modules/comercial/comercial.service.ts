@@ -120,7 +120,6 @@ export class ComercialService {
 
   getClasses(params: any): Observable<Object> {
     let httpParams = new HttpParams();
-
     for (let param in params) {
       httpParams = httpParams.append(param, params[param]);
     }

@@ -80,7 +80,7 @@
         <p>Total  USD. <span class="customer-info custom-modal-content"> USD.{{ dataFromParent.pedido[0].total }}</span> </p>
       </div>
       <div class="form-row">
-        <div class="group col upspace">
+        <div class="group col-6 upspace">
           <div class="left-div customer-info custom-modal-content">
             <div class="entrega-font">
               <div class="no-bullet">Lugar de entrega: {{ dataFromParent.parcelas[0].direccion_entrega }}</div>
@@ -89,7 +89,7 @@
             </div>
           </div>
         </div>
-        <div class="group col negrita-font upspace">
+        <div class="group col-6 negrita-font upspace">
           <div class="left-div customer-info custom-modal-content ">
             <div >
               Esta cotización está sujeta a stock.
@@ -114,10 +114,10 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" #captureButton (click)="onDownloadPDF()">DESCARGAR</button>
-      <button type="button" class="btn btn-secondary" (click)="captureScreen()">IMPRIMIR</button>
-    </div>
+    
   </div>
 </div>
-
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" #captureButton (click)="onDownlaod()">DESCARGAR</button>
+  <button type="button" class="btn btn-secondary" (click)="captureScreen()">IMPRIMIR</button>
+</div>

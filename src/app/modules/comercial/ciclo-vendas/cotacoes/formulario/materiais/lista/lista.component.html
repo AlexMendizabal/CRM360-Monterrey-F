@@ -21,10 +21,10 @@
     <div class="row mb-2">
       <div class="col">
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-sm btn-danger mr-3" (click)="onReset()">
+        <!--   <button type="button" class="btn btn-sm btn-danger mr-3" (click)="onReset()">
             <i class="fas fa-trash"></i>
             <span>Limpiar</span>
-          </button>
+          </button> -->
           <button type="button" class="btn btn-sm btn-secondary mr-3" (click)="onFilterVend(1)"
             *ngIf="swVendedor === true && swActivarBusqueda === true">
             <i class="fas fa-search"></i>
@@ -70,7 +70,7 @@
               </ng-select>
             </div>
             <div class="form-group col-lg-4">
-              <label for="codMaterial">Material</label>
+              <label for="codMaterial"><span class="text-danger">(*)</span>Material</label>
               <ng-select [searchable]="true" [clearable]="false" [items]="materiais" placeholder="Seleccione..."
                 formControlName="codMaterial" [virtualScroll]="true" labelForId="id_material" bindLabel="nombre"
                 bindValue="codigoMaterial" [loading]="materiaisLoader" loadingText="Cargando..."
@@ -97,7 +97,7 @@
                 [ngClass]="onFieldError('comEstoque') + ' ' + onFieldRequired(form.controls.comEstoque)"
               </select>
             </div> -->
-            <div class="form-group col-lg-2">
+            <!-- <div class="form-group col-lg-2">
               <label for="registros">Registros</label>
               <select class="form-control custom-select" id="registros" formControlName="registros"
                 (change)="cambioRegistros($event)">
@@ -108,7 +108,7 @@
                 <option>1000</option>
 
               </select>
-            </div>
+            </div> -->
             <!-- <div class="form-group col-lg-1">
               <label for="orderBy">Ordenación</label>
               <select class="form-control custom-select" formControlName="orderBy" id="orderBy">

@@ -37,7 +37,7 @@ export class ComercialClientesDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("acceso 2", this.activatedRoute.snapshot.data);
+    
   
     if (this.activatedRoute.snapshot.data['response']['responseCode'] === 200) {
       this.titleService.setTitle('Dashboard de cliente');

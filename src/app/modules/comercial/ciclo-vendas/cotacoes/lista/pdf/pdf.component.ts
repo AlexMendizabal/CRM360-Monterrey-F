@@ -6,7 +6,15 @@ import { Subject } from 'rxjs';
 import html2canvas from 'html2canvas';
 import * as jsPDF from 'jspdf';
 import { VERSION, ViewChild, ElementRef } from '@angular/core';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { PdfService } from 'src/app/shared/services/core/pdf.service';
 
+
+interface PdfMakeConfig {
+  content: Array<any>;
+  styles?: Array<any>;
+}
 
 
 @Component({
@@ -26,6 +34,8 @@ export class PdfComponent implements OnInit {
   imageSrc: any;
   data: [];
   materiais: any[];
+  pdfData: string;
+
   public onClose: Subject<boolean>;
 
   imageWidth = 300; // Increase the width as needed
@@ -33,6 +43,7 @@ export class PdfComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private pdfService: PdfService,
     // tslint:disable-next-line:variable-name
     private _bsModalRef: BsModalRef,
     private sanitizer: DomSanitizer
@@ -61,54 +72,11 @@ export class PdfComponent implements OnInit {
     this._bsModalRef.hide();
   }
 
-  onDownloadPDF() {
-    const content = this.contentToConvert.nativeElement;
-
-    // Use html2canvas to capture the content as an image
-    html2canvas(content).then(canvas => {
-      // Create a new PDF document
-      const pdf = new jsPDF('p', 'mm', 'a4');
-
-      // Calculate the image dimensions to fit the PDF page
-      const imgWidth = 210;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      // Add the captured image to the PDF
-      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgWidth, imgHeight);
-
-      // Download the PDF
-      pdf.save('your_pdf_filename.pdf');
-    });
+  onDownlaod(){
+    //this.loaderNavbar = true;
+    this.pdfService.download(
+      'contentToConvert',
+      `${this.dataFromParent.pedido[0].codigo_oferta}_Monterrey`
+    );
   }
-
-  public captureScreen() {
-    const content = this.contentToConvert.nativeElement;
-
-    if (!content) {
-      console.error('Element with id contentToConvert not found.');
-      return;
-    }
-
-    if (content.childElementCount === 0) {
-      console.error('No content found inside the contentToConvert element.');
-      return;
-    }
-    html2canvas(content).then((canvas) => {
-      const imgWidth = 980;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      const contentDataURL = canvas.toDataURL('image/png');
-
-      // Create a new window and open the PDF in a new tab
-      const newWindow = window.open('', '_blank');
-      newWindow.document.open();
-      newWindow.document.write(`<html><body><img src="${contentDataURL}" width="${imgWidth}" height="${imgHeight}" /></body></html>`);
-      newWindow.document.close();
-
-      setTimeout(() => {
-        newWindow.print();
-      }, 500);
-    });
-  }
-
 }

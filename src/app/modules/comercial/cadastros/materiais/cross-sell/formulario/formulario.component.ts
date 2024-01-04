@@ -98,7 +98,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
     this.setBreadCrumb();
     this.getFilterValues();
     this.setFormBuilder();
-    this.titleService.setTitle('Cadastro de cross-sell de materiais');
+    this.titleService.setTitle('Registro de cross-sell de materiales');
   }
 
   registrarAcesso(): void {
@@ -108,10 +108,10 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
   setBreadCrumb(): void {
     this.activatedRoute.params.subscribe((params: any) => {
       if (params.id) {
-        this.appTitle = 'Editar cross-sell de materiais';
+        this.appTitle = 'Editar cross-sell de materiales';
         this.action = 'update';
       } else {
-        this.appTitle = 'Nova cross-sell de materiais';
+        this.appTitle = 'Nuevo cross-sell de materiales';
         this.action = 'create';
       }
 
@@ -242,8 +242,8 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
   confirmDelete(): any {
     return this.confirmModalService.showConfirm(
       'delete',
-      'Confirmar exclusão',
-      'Deseja realmente prosseguir com a exclusão do registro?',
+      'Confirmar la eliminación',
+      '¿Realmente desea continuar con la eliminación del registro?',
       'Cancelar',
       'Confirmar'
     );
@@ -317,6 +317,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
         )
         .subscribe(
           (response: JsonResponse) => {
+            console.log('aqui crossell', response);
             if (
               response.hasOwnProperty('success') &&
               response.success === true
@@ -478,10 +479,10 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
               }
             );
         } else {
-          this.pnotifyService.notice('Associe pelo menos um material.');
+          this.pnotifyService.notice('Asociar al menos un material.');
         }
       } else {
-        this.pnotifyService.notice('Selecione um material.');
+        this.pnotifyService.notice('Selecione un material.');
       }
     }
   }

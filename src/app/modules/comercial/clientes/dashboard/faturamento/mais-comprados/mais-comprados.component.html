@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col">
     <div class="border rounded bg-white shadow-sm p-3 h-100">
-      <div class="mtc-title">Materiais mais comprados no último ano</div>
+      <div class="mtc-title">Materiales mas ofertados el ultimo año</div>
       <div class="row" id="mais-comprados">
         <div class="col my-auto">
           <div [hidden]="!maisCompradosLoaded">
@@ -18,13 +18,13 @@
                 <tr *ngFor="let item of maisComprados; let i = index">
                   <td style="width: 40%" class="text-truncate" [tooltip]="item.material" container="body">{{ item.material }}</td>
                   <td style="width: 20%" class="text-center text-truncate">{{ item.ton | number:'1.3-3' }}t</td>
-                  <td style="width: 20%" class="text-center text-truncate">{{ item.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
+                  <td style="width: 20%" class="text-center text-truncate">{{ item.valor | currency:'$':'symbol':'1.2-2' }}</td>
                   <td style="width: 20%" class="text-center text-truncate">{{ item.percentual | number:'1.2-2' }}%</td>
                 </tr>
                 <tr class="">
                   <td style="width: 40%" class="bg-dark text-white"><strong>Total</strong></td>
                   <td style="width: 20%" class="bg-dark text-white text-center"><strong>{{ maisCompradosTotal.ton | number:'1.3-3' }}t</strong></td>
-                  <td style="width: 20%" class="bg-dark text-white text-center"><strong>{{ maisCompradosTotal.valor | currency:'BRL':'symbol':'1.2-2' }}</strong></td>
+                  <td style="width: 20%" class="bg-dark text-white text-center"><strong>{{ maisCompradosTotal.valor | currency:'$':'symbol':'1.2-2' }}</strong></td>
                   <td style="width: 20%" class="bg-dark text-white"></td>
                 </tr>
               </ng-template>

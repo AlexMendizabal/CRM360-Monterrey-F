@@ -49,9 +49,16 @@ export class NotificacionesService {
     }
 
     postLeerNotificaciones(params: any) {
-        console.log(params);
+        //console.log(params);
         return this.http
             .post(this.BASE_URL+ `/core/notificaciones/leerNotificaciones`, params)
             .pipe(take(1), retry(2));
+    }
+
+    createNotificacion(params: any) {
+    
+        return this.http
+            .post(this.BASE_URL+ `/core/notificaciones/crearNotificaciones`, params)
+            .pipe(take(1), retry(0));
     }
 }

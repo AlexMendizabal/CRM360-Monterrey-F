@@ -37,6 +37,8 @@ import { FunctionsService } from 'src/app/shared/services/core/functions.service
 import { array } from '@amcharts/amcharts4/core';
 import { number } from 'ng-brazil/number/validator';
 import { PreCadastroUbicacionContactosService } from './ubicacion_contacto/ubicacion.service';
+import { NotificacionesService } from '../../../../core/header/notificaciones/notificaciones.service';
+
 
 @Component({
   selector: 'comercial-clientes-pre-cadastro',
@@ -75,14 +77,19 @@ export class ComercialClientesPreCadastroComponent
   vendedores: any = [];
   cnaes: any = [];
 
+  id_vend: number = 0;
+
   form: FormGroup;
   formChanged = false;
   tipoPessoa: any = {};
+  tipos_personas: any = [];
   submittingForm = false;
   latitud: number = 0;
   longitud: number = 0;
   swActivarLatitud: boolean = false;
-  maxLengthRules: any = {};
+  maxLengthRules: any = {
+    ci: 12,
+  };
   maxLengthMessages: any = {};
   id_marcador: number = 0;
   disabled_form: boolean = true;
@@ -93,6 +100,8 @@ export class ComercialClientesPreCadastroComponent
   tipos_clientes: any = [];
   index_array_ubicacion: number = 0;
   titulo_ubicacion_array: string = '';
+  direccion_ubicacion_array: string = '';
+
   id_ciudad: number = 0;
 
   index_array_contactos: number = 0;
@@ -120,6 +129,9 @@ export class ComercialClientesPreCadastroComponent
   formObj: FormGroup;
   formObjArray: any[] = [];
   ubicaciones: any[] = [];
+
+  notificaciones: any = [];
+
   indice: number = 0;
   //bloquearSeleccion: boolean = true;
   ciudad_vendedor: number = 0;
@@ -145,7 +157,8 @@ export class ComercialClientesPreCadastroComponent
     private functionsService: FunctionsService,
     private modalService: BsModalService,
     private ubicacionService: PreCadastroUbicacionContactosService,
-    private bsModalRef: BsModalRef
+    private bsModalRef: BsModalRef,
+    private notificacionesService: NotificacionesService
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -155,6 +168,7 @@ export class ComercialClientesPreCadastroComponent
     this.getFormFields();
     //this.determinarBloqueo();
     this.obtenerTiposClientes();
+    this.obtenerTipoPersonas();
     this.activatedRoute.queryParams.subscribe((queryParams: any) => {
       let documento = null;
 
@@ -177,6 +191,7 @@ export class ComercialClientesPreCadastroComponent
   } */
 
   changeVendedor(a) {
+    this.id_vend = a;
     this.clientesService.getVendedorCiudad(a).subscribe(
       (response: any) => {
         if (response.responseCode === 200) {
@@ -201,6 +216,26 @@ export class ComercialClientesPreCadastroComponent
       (response: any) => {
         if (response.responseCode === 200) {
           this.tipos_clientes = response.result;
+        } else {
+          this.handleFormFieldsError();
+        }
+      },
+      (error) => {
+        /*           console.error('Error al cargar dependencias:', error);
+         */ this.handleFormFieldsError();
+      }
+    );
+  }
+  get ciControl() {
+    return this.form.get('ci');
+  }
+
+  obtenerTipoPersonas() {
+    this.preCadastroService.getTipoPersona().subscribe(
+      (response: any) => {
+        if (response.responseCode === 200) {
+          console.log(response);
+          this.tipos_personas = response.result;
         } else {
           this.handleFormFieldsError();
         }
@@ -325,6 +360,7 @@ export class ComercialClientesPreCadastroComponent
 
   setMaxLengthRules() {
     this.maxLengthRules = this.activatedRoute.snapshot.data.rules.data;
+    //console.log(this.maxLengthRules);
     this.maxLengthMessages = {
       nome: `El nombre debe contener ${this.maxLengthRules.nome} caracteres.`,
       apellido1: `Apellido debe contener ${this.maxLengthRules.apellido1} caracteres.`,
@@ -332,6 +368,7 @@ export class ComercialClientesPreCadastroComponent
       razaoSocial: `El nombre de la empresa debe contener ${this.maxLengthRules.razaoSocial} caracteres.`,
       nomeFantasia: `El nombre comercial debe contener hasta ${this.maxLengthRules.nomeFantasia} caracteres.`,
       email: `El correo electrónico debe llegar a ${this.maxLengthRules.email} caracteres.`,
+      ci: `El ci no puede exceder los 8  ${this.maxLengthRules.ci} caracteres.`,
     };
   }
   agregarUbicacionALaFormObj(datosUbicacion: any) {
@@ -507,7 +544,7 @@ export class ComercialClientesPreCadastroComponent
     this.form = this.formBuilder.group({
       //cnpj_cpf: [null,Validators.required],
       nit: [null, Validators.required],
-      ci: [null, Validators.required],
+      ci: [null, [Validators.required, Validators.maxLength(8)]],
 
       nome: [
         null,
@@ -517,12 +554,17 @@ export class ComercialClientesPreCadastroComponent
       contacto: [null],
       razaoSocial: [null],
       nomeFantasia: [null],
-      nombre_factura: [null, Validators.required],
+      nombre_factura: [null /* Validators.required */],
       vendedor: [null, Validators.required],
       cnae: [null],
       email: [
         null,
-        [Validators.email, Validators.maxLength(this.maxLengthRules.email)],
+        [
+          ,
+          /* Validators.email */ Validators.maxLength(
+            this.maxLengthRules.email
+          ),
+        ],
       ],
       telefone: [null, Validators.required],
       celular: [null, Validators.required],
@@ -556,7 +598,11 @@ export class ComercialClientesPreCadastroComponent
       this.form.get('razaoSocial').updateValueAndValidity();
     });
   }
+
   onSubmit() {
+    alert(
+      'Se recomienda no salir de la ventana mientras se realiza el proceso de registro'
+    );
     var swDireccion = false;
     var swContactos = false;
     /* this.postAkna(20081);
@@ -568,60 +614,138 @@ export class ComercialClientesPreCadastroComponent
       G: 'Gobierno',
       E: 'Empleado',
     };
-    const tipopessoa = this.form.value.tipopessoa;
-    const tipopersona = tipoPessoaOptions[tipopessoa];
+    const tipopessoa = (this.form.value.tipopessoa || '').trim().toUpperCase(); // Convertir a mayúsculas
+    const tipopersona = tipoPessoaOptions[tipopessoa] || 'Tipo no válido';
+
+    //console.log(tipopersona);
     const data = {
       ubicacion: [],
       contactos: [],
     };
-    /*  console.log(this.ubicacionFormularios); */
-    /* this.ubicacionFormularios.forEach((formulario) => {
+    /* if (
+      this.contactoFormularios.length > 0 &&
+      this.contactoFormularios.length > 0
+    ) { */
+    /* const ubicacionFormulario = this.ubicacionFormularios;
+      const allFieldsFilledInUbicacionFormulario = Object.values(
+        ubicacionFormulario
+      ).every((direccion) => {
+        // Verificar que todos los campos en cada objeto estén llenos
+        return Object.keys(direccion).every(
+          (key) =>
+            direccion[key] !== null &&
+            direccion[key] !== undefined &&
+            direccion[key] !== ''
+        );
+      });
 
-      data.ubicacion.push(formulario.value);
-    }); */
-    //console.log(this.ubicacionFormularios)
-    const ubicacionFormulario = this.ubicacionFormularios;
-    const allFieldsFilledInUbicacionFormulario = Object.values(
-      ubicacionFormulario
-    ).every((direccion) => {
-      // Verificar que todos los campos en cada objeto estén llenos
-      return Object.keys(direccion).every(
-        (key) =>
-          direccion[key] !== null &&
-          direccion[key] !== undefined &&
-          direccion[key] !== ''
+      if (allFieldsFilledInUbicacionFormulario) {
+        data.ubicacion = ubicacionFormulario;
+        swDireccion = true;
+      } else {
+        this.pnotifyService.notice(
+          'Porfavor llene todos los campos requeridos de dirección.'
+        );
+      } */
+    /* 
+      const contactoFormulario = this.contactoFormularios;
+      console.log(this.contactoFormularios);
+      const requiredAttributes = [
+        'titulo_contacto',
+        'nombres_contacto',
+        'apellido_contacto',
+      ];
+
+      const allFieldsFilledInContactoFormulario = contactoFormulario.every(
+        (contacto) => {
+          // Verificar que los atributos requeridos estén llenos en cada objeto
+          return requiredAttributes.every(
+            (key) =>
+              contacto[key] !== null &&
+              contacto[key] !== undefined &&
+              contacto[key] !== ''
+          );
+        }
       );
-    });
 
-    if (allFieldsFilledInUbicacionFormulario) {
-      data.ubicacion = ubicacionFormulario;
-      swDireccion = true;
-    }else{
-      this.pnotifyService.notice('Porfavor llene todos los campos requeridos de dirección.');
-    }
+      if (allFieldsFilledInContactoFormulario) {
+        data.contactos = contactoFormulario;
+      } else {
+        this.pnotifyService.notice(
+          'Por favor, llene todos los campos requeridos de contacto.'
+          );
+        } */
 
-
+    //if()
     const contactoFormulario = this.contactoFormularios;
-    const allFieldsFilledInContactoFormulario = Object.values(
-      contactoFormulario
-    ).every((contacto) => {
-      // Verificar que todos los campos en cada objeto estén llenos
-      return Object.keys(contacto).every(
-        (key) =>
-        contacto[key] !== null &&
-        contacto[key] !== undefined &&
-        contacto[key] !== ''
-      );
-    });
+    //console.log(this.contactoFormularios);
+    const requiredAttributes = [
+      'titulo_contacto',
+      'nombres_contacto',
+      'apellido_contacto',
+      'telefono_contacto',
+      'direccion_contacto',
+    ];
+    const allFieldsFilledInContactoFormulario = contactoFormulario.every(
+      (contacto) => {
+        // Verificar que los atributos requeridos estén llenos en cada objeto
+        return requiredAttributes.every(
+          (key) =>
+            contacto[key] !== null &&
+            contacto[key] !== undefined &&
+            contacto[key] !== ''
+        );
+      }
+    );
 
     if (allFieldsFilledInContactoFormulario) {
-      data.contactos = contactoFormulario;
       swContactos = true;
-    }else{
-      this.pnotifyService.notice('Porfavor llene todos los campos requeridos de contacto.');
+
+      data.contactos = contactoFormulario;
+    } else {
+      this.pnotifyService.notice(
+        'Por favor, llene todos los campos requeridos de contacto.'
+      );
+    }
+    const ubicacionFormulario = this.ubicacionFormularios;
+
+    if (
+      ubicacionFormulario &&
+      ubicacionFormulario.length > 0 &&
+      ubicacionFormulario[0].id_ciudad !== null &&
+      ubicacionFormulario[0].id_ciudad !== undefined &&
+      ubicacionFormulario[0].id_ciudad !== ''
+    ) {
+      if (
+        ubicacionFormulario[0].ubicacion &&
+        ubicacionFormulario[0].ubicacion.length > 0
+      ) {
+        const direccionValida = ubicacionFormulario.every(
+          (direccion) =>
+            direccion.direccion === null ||
+            direccion.direccion === undefined ||
+            (typeof direccion.direccion === 'string' &&
+              direccion.direccion.length < 50)
+        );
+
+        if (direccionValida) {
+          data.ubicacion = ubicacionFormulario;
+          swDireccion = true;
+        } else {
+          this.pnotifyService.notice(
+            'La dirección debe tener menos de 50 caracteres.'
+          );
+        }
+      } else {
+        this.pnotifyService.notice(
+          'El nombre de ubicacion es un dato requerido'
+        );
+      }
+    } else {
+      this.pnotifyService.notice('El campo de ciudad es obligatorio');
     }
 
-    if (this.form.valid && swContactos ===true  && swDireccion === true) {
+    if (this.form.valid && swDireccion === true && swContactos === true) {
       this.loaderNavbar = true;
       this.submittingForm = true;
       let formObj = {};
@@ -639,8 +763,8 @@ export class ComercialClientesPreCadastroComponent
         email: this.form.value.email,
         telefono: this.form.value.telefone,
         celular: this.form.value.celular,
-        ubicacion: data.ubicacion, // Asigna los datos de ubicación directamente aquí
-        contactos: data.contactos,
+        ubicacion: data.ubicacion /* this.ubicacionFormularios */, // Asigna los datos de ubicación directamente aquí
+        contactos: /* data.contactos */ this.contactoFormularios,
         id_tipo_cliente: 0,
         frontend: 1,
       };
@@ -656,15 +780,18 @@ export class ComercialClientesPreCadastroComponent
         )
         .subscribe(
           (response: any) => {
-            if (response.response === 200 || response.response === 202) {
-              this.pnotifyService.success(response.detalle);
+            if (response.CodigoRespuesta === 200) {
+              this.pnotifyService.success(response.Mensaje);
               this.formChanged = false;
               this.form.reset();
-              this.router.navigate(['../cadastro', response.result], {
+              this.crearNotificacion();
+              
+              /* this.router.navigate(['../cadastro', response.Mensaje], {
                 relativeTo: this.activatedRoute,
-              });
-            } else if (response.response === 204) {
-              this.pnotifyService.notice(response.detalle);
+              }); */
+              this.getNotificaciones();
+            } else if (response.CodigoRespuesta === 204) {
+              this.pnotifyService.notice(response.Mensaje);
             }
           },
           (error: any) => {
@@ -672,6 +799,63 @@ export class ComercialClientesPreCadastroComponent
           }
         );
     }
+    /* } else {
+      this.pnotifyService.notice(
+        'Debe registrar al menos 1 contacto y dirección.'
+      );
+    } */
+  }
+
+  crearNotificacion(){
+    console.log(this.form.value.vendedor); 
+    const params ={
+      'titulo': 'Nuevo cliente',
+      'mensaje': 'Se ha registrado un socio de negocios',
+      'url': 'http://localhost:4200/#/comercial/clientes/lista',
+      'id_vendedor':  this.id_vend
+    }
+
+    this.notificacionesService.createNotificacion(params)
+    .pipe(
+      finalize(() => {
+       
+      })
+    )
+    .subscribe(
+      (response: any) => {
+        if (response.responseCode === 200) {
+        }
+      },
+      (error: any) => {
+       // this.pnotifyService.notice('Ocurrio un error.');
+      }
+    );
+
+  }
+
+  getNotificaciones() {
+    this.notificacionesService.getNotificaciones();
+
+    this.notificacionesService
+
+      .getNotificaciones()
+      .pipe(
+        finalize(() => {
+          /*  this.loaderNavbar = false;
+           this.submittingForm = false; */
+        })
+      )
+      .subscribe(
+        (response: any) => {
+          if (response.responseCode === 200) {
+            this.notificaciones = response.content;
+          } else if (response.response === 204) {
+          }
+        },
+        (error: any) => {
+          this.pnotifyService.notice('Ocurrio un error.');
+        }
+      );
   }
 
   setType(type: string) {
@@ -786,6 +970,17 @@ export class ComercialClientesPreCadastroComponent
 
     this.ubicacionFormularios[index].ubicacion = atributo;
     //console.log(this.ubicacionFormularios)
+  }
+  actualizarDireccion(atributo, index, tipo) {
+    /*  console.log(atributo)
+    console.log(index) */
+
+    if (tipo === 1) {
+      this.index_array_ubicacion = index;
+      this.ubicacionFormularios[index].direccion = atributo;
+    } else if (tipo === 2) {
+    }
+    //this.direccion_ubicacion_array = atributo;
   }
   actualizarContacto(atributo, tipo, index) {
     /*  console.log(atributo) */

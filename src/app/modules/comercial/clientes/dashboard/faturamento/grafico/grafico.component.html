@@ -1,12 +1,12 @@
 <div class="row">
   <div class="col">
     <div class="border rounded bg-white shadow-sm p-3 h-100">
-      <div class="mtc-title">Facturación mensual del año pasado en toneladas</div>
+      <div class="mtc-title">Cotizacion mensual desde el año pasado en toneladas</div>
       <div class="row" id="faturamento-grafico">
         <div class="col my-auto">
           <div [hidden]="!chartLoaded">
             <div id="column-chart" class="amcharts" [hidden]="chartEmpty"></div>
-            <empty-result message="Nenhuma informação encontrada" *ngIf="chartEmpty"></empty-result>
+            <empty-result message="Ninguna informacion encontrada" *ngIf="chartEmpty"></empty-result>
           </div>
           <div *ngIf="!chartLoaded" class="text-center">
             <div class="spinner-border text-dark"></div>

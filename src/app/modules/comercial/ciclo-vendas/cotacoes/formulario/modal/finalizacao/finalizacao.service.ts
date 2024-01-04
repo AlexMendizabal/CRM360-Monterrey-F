@@ -82,12 +82,11 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
       )
       .subscribe(
         (response: JsonResponse) => {
-          console.log(response);
-          this.eventDirty.emit(true)
+              this.eventDirty.emit(true)
           // @ts-ignore: Ignorar error TS2339
-          if (response.success) {
-             dataCotacao.carrinho = [];
-            dataCotacao.carrinho = response.data;
+          if (response.success == true) {
+         /*     dataCotacao.carrinho = [];
+            dataCotacao.carrinho = response.data; */
             this.showModal(
               ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
               dataCotacao

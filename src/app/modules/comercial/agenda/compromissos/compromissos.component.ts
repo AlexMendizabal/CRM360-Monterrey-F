@@ -26,7 +26,7 @@ import { ComercialService } from '../../comercial.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { DateService } from 'src/app/shared/services/core/date.service';
-
+import { ChangeDetectorRef } from '@angular/core';
 // Interfaces
 
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
@@ -50,8 +50,6 @@ export interface Compromisso {
   typeContactDesc: string; // Nueva propiedad para la descripción del tipo de contacto
   statusnome : string;
 }
-
-
 
 @Component({
   selector: 'comercial-agenda-compromissos',
@@ -111,24 +109,27 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
     private comercialService: ComercialService,
     private atividadesService: AtividadesService,
     private titleService: TitleService,
-    private dateService: DateService
+    private dateService: DateService,
+    private cdr: ChangeDetectorRef
   ) { }
 
 
   ngOnInit(): void {
+    this.cdr.detectChanges();
+    console.log('aqui usuarios', this.user.info);
+    if (this.user.info.nomeCargo == 'ADMINISTRADOR') {
+      this.switchEdit = true;
+    } else {
+      this.switchEdit = false;
+    }
     this.registrarAcesso();
-    this.getPerfil();
+   /*  this.getPerfil(); */
     this.titleService.setTitle('Agenda');
     // Actualizar los eventos cada 20 seg
-  interval(20 * 1000) // 20 seg en milisegundos
-  .pipe(takeUntil(this.destroy$))
-  .subscribe(() => {
-  this.fetchEvents();
-  if (this.user.info.matricula == 1) {
-    this.switchEdit = true;
-  } else {
-    this.switchEdit = false;
-  }
+    interval(20 * 1000) // 20 seg en milisegundos
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(() => {
+    this.fetchEvents();
 });
 
 
@@ -162,15 +163,11 @@ ngOnDestroy(): void {
       )
       .subscribe({
         next: (response: any) => {
+          console.log(response);
           if (response.responseCode === 200) {
             this.profile = response.result;
-            if (
-              this.profile.coordenador === true ||
-              this.profile.gestor === true ||
-              (this.profile.vendedor === true &&
-                this.profile.coordenador === false &&
-                this.profile.gestor === false &&
-                this.profile.hasVinculoOperadores === true)
+            if (this.profile.coordenador === true || this.profile.gestor === true || 
+              ( this.profile.vendedor === true && this.profile.coordenador === false && this.profile.gestor === false && this.profile.hasVinculoOperadores === true )
             ) {
               this.checkRouterParams();
             } else if (
@@ -234,7 +231,6 @@ ngOnDestroy(): void {
           let params: any = atob(queryParams['q']);
           
           params = JSON.parse(params);
-          console.log(params);
 
           this.idEscritorio = parseInt(params.idEscritorio);
           this.idVendedor = parseInt(params.idVendedor);

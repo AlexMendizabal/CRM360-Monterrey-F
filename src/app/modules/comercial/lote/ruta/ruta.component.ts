@@ -483,9 +483,6 @@ export class ComercialLoteRutaComponent implements OnInit {
         );
     }
 
-
-
-
     gestiones() {
         this.vendedoresService.getGestiones().subscribe(
             (response: any) => {
@@ -502,7 +499,6 @@ export class ComercialLoteRutaComponent implements OnInit {
     }
     public mostrarSpinner = false;
     private enviarDatosSubject = new Subject<void>();
-
 
     enviarDatos() {
         let msgSuccess = 'Cita creada exitosamente.';
@@ -560,11 +556,6 @@ export class ComercialLoteRutaComponent implements OnInit {
     onFechaChange(item: any, newValue: any) {
         item.fechaVisita = newValue;
     }
-
-
-
-
-
 
     /*   dayClicked({
         date,

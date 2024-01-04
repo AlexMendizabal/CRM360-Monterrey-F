@@ -154,6 +154,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   id_presentacion: number = 0;
   swDescuentoPermitido = false;
   
+  sWPesoTotal: boolean = false;
 
   descuento: number = 0;
 
@@ -981,6 +982,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   }
 
   onCalcularTotais(emitter: boolean): void {
+    /* console.log('total'); */
     const materiais = this.form.value.materiais;
 
     this.total.quantidade = 0;
@@ -1025,6 +1027,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
 
       }
+
 
       /* (this.total.bruto); */
 
@@ -1073,7 +1076,11 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
         /* console.log(this.total) */
       }
-
+      if(this.total.valorTotal >= 1000){
+        this.swDescuentoPermitido = true;
+      }else{
+        this.swDescuentoPermitido = false;
+      }
 
       this.setLocalStorage(this.form.value.materiais);
     }

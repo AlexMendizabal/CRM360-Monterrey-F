@@ -75,8 +75,8 @@
           <select class="form-control custom-select" id="situacao" formControlName="situacao">
             <option value="Ativo">Activos</option>
             <option value="Inativo">Inactivos</option>
-            <option value="Potenci">Potenciales</option>
-            <option value="Arquivo">Archivados</option>
+       <!--      <option value="Potenci">Potenciales</option>
+            <option value="Arquivo">Archivados</option> -->
             <option value="T">Todos</option>
           </select>
         </div>
@@ -89,13 +89,29 @@
         <div class="form-group col-lg-3 mb-lg-0">
           <label for="tipoPessoa">Tipo de persona</label>
           <select class="form-control custom-select" id="tipoPessoa" formControlName="tipoPessoa">
-            <option value="F">Persona física</option>
-            <option value="J">Persona jurídica</option>
-            <option value="T">Todos</option>
+              <option *ngFor="let tipo of tipos_personas" [value]="tipo.sigla">{{ tipo.tipo_persona }}</option>
+          </select>
+        </div>
+        <div class="form-group col-lg-3 mb-lg-0">
+          <label for="tipoPessoa">Vendedor</label>
+          <select class="form-control custom-select" id="tipoPessoa" formControlName="vendedor">
+              <option *ngFor="let vendedor of vendedoresList" [value]="vendedor.ID">{{ vendedor.nombre }}</option>
+          </select>
+        </div>
+        <div class="form-group col-lg-1 mb-lg-0">
+          <label for="registros">Registros</label>
+          <select class="form-control custom-select" id="registros" formControlName="registros">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+            <option>100</option>
+            <option>200</option>
+            <option>1000</option>
+
           </select>
         </div>
       </div>
-      <div class="form-row">
+      <!-- <div class="form-row"> -->
         
         <!-- <div class="form-group col-lg-3 mb-lg-0">
           <label for="grupoEconomico">Esta en grupo economico</label>
@@ -129,7 +145,7 @@
             <option value="T">Todos</option>
           </select>
         </div> -->
-        <div class="form-group col-lg-1 mb-lg-0">
+       <!--  <div class="form-group col-lg-1 mb-lg-0">
           <label for="registros">Registros</label>
           <select class="form-control custom-select" id="registros" formControlName="registros">
             <option>10</option>
@@ -139,7 +155,7 @@
             <option>200</option>
           </select>
         </div>
-      </div>
+      </div> -->
     </form>
   </advanced-filter>
   <div class="row mt-3" *ngIf="
@@ -187,26 +203,28 @@
         <ng-template #tbody let-tbody>
           <tr *ngFor="let cliente of clientes" [class.table-active]="cliente.codigo_cliente == clienteSelecionado">
             <td class="text-center hover" [ngClass]="classStatusBorder(cliente.situacao)"
-              (click)="viewRegister(cliente)">
-              <i class="text-black-50 far fa-check-square mr-3" *ngIf="cliente.segurado == 0"
-                tooltip="Cliente no asegurado" placement="right"></i>
-              <i class="text-warning fas fa-check-square mr-3" *ngIf="cliente.segurado > 0" tooltip="Cliente asegurado"
-                placement="right"></i>
-              <i class="text-black-50 far fa-folder-open" *ngIf="cliente.grupoEconomico == 0"
-                tooltip="No hace parte de grupo economico" placement="right"></i>
+              >
+              <i class="text-warning fas fa-check-square mr-3" *ngIf="cliente.tieneOferta.result"
+              tooltip="Cliente tiene Oferta" placement="right"></i>
+            <i class="text-black-50 far fa-check-square mr-3" *ngIf="!cliente.tieneOferta.result"
+              tooltip="Cliente no tiene oferta" placement="right"></i>
+
+
+              <!-- <i class="text-black-50 far fa-folder-open" *ngIf="cliente.grupoEconomico == 0"
+                tooltip="No hace parte de grupo economico" placement="right" ></i> -->
               <i class="text-warning fas fa-folder-open" *ngIf="cliente.grupoEconomico > 0"
-                tooltip="Pertenece a un grupo economico" placement="right"></i>
+                tooltip="Datos" placement="right" (click)="viewRegister(cliente)"></i>
             </td>
-            <td class="text-center hover" (click)="viewRegister(cliente)">
+            <td class="text-center hover">
               {{ cliente.codigo_cliente }}
             </td>
-            <td class="text-center hover" (click)="viewRegister(cpf)">
-              {{ cliente.cpf }}
-            </td>
-            <td class="hover" (click)="viewRegister(cliente)">
+            <td class="text-center hover">
+              {{ cliente.nit ? cliente.cnpj_cpf + ' - ' + cliente.nit : cliente.cnpj_cpf }}
+            </td>            
+            <td class="hover">
               {{ cliente.nomeFantasia | uppercase }}
             </td>
-            <td class="hover" (click)="viewRegister(cliente)" *ngIf="!showDetailPanel">
+            <td class="hover" *ngIf="!showDetailPanel">
               {{ cliente.razaoSocial | uppercase }}
             </td>
             <td>
@@ -238,7 +256,11 @@
           <tabset>
             <tab heading="Datos registrados">
               <div class="border-right border-left border-bottom px-3 pt-3">
-                <div *ngIf="dadosCadastraisLoaded && !dadosCadastraisEmpty">
+                <div class="text-center" *ngIf="swSpinner">
+                  <div class="spinner-border text-dark text-center" style="font-size: 7px;"></div>
+                  <p><strong> Cargando... </strong></p>
+                </div>
+                <div *ngIf="dadosCadastraisLoaded && !dadosCadastraisEmpty && !swSpinner">
                   <div class="container">
                     <div class="form-row">
                       <div class="form-group col-lg-6">
@@ -361,8 +383,12 @@
               </div>
             </tab>
             <tab heading="Contactos">
+              <div class="text-center mt-2" *ngIf="swSpinner">
+                <div class="spinner-border text-dark text-center" style="font-size: 7px;"></div>
+                <p><strong> Cargando... </strong></p>
+              </div>
               <div class="border-right border-left border-bottom px-3 pt-3">
-                <div class="col-lg-12 mb-4" *ngIf="contatosLoaded && !contatosEmpty">
+                <div class="col-lg-12 mb-4" *ngIf="contatosLoaded && !contatosEmpty && !swSpinner">
   
                   <div class="embed-responsive embed-responsive-16by9">
                     <agm-map [latitude]="latitudPromedioContacto" [longitude]="longitudPromedioContacto" [zoom]="16"
@@ -491,8 +517,12 @@
               </div>
             </tab>
             <tab heading="Dirección">
+              <div class="text-center mt-2" *ngIf="swSpinner">
+                <div class="spinner-border text-dark text-center" style="font-size: 7px;"></div>
+                <p><strong> Cargando... </strong></p>
+              </div>
               <div class="border-right border-left border-bottom px-3 pt-3">
-                <div *ngIf="contatosLoaded && !direccionEmpty">
+                <div *ngIf="contatosLoaded && !direccionEmpty && !swSpinner">
                   <div class="col-lg-12 mb-4" *ngIf="direcciones.lenght !==  0">
 
                     <div class="embed-responsive embed-responsive-16by9">

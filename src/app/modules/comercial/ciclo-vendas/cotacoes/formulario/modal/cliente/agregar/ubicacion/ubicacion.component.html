@@ -45,7 +45,7 @@
         <button type="button" class="btn btn-danger" (click)="onClose()">
             Cancelar
         </button>
-        <button type="button" class="btn btn-primary" (click)="onSubmit()">
+        <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="swDireccion === false">
             Confirmar
         </button>
     </div>
