@@ -118,11 +118,11 @@ throw new Error('Method not implemented.');
 
     this.filtrarPosiciones(detalhes.id)
     this.imagenesAnexo(detalhes.id)
-    console.log(this.imagenesAnexo(detalhes.id));
+    //console.log(this.imagenesAnexo(detalhes.id));
 
 
 
-    console.log(detalhes);
+    //console.log(detalhes);
     this.detalhes.description =
 
       detalhes.description != null

@@ -96,6 +96,9 @@ const routes: Routes = [
         path: 'vista/:id_oferta',
         component: VistaComponent
       },
+      {
+        path: 'enviar_sap/:id_oferta'
+      },
     ]
   },
 ];

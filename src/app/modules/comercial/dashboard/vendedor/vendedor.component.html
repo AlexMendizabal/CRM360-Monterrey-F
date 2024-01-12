@@ -39,20 +39,20 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 mb-4">
-          <comercial-dashboard-vendedor-desempenho-toneladas
-            [idVendedor]="idVendedor"
-            [idEscritorio]="idEscritorio">
-          </comercial-dashboard-vendedor-desempenho-toneladas>
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <comercial-dashboard-vendedor-desempenho-toneladas
+              [idVendedor]="idVendedor"
+              [idEscritorio]="idEscritorio">
+            </comercial-dashboard-vendedor-desempenho-toneladas>
+          </div>
+          <div class="col-md-6 mb-4">
+            <comercial-dashboard-vendedor-desempenho-linha
+              [idVendedor]="idVendedor"
+              [idEscritorio]="idEscritorio">
+            </comercial-dashboard-vendedor-desempenho-linha>
+          </div>
         </div>
-        <div class="col-md-6 mb-4">
-          <comercial-dashboard-vendedor-desempenho-linha
-            [idVendedor]="idVendedor"
-            [idEscritorio]="idEscritorio">
-          </comercial-dashboard-vendedor-desempenho-linha>
-        </div>
-      </div>
       <div class="row">
         <div class="col mb-4">
           <comercial-dashboard-vendedor-concentracao-vendas
@@ -61,7 +61,7 @@
           </comercial-dashboard-vendedor-concentracao-vendas>
         </div>
       </div>
-      <!-- <div class="row">
+      <div class="row">
         <div class="col mb-4">
           <div class="border rounded bg-white shadow-sm p-3">
             <comercial-templates-mapa-metas
@@ -70,8 +70,8 @@
             </comercial-templates-mapa-metas>
           </div>
         </div>
-      </div> -->
-      <!-- <div class="row">
+      </div>
+      <div class="row">
         <div class="col-md-6 mb-4">
           <div class="border rounded bg-white shadow-sm p-3">
             <div class="mtc-title mb-0">
@@ -131,9 +131,9 @@
             </comercial-dashboard-vendedor-registro-ocorrencias>
           </div>
         </div>
-      </div> -->
-      <!-- <div class="row">
-        <div class="col-md-5">
+      </div>
+      <div class="row">
+
         <div class="col-md-6">
           <div class="mtc-title">Financeiro</div>
           <comercial-dashboard-vendedor-financeiro
@@ -150,8 +150,8 @@
             (dataEmitter)="onAnalyticsData($event)">
           </comercial-dashboard-vendedor-representante>
         </div>
-      </div> -->
-      <!-- <div class="row" *ngIf="showAnalytic">
+      </div>
+      <div class="row" *ngIf="showAnalytic">
         <div class="col mt-4">
           <div class="border rounded bg-white shadow-sm p-3">
             <comercial-dashboard-vendedor-analitico
@@ -160,7 +160,7 @@
             </comercial-dashboard-vendedor-analitico>
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
   <permission-denied

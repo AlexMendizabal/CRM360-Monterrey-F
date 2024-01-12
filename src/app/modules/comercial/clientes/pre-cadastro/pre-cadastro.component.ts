@@ -191,6 +191,7 @@ export class ComercialClientesPreCadastroComponent
   } */
 
   changeVendedor(a) {
+    console.log(a);
     this.id_vend = a;
     this.clientesService.getVendedorCiudad(a).subscribe(
       (response: any) => {
@@ -543,7 +544,7 @@ export class ComercialClientesPreCadastroComponent
   setFormBuilder(documento: string) {
     this.form = this.formBuilder.group({
       //cnpj_cpf: [null,Validators.required],
-      nit: [null, Validators.required],
+      nit: [null, [Validators.required, Validators.min(0)]],
       ci: [null, [Validators.required, Validators.maxLength(8)]],
 
       nome: [
@@ -566,8 +567,8 @@ export class ComercialClientesPreCadastroComponent
           ),
         ],
       ],
-      telefone: [null, Validators.required],
-      celular: [null, Validators.required],
+      telefone: [null, [Validators.required, Validators.min(0)]],
+      celular: [null, [Validators.required, Validators.min(0)]],
       direccion: [null],
       tipopessoa: [null, Validators.required],
       nombres_contacto: [null],

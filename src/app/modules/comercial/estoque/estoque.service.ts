@@ -111,11 +111,31 @@ export class ComercialEstoqueService {
   }
 
   getStockAlmacenes(params: any): Observable<Object | JsonResponse> {
-    
+    const url = `${this.API}/estoquealmacen/${params.idMaterial}`;
+    const queryParams = new HttpParams({
+      fromObject: {
+        id_lista_precio: params.id_lista_precio || '',
+        nombre_almacen: params.nombre_almacen || '',
+        codigo_almacen: params.codigo_almacen || '',
+      }
+    });
+  
+    console.log('URL de la solicitud:', url);
+    console.log('Parámetros de la solicitud:', queryParams.toString());
+  
+    return this.http.get(url, { params: queryParams }).pipe(take(1), retry(2));
+  }
+
+  buscarListaPrecio(nombreLista: string): Observable<Object | JsonResponse> {
+    const params = new HttpParams().set('nombre_lista', nombreLista);
+  
+    console.log('Enviando parámetros:', params.toString());
+  
     return this.http
-      .get(
-        `${this.API}/estoquealmacen/${params.idMaterial}`
-      )
+      .get(`${this.API}/lista-precio`, { params })
       .pipe(take(1), retry(2));
   }
+  
+  
+  
 }

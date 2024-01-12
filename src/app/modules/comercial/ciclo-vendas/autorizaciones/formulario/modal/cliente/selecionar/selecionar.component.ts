@@ -55,7 +55,7 @@ export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
     const _obj = this.formClientes.value;
     this.loadingClientes = true;
     if (_obj['pesquisa']) _params[_obj['buscarPor']] = _obj['pesquisa'];
-    console.log(_params, _obj);
+    //console.log(_params, _obj);
     this.comercialService
       .getCarteiraClientes(_params)
       .pipe(

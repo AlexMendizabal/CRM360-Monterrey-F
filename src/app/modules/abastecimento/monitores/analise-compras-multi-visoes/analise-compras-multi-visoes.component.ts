@@ -887,7 +887,7 @@ export class AbastecimentoMonitoresAnaliseComprasMultiVisoesComponent implements
   setValuesFavorite(): void {
     this.modal.title = "Favoritos";
     this.showModalFavoritos = true;
-    console.log(this.form.value);
+    //console.log(this.form.value);
   }
 
   setValuesAlterarAgrupamento(): void {

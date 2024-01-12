@@ -223,7 +223,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioModalMaterialCalc
       quantidade: this.form.value.quantidade,
     };
 
-    console.log(params)
+    //console.log(params)
     this.pedidosProducaoTelas
       .getCalculoMaterial(params)
       .pipe(
@@ -234,7 +234,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioModalMaterialCalc
       .subscribe((response: JsonResponse) => {
         if (response.success === true) {
           if (response.data.length === 1) {
-            console.log(response.data)
+            //console.log(response.data)
             this.calcularTotais(response.data[0]);
           } else {
 

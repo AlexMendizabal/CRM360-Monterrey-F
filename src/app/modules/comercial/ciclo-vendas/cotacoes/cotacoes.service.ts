@@ -24,12 +24,10 @@ export class ComercialCicloVendasCotacoesService {
     private comercialService: ComercialService,
     private tidSoftwareService: ComercialTidSoftwareService,
     private estoqueService: ComercialEstoqueService
-  ) { }
+  ) {}
 
-  getIdOferta(){
-    return this.http
-      .get(`${this.API}/oferta_id`)
-      .pipe(take(1), retry(2));
+  getIdOferta() {
+    return this.http.get(`${this.API}/oferta_id`).pipe(take(1), retry(2));
   }
 
   getPermissoesAcesso(): Observable<Object | JsonResponse> {
@@ -50,14 +48,26 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
-    getOfertas(params: any): Observable<Object | JsonResponse> {
-      let httpParams = new HttpParams();
-      return this.http
-        .get(`${this.API}/lista_cotizacion`, {
-          params: params,
-        })
-        .pipe(take(1), retry(2));
-    }
+  getOfertas(params: any): Observable<Object | JsonResponse> {
+    let httpParams = new HttpParams();
+    return this.http
+      .get(`${this.API}/lista_cotizacion`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
+
+  verificarOfertas(params: any) {
+    return this.http
+    .post(`${this.API}/verificar_ofertas`, params)
+    .pipe(take(1), retry(2));
+  }
+
+  verificarOfertasCliente(params: any) {
+    return this.http
+    .post(`${this.API}/verificar_ofertas_cliente`, params)
+    .pipe(take(1), retry(2));
+  }
 
 
   getDetalleOferta(params: any): Observable<Object | JsonResponse> {
@@ -78,9 +88,7 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
-  getDetalhesPedidos(
-    nrPedido: number
-  ): Observable<Object | JsonResponse> {
+  getDetalhesPedidos(nrPedido: number): Observable<Object | JsonResponse> {
     return this.http
       .get(`${this.API}/detalhes/${nrPedido}`)
       .pipe(take(1), retry(2));
@@ -97,7 +105,6 @@ export class ComercialCicloVendasCotacoesService {
   }
 
   getSituacaoLiberacao(params: any): Observable<Object | JsonResponse> {
-
     let httpParams = new HttpParams();
 
     for (let param in params) {
@@ -114,7 +121,6 @@ export class ComercialCicloVendasCotacoesService {
       .post(`${this.API}/transfere-faturamento`, params)
       .pipe(take(1), retry(2));
   }
-
 
   postTrocarCliente(params: any): Observable<Object | JsonResponse> {
     return this.http
@@ -146,25 +152,32 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
-  getImprimirSeparacao(nrPedido: number, codEmpresa: number): Observable<Object | JsonResponse> {
+
+
+
+  getImprimirSeparacao(
+    nrPedido: number,
+    codEmpresa: number
+  ): Observable<Object | JsonResponse> {
     return this.http
       .get(`${this.API}/imprimir-separacao/${nrPedido}/${codEmpresa}`)
       .pipe(take(1), retry(2));
   }
 
   postEmailCotacao(params: any): Observable<Object | JsonResponse> {
-    return this.http
-      .post(`${this.API}/email-cotacao`, params)
-      .pipe(take(1)
-        // ,
-        // retry(2)
-      );
+    return this.http.post(`${this.API}/email-cotacao`, params).pipe(
+      take(1)
+      // ,
+      // retry(2)
+    );
   }
 
   getReservarIdCotacao(params?): Observable<Object | JsonResponse> {
-    return this.http.get(`${this.API}/reservar`, {
-      params: params
-    }).pipe(take(1), retry(2));
+    return this.http
+      .get(`${this.API}/reservar`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
   }
 
   getCotacao(
@@ -211,14 +224,11 @@ export class ComercialCicloVendasCotacoesService {
 
   descuentoCliente(params: any) {
     return this.http
-      .get(
-        `${this.API}/descuento_cliente`, {
+      .get(`${this.API}/descuento_cliente`, {
         params: params,
       })
       .pipe(take(1), retry(2));
   }
-
-
 
   getMateriaisCombo(
     codEmpresa: number,
@@ -234,9 +244,8 @@ export class ComercialCicloVendasCotacoesService {
           codCliente: codCliente,
           codEndereco: codEndereco,
           codFormaPagamento: codFormaPagamento,
-          freteConta: freteConta
-        }
-
+          freteConta: freteConta,
+        },
       })
       .pipe(take(1), retry(2));
   }
@@ -260,10 +269,10 @@ export class ComercialCicloVendasCotacoesService {
   }
 
   postMaterialesRelacionados(params: any): Observable<Object | JsonResponse> {
-    console.log(params)
+    console.log(params);
     return this.http
-    .post(`${this.API}/materiales/relacionados`, params)
-    .pipe(take(1), retry(2));
+      .post(`${this.API}/materiales/relacionados`, params)
+      .pipe(take(1), retry(2));
   }
 
   getFichaCadastralMaterial(
@@ -283,15 +292,14 @@ export class ComercialCicloVendasCotacoesService {
     freteConta
   ): Observable<Object | JsonResponse> {
     return this.http
-      .get(`${this.API}/material/similaridade/${codEmpresa}/${codMaterial}`,
-        {
-          params: {
-            codEndereco: codEndereco,
-            codCliente: codCliente,
-            codFormaPagamento: codFormaPagamento,
-            freteConta: freteConta
-          }
-        })
+      .get(`${this.API}/material/similaridade/${codEmpresa}/${codMaterial}`, {
+        params: {
+          codEndereco: codEndereco,
+          codCliente: codCliente,
+          codFormaPagamento: codFormaPagamento,
+          freteConta: freteConta,
+        },
+      })
       .pipe(take(1), retry(2));
   }
 
@@ -302,8 +310,8 @@ export class ComercialCicloVendasCotacoesService {
     return this.http
       .get(`${this.API}/material/tipo-calculo/${codMaterial}`, {
         params: {
-          codFormaPagamento: codFormaPagamento
-        }
+          codFormaPagamento: codFormaPagamento,
+        },
       })
       .pipe(take(1), retry(2));
   }
@@ -315,7 +323,6 @@ export class ComercialCicloVendasCotacoesService {
   }
 
   getHistoricoCompras(params: any): Observable<Object | JsonResponse> {
-
     let httpParams = new HttpParams();
 
     for (let param in params) {
@@ -340,7 +347,6 @@ export class ComercialCicloVendasCotacoesService {
   }
 
   getDuplicatas(params: any): Observable<Object | JsonResponse> {
-
     let httpParams = new HttpParams();
 
     for (let param in params) {
@@ -380,11 +386,15 @@ export class ComercialCicloVendasCotacoesService {
     return this.http.post(`${this.API}/salvar`, params).pipe(take(1), retry(2));
   }
   postCotizacion(params: any): Observable<Object | JsonResponse> {
-    return this.http.post(`${this.API}/guardar`, params).pipe(take(1), retry(0));
+    return this.http
+      .post(`${this.API}/guardar`, params)
+      .pipe(take(1), retry(0));
   }
 
   putCotacao(params: any): Observable<Object | JsonResponse> {
-    return this.http.put(`${this.API}/atualizar`, params).pipe(take(1), retry(2));
+    return this.http
+      .put(`${this.API}/atualizar`, params)
+      .pipe(take(1), retry(2));
   }
 
   postCotacaoPerdida(params: any): Observable<Object | JsonResponse> {
@@ -429,23 +439,25 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
-
-  autorizaciones(data: any): Observable<Object>{
+  autorizaciones(data: any): Observable<Object> {
     return this.http
       .post(`${this.API2}/post_autorizaciones`, data)
       .pipe(take(1), retry(2));
   }
 
-  getCierreOferta()
-  {
-    return this.http
-    .get(`${this.API}/cierre`)
-    .pipe(take(1), retry(2));
+  getCierreOferta() {
+    return this.http.get(`${this.API}/cierre`).pipe(take(1), retry(2));
   }
 
-  finalizarOferta(data: any): Observable<Object>{
+  finalizarOferta(data: any): Observable<Object> {
     return this.http
       .post(`${this.API}/post_cierre`, data)
+      .pipe(take(1), retry(2));
+  }
+
+  getenviarsap(nrPedido: number): Observable<Object | JsonResponse> {
+    return this.http
+      .get(`${this.API}/enviar_sap/${nrPedido}`)
       .pipe(take(1), retry(2));
   }
 }

@@ -173,7 +173,7 @@
                   </button>
                 </div>
                 <div class="form-group col-md-9 mt-1">
-                  <label for="titulo_ubicacion">Título para la ubicación <!-- <span class="text-danger">*</span> --></label>
+                  <label for="titulo_ubicacion">Título para la ubicación <span class="text-danger">*</span> </label>
                   <input type="text" class="form-control" id="titulo_ubicacion" formControlName="titulo_ubicacion"
                     (input)="onInput()" [value]="ubicacionForm.ubicacion"
                     (ngModelChange)="actualizarPosicion($event, i)">
@@ -192,7 +192,7 @@
                   </ng-select>
                 </div>
                 <div class="form-group col-md-12 " >
-                  <label for="direccion">Direccion <!-- <span class="text-danger">*</span> --></label>
+                  <label for="direccion">Direccion <span class="text-danger">*</span> </label>
                   <input type="text" class="form-control" id="direccion" formControlName="" (input)="onInput()"
                     [(ngModel)]="ubicacionForm.direccion" 
                     [value]="ubicacionForm.direccion" (ngModelChange)="actualizarDireccion($event, i, 1)" placeholder="Puede escribir aquí, o agregar ubicación por el mapa.">

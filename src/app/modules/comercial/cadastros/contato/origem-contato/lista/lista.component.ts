@@ -326,7 +326,7 @@ export class ComercialCadastrosContatoOrigemContatoListaComponent
       )
       .subscribe(
         (response: any) => {
-          console.log(response)
+          //console.log(response)
           if (response.hasOwnProperty('success') && response.success === true) {
 
             Object.keys(response.data).forEach(key => {​​

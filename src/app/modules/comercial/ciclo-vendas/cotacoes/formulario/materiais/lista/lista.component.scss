@@ -10,8 +10,8 @@
 
     .nav-tabs .nav-link.active {
         color: #fff;
-        background-color: #7F849C;
-        border-color: #7F849C; 
+        background-color: #0008ff;
+        border-color: #1235e1; 
         padding-bottom: 6px;
         padding-top: 6px;
     }
@@ -28,3 +28,13 @@
     }
 
 }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    /* Otros estilos generales de la tabla */
+  }
+
+.table-responsive .custom-table thead {
+    background-color: #3498db; /* Cambia el color de fondo según tus preferencias */
+    color: #fff; /* Cambia el color del texto según tus preferencias */
+  }

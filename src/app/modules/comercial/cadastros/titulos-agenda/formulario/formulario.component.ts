@@ -81,7 +81,7 @@ export class ComercialCadastrosTitulosAgendaFormularioComponent
           routerLink: `/comercial/cadastros/${params.idSubModulo}`,
         },
         {
-          descricao: 'Títulos para agenda do vendedor',
+          descricao: 'Titulos para agenda de vendedor',
           routerLink: `/comercial/cadastros/${params.idSubModulo}/titulos-agenda/lista`,
         },
         {

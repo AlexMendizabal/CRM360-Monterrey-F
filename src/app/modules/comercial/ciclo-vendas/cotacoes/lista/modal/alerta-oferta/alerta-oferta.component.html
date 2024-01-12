@@ -1,0 +1,27 @@
+<div class="modal-content">
+    <div class="modal-header bg-danger text-white">
+      <h4 class="mtc-title mb-0 my-auto text-white"><i class="fas fa-exclamation-circle fa-1x"></i>  Atención!  </h4>
+      <button type="button" class="close" (click)="onClose()">
+        <span aria-hidden="true" class="text-white">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="titulo">
+        <strong>  </strong> 
+      </p>
+      <p class="cuerpo text-center">
+        <strong> Tiene ofertas pendientes de gestión, actualiza el estado de las ofertas para realizar nuevos pedidos.</strong> 
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-danger"
+        [disabled]="submittingForm"
+        (click)="onClose()">
+        Aceptar
+      </button>
+      
+    </div>
+  </div>
+  

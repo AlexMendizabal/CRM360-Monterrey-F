@@ -66,7 +66,7 @@ export class ComercialClientesCadastroContatosFormularioComponent
     if (this.activatedRoute.snapshot.data.data.success === true) {
       this.getFormFields();
       this.setFormBuilder(this.activatedRoute.snapshot.data.data.data);
-      console.log(this.activatedRoute.snapshot.data.data.data);
+      //console.log(this.activatedRoute.snapshot.data.data.data);
       this.activatedRoute.parent.parent.params.subscribe((params: any) => {
         this.codCliente = params.id;
       });
@@ -594,7 +594,7 @@ export class ComercialClientesCadastroContatosFormularioComponent
 
         this.clientesService.updateContato(formObj).subscribe({
           next: (response: any) => {
-            console.log(response)
+            //console.log(response)
             if (response['responseCode'] === 200) {
               this.onSended();
               this.pnotifyService.success();

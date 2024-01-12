@@ -588,6 +588,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 
   onFilterVend(a): void {
     var tipo = a;
+
     if (this.checkFieldErrors() === false) {
       if (this.searching === false && this.form.valid) {
         this.setRouterParams(this.getFormFilterValues(), tipo);
@@ -672,7 +673,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 
       this.swTodos = false;
       this.swVendedor = true ;
-
+      
       this.comercialService
         .getMaterialesOfertaVendedor(params)
         .pipe(
@@ -687,13 +688,13 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
           next: (response: any) => {
             /*           console.log(response.responseCode);
              */          /*  if (response.hasOwnProperty('success')
-     && response.success === true
-     && !response.data[0].msg) {
-       this.dados = response.data.map(function (el: any) {
-         var o = Object.assign({}, el);
-         o.checked = 0; 
-         return o;
-       }); */
+            && response.success === true
+            && !response.data[0].msg) {
+              this.dados = response.data.map(function (el: any) {
+                var o = Object.assign({}, el);
+                o.checked = 0; 
+                return o;
+              }); */
             if (response.responseCode === 200) {
               this.swAppSellColor = false;
               this.dados = response.result.map((el) => {
@@ -704,8 +705,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 
               this.dadosEmpty = false;
               this.form.controls.codMaterial.enable();
-
-
+              this.swAppSell= true ;
 
 
               //console.log('dados', this.dados);
@@ -750,7 +750,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     } else if (tipo == 2) {
       this.swTodos = true;
       this.swVendedor = false;
-
+      
       this.form.controls.codMaterial.disable();
       this.comercialService
         .getMaterialesOferta(params)
@@ -822,10 +822,9 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         });
     } else if (tipo === 3) {
       this.swTodos = false;
-      this.swVendedor = false;
+      this.swVendedor = true;
       this.swAppSell = true;
       this.form.controls.codMaterial.disable();
-      console.log(params);
       this.comercialService
         .getUpSellService(params)
         .pipe(
@@ -843,7 +842,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
               this.form.controls.codMaterial.enable();
               this.swTodos = false;
               this.swVendedor = true;
-              this.swAppSell = false;
+              this.swAppSell = true;
               this.dados = response.result.map((el) => {
                 var o = Object.assign({}, el);
                 o.checked = 0;
@@ -852,22 +851,22 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
               this.dadosEmpty = false;
               this.tableConfig.fixedHeader = true;
             } else {
-              this.swAppSellColor = false;
+              this.swAppSellColor = true;
 
-              this.swTodos = true;
-              this.swVendedor = false;
+              this.swTodos = false;
+              this.swVendedor = true;
               this.dadosEmpty = true;
-              this.swAppSell = false;
+              this.swAppSell = true;
               //this.form.controls.codMaterial.enable();
 
             }
           },
           error: (error: any) => {
             this.swAppSellColor = false;
-            this.swTodos = true;
-            this.swVendedor = false;
+            this.swTodos = false;
+            this.swVendedor = true;
             this.dadosEmpty = true;
-            this.swAppSell = false;
+            this.swAppSell = true;
             this.form.controls.codMaterial.enable();
             if (error['error'].hasOwnProperty('mensagem')) {
               this.pnotifyService.error(error.error.mensagem);
@@ -887,6 +886,13 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     let hasError = true;
     if (this.codCliente == null) {
       this.pnotifyService.notice("Seleccione un cliente")
+      hasError = true;
+    }
+
+    //console.log(this.id_vendedor)
+
+    if (this.id_vendedor == 0) {
+      this.pnotifyService.notice("Seleccione un vendedor")
       hasError = true;
     }
 
@@ -986,6 +992,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     // @ts-ignore: Ignorar error TS2339
     if (this.dados[index].codigo_situacion == "A") {
       this.dados[index].checked = material.checked == 0 ? 1 : 0;
+/*  */
     } else {
       this.pnotifyService.notice('Seleccione por lo menos un material');
     }
@@ -1000,6 +1007,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       if (this.dados[index].checked === 1) {
         materiais.push(this.dados[index]);
         this.dados[index].checked = 0;
+        this.pnotifyService.success('Material agregado.');
+
       }
     }
 
@@ -1009,7 +1018,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       this.toggleAll = this.toggleAll === true ? false : this.toggleAll;
       this.scrollToCarrinho.emit(this.autoScroll);
     } else {
-      this.pnotifyService.notice('Seleccione al menos un material');
+      this.pnotifyService.notice(' un material');
     }
     this.dados = [];
   }

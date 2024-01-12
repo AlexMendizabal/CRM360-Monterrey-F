@@ -89,6 +89,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       idUltimaVisita: idUltimaVisita,
       idEstado: idEstado
     };
+    
     this.rutaService.filtrarMapas(params);
     const vendedorSeleccionado = idVendedor;
     this.rutaService.indiceVendedor = vendedorSeleccionado
@@ -129,6 +130,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       )
       .subscribe({
         next: (response: any) => {
+          console.log('aqui estoy', response);
           if (response[0]['responseCode'] === 200) {
 
             this.setFormFilter();
@@ -151,13 +153,12 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
           } else {
             this.handleLoadDependenciesError();
           }
-          if (response[0]['responseCode'] === 200) {
-            this.vendedores = response[1]['data'];
-           
-            this.filteredVendedores = this.vendedores;
+          if (response[1]['responseCode'] === 200) {
+           /*  this.vendedores = response[1]['data']; */
+            this.filteredVendedores = response[1]['data'];
             /* if (this.showAll === true) { */
             this.filteredVendedores.unshift({
-              id: 0,
+              ID: 0,
               nombres: 'TODOS'
             });
             /* } */
@@ -209,7 +210,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       )
       .subscribe(
         (response: any) => {
-        
+          
           if (response['responseCode'] === 200) {
             this.setFormFilter();
             this.filteredVendedores = response['result'];
@@ -258,12 +259,12 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
             }
           }
         }
-
+        console.log('aqui en vende', this.form.get('nomeVendedor'))
         if (this.form.value['idVendedor'] === 0) {
           this.form.get('nomeVendedor').setValue('TODOS OS VENDEDORES');
         } else {
           for (let i = 0; i < this.vendedores.length; i++) {
-            if (this.form.value['idVendedor'] === this.vendedores[i]['id']) {
+            if (this.form.value['idVendedor'] === this.vendedores[i]['ID']) {
               this.form
                 .get('nomeVendedor')
                 .setValue(this.vendedores[i]['nome']);
@@ -273,7 +274,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       } else {
         for (let i = 0; i < this.filteredVendedores.length; i++) {
           if (
-            this.form.value['idVendedor'] === this.filteredVendedores[i]['id']
+            this.form.value['idVendedor'] === this.filteredVendedores[i]['ID']
           ) {
             this.form
               .get('idEscritorio')

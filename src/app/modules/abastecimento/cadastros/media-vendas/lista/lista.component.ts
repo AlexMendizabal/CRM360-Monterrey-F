@@ -252,7 +252,7 @@ export class AbastecimentoCadastrosMediaVendasListaComponent implements OnInit {
   }
 
   openModal(item: any): void {
-    console.log(item);
+    //console.log(item);
 
     let params = {
       linha: item.Linha,

@@ -131,7 +131,7 @@ export class ComercialCadastrosTitulosAgendaListaComponent implements OnInit {
           routerLink: `/comercial/cadastros/${params['idSubModulo']}`,
         },
         {
-          descricao: 'Títulos para agenda do vendedor',
+          descricao: 'Titulos para agenda de vendedor',
         },
       ];
     });
@@ -415,7 +415,7 @@ export class ComercialCadastrosTitulosAgendaListaComponent implements OnInit {
             this.detailPanelService.loadedFinished(true);
             this.alteracoes = [];
           }
-          console.log(this.alteracoes)
+          //console.log(this.alteracoes)
         },
         error: (error: any) => {
           // Vazio e com erro.

@@ -84,8 +84,9 @@ export class ComercialAgendaFormularioComponent
   loaderNavbar = false;
   loaderFullScreen = true;
   action: string;
-  latitud: number = -17.78629;
-  longitud: number = -63.18117;
+  latitud: number = -17.783384728226157;
+  longitud: number = -63.1820969584504;
+
 
   direccion: string;
 
@@ -353,8 +354,14 @@ export class ComercialAgendaFormularioComponent
       if (detalhes.allDay) {
         this.isDisabledTime = true;
       }
-      this.latitud = detalhes.latitud;
-      this.longitud = detalhes.longitud;
+      if (detalhes.latitud !== undefined && detalhes.longitud !== undefined) {
+        this.latitud = detalhes.latitud;
+        this.longitud = detalhes.longitud;
+      } else {
+        this.latitud = -17.783384728226157;
+        this.longitud = -63.1820969584504;
+      }
+      
       if (this.action == 'reagendar') {
         this.form.controls.motivoReagendamento.setValidators([
           Validators.required,
@@ -472,21 +479,22 @@ export class ComercialAgendaFormularioComponent
         } else {
           this.handleLoadDependenciesError();
         }
-        if(this.user.info.matricula != 1)
+        /* if(this.user.info.matricula != 1)
         {
+          //console.log(this.user)
           this.promotores =[{
             'id': this.user.info.idVendedor,
             'nombre': this.user.info.nomeCompleto
           }];
-        }
-        else
-        {
+        } */
+      /*   else
+        { */
           if (response[5].success == true) {
             this.promotores = response[5].data;
           } else {
             this.showInputVendedores = false;
           }
-        }
+       /*  } */
       });
   }
 
@@ -798,7 +806,7 @@ export class ComercialAgendaFormularioComponent
       .then((data) => {
         const resultado = data.results[0];
         if (resultado) {
-          return resultado.formatted_address;
+          return resultado.formatted_address.substring(0, 49);
         } else {
           return 'Dirección no encontrada';
         }

@@ -27,6 +27,7 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
   implements OnInit, OnChanges {
   @Input('linhas') linhas: any[] = [];
   @Input('classes') classes: any[] = [];
+  @Input('grupos') grupos: any[] = [];
 
   @Input('linhaSelecionada') linhaSelecionada: number = null;
   @Input('classeSelecionada') classeSelecionada: number = null;
@@ -46,6 +47,7 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
   form: FormGroup;
 
   filteredClasses: Array<any> = [];
+  filteredGrupos: Array<any> = [];
   materiais: Array<any> = [];
   materiaisLoader: boolean;
 
@@ -78,11 +80,7 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
       this.onChangeClasse(this.form.value.codClasse);
     }
 
-    if (
-      events.linhaSelecionada &&
-      events.linhaSelecionada.currentValue !== null &&
-      !events.linhaSelecionada.firstChange
-    ) {
+    if (events.linhaSelecionada && events.linhaSelecionada.currentValue !== null && !events.linhaSelecionada.firstChange ) {
       this.setLinhaSelecionada(events.linhaSelecionada.currentValue);
     }
 
@@ -99,6 +97,7 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
     this.form = this.formBuilder.group({
       codLinha: [this.linhaSelecionada, [Validators.required]],
       codClasse: [this.classeSelecionada, [Validators.required]],
+      codGrupo: [null, [Validators.required]],
       codMaterial: [null, [Validators.required]],
     });
   }
@@ -112,7 +111,7 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
       this.materiaisListaEmpty = false;
 
       let params = {
-        codClasse: this.form.value.codClasse,
+        codClasse: this.form.value.codGrupo,
       };
 
       if (this.form.value.codMaterial !== 0) {
@@ -216,17 +215,28 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
     this.form.controls.codMaterial.updateValueAndValidity();
 
     this.filteredClasses = this.classes.filter(
-      (value: any) => value.idLinha == codLinha
+      (value: any) => value.idClasseMt == codLinha
     );
   }
 
-  onChangeClasse(codClasse: number) {
+  onChangeGrupo(codClasse: number) {
+
+    this.form.controls.codGrupo.reset();
+   /*  this.form.controls.codGrupo.disable(); */
+    this.form.controls.codGrupo.setValue(null);
+    this.form.controls.codGrupo.updateValueAndValidity();
+    this.filteredGrupos = this.grupos.filter(
+      (value: any) => value.id_grupo == codClasse
+    );
+  }
+
+  onChangeClasse(codGrupo: number) {
     this.form.controls.codMaterial.reset();
     this.form.controls.codMaterial.enable();
     this.form.controls.codMaterial.setValue(null);
     this.form.controls.codMaterial.updateValueAndValidity();
 
-    this.getMateriais(codClasse);
+    this.getMateriais(codGrupo);
   }
 
   getMateriais(codClasse: number): void {
@@ -237,7 +247,7 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
       this.comercialService
         .getMateriais({
           codClasse: codClasse,
-          situacao: 'A'
+          situacao: '1'
         })
         .pipe(
           finalize(() => {

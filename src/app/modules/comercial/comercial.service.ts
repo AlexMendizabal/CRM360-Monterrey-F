@@ -131,6 +131,19 @@ export class ComercialService {
       .pipe(take(1), retry(2));
   }
 
+  getGrupo(params: any){
+    let httpParams = new HttpParams();
+    for (let param in params) {
+      httpParams = httpParams.append(param, params[param]);
+    }
+
+    return this.http
+      .get(`${this.API}/grupos`, {
+        params: httpParams,
+      })
+      .pipe(take(1), retry(2));
+  }
+
   getMateriais(params: any = []): Observable<Object | JsonResponse> {
     let httpParams = new HttpParams();
 

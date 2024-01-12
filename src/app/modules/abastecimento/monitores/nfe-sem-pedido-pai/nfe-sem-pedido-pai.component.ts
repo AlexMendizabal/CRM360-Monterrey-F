@@ -409,7 +409,7 @@ export class AbastecimentoMonitoresNfeSemPedidoPaiComponent implements OnInit {
         })
       )
       .subscribe((response: any) => {
-        console.log(response);
+        //console.log(response);
         if (Object.keys(response.body['result']).length > 0) {
           this.materiais = response.body['result'];
         }

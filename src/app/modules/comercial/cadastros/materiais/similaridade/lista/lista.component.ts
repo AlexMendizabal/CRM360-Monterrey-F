@@ -102,7 +102,7 @@ export class ComercialCadastrosMateriaisSimilaridadeListaComponent
     this.registrarAcesso();
     this.setBreadCrumb();
     this.setFormFilter();
-    this.titleService.setTitle('Similaridade de materiais');
+    this.titleService.setTitle('Materiales similares - UPSELL');
     this.onDetailPanelEmitter();
     this.setSimilaridadeSelecionada();
   }
@@ -123,7 +123,7 @@ export class ComercialCadastrosMateriaisSimilaridadeListaComponent
           routerLink: `/comercial/cadastros/${params.idSubModulo}`,
         },
         {
-          descricao: 'Similaridade de materiais',
+          descricao: 'Materiales similares - UPSELL',
         },
       ];
     });
@@ -381,7 +381,7 @@ export class ComercialCadastrosMateriaisSimilaridadeListaComponent
   onDetails(similaridade: ISimilaridade): void {
     this.loaderNavbar = true;
     this.detailPanelService.show();
-    this.detailPanelTitle = `Similaridades (${similaridade.nomeMaterial})`;
+    this.detailPanelTitle = `Similitudes (${similaridade.nomeMaterial})`;
     this.setSimilaridadeSelecionada();
     this.similaridadeSelecionada = similaridade;
     this.materiais = [];
@@ -460,7 +460,7 @@ export class ComercialCadastrosMateriaisSimilaridadeListaComponent
     return this.confirmModalService.showConfirm(
       null,
       null,
-      'Deseja realmente prosseguir com a ativação do registro?',
+      '¿Realmente desea continuar con la activación del registro?',
       'Cancelar',
       'Confirmar'
     );
@@ -504,9 +504,9 @@ export class ComercialCadastrosMateriaisSimilaridadeListaComponent
 
   confirmInactive(): any {
     return this.confirmModalService.showConfirm(
-      'inactivate',
-      'Confirmar inativação',
-      'Deseja realmente prosseguir com a inativação do registro?',
+      'inactivar',
+      'Confirmar inactivación',
+      '¿Realmente desea continuar con la desactivación del registro?',
       'Cancelar',
       'Confirmar'
     );
@@ -525,14 +525,10 @@ export class ComercialCadastrosMateriaisSimilaridadeListaComponent
   }
 
   refreshMainData(similaridade: ISimilaridade): void {
-    console.log('Aqui!');
-
     for (let i = 0; i < this.dados.length; i++) {
       if (similaridade.codSimilaridade === this.dados[i].codSimilaridade) {
         this.dados[i].codSituacao = similaridade.codSituacao;
-
-        console.log(this.dados[i]);
-
+        //console.log(this.dados[i]);
         return;
       }
     }

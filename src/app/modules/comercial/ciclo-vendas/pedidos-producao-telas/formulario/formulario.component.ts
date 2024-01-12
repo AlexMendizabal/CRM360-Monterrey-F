@@ -254,7 +254,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioComponent
         this.action = 'create';
       }
       this.idSubModulo = params.idSubModulo;
-      console.log(params)
+      //console.log(params)
 
       this.breadCrumbTree = [
         {
@@ -1064,7 +1064,7 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioComponent
 
   onCliente(event) {
     this.form.patchValue(event);
-    console.log(event)
+    //console.log(event)
     this.onChangeCliente(event.codCliente, 'user');
     this.onLoadCliente(true);
   }

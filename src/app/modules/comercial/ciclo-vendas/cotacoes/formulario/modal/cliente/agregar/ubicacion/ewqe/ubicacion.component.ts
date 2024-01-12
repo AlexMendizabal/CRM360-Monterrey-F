@@ -125,7 +125,7 @@ export class PreCadastroUbicacionContactosComponent
       .then((data) => {
         const resultado = data.results[0];
         if (resultado) {
-          return resultado.formatted_address;
+           return resultado.formatted_address.substring(0, 49);
         } else {
           return 'Dirección no encontrada';
         }

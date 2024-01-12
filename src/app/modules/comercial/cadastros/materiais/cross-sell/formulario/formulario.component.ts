@@ -46,6 +46,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
 
   appTitle: string;
   action: string;
+  codGrupos: number = null;
 
   breadCrumbTree: Array<Breadcrumb> = [];
 
@@ -70,6 +71,8 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
 
   linhas: Array<any> = [];
   classes: Array<any> = [];
+  grupos: Array<any> = [];
+
   filteredClasses: Array<any> = [];
 
   toggleAll = false;
@@ -157,6 +160,13 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
           this.pnotifyService.error();
           this.location.back();
         }
+
+        if (response[2].responseCode === 200) {
+          this.grupos = response[2].result;
+        } else {
+          this.pnotifyService.error();
+          this.location.back();
+        }
       });
   }
 
@@ -170,6 +180,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
         codCrossSell: [detalhes.codCrossSell],
         codLinha: [detalhes.codLinha],
         codClasse: [detalhes.codClasse],
+        codGrupos: [detalhes.codGrupos],
         codMaterial: [{ value: detalhes.codMaterial, disabled: true }],
         nomeMaterial: [{ value: detalhes.nomeMaterial, disabled: true }],
         codSituacao: [detalhes.codSituacao, [Validators.required]],
@@ -317,7 +328,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
         )
         .subscribe(
           (response: JsonResponse) => {
-            console.log('aqui crossell', response);
+            //console.log('aqui crossell', response);
             if (
               response.hasOwnProperty('success') &&
               response.success === true
@@ -539,6 +550,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
 
     this.form.controls.codLinha.setValue(material.codLinha);
     this.form.controls.codClasse.setValue(material.codClasse);
+    this.form.controls.codGrupos.setValue(material.codGrupos);
     this.form.controls.codMaterial.setValue(material.codigoMaterial);
     this.form.controls.nomeMaterial.setValue(material.descricao);
 

@@ -126,9 +126,10 @@ export class PreCadastroUbicacionContactosComponent
       .then((response) => response.json())
       .then((data) => {
         const resultado = data.results[0];
+        //console.log(resultado);
         if (resultado) {
           this.swDireccion = true;
-          return resultado.formatted_address;
+          return resultado.formatted_address.substring(0, 49);
         } else {
           this.swDireccion = false;
           return 'Dirección no encontrada';

@@ -138,7 +138,8 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
       .subscribe(
         (response: any) => {
           if (response.responseCode === 200) {
-            this.notificaciones = response.content;
+            //console.log(response);
+           // this.notificaciones = response.content;
           } else if (response.response === 204) {
           }
         },
@@ -267,11 +268,11 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
       id_vendedor: [null, Validators.required],
       tipo_persona: [null, Validators.required],
       nombre_factura: [null],
-      nit: [null, Validators.required],
-      telefono: [null, Validators.required],
+      nit: [null, [Validators.required, Validators.min(0)]],
+      telefono: [null, [Validators.required, Validators.min(0)]],
       ci: [null, [Validators.required, Validators.maxLength(8)]],
 
-      celular: [null, Validators.required],
+      celular: [null, [Validators.required, Validators.min(0)]],
 
       /* Detalle-contacto */
       contacto: [null, Validators.required ],
@@ -408,6 +409,8 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
 
             if (response.CodigoRespuesta === 200) {
               this.pnotifyService.success('Cliente registrado.');
+              this.crearNotificacion();
+              this.getNotificaciones();
               setTimeout(() => {
                 location.reload();
               }, 1000);

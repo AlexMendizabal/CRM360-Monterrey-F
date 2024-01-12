@@ -9,10 +9,10 @@
         [clearable]="false"
         [items]="escritorios"
         [virtualScroll]="true"
-        labelForId="vendedor"
+        labelForId="sucursal_id"
         bindLabel="nome"
         bindValue="id"
-        (change)="filtrarClientes()"
+        (change)="filterVendedores($event.id)"
         formControlName="sucursal_id"
       ></ng-select>
     </div>
@@ -25,7 +25,7 @@
         [virtualScroll]="true"
         labelForId="vendedor"
         bindLabel="nombre"
-        bindValue="id"
+        bindValue="ID"
         (change)="filtrarClientes()"
         formControlName="vendedor_id"
       ></ng-select>

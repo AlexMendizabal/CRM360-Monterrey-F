@@ -140,7 +140,7 @@ export class ComercialCadastrosAssociacaoLinhasFormularioComponent
 
   setFormBuilder(): void {
     const resolver = this.activatedRoute.snapshot.data.detalhes;
-    console.log(resolver);
+    //console.log(resolver);
     if (resolver.body.success === true) {
       const detalhes: ILinha = resolver.body.data[0];
       const setoresAssociados: ILinha = resolver.body.data;

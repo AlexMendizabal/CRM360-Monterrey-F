@@ -172,7 +172,7 @@ export class ComercialCadastrosTiposFreteFormularioComponent
           )
           .subscribe({
             next: (response: any) => {
-              console.log(response)
+              //console.log(response)
               if (
                 response.hasOwnProperty('mensagem') &&
                 response.hasOwnProperty('success') &&

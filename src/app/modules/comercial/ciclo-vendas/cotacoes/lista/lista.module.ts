@@ -47,6 +47,8 @@ import { ComercialCicloVendasCotacoesListaModalDesdobrarPropostaService } from '
 import { ComercialCicloVendasCotacoesListaModalTrocarClienteService } from './modal/trocar-cliente/trocar-cliente.service';
 import { ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService } from './modal/transfere-faturamento/transfere-faturamento.service';
 import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
+import { ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent } from './modal/alerta-oferta/alerta-oferta.component';
+
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { VistaComponent } from './vista/vista.component';
@@ -68,6 +70,7 @@ import { VistaComponent } from './vista/vista.component';
     ComercialCicloVendasCotacoesListaModalTrocarClienteComponent,
     ComercialCicloVendasCotacoesListaModalTransfereFaturamentoComponent,
     VistaComponent,
+    ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent
   ],
   imports: [
     CommonModule,
@@ -100,6 +103,8 @@ import { VistaComponent } from './vista/vista.component';
     ComercialCicloVendasCotacoesListaModalTransfereFaturamentoComponent,
     ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent,
     ComercialCicloVendasCotacoesListaTemplatesButtonImprimirSeparacaoComponent,
+    ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent
+
 
   ],
   entryComponents: [
@@ -112,6 +117,7 @@ import { VistaComponent } from './vista/vista.component';
     ComercialCicloVendasCotacoesListaModalDesdobrarPropostaComponent,
     ComercialCicloVendasCotacoesListaModalTrocarClienteComponent,
     ComercialCicloVendasCotacoesListaModalTransfereFaturamentoComponent,
+    ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent,
 
   ],
   providers: [
@@ -123,7 +129,8 @@ import { VistaComponent } from './vista/vista.component';
     ComercialCicloVendasCotacoesListaModalDuplicarPropostaService,
     ComercialCicloVendasCotacoesListaModalDesdobrarPropostaService,
     ComercialCicloVendasCotacoesListaModalTrocarClienteService,
-    ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService,
+    ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService
+    
 
   ],
 })

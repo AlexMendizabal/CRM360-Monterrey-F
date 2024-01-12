@@ -34,7 +34,7 @@ export class AbastecimentoMonitoresAnaliseComprasMultiVisoesModalFavoritosCompon
   }
 
   OnSaveFavorite(): void {
-    console.log(this.formModal.value);
+    //console.log(this.formModal.value);
   }
 
   onClose(): void {

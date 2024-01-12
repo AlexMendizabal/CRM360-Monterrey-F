@@ -21,6 +21,7 @@
         <comercial-cadastros-materiais-templates-material-principal
           [linhas]="linhas"
           [classes]="classes"
+          [grupos]="grupos"
           [limparMaterialSelecionado]="limparMaterialPrincipal"
           (loaderNavbar)="onLoaderNavbar($event)"
           (materialPrincipal)="materialPrincipal($event)">
@@ -141,6 +142,7 @@
             <comercial-cadastros-materiais-templates-associacoes
               [linhas]="linhas"
               [classes]="classes"
+              [grupos]="grupos"
               [linhaSelecionada]="form.value.codLinha"
               [classeSelecionada]="form.value.codClasse"
               (loaderNavbar)="onLoaderNavbar($event)"

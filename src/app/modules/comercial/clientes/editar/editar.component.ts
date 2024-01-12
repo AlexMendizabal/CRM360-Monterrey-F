@@ -114,7 +114,7 @@ export class EditarClienteComponent implements OnInit {
       carnet: [null, Validators.required],
       nit: [null, Validators.required],
       nombre: [null, Validators.required],
-      nombre_factura: [null, Validators.required],
+      nombre_factura: [null],
       razon_social: [null, Validators.required],
       id_tipo_persona: [],
       email: [null, Validators.required],
@@ -138,6 +138,7 @@ export class EditarClienteComponent implements OnInit {
     this.categorizarContacto();
     this.ciudadVendedor();
     this.id_client = this.datos_cliente.datos_cliente.id_cliente;
+    //console.log(this.tipos_personas)
 
     //console.log(this.latitudPromedio)
   }
@@ -405,7 +406,7 @@ export class EditarClienteComponent implements OnInit {
       .then((data) => {
         const resultado = data.results[0];
         if (resultado) {
-          return resultado.formatted_address;
+          return resultado.formatted_address.substring(0, 49);
         } else {
           return 'Dirección no encontrada';
         }
@@ -566,8 +567,8 @@ export class EditarClienteComponent implements OnInit {
       G: 'Gobierno',
       E: 'Empleado',
     };
-
-    const tipopersona = tipoPessoaOptions[idTipoPersonaInput];
+    var tipoPersona = idTipoPersonaInput.trim().toUpperCase();
+    const tipopersona = tipoPessoaOptions[tipoPersona]
     const ubicacion = this.datos_cliente.datos_direccion;
     const contactos = this.datos_cliente.datos_contacto;
 
@@ -602,19 +603,20 @@ export class EditarClienteComponent implements OnInit {
       'ci',
       'razon_social',
       'nombres',
-      'tipo_pessoa',
+      'tipo_pessoa', 
       'tipo_persona',
       'id_vendedor',
       'telefono',
       'celular',
       'ubicacion',
-      'contactos',
-      'id_estado',
+      'contactos'
     ];
+
 
     // Verifica si todos los campos requeridos tienen un valor válido
     const allFieldsFilled = requiredFields.every((field) => {
       const value = data[field];
+      //console.log(value);
       return value !== null && value !== undefined && value !== '';
     });
 

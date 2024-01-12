@@ -16,7 +16,7 @@ import {
   endOfWeek,
   startOfDay,
   endOfDay,
-  format
+  format,
 } from 'date-fns';
 
 // Services
@@ -48,13 +48,13 @@ export interface Compromisso {
   formContactDesc: string; // Nueva propiedad para la descripción del formulario de contacto
   typeContactId: string; // Nueva propiedad para el ID del tipo de contacto
   typeContactDesc: string; // Nueva propiedad para la descripción del tipo de contacto
-  statusnome : string;
+  statusnome: string;
 }
 
 @Component({
   selector: 'comercial-agenda-compromissos',
   templateUrl: './compromissos.component.html',
-  styleUrls: ['./compromissos.component.scss']
+  styleUrls: ['./compromissos.component.scss'],
 })
 export class ComercialAgendaCompromissosComponent implements OnInit {
   private user = this.authService.getCurrentUser();
@@ -68,11 +68,11 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   breadCrumbTree: Array<Breadcrumb> = [
     {
       descricao: 'Home',
-      routerLink: '/comercial/home'
+      routerLink: '/comercial/home',
     },
     {
-      descricao: 'Agenda'
-    }
+      descricao: 'Agenda',
+    },
   ];
 
   activatedRouteSubscription: Subscription;
@@ -89,7 +89,6 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   idVendedor: number;
   nomeVendedor: string;
   nomeEscritorio: string;
-
 
   events$: Observable<Array<CalendarEvent<{ compromisso: Compromisso }>>>;
   eventSelected: Compromisso;
@@ -111,33 +110,33 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
     private titleService: TitleService,
     private dateService: DateService,
     private cdr: ChangeDetectorRef
-  ) { }
-
+  ) {}
 
   ngOnInit(): void {
+    //this.fetchEvents();
     this.cdr.detectChanges();
-    console.log('aqui usuarios', this.user.info);
-    if (this.user.info.nomeCargo == 'ADMINISTRADOR') {
+    /* console.log('aqui usuarios', this.user.info); */
+    if (this.user.info.idVendedor == '88') {
       this.switchEdit = true;
     } else {
       this.switchEdit = false;
     }
     this.registrarAcesso();
-   /*  this.getPerfil(); */
+    this.getPerfil();
     this.titleService.setTitle('Agenda');
+    /* this.fetchEvents(); */
+
     // Actualizar los eventos cada 20 seg
     interval(20 * 1000) // 20 seg en milisegundos
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(() => {
-    this.fetchEvents();
-});
-
-
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.fetchEvents();
+      });
   }
-ngOnDestroy(): void {
-  this.destroy$.next();
-  this.destroy$.complete();
-}
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   appTitle(date: Date): string {
     if (this.showCalendar) {
@@ -163,11 +162,16 @@ ngOnDestroy(): void {
       )
       .subscribe({
         next: (response: any) => {
-          console.log(response);
+          ///console.log(response);
           if (response.responseCode === 200) {
             this.profile = response.result;
-            if (this.profile.coordenador === true || this.profile.gestor === true || 
-              ( this.profile.vendedor === true && this.profile.coordenador === false && this.profile.gestor === false && this.profile.hasVinculoOperadores === true )
+            if (
+              this.profile.coordenador === true ||
+              this.profile.gestor === true ||
+              (this.profile.vendedor === true &&
+                this.profile.coordenador === false &&
+                this.profile.gestor === false &&
+                this.profile.hasVinculoOperadores === true)
             ) {
               this.checkRouterParams();
             } else if (
@@ -176,9 +180,9 @@ ngOnDestroy(): void {
               this.profile.gestor === false &&
               this.profile.hasVinculoOperadores === false
             ) {
-              this.fetchEvents();
               this.idVendedor = this.user.info.idVendedor;
               this.idEscritorio = this.user.info.idEscritorio;
+              this.fetchEvents();
               this.showCalendar = true;
             } else {
               this.showPermissionDenied = true;
@@ -189,7 +193,7 @@ ngOnDestroy(): void {
         },
         error: (error: any) => {
           this.showPermissionDenied = true;
-        }
+        },
       });
   }
 
@@ -208,9 +212,8 @@ ngOnDestroy(): void {
     }
   }
 
-
   dataFilter(event: any): void {
-   // console.log(event)
+    // console.log(event)
     this.idVendedor = event.idVendedor;
     this.nomeEscritorio = this.user.info.nomeCompleto;
     this.idEscritorio = event.idEscritorio;
@@ -222,14 +225,14 @@ ngOnDestroy(): void {
       idEscritorio: null,
       idVendedor: null,
       nomeEscritorio: null,
-      nomeVendedor: null
+      nomeVendedor: null,
     };
 
     this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
       (queryParams: any) => {
         if (Object.keys(queryParams).length > 0) {
           let params: any = atob(queryParams['q']);
-          
+
           params = JSON.parse(params);
 
           this.idEscritorio = parseInt(params.idEscritorio);
@@ -241,8 +244,8 @@ ngOnDestroy(): void {
           this.showCalendar = true;
           this.fetchEvents();
 
-          Object.keys(formValue).forEach(formKey => {
-            Object.keys(params).forEach(paramKey => {
+          Object.keys(formValue).forEach((formKey) => {
+            Object.keys(params).forEach((paramKey) => {
               if (
                 formKey == paramKey &&
                 formValue[formKey] != params[paramKey]
@@ -265,31 +268,36 @@ ngOnDestroy(): void {
   }
 
   fetchEvents(): void {
+    //console.log('solicitud');
     const getStart: any = {
       month: startOfMonth,
       week: startOfWeek,
-      day: startOfDay
+      day: startOfDay,
     }[this.view];
 
     const getEnd: any = {
       month: endOfMonth,
       week: endOfWeek,
-      day: endOfDay
+      day: endOfDay,
     }[this.view];
 
     let paramsObj = {};
-   
+
     if (!this.queryParamsChecked) {
       this.activatedRoute.queryParams.subscribe((queryParams: any) => {
         if (Object.keys(queryParams).length > 0) {
           let params: any = atob(queryParams['q']);
+          //console.log(params);
           params = JSON.parse(params);
 
           const queryDate = params.inicio.split('-');
           this.viewDate.setFullYear(queryDate[0]);
           this.viewDate.setMonth(queryDate[1] - 1);
           this.viewDate.setDate(queryDate[2]);
-        
+
+          this.idVendedor = params.idVendedor;
+          this.idEscritorio = params.idEscritorio;
+
           paramsObj = {
             inicio: params.inicio,
             fim: params.fim,
@@ -297,10 +305,10 @@ ngOnDestroy(): void {
             idVendedor: params.idVendedor,
             nomeEscritorio: params.nomeEscritorio,
             nomeVendedor: params.nomeVendedor,
-            statusnome : params.statusnome
+            statusnome: params.statusnome,
           };
-          
 
+          //console.log(paramsObj);
         } else {
           this.viewDate = new Date();
           paramsObj = {
@@ -311,7 +319,6 @@ ngOnDestroy(): void {
             nomeEscritorio: this.nomeEscritorio,
             nomeVendedor: this.nomeVendedor,
           };
-          
         }
       });
     } else {
@@ -321,51 +328,54 @@ ngOnDestroy(): void {
         idEscritorio: this.idEscritorio,
         idVendedor: this.idVendedor,
         nomeEscritorio: this.nomeEscritorio,
-        nomeVendedor: this.nomeVendedor
+        nomeVendedor: this.nomeVendedor,
       };
-    
     }
+
+    //console.log(this.queryParamsChecked);
 
     this.queryParamsChecked = true;
     this.activeDayIsOpen = false;
 
-    this.events$ = this.agendaService.getCompromissos(paramsObj).pipe(
-      map((compromissos: Compromisso[]) => {
-        if (compromissos['responseCode'] === 200) {
-          return compromissos['result'].map((compromisso: Compromisso) => {
-            return {
-              id: compromisso.id,
-              color: {
-                primary: compromisso.color, //getColorFromVariable()
-              },
-              title: `${compromisso.title} - ${compromisso.client} - ${compromisso.statusnome}`,
-              codClient: compromisso.codClient,
-              client: compromisso.client,
-              formContactId: compromisso.formContactId,
-              formContactDesc: compromisso.formContactDesc,
-              typeContactId: compromisso.typeContactId,
-              typeContactDesc: compromisso.typeContactDesc,
-              start: new Date(compromisso.start),
-              end: new Date(compromisso.end),
-              allDay: compromisso.allDay,
-              description: compromisso.description,
-              draggable: false,
-              statusnome : compromisso.statusnome
-            };
-          });
-        }else{
-          return[];
-        }
-      }),
-      finalize(() => {
-        this.setRouterParams(paramsObj);
-      })
-    );
+    if (this.idVendedor != undefined) {
+      this.events$ = this.agendaService.getCompromissos(paramsObj).pipe(
+        map((compromissos: Compromisso[]) => {
+          if (compromissos['responseCode'] === 200) {
+            return compromissos['result'].map((compromisso: Compromisso) => {
+              return {
+                id: compromisso.id,
+                color: {
+                  primary: compromisso.color, //getColorFromVariable()
+                },
+                title: `${compromisso.title} - ${compromisso.client} - ${compromisso.statusnome}`,
+                codClient: compromisso.codClient,
+                client: compromisso.client,
+                formContactId: compromisso.formContactId,
+                formContactDesc: compromisso.formContactDesc,
+                typeContactId: compromisso.typeContactId,
+                typeContactDesc: compromisso.typeContactDesc,
+                start: new Date(compromisso.start),
+                end: new Date(compromisso.end),
+                allDay: compromisso.allDay,
+                description: compromisso.description,
+                draggable: false,
+                statusnome: compromisso.statusnome,
+              };
+            });
+          } else {
+            return [];
+          }
+        }),
+        finalize(() => {
+          this.setRouterParams(paramsObj);
+        })
+      );
+    }
   }
 
   dayClicked({
     date,
-    events
+    events,
   }: {
     date: Date;
     events: Array<CalendarEvent<{ compromisso: Compromisso }>>;
@@ -385,7 +395,7 @@ ngOnDestroy(): void {
 
   eventClicked(event: CalendarEvent<{ compromisso: Compromisso }>): void {
     this.router.navigate(['../detalhes', event.id], {
-      relativeTo: this.activatedRoute
+      relativeTo: this.activatedRoute,
     });
   }
 
@@ -403,13 +413,13 @@ ngOnDestroy(): void {
   setRouterParams(params: any): void {
     if (params === null) {
       this.router.navigate([], {
-        relativeTo: this.activatedRoute
+        relativeTo: this.activatedRoute,
       });
     } else {
       this.router.navigate([], {
         relativeTo: this.activatedRoute,
         queryParams: { q: btoa(JSON.stringify(params)) },
-        queryParamsHandling: 'merge'
+        queryParamsHandling: 'merge',
       });
     }
   }

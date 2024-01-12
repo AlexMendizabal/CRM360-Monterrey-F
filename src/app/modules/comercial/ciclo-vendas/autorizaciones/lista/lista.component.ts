@@ -377,7 +377,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.vendedoresService.getVendedores()
     .subscribe({
       next: (response: JsonResponse) => {
-        console.log(response);
+        //console.log(response);
         if (response.hasOwnProperty('success') && response.success === true) {
 
           this.vendedores = response.data;

@@ -2,7 +2,7 @@
 <loader-spinner-full-screen
   *ngIf="loaderFullScreen"
 ></loader-spinner-full-screen>
-<app-header appTitle="Estoque">
+<app-header appTitle="Stock">
   <button type="button" (click)="onResetForm()">Limpiar</button>
   <button type="button" (click)="onFilter()" [disabled]="!form.valid">
     Filtrar
@@ -32,7 +32,7 @@
             </ng-select>
             <invalid-form-control [show]="onFieldInvalid('empresa')" message="Empresa é obrigatório."></invalid-form-control>
           </div> -->
-          <div class="form-group col-lg-3">
+          <!-- <div class="form-group col-lg-3">
             <label for="empresa"> Almacén </label>
             <ng-select
               [searchable]="true"
@@ -53,7 +53,7 @@
               [show]="onFieldInvalid('empresa')"
               message="Empresa é obrigatório."
             ></invalid-form-control>
-          </div>
+          </div> -->
           <!-- <div class="form-group col-lg-3">
             <label for="deposito">Depósito</label>
             <ng-select
@@ -298,9 +298,9 @@
                   <th class="text-center">Código</th>
                   <th class="text-center">Oferta</th>
                   <th class="text-center">Fecha</th>
-                  <th class="text-center">Cliente</th>
+                  <th class="text-center">Cliente/Razon Social</th>
                   <th class="text-center">Vendedor</th>
-                  <th class="text-center">Cantidad</th>
+                  <th class="text-center">Cantidad/Unidad</th>
                 </tr>
               </ng-template>
               <ng-template #tbody let-tbody>
@@ -311,14 +311,14 @@
                     "
                     class="text-center"
                   >
-                    {{ item.codigo_oferta }}
+                    {{ item.id_oferta }}
                   </td>
-                  <td class="text-center">{{ item.nombre_oferta }}</td>
+                  <td class="text-center">{{ item.codigo_oferta }}</td>
                   <td class="text-center">{{ item.fecha_oferta }}</td>
                   <td class="text-center">{{ item.cliente }}</td>
                   <td class="text-center">{{ item.vendedor }}</td>
                   <td class="text-center">
-                    {{ item.cantidad | number : '1.4-4' }} {{ item.unidad }}
+                    {{ item.cantidad | number : '1.0-0' }} {{ item.unidad }}
                   </td>
                 </tr>
                 <tr class="bg-dark text-center text-dark">
@@ -326,7 +326,7 @@
                   <td><strong>Total</strong></td>
                   <td class="text-center">
                     <strong>{{
-                      totaisComprometido.cantidad | number : '1.4-4'
+                      totaisComprometido.cantidad | number : '1.0-0'
                     }}</strong>
                   </td>
                 </tr>
@@ -401,7 +401,7 @@
                   {{ item.descripcion }}
                 </td>
                 <td class="text-center" [ngClass]="border - danger">
-                  {{ item.cantidad | number : '1.3-3' }} {{ item.unidad }}
+                  {{ item.cantidad | number : '1.0-0' }} {{ item.unidad }}
                 </td>
               </tr>
               <tr class="bg-dark text-center text-dark">
@@ -409,7 +409,7 @@
                 <td><strong>Total</strong></td>
                 <td class="text-center">
                   <strong>{{
-                    totalSuspenso.cantidad | number : '1.4-4'
+                    totalSuspenso.cantidad | number : '1.0-0'
                   }}</strong>
                 </td>
               </tr>
@@ -447,8 +447,8 @@
       <tab
         heading="Stock Almacenes"
         class="border-right border-left border-bottom"
-        (selectTab)="onGetEstoqueAlmacen()"
-        *ngIf="StockAlmacenes"
+       
+        *ngIf="true"
       >
         <advanced-filter>
           <form [formGroup]="form" autocomplete="off">
@@ -459,7 +459,7 @@
                   type="text"
                   class="form-control"
                   formControlName="codigo_almacen"
-                  (keydown.enter)="onFilterModal()"
+                 
                 />
               </div>
               <div class="form-group col-lg-3 mb-0">
@@ -468,27 +468,20 @@
                   type="text"
                   class="form-control"
                   formControlName="nombre_almacen"
-                  (keydown.enter)="onFilterModal()"
+                  
                 />
               </div>
               <div class="form-group col-lg-3 mb-0">
                 <label for="nombre_lista">Lista precio</label>
-                <select
-                  class="form-control"
-                  formControlName="nombre_lista"
-                  (keydown.enter)="onFilterModal()"
-                >
-                  <option value="" disabled selected>
-                    Select Lista Precio
-                  </option>
-                  <option
-                    *ngFor="let listaPrecio of uniqueListasPrecios"
-                    [value]="id_lista"
-                  >
-                    {{ listaPrecio }}
+                <select class="form-control" formControlName="nombre_lista">
+                  <option value="" disabled selected>Select Lista Precio</option>
+                  <option *ngFor="let listaPrecio of uniqueListasPrecios" [value]="listaPrecio.id"> <!-- Ajusta según la estructura de tus datos -->
+                    {{ listaPrecio.nombre_lista }}
                   </option>
                 </select>
               </div>
+              
+              
             </div>
             <div class="form-row" style="margin-top: 10px; margin-bottom: 10px">
               <button
@@ -512,7 +505,7 @@
 
           <custom-table
             [config]="tableConfig"
-            *ngIf="detalhesAlmacen.length > 0 && stockLoaded"
+            *ngIf="detalhesAlmacen.length > 0"
           >
             <ng-template #thead let-thead>
               <tr>
@@ -532,7 +525,7 @@
                   {{ item.precio | number : '1.2-2' }}
                 </td>
                 <td class="text-center">
-                  {{ item.cantidad | number : '1.3-3' }} {{ item.unidad }}
+                  {{ item.cantidad | number : '1.0-0' }} {{ item.unidad }}
                 </td>
               </tr>
             </ng-template>

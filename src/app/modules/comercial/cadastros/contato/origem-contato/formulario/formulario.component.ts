@@ -101,7 +101,7 @@ export class ComercialCadastrosContatoOrigemContatoFormularioComponent
       const detalhes: OrigemContato = this.activatedRoute.snapshot.data.detalhes
         .data;
 
-        console.log(detalhes);
+        //console.log(detalhes);
       
       this.form = this.formBuilder.group({
         codOrigemContato: [detalhes.codOrigemContato],

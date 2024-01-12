@@ -221,9 +221,9 @@ export class ComercialCadastrosTipoComissionamentoFormularioComponent
       valida = item;
     }
 
-    console.log()
+    //console.log()
 
-    console.log(dados);
+    //console.log(dados);
 
     this.confirmDelete().subscribe((response: boolean) => {
       if (response) {

@@ -221,10 +221,10 @@ export class ComercialAknaContatosListaComponent implements OnInit, OnDestroy {
     await promise
       .then((contatos: IComercialAknaContatos[]) => {
         this.contatosFiltrados = contatos;
-        console.log(contatos);
+        //console.log(contatos);
       })
       .catch((error) => {
-        console.log(error);
+        //console.log(error);
       });
   }
 

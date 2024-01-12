@@ -2,11 +2,11 @@
   "login": {
     "browserTitle": "Login",
     "form": {
-      "button": "Proceder",
+      "button": "Inicio de sesión",
       "password": "Contraseña",
       "user": "Usuario"
     },
-    "text": "para unirse a MTCorp",
+    "text": "para ingresar a CRM360",
     "title": "Inicie sesión"
   },
 

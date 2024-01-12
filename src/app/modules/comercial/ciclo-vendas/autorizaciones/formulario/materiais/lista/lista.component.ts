@@ -664,7 +664,6 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       } else if (this.clickCounter === 2) {
         this.onDoubleClickMaterial(index);
       }
-
       this.clickCounter = 0;
     }, 250);
   }
@@ -691,22 +690,26 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
   onAddMaterial(): void {
+    
+
     let materiais = [];
 
     for (let index = 0; index < this.dados.length; index++) {
       if (this.dados[index].checked === 1) {
         materiais.push(this.dados[index]);
         this.dados[index].checked = 0;
+      this.pnotifyService.success('Material agregado.');
+
       }
     }
 
-    //if (materiais.length > 0) {
+    if (materiais.length > 0) {
       this.formularioService.materiaisSubject.next(materiais);
       this.toggleAll = this.toggleAll === true ? false : this.toggleAll;
       this.scrollToCarrinho.emit(this.autoScroll);
-    //} else {
+    } else {
       this.pnotifyService.notice('Selecione ao menos um material.');
-    //}
+    }
   }
 
   onActiveRow(index: number): void {

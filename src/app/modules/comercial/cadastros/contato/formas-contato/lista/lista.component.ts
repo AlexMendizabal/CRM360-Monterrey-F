@@ -329,7 +329,7 @@ export class ComercialCadastrosContatoFormasContatoListaComponent
             this.dadosPagination = this.dados.slice(0, this.itemsPerPage);
             this.totalItems = this.dados.length;
             this.dadosLoaded = true;
-            console.log(this.dados)
+            //console.log(this.dados)
           } else if (
             response.hasOwnProperty('success') &&
             response.success === false

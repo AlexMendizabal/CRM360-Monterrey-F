@@ -63,7 +63,7 @@
             </td>
             <td class="hover text-center " style="width: 30%" (click)="item.checked = !item.checked">
               <ng-select [searchable]="true" [clearable]="false" [items]="filteredVendedores" [virtualScroll]="true"
-                labelForId="vendedor" bindLabel="nome" bindValue="id" [(ngModel)]="item.vendedor_id"
+                labelForId="vendedor" bindLabel="nombre" bindValue="ID" [(ngModel)]="item.vendedor_id"
                 (ngModelChange)="onVendedorChange(item, $event)" class="select-control">
                 <option value="">Seleccionar</option>
               </ng-select>

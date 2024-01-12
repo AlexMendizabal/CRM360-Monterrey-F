@@ -49,7 +49,7 @@ export class ComercialClientesCadastroAnexosDetalhesComponent
             
             this.loaderFullScreen = false;
             this.anexos = response['data']; 
-            console.log(this.anexos);
+            //console.log(this.anexos);
             this.anexosLoaded = true;
           
           } else if (response['success'] == true && response['data'].length == 0) {
@@ -57,7 +57,7 @@ export class ComercialClientesCadastroAnexosDetalhesComponent
             this.anexosLoaded = true;
           } else {
             this.pnotifyService.error();
-            console.log('erro')
+            //console.log('erro')
               // this.router.navigate([
               //   '/comercial/clientes/detalhes',
               //   params['id']

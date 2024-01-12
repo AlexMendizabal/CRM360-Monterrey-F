@@ -115,14 +115,14 @@
                       </label>
                       <select name="" id="id_tipo_persona" class="form-control">
                         <option
-                          *ngFor="let tipo of tipos_personas | keyvalue"
-                          [value]="tipo.key"
+                          *ngFor="let tipo of tipos_personas"
+                          [value]="tipo.sigla"
                           [selected]="
-                            tipo.key ===
+                            tipo.id ===
                             datos_cliente.datos_cliente.id_tipo_persona
                           "
                         >
-                          {{ tipo.value }}
+                          {{ tipo.tipo_persona }}
                         </option>
                       </select>
                     </div>
@@ -292,14 +292,14 @@
             >
               <div class="card">
                 <div class="card-body">
-                  <label>Título</label>
+                  <label>Título <span class="text-danger">*</span></label>
                   <div>
                     <input
                       [(ngModel)]="contacto.contacto"
                       class="form-control"
                     />
                   </div>
-                  <label>Nombre<!-- <span class="text-danger">(*)</span> --> </label>
+                  <label>Nombre  <span class="text-danger">*</span> </label>
                   <div>
                     <input
                       [(ngModel)]="contacto.nombres_contacto"
@@ -307,7 +307,7 @@
                     />
                   </div>
                   <label
-                    >Apellido paterno <!-- <span class="text-danger">(*)</span> -->
+                    >Apellido paterno  <span class="text-danger">*</span>
                   </label>
                   <div>
                     <input
@@ -324,7 +324,7 @@
                       class="form-control"
                     />
                   </div>
-                  <label>Dirección <!-- <span class="text-danger">(*)</span> --> </label>
+                  <label>Dirección  <span class="text-danger">*</span> </label>
                   <div>
                     <input
                       [(ngModel)]="contacto.direccion_contacto"
@@ -338,7 +338,7 @@
                       class="form-control"
                     />
                   </div>
-                  <label>Teléfono <!-- <span class="text-danger">(*)</span> --> </label>
+                  <label>Teléfono  <span class="text-danger">*</span> </label>
                   <div>
                     <input
                       [(ngModel)]="contacto.telefono_contacto"

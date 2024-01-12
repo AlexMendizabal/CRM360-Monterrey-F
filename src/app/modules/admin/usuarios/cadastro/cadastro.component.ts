@@ -334,7 +334,7 @@ export class AdminUsuariosCadastroComponent implements OnInit {
         },
         error => {
           this.perfis = [];
-          console.log(error)
+         // console.log(error)
         }
       )
   }

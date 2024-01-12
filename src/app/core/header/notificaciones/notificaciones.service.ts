@@ -61,4 +61,10 @@ export class NotificacionesService {
             .post(this.BASE_URL+ `/core/notificaciones/crearNotificaciones`, params)
             .pipe(take(1), retry(0));
     }
+
+    verificarOferta(params: any) {
+        return this.http
+            .post(this.BASE_URL+ `/core/notificaciones/verificar_oferta`, params)
+            .pipe(take(1), retry(0));
+    }
 }

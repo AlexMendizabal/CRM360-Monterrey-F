@@ -75,6 +75,9 @@ export class ComercialEstoqueListaComponent implements OnInit {
   form: FormGroup;
   idEmpresa: number;
   codMaterial: number;
+  codigo_almacen: string;
+  nombre_almacen: string;
+  nombre_lista: string;
 
   modalRef: BsModalRef;
 
@@ -146,16 +149,17 @@ export class ComercialEstoqueListaComponent implements OnInit {
   comprometidoLoaded: boolean;
   comprometidoEmpty: boolean;
 
-  stockLoaded : boolean;
-  stockEmpty : boolean;
+  stockLoaded: boolean;
+  stockEmpty: boolean;
 
   loteLoaded: boolean;
   loteEmpty: boolean;
   suspensoLoaded: boolean;
   suspensoEmpty: boolean;
   possuiLote: boolean;
-  orderBy: string = ''; // Variable para almacenar el nombre de la columna seleccionada para ordenar
-  orderType: 'asc' | 'desc' = 'asc'; // Variable para almacenar el tipo de orden (ascendente o descendente)
+  orderBy: string = ''; 
+  orderType: 'asc' | 'desc' = 'asc'; 
+  uniqueListasPrecios: string[] = [];
 
   modalDetalhes: TemplateRef<any>;
 
@@ -179,6 +183,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
     this.getFiltros();
     this.setFormFilter();
     this.titleService.setTitle('Inventario');
+    this.cargarListasPrecios();
   }
 
   registrarAcesso() {
@@ -242,7 +247,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
       id_familia: 0,
       id_grupo: 0,
       id_linea: 0,
-      codigo_material: null,
+      codigo_material: 0,
       nombre_material: null,
       codigo_almacen: null,
       nombre_almacen: null,
@@ -280,6 +285,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
 
   setFormFilter() {
     const formValue: any = this.checkRouterParams();
+
     this.form = this.formBuilder.group({
       grupo: [formValue.grupo],
       empresa: [formValue.empresa],
@@ -292,9 +298,25 @@ export class ComercialEstoqueListaComponent implements OnInit {
       estoqueDisponivel: [formValue.estoqueDisponivel],
       codigo_almacen: [formValue.codigo_almacen],
       nombre_almacen: [formValue.nombre_almacen],
-      nombre_lista: [formValue.nombre_lista],
-    }); 
+      nombre_lista: [''],
+    });
   }
+  cargarListasPrecios() {
+    const nombreLista = this.form.get('nombre_lista').value;
+
+    // Utiliza el nombre de la variable correcto (nombreLista en lugar de this.nombre_lista)
+    this.estoqueService.buscarListaPrecio(nombreLista).subscribe(
+      (response: any) => {
+        this.uniqueListasPrecios = response.listas_precios; // Ajusta según la estructura de tu respuesta
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
+  }
+
+  
+  
   onFilter() {
     this.totalItems = 0;
     this.dados = [];
@@ -331,8 +353,6 @@ export class ComercialEstoqueListaComponent implements OnInit {
       },
     });
   }
-
-  
 
   sincronizar() {
     this.comercialService.sincronizarMateriales().subscribe({
@@ -398,8 +418,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
     return this.estoqueComprometido.slice(startIndex, endIndex);
   }
   getPaginateDataAlmacen(): any[] {
-    const startIndex =
-      (this.currentPageAlmacen - 1) * this.itemsPerPageAlmacen;
+    const startIndex = (this.currentPageAlmacen - 1) * this.itemsPerPageAlmacen;
     const endIndex = startIndex + this.itemsPerPageAlmacen;
     //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
     return this.estoqueAlmacen.slice(startIndex, endIndex);
@@ -488,26 +507,37 @@ export class ComercialEstoqueListaComponent implements OnInit {
     this.possuiLote = false;
     this.nomeMaterial = `(${codigoMaterial}) ${titulo}`;
     this.codMaterial = idMaterial;
-    
-
+  
     if (estoqueSuspenso > 0) {
       this.possuiLote = true;
     }
-    this.onSelectComprometidos();
-    /*     this.onGetOutrasUnidades(idMaterial); */
+  
+    // Limpiar la lista antes de obtener nuevos datos
+    this.detalhesAlmacen = [];
+  
+    // Resetear el formulario al abrir el modal
+    this.form.reset();
 
+  
     setTimeout(() => {
       this.loaderNavbar = false;
       this.modalRef = this.modalService.show(modalRef, {
         class: 'modal-xl',
       });
+      this.onSelectComprometidos();
     }, 600);
   }
+  
+  
 
   closeModal(modalRef: TemplateRef<any>) {
     this.modalRef.hide();
     this.codMaterial = null;
+
+    // Resetea el formulario al cerrar el modal
+    this.form.reset();
   }
+
 
   onSelectPedidos() {
     this.onGetPedidosCompra(this.idEmpresa, this.codMaterial);
@@ -658,73 +688,42 @@ export class ComercialEstoqueListaComponent implements OnInit {
       }
     );
   }
-  onFilterModal() {
-    this.totalItems = 0;
-    this.dados = [];
-    this.dadosReturned = [];
-    const formValue = this.form.value;
-    this.loaderNavbar = true;
 
-    let params: any = {
-      id_almacen: formValue.empresa,
-      id_familia: formValue.classeMaterial,
-      id_grupo: formValue.grupo,
-      id_linea: formValue.linha,
-      codigo_material: formValue.codMaterial,
-      nombre_material: formValue.descMaterial,
-      registros: formValue.registros,
-    };
-
-    console.log("Parametros", params);
-
-    this.comercialService.getMateriales(params).subscribe({
-      next: (response: any) => {
-        if (response.responseCode === 200) {
-          this.loaderNavbar = false;
-
-          this.dados = [];
-          this.datos = response.result;
-          this.dadosReturned = this.datos.slice(0, this.itemsPerPage);
-
-          this.totalItems = this.datos.length;
-          /* console.log(this.datos); */
-          this.dadosEmpty = false;
-        } else {
-          this.loaderNavbar = false;
-          this.dadosEmpty = true;
-        }
-      },
-    });
-  }
 
   onGetEstoqueAlmacen() {
-    
+  
     this.stockLoaded = false;
     this.stockEmpty = false;
-
-    let params: any = {
-      codMaterial: this.codMaterial,
   
+    // Ajusta el nombre del parámetro idMaterial según sea necesario
+    let params: any = {
+      idMaterial: this.codMaterial,
+      // Ajusta el nombre de la propiedad según sea necesario
+      id_lista_precio: this.form.get('nombre_lista').value,
+      nombre_almacen: this.form.get('nombre_almacen').value,
+      codigo_almacen: this.form.get('codigo_almacen').value
+      // Agrega aquí cualquier otro parámetro necesario del formulario
     };
-    console.log('Form valuesss:', params);
+  
+    console.log('Enviando Params:', params);
+  
     this.estoqueService.getStockAlmacenes(params).subscribe(
-        (response: any) => {
-            console.log("respuesta Estoque", response);
-            if (response.responseCode === 200) {
-                this.detalhesAlmacen = response.result;
-                this.stockLoaded = true;
-            } else {
-                this.pnotifyService.notice('Datos no encontrados.');
-                this.stockEmpty = true;
-            }
-        },
-        (error: any) => {
-            this.handleSearchError('Error al cargar los datos de Almacen');
+      (response: any) => {
+        console.log("Respuesta Estoque", response);
+        if (response.responseCode === 200) {
+          this.detalhesAlmacen = response.result;
+          this.stockLoaded = true;
+        } else {
+          this.pnotifyService.notice('Datos no encontrados.');
+          this.stockEmpty = true;
         }
+      },
+      (error: any) => {
+        this.handleSearchError('Error al cargar los datos de Almacen');
+      }
     );
-}
-
-
+  }
+  
 
   onFieldError(field: string) {
     if (this.onFieldInvalid(field)) {
@@ -747,7 +746,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
     if (this.form.controls[field].validator) {
       let validationResult = this.form.controls[field].validator(formControl);
       required =
-        validationResult !== null && validationResult.required ===  true;
+        validationResult !== null && validationResult.required === true;
     }
 
     if (required) {

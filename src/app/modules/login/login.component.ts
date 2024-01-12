@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
   }
 
   getLogoInicio() {
-    this.srcLogoInicio = `src/assets/images/logo/Short-Degrade-Morado.png`;
+    this.srcLogoInicio = `src/assets/images/logo/Logo_RIA_Green.png`;
   }
 
   getClienteLogo() {

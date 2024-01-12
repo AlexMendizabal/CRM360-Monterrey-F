@@ -101,7 +101,7 @@ export class ComercialCadastrosMateriaisCrossSellListaComponent
     this.registrarAcesso();
     this.setBreadCrumb();
     this.setFormFilter();
-    this.titleService.setTitle('Cross-Sell de materiais');
+    this.titleService.setTitle('Cross-Sell de materiales');
     this.onDetailPanelEmitter();
     this.setCrossSellSelecionada();
   }
@@ -122,7 +122,7 @@ export class ComercialCadastrosMateriaisCrossSellListaComponent
           routerLink: `/comercial/cadastros/${params.idSubModulo}`,
         },
         {
-          descricao: 'Cross-Sell de materiais',
+          descricao: 'Cross-Sell de materiales',
         },
       ];
     });
@@ -222,7 +222,7 @@ export class ComercialCadastrosMateriaisCrossSellListaComponent
   onFieldInvalid(field: any): boolean {
     field = this.form.get(field);
 
-    return field.status == 'INVALID' && field.touched;
+    return field.status == 'INVÁLIDA' && field.touched;
   }
 
   onFieldRequired(
@@ -374,7 +374,7 @@ export class ComercialCadastrosMateriaisCrossSellListaComponent
   onDetails(crossSell: ICrossSell): void {
     this.loaderNavbar = true;
     this.detailPanelService.show();
-    this.detailPanelTitle = `Associações (${crossSell.nomeMaterial})`;
+    this.detailPanelTitle = `Asociaciones (${crossSell.nomeMaterial})`;
     this.setCrossSellSelecionada();
     this.crossSellSelecionada = crossSell;
     this.materiais = [];
@@ -453,7 +453,7 @@ export class ComercialCadastrosMateriaisCrossSellListaComponent
     return this.confirmModalService.showConfirm(
       null,
       null,
-      'Deseja realmente prosseguir com a ativação do registro?',
+      '¿Realmente desea continuar con la activación del registro?',
       'Cancelar',
       'Confirmar'
     );
@@ -494,9 +494,9 @@ export class ComercialCadastrosMateriaisCrossSellListaComponent
 
   confirmInactive(): any {
     return this.confirmModalService.showConfirm(
-      'inactivate',
-      'Confirmar inativação',
-      'Deseja realmente prosseguir com a inativação do registro?',
+      'inactivar',
+      'Confirmar inactivación',
+      '¿Realmente desea continuar con la desactivación del registro?',
       'Cancelar',
       'Confirmar'
     );

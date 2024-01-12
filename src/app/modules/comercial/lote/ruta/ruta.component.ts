@@ -472,7 +472,7 @@ export class ComercialLoteRutaComponent implements OnInit {
         this.vendedoresService.getVendedores().subscribe(
             (response: any) => {
                 if (response['responseCode'] === 200) {
-                    this.filteredVendedores = response['result'];
+                    this.filteredVendedores = response['data'];
                     if (this.filteredVendedores.length > 0) {
                         //this.indiceVendedor = this.filteredVendedores[].id;
                     }
@@ -505,8 +505,8 @@ export class ComercialLoteRutaComponent implements OnInit {
         let msgError = 'Ocurrio un error al agendar la cita.';
         const datos = this.atividades;
 
-        /* console.log(datos);
-
+       console.log('aqui es datos de cita',datos);
+        
         // Muestra el spinner
         this.mostrarSpinner = true;
 
@@ -524,7 +524,7 @@ export class ComercialLoteRutaComponent implements OnInit {
                     this.mostrarSpinner = false;
                 }
             );
-        this.limpiarDatos(); */
+        this.limpiarDatos();
     }
     limpiarDatos() {
 
@@ -544,8 +544,8 @@ export class ComercialLoteRutaComponent implements OnInit {
         this.enviarDatosSubject.next();
         this.enviarDatosSubject.complete();
     }
-    onVendedorChange(item: any, newValue: any) {
 
+    onVendedorChange(item: any, newValue: any) {
         item.id_vendedor = newValue;
 
     }

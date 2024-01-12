@@ -15,8 +15,9 @@
 
     </div>
   </div>
-
+  
   <div class="col" [hidden]=showBloco3>
+ 
     <div class="row mb-5" #scrollToCarrinho >
       <div class="col">
         <div class="row">
@@ -43,6 +44,7 @@
             </div>
           </div>
         </div>
+       
         <form [formGroup]="form" autocomplete="off">
           <custom-table [config]="tableHeadConfig">
             <ng-template #thead let-thead>

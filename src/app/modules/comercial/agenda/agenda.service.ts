@@ -41,7 +41,7 @@ export class ComercialAgendaService {
   }
 
     reporteAgenda(data: any) {
-      console.log('entro')
+      //console.log('entro')
       return this.http.post(`${this.API}/reporte`, data).pipe(take(1), retry(2));
     }
 
@@ -103,7 +103,7 @@ export class ComercialAgendaService {
   }
 
   reporte(params: any) {
-    console.log(params);
+    //console.log(params);
       return this.http.post(`${this.API}/reporte`, params ).pipe(
         take(1),
         retry(2)
@@ -111,8 +111,8 @@ export class ComercialAgendaService {
   }
 
   reporte_cliente(params: any) {
-    console.log('entro432')
-    console.log(params);
+    //console.log('entro432')
+    //console.log(params);
       return this.http.post(`${this.API}/reportecliente`, params ).pipe(
         take(1),
         retry(2)

@@ -532,8 +532,8 @@ export class ComercialCicloVendasPedidosProducaoTelasListaComponent
   viewRegister(index: number, pedido: IComercialCicloVendasPedidosProducaoTelas): void {
     this.loaderNavbar = true;
 
-    console.log('pedido')
-    console.log(pedido)
+    //console.log('pedido')
+    //console.log(pedido)
 
     this.detailPanelService.show();
     this.detailPanelTitle = `#${
@@ -565,9 +565,9 @@ export class ComercialCicloVendasPedidosProducaoTelasListaComponent
         next: (response: any) => {
           if (response.success === true) {
             this.detailPanelService.loadedFinished(false);
-            console.log(response);
-            console.log(response.data);
-            console.log(response.data.carrinho);
+            //console.log(response);
+            //console.log(response.data);
+            //console.log(response.data.carrinho);
             this.detalhes = response.data;
             this.loaderNavbar = false;
             this.itensLoaded = true;
@@ -611,7 +611,7 @@ export class ComercialCicloVendasPedidosProducaoTelasListaComponent
         next: (response: any) => {
           if (response.success === true) {
             this.detailPanelService.loadedFinished(false);
-            console.log(response.data);
+            //console.log(response.data);
             this.detalhesCarrinho = response.data.carrinho;
             this.loaderNavbar = false;
             this.itensLoaded = true;
@@ -664,7 +664,7 @@ export class ComercialCicloVendasPedidosProducaoTelasListaComponent
   }
 
   onSubtitleActivationChange(event: any): void {
-    console.log(event);
+    //console.log(event);
   }
 
   showLoaderNavbar(event: boolean) {
@@ -783,7 +783,7 @@ export class ComercialCicloVendasPedidosProducaoTelasListaComponent
 
 
   onAdd(): void {
-    console.log()
+    //console.log()
     this.router.navigate(['../novo'], {
       relativeTo: this.activatedRoute,
     });
@@ -812,7 +812,7 @@ export class ComercialCicloVendasPedidosProducaoTelasListaComponent
   }
 
   onChangeProducao(){
-    console.log(this.formProducao.getRawValue());
+    //console.log(this.formProducao.getRawValue());
     this.pedidosProducaoTelas
     .postProducao(this.formProducao.getRawValue())
     .pipe(
@@ -822,7 +822,7 @@ export class ComercialCicloVendasPedidosProducaoTelasListaComponent
     )
     .subscribe({
       next: (response: JsonResponse) => {
-        console.log(response)
+        //console.log(response)
         if (response.hasOwnProperty('success') && response.success === true) {
           this.producao = response.data;
           this.pnotifyService.success();
@@ -862,7 +862,7 @@ export class ComercialCicloVendasPedidosProducaoTelasListaComponent
   }
 
   onChangeExpedicao(){
-    console.log(this.formExpedicao.getRawValue());
+    //console.log(this.formExpedicao.getRawValue());
     this.pedidosProducaoTelas
     .postExpedicao(this.formExpedicao.getRawValue())
     .pipe(
