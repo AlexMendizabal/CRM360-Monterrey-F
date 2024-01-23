@@ -84,11 +84,13 @@ export class ComercialAgendaFormularioComponent
   loaderNavbar = false;
   loaderFullScreen = true;
   action: string;
-  latitud: number = -17.783384728226157;
-  longitud: number = -63.1820969584504;
-
+  latitud: number = -17.78629;
+  longitud: number = -63.18117;
 
   direccion: string;
+
+  selectedImage: File;
+  previewImage: string | ArrayBuffer;
 
   breadCrumbTree: Array<Breadcrumb> = [];
 
@@ -593,11 +595,12 @@ export class ComercialAgendaFormularioComponent
       );
       return;
     }
-
+  
     if (this.form && this.form.valid) {
+      
       this.loaderNavbar = true;
       this.submittingForm = true;
-      const formValue = this.form.getRawValue();
+      const formValue =  this.form.getRawValue();
       const obsFinalizar = this.form.get('Obsfinalizar');
       let client: string,
         formContactDesc: string,
@@ -614,7 +617,7 @@ export class ComercialAgendaFormularioComponent
         msgSuccess = 'Su cita fue editada.';
         msgError = 'Ocurrió un error al editar la cita.';
       }
-
+    
       if (formValue.cliente != '') {
         for (let index = 0; index < this.clientes.length; index++) {
           if (this.clientes[index].id == formValue.cliente) {
@@ -622,13 +625,10 @@ export class ComercialAgendaFormularioComponent
           }
         }
       }
-
+      
       if (formValue.codFormaContato != '') {
         for (let index = 0; index < this.formasContato.length; index++) {
-          if (
-            this.formasContato[index].codFormaContato ==
-            formValue.codFormaContato
-          ) {
+          if ( this.formasContato[index].codFormaContato == formValue.codFormaContato) {
             formContactDesc = this.formasContato[index].nomeFormaContato;
           }
         }
@@ -636,35 +636,26 @@ export class ComercialAgendaFormularioComponent
 
       if (formValue.codOrigemContato != '') {
         for (let index = 0; index < this.origensContato.length; index++) {
-          if (
-            this.origensContato[index].codOrigemContato ==
-            formValue.codOrigemContato
-          ) {
+          if ( this.origensContato[index].codOrigemContato == formValue.codOrigemContato) {
             typeContactDesc = this.origensContato[index].nomeOrigemContato;
           }
         }
       }
-
-      if (formValue.diaInteiro) {
-        inicioData = formValue.inicioData;
-        terminoData = inicioData;
-
-        inicioData.setHours(0, 0, 0);
-        terminoData.setHours(0, 0, 0);
+     
+      if (formValue.diaInteiro) 
+      {
+         inicioData = formValue.inicioData;
+         terminoData = inicioData;
+         inicioData.setHours(0, 0, 0);
+         terminoData.setHours(0, 0, 0);
       } else {
         inicioData = formValue.inicioData;
         inicioHorario = formValue.inicioHorario;
         terminoData = formValue.terminoData;
         terminoHorario = formValue.terminoHorario;
 
-        inicioData.setHours(
-          inicioHorario.getHours(),
-          inicioHorario.getMinutes()
-        );
-        terminoData.setHours(
-          terminoHorario.getHours(),
-          terminoHorario.getMinutes()
-        );
+        inicioData.setHours(inicioHorario.getHours(), inicioHorario.getMinutes());
+        terminoData.setHours(terminoHorario.getHours(), terminoHorario.getMinutes());
       }
 
       let status: number;
@@ -695,11 +686,8 @@ export class ComercialAgendaFormularioComponent
       const inicio = this.dateService.convert2PhpDate(inicioData);
       const termino = this.dateService.convert2PhpDate(terminoData);
 
-      const observacaoUpperCase =
-        formValue.observacao !== null && formValue.observacao !== undefined
-          ? formValue.observacao.toUpperCase()
-          : null;
-
+      /* const observacaoUpperCase = formValue.observacao !== null && formValue.observacao !== undefined ? formValue.observacao.toUpperCase() : null; */
+      console.log(formValue);
       let formObj = {
         id: formValue.id,
         color: {
@@ -710,7 +698,6 @@ export class ComercialAgendaFormularioComponent
         idVendedor: formValue.promotor,
         client: client,
         formContactId: formValue.codFormaContato,
-        codigo_cliente: formValue.codigo_cliente.value,
         formContactDesc: formContactDesc,
         typeContactId: formValue.codOrigemContato,
         typeContactDesc: typeContactDesc,
@@ -726,6 +713,7 @@ export class ComercialAgendaFormularioComponent
         /* id_status: id_status, */
         obsFinalizar: formValue.Obsfinalizar,
       };
+      
       this.agendaService.save(this.action, formObj).subscribe({
         next: (response: any) => {
           if (response.responseCode === 200) {
@@ -755,6 +743,21 @@ export class ComercialAgendaFormularioComponent
         },
       });
     }
+    const formData = new FormData();
+    formData.append('imagen', this.selectedImage);
+    //console.log('imagen')
+    //console.log(formData)
+  }
+
+  onImageSelected(event: any) {
+    this.selectedImage = event.target.files[0];
+
+    // Generar la vista previa de la imagen
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewImage = reader.result;
+    };
+    reader.readAsDataURL(this.selectedImage);
   }
 
   handleErrorOnSubmit(message: string): void {
@@ -768,6 +771,7 @@ export class ComercialAgendaFormularioComponent
     const idVendedor = this.form.value.promotor;
     let params = {
       idVendedor: idVendedor,
+
     }
     this.ComercialVendedoresService.getCarteiraClientes(params).subscribe((response: JsonResponse) => {
       if(response.success== true){
@@ -776,7 +780,12 @@ export class ComercialAgendaFormularioComponent
     })
   }
 
+
   updateDireccion(event: any) {
+
+    console.log('que tienen aqui',event);
+
+    
     var direccion_cliente = event.direccion;
     var latitud_cliente = event.latitud;
     var longitud_cliente = event.longitud;

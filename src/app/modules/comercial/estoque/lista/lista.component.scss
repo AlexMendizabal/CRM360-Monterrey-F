@@ -1,11 +1,18 @@
-::ng-deep {
-  .dropdown-item:hover {
-    cursor: pointer;
-  }
-  .card-title {
-    font-size: 1.05rem;
-  }
-  .card:hover {
-    background-color: #f0f0f0;
-  }
+:host >>> .dropdown-item:hover {
+  cursor: pointer;
 }
+
+:host >>> .card-title {
+  font-size: 1.05rem;
+}
+
+:host >>> .card:hover {
+  background-color: #f0f0f0;
+}
+
+:host .custom-styling .stocktable {
+  width: 180%;
+  margin-bottom: 1rem;
+  color: #212529;
+}
+

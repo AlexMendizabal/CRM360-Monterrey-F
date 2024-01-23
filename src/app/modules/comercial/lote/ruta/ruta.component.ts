@@ -436,10 +436,11 @@ export class ComercialLoteRutaComponent implements OnInit {
     }
 
     selectVendedorDefault(cliente: any, mapa: any) {
-        //console.log(mapa.id_vendedor);
-        const vendedorEncontrado = this.filteredVendedores.find(vendedor => vendedor.id === mapa.ID_VENDEDOR);
+       
+        const vendedorEncontrado = this.filteredVendedores.find(vendedor => vendedor.ID === mapa.ID_VENDEDOR);
+        console.log('aquie mapa', vendedorEncontrado);
         if (vendedorEncontrado) {
-            cliente.vendedor_id = vendedorEncontrado.id;
+            cliente.vendedor_id = vendedorEncontrado.ID;
         } else {
             cliente.vendedor_id = ''; // Valor por defecto si el vendedor no se encuentra en filteredVendedores
         }

@@ -115,7 +115,7 @@
       </div>
     </div>
     <div class="col-md-12">
-      <div class="modal-footer">
+      <div class="modal-footer" id="botones" *ngIf="idVend === 88">
         <button type="submit" id="aceptado" class="btn btn-success" (click)="boton(data.oferta[0].id_autorizacion, 12)"
           [disabled]="loader">
           Aprobar

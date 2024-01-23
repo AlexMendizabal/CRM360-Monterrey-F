@@ -544,7 +544,7 @@ export class ComercialClientesPreCadastroComponent
   setFormBuilder(documento: string) {
     this.form = this.formBuilder.group({
       //cnpj_cpf: [null,Validators.required],
-      nit: [null, [Validators.required, Validators.min(0)]],
+      nit: [null, Validators.required],
       ci: [null, [Validators.required, Validators.maxLength(8)]],
 
       nome: [
@@ -589,13 +589,13 @@ export class ComercialClientesPreCadastroComponent
 
     this.form.get('tipopessoa').valueChanges.subscribe((value) => {
       if (value === 'P' || value === 'G' || value === 'E') {
-        this.form.get('nit').setValidators([Validators.required]);
+        //this.form.get('nit').setValidators([Validators.required]);
         this.form.get('razaoSocial').setValidators([Validators.required]);
       } else {
-        this.form.get('nit').clearValidators();
+        //this.form.get('nit').clearValidators();
         this.form.get('razaoSocial').clearValidators();
       }
-      this.form.get('nit').updateValueAndValidity();
+      //this.form.get('nit').updateValueAndValidity();
       this.form.get('razaoSocial').updateValueAndValidity();
     });
   }

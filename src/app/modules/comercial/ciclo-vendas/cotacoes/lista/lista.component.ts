@@ -584,6 +584,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       dataInicial1: [formValue.dataInicial1],
       dataInicial2: [formValue.dataInicial2],
       nrPedido: [formValue.nrPedido],
+      codigo_oferta: [formValue.codigo_oferta],
       codEmpresa: [formValue.codEmpresa, [Validators.required]],
       codEmpresaAdd: [formValue.codEmpresa],
       codDeposito: [formValue.codDeposito, [Validators.required]],
@@ -815,6 +816,9 @@ export class ComercialCicloVendasCotacoesListaComponent
       /*    console.log(params.codSituacao); */
     }
 
+    if (this.form.value.codigo_oferta) {
+      params.codigo_oferta = this.form.value.codigo_oferta;
+    }
     if (this.form.value.nrPedido) {
       params.id_oferta = this.form.value.nrPedido;
     }
@@ -893,15 +897,20 @@ export class ComercialCicloVendasCotacoesListaComponent
             this.loaderNavbar = false;
 
             this.dados = response.result;
-
             const uniqueClientes = new Set<string>();
 
             for (const pedido of this.dados) {
               uniqueClientes.add(pedido.prim_nome);
             }
-
             this.clientesArray = Array.from(uniqueClientes);
 
+           
+          /*   for (const pedido of this.dados) {
+               this.agregarCliente(pedido.id_cliente,pedido.prim_nome);
+            }
+            */
+
+            
             this.totalItems = this.dados.length;
           } else {
             this.loaderNavbar = false;
@@ -910,6 +919,23 @@ export class ComercialCicloVendasCotacoesListaComponent
           }
         },
       });
+  }
+
+ agregarCliente(id: number, nombre: string) {
+    interface Cliente {
+      id: number;
+      nombre: string;
+    }
+    const clientesUnicos: Cliente[] = [];
+    // Verificar si el cliente ya existe en la matriz
+    const clienteExistente = clientesUnicos.find(cliente => cliente.id === id || cliente.nombre === nombre);
+  
+    if (!clienteExistente) {
+      // Agregar el cliente si no existe
+      clientesUnicos.push({ id, nombre });
+     
+      console.log('clientes',clientesUnicos);
+    } 
   }
 
   onReset() {
@@ -1309,7 +1335,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     var params = {
       id_oferta: id_oferta,
     };
-
+    console.log("parametros", params);
     this.loaderNavbar = true;
     this.cotacoesService
       .getDetalleOferta(params)
@@ -1603,12 +1629,11 @@ export class ComercialCicloVendasCotacoesListaComponent
       )
     .subscribe(
       (response: JsonResponse) => {
-        console.log(response);
-        if (response.hasOwnProperty('success') && response.success === true) {
-          this.pnotifyService.notice('Se envio sap');
-      return;
+        if (response.data_sap.CodigoRespuesta === 200) {
+          this.pnotifyService.success('Se envio sap');
+          return;
         } else {
-          this.pnotifyService.error();
+          this.pnotifyService.error(response.data_sap.message);
         }
       },
       (error: any) => {

@@ -70,37 +70,68 @@
               (keydown.enter)="onFilter()"
             />
           </div>
+          <div class="form-group col-lg-2">
+            <label for="codSAP">Cod. SAP</label>
+            <input
+              type="text"
+              id="codigo_oferta"
+              placeholder="Digite..."
+              class="form-control"
+              formControlName="codigo_oferta"
+              (keydown.enter)="onFilter()"
+            />
+          </div>
 
           <div class="form-group col-lg-3">
             <label for="codVendedor">Vendedor</label>
-            <select
+           <!--  <select
               class="form-control"
               name="codVendedor"
               id="codVendedor"
               formControlName="codVendedor"
             >
-              <!--  <option class="" [value]="0" readonly>
-              TODOS
-            </option> -->
+             
               <option *ngFor="let vendedor of vendedores" [value]="vendedor.ID">
                 {{ vendedor.nombre }}
               </option>
-            </select>
+            </select> -->
+            <ng-select
+            [items]="vendedores"
+            [searchable]="true"
+            [clearable]="false"
+            labelForId="ID"
+            bindLabel="nombre"
+            formControlName="codVendedor"
+            [(ngModel)]="defaultSelection"
+          >
+          </ng-select>
           </div>
 
           <div class="form-group col-lg-4">
             <label for="cliente">Clientes</label>
             <select
-              class="form-control"
-              name="cliente"
-              id="id_cliente"
-              formControlName="cliente"
+            class="form-control"
+            name="cliente"
+            id="id_cliente"
+            formControlName="cliente"
+            search
             >
-              <option class="" [value]="0" readonly>TODOS</option>
-              <option *ngFor="let cliente of clientesArray" [value]="cliente">
-                {{ cliente | uppercase }}
-              </option>
-            </select>
+            <option class="" [value]="0" readonly>TODOS</option>
+            <option *ngFor="let cliente of clientesArray" [value]="cliente">
+              {{ cliente | uppercase }}
+            </option>
+          </select>
+
+           <!--  <ng-select
+              [items]="clientesArray"
+              [searchable]="true"
+              [clearable]="false"
+              labelForId="cliente"
+              bindLabel="cliente"
+              formControlName="cliente"
+              [(ngModel)]="defaultSelection"
+            >
+          </ng-select> -->
           </div>
           <div
             class="form-group"
@@ -152,26 +183,24 @@
         <custom-table [config]="tableConfig">
           <ng-template #thead let-thead>
             <tr class="text-center">
-              <!-- <th scope="col"></thscope=> -->
-              <!--  <th scope="col"></th> -->
               <th scope="col" class="text-center">
                 <thead-sorter
-                  value="Num."
+                  value="Cod.SAP"
+                  [active]="orderBy == 'codigo_oferta'"
+                  [sort]="orderType"
+                  (click)="setOrderBy('codigo_oferta')"
+                >
+                </thead-sorter>
+              </th>
+              <th scope="col" class="text-center">
+                <thead-sorter
+                  value="Num. Pedido"
                   [active]="orderBy == 'id_oferta'"
                   [sort]="orderType"
                   (click)="setOrderBy('id_oferta')"
                 >
                 </thead-sorter>
               </th>
-              <!-- <th scope="col" class="text-center">
-                <thead-sorter
-                  value="Codigo SAP"
-                  [active]="orderBy == 'id_oferta'"
-                  [sort]="orderType"
-                  (click)="setOrderBy('id_oferta')"
-                >
-                </thead-sorter>
-              </th> -->
               <th scope="col" class="text-center">
                 <thead-sorter
                   value="Fecha inicial"
@@ -208,7 +237,7 @@
                 >
                 </thead-sorter>
               </th>
-              <th scope="col">
+              <!-- <th scope="col">
                 <thead-sorter
                   value="Monto total"
                   [active]="orderBy == 'monto_total'"
@@ -225,7 +254,7 @@
                   (click)="setOrderBy('peso_total')"
                 >
                 </thead-sorter>
-              </th>
+              </th> -->
               <th scope="col">
                 <thead-sorter
                   value="Lista"
@@ -277,10 +306,13 @@
             <tr 
               *ngFor="let pedido of dados; let i = index"
               [class.table-active]="i == activeRow" >
-              <td class="hover" style="color:green" *ngIf="pedido.codigo_oferta !== null; else segCodigo " >{{ pedido.codigo_oferta }} </td>
+              <td class="hover text-success"  *ngIf="pedido.codigo_oferta !== null; else segCodigo " >{{ pedido.codigo_oferta }} </td>
               <ng-template #segCodigo>
                 <td class="hover text-danger" *ngIf="pedido.codigo_oferta === null" >0</td>
               </ng-template>
+              <td class="text-center hover">
+                {{ pedido.id_oferta }}
+              </td>
               <td class="text-center hover">
                 {{ pedido.fecha_inicial | date : 'dd/MM/yyyy' }}
               </td>
@@ -291,8 +323,8 @@
                 {{ pedido.prim_nome | uppercase }}
               </td>
               <td class="text-center hover">{{ pedido.nombre | uppercase }}</td>
-              <td class="text-center hover">{{ pedido.monto_total }}</td>
-              <td class="text-center hover">{{ pedido.peso_total }}</td>
+              <!-- <td class="text-center hover">{{ pedido.monto_total }}</td>
+              <td class="text-center hover">{{ pedido.peso_total }}</td> -->
               <td class="text-center hover">{{ pedido.nombre_lista }}</td>
               <td class="text-center hover">
                 {{ pedido.nombre_modo_entrega }}
@@ -315,43 +347,45 @@
                 <div class="row">
                   <div class="col-md" style="padding: 0%;">
                     <a
-                    style="padding: 0%;"
+                    style="padding: 0%; color: rgb(6, 68, 14);"
                     class="dropdown-item"
                     routerLink="/pdf"
                     [tooltip]="'PDF'"
                     (click)="onImprimir(pedido.id_oferta)"
-                    ><i class="fas fa-file"></i
+                    ><i class="far fa-file-pdf"></i
                     ><span class="text-uppercase"> </span></a
                   >
                   </div>
                   <div class="col-md" style="padding: 0%;">
                     <a
-                    style="padding: 0%;"
+                    style="padding: 0%; color: rgb(0, 105, 128);"
                     class="dropdown-item"
                     routerLink="/vista"
                     [tooltip]="'VISTA'"
                     (click)="onVista(pedido.id_oferta)"
-                    ><i class="fas fa-eye"></i
+                    ><i class="far fa-eye"></i
                     ><span class="text-uppercase"> </span></a
                   >
                   </div>
-                  <div class="col-md" style="padding: 0%;">
+                  <div class="col-md"  style="padding: 0%;">
                     <a
                     style="padding: 0%;"
                     class="dropdown-item text-danger"
+                    [tooltip]="'Sin Codigo de SAP'"
                     *ngIf=" pedido.codigo_oferta === null && pedido.tipo_estado === 14 && pedido.estado_oferta === 1;
                       else otroBoton"
                     routerLink="/enviar_sap"
                     (click)="onEnviarSap(pedido.id_oferta)"
                     >
-                    <i class="fas fa-paper-plane" ></i
+                    <i class="far fa-paper-plane" ></i
                     ><span class="text-uppercase"></span>
                   </a>
       
                   <ng-template #otroBoton>
                     <a
-                    style="padding: 0%;"
+                      style="padding: 0%;"
                       class="dropdown-item text-warning"
+                      [tooltip]="'Pendiente'"
                       *ngIf="pedido.estado_oferta === 10 && pedido.tipo_estado === 14 ; else tercerBoton"
                       disabled
                     >
@@ -364,6 +398,7 @@
                     <a  
                     style="padding: 0%;"
                     class="dropdown-item text-success"
+                    [tooltip]="'Enviado a SAP'"
                        *ngIf="pedido.codigo_oferta !== null"
                       disabled  >
                       <i class="fas fa-paper-plane" disabled></i

@@ -192,10 +192,10 @@
                   </ng-select>
                 </div>
                 <div class="form-group col-md-12 " >
-                  <label for="direccion">Direccion <span class="text-danger">*</span> </label>
+                  <label for="direccion">Direccion <span class="text-danger" style="font-size: 9px;">(Use el mapa)</span> </label>
                   <input type="text" class="form-control" id="direccion" formControlName="" (input)="onInput()"
                     [(ngModel)]="ubicacionForm.direccion" 
-                    [value]="ubicacionForm.direccion" (ngModelChange)="actualizarDireccion($event, i, 1)" placeholder="Puede escribir aquí, o agregar ubicación por el mapa.">
+                    [value]="ubicacionForm.direccion" (ngModelChange)="actualizarDireccion($event, i, 1)" placeholder="Utilice el mapa para agregar dirección." readonly>
                 </div>
                 <div class="form-group col-md-12 text-center" *ngIf="ubicacionForm.swActivarLatitud === false">
                   <label for="direccion">Dirección </label> <br>
@@ -268,11 +268,11 @@
                         (ngModelChange)="actualizarContacto($event, 6 , i)">
                     </div>
                     <div class="form-group col-md-6 mt-2">
-                      <label for="direccion_contacto">DIRECCIÓN DE CONTACTO  <span class="text-danger">*</span> </label>
+                      <label for="direccion_contacto">DIRECCIÓN DE CONTACTO  <span class="text-danger" style="font-size: 9px;">(Use el mapa)</span> </label>
                       <input type="text" class="form-control" id="direccion_contacto"
                         formControlName="direccion_contacto" (input)="onInput()"
                         [value]="contactoForm.direccion_contacto" (ngModelChange)="actualizarContacto($event, 7,  i)"
-                        placeholder="Puede escribir aquí, o agregar ubicación por el mapa.">
+                        placeholder="Utilice el mapa para agregar dirección." readonly>
                     </div>
                     <div class="form-group col-md-12 mt-2 text-center">
                       <button class="btn btn-warning " (click)="openModalUbicacion(seleccionarUbicacion, i, 1)"> Agregar

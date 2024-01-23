@@ -10,7 +10,7 @@ import * as ExcelJS from 'exceljs/dist/exceljs.min.js';
 
 // ngx-bootstrap
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
-
+import { NgSelectModule } from '@ng-select/ng-select';
 // Services
 import { ComercialClientesService } from 'src/app/modules/comercial/services/clientes.service';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
@@ -142,8 +142,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   getVendedores(): void {
     this.vendedoresService.getVendedores().subscribe(
       (response: any) => {
-        console.log(response); // Verificar el tipo de datos de la respuesta
-        this.vendedores = response.result;
+        console.log("lista vendedores",response); // Verificar el tipo de datos de la respuesta
+        this.vendedores = response.data;
       },
       (error: any) => {
         // Manejar el error en caso de que ocurra
@@ -227,8 +227,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       (response: any) => {
         this.resuldata = response.result;
         this.totalItems = response.result.length;
-        console.log('respuesta|132123');
-        console.log(this.totalItems);
+
         // Realizar las acciones necesarias con la respuesta
       },
       (error: any) => {
@@ -356,6 +355,11 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       return 'border-secondary';
     }
   }
+  filter(term: string, item: any) {
+    term = term.toLowerCase();
+    return item.nombre.toLowerCase().includes(term);
+  }
+  
   
   onAdvancedFilter(): void {
     this.showAdvancedFilter = !this.showAdvancedFilter;

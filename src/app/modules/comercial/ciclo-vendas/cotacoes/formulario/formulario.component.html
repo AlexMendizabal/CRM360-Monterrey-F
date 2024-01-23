@@ -17,17 +17,18 @@
     type="button"
     (click)="onCancel()"
     *ngIf="!visualizar"
+    [disabled]="loaderNavbar"
   >
     Cancelar
   </button>
-  <button
+  <!-- <button
     class="btn btn-danger"
     type="button"
     (click)="onCancel()"
     *ngIf="visualizar"
   >
     Voltar
-  </button>
+  </button> -->
   <div
     class="d-inline-block ml-1"
     dropdown

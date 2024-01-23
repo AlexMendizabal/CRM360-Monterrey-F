@@ -2,8 +2,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';``
 import { BsModalRef } from 'ngx-bootstrap';
 import { finalize } from 'rxjs/operators';
-
+import { userInfo } from 'os';
 import { ComercialCicloVendasAutorizacionesService } from '../../autorizaciones.service';
+import { AuthService } from 'src/app/shared/services/core/auth.service';
 
 import { JsonResponse } from 'src/app/models/json-response';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
@@ -15,6 +16,7 @@ import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
   styleUrls: ['./modal-autorizacion.component.scss']
 })
 export class ModalAutorizacionComponent implements OnInit {
+  private user = this.authService.getCurrentUser();
   loaderNavbar: boolean;
   loaderFullScreen = true;
   datosAutorizacion: any = {};
@@ -26,7 +28,7 @@ export class ModalAutorizacionComponent implements OnInit {
     private autorizacionService: ComercialCicloVendasAutorizacionesService, //de dataFromParent
     private pnotifyService: PNotifyService,
     private formBuilder: FormBuilder,
-
+    private authService: AuthService,
   ) {
     this.myForm = this.formBuilder.group({
     observacion: ['', Validators.required]  // inicializa con un valor por defecto y agrega validador
@@ -37,24 +39,23 @@ export class ModalAutorizacionComponent implements OnInit {
   detalle: any[];
   observacion: string = '';
   loader: boolean = false;
+  idVend: any;
 
   ngOnInit(): void {
-
     this.data = this.dataForm;
     this.detalle = this.dataForm.detalle;
     this.oferta = this.data['oferta'][0];
-
+    this.idVend = this.user.info.idVendedor;
     if(this.oferta['estado'] == 10)
     {
         this.loader = false;
     }
     else
     {
-      this.loader = true;
+        this.loader = true;
     }
   }
-
-
+  
   cerrar(): void {
     this._BsModalRef.hide();
   }

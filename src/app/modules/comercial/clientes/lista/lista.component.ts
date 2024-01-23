@@ -157,7 +157,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.vendedoresService.getVendedores().subscribe(
       (response: any) => {
         this.vendedoresList = response.data;
-        console.log(response);
         if (this.vendedoresList.length > 0) {
           this.editedFields.id_vendedor = this.vendedoresList[0].id;
         }
@@ -786,7 +785,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
           (clientes: any[]) => {
             // Actualiza la lista de clientes con la información de la oferta
             this.clientes = clientes.slice(0, this.itemsPerPage);
-            this.totalItems = clientes[0]?.total || 0;
+            this.totalItems = clientes[0]?.length|| 0;
             this.setStatus(Response['result']['sintetico']);
           },
           (error: any) => {

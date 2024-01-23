@@ -89,10 +89,33 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       idUltimaVisita: idUltimaVisita,
       idEstado: idEstado
     };
-    
     this.rutaService.filtrarMapas(params);
     const vendedorSeleccionado = idVendedor;
     this.rutaService.indiceVendedor = vendedorSeleccionado
+  }
+
+  onEscritorioChange(escritorio: any) {
+    // alert(1)
+    //console.log(escritorio);
+    //if (escritorio> 0){
+      this.vendedoresService.getVendedoresSucursal(escritorio).subscribe(
+        (response: any) => {
+          //console.log(response)
+          if (response['success'] === true) {
+            //this.setFormFilter();
+            this.filteredVendedores = response['data'];
+
+          } else {
+            this.handleLoadDependenciesError();
+          }
+        },
+      )
+    //}
+    // //else{
+    //   this.vendedoresService.getVendedoresSucursal(escritorio.idEscritorio)
+
+    // }
+    this.form.get('idVendedor').setValue(0);
   }
 
   adminOnly(): boolean {
@@ -117,7 +140,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       .pipe(
         finalize(() => {
           this.loaderFullScreen = false;
-            
+
           if (this.showAll === true) {
             this.formValue.emit({
               idEscritorio: 0,
@@ -130,18 +153,18 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       )
       .subscribe({
         next: (response: any) => {
-          console.log('aqui estoy', response);
           if (response[0]['responseCode'] === 200) {
-
             this.setFormFilter();
             this.escritorios = response[0]['result'];
 
             const escritorioNoVacio = this.escritorios.find(item => item.nome !== null && item.nome !== '');
 
             if (escritorioNoVacio) {
-              /*  // Se encontró un valor no vacío */
+              /*  // Se encontró un valor no vacío
+               console.log(escritorioNoVacio.nome); */
             } else {
-              /*   // No se encontró ningún valor no vacío*/
+              /*   // No se encontró ningún valor no vacío
+              console.log("No hay valores no vacíos en el array"); */
             }
 
             if (this.escritorios.length > 1 && this.showAll === true) {
@@ -153,13 +176,14 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
           } else {
             this.handleLoadDependenciesError();
           }
-          if (response[1]['responseCode'] === 200) {
-           /*  this.vendedores = response[1]['data']; */
-            this.filteredVendedores = response[1]['data'];
+
+          if (response[0]['responseCode'] === 200) {
+            this.vendedores = response[1]['result'];
+            this.filteredVendedores = this.vendedores;
             /* if (this.showAll === true) { */
             this.filteredVendedores.unshift({
-              ID: 0,
-              nombres: 'TODOS'
+              id: 0,
+              nome: 'TODOS'
             });
             /* } */
           } else {
@@ -210,7 +234,6 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       )
       .subscribe(
         (response: any) => {
-          
           if (response['responseCode'] === 200) {
             this.setFormFilter();
             this.filteredVendedores = response['result'];
@@ -259,12 +282,12 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
             }
           }
         }
-        console.log('aqui en vende', this.form.get('nomeVendedor'))
+
         if (this.form.value['idVendedor'] === 0) {
           this.form.get('nomeVendedor').setValue('TODOS OS VENDEDORES');
         } else {
           for (let i = 0; i < this.vendedores.length; i++) {
-            if (this.form.value['idVendedor'] === this.vendedores[i]['ID']) {
+            if (this.form.value['idVendedor'] === this.vendedores[i]['id']) {
               this.form
                 .get('nomeVendedor')
                 .setValue(this.vendedores[i]['nome']);
@@ -274,7 +297,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       } else {
         for (let i = 0; i < this.filteredVendedores.length; i++) {
           if (
-            this.form.value['idVendedor'] === this.filteredVendedores[i]['ID']
+            this.form.value['idVendedor'] === this.filteredVendedores[i]['id']
           ) {
             this.form
               .get('idEscritorio')

@@ -229,14 +229,14 @@
                   </h5>
                 </div>
                 <div class="card-body table-container">
-                  <div class="col-md-3">
-                    <label for="">perdió la venta:</label>
+                  <div class="col-md-6">
+                    <label for="">MOTIVO DE CIERRE:</label>
                     <select class="form-control" formControlName="estadoOfert">
-                      <option value="" disabled selected>Selecciona una opción   </option>
+                      <option value="" disabled selected>Selecciona...</option>
                       <option *ngFor="let item of cierre_oferta" [value]="item.id">{{ item.descripcion }}</option>
                     </select>
                   </div>
-                  <div class="col-md-9">
+                  <div class="col-md-6">
                     <input type="text" formControlName="descripcion" class="form-control mt-2" id="description" value="{{$item.descripcion}}">
                   </div>
                 </div>
@@ -248,7 +248,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <a class="btn btn-secondary" *ngIf="showCierreButton" (click)="toggleDescripcionCard()">CIERRE DE VENTA</a>
+      <a class="btn btn-secondary" *ngIf="showCierreButton" (click)="toggleDescripcionCard()">CIERRE OFERTA</a>
       <button type="submit" class="btn btn-secondary" *ngIf="showGuardarButton">GUARDAR</button>
       <a type="button" class="btn btn-secondary" #captureButton (click)="onDownloadPDF()">DESCARGAR</a>
       <a type="button" class="btn btn-secondary" (click)="captureScreen()">IMPRIMIR</a>

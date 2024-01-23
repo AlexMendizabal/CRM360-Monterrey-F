@@ -260,7 +260,7 @@
               <agm-map
                 [latitude]="latitudPromedioContacto"
                 [longitude]="longitudPromedioContacto"
-                [zoom]="16"
+                [zoom]="10"
                 (mapClick)="actualizarMapaContacto($event)"
                 class="embed-responsive-item "
               >
@@ -324,11 +324,11 @@
                       class="form-control"
                     />
                   </div>
-                  <label>Dirección  <span class="text-danger">*</span> </label>
+                  <label>Dirección  <span class="text-danger" style="font-size: 9px;">(Use el mapa)</span> </label>
                   <div>
                     <input
                       [(ngModel)]="contacto.direccion_contacto"
-                      class="form-control"
+                      class="form-control" readonly
                     />
                   </div>
                   <label>Celular <!-- <span class="text-danger">(*)</span>  --></label>
@@ -375,7 +375,7 @@
               <agm-map
                 [latitude]="latitudPromedio"
                 [longitude]="longitudPromedio"
-                [zoom]="16"
+                [zoom]="10"
                 (mapClick)="actualizarMapa($event)"
                 class="embed-responsive-item"
               >
@@ -432,12 +432,12 @@
                       </option>
                     </select>
                   </div>
-                  <label>Dirección <!-- <span class="text-danger">(*)</span> --> </label>
+                  <label>Dirección <span class="text-danger" style="font-size: 9px;">(Use el mapa)</span>  </label>
                   <div>
                     <input
                       [(ngModel)]="direccion.direccion"
                       class="form-control"
-                    />
+                     readonly/>
                   </div>
                   <button
                     (click)="eliminarUbicacion(i)"

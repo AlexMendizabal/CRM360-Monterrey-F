@@ -144,6 +144,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
   detalhesAlmacen: Array<any> = [];
 
   unidadesLoaded: boolean;
+  almacenesLoaded: boolean;
   pedidosCompraLoaded: boolean;
   pedidosCompraEmpty: boolean;
   comprometidoLoaded: boolean;
@@ -439,6 +440,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
   }
 
   onChangeAlmacen(id: number) {}
+  
 
   onChangeDeposito(deposito: any) {
     this.form.controls.empresa.setValue(deposito.idEmpresa);
@@ -524,7 +526,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
       this.modalRef = this.modalService.show(modalRef, {
         class: 'modal-xl',
       });
-      this.onSelectComprometidos();
+      this.onGetEstoqueAlmacen();
     }, 600);
   }
   

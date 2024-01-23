@@ -228,6 +228,8 @@ export class EditarClienteComponent implements OnInit {
   }
 
   agregarUbicacion() {
+   
+
     if (this.latitudPromedio > 0 && this.longitudPromedio > 0) {
       this.nuevaDireccion = {
         ubicacion: '',
@@ -239,11 +241,12 @@ export class EditarClienteComponent implements OnInit {
         color: this.generarColorAleatorio(),
       };
     } else {
+      
       this.nuevaDireccion = {
         ubicacion: '',
         direccion: '',
-        latitud: 0,
-        longitud: 0,
+        latitud: this.latitudPromedio,
+        longitud: this.longitudPromedio,
         id_ciudad: '',
         id_cliente: this.id_client,
         color: this.generarColorAleatorio(),
@@ -344,6 +347,8 @@ export class EditarClienteComponent implements OnInit {
 
   actualizarMarcador(index: number, latitud, longitud): void {
     this.id_marcador = index;
+    /* this.latitud = latitud
+    this.longitud = longitud; */
     this.datos_cliente.datos_direccion[index].latitud = latitud;
     this.datos_cliente.datos_direccion[index].longitud = longitud;
   }
@@ -455,16 +460,14 @@ export class EditarClienteComponent implements OnInit {
       const isUbicacionValid = this.datos_cliente.datos_direccion.every(
         (direccion) => {
           const ubicacionValida =
-            direccion.ubicacion !== null &&
             direccion.ubicacion !== undefined &&
             direccion.ubicacion !== '';
-            return ubicacionValida;
-          
+          return ubicacionValida;
         }
       );
 
       if (isIdCiudadRequired) {
-        if(isUbicacionValid){
+        if (isUbicacionValid) {
           if (isDireccionValid) {
             swDireccion = true;
           } else {
@@ -472,8 +475,7 @@ export class EditarClienteComponent implements OnInit {
               'La dirección no debe exceder los 50 caracteres ni ser numerica.'
             );
           }
-
-        }else{
+        } else {
           this.pnotifyService.error(
             'El nombre de la ubicación es un campo obligatorio.'
           );
@@ -489,12 +491,11 @@ export class EditarClienteComponent implements OnInit {
 
     const direccionContactoValido = this.datos_cliente.datos_contacto.every(
       (contacto) =>
-        contacto.direccion_contacto === null ||
+        
         contacto.direccion_contacto === undefined ||
         (typeof contacto.direccion_contacto === 'string' &&
           contacto.direccion_contacto.length <= 50)
     );
-
 
     if (direccionContactoValido) {
       swContacto = true;
@@ -568,7 +569,7 @@ export class EditarClienteComponent implements OnInit {
       E: 'Empleado',
     };
     var tipoPersona = idTipoPersonaInput.trim().toUpperCase();
-    const tipopersona = tipoPessoaOptions[tipoPersona]
+    const tipopersona = tipoPessoaOptions[tipoPersona];
     const ubicacion = this.datos_cliente.datos_direccion;
     const contactos = this.datos_cliente.datos_contacto;
 
@@ -603,15 +604,14 @@ export class EditarClienteComponent implements OnInit {
       'ci',
       'razon_social',
       'nombres',
-      'tipo_pessoa', 
+      'tipo_pessoa',
       'tipo_persona',
       'id_vendedor',
       'telefono',
       'celular',
       'ubicacion',
-      'contactos'
+      'contactos',
     ];
-
 
     // Verifica si todos los campos requeridos tienen un valor válido
     const allFieldsFilled = requiredFields.every((field) => {
@@ -643,8 +643,8 @@ export class EditarClienteComponent implements OnInit {
             setTimeout(() => {
               this.pnotifyService.success('Cliente editado exitosamente');
               this.onClose();
+              location.reload();
             }, 200);
-            location.reload();
           } else {
             this.pnotifyService.error(response.Mensaje);
           }
