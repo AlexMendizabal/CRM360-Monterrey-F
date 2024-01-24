@@ -34,14 +34,14 @@
         </div>
         <div class="form-row">
           <div class="form-group col-lg-6">
-            <label for="codSituacao">Situacion</label>
+            <label for="codSituacao">Estadoion</label>
             <select
               class="form-control custom-select"
               id="codSituacao"
               formControlName="codSituacao"
               [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
               <option value="1" selected >Activo</option>
-              <option value="0">Inactivo</option>
+              <option value="0">Inactivo </option>
             </select>
             <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situacion es obligatorio."></invalid-form-control>
           </div>

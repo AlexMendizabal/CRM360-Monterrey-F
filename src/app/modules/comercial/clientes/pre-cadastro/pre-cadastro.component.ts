@@ -11,6 +11,7 @@ import {
   Validators,
   FormControl,
   FormArray,
+  AbstractControl,
 } from '@angular/forms';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -544,8 +545,14 @@ export class ComercialClientesPreCadastroComponent
   setFormBuilder(documento: string) {
     this.form = this.formBuilder.group({
       //cnpj_cpf: [null,Validators.required],
-      nit: [null, Validators.required],
-      ci: [null, [Validators.required, Validators.maxLength(8)]],
+      nit: [null, [Validators.required, Validators.min(0)]],
+      ci: [
+        null,
+        [
+          Validators.required,
+          Validators.maxLength(8),Validators.min(0)
+        ],
+      ],
 
       nome: [
         null,
@@ -574,8 +581,8 @@ export class ComercialClientesPreCadastroComponent
       nombres_contacto: [null],
       apellido_contacto: [null],
       apellido2_contacto: [null],
-      telefono_contacto: [null],
-      celular_contacto: [null],
+      telefono_contacto: [null, [Validators.required, Validators.min(0)]],
+      celular_contacto: [Validators.min(0)],
       ciudad: [null],
       direccion_contacto: [null],
       ciudadUbi: [null],
@@ -599,6 +606,7 @@ export class ComercialClientesPreCadastroComponent
       this.form.get('razaoSocial').updateValueAndValidity();
     });
   }
+
 
   onSubmit() {
     alert(

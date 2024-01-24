@@ -99,6 +99,7 @@ export class ComercialAgendaFormularioComponent
   submittingForm = false;
 
   clientes: any = [];
+  clientesub: any = [];
   promotores: any = [];
   formasContato: any = [];
   origensContato: any = [];
@@ -782,11 +783,15 @@ export class ComercialAgendaFormularioComponent
 
 
   updateDireccion(event: any) {
-
-    console.log('que tienen aqui',event);
-
+    const id = event.codCliente;
+    this.ComercialVendedoresService.getUbicaionesClientes(id).subscribe((response: JsonResponse) => {
+      if(response.success== true){
+        this.clientesub = response.data;
+        console.log('aqui datos de ub', this.clientesub);
+      }
+    })
     
-    var direccion_cliente = event.direccion;
+   /*  var direccion_cliente = event.direccion;
     var latitud_cliente = event.latitud;
     var longitud_cliente = event.longitud;
     var codigo_cliente = event.codigo_cliente;
@@ -797,7 +802,7 @@ export class ComercialAgendaFormularioComponent
     this.form.controls['codigo_cliente'].setValue(codigo_cliente);
 
     this.latitud = latitud_cliente;
-    this.longitud = longitud_cliente;
+    this.longitud = longitud_cliente; */
   }
   actualizarMarcador(event: any) {
     this.latitud = event.coords.lat;

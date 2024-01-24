@@ -25,10 +25,10 @@
           <div class="form-group col-md-3">
             <label for="ci">CI <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="ci" formControlName="ci" (input)="onInput()"
-              [ngClass]="onFieldError('ci') + ' ' + onFieldRequired('ci')">
+              [ngClass]="onFieldError('ci') + ' ' + onFieldRequired('ci')" min="0">
             
             <div *ngIf="ciControl.hasError('required')" class="text-danger">
-              CI es obligatorio.
+              CI es obligatorio
             </div>
             <div *ngIf="ciControl.hasError('maxlength')" class="text-danger">
               Máximo 8 {{ maxLengthRules.ci }} caracteres.
@@ -38,10 +38,11 @@
           <div class="form-group col-md-3">
             <label for="nit">NIT <span class="text-danger">*</span> </label>
             <input type="number" class="form-control" id="nit" formControlName="nit" (input)="onInput()"
-              [ngClass]="onFieldError('nit') + ' ' + onFieldRequired('nit')">
+              [ngClass]="onFieldError('nit') + ' ' + onFieldRequired('nit')" min="0">
             <invalid-form-control [show]="onFieldInvalid('nit') == 'required'"
               message="NIT inválido."></invalid-form-control>
-          </div>
+          </div>          
+          
           <div class="form-group col-md-3">
             <label for="tipopessoa">Tipo de persona <span class="text-danger">*</span></label>
             <select class="form-control" id="tipopessoa" formControlName="tipopessoa" (change)="onInput()">
@@ -88,7 +89,7 @@
           <div class="form-group col-md-6">
             <label for="celular">Celular  <span class="text-danger">*</span> </label>
             <input type="number" class="form-control" id="celular" formControlName="celular" (input)="onInput()"
-              [ngClass]="onFieldError('celular') + ' ' + onFieldRequired('celular')">
+              [ngClass]="onFieldError('celular') + ' ' + onFieldRequired('celular')" min="0">
             <invalid-form-control [show]="onFieldInvalid('celular') == 'required'"
               message="celular es obligatorio."></invalid-form-control>
           </div>
@@ -106,7 +107,7 @@
           <div class="form-group col-md-6">
             <label for="telefone">Teléfono <span class="text-danger">*</span></label>
             <input type="number" class="form-control" id="telefone" formControlName="telefone" (input)="onInput()"
-              [ngClass]="onFieldError('telefone') + ' ' + onFieldRequired('telefone')">
+              [ngClass]="onFieldError('telefone') + ' ' + onFieldRequired('telefone')" min="0">
             <invalid-form-control [show]="onFieldInvalid('telefone') == 'required'"
               message="Teléfono es obligatorio."></invalid-form-control>
           </div>
@@ -259,13 +260,17 @@
                       <label for="telefono_contacto">TELÉFONO CONTACTO  <span class="text-danger">*</span> </label>
                       <input type="text" class="form-control" id="telefono_contacto" formControlName="telefono_contacto"
                         (input)="onInput()" [value]="contactoForm.telefono_contacto"
-                        (ngModelChange)="actualizarContacto($event,5 , i)">
+                        (ngModelChange)="actualizarContacto($event,5 , i)" min="0"
+                        [ngClass]="onFieldError('telefono_contacto') + ' ' + onFieldRequired('telefono_contacto')" min="0">
+                        
+                    <invalid-form-control [show]="onFieldInvalid('telefono_contacto') == 'required'"
+                     message="Telefono Invalido."></invalid-form-control>
                     </div>
                     <div class="form-group col-md-3 mt-2">
                       <label for="celular_contacto">CELULAR DE CONTACTO  <!-- <span class="text-danger">*</span>  --></label>
                       <input type="text" class="form-control" id="celular_contacto" formControlName="celular_contacto"
                         (input)="onInput()" [value]="contactoForm.celular_contacto"
-                        (ngModelChange)="actualizarContacto($event, 6 , i)">
+                        (ngModelChange)="actualizarContacto($event, 6 , i)" min="0">
                     </div>
                     <div class="form-group col-md-6 mt-2">
                       <label for="direccion_contacto">DIRECCIÓN DE CONTACTO  <span class="text-danger" style="font-size: 9px;">(Use el mapa)</span> </label>

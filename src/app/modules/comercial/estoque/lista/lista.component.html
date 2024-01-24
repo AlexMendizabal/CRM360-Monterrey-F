@@ -396,10 +396,7 @@
 
       <tab
         heading="Stock Almacenes"
-        class="border-right border-left border-bottom"
-      >
-        <div class="px-3 pt-3">
-          <div class="form-row">
+        class="border-right border-left border-bottom">
             <advanced-filter>
               <form [formGroup]="form" autocomplete="off">
                 <div class="form-row">
@@ -461,10 +458,9 @@
                 [config]="tableConfig"
                 *ngIf="detalhesAlmacen.length > 0"
                 class="stocktable custom-styling"
-                
-              >
+                >
                 <ng-template #thead let-thead>
-                  <tr>
+                  <tr style="border-color:blue;">
                     <th scope="col" class="text-center">CODIGO ALMACEN</th>
                     <th scope="col" class="text-center">NOMBRE ALMACEN</th>
                     <th scope="col" class="text-center">LISTA DE PRECIO</th>
@@ -507,8 +503,6 @@
                 </pagination>
               </div>
             </div>
-          </div>
-        </div>
       </tab>
 
       <tab

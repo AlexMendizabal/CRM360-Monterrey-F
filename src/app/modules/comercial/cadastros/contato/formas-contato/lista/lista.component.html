@@ -19,12 +19,13 @@
           <form [formGroup]="form" autocomplete="off">
             <div class="form-row">
               <div class="form-group col-lg-7">
-                <label for="formaContato">Descrição</label>
+                <label for="formaContato">Descripcion</label>
                 <input
                   type="text"
                   class="form-control"
                   formControlName="formaContato"
                   (keydown.enter)="onFilter()">
+                
               </div>
               <div class="form-group col-lg-3">
                 <label for="codSituacao">Situação</label>
@@ -80,7 +81,7 @@
               <td
                 class="text-center hover"
                 [ngClass]="classStatusBorder(formaContato)"
-                (click)="onDetails(formaContato)">
+                > 
                 {{ formaContato.codFormaContato }}
               </td>
               <td
@@ -129,7 +130,7 @@
         </div>
       </div>
       <div class="col-7" [hidden]="!showDetailPanel">
-        <detail-panel panelTitle="Histórico de alterações">
+        <!-- <detail-panel panelTitle="Histórico de alterações">
           <custom-table *ngIf="alteracoes.length > 0">
             <ng-template #thead let-thead>
               <tr>
@@ -146,7 +147,7 @@
               </tr>
             </ng-template>
           </custom-table>
-        </detail-panel>
+        </detail-panel> -->
       </div>
     </div>
   </app-body>

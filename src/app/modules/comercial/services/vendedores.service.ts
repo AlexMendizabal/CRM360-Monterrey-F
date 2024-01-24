@@ -55,6 +55,14 @@ export class ComercialVendedoresService {
       .pipe(take(1), retry(2));
   }
 
+  getUbicaionesClientes(
+    codCliente: number
+  ): Observable<Object | JsonResponse> {
+    return this.http
+      .get(`${this.API}/cliente/ubicacionescliente/${codCliente}`)
+      .pipe(take(1), retry(2));
+  }
+
   getValidaClienteCarteira(
     codCliente: number
   ): Observable<Object | JsonResponse> {

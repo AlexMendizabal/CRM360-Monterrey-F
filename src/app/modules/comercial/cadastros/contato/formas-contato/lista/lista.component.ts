@@ -103,7 +103,7 @@ export class ComercialCadastrosContatoFormasContatoListaComponent
     this.registrarAcesso();
     this.setBreadCrumb();
     this.setFormFilter();
-    this.titleService.setTitle('Formas de Contato');
+    this.titleService.setTitle('Formas de contacto');
     this.onDetailPanelEmitter();
     this.setFormaContatoSelecionada();
   }
@@ -124,11 +124,11 @@ export class ComercialCadastrosContatoFormasContatoListaComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Cadastros',
+          descricao: 'Registros',
           routerLink: `/comercial/cadastros/${params['idSubModulo']}`,
         },
         {
-          descricao: 'Formas de contato',
+          descricao: 'Formas de contacto',
         },
       ];
     });
