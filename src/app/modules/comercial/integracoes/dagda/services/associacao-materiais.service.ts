@@ -12,7 +12,7 @@ import { Observable, forkJoin } from 'rxjs';
   providedIn: 'root',
 })
 export class ComercialIntegracoesServicosIntegracaoMateriaisComponent {
-  private readonly BASE_URL: string = `https://crm360.monterrey.com.bo/api`;
+  private readonly BASE_URL: string = `http://23.254.204.187/api`;
   private readonly API = `http://23.254.204.187/api/comercial`;
 
   constructor(
@@ -43,6 +43,12 @@ export class ComercialIntegracoesServicosIntegracaoMateriaisComponent {
 
   getLinhas() {
     return this.http.get(`${this.BASE_URL}/common/v2/linhas`, {
+      observe: 'response',
+    });
+  }
+
+  getDepartamento() {
+    return this.http.get(`${this.BASE_URL}/common/v2/departamentos`, {
       observe: 'response',
     });
   }

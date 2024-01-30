@@ -25,7 +25,7 @@ export class ComercialCadastrosComponent implements OnInit {
       routerLink: '/comercial/home',
     },
     {
-      descricao: 'Cadastros',
+      descricao: 'Registros',
     },
   ];
 

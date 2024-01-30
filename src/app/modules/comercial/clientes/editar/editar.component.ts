@@ -229,7 +229,6 @@ export class EditarClienteComponent implements OnInit {
 
   agregarUbicacion() {
    
-
     if (this.latitudPromedio > 0 && this.longitudPromedio > 0) {
       this.nuevaDireccion = {
         ubicacion: '',

@@ -1,8 +1,13 @@
 <div class="modal-content custom-modal">
   <div class="modal-header">
-    <h6 class="modal-title pull-left">Resumen de autorización </h6>
+    <h6 class="modal-title pull-left">Resumen de autorización</h6>
     <div class="d-flex justify-content-center align-items-center">
-      <button type="button" class="close pull-right" aria-label="Close" (click)="cerrar()">
+      <button
+        type="button"
+        class="close pull-right"
+        aria-label="Close"
+        (click)="cerrar()"
+      >
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -13,27 +18,51 @@
         <div class="col-md-12 mt-2">
           <div class="card">
             <div class="card-body">
-              <h6 class="card-title"> Datos de autorización</h6>
+              <h6 class="card-title">Datos de autorización</h6>
               <div class="row">
                 <div class="col-md-2">
                   <label for="id_autorizacion"> <strong> N°:</strong></label>
-                  <input type="text" id="id_autorizacion" class="form-control" readonly
-                    value="{{data.oferta[0].id_autorizacion}}">
+                  <input
+                    type="text"
+                    id="id_autorizacion"
+                    class="form-control"
+                    readonly
+                    value="{{ data.oferta[0].id_autorizacion }}"
+                  />
                 </div>
                 <div class="col-md-4">
                   <label for="cliente"> <strong> Cliente</strong></label>
-                  <input type="text" id="cliente" class="form-control" readonly
-                    value="{{data.oferta[0].nombre_cliente | uppercase}}">
+                  <input
+                    type="text"
+                    id="cliente"
+                    class="form-control"
+                    readonly
+                    value="{{ data.oferta[0].nombre_cliente | uppercase }}"
+                  />
                 </div>
                 <div class="col-md-4">
-                  <label for="fecha_solicitud"> <strong> Fecha Solicitada</strong></label>
-                  <input type="text" id="fecha_solicitud" class="form-control" readonly
-                    value="{{data.oferta[0].fecha_solicitud | date: 'dd/MM/yyyy'}}">
+                  <label for="fecha_solicitud">
+                    <strong> Fecha Solicitada</strong></label
+                  >
+                  <input
+                    type="text"
+                    id="fecha_solicitud"
+                    class="form-control"
+                    readonly
+                    value="{{
+                      data.oferta[0].fecha_solicitud | date : 'dd/MM/yyyy'
+                    }}"
+                  />
                 </div>
                 <div class="col-md-5">
                   <label for="vendedor"> <strong> Vendedor</strong></label>
-                  <input type="text" id="vendedor" class="form-control" readonly
-                    value="{{data.oferta[0].nombre_vendedor | uppercase}}">
+                  <input
+                    type="text"
+                    id="vendedor"
+                    class="form-control"
+                    readonly
+                    value="{{ data.oferta[0].nombre_vendedor | uppercase }}"
+                  />
                 </div>
               </div>
             </div>
@@ -42,7 +71,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-12 ">
+      <div class="col-12">
         <div class="card">
           <div class="card-header">
             <h5>Detalle</h5>
@@ -62,20 +91,27 @@
               </thead>
               <tbody>
                 <tr *ngFor="let detalles of detalle">
-                  <td class="font-weight-bold  text-center">
-                    {{detalles.CODIGOMATERIAL}}</td>
-                  <td class="font-weight-bold  text-center">
-                    {{detalles.DESCRICAO | uppercase}}</td>
-                  <td class="font-weight-bold  text-center">
-                    {{detalles.cantidad_total}}</td>
-                  <td class="font-weight-bold  text-center">
-                    {{detalles.subtotal}}</td>
-                  <td class="font-weight-bold  text-center">
-                    {{detalles.descuento_solicitado}}</td>
-                  <td class="font-weight-bold  text-center">
-                    {{detalles.descuento_permitido}}</td>
-                  <td class="font-weight-bold  text-center text-danger">
-                    {{detalles.excedente}}</td>
+                  <td class="font-weight-bold text-center">
+                    {{ detalles.CODIGOMATERIAL }}
+                  </td>
+                  <td class="font-weight-bold text-center">
+                    {{ detalles.DESCRICAO | uppercase }}
+                  </td>
+                  <td class="font-weight-bold text-center">
+                    {{ detalles.cantidad_total }}
+                  </td>
+                  <td class="font-weight-bold text-center">
+                    {{ detalles.subtotal }}
+                  </td>
+                  <td class="font-weight-bold text-center">
+                    {{ detalles.descuento_solicitado }}
+                  </td>
+                  <td class="font-weight-bold text-center">
+                    {{ detalles.descuento_permitido }}
+                  </td>
+                  <td class="font-weight-bold text-center text-danger">
+                    {{ detalles.excedente }}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -88,11 +124,16 @@
         <div class="col-md-6 mt-2">
           <div class="card">
             <div class="card-body">
-              <h6 class="card-title"> Descripción</h6>
+              <h6 class="card-title">Descripción</h6>
               <div class="row">
                 <div class="col-md-9">
-                  <input type="text" id="customerName" class="form-control" readonly
-                    value="{{data.oferta[0].descripcion_vend | uppercase}}">
+                  <input
+                    type="text"
+                    id="customerName"
+                    class="form-control"
+                    readonly
+                    value="{{ data.oferta[0].descripcion_vend | uppercase }}"
+                  />
                 </div>
               </div>
             </div>
@@ -101,29 +142,46 @@
         <div class="col-md-6 mt-2">
           <div class="card">
             <div class="card-body">
-              <h6 class="card-title"> Observaciones</h6>
+              <h6 class="card-title">Observaciones</h6>
               <div class="row">
                 <form [formGroup]="myForm" (ngSubmit)="submitForm()">
                   <div class="col-md-9">
-                    <input type="text" size="300" id="observacion" formControlName="observacion" class="form-control">
+                    <input
+                      type="text"
+                      size="300"
+                      id="observacion"
+                      formControlName="observacion"
+                      class="form-control"
+                    />
                   </div>
                 </form>
               </div>
-            </div>  
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="col-md-12">
       <div class="modal-footer" id="botones" *ngIf="idVend === 88">
-        <button type="submit" id="aceptado" class="btn btn-success" (click)="boton(data.oferta[0].id_autorizacion, 12)"
-          [disabled]="loader">
+        <button
+          type="submit"
+          id="aceptado"
+          class="btn btn-success"
+          (click)="boton(data.oferta[0].id_autorizacion, 12)"
+          [disabled]="loader || myForm.get('observacion').invalid"
+        >
           Aprobar
         </button>
-        <button type="button" id="rechazado" class="btn btn-danger" (click)="boton(data.oferta[0].id_autorizacion, 11)"
-          [disabled]="loader">
+        <button
+          type="button"
+          id="rechazado"
+          class="btn btn-danger"
+          (click)="boton(data.oferta[0].id_autorizacion, 11)"
+          [disabled]="loader || myForm.get('observacion').invalid"
+        >
           Rechazar
         </button>
       </div>
     </div>
   </div>
+</div>

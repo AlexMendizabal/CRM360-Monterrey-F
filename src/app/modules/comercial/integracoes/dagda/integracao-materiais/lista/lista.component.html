@@ -1,11 +1,11 @@
 <loader-spinner-full-screen *ngIf="spinnerFullScreen"></loader-spinner-full-screen>
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
 <app-header [appTitle]="appTitle">
-  <button
+<!--   <button
     type="button"
     [routerLink]="['../novo']">
     Adicionar
-  </button>
+  </button> -->
   <button
     type="button"
     (click)="onFilter()">
@@ -20,80 +20,53 @@
           <div class="form-row">
             <div class="form-group col-lg-3">
               <label for="de">
-                <span class="mr-1">De</span>
+                <span class="mr-1">Codigo Material</span>
                 <ng-template #tooltipLabelDeTemplate>
-                  <p class="mb-0">Código do Material no TID</p>
+                  <p class="mb-0">Busca por Código de Material</p>
                 </ng-template>
                 <i class="far fa-question-circle" [tooltip]="tooltipLabelDeTemplate" container="body"></i>
               </label>
               <input
-                type="number"
+                type="text"
                 class="form-control"
                 formControlName="codigoMaterial"
                 (keydown.enter)="onFilter()">
             </div>
             <div class="form-group col-lg-3">
-              <label for="para">
-                <span class="mr-1">Para</span>
+              <label for="Material">
+                <span class="mr-1">Nombre de Material</span>
                 <ng-template #tooltipLabelParaTemplate>
-                  <p class="text-nowrap mb-0">Código do Material no Dagda</p>
+                  <p class="text-nowrap mb-0">busca por el Nombre de Material</p>
                 </ng-template>
                 <i class="far fa-question-circle" [tooltip]="tooltipLabelParaTemplate" container="body"></i>
               </label>
               <input
                 type="text"
                 class="form-control"
-                formControlName="cdDagda"
+                formControlName="nomMaterial"
                 (input)="disableForm()"
                 (keydown.enter)="onFilter()">
             </div>
             <div class="form-group col-md-6">
-              <label for="linhas">Linhas</label>
+              <label for="Departamento">Departamento</label>
               <ng-select
                 [searchable]="true"
                 [clearable]="true"
-                [items]="linhas"
+                [items]="despartamentos"
                 [virtualScroll]="true"
                 placeholder="Selecione..."
                 [loading]="loadingLinhas"
-                labelForId="linhas"
-                bindLabel="NM_LINH"
-                bindValue="ID"
-                id="linhas"
-                formControlName="ID_LINH"
-                (change) ="getClasses()"
-                [ngClass]="onFieldError('ID_LINH') + ' ' + onFieldRequired('ID_LINH')"
-                >
+                labelForId="departamento"
+                bindLabel="nombre_dep"
+                bindValue="id"
+                id="id"
+                formControlName="id_dep"
+              >
               </ng-select>
-              <invalid-form-control
-                [show]="onFieldInvalid('ID_LINH')"
-                message="Linha é obrigatório.">
-              </invalid-form-control>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="classes">Classes</label>
-              <ng-select
-                [searchable]="true"
-                [clearable]="true"
-                [items]="classes"
-                [virtualScroll]="true"
-                placeholder="Selecione..."
-                [loading]="loadingClasses"
-                labelForId="classes"
-                bindLabel="NM_CLAS"
-                bindValue="ID"
-                id="classes"
-                formControlName="ID_CLAS"
-                [ngClass]="onFieldError('ID_CLAS') + ' ' + onFieldRequired('ID_CLAS')"
-                >
-              </ng-select>
-              <invalid-form-control
-                [show]="onFieldInvalid('ID_CLAS')"
-                message="Classe é obrigatório.">
-              </invalid-form-control>
+             
             </div>
             <div class="form-group col-md-3">
-							<label for="status"> Situação </label>
+							<label for="status"> ESTADO </label>
 							<ng-select
 								[searchable]="true"
 								[clearable]="true"
@@ -144,12 +117,15 @@
           <tr>
 						<th></th>
             <th class="text-nowrap" (click)="setOrderBy('ID_MATE_TID')">
-              <thead-sorter value="Cod. TID" [active]="orderBy == 'ID_MATE_TID'" [sort]="orderType"></thead-sorter>
+              <thead-sorter value="Cod. MATERIAL" [active]="orderBy == 'ID_MATE_TID'" [sort]="orderType"></thead-sorter>
             </th>
-						<th (click)="setOrderBy('NM_MATE_TID')">
-							<thead-sorter value="Material" [active]="orderBy == 'NM_MATE_TID'" [sort]="orderType"></thead-sorter>
+						<th (click)="setOrderBy('DESCRICAO')">
+							<thead-sorter value="Material" [active]="orderBy == 'DESCRICAO'" [sort]="orderType"></thead-sorter>
 						</th>
-						<th class="text-left"> Usuário Cadastro</th>
+						<th class="text-left"> DEPARTAMENTO</th>
+            <th class="text-left"> RANGO INICIAL</th>
+            <th class="text-left"> RANGO FINAL</th>
+            <th class="text-left"> DESCUENTO</th>
             <th [hidden]="showDetailPanel"></th>
             <th></th>
             <th></th>
@@ -159,28 +135,31 @@
           <tr *ngFor="let lista of listas | slice : begin : end; let i = index" [tooltip]="lista.IN_STAT == 0 ? 'Editar' : ''"
                class="hover">
 						<td [ngClass]="{ 
-                'border-success' : lista.IN_STAT == 1, 
-                'border-danger'  : lista.IN_STAT == 0
+                'border-success' : lista.estado == 1, 
+                'border-danger'  : lista.estado == 0
               }">
             </td>
-            <td class="text-center" (click)="onDetailPanel(lista)">{{ lista.ID_MATE_TID }}</td>
-            <td class="text-left" style="width: 50rem" (click)="onDetailPanel(lista)">{{ lista.NM_MATE_TID | uppercase }}</td>
-            <td class="text-left" style="width: 15rem" (click)="onDetailPanel(lista)">{{ lista.NR_MATR }}</td>
-            <td  style="width: 10rem" [hidden]="showDetailPanel" (click)="onDetailPanel(lista)"></td>
+            <td class="text-center" >{{ lista.CODIGOMATERIAL }}</td>
+            <td class="text-left" style="width: 50rem" >{{ lista.DESCRICAO | uppercase }}</td>
+            <td class="text-left" style="width: 15rem" >{{ lista.nombre_ciudad | uppercase }}</td>
+            <td class="text-left" style="width: 15rem" >{{ lista.rango_inicial }}</td>
+            <td class="text-left" style="width: 15rem" >{{ lista.rango_final}}</td>
+            <td class="text-left" style="width: 15rem" >{{ lista.descuento }} %</td>
+            <td  style="width: 10rem" [hidden]="showDetailPanel" ></td>
             <td class="text-right px-0" style="width: 10rem">
-              <span class="" [tooltip]="lista.IN_STAT == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
-                <button type="button" class="btn-icon-sm" [style]="lista.IN_STAT == 1 ? 'color: green;' : 'color: red;'" (click)="onEditStatus(lista)" [disabled]="lista.IN_STAT == null">
-                  <i [ngClass]="lista.IN_STAT == 1 ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+              <span class="" [tooltip]="lista.estado == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" [style]="lista.estado == 1 ? 'color: green;' : 'color: red;'" (click)="onEditStatus(lista)" [disabled]="lista.estado == null">
+                  <i [ngClass]="lista.estado == 1 ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
                 </button>
               </span>
             </td>
-            <td class="text-center px-0" style="width: 4rem">
+          <!--   <td class="text-center px-0" style="width: 4rem">
               <span tooltip="Editar" placement="left" container="body">
-                <button class="btn-icon-sm" style="color: blue;" (click)="onEdit(lista)" [disabled]="lista.IN_STAT == 0">
+                <button class="btn-icon-sm" style="color: blue;" (click)="onEdit(lista)" [disabled]="lista.estado == 0">
                   <i class="fas fa-edit"></i>
                 </button>
               </span>
-            </td>
+            </td> -->
           </tr>
         </ng-template>
       </custom-table>
@@ -205,7 +184,7 @@
         *ngIf="dadosEmpty">
       </empty-result>
     </div>
-    <div class="col-5" [hidden]="!showDetailPanel">
+   <!--  <div class="col-5" [hidden]="!showDetailPanel">
       <detail-panel [panelTitle]="panelTitle">
         <custom-table [hidden]="dadosEmptyDetalhes">
           <ng-template #thead let-thead>
@@ -235,7 +214,7 @@
           *ngIf="dadosEmptyDetalhes">
         </empty-result>
       </detail-panel>
-    </div>
+    </div> -->
   </div>
 </app-body>
 

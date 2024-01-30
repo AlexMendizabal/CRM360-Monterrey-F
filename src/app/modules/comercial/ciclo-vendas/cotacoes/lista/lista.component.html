@@ -47,7 +47,7 @@
           </div>
 
           <div class="form-group col-lg-3">
-            <label for="codStatus">Situacion</label>
+            <label for="codSituacao">Situacion</label>
             <ng-select
               [items]="situacoes"
               [searchable]="true"
@@ -55,10 +55,12 @@
               labelForId="id"
               bindLabel="nombre"
               formControlName="codSituacao"
-              [(ngModel)]="defaultSelection"
+              [(ngModel)]="selectedSituacao"
+              class="custom-ng-select"
             >
             </ng-select>
           </div>
+
           <div class="form-group col-lg-2">
             <label for="nrPedido">Núm. pedido</label>
             <input
@@ -84,7 +86,7 @@
 
           <div class="form-group col-lg-3">
             <label for="codVendedor">Vendedor</label>
-           <!--  <select
+            <!--  <select
               class="form-control"
               name="codVendedor"
               id="codVendedor"
@@ -96,43 +98,36 @@
               </option>
             </select> -->
             <ng-select
-            [items]="vendedores"
-            [searchable]="true"
-            [clearable]="false"
-            labelForId="ID"
-            bindLabel="nombre"
-            formControlName="codVendedor"
-            [(ngModel)]="defaultSelection"
-          >
-          </ng-select>
+              [items]="vendedores"
+              [searchable]="true"
+              [clearable]="false"
+              labelForId="ID"
+              bindLabel="nombre"
+              formControlName="codVendedor"
+              [(ngModel)]="defaultSelection"
+            >
+            </ng-select>
           </div>
 
           <div class="form-group col-lg-4">
             <label for="cliente">Clientes</label>
-            <select
-            class="form-control"
-            name="cliente"
-            id="id_cliente"
-            formControlName="cliente"
-            search
-            >
-            <option class="" [value]="0" readonly>TODOS</option>
-            <option *ngFor="let cliente of clientesArray" [value]="cliente">
-              {{ cliente | uppercase }}
-            </option>
-          </select>
-
-           <!--  <ng-select
-              [items]="clientesArray"
-              [searchable]="true"
-              [clearable]="false"
-              labelForId="cliente"
-              bindLabel="cliente"
-              formControlName="cliente"
-              [(ngModel)]="defaultSelection"
-            >
-          </ng-select> -->
+              <ng-select
+                class=""
+                name="cliente"
+                id="id_cliente"
+                formControlName="cliente"
+                [items]="clientesArray"
+                bindLabel="name"  
+                placeholder="Selecciona un cliente"
+                notFoundText="No se encontraron resultados"
+                search
+              >
+              <ng-template ng-option-tmp let-item="item">
+                {{ item | uppercase }}
+              </ng-template>
+            </ng-select>
           </div>
+          
           <div
             class="form-group"
             [ngClass]="{
@@ -303,12 +298,23 @@
             </tr>
           </ng-template>
           <ng-template #tbody let-tbody>
-            <tr 
+            <tr
               *ngFor="let pedido of dados; let i = index"
-              [class.table-active]="i == activeRow" >
-              <td class="hover text-success"  *ngIf="pedido.codigo_oferta !== null; else segCodigo " >{{ pedido.codigo_oferta }} </td>
+              [class.table-active]="i == activeRow"
+            >
+              <td
+                class="hover text-success"
+                *ngIf="pedido.codigo_oferta !== null; else segCodigo"
+              >
+                {{ pedido.codigo_oferta }}
+              </td>
               <ng-template #segCodigo>
-                <td class="hover text-danger" *ngIf="pedido.codigo_oferta === null" >0</td>
+                <td
+                  class="hover text-danger"
+                  *ngIf="pedido.codigo_oferta === null"
+                >
+                  0
+                </td>
               </ng-template>
               <td class="text-center hover">
                 {{ pedido.id_oferta }}
@@ -345,66 +351,75 @@
               <td class="text-center hover">{{ pedido.descripcion_cierre }}</td>
               <td class="text-center hover">
                 <div class="row">
-                  <div class="col-md" style="padding: 0%;">
+                  <div class="col-md" style="padding: 0%">
                     <a
-                    style="padding: 0%; color: rgb(6, 68, 14);"
-                    class="dropdown-item"
-                    routerLink="/pdf"
-                    [tooltip]="'PDF'"
-                    (click)="onImprimir(pedido.id_oferta)"
-                    ><i class="far fa-file-pdf"></i
-                    ><span class="text-uppercase"> </span></a
-                  >
+                      style="padding: 0%; color: rgb(6, 68, 14)"
+                      class="dropdown-item"
+                      routerLink="/pdf"
+                      [tooltip]="'PDF'"
+                      (click)="onImprimir(pedido.id_oferta)"
+                      ><i class="far fa-file-pdf"></i
+                      ><span class="text-uppercase"> </span
+                    ></a>
                   </div>
-                  <div class="col-md" style="padding: 0%;">
+                  <div class="col-md" style="padding: 0%">
                     <a
-                    style="padding: 0%; color: rgb(0, 105, 128);"
-                    class="dropdown-item"
-                    routerLink="/vista"
-                    [tooltip]="'VISTA'"
-                    (click)="onVista(pedido.id_oferta)"
-                    ><i class="far fa-eye"></i
-                    ><span class="text-uppercase"> </span></a
-                  >
+                      style="padding: 0%; color: rgb(0, 105, 128)"
+                      class="dropdown-item"
+                      routerLink="/vista"
+                      [tooltip]="'VISTA'"
+                      (click)="onVista(pedido.id_oferta)"
+                      ><i class="far fa-eye"></i
+                      ><span class="text-uppercase"> </span
+                    ></a>
                   </div>
-                  <div class="col-md"  style="padding: 0%;">
+                  <div class="col-md" style="padding: 0%">
                     <a
-                    style="padding: 0%;"
-                    class="dropdown-item text-danger"
-                    [tooltip]="'Sin Codigo de SAP'"
-                    *ngIf=" pedido.codigo_oferta === null && pedido.tipo_estado === 14 && pedido.estado_oferta === 1;
-                      else otroBoton"
-                    routerLink="/enviar_sap"
-                    (click)="onEnviarSap(pedido.id_oferta)"
+                      style="padding: 0%"
+                      class="dropdown-item text-danger"
+                      [tooltip]="'Sin Codigo de SAP'"
+                      *ngIf="
+                        pedido.codigo_oferta === null &&
+                          pedido.tipo_estado === 14 &&
+                          pedido.estado_oferta === 1;
+                        else otroBoton
+                      "
+                      routerLink="/enviar_sap"
+                      (click)="onEnviarSap(pedido.id_oferta)"
                     >
-                    <i class="far fa-paper-plane" ></i
-                    ><span class="text-uppercase"></span>
-                  </a>
-      
-                  <ng-template #otroBoton>
-                    <a
-                      style="padding: 0%;"
-                      class="dropdown-item text-warning"
-                      [tooltip]="'Pendiente'"
-                      *ngIf="pedido.estado_oferta === 10 && pedido.tipo_estado === 14 ; else tercerBoton"
-                      disabled
-                    >
-                      <i class="fas fa-paper-plane" disabled></i
+                      <i class="far fa-paper-plane"></i
                       ><span class="text-uppercase"></span>
                     </a>
-                  </ng-template>
-      
-                  <ng-template #tercerBoton>
-                    <a  
-                    style="padding: 0%;"
-                    class="dropdown-item text-success"
-                    [tooltip]="'Enviado a SAP'"
-                       *ngIf="pedido.codigo_oferta !== null"
-                      disabled  >
-                      <i class="fas fa-paper-plane" disabled></i
-                      ><span class="text-uppercase"></span>
-                    </a>
-                  </ng-template>
+
+                    <ng-template #otroBoton>
+                      <a
+                        style="padding: 0%"
+                        class="dropdown-item text-warning"
+                        [tooltip]="'Pendiente'"
+                        *ngIf="
+                          pedido.estado_oferta === 10 &&
+                            pedido.tipo_estado === 14;
+                          else tercerBoton
+                        "
+                        disabled
+                      >
+                        <i class="fas fa-paper-plane" disabled></i
+                        ><span class="text-uppercase"></span>
+                      </a>
+                    </ng-template>
+
+                    <ng-template #tercerBoton>
+                      <a
+                        style="padding: 0%"
+                        class="dropdown-item text-success"
+                        [tooltip]="'Enviado a SAP'"
+                        *ngIf="pedido.codigo_oferta !== null"
+                        disabled
+                      >
+                        <i class="fas fa-paper-plane" disabled></i
+                        ><span class="text-uppercase"></span>
+                      </a>
+                    </ng-template>
                   </div>
                 </div>
               </td>

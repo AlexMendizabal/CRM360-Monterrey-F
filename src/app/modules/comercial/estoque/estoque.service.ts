@@ -112,11 +112,13 @@ export class ComercialEstoqueService {
 
   getStockAlmacenes(params: any): Observable<Object | JsonResponse> {
     const url = `${this.API}/estoquealmacen/${params.idMaterial}`;
+    
     const queryParams = new HttpParams({
       fromObject: {
         id_lista_precio: params.id_lista_precio || '',
         nombre_almacen: params.nombre_almacen || '',
         codigo_almacen: params.codigo_almacen || '',
+        registrosLista: params.registrosLista || '25',
       }
     });
   

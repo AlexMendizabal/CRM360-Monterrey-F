@@ -88,6 +88,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
   clientesPagination: Array<any> = [];
 
   detalhes = false;
+  loading: boolean = false;
 
   nomeMaterial: string;
   idMaterial = 0;
@@ -105,7 +106,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
   currentPageSuspenso = 1;
 
   maxSizeAlmacen = 10;
-  itemsPerPageAlmacen = 7;
+  itemsPerPageAlmacen = 10;
   totalAlmacen = 10;
   currentPageAlmacen = 1;
 
@@ -253,6 +254,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
       codigo_almacen: null,
       nombre_almacen: null,
       registros: 300,
+      registrosLista: 10
     };
 
     this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
@@ -294,6 +296,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
       linha: [formValue.linha],
       classeMaterial: [formValue.classeMaterial],
       registros: [formValue.registros],
+      registrosLista: [formValue.registrosLista],
       codMaterial: [formValue.codMaterial],
       descMaterial: [formValue.descMaterial],
       estoqueDisponivel: [formValue.estoqueDisponivel],
@@ -333,6 +336,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
       codigo_material: formValue.codMaterial,
       nombre_material: formValue.descMaterial,
       registros: formValue.registros,
+      registrosLista: formValue.registrosLista,
     };
 
     this.comercialService.getMateriales(params).subscribe({
@@ -406,10 +410,10 @@ export class ComercialEstoqueListaComponent implements OnInit {
   }
 
   onPageChangedAlmacen(event: PageChangedEvent): void {
-    //console.log('onPageChangedAlmacen called:', event)
     this.currentPageAlmacen = event.page;
-    this.getPaginateDataAlmacen();
-  }
+    this.onGetEstoqueAlmacen();
+}
+
 
   getPaginateDataComprometido(): any[] {
     const startIndex =
@@ -693,20 +697,19 @@ export class ComercialEstoqueListaComponent implements OnInit {
 
 
   onGetEstoqueAlmacen() {
-  
+    this.loading = true; // Activa el spinner de carga
+    
     this.stockLoaded = false;
     this.stockEmpty = false;
   
-    // Ajusta el nombre del parámetro idMaterial según sea necesario
     let params: any = {
       idMaterial: this.codMaterial,
-      // Ajusta el nombre de la propiedad según sea necesario
       id_lista_precio: this.form.get('nombre_lista').value,
       nombre_almacen: this.form.get('nombre_almacen').value,
-      codigo_almacen: this.form.get('codigo_almacen').value
-      // Agrega aquí cualquier otro parámetro necesario del formulario
+      codigo_almacen: this.form.get('codigo_almacen').value,
+      registrosLista: this.form.get('registrosLista').value
     };
-  
+    this.itemsPerPageAlmacen = params.registrosLista;
     console.log('Enviando Params:', params);
   
     this.estoqueService.getStockAlmacenes(params).subscribe(
@@ -722,9 +725,13 @@ export class ComercialEstoqueListaComponent implements OnInit {
       },
       (error: any) => {
         this.handleSearchError('Error al cargar los datos de Almacen');
+      },
+      () => {
+        this.loading = false; // Desactiva el spinner de carga al finalizar la solicitud
       }
     );
   }
+  
   
 
   onFieldError(field: string) {

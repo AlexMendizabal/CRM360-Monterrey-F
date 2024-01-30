@@ -49,12 +49,12 @@ export class ComercialCadastrosContatoFormasContatoListaComponent
   subtitles: Array<Subtitles> = [
     {
       id: 1,
-      text: 'Ativo',
+      text: 'Activo',
       color: 'green',
     },
     {
       id: 2,
-      text: 'Inativo',
+      text: 'Inactivo',
       color: 'red',
     },
   ];

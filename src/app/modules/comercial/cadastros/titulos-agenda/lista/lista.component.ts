@@ -49,12 +49,12 @@ export class ComercialCadastrosTitulosAgendaListaComponent implements OnInit {
   subtitles: Array<Subtitles> = [
     {
       id: 1,
-      text: 'Ativo',
+      text: 'Activo',
       color: 'green',
     },
     {
       id: 2,
-      text: 'Inativo',
+      text: 'Inactivo',
       color: 'red',
     },
   ];
@@ -127,7 +127,7 @@ export class ComercialCadastrosTitulosAgendaListaComponent implements OnInit {
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Cadastros',
+          descricao: 'Registros',
           routerLink: `/comercial/cadastros/${params['idSubModulo']}`,
         },
         {
@@ -464,7 +464,7 @@ export class ComercialCadastrosTitulosAgendaListaComponent implements OnInit {
     return this.confirmModalService.showConfirm(
       null,
       null,
-      'Deseja realmente prosseguir com a ativação do registro?',
+      'Realmente desea proceder a la activación del registro?',
       'Cancelar',
       'Confirmar'
     );
@@ -508,9 +508,9 @@ export class ComercialCadastrosTitulosAgendaListaComponent implements OnInit {
 
   confirmInactive(): any {
     return this.confirmModalService.showConfirm(
-      'inactivate',
-      'Confirmar inativação',
-      'Deseja realmente prosseguir com a inativação do registro?',
+      'Inactivar',
+      'Confirmar Inactivacion',
+      'Realmente quieres proceder a desactivar el registro?',
       'Cancelar',
       'Confirmar'
     );

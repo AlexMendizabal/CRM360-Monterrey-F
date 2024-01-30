@@ -86,17 +86,35 @@ export class ComercialAgendaFormularioComponent
   action: string;
   latitud: number = -17.78629;
   longitud: number = -63.18117;
-
+  inicio_latitud: number = 0;
+  final_longitud: number = 0;
+  marca_color = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00';
+  id_marcador: number = 0;
   direccion: string;
 
   selectedImage: File;
   previewImage: string | ArrayBuffer;
 
   breadCrumbTree: Array<Breadcrumb> = [];
-
+  colorAleatorio: any;
   form: FormGroup;
   formChanged = false;
   submittingForm = false;
+  labelOptions = {
+    color: 'blue',
+    fontFamily: '',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    text: 'UB Agenda',
+    }
+
+    labelOptions2 = {
+      color: 'blue',
+      fontFamily: '',
+      fontSize: '14px',
+      fontWeight: 'bold',
+      text: 'UB Cliente',
+    }
 
   clientes: any = [];
   clientesub: any = [];
@@ -127,6 +145,13 @@ export class ComercialAgendaFormularioComponent
   detalhes: any = {
     status: null,
   };
+ private coloresDisponibles: string[] = [
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000',
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FC9F3A',
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00',
+    
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFFFF',
+  ];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -175,6 +200,16 @@ export class ComercialAgendaFormularioComponent
   //     this.permissoesAcesso.simuladorVendas = false;
   //   }
   // }
+  generarColorAleatorio(): string {
+    if (this.coloresDisponibles.length === 0) {
+      return null;
+    }
+    const indiceAleatorio = Math.floor(
+      Math.random() * this.coloresDisponibles.length
+    );
+    this.colorAleatorio = this.coloresDisponibles.splice(indiceAleatorio,1)[0];
+    return this.colorAleatorio;
+  }
 
   checkAcessos(): void {
     const acessos = this.activatedRoute.snapshot.data.detalhes;
@@ -708,8 +743,8 @@ export class ComercialAgendaFormularioComponent
         rescheduleId: formValue.motivoReagendamento,
         description: formValue.observacao,
         direccion: formValue.direccion,
-        latitud: this.latitud,
-        longitud: this.longitud,
+        latitud: this.inicio_latitud,
+        longitud: this.final_longitud,
         status: status,
         /* id_status: id_status, */
         obsFinalizar: formValue.Obsfinalizar,
@@ -781,36 +816,87 @@ export class ComercialAgendaFormularioComponent
     })
   }
 
-
   updateDireccion(event: any) {
     const id = event.codCliente;
     this.ComercialVendedoresService.getUbicaionesClientes(id).subscribe((response: JsonResponse) => {
-      if(response.success== true){
-        this.clientesub = response.data;
-        console.log('aqui datos de ub', this.clientesub);
+      if(response.success == true){
+        if(response.data[0] !== null)
+        {
+          this.clientesub = response.data;
+        
+          this.clientesub.forEach((item, index) => {
+            console.log(`Item at index ${index}:`, item.latitude, item.longitude);
+            this.clientesub[index] =  {
+              latitude:  item.latitude,
+              longitude: item.longitude,
+              color: this.generarColorAleatorio(),
+            };
+
+            console.log('aqui datos de ub', this.clientesub);
+
+            var codigo_cliente = item.codigo_cliente;
+            this.form.controls['codigo_cliente'].setValue(codigo_cliente);
+          });
+        }
+        else{
+          console.log('sdata 0')
+        }
+      }
+      else
+      {
+        console.log('sin aqui datos de ub')
       }
     })
-    
-   /*  var direccion_cliente = event.direccion;
-    var latitud_cliente = event.latitud;
-    var longitud_cliente = event.longitud;
-    var codigo_cliente = event.codigo_cliente;
-
-    this.form.controls['latitud_clie'].setValue(latitud_cliente);
-    this.form.controls['longitud_clie'].setValue(longitud_cliente);
-    this.form.controls['direccion'].setValue(direccion_cliente);
-    this.form.controls['codigo_cliente'].setValue(codigo_cliente);
-
-    this.latitud = latitud_cliente;
-    this.longitud = longitud_cliente; */
+ 
   }
-  actualizarMarcador(event: any) {
+
+  actualizarMapa(event: any) {
     this.latitud = event.coords.lat;
     this.longitud = event.coords.lng;
-    this.form.controls['latitud_clie'].setValue(this.latitud);
-    this.form.controls['longitud_clie'].setValue(this.longitud);
-    this.actualizarDireccion(event);
+    this.actualizarMarcador(this.id_marcador, this.latitud, this.longitud);
+    this.actualizarDireccion(this.id_marcador, event);
   }
+  actualizarMarcador(index: number, latitud, longitud): void {
+    this.id_marcador = index;
+    this.inicio_latitud = latitud;
+    this.final_longitud = longitud;
+  }
+
+  actualizarDireccion(index, event: any) {
+    console.log('clickclick',event);
+    this.obtenerDireccion(event.coords.lat, event.coords.lng)
+      .then((direccion_mapa: string) => {
+        this.form.controls['direccion'].setValue(direccion_mapa);
+      })
+      .catch((error: any) => {
+        //console.log(error);
+      });
+  }
+
+  actualizarUbicacion(index: number) {
+    this.clientesub[index].latitude = this.latitud;
+    this.clientesub[index].longitude = this.longitud;
+  }
+  
+
+  /*   actualizarMarcador(event: any) {
+      this.latitud = event.coords.lat;
+      this.longitud = event.coords.lng;
+      this.form.controls['latitud_clie'].setValue(this.latitud);
+      this.form.controls['longitud_clie'].setValue(this.longitud);
+      this.actualizarDireccion(event);
+    } */
+/*  actualizarDireccion(event: any) {
+    this.obtenerDireccion(event.latitude, event.longitude)
+      .then((direccion_mapa: string) => {
+        this.form.controls['direccion'].setValue(direccion_mapa);
+      })
+      .catch((error: any) => {
+        this.form.controls['direccion'].setValue(
+          'Error al obtener la dirección'
+        );
+      });
+  } */
 
   public obtenerDireccion(latitud: number, longitud: number): Promise<string> {
     return fetch(
@@ -827,18 +913,6 @@ export class ComercialAgendaFormularioComponent
       })
       .catch((error) => {
         return 'Error al obtener la dirección';
-      });
-  }
-
-  actualizarDireccion(event: any) {
-    this.obtenerDireccion(event.coords.lat, event.coords.lng)
-      .then((direccion_mapa: string) => {
-        this.form.controls['direccion'].setValue(direccion_mapa );
-      })
-      .catch((error: any) => {
-        this.form.controls['direccion'].setValue(
-          'Error al obtener la dirección'
-        );
       });
   }
 
@@ -925,6 +999,7 @@ export class ComercialAgendaFormularioComponent
         }
       });
   }
+
   filtrovendedor(): void {
     var params = this.form.value.promotor
     this.agendaService.reporte(params);

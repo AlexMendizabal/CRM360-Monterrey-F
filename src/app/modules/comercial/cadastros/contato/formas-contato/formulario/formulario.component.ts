@@ -72,7 +72,7 @@ export class ComercialCadastrosContatoFormasContatoFormularioComponent
       if (params.id) {
         this.appTitle = 'Editar forma de contato';
       } else {
-        this.appTitle = 'Nova forma de contato';
+        this.appTitle = 'Nueva forma de contacto';
       }
 
       this.breadCrumbTree = [

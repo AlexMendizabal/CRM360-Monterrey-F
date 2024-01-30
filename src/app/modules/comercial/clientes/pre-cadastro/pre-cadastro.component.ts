@@ -908,6 +908,7 @@ export class ComercialClientesPreCadastroComponent
     )[0];
     return colorAleatorio;
   }
+  
   actualizarUbicacion(index: number) {
     // Actualiza las coordenadas de la ubicación en el arreglo
     this.ubicaciones[index].latitud = this.latitud;

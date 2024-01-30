@@ -29,12 +29,12 @@
               (input)="onInput()"
               autocomplete="new-password"
               [ngClass]="onFieldError('descricaoTitulo') + ' ' + onFieldRequired(form.controls.descricaoTitulo)">
-            <invalid-form-control [show]="onFieldInvalid('descricaoTitulo')" message="Nome do Título é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('descricaoTitulo')" message="Nombre de titulo es obligatorio."></invalid-form-control>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-lg-6">
-            <label for="codSituacao">Estadoion</label>
+            <label for="codSituacao">Estado</label>
             <select
               class="form-control custom-select"
               id="codSituacao"
@@ -43,7 +43,7 @@
               <option value="1" selected >Activo</option>
               <option value="0">Inactivo </option>
             </select>
-            <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situacion es obligatorio."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Estado es obligatorio."></invalid-form-control>
           </div>
         </div>
       </form>

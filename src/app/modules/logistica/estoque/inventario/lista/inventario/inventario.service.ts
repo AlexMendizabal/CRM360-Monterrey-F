@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class LogisticaEstoqueInventarioListaInventarioService {
-  private readonly BASE_URL: string = `https://crm360.monterrey.com.bo/api`;
+  private readonly BASE_URL: string = `https://23.254.204.187/api`;
 
   constructor(private http: HttpClient, private dateService: DateService) {}
 

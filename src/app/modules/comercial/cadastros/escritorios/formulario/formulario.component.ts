@@ -86,7 +86,7 @@ export class ComercialCadastrosEscritorioFormularioComponent
           routerLink: `/comercial/cadastros/${params.idSubModulo}`
         },
         {
-          descricao: 'Escritórios',
+          descricao: 'Almacenes',
           routerLink: `/comercial/cadastros/${params.idSubModulo}/escritorios/lista`
         },
         {

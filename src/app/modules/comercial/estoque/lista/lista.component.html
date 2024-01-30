@@ -396,113 +396,128 @@
 
       <tab
         heading="Stock Almacenes"
-        class="border-right border-left border-bottom">
-            <advanced-filter>
-              <form [formGroup]="form" autocomplete="off">
-                <div class="form-row">
-                  <div class="form-group col-lg-2 mb-0">
-                    <label for="codigo_almacen">Código almacen</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      formControlName="codigo_almacen"
-                    />
-                  </div>
-                  <div class="form-group col-lg-3 mb-0">
-                    <label for="nombre_almacen">Nombre Almacen</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      formControlName="nombre_almacen"
-                    />
-                  </div>
-                  <div class="form-group col-lg-3 mb-0">
-                    <label for="nombre_lista">Lista precio</label>
-                    <select class="form-control" formControlName="nombre_lista">
-                      <option value="" disabled selected>
-                        Select Lista Precio
-                      </option>
-                      <option
-                        *ngFor="let listaPrecio of uniqueListasPrecios"
-                        [value]="listaPrecio.id"
-                      >
-                        <!-- Ajusta según la estructura de tus datos -->
-                        {{ listaPrecio.nombre_lista }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-                <div
-                  class="form-row"
-                  style="margin-top: 10px; margin-bottom: 10px"
-                >
-                  <button
-                    type="button"
-                    (click)="onGetEstoqueAlmacen()"
-                    [disabled]="!form.valid || allFieldsEmpty"
-                    style="border: none"
-                  >
-                    Filtrar
-                  </button>
-                </div>
-              </form>
-            </advanced-filter>
-            <div class="p-3">
-              <div class="d-flex">
-                <div class="legend blue">
-                  <div class="square"></div>
-                  <div class="text">Stock Almacenes</div>
-                </div>
+        class="border-right border-left border-bottom"
+      >
+        <advanced-filter>
+          <form [formGroup]="form" autocomplete="off">
+            <div class="form-row">
+              <div class="form-group col-lg-2 mb-0">
+                <label for="codigo_almacen">Código almacen</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="codigo_almacen"
+                />
               </div>
-              <custom-table
-                [config]="tableConfig"
-                *ngIf="detalhesAlmacen.length > 0"
-                class="stocktable custom-styling"
+              <div class="form-group col-lg-3 mb-0">
+                <label for="nombre_almacen">Nombre Almacen</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="nombre_almacen"
+                />
+              </div>
+              <div class="form-group col-lg-3 mb-0">
+                <label for="nombre_lista">Lista precio</label>
+                <select class="form-control" formControlName="nombre_lista">
+                  <option value="" disabled selected>
+                    Select Lista Precio
+                  </option>
+                  <option
+                    *ngFor="let listaPrecio of uniqueListasPrecios"
+                    [value]="listaPrecio.id"
+                  >
+                    <!-- Ajusta según la estructura de tus datos -->
+                    {{ listaPrecio.nombre_lista }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group col-lg-2 mb-0">
+                <label for="registrosLista">Registros</label>
+                <select
+                  class="form-control"
+                  id="registrosLista"
+                  formControlName="registrosLista"
                 >
-                <ng-template #thead let-thead>
-                  <tr style="border-color:blue;">
-                    <th scope="col" class="text-center">CODIGO ALMACEN</th>
-                    <th scope="col" class="text-center">NOMBRE ALMACEN</th>
-                    <th scope="col" class="text-center">LISTA DE PRECIO</th>
-                    <th scope="col" class="text-center">PRECIO U.</th>
-                    <th scope="col" class="text-center">CANTIDAD</th>
-                  </tr>
-                </ng-template>
-                <ng-template #tbody let-tbody>
-                  <tr *ngFor="let item of detalhesAlmacen">
-                    <td class="text-center">{{ item.codigo_almacen }}</td>
-                    <td class="text-center">{{ item.nombre_almacen }}</td>
-                    <td class="text-center">{{ item.lista }}</td>
-                    <td class="text-center">
-                      {{ item.precio | number : '1.2-2' }}
-                    </td>
-                    <td class="text-center">
-                      {{ item.cantidad | number : '1.0-0' }} {{ item.unidad }}
-                    </td>
-                  </tr>
-                </ng-template>
-              </custom-table>
-              <empty-result
-                message="Ninguna información encontrada"
-                class="my-4"
-                *ngIf="stockEmpty && !stockLoaded"
-              ></empty-result>
-              <div class="d-flex justify-content-center mt-3">
-                <pagination
-                  [maxSize]="maxSizeAlmacen"
-                  [(totalItems)]="totalAlmacen"
-                  (pageChanged)="onPageChangedAlmacen($event)"
-                  [(itemsPerPage)]="itemsPerPageAlmacen"
-                  [boundaryLinks]="true"
-                  [(ngModel)]="currentPageAlmacen"
-                  previousText="&lsaquo;"
-                  nextText="&rsaquo;"
-                  firstText="&laquo;"
-                  lastText="&raquo;"
-                >
-                </pagination>
+                  <option>25</option>
+                  <option>50</option>
+                  <option>100</option>
+                  <option>200</option>
+                  <option>300</option>
+                </select>
               </div>
             </div>
+            <div class="form-row" style="margin-top: 10px; margin-bottom: 10px">
+              <button
+                type="button"
+                (click)="onGetEstoqueAlmacen()"
+                [disabled]="!form.valid || allFieldsEmpty || loading"
+                style="border: none"
+              >
+                Filtrar
+                <span
+                  *ngIf="loading"
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>
+            </div>
+          </form>
+        </advanced-filter>
+        <div class="p-3">
+          <div class="d-flex">
+            <div class="legend blue">
+              <div class="square"></div>
+              <div class="text">Stock Almacenes</div>
+            </div>
+          </div>
+          <custom-table
+            [config]="tableConfig"
+            *ngIf="detalhesAlmacen.length > 0"
+            class="stocktable custom-styling"
+          >
+            <ng-template #thead let-thead>
+              <tr style="border-color: blue">
+                <th scope="col" class="text-center">CODIGO ALMACEN</th>
+                <th scope="col" class="text-center">NOMBRE ALMACEN</th>
+                <th scope="col" class="text-center">LISTA DE PRECIO</th>
+                <th scope="col" class="text-center">PRECIO U.</th>
+                <th scope="col" class="text-center">CANTIDAD</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let item of detalhesAlmacen">
+                <td class="text-center">{{ item.codigo_almacen }}</td>
+                <td class="text-center">{{ item.nombre_almacen }}</td>
+                <td class="text-center">{{ item.lista }}</td>
+                <td class="text-center">
+                  {{ item.precio | number : '1.2-2' }}
+                </td>
+                <td class="text-center">
+                  {{ item.cantidad | number : '1.0-0' }} {{ item.unidad }}
+                </td>
+              </tr>
+            </ng-template>
+          </custom-table>
+          <empty-result
+            message="Ninguna información encontrada"
+            class="my-4"
+            *ngIf="stockEmpty && !stockLoaded"
+          ></empty-result>
+          <div class="d-flex justify-content-center mt-3">
+            <pagination
+              [(ngModel)]="currentPageAlmacen"
+              [totalItems]="totalAlmacen"
+              [itemsPerPage]="itemsPerPageAlmacen"
+              (pageChanged)="onPageChangedAlmacen($event)"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+            ></pagination>
+          </div>
+        </div>
       </tab>
 
       <tab

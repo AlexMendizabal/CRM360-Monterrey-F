@@ -22,6 +22,7 @@ export class ModalAutorizacionComponent implements OnInit {
   datosAutorizacion: any = {};
   myForm: FormGroup;
   checkoutForm;
+  
 
   constructor(
     private _BsModalRef: BsModalRef,
@@ -72,13 +73,16 @@ export class ModalAutorizacionComponent implements OnInit {
       id_autorizacion: id_autorizacion,
       descripcion_usua: observacionValue
     };
-
-    this.loaderNavbar = true;
+  
+    // Iniciar loader y deshabilitar botones
+    this.loader = true;
+  
     this.autorizacionService
       .updateAutorizacion(params)
       .pipe(
         finalize(() => {
-          this.loaderNavbar = false;
+          // Finalizar loader y habilitar botones
+          this.loader = false;
         })
       )
       .subscribe(

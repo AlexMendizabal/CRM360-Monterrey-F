@@ -31,8 +31,10 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
   listas: any = [];
   detalhes: any = [];
   linhas: [];
+  despartamentos: [];
   classes: [];
   loadingLinhas: boolean;
+  loadingDepartamentos: boolean;
   loadingClasses: boolean;
   form: FormGroup;
   bsConfig: Partial<BsDatepickerConfig>;
@@ -51,11 +53,11 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
     },
     {
       cd: '0',
-      ds: 'Inativos',
+      ds: 'Inactivo',
     },
     {
       cd: '1',
-      ds: 'Ativos',
+      ds: 'Activo',
     },
   ];
 
@@ -84,6 +86,10 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
       cd: 300,
       ds: '300',
     },
+    {
+      cd: 400,
+      ds: '400',
+    },
   ];
 
   integrados = [
@@ -104,8 +110,8 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
   begin: number = 0;
   end: number = this.itemsPerPage;
 
-  orderBy = 'ID_MATE_TID_DAGD';
-  orderType = 'DESC';
+  orderBy = 'DS.id';
+  orderType = 'ASC';
 
   /* Config Table */
   tableConfig: Partial<CustomTableConfig> = {
@@ -137,25 +143,24 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
 
     this.form = this.formBuilder.group({
       codigoMaterial: [null],
+      nomMaterial: [null],
       cdDagda: [null],
       status: [null],
-      ID_LINH: [null],
-      ID_CLAS: [null],
+      id_dep: [null],
       idMatTidDagda: null,
       inCada: null,
       registros: 10,
       pagina: this.currentPage,
       orderBy: this.orderBy,
       orderType: this.orderType,
-      time: [new Date().getTime()],
+    /*   time: [new Date().getTime()], */
     });
   }
 
   ngOnInit(): void {
     this.setBreadCrumb();
     this.getActiveRoute();
-    this.getLinhas();
-    this.getClasses();
+    this.getDepartamento();
     this.onSubscription();
   }
 
@@ -165,7 +170,7 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
   }
 
   onFilter() {
-    this.form.get('time').setValue(new Date().getTime());
+    /* this.form.get('time').setValue(new Date().getTime()); */
     this.loaderNavbar = true;
     this.detailPanelService.hide();
     if (this.form.value['registros']) {
@@ -265,7 +270,7 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
               this.listas = [];
               return;
             }
-
+            console.log('datos',response.body['data']);
             this.listas = response.body['data'];
             this.totalItems = response.body['data'].length;
             this.noResult = true;
@@ -323,11 +328,11 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
 
   onEditStatus(param) {
     this.loaderNavbar = true;
-    param.IN_STAT = param.IN_STAT == 1 ? 0 : 1;
-
+    param.estado = param.estado == 1 ? 0 : 1;
     const params = {
-      idMatTidDagda: param.ID_MATE_TID_DAGD,
-      status: param.IN_STAT,
+      id_descuento: param.id,
+      codigo_material: param.CODIGOMATERIAL,
+      status: param.estado,
       user: this.idMtcorp,
     };
 
@@ -341,7 +346,7 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
       .subscribe({
         next: (response) => {
           if (response.status === 200) {
-            this.pnotify.success('Status alterado com sucesso');
+            this.pnotify.success('El estado cambió exitosamente');
             this.getAssociacao(this.getParams());
           }
         },
@@ -349,7 +354,7 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
       });
   }
 
-  getLinhas() {
+ /*  getLinhas() {
     this.loadingLinhas = true;
 
     this.associacaoService.getLinhas().subscribe((response) => {
@@ -361,9 +366,23 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
         this.linhas = response.body['result'];
       }
     });
+  } */
+
+  getDepartamento() {
+    this.loadingDepartamentos = true;
+
+    this.associacaoService.getDepartamento().subscribe((response) => {
+      if (response.body['responseCode'] != 200) {
+        this.pnotify.notice('¡No se encontraron!');
+        this.loadingDepartamentos = false;
+      } else {
+        this.loadingDepartamentos = false;
+        this.despartamentos = response.body['result'];
+      }
+    });
   }
 
-  getClasses() {
+/*   getClasses() {
     this.loadingClasses = true;
     let idlinha = {
       ID_LINH:
@@ -380,7 +399,7 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
         this.loadingClasses = false;
       }
     });
-  }
+  } */
 
   onSubscription() {
     this.$showDetailPanelSubscription =
@@ -390,11 +409,11 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
   }
 
   onDetailPanel(param): void {
-    if (param.IN_STAT == 0) {
+    if (param.estado== 0) {
       return;
     } else {
       this.detailPanelService.show();
-      this.getDetalhes({ codigoMaterial: param.ID_MATE_TID });
+      this.getDetalhes({codigoMaterial: param.ID_MATE_TID });
     }
   }
 

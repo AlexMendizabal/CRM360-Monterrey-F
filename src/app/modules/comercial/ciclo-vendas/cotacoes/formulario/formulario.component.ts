@@ -234,6 +234,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   showBloco3 = true;
   showBloco4 = true;
   showBloco5 = true;
+  loaderCotizacion: boolean = false;
 
   showBloco6 = true;
 
@@ -1359,6 +1360,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.cantidadTotal > 0
     ) {
       this.formularioService.onNotifySubmit(true);
+      this.loaderCotizacion = true;
       this.sendForm();
     } else {
       this.pnotifyService.notice(
@@ -1522,7 +1524,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
           this.cotacoesService
             .verificarOfertasCliente(paramsVerificacion)
-            .pipe(finalize(() => {}))
+            .pipe(finalize(() => {this.loaderCotizacion = false;}))
             .subscribe((response: JsonResponse) => {
               if (response.pendiente === true) {
                 this.pnotifyService.error(

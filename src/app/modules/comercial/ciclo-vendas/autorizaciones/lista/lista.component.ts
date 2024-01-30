@@ -463,19 +463,17 @@ export class ComercialCicloVendasCotacoesListaComponent
     return formValue;
   }
 
-setOrderBy(column: string) {
-  if (this.orderBy === column) {
-    if (this.orderType == 'DESC') {
-      this.orderType = 'ASC';
-    } else if (this.orderType == 'ASC') {
+  setOrderBy(column: string) {
+    if (this.orderBy === column) {
+      this.orderType = this.orderType === 'DESC' ? 'ASC' : 'DESC';
+    } else {
+      this.orderBy = column;
       this.orderType = 'DESC';
     }
-  } else {
-    this.orderBy = column;
-    this.orderType = 'DESC';
+    this.getDatosAutorizaciones();  // Llama directamente a la función para obtener los datos ordenados.
   }
-  this.onFilter();
-}
+  
+  
 
 setOrderByModal(column: string) {
   //console.log(column);

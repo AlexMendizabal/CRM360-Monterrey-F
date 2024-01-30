@@ -28,14 +28,14 @@
                 
               </div>
               <div class="form-group col-lg-3">
-                <label for="codSituacao">Situação</label>
+                <label for="codSituacao">Estado</label>
                 <select
                   class="form-control custom-select"
                   id="codSituacao"
                   formControlName="codSituacao">
                   <option value="">Todos</option>
-                  <option value="0">Inativos</option>
-                  <option value="1">Ativos</option>
+                  <option value="0">Inactivos</option>
+                  <option value="1">Activos</option>
                 </select>
               </div>
               <div class="form-group col-lg-2">
@@ -69,8 +69,8 @@
         <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
           <ng-template #thead let-thead>
             <tr>
-              <th class="text-center" scope="col">Código</th>
-              <th scope="col">Descrição</th>
+              <th class="text-center" scope="col">Codigo</th>
+              <th scope="col">Descripcion</th>
               <th scope="col" [hidden]="showDetailPanel"></th>
             </tr>
           </ng-template>
@@ -95,7 +95,7 @@
                     <i class="fas fa-toggle-off"></i>
                   </button>
                 </span>
-                <span *ngIf="formaContato.codSituacao == 1" class="mr-3" tooltip="Inativar" placement="left" container="body">
+                <span *ngIf="formaContato.codSituacao == 1" class="mr-3" tooltip="Desactivar" placement="left" container="body">
                   <button type="button" class="btn-icon-sm" (click)="onInactivate(i, formaContato)">
                     <i class="fas fa-toggle-on"></i>
                   </button>
@@ -110,7 +110,7 @@
           </ng-template>
         </custom-table>
         <empty-result
-          message="Nenhuma informação encontrada"
+          message="Ningun informacion encontrada"
           class="my-3"
           *ngIf="dadosEmpty">
         </empty-result>

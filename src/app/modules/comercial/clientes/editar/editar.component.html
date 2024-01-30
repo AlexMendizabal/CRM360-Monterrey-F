@@ -273,8 +273,7 @@
                   [longitude]="ubicacion.longitude_contacto"
                   [iconUrl]="ubicacion.color"
                   (markerClick)="actualizarMarcadorContacto(i)"
-                  (markerDragEnd)="
-                    actualizarUbicacion(i, $event.coords.lat, $event.coords.lng)
+                  (markerDragEnd)="actualizarUbicacion(i, $event.coords.lat, $event.coords.lng)
                   "
                 >
                 </agm-marker>

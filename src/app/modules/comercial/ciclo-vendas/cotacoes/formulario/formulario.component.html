@@ -8,7 +8,7 @@
     type="button"
     (click)="onSubmit()"
     *ngIf="!visualizar"
-    [disabled]="loaderNavbar"
+    [disabled]="loaderCotizacion || loaderNavbar"
   >
     Finalizar
   </button>
@@ -333,7 +333,7 @@
                   class="text-primary mr-2"
                   href="javascript:void(0)"
                   (click)="openModal(agregarCliente)"
-                  style="font-weight: bold;"
+                  style="font-weight: bold"
                 >
                   Nuevo cliente
                 </a>
@@ -343,7 +343,7 @@
                   class="text-primary mr-2"
                   href="javascript:void(0)"
                   (click)="openModal(selecionarCliente)"
-                  style="font-weight: bold;"
+                  style="font-weight: bold"
                 >
                   Seleccionar
                 </a>
@@ -353,7 +353,7 @@
                   class="text-primary mr-2"
                   href="javascript:void(0)"
                   (click)="onClienteDetalhes()"
-                  style="font-weight: bold;"
+                  style="font-weight: bold"
                 >
                   Detalles
                 </a>
@@ -412,18 +412,18 @@
           </div>
         </div>
         <div class="row">
-            <div class="form-group col-lg-2">
-              <label class="my-auto">Carnet</label>
-              <div class="my-1 text-uppercase" style="font-size: 11px">
-                <input
-                  formControlName="carnet"
-                  type="text"
-                  class="form-control"
-                  [readonly]="true"
-                  [attr.disabled]="true"
-                />
-              </div>
+          <div class="form-group col-lg-2">
+            <label class="my-auto">Carnet</label>
+            <div class="my-1 text-uppercase" style="font-size: 11px">
+              <input
+                formControlName="carnet"
+                type="text"
+                class="form-control"
+                [readonly]="true"
+                [attr.disabled]="true"
+              />
             </div>
+          </div>
           <!--   <div class="my-1 text-uppercase" style="font-size: 11px">
               <input
                 formControlName="codRazaoSocial"

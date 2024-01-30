@@ -26,6 +26,14 @@
                 formControlName="nomeEscritorio"
                 (keydown.enter)="onFilter()">
             </div>
+            <div class="form-group col-lg-4">
+              <label for="codReferenteErp">Codigo Almacen</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="codReferenteErp"
+                (keydown.enter)="onFilter()">
+            </div>
             <!-- <div class="form-group col-lg-3">
               <label for="codEmpresa">Empresa</label>
               <ng-select
@@ -45,8 +53,8 @@
                 id="codSituacao"
                 formControlName="codSituacao">
                 <option value="0">Todos</option>
-                <option value="1">Ativos</option>
-                <option value="2">Inativos</option>
+                <option value="1">Activos</option>
+                <option value="2">Inactivos</option>
               </select>
             </div>
             <div class="form-group col-lg-2">
@@ -80,6 +88,7 @@
       <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
         <ng-template #thead let-thead>
           <tr>
+            <th scope="col">Codigo Almacen</th>
             <th scope="col">Almacen</th>
             <!-- <th scope="col" [hidden]="showDetailPanel">Empresa</th> -->
             <th scope="col" [hidden]="showDetailPanel"></th>
@@ -90,15 +99,18 @@
             <td
               class="hover"
               [ngClass]="classStatusBorder(escritorio)"
-              (click)="onDetails(escritorio)">
-              {{ escritorio.nomeEscritorio | uppercase }}
+              >
+              <!-- (click)="onDetails(escritorio)" -->
+              {{ escritorio.codReferenteErp | uppercase }}
             </td>
             <td
               class="hover"
-              (click)="onDetails(escritorio)"
+              
               [hidden]="showDetailPanel">
-              {{ escritorio.nomeEmpresa | uppercase }}
+              {{ escritorio.nomeEscritorio | uppercase }}
             </td>
+            <!-- (click)="onDetails(escritorio)" -->
+            <!-- (click)="onDetails(escritorio)" -->
             <td class="text-right" [hidden]="showDetailPanel">
               <span *ngIf="escritorio.codSituacao == 1" class="mr-3" tooltip="Inativar" placement="left" container="body">
                 <button type="button" class="btn-icon-sm" (click)="onInactivate(i, escritorio)">

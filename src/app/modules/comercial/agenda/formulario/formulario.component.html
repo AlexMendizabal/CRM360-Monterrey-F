@@ -124,8 +124,14 @@
           <div class="form-group col-md-12">
             <div class="embed-responsive embed-responsive-16by9">
               <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="16" class="embed-responsive-item"
-                (mapClick)="actualizarMarcador($event)">
-                <agm-marker [latitude]="latitud" [longitude]="longitud" (markerDragEnd)="actualizarDireccion($event)">
+                (mapClick)="actualizarMapa($event)">
+                <agm-marker *ngFor="let place of clientesub;  let i = index" [latitude]="place.latitude" [longitude]="place.longitude" [iconUrl]="place.color"
+                (markerClick)="actualizarMarcadorContacto(i)" [label]="labelOptions2" 
+                (markerDragEnd)="actualizarUbicacion(i, $place.latitude, $place.longitude)">
+                </agm-marker>
+                <agm-marker  [latitude]="inicio_latitud" [longitude]="final_longitud" [label]="labelOptions" [iconUrl]="marca_color" style="text-shadow: 0px 0px 6.2px grey;"
+                (markerClick)="actualizarMarcadorContacto(i)"
+                (markerDragEnd)="actualizarUbicacion(i, $place.latitude, $place.longitude)">
                 </agm-marker>
               </agm-map>
               <div id="map-zoom-control" class="map-control"></div>

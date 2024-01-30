@@ -679,7 +679,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         .pipe(
           finalize(() => {
             this.loaderNavbar.emit(false);
-            this.searching = false;
+            this.searching = true;
             this.firstSearch = true;
             this.dadosLoaded = true;
           })
@@ -706,10 +706,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
               this.dadosEmpty = false;
               this.form.controls.codMaterial.enable();
               this.swAppSell= true ;
-
-
               //console.log('dados', this.dados);
-
               // if (this.dados.length > 10) {
               this.tableConfig.fixedHeader = true;
               // } else {
@@ -719,12 +716,12 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
               //this.pnotifyService.notice("Há campos faltando ou não há dados para sua consulta.");
               //this.dadosEmpty = true;
             } else {
-              this.swTodos = false;
-              this.swVendedor = false;
+              this.swTodos = true;
+              this.swVendedor = true;
               this.swAppSell = true;
               this.dadosEmpty = true;
               this.form.controls.codMaterial.disable();
-              this.swAppSellColor = false;
+              this.swAppSellColor = true;
 
 
 
@@ -824,13 +821,12 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       this.swTodos = false;
       this.swVendedor = true;
       this.swAppSell = true;
-      this.form.controls.codMaterial.disable();
       this.comercialService
         .getUpSellService(params)
         .pipe(
           finalize(() => {
             this.loaderNavbar.emit(false);
-            this.searching = false;
+            this.searching = true;
             this.firstSearch = true;
             this.dadosLoaded = true;
           })
@@ -840,7 +836,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
             if (response.responseCode === 200) {
               this.swAppSellColor = true;
               this.form.controls.codMaterial.enable();
-              this.swTodos = false;
+              this.swTodos = true;
               this.swVendedor = true;
               this.swAppSell = true;
               this.dados = response.result.map((el) => {
@@ -849,21 +845,21 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
                 return o;
               });
               this.dadosEmpty = false;
+              this.form.controls.codMaterial.enable();
               this.tableConfig.fixedHeader = true;
             } else {
-              this.swAppSellColor = true;
-
-              this.swTodos = false;
+              this.swTodos = true;
               this.swVendedor = true;
-              this.dadosEmpty = true;
               this.swAppSell = true;
+              this.dadosEmpty = true;
+              this.form.controls.codMaterial.enable();
+              this.swAppSellColor = true;
               //this.form.controls.codMaterial.enable();
-
             }
           },
           error: (error: any) => {
-            this.swAppSellColor = false;
-            this.swTodos = false;
+            this.swAppSellColor = true;
+            this.swTodos = true;
             this.swVendedor = true;
             this.dadosEmpty = true;
             this.swAppSell = true;

@@ -91,12 +91,13 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   situacoes = [
     { id: '', nombre: 'Todos' },
-    { id: 0, nombre: 'Borrador' },
-    { id: 1, nombre: 'Venta' },
-    { id: 2, nombre: 'Rechazado' },
+    { id: 1, nombre: 'Borrador' },
+    { id: 9, nombre: 'Venta' },
+    { id: 13, nombre: 'Cerrado' },
+    { id: 14, nombre: 'Abierto' },
   ];
   formGroup: FormGroup;
-  defaultSelection = this.situacoes[0];
+  selectedSituacao = this.situacoes[0];
   breadCrumbTree: Array<Breadcrumb> = [];
 
   subtitles: Array<Subtitles> = [];
@@ -237,7 +238,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.search(null);
     this.getVendedores();
     this.formGroup = this.formBuilder.group({
-      codSituacao: [this.defaultSelection],
+      codSituacao: [this.selectedSituacao],
     });
     this.verificarOFertas();
     this.result = this.resultFromParent;
@@ -516,17 +517,14 @@ export class ComercialCicloVendasCotacoesListaComponent
               nombre: 'Todos',
             },
             {
-              id: 0,
-              nombre: 'Borrador',
+              id: 13,
+              nombre: 'Cerrado',
             },
             {
-              id: 1,
-              nombre: 'Venta',
+              id: 14,
+              nombre: 'Abierto',
             },
-            {
-              id: 2,
-              nombre: 'Rechazado',
-            },
+            
           ];
           this.empresas = response[1].result || [];
 
@@ -612,9 +610,9 @@ export class ComercialCicloVendasCotacoesListaComponent
       codEmpresa: null,
       codEmpresaAdd: null,
       codDeposito: null,
-      codSituacao: 0,
+      codSituacao: null,
       cliente: null,
-      codVendedor: 0,
+      codVendedor: null,
       pagina: 1,
       registros: this.itemsPerPage,
     };
@@ -813,7 +811,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
     if (this.form.value.codSituacao) {
       params.codSituacao = this.form.value.codSituacao.id;
-      /*    console.log(params.codSituacao); */
+          console.log("situacion",params.codSituacao); 
     }
 
     if (this.form.value.codigo_oferta) {
@@ -836,7 +834,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     }
 
     if (this.form.value.codVendedor) {
-      params.codVendedor = this.form.value.codVendedor;
+      params.codVendedor = this.form.value.codVendedor.ID;
     }
 
     if (this.form.value.pagina) {
