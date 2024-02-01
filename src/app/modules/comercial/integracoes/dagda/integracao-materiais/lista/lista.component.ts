@@ -43,8 +43,8 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
   dadosEmpty = false;
   dadosEmptyDetalhes = false;
 
-  appTitle = 'Integração de Materiais';
-  panelTitle = 'Associações';
+  appTitle = 'Descuento de materiales';
+  panelTitle = 'Descuento';
 
   situacao = [
     {
@@ -208,7 +208,7 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
         routerLink: `/comercial/home`,
       },
       {
-        descricao: 'Integração Dagda',
+        descricao: 'Materiales',
         routerLink: `/comercial/integracoes/dagda/${id}`,
       },
       {

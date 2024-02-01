@@ -19,7 +19,7 @@
         <form [formGroup]="form" autocomplete="off">
           <div class="form-row">
             <div class="form-group col-lg-3">
-              <label for="de">
+              <label for="codigoMaterial">
                 <span class="mr-1">Codigo Material</span>
                 <ng-template #tooltipLabelDeTemplate>
                   <p class="mb-0">Busca por Código de Material</p>
@@ -44,7 +44,6 @@
                 type="text"
                 class="form-control"
                 formControlName="nomMaterial"
-                (input)="disableForm()"
                 (keydown.enter)="onFilter()">
             </div>
             <div class="form-group col-md-6">
@@ -132,7 +131,7 @@
           </tr>
         </ng-template>
         <ng-template #tbody let-tbody >
-          <tr *ngFor="let lista of listas | slice : begin : end; let i = index" [tooltip]="lista.IN_STAT == 0 ? 'Editar' : ''"
+          <tr *ngFor="let lista of listas | slice : begin : end; let i = index" [tooltip]="lista.estado == 0 ? 'Editar' : ''"
                class="hover">
 						<td [ngClass]="{ 
                 'border-success' : lista.estado == 1, 
@@ -141,7 +140,7 @@
             </td>
             <td class="text-center" >{{ lista.CODIGOMATERIAL }}</td>
             <td class="text-left" style="width: 50rem" >{{ lista.DESCRICAO | uppercase }}</td>
-            <td class="text-left" style="width: 15rem" >{{ lista.nombre_ciudad | uppercase }}</td>
+            <td class="text-left" style="width: 15rem" >{{ lista.nombre_dep | uppercase }}</td>
             <td class="text-left" style="width: 15rem" >{{ lista.rango_inicial }}</td>
             <td class="text-left" style="width: 15rem" >{{ lista.rango_final}}</td>
             <td class="text-left" style="width: 15rem" >{{ lista.descuento }} %</td>

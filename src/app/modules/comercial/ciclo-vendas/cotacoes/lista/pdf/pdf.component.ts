@@ -79,4 +79,36 @@ export class PdfComponent implements OnInit {
       `${this.dataFromParent.pedido[0].codigo_oferta}_Monterrey`
     );
   }
+  captureScreen(): void {
+    const data = this.contentToConvert.nativeElement;
+
+    // Utilizar html2canvas para capturar el contenido del div como una imagen
+    html2canvas(data).then(canvas => {
+      const imgWidth = 190; // Ancho de la imagen en el documento PDF
+      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Altura de la imagen en el documento PDF
+
+      // Crear un nuevo objeto jsPDF con margenes
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a4',
+        putOnlyUsedFonts: true,
+        compress: true,
+        floatPrecision: 16,
+        precision: 16,
+        userUnit: 16,
+        marginLeft: 10, // Margen izquierdo
+        marginRight: 10, // Margen derecho
+        marginTop: 10, // Margen superior
+        marginBottom: 10 // Margen inferior
+      });
+      const xOffset = 10; 
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, 10, imgWidth, imgHeight); // Añadir la imagen con márgenes
+
+      // Mandar a imprimir automáticamente
+      pdf.autoPrint();
+      const blob = pdf.output('bloburl'); // Obtener un Blob URL del documento PDF
+      window.open(blob, '_blank'); // Abrir una nueva ventana con el Blob URL para imprimir
+    });
+  }
 }

@@ -109,7 +109,12 @@
                   <td class="font-weight-bold text-center">
                     {{ detalles.descuento_permitido }}
                   </td>
-                  <td class="font-weight-bold text-center text-danger">
+                  <td
+                    class="font-weight-bold text-center"
+                    [ngStyle]="{
+                      color: detalles.excedente >= 0 ? 'red' : 'green'
+                    }"
+                  >
                     {{ detalles.excedente }}
                   </td>
                 </tr>

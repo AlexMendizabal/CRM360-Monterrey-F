@@ -43,7 +43,7 @@
             <th>UND</th>
             <th>CANT</th>
             <th>PRECIO</th>
-            <th>%</th>
+            <th>Desc.%</th>
             <th>PRECIO NETO</th>
             <th>TOTAL USD.</th>
             <th>PESO</th>
@@ -119,5 +119,5 @@
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" #captureButton (click)="onDownlaod()">DESCARGAR</button>
-  <button type="button" class="btn btn-secondary" (click)="captureScreen()">IMPRIMIR</button>
+  <button type="button" class="btn btn-secondary" #contentToConvert (click)="captureScreen()">IMPRIMIR</button>
 </div>
