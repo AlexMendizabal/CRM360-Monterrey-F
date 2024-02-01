@@ -84,6 +84,7 @@ export class ComercialClientesPreCadastroComponent
   formChanged = false;
   tipoPessoa: any = {};
   tipos_personas: any = [];
+  tipos_documentos: any = [];
   submittingForm = false;
   latitud: number = 0;
   longitud: number = 0;
@@ -169,6 +170,7 @@ export class ComercialClientesPreCadastroComponent
     this.getFormFields();
     //this.determinarBloqueo();
     this.obtenerTiposClientes();
+    this.obtenerTipoDocumento();
     this.obtenerTipoPersonas();
     this.activatedRoute.queryParams.subscribe((queryParams: any) => {
       let documento = null;
@@ -192,7 +194,6 @@ export class ComercialClientesPreCadastroComponent
   } */
 
   changeVendedor(a) {
-    console.log(a);
     this.id_vend = a;
     this.clientesService.getVendedorCiudad(a).subscribe(
       (response: any) => {
@@ -236,8 +237,7 @@ export class ComercialClientesPreCadastroComponent
     this.preCadastroService.getTipoPersona().subscribe(
       (response: any) => {
         if (response.responseCode === 200) {
-          console.log(response);
-          this.tipos_personas = response.result;
+            this.tipos_personas = response.result;
         } else {
           this.handleFormFieldsError();
         }
@@ -248,7 +248,22 @@ export class ComercialClientesPreCadastroComponent
       }
     );
   }
-
+  obtenerTipoDocumento() {
+    this.preCadastroService.getTipoDocumento().subscribe(
+      (response: any) => {
+        if (response.responseCode === 200) {
+          console.log('Documentos', response);
+          this.tipos_documentos = response.result;
+        } else {
+          this.handleFormFieldsError();
+        }
+      },
+      (error) => {
+        /*           console.error('Error al cargar dependencias:', error);
+         */ this.handleFormFieldsError();
+      }
+    );
+  }
   /* actualizarMarcador(event: any) {
     this.latitud = event.coords.lat;
     this.longitud = event.coords.lng;
@@ -370,7 +385,7 @@ export class ComercialClientesPreCadastroComponent
       razaoSocial: `El nombre de la empresa debe contener ${this.maxLengthRules.razaoSocial} caracteres.`,
       nomeFantasia: `El nombre comercial debe contener hasta ${this.maxLengthRules.nomeFantasia} caracteres.`,
       email: `El correo electrónico debe llegar a ${this.maxLengthRules.email} caracteres.`,
-      ci: `El ci no puede exceder los 8  ${this.maxLengthRules.ci} caracteres.`,
+      numero_documento: `El numero de documento no puede exceder los 15  ${this.maxLengthRules.numero_documento} caracteres.`,
     };
   }
   agregarUbicacionALaFormObj(datosUbicacion: any) {
@@ -545,12 +560,12 @@ export class ComercialClientesPreCadastroComponent
   setFormBuilder(documento: string) {
     this.form = this.formBuilder.group({
       //cnpj_cpf: [null,Validators.required],
-      nit: [null, [Validators.required, Validators.min(0)]],
-      ci: [
+      numero_documento: [null, [Validators.required, Validators.min(0)]],
+      tipo_documento: [
         null,
         [
           Validators.required,
-          Validators.maxLength(8),Validators.min(0)
+          Validators.maxLength(15),Validators.min(0)
         ],
       ],
 
@@ -766,8 +781,8 @@ export class ComercialClientesPreCadastroComponent
         nombres: this.form.value.nome,
         razonSocial: this.form.value.razaoSocial,
         nombre_factura: this.form.value.nombre_factura,
-        nit: this.form.value.nit,
-        cnpj_cpf: this.form.value.ci,
+        tipo_documento: this.form.value.tipo_documento,
+        cnpj_cpf: this.form.value.numero_documento,
         id_rubro: this.form.value.cnae,
         email: this.form.value.email,
         telefono: this.form.value.telefone,

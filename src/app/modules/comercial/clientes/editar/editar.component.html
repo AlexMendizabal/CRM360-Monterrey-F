@@ -40,16 +40,16 @@
                     </div>
                     <div class="col-md-6">
                       <label class="mb-0">
-                        <strong> CI </strong>
+                        <strong> Tipo de Documento </strong>
                         <span class="text-danger">*</span>
                       </label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        value="{{ datos_cliente.datos_cliente.carnet }}"
-                        formControlName="carnet"
-                        id="carnet"
-                      />
+                      <ng-select id="tipo_documento" formControlName="tipo_documento" 
+                      [items]="tipos_documentos"
+                      bindLabel="nombre_doc"
+                      bindValue="id"
+                      [(ngModel)]="datos_cliente.datos_cliente.id_tipo_documento">
+                      </ng-select>
+           
                       <input
                         type="hidden"
                         value="{{ datos_cliente.datos_cliente.id_cliente }}"
@@ -58,15 +58,15 @@
                     </div>
                     <div class="col-md-6">
                       <label class="mb-0">
-                        <strong> NIT </strong>
+                        <strong> Número de Documento </strong>
                         <span class="text-danger">*</span>
                       </label>
                       <input
                         type="text"
                         class="form-control"
-                        value="{{ datos_cliente.datos_cliente.nit }}"
-                        formControlName="nit"
-                        id="nit"
+                        value="{{ datos_cliente.datos_cliente.numero_documento }}"
+                        formControlName="numero_documento"
+                        id="numero_documento"
                       />
                     </div>
                     <div class="col-md-6">

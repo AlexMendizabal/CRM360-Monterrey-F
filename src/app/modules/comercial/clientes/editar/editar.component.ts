@@ -39,6 +39,7 @@ export class EditarClienteComponent implements OnInit {
   @Input() longitudPromedioContacto: number = 0;
 
   @Input() tipos_personas: any[];
+  @Input() tipos_documentos: any[];
 
   @ViewChild('botonGuardar') botonGuardar: ElementRef;
 
@@ -111,8 +112,8 @@ export class EditarClienteComponent implements OnInit {
     this.form = this.formBuilder.group({
       //observacion: ['', Validators.required],
       codigo_cliente: [null, Validators.required],
-      carnet: [null, Validators.required],
-      nit: [null, Validators.required],
+      tipo_documento: [null, Validators.required],
+      numero_documento: [null, Validators.required],
       nombre: [null, Validators.required],
       nombre_factura: [null],
       razon_social: [null, Validators.required],
@@ -137,10 +138,10 @@ export class EditarClienteComponent implements OnInit {
     this.categorizarUbicacion();
     this.categorizarContacto();
     this.ciudadVendedor();
+    console.log(this.datos_cliente.datos_cliente);
     this.id_client = this.datos_cliente.datos_cliente.id_cliente;
-    //console.log(this.tipos_personas)
 
-    //console.log(this.latitudPromedio)
+ 
   }
 
   getVendedorNome(id_vendedor: number): string {
@@ -536,9 +537,9 @@ export class EditarClienteComponent implements OnInit {
     // @ts-ignore: Ignorar error TS2339
     var codigoClienteInput = document.getElementById('codigo_cliente').value;
     // @ts-ignore: Ignorar error TS2339
-    var ciInput = document.getElementById('carnet').value;
+    var numero_documentoInput = document.getElementById('numero_documento').value;
     // @ts-ignore: Ignorar error TS2339
-    var nitInput = document.getElementById('nit').value;
+    var tipo_documentoInput = document.getElementById('tipo_documento').value;
     // @ts-ignore: Ignorar error TS2339
     var nombreInput = document.getElementById('nombre').value;
     // @ts-ignore: Ignorar error TS2339
@@ -575,8 +576,8 @@ export class EditarClienteComponent implements OnInit {
     const data = {
       codigo_cliente: codigoClienteInput,
       id_cliente: idClienteInput,
-      nit: nitInput,
-      ci: ciInput,
+      tipo_documento: tipo_documentoInput,
+      numero_documento: numero_documentoInput,
       razon_social: idRazonSocialInput,
       nombres: nombreInput,
       tipo_pessoa: idTipoPersonaInput,
@@ -599,8 +600,8 @@ export class EditarClienteComponent implements OnInit {
     const requiredFields = [
       'codigo_cliente',
       'id_cliente',
-      'nit',
-      'ci',
+      'tipo_documento',
+      'numero_documento',
       'razon_social',
       'nombres',
       'tipo_pessoa',
@@ -631,6 +632,7 @@ export class EditarClienteComponent implements OnInit {
   enviarPeticion(data: any): void {
     this.isLoading = true;
     this.botonGuardar.nativeElement.disabled = true;
+    console.log();
     this.preCadastroService
       .updateCliente(data)
       .pipe(finalize(() => {}))

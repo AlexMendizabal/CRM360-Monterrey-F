@@ -99,6 +99,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   contato: any = [];
   contatos: any = [];
   tipos_clientes: any = [];
+  tipos_documentos: any = [];
 
   cliente: any = [];
 
@@ -152,6 +153,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.onDetailPanelEmitter();
     this.getCenaes();
     this.obtenerTiposClientes();
+    this.obtenerTipoDocumento();
     this.getCiudades();
    
     this.vendedoresService.getVendedores().subscribe(
@@ -205,6 +207,17 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
           console.log('tipo tipos_personas', response.result);
           this.tipos_personas = response.result;
         } 
+      }
+    );
+  }
+
+  obtenerTipoDocumento() {
+    this.preCadastroService.getTipoDocumento().subscribe(
+      (response: any) => {
+        if (response.responseCode === 200) {
+          console.log('Documentos', response);
+          this.tipos_documentos = response.result;
+        }
       }
     );
   }
@@ -295,7 +308,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
         this.informacionMarcador = null;
         if (response.responseCode == 200) {
-          //console.log(response);
           this.cliente = response.result;
 
           this.contatosLoaded = true;
@@ -786,7 +798,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
             // Actualiza la lista de clientes con la información de la oferta
             this.clientes = clientes.slice(0, this.itemsPerPage);
             this.totalItems = clientes[0]?.length|| 0;
-            this.setStatus(Response['result']['sintetico']);
+            //this.setStatus(Response['result']['sintetico']);
           },
           (error: any) => {
             this.pnotifyService.error();

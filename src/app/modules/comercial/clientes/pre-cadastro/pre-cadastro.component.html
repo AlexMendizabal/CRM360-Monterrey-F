@@ -23,8 +23,12 @@
             </strong>
           </div>
           <div class="form-group col-md-3">
-            <label for="ci">CI <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="ci" formControlName="ci" (input)="onInput()"
+            <label for="tipo_documento">Tipo de Documento <span class="text-danger">*</span></label>
+            <select class="form-control" id="tipo_documento" formControlName="tipo_documento" (change)="onInput()">
+              <option *ngFor="let tipo of tipos_documentos" [value]="tipo.id">{{ tipo.siglas_doc }}-{{ tipo.nombre_doc }}</option>
+            </select>
+
+            <!-- <input type="text" class="form-control" id="ci" formControlName="ci" (input)="onInput(-)"
               [ngClass]="onFieldError('ci') + ' ' + onFieldRequired('ci')" min="0">
             
             <div *ngIf="ciControl.hasError('required')" class="text-danger">
@@ -33,14 +37,15 @@
             <div *ngIf="ciControl.hasError('maxlength')" class="text-danger">
               Máximo 8 {{ maxLengthRules.ci }} caracteres.
             </div>
-            <invalid-form-control [show]="onFieldInvalid('ci') == 'required'" message="CI inválido."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('ci') == 'required'" message="CI inválido."></invalid-form-control> -->
+
           </div> 
           <div class="form-group col-md-3">
-            <label for="nit">NIT <span class="text-danger">*</span> </label>
-            <input type="number" class="form-control" id="nit" formControlName="nit" (input)="onInput()"
-              [ngClass]="onFieldError('nit') + ' ' + onFieldRequired('nit')" min="0">
-            <invalid-form-control [show]="onFieldInvalid('nit') == 'required'"
-              message="NIT inválido."></invalid-form-control>
+            <label for="numero_documento">Número de Documento <span class="text-danger">*</span> </label>
+            <input type="number" class="form-control" id="numero_documento" formControlName="numero_documento" (input)="onInput()"
+              [ngClass]="onFieldError('numero_documento') + ' ' + onFieldRequired('numero_documento')" min="0">
+            <invalid-form-control [show]="onFieldInvalid('numero_documento') == 'required'"
+              message="Número de Documento inválido."></invalid-form-control>
           </div>          
           
           <div class="form-group col-md-3">
@@ -181,8 +186,15 @@
                 </div>
                 <div class="form-group col-md-3">
                   <label for="ciudadUbi">Ciudad <span class="text-danger">*</span> </label>
-                  <ng-select [searchable]="true" [clearable]="false" [items]="ciudades" [virtualScroll]="true"
-                    (change)="cambiarCiudad($event.id, i)" labelForId="ciudad" bindLabel="nombre_ciudad" bindValue="id"
+                  <ng-select 
+                  [searchable]="true" 
+                  [clearable]="false" 
+                  [items]="ciudades" 
+                  [virtualScroll]="true"
+                    (change)="cambiarCiudad($event.id, i)" 
+                    labelForId="ciudad" 
+                    bindLabel="nombre_ciudad" 
+                    bindValue="id"
                     formControlName="nombre_ciudad"
                     [ngClass]="onFieldError('nombre_ciudad') + ' ' + onFieldRequired('nombre_ciudad')">
                     <ng-option *ngFor="let ciudad of ciudades"

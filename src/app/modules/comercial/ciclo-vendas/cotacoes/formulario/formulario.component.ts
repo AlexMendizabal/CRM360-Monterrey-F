@@ -110,6 +110,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   autoScrollToCarrinho = true;
   exibirClienteT = false;
   carnet_cliente = '';
+  tipo_documento = '';
 
   activatedRouteSubscription: Subscription;
 
@@ -587,7 +588,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           this.form.controls.nomeCliente.setValue(event.nomeCliente);
           this.form.controls.codigo_cliente.setValue(event.codigo_cliente);
           this.form.controls.nombreTipo.setValue(event.nombreTipo);
-          this.form.controls.carnet.setValue(event.carnet);
+          this.form.controls.carnet.setValue(event.numero_documento);
+          this.form.controls.tipo_documento.setValue(event.tipo_documento);
           this.form.controls.razaoSocial.setValue(event.razaoSocial);
           this.form.controls.correo_electronico.setValue(
             event.correo_electronico
@@ -765,7 +767,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         nombre_factura: [data.nombre_factura],
         correo_electronico: [data.correo_electronico],
         nomeCliente: [data.nomeCliente],
-        carnet: [data.carnet],
+        carnet: [data.numero_documento],
+        tipo_documento: [data.tipo_documento],
         nombreVendedor: [data.nombreVendedor],
         codigo_oferta: [],
         codigo_oferta_crm: [],
@@ -1510,6 +1513,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             direccion_cliente: this.direccion_cliente,
             direccion_entrega: formValue.direccionEntrega,
             carnet_cliente: this.carnet_cliente,
+            tipo_documento: this.tipo_documento,
             correo_electronico: formValue.correoElectronico,
             celular: formValue.celular,
             id_oferta: this.id_oferta,
@@ -2152,8 +2156,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             );
           } else {
             this.form.controls.codRazaoSocial.setValue(this.clientes[0].carnet);
-            /*               this.form.controls.codigoCliente.setValue(this.clientes[0].codRazaoSocial);
-             */
+                         this.form.controls.codigoCliente.setValue(this.clientes[0].tipo_documento);
+            
             this.onChangeCliente(this.clientes[0].codCliente, 'user');
           }
         }

@@ -413,7 +413,7 @@
         </div>
         <div class="row">
           <div class="form-group col-lg-2">
-            <label class="my-auto">Carnet</label>
+            <label class="my-auto">Nro Documento</label>
             <div class="my-1 text-uppercase" style="font-size: 11px">
               <input
                 formControlName="carnet"
@@ -424,19 +424,18 @@
               />
             </div>
           </div>
-          <!--   <div class="my-1 text-uppercase" style="font-size: 11px">
+          <div class="form-group col-lg-2">
+            <label class="my-auto">Tipo Documento</label>
+            <div class="my-1 text-uppercase" style="font-size: 11px">
               <input
-                formControlName="codRazaoSocial"
+                formControlName="tipo_documento"
                 type="text"
-                id="codRazaoSocial"
                 class="form-control"
-                [disabled]="swExisteCliente"
+                [readonly]="true"
+                [attr.disabled]="true"
               />
-              <invalid-form-control
-                [show]="onFieldInvalid('codRazaoSocial') == 'required'"
-                message="Nit requerido."
-              ></invalid-form-control>
-            </div> -->
+            </div>
+          </div>
           <div class="form-group col-lg-2">
             <label class="my-auto">
               <!-- <span class="text-danger">(*)</span> -->
@@ -452,6 +451,8 @@
               <input formControlName="id_departamento" type="hidden" />
             </div>
           </div>
+        </div>
+        <div class="row">
           <div class="form-group col-lg-3">
             <label class="my-auto" for="correoElectronico"
               >Correo electrónico</label
