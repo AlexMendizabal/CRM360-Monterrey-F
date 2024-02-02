@@ -1,5 +1,5 @@
 <div class="modal-content custom-modal">
-  <div class="modal-header" style="background-color: #F8F9FA;">
+  <div class="modal-header" style="background-color: #f8f9fa">
     <h6 class="modal-title pull-left">Editar datos de cliente</h6>
     <div class="d-flex justify-content-center align-items-center">
       <button
@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="modal-body">
-    <div class="col-md-12" >
+    <div class="col-md-12">
       <div class="form row">
         <div class="col-md-12">
           <div class="col mb-0">
@@ -35,7 +35,8 @@
                         class="form-control"
                         formControlName="codigo_cliente"
                         value="{{ datos_cliente.datos_cliente.codigo_cliente }}"
-                        id="codigo_cliente" readonly
+                        id="codigo_cliente"
+                        readonly
                       />
                     </div>
                     <div class="col-md-6">
@@ -43,13 +44,20 @@
                         <strong> Tipo de Documento </strong>
                         <span class="text-danger">*</span>
                       </label>
-                      <ng-select id="tipo_documento" formControlName="tipo_documento" 
-                      [items]="tipos_documentos"
-                      bindLabel="nombre_doc"
-                      bindValue="id"
-                      [(ngModel)]="datos_cliente.datos_cliente.id_tipo_documento">
-                      </ng-select>
-           
+
+                      <select name="" id="tipo_documento" class="form-control">
+                        <option
+                          *ngFor="let tipo of tipos_documentos"
+                          [value]="tipo.id"
+                          [selected]="
+                            tipo.id ===
+                            datos_cliente.datos_cliente.id_tipo_documento
+                          "
+                        >
+                          {{ tipo.nombre_doc }}
+                        </option>
+                      </select>
+
                       <input
                         type="hidden"
                         value="{{ datos_cliente.datos_cliente.id_cliente }}"
@@ -64,7 +72,9 @@
                       <input
                         type="text"
                         class="form-control"
-                        value="{{ datos_cliente.datos_cliente.numero_documento }}"
+                        value="{{
+                          datos_cliente.datos_cliente.numero_documento
+                        }}"
                         formControlName="numero_documento"
                         id="numero_documento"
                       />
@@ -168,8 +178,9 @@
                     <div class="col-md-6">
                       <label class="mb-0 mt-2">
                         <strong> Rubro </strong>
-<!--                         <span class="text-danger">(*)</span>
- -->                      </label>
+                        <!--                         <span class="text-danger">(*)</span>
+ -->
+                      </label>
                       <select name="" id="id_rubro" class="form-control">
                         <option
                           *ngFor="let cnae of cnaes"
@@ -232,7 +243,12 @@
                         <strong> Estado </strong>
                         <!-- <span class="text-danger">(*)</span> -->
                       </label>
-                      <select name="" id="id_estado" class="form-control" disabled>
+                      <select
+                        name=""
+                        id="id_estado"
+                        class="form-control"
+                        disabled
+                      >
                         <option
                           *ngFor="let estado of estados | keyvalue"
                           [value]="estado.key"
@@ -262,7 +278,7 @@
                 [longitude]="longitudPromedioContacto"
                 [zoom]="10"
                 (mapClick)="actualizarMapaContacto($event)"
-                class="embed-responsive-item "
+                class="embed-responsive-item"
               >
                 <agm-marker
                   *ngFor="
@@ -273,7 +289,8 @@
                   [longitude]="ubicacion.longitude_contacto"
                   [iconUrl]="ubicacion.color"
                   (markerClick)="actualizarMarcadorContacto(i)"
-                  (markerDragEnd)="actualizarUbicacion(i, $event.coords.lat, $event.coords.lng)
+                  (markerDragEnd)="
+                    actualizarUbicacion(i, $event.coords.lat, $event.coords.lng)
                   "
                 >
                 </agm-marker>
@@ -298,7 +315,7 @@
                       class="form-control"
                     />
                   </div>
-                  <label>Nombre  <span class="text-danger">*</span> </label>
+                  <label>Nombre <span class="text-danger">*</span> </label>
                   <div>
                     <input
                       [(ngModel)]="contacto.nombres_contacto"
@@ -306,7 +323,7 @@
                     />
                   </div>
                   <label
-                    >Apellido paterno  <span class="text-danger">*</span>
+                    >Apellido paterno <span class="text-danger">*</span>
                   </label>
                   <div>
                     <input
@@ -315,7 +332,8 @@
                     />
                   </div>
                   <label
-                    >Apellido materno <!-- <span class="text-danger">(*)</span> -->
+                    >Apellido materno
+                    <!-- <span class="text-danger">(*)</span> -->
                   </label>
                   <div>
                     <input
@@ -323,21 +341,27 @@
                       class="form-control"
                     />
                   </div>
-                  <label>Dirección  <span class="text-danger" style="font-size: 9px;">(Use el mapa)</span> </label>
+                  <label
+                    >Dirección
+                    <span class="text-danger" style="font-size: 9px">*</span>
+                  </label>
                   <div>
                     <input
                       [(ngModel)]="contacto.direccion_contacto"
-                      class="form-control" readonly
+                      class="form-control"
                     />
                   </div>
-                  <label>Celular <!-- <span class="text-danger">(*)</span>  --></label>
+                  <label
+                    >Celular
+                    <!-- <span class="text-danger">(*)</span>  --></label
+                  >
                   <div>
                     <input
                       [(ngModel)]="contacto.celular_contacto"
                       class="form-control"
                     />
                   </div>
-                  <label>Teléfono  <span class="text-danger">*</span> </label>
+                  <label>Teléfono <span class="text-danger">*</span> </label>
                   <div>
                     <input
                       [(ngModel)]="contacto.telefono_contacto"
@@ -406,7 +430,7 @@
             >
               <div class="card">
                 <div class="card-body">
-                  <label>Título  <span class="text-danger">*</span> </label>
+                  <label>Título <span class="text-danger">*</span> </label>
                   <div>
                     <input
                       [(ngModel)]="direccion.ubicacion"
@@ -431,12 +455,15 @@
                       </option>
                     </select>
                   </div>
-                  <label>Dirección <span class="text-danger" style="font-size: 9px;">(Use el mapa)</span>  </label>
+                  <label
+                    >Dirección
+                    <span class="text-danger" style="font-size: 9px">*</span>
+                  </label>
                   <div>
                     <input
                       [(ngModel)]="direccion.direccion"
                       class="form-control"
-                     readonly/>
+                    />
                   </div>
                   <button
                     (click)="eliminarUbicacion(i)"

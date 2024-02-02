@@ -42,24 +42,27 @@
           </div>
           <div class="form-group col-lg-3">
             <label for="codVendedor">Vendedor</label>
-            <select
-              class="form-control"
-              name="codVendedor"
-              id="codVendedor"
-              formControlName="codVendedor"
-            >
-              <option class="" [value]="0" readonly>TODOS</option>
-              <option *ngFor="let vendedor of vendedores" [value]="vendedor.id">
-                {{ vendedor.nome }}
-              </option>
-            </select>
+            <ng-select
+            class=""
+            formControlName="codVendedor"
+            [ngModel]="selectedVendedor"
+            (ngModelChange)="onChangeVendedor($event)"
+            [clearable]="true"
+            [(ngModel)]="defaultSelection"
+            (keydown.enter)="onFilter()"
+          >
+            <ng-option [value]="0" disabled>TODOS</ng-option>
+            <ng-option *ngFor="let vendedor of vendedores" [value]="vendedor.id">
+              {{ vendedor.nome }}
+            </ng-option>
+          </ng-select>
           </div>
           <div class="form-group col-lg-3">
             <label for="codStatus">Estado Oferta</label>
             <ng-select
               [items]="estado_oferta"
               [searchable]="true"
-              [clearable]="false"
+              [clearable]="true"
               labelForId="id"
               bindLabel="nombre"
               formControlName="estado_oferta"
@@ -76,15 +79,17 @@
             }"
           >
             <label for="registros">Registros</label>
-            <select
-              class="form-control custom-select"
+            <ng-select
+              class=""
               id="registros"
               formControlName="registros"
+              [clearable]="true"
             >
-              <option>100</option>
-              <option>200</option>
-              <option>300</option>
-            </select>
+              <ng-option value="100">100</ng-option>
+              <ng-option value="200">200</ng-option>
+              <ng-option value="300">300</ng-option>
+            </ng-select>
+
           </div>
         </div>
       </form>
@@ -93,6 +98,7 @@
   <custom-table [config]="tableConfig">
     <ng-template #thead let-thead>
       <tr>
+        <th></th>
         <th
           scope="col"
           class="text-center hover"
@@ -190,10 +196,13 @@
     >
 
     <ng-template #tbody let-tbody>
-      <tr
-        *ngFor="let autorizacion of getPaginateData(); let i = index"
-        [class.table-active]="autorizacion.id_cliente == clienteSelecionado"
-      >
+      <tr *ngFor="let autorizacion of getPaginateData(); let i = index"
+        [class.table-active]="autorizacion.id_cliente == clienteSelecionado">
+        <td [ngClass]="{ 
+          'border-primary'  : autorizacion.id_estado_auto == 10,
+          'border-success' : autorizacion.id_estado_auto == 12, 
+          'border-danger'  : autorizacion.id_estado_auto == 11
+        }">
         <td class="text-center hover">
           {{ autorizacion.fecha_creacion | date : 'dd/MM/yyyy' }}
         </td>
@@ -227,7 +236,7 @@
         <td class="text-center hover" *ngIf="autorizacion.estado_oferta === 'PENDIENTE'" style="color: blue;">
           {{ autorizacion.estado_oferta | uppercase }}
         </td> -->
-        <td>
+        <td class="text-center">
           <a
             class="dropdown-item"
             routerLink="/modal-autorizacion"
@@ -236,13 +245,13 @@
             <i class="fas fa-file"></i
             ><span class="text-uppercase"> Detalles</span>
           </a>
-          <a
+          <!-- <a
             class="dropdown-item"
             routerLink="/vista"
             (click)="onVista(autorizacion.id_oferta)"
           >
             <i class="fas fa-eye"></i><span class="text-uppercase"> Vista</span>
-          </a>
+          </a> -->
         </td>
       </tr>
     </ng-template>

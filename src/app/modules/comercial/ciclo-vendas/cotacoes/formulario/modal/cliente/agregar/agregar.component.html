@@ -165,10 +165,10 @@
                                     message="Este campo es requerido."></invalid-form-control>
                                     </div>
                                     <div class="col-md-6" *ngIf="swDireccionContacto === true">
-                                        <label for=""> <strong> Dirección  <span class="text-danger" style="font-size: 9px;">(Use el mapa)</span> </strong>
+                                        <label for=""> <strong> Dirección  <span class="text-danger" style="font-size: 9px;">*</span> </strong>
                                         </label>
                                         <input type="text" class="form-control" formControlName="direccion_contacto" [ngClass]="onFieldError('direccion_contacto') + ' ' + onFieldRequired('direccion_contacto')"
-                                        placeholder="Puede escribir aquí, o agregar ubicación por el mapa." readonly>
+                                        placeholder="Puede escribir aquí, o agregar ubicación por el mapa." >
                                         <invalid-form-control [show]="onFieldInvalid('direccion_contacto') == 'required'"
                                     message="Este campo es requerido/ Max. 50 caracteres."></invalid-form-control>
                                     </div>
@@ -218,9 +218,9 @@
                                     message="Este campo es requerido."></invalid-form-control> -->
                                     </div>
                                     <div class="col-md-12"*ngIf="swDireccion === true">
-                                        <label for=""> <strong> Dirección <span class="text-danger" style="font-size: 9px;">(Use el mapa)</span> </strong>
+                                        <label for=""> <strong> Dirección <span class="text-danger" style="font-size: 9px;">*</span> </strong>
                                         </label>
-                                        <input type="text" class="form-control" formControlName="direccion" [ngClass]="onFieldError('direccion') + ' ' + onFieldRequired('direccion')"  placeholder="Puede escribir aquí, o agregar ubicación por el mapa." readonly>
+                                        <input type="text" class="form-control" formControlName="direccion" [ngClass]="onFieldError('direccion') + ' ' + onFieldRequired('direccion')"  placeholder="Puede escribir aquí, o agregar ubicación por el mapa." >
                                         <invalid-form-control [show]="onFieldInvalid('direccion') == 'required'"
                                     message="Este campo es requerido/ Max. 50 caracteres."></invalid-form-control>
                                     </div>

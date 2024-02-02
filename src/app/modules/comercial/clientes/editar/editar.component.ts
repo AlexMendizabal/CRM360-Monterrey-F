@@ -531,6 +531,11 @@ export class EditarClienteComponent implements OnInit {
     } */
   }
 
+  /* actualizarInput(form, value){
+    form.control.get(form).setValue(value);
+
+  }
+ */
   prepararPeticion() {
     // @ts-ignore: Ignorar error TS2339
     var idClienteInput = document.getElementById('id_cliente').value;
@@ -562,6 +567,8 @@ export class EditarClienteComponent implements OnInit {
     var idRubroInput = document.getElementById('id_rubro').value;
     // @ts-ignore: Ignorar error TS2339
     var idEstadoInput = document.getElementById('id_estado').value;
+
+    console.log(celularInput);
     const tipoPessoaOptions = {
       S: 'Sociedades',
       P: 'Privado',
@@ -594,7 +601,10 @@ export class EditarClienteComponent implements OnInit {
       id_rubro: idRubroInput,
       id_estado: idEstadoInput,
       frontend: 1,
+      ciudad: ubicacion[0]['ciudad']
     };
+
+    console.log(data);
 
     // Especifica los campos requeridos
     const requiredFields = [

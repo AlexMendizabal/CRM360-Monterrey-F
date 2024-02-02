@@ -205,7 +205,7 @@
                   </ng-select>
                 </div>
                 <div class="form-group col-md-12 " >
-                  <label for="direccion">Direccion <span class="text-danger" style="font-size: 9px;">(Use el mapa)</span> </label>
+                  <label for="direccion">Direccion <span class="text-danger" style="font-size: 9px;">*</span> </label>
                   <input type="text" class="form-control" id="direccion" formControlName="" (input)="onInput()"
                     [(ngModel)]="ubicacionForm.direccion" 
                     [value]="ubicacionForm.direccion" (ngModelChange)="actualizarDireccion($event, i, 1)" placeholder="Utilice el mapa para agregar dirección." readonly>
@@ -224,7 +224,7 @@
                 <div class="form-group col-md-3" *ngIf="ubicacionForm.swActivarLatitud === true">
                   <label for="ciudadUbi">Longitud</label>
                   <input type="text" class="form-control" id="titulo_ubicacion" formControlName="longitud"
-                    (input)="onInput()" [(ngModel)]="ubicacionForm.longitud" [value]="ubicacionForm.longitud" readonly>
+                    (input)="onInput()" [(ngModel)]="ubicacionForm.longitud" [value]="ubicacionForm.longitud">
                 </div>
               </div>
             </div>
@@ -285,7 +285,7 @@
                         (ngModelChange)="actualizarContacto($event, 6 , i)" min="0">
                     </div>
                     <div class="form-group col-md-6 mt-2">
-                      <label for="direccion_contacto">DIRECCIÓN DE CONTACTO  <span class="text-danger" style="font-size: 9px;">(Use el mapa)</span> </label>
+                      <label for="direccion_contacto">DIRECCIÓN DE CONTACTO  <span class="text-danger" style="font-size: 9px;">*</span> </label>
                       <input type="text" class="form-control" id="direccion_contacto"
                         formControlName="direccion_contacto" (input)="onInput()"
                         [value]="contactoForm.direccion_contacto" (ngModelChange)="actualizarContacto($event, 7,  i)"
