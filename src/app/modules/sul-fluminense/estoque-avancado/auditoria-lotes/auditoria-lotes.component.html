@@ -473,7 +473,7 @@
       </custom-table>
     </div>
     <div class="mt-3" *ngIf="this.listaAuditoria?.length > 15 && !carregando && !listaVazia">
-      Exibindo {{ begin + 1 }} a {{ end }} de {{ this.listaAuditoria?.length }}
+      Total {{ begin + 1 }} a {{ end }} de {{ this.listaAuditoria?.length }}
       <div class="d-flex">
         <pagination
           [maxSize]="10"

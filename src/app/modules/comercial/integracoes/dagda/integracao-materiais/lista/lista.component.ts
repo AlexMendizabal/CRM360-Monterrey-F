@@ -85,11 +85,7 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
     {
       cd: 300,
       ds: '300',
-    },
-    {
-      cd: 400,
-      ds: '400',
-    },
+    }, 
   ];
 
   integrados = [
@@ -266,11 +262,10 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
             if (response.status != 200) {
               this.dadosEmpty = true;
               this.noResult = false;
-              this.pnotify.notice('Nenhum resgistro foi encontrado!');
+              this.pnotify.notice('¡No se encontraron registros!');
               this.listas = [];
               return;
             }
-            console.log('datos',response.body['data']);
             this.listas = response.body['data'];
             this.totalItems = response.body['data'].length;
             this.noResult = true;
@@ -440,7 +435,7 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
             });
           }
         } else {
-          this.pnotify.notice('Nenhuma associação encontrada!');
+          this.pnotify.notice('¡No se encontraron asociaciones!');
           this.detalhes = [];
           this.dadosEmptyDetalhes = true;
           this.getAssociacao(0);

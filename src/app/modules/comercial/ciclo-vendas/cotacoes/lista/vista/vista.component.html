@@ -376,7 +376,7 @@
                 <div class="card-header">
                   <h5>DETALLE</h5>
                 </div>
-                <div class="card-body table-container" style="overflow: hidden;">
+                <div class="card-body table-container" >
                   <table class="table table-striped">
                     <thead>
                       <tr>
@@ -474,7 +474,7 @@
                       formControlName="descripcion"
                       class="form-control mt-2"
                       id="description"
-                      value="{{ $item.descripcion }}"
+                      [value]="item?.descripcion"
                     />
                   </div>
                 </div>

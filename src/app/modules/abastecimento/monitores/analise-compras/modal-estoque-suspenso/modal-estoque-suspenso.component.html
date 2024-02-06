@@ -109,7 +109,7 @@
       </custom-table>
     </div>
     <div class="mt-2 mb-2" *ngIf="dadosEstoqueSuspensoInventario?.length > itemsPerPage">
-      Exibindo {{ beginA + 1 }} a {{ endA }} de
+      Total {{ beginA + 1 }} a {{ endA }} de
       {{ dadosEstoqueSuspensoInventario?.length }}
       <div class="d-flex">
         <pagination [maxSize]="10" [totalItems]="dadosEstoqueSuspensoInventario?.length"
@@ -209,7 +209,7 @@
     <div class="mt-2 mb-2" *ngIf="
         dadosEstoqueSuspensoEntradaMaterial?.length > itemsPerPage
       ">
-      Exibindo {{ beginB + 1 }} a {{ endB }} de
+      Total {{ beginB + 1 }} a {{ endB }} de
       {{ dadosEstoqueSuspensoEntradaMaterial?.length }}
       <div class="d-flex">
         <pagination [maxSize]="10" [totalItems]="dadosEstoqueSuspensoEntradaMaterial?.length"
@@ -289,7 +289,7 @@
       </custom-table>
     </div>
     <div class="mt-2 mb-2" *ngIf="dadosEstoqueSuspensoInventario?.length > itemsPerPage">
-      Exibindo {{ beginC + 1 }} a {{ endC }} de
+      Total {{ beginC + 1 }} a {{ endC }} de
       {{ dadosEstoqueSuspensoInventario?.length }}
       <div class="d-flex">
         <pagination [maxSize]="10" [totalItems]="dadosEstoqueSuspensoInventario?.length"

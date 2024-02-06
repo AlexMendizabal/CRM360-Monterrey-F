@@ -12,6 +12,7 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import {
+  FormControl,
   FormBuilder,
   FormGroup,
   Validators,
@@ -26,6 +27,7 @@ import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { esLocale } from 'ngx-bootstrap/locale';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { RouterService } from './../../../../../shared/services/core/router.service';
 
 defineLocale('es', esLocale);
 
@@ -89,6 +91,8 @@ export class ComercialCicloVendasCotacoesListaComponent
   cotacaoDesdobradaSubscription: Subscription;
   trocarEmpresaSubscription: Subscription;
 
+  $activateRoutedSubscription: Subscription;
+
   situacoes = [
     { id: '', nombre: 'Todos' },
     { id: 1, nombre: 'Borrador' },
@@ -96,10 +100,23 @@ export class ComercialCicloVendasCotacoesListaComponent
     { id: 13, nombre: 'Cerrado' },
     { id: 14, nombre: 'Abierto' },
   ];
-  formGroup: FormGroup;
-  selectedSituacao = this.situacoes[0];
-  breadCrumbTree: Array<Breadcrumb> = [];
+  situacao = [
+    {
+      cd: '',
+      ds: 'Todos',
+    },
+    {
+      cd: '0',
+      ds: 'Inactivo',
+    },
+    {
+      cd: '1',
+      ds: 'Activo',
+    },
+  ];
 
+  breadCrumbTree: Array<Breadcrumb> = [];
+  spinnerFullScreen: boolean = true;
   subtitles: Array<Subtitles> = [];
   leyendas: Array<Subtitles> = [];
 
@@ -120,7 +137,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   orderType = 'DESC';
 
   nrCliente: number;
-  codSituacao: number;
+
   pedidoTransferido: number;
   imprimirSeparacao: number;
   empresas: Array<any> = [];
@@ -132,6 +149,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   resultFromParent: any;
   result: [];
+  clientes: [];
   analiticos: any[];
 
   items: Array<any> = [];
@@ -152,6 +170,33 @@ export class ComercialCicloVendasCotacoesListaComponent
     },
   };
 
+  reg = [
+    {
+      cd: 10,
+      ds: '10',
+    },
+    {
+      cd: 25,
+      ds: '25',
+    },
+    {
+      cd: 50,
+      ds: '50',
+    },
+    {
+      cd: 100,
+      ds: '100',
+    },
+    {
+      cd: 200,
+      ds: '200',
+    },
+    {
+      cd: 300,
+      ds: '300',
+    }, 
+  ];
+
   modalRef: BsModalRef;
   modalRef2: BsModalRef;
   loadingModal = false;
@@ -166,12 +211,16 @@ export class ComercialCicloVendasCotacoesListaComponent
   activeCotacao: ICotacao;
 
   maxSize = 10;
-  itemsPerPage = 25;
-  currentPage = 1;
-  totalItems = 0;
   totalModal = 0;
   itemsPerPageModal = 25;
   currentPageModal = 1;
+
+  /* Paginação */
+  itemsPerPage: number = 10;
+  totalItems: number;
+  currentPage: number = 1;
+  begin: number = 0;
+  end: number = this.itemsPerPage;
 
   swOfertaVencida: boolean = false;
 
@@ -189,6 +238,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     private location: Location,
     private localeService: BsLocaleService,
     private formBuilder: FormBuilder,
+    private routerService: RouterService,
     private authService: AuthService,
     private pnotifyService: PNotifyService,
     private dateService: DateService,
@@ -232,23 +282,22 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.setFormFilter();
     this.verificarOfertaNotificacion();
     this.titleService.setTitle('Ofertas');
-    this.onDetailPanelEmitter();
-    this.detalhesCodCliente =
-      this.activatedRoute.snapshot.queryParams['codCliente'];
-    this.search(null);
+    
+   /*  this.onDetailPanelEmitter(); */
+    this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente'];
+    this.getActiveRoute();
     this.getVendedores();
-    this.formGroup = this.formBuilder.group({
-      codSituacao: [this.selectedSituacao],
-    });
     this.verificarOFertas();
-    this.result = this.resultFromParent;
-    this.analiticos = this.resultFromParent.analitico;
+    this.onSubscription();
+    /* this.result = this.resultFromParent; */
+    /*this.analiticos = this.resultFromParent.analitico; */
   }
 
   ngOnDestroy(): void {
-    this.unsetLoaderEvents();
-    this.unsetChangeEvents();
-    this.activatedRouteSubscription.unsubscribe();
+   /*  this.unsetLoaderEvents();
+    this.unsetChangeEvents(); */
+    this.$activateRoutedSubscription.unsubscribe();
+    /* this.activatedRouteSubscription.unsubscribe(); */
     this.showDetailPanelSubscription.unsubscribe();
   }
 
@@ -410,7 +459,14 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.trocarEmpresaSubscription.unsubscribe();
   }
 
-  onDetailPanelEmitter(): void {
+  onSubscription() {
+    this.showDetailPanelSubscription =
+      this.detailPanelService.config.subscribe((event: any) => {
+        this.showDetailPanel = event.showing;
+      });
+  }
+
+  /* onDetailPanelEmitter(): void {
     this.showDetailPanelSubscription = this.detailPanelService.config.subscribe(
       (event: any) => {
         this.showDetailPanel = event.showing;
@@ -420,7 +476,7 @@ export class ComercialCicloVendasCotacoesListaComponent
         }
       }
     );
-  }
+  } */
 
   checkUserProfile(): void {
     const profile = this.activatedRoute.snapshot.data.profile.result;
@@ -502,16 +558,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       )
       .subscribe(
         (response: any | JsonResponse[]) => {
-          /* this.situacoes = response[0].data || [];
-
-          this.situacoes.unshift({
-            codParametroSituacaoProposta: 0,
-            situacaoProposta: 'EXIBIR TODOS',
-          });
-
- */
-          /*           console.log(response);
-           */ this.situacoes = [
+         this.situacoes = [
             {
               id: '',
               nombre: 'Todos',
@@ -576,7 +623,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   setFormFilter(): void {
     const formValue: any = this.checkRouterParams();
-
+   
     this.form = this.formBuilder.group({
       tipoData: [formValue.tipoData],
       dataInicial1: [formValue.dataInicial1],
@@ -586,11 +633,12 @@ export class ComercialCicloVendasCotacoesListaComponent
       codEmpresa: [formValue.codEmpresa, [Validators.required]],
       codEmpresaAdd: [formValue.codEmpresa],
       codDeposito: [formValue.codDeposito, [Validators.required]],
-      codSituacao: [formValue.codSituacao],
+      status: [null],
       cliente: [formValue.cliente],
       codVendedor: [formValue.codVendedor, [Validators.required]],
       pagina: [formValue.pagina],
-      registros: [this.itemsPerPage, Validators.required],
+     /*  codSituacao: [this.selectedSituacao], */
+      registros: 10,
       statusCliente: ['Ativo'],
     });
 
@@ -610,14 +658,14 @@ export class ComercialCicloVendasCotacoesListaComponent
       codEmpresa: null,
       codEmpresaAdd: null,
       codDeposito: null,
-      codSituacao: null,
+      status: 1,
       cliente: null,
       codVendedor: null,
       pagina: 1,
       registros: this.itemsPerPage,
     };
 
-    this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
+   /*  this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
       (queryParams: any) => {
         if (Object.keys(queryParams).length > 0) {
           let params = atob(queryParams.q);
@@ -654,7 +702,7 @@ export class ComercialCicloVendasCotacoesListaComponent
           this.activatedRouteSubscription.unsubscribe();
         }
       }
-    );
+    ); */
 
     // Esto debería estar fuera del bloque de la suscripción
     // this.activatedRouteSubscription.unsubscribe();
@@ -711,27 +759,19 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   setOrderBy(column: string) {
-    console.log(column);
     if (this.orderBy === column) {
-      this.orderType = this.orderType === 'asc' ? 'desc' : 'asc'; // Cambiar el tipo de orden si se hace clic nuevamente en la misma columna
+      if (this.orderType == 'desc') {
+        this.orderType = 'asc';
+      } else if (this.orderType == 'asc') {
+        this.orderType = 'desc';
+      }
     } else {
       this.orderBy = column;
-      this.orderType = 'asc'; // Establecer el orden ascendente por defecto al hacer clic en una nueva columna
+      this.orderType = 'asc';
     }
-
-    this.dados.sort((a, b) => {
-      const valueA = a[column]; /* .toUpperCase(); */
-      const valueB = b[column]; /* .toUpperCase() */
-      /*       console.log(this.datos);
-            console.log(column); */
-      if (valueA < valueB) {
-        return this.orderType === 'asc' ? -1 : 1;
-      }
-      if (valueA > valueB) {
-        return this.orderType === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
+    this.form.get('orderBy').setValue(this.orderBy);
+    this.form.get('orderType').setValue(this.orderType);
+    this.onFilter();
   }
 
   setOrderByModal(column: string) {
@@ -760,23 +800,60 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   onFilter(): void {
     /* if (this.form?.valid) { */
-    this.itemsPerPage = this.form.value.registros;
-    this.currentPage = 1;
-
-    this.detailPanelService.hide();
-
-    this.setRouterParams(this.getFormFilterValues());
-    /* } */
-    return;
+      this.loaderNavbar = true;
+      this.detailPanelService.hide();
+      if (this.form.value['registros']) {
+        this.itemsPerPage = this.form.value['registros'];
+        this.end = this.form.value['registros'];
+      }
+      this.router.navigate([], {
+        relativeTo: this.activatedRoute,
+        queryParams: this.routerService.setBase64UrlParams(this.getParams()),
+      });
   }
 
-  setRouterParams(params: any): void {
+    
+  getActiveRoute() {
+    this.spinnerFullScreen = true;
+    this.$activateRoutedSubscription =
+      this.activatedRoute.queryParams.subscribe((response) => {
+        if (Object.keys(response).length > 0) {
+          const _response = this.routerService.getBase64UrlParams(response);
+          this.form.patchValue(_response);
+        }
+      this.search(this.getParams());
+      });
+  }
+
+  getParams() {
+    let _params = {};
+    let _obj = this.form.value;
+
+    for (let prop in _obj) {
+      if (_obj[prop]) {
+        if (_obj[prop] instanceof Date)
+          _params[prop] = this.dateService
+            .convertToBrazilianDate(_obj[prop])
+            .substring(0, 10);
+        else _params[prop] = _obj[prop];
+      }
+    }
+
+    return _params;
+  }
+
+
+
+
+/*   setRouterParams(params: any): void {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: { q: btoa(JSON.stringify(params)) },
     });
-    this.search(params);
-  }
+    
+    this.search(this.getParams());
+  } */
+
 
   getFormFilterValues(): Object {
     let params: any = {};
@@ -809,10 +886,10 @@ export class ComercialCicloVendasCotacoesListaComponent
       );
     }
 
-    if (this.form.value.codSituacao) {
+   /*  if (this.form.value.codSituacao) {
       params.codSituacao = this.form.value.codSituacao.id;
           console.log("situacion",params.codSituacao); 
-    }
+    } */
 
     if (this.form.value.codigo_oferta) {
       params.codigo_oferta = this.form.value.codigo_oferta;
@@ -830,7 +907,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     }
 
     if (this.form.value.cliente) {
-      params.cliente = this.form.value.cliente;
+      params.cliente = this.form.value.cliente.id_cliente;
     }
 
     if (this.form.value.codVendedor) {
@@ -851,7 +928,6 @@ export class ComercialCicloVendasCotacoesListaComponent
 
     params.orderBy = this.orderBy;
     params.orderType = this.orderType;
-    console.log(params);
     return params;
   }
 
@@ -874,13 +950,12 @@ export class ComercialCicloVendasCotacoesListaComponent
       }
     }
   }
-  clientesArray: string[] = [];
+
   search(params: any): void {
     this.loaderNavbar = true;
     this.dados = [];
     this.dadosLoaded = true;
     this.dadosEmpty = false;
-
     this.cotacoesService
       .getOfertas(params)
       .pipe(
@@ -893,29 +968,18 @@ export class ComercialCicloVendasCotacoesListaComponent
         next: (response: any) => {
           if (response.responseCode === 200) {
             this.loaderNavbar = false;
-
+            this.dadosLoaded = false;
+            this.spinnerFullScreen = false;
             this.dados = response.result;
-            const uniqueClientes = new Set<string>();
-
-            for (const pedido of this.dados) {
-              uniqueClientes.add(pedido.prim_nome);
-            }
-            this.clientesArray = Array.from(uniqueClientes);
-
-           
-          /*   for (const pedido of this.dados) {
-               this.agregarCliente(pedido.id_cliente,pedido.prim_nome);
-            }
-            */
-
-            
+            this.clientes = response.clientes;
             this.totalItems = this.dados.length;
           } else {
             this.loaderNavbar = false;
             this.pnotifyService.notice('Ningún registro encontrado');
-            this.dadosEmpty = true;
+            this.dadosEmpty = false;
           }
         },
+        error: (error) => this.pnotifyService.error(),
       });
   }
 
@@ -945,18 +1009,19 @@ export class ComercialCicloVendasCotacoesListaComponent
       nrPedido: null,
       codEmpresa: null,
       codDeposito: null,
-      codSituacao: 0,
+      status: 0,
       cliente: null,
-      codVendedor: 0,
-      pagina: 1,
-      registros: this.itemsPerPage,
+      codVendedor: null,
+      pagina:  this.currentPage,
+      registros: 10,
       statusCliente: 'Ativo',
     });
   }
 
   onPageChanged(event: PageChangedEvent): void {
-    this.currentPage = event.page;
-    this.getPaginateData();
+    console.log('aqui',event);
+    this.begin = (event.page - 1) * event.itemsPerPage;
+    this.end = event.page * event.itemsPerPage;
   }
 
   getPaginateData(): any[] {
@@ -988,7 +1053,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   viewRegister(index: number, cotacao: ICotacao): void {
     this.loaderNavbar = true;
-    this.codSituacao = cotacao.codSituacao;
+   /*  this.codSituacao = cotacao.codSituacao; */
     this.pedidoTransferido = cotacao.pedidoTransferido;
     this.imprimirSeparacao = cotacao.imprimirSeparacao;
 
@@ -1567,30 +1632,20 @@ export class ComercialCicloVendasCotacoesListaComponent
     return cep;
   }
 
-  onFieldError(field: string): string {
-    if (this.onFieldInvalid(field) != '') {
+  onFieldError(field: string) {
+    if (this.onFieldInvalid(field)) {
       return 'is-invalid';
     }
-
     return '';
   }
 
-  onFieldInvalid(field: any): string {
+
+  onFieldInvalid(field: any) {
     field = this.form.get(field);
-    if (field.errors != null) {
-      if (field.errors.hasOwnProperty('required') && field.touched) {
-        return 'required';
-      }
-
-      if (field.errors.hasOwnProperty('maxDate') && field.touched) {
-        return 'maxDate';
-      }
-    }
-    //return field.status == 'INVALID' && field.touched;
-    return '';
+    return field.status == 'INVALID' && field.touched;
   }
 
-  onFieldRequired(
+ /*  onFieldRequired(
     abstractControl: AbstractControl,
     abstractControlField?: string
   ): string {
@@ -1615,8 +1670,21 @@ export class ComercialCicloVendasCotacoesListaComponent
     }
 
     return '';
-  }
+  } */
+  onFieldRequired(field: string) {
+    let required = false;
+    let formControl = new FormControl();
 
+    if (this.form.controls[field].validator) {
+      let validationResult = this.form.controls[field].validator(formControl);
+      required =
+        validationResult !== null && validationResult.required === true;
+    }
+
+    if (required) {
+      return 'is-required';
+    }
+  }
   onEnviarSap(nmpedido: number): void {
     this.loaderNavbar = true;
     this.cotacoesService.getenviarsap(nmpedido)

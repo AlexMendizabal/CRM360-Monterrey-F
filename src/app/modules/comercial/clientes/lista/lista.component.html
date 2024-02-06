@@ -204,8 +204,9 @@
           <tr *ngFor="let cliente of clientes" [class.table-active]="cliente.codigo_cliente == clienteSelecionado">
             <td class="text-center hover" [ngClass]="classStatusBorder(cliente.situacao)"
               >
-              <i class="text-warning fas fa-check-square mr-3" *ngIf="cliente.tieneOferta.result"
-              tooltip="Cliente tiene Oferta" placement="right"></i>
+              <i class="text-primary fas fa-check-square mr-3" *ngIf="cliente.tieneOferta.result"
+                tooltip="Cliente tiene Oferta" placement="right"></i>
+
             <i class="text-black-50 far fa-check-square mr-3" *ngIf="!cliente.tieneOferta.result"
               tooltip="Cliente no tiene oferta" placement="right"></i>
 

@@ -41,22 +41,23 @@
               id="dataInicial2"
               type="text"
               bsDatepicker
-              [bsConfig]="bsConfig"
+              labelForId="dataInicial2"
               formControlName="dataInicial2"
             />
           </div>
 
           <div class="form-group col-lg-3">
-            <label for="codSituacao">Situacion</label>
+            <label for="status"> ESTADO </label>
             <ng-select
-              [items]="situacoes"
               [searchable]="true"
-              [clearable]="false"
-              labelForId="id"
+              [clearable]="true"
+              [items]="situacoes"
+              [virtualScroll]="true"
+              labelForId="status"
               bindLabel="nombre"
-              formControlName="codSituacao"
-              [(ngModel)]="selectedSituacao"
-              class="custom-ng-select"
+              bindValue="id"
+              placeholder="Selecione..."
+              formControlName="status"
             >
             </ng-select>
           </div>
@@ -86,65 +87,58 @@
 
           <div class="form-group col-lg-3">
             <label for="codVendedor">Vendedor</label>
-            <!--  <select
-              class="form-control"
-              name="codVendedor"
-              id="codVendedor"
-              formControlName="codVendedor"
-            >
-             
-              <option *ngFor="let vendedor of vendedores" [value]="vendedor.ID">
-                {{ vendedor.nombre }}
-              </option>
-            </select> -->
             <ng-select
               [items]="vendedores"
               [searchable]="true"
-              [clearable]="false"
+              [clearable]="true"
               labelForId="ID"
+              bindValue="ID"
               bindLabel="nombre"
               formControlName="codVendedor"
-              [(ngModel)]="defaultSelection"
+              placeholder="Seleccione un vendedor"
+              notFoundText="No se encontraron resultados"
             >
             </ng-select>
           </div>
 
           <div class="form-group col-lg-4">
             <label for="cliente">Clientes</label>
-              <ng-select
-                class=""
-                name="cliente"
-                id="id_cliente"
-                formControlName="cliente"
-                [items]="clientesArray"
-                bindLabel="name"  
-                placeholder="Selecciona un cliente"
-                notFoundText="No se encontraron resultados"
-                search
-              >
-              <ng-template ng-option-tmp let-item="item">
-                {{ item | uppercase }}
-              </ng-template>
+            <ng-select
+              [items]="clientes"
+              [searchable]="true"
+              [clearable]="true"
+              labelForId="id_cliente"
+              bindValue="id_cliente"
+              bindLabel="nombre"
+              formControlName="cliente"
+              placeholder="Selecciona un cliente"
+              notFoundText="No se encontraron resultados"
+            >
             </ng-select>
           </div>
-          
-          <div
-            class="form-group"
-            [ngClass]="{
-              'col-lg-2': !filtroCotacoes,
-              'col-lg-1': filtroCotacoes
-            }"
-          >
-            <label for="registros">Registros</label>
-            <select
-              class="form-control custom-select"
-              id="registros"
+
+          <div class="form-group">
+            <label for="registros"> Registros </label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="reg"
+              [virtualScroll]="true"
+              labelForId="registros"
+              bindLabel="ds"
+              bindValue="cd"
+              placeholder="Selecione..."
               formControlName="registros"
+              [ngClass]="
+                onFieldError('registros') + ' ' + onFieldRequired('registros')
+              "
             >
-              <option>25</option>
-              <option>50</option>
-              <option>100</option>
-            </select>
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('registros')"
+              message="Los registros son obligatorios"
+            >
+            </invalid-form-control>
           </div>
         </div>
         <div class="form-row">
@@ -430,11 +424,18 @@
           </ng-template>
         </custom-table>
         <div class="d-flex justify-content-center mt-3">
+          Total {{ itemsPerPage * (currentPage - 1) + 1 }} a
+          {{
+            currentPage * itemsPerPage > totalItems
+              ? totalItems
+              : currentPage * itemsPerPage
+          }}
+          de {{ totalItems }}
           <pagination
-            [maxSize]="maxSize"
-            [(totalItems)]="totalItems"
-            (pageChanged)="onPageChanged($event)"
+            [maxSize]="10"
+            [totalItems]="totalItems"
             [(itemsPerPage)]="itemsPerPage"
+            (pageChanged)="onPageChanged($event)"
             [boundaryLinks]="true"
             [(ngModel)]="currentPage"
             previousText="&lsaquo;"
@@ -735,24 +736,21 @@
                           </ng-container>
                         </ng-template>
                       </custom-table>
-                      <empty-result
-                        message="Ningún registro encontrado."
-                        *ngIf="dadosEmptyModal"
-                      ></empty-result>
-                      <div class="d-flex justify-content-center mt-3">
-                        <pagination
-                          [maxSize]="maxSize"
-                          [(totalItems)]="totalModal"
-                          (pageChanged)="onPageChangedModal($event)"
-                          [(itemsPerPage)]="itemsPerPageModal"
-                          [boundaryLinks]="true"
-                          [(ngModel)]="currentPageModal"
-                          previousText="&lsaquo;"
-                          nextText="&rsaquo;"
-                          firstText="&laquo;"
-                          lastText="&raquo;"
-                        >
+                      <div class="mt-3" [hidden]="!noResult">
+                         <pagination
+                            [maxSize]="10"
+                            [totalItems]="totalItems"
+                            [(itemsPerPage)]="itemsPerPage"
+                            (pageChanged)="onPageChanged($event)"
+                            [boundaryLinks]="true"
+                            [(ngModel)]="currentPage"
+                            previousText="&lsaquo;"
+                            nextText="&rsaquo;"
+                            firstText="&laquo;"
+                            lastText="&raquo;">
                         </pagination>
+                        <empty-result message="Ningún registro encontrado." *ngIf="dadosEmptyModal">
+                        </empty-result>
                       </div>
                     </div>
                   </div>

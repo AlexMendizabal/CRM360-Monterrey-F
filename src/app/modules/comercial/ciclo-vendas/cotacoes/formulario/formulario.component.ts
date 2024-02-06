@@ -1456,37 +1456,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           }
 
           const borrador = 0;
-          /* const dataCotacao = {
-            codCotacao: formValue.codCotacao,
-            tipoCotacao: formValue.tipoCotacao,
-            codSituacao: Number(formValue.codSituacao),
-            situacao: situacao,
-            codCliente: formValue.codCliente,
-            razaoSocial: formValue.razaoSocial,
-            codEndereco: formValue.codEndereco,
-            codContato: formValue.codContato,
-            codEmpresa: formValue.codEmpresa,
-            codDeposito: formValue.codDeposito,
-            notaFiscalMae: Number(formValue.notaFiscalMae),
-            codFormaPagamento: formValue.codFormaPagamento,
-            id_lista_precio: formValue.lista,
-            duplicatasSomenteCarteira: formValue.duplicatasSomenteCarteira,
-            dataEntrega: formValue.dataEntrega,
-            dataEncerramento: formValue.dataEncerramento,
-            dataValidade: formValue.dataValidade,
-            codFormaContato: formValue.codFormaContato,
-            codOrigemContato: formValue.codOrigemContato,
-            dadosAdicionais: formValue.dadosAdicionais,
-            freteConta: formValue.freteConta,
-            codTransportadora: formValue.codTransportadora,
-            observacoes: formValue.observacoes,
-            carrinho: this.materiais,
-            idSubModulo: this.activatedRoute.snapshot.params.idSubModulo,
-            valorProposta: this.valorProposta,
-            valorIcmsSt: this.valorIcmsSt,
-            profile: this.activatedRoute.snapshot.data.profile.result
-          }; */
-
           const dataCotizacion = {
             monto_total: this.valorProposta,
             monto_total_bruto: this.valorPropuestaBruto,

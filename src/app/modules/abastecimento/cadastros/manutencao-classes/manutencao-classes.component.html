@@ -209,7 +209,7 @@
     </custom-table>
   </div>
   <div class="col-12 mt-2" *ngIf="data.length > itemsPerPage && loading">
-    Exibindo {{ begin + 1 }} a {{ end }} de {{ data?.length }}
+    Total {{ begin + 1 }} a {{ end }} de {{ data?.length }}
     <div class="d-flex">
       <pagination
         [maxSize]="10"

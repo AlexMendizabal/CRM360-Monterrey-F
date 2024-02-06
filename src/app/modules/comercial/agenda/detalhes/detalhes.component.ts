@@ -50,10 +50,14 @@ throw new Error('Method not implemented.');
 
   ];
 
+ 
+
   detalhes: any = {
     status: null
   };
-
+  
+  marca_color = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00';
+  
   imagenes: any = [];
   img: any = [];
   //mostrarElemento: boolean = true;
@@ -65,7 +69,8 @@ throw new Error('Method not implemented.');
   private user = this.authservice.getCurrentUser();
   posiciones: any;
 
-
+  latitud_final: number = 0;
+  longitud_final: number = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -84,10 +89,6 @@ throw new Error('Method not implemented.');
     this.pnotifyService.getPNotify();
 
   }
-
-
-
-
 
   ngOnInit() {
 
@@ -114,6 +115,8 @@ throw new Error('Method not implemented.');
     this.detalhes.observacionFinal = detalhes.observacionFinal;
     this.latitud = detalhes.latitud;
     this.longitud = detalhes.longitud;
+    this.latitud_final = detalhes.latitud_final;
+    this.longitud_final = detalhes.longitud_final;
     this.detalhes.url_web = detalhes.url_web;
 
     this.filtrarPosiciones(detalhes.id)

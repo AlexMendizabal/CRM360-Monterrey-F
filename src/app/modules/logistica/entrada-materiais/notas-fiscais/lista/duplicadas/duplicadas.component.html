@@ -150,7 +150,7 @@
         </custom-table><br>
       </div>
       <div>
-        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItemsDuplicadas ? totalItemsDuplicadas : currentPage*(itemsPerPage) }} de {{ totalItemsDuplicadas }}
+        Total {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItemsDuplicadas ? totalItemsDuplicadas : currentPage*(itemsPerPage) }} de {{ totalItemsDuplicadas }}
         <pagination
           [maxSize]="10"
           [totalItems]="totalItemsDuplicadas"

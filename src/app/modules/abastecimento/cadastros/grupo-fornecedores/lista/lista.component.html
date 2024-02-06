@@ -197,7 +197,7 @@
       class="col-12 mb-2 ml-2"
       *ngIf="!noResult && dados?.length > itemsPerPage"
     >
-      Exibindo {{ begin + 1 }} a {{ end }} de {{ dados?.length }}
+      Total {{ begin + 1 }} a {{ end }} de {{ dados?.length }}
       <div class="d-flex">
         <pagination
           [maxSize]="10"

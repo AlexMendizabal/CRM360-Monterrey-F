@@ -429,7 +429,7 @@
     class="col-12 mb-2 ml-2"
     *ngIf="!noResult && dados?.length > itemsPerPage"
   >
-    Exibindo {{ begin + 1 }} a {{ end }} de {{ dados?.length }}
+    Total {{ begin + 1 }} a {{ end }} de {{ dados?.length }}
     <div class="d-flex">
       <pagination
         [maxSize]="10"
@@ -675,7 +675,7 @@
           class="col-12 mb-2 ml-2"
           *ngIf="!noResultDetalhes && dadosDetalhes?.length > itemsPerPage"
         >
-          Exibindo {{ beginA + 1 }} a {{ endA }} de {{ dadosDetalhes?.length }}
+          Total {{ beginA + 1 }} a {{ endA }} de {{ dadosDetalhes?.length }}
           <div class="d-flex">
             <pagination
               [maxSize]="10"
@@ -801,7 +801,7 @@
           class="col-12 mb-2 ml-2"
           *ngIf="!noResultLogs && dadosLogs?.length > itemsPerPage"
         >
-          Exibindo {{ beginB + 1 }} a {{ endB }} de {{ dadosLogs?.length }}
+          Total {{ beginB + 1 }} a {{ endB }} de {{ dadosLogs?.length }}
           <div class="d-flex">
             <pagination
               [maxSize]="10"
