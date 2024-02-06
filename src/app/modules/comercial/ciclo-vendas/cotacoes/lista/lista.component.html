@@ -423,27 +423,31 @@
             </tr>
           </ng-template>
         </custom-table>
-        <div class="d-flex justify-content-center mt-3">
-          Total {{ itemsPerPage * (currentPage - 1) + 1 }} a
-          {{
-            currentPage * itemsPerPage > totalItems
-              ? totalItems
-              : currentPage * itemsPerPage
-          }}
-          de {{ totalItems }}
-          <pagination
-            [maxSize]="10"
-            [totalItems]="totalItems"
-            [(itemsPerPage)]="itemsPerPage"
-            (pageChanged)="onPageChanged($event)"
-            [boundaryLinks]="true"
-            [(ngModel)]="currentPage"
-            previousText="&lsaquo;"
-            nextText="&rsaquo;"
-            firstText="&laquo;"
-            lastText="&raquo;"
-          >
-          </pagination>
+        <div class="d-flex flex-column align-items-center mt-3">
+          <div class="d-flex justify-content-center">
+            <pagination
+              [maxSize]="10"
+              [totalItems]="totalItems"
+              [(itemsPerPage)]="itemsPerPage"
+              (pageChanged)="onPageChanged($event)"
+              [boundaryLinks]="true"
+              [(ngModel)]="currentPage"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+            >
+            </pagination>
+          </div>
+          <div class="mb-2">
+            Total {{ itemsPerPage * (currentPage - 1) + 1 }} a
+            {{
+              currentPage * itemsPerPage > totalItems
+                ? totalItems
+                : currentPage * itemsPerPage
+            }}
+            de {{ totalItems }} ofertas
+          </div>
         </div>
       </div>
     </div>
@@ -737,19 +741,23 @@
                         </ng-template>
                       </custom-table>
                       <div class="mt-3" [hidden]="!noResult">
-                         <pagination
-                            [maxSize]="10"
-                            [totalItems]="totalItems"
-                            [(itemsPerPage)]="itemsPerPage"
-                            (pageChanged)="onPageChanged($event)"
-                            [boundaryLinks]="true"
-                            [(ngModel)]="currentPage"
-                            previousText="&lsaquo;"
-                            nextText="&rsaquo;"
-                            firstText="&laquo;"
-                            lastText="&raquo;">
+                        <pagination
+                          [maxSize]="10"
+                          [totalItems]="totalItems"
+                          [(itemsPerPage)]="itemsPerPage"
+                          (pageChanged)="onPageChanged($event)"
+                          [boundaryLinks]="true"
+                          [(ngModel)]="currentPage"
+                          previousText="&lsaquo;"
+                          nextText="&rsaquo;"
+                          firstText="&laquo;"
+                          lastText="&raquo;"
+                        >
                         </pagination>
-                        <empty-result message="Ningún registro encontrado." *ngIf="dadosEmptyModal">
+                        <empty-result
+                          message="Ningún registro encontrado."
+                          *ngIf="dadosEmptyModal"
+                        >
                         </empty-result>
                       </div>
                     </div>

@@ -799,18 +799,26 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   onFilter(): void {
-    /* if (this.form?.valid) { */
-      this.loaderNavbar = true;
-      this.detailPanelService.hide();
-      if (this.form.value['registros']) {
-        this.itemsPerPage = this.form.value['registros'];
-        this.end = this.form.value['registros'];
-      }
-      this.router.navigate([], {
-        relativeTo: this.activatedRoute,
-        queryParams: this.routerService.setBase64UrlParams(this.getParams()),
-      });
+    this.loaderNavbar = true;
+    this.detailPanelService.hide();
+  
+    if (this.form.value['registros']) {
+      this.itemsPerPage = this.form.value['registros'];
+      this.end = this.form.value['registros'];
+    }
+  
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: this.routerService.setBase64UrlParams(this.getParams()),
+    })
+    .catch(error => {
+      console.error('Error during filtering:', error);
+    })
+    .finally(() => {
+      this.loaderNavbar = false;
+    });
   }
+  
 
     
   getActiveRoute() {
