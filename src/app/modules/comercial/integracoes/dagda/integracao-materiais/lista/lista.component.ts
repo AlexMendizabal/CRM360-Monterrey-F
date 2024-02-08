@@ -129,7 +129,7 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
     private detailPanelService: DetailPanelService,
     private associacaoService: ComercialIntegracoesServicosIntegracaoMateriaisComponent
   ) {
-    this.localeService.use('pt-br');
+    this.localeService.use('es');
     this.bsConfig = Object.assign(
       {},
       { containerClass: 'theme-dark-blue' },
@@ -294,7 +294,6 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
         else _params[prop] = _obj[prop];
       }
     }
-
     return _params;
   }
 
@@ -315,10 +314,11 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
   }
 
   onEdit(item) {
-    this.route.navigate(['./', item.ID_MATE_TID], {
+
+  /*   this.route.navigate(['./', item.ID_CODIGOMATERIAL], {
       relativeTo: this.activatedRoute,
       queryParams: this.routerService.setBase64UrlParams(item),
-    });
+    }); */
   }
 
   onEditStatus(param) {
@@ -404,11 +404,12 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
   }
 
   onDetailPanel(param): void {
+    
     if (param.estado== 0) {
       return;
     } else {
       this.detailPanelService.show();
-      this.getDetalhes({codigoMaterial: param.ID_MATE_TID });
+      /* this.getDetalhes({codigoMaterial: param.ID_CODIGOMATERIAL }); */
     }
   }
 
@@ -426,7 +427,8 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
       .subscribe((response) => {
         if (response.status == 200) {
           this.detalhes = response.body['data'];
-          params = { codigoMaterial: this.detalhes[0]['ID_MATE_TID'] };
+          
+         /*  params = { codigoMaterial: this.detalhes[0]['ID_CODIGOMATERIAL'] }; */
           this.dadosEmptyDetalhes = false;
 
           if (this.form.get('cdDagda').value && this.showDetailPanel == false) {
@@ -443,20 +445,19 @@ export class ComercialIntegracoesDagdaIntegracaoMateriaisListaComponent
       });
   }
 
-  deleteAssociacao(i, param): void {
+/*   deleteAssociacao(i, param): void {
     this.detalhes.splice(i, 1);
     const params = {
       idMatTidDagda: param.ID,
-      cdMatTid: param.ID_MATE_TID,
-      cdMatDagda: param.ID_MATE_DAGD,
+      cdMatTid: param.ID_CODIGOMATERIAL,
       user: this.idMtcorp,
     };
 
     this.associacaoService.deleteAssociacao(params).subscribe((response) => {
       this.pnotify.success('Associação removida com sucesso');
-      this.getDetalhes({ codigoMaterial: param.ID_MATE_TID });
+      this.getDetalhes({ codigoMaterial: param.ID_CODIGOMATERIAL });
     });
-  }
+  } */
 
   disableForm() {
     if (this.form.get('cdDagda').value) {

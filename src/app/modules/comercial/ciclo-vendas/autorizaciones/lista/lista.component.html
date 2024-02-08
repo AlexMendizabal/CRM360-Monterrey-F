@@ -9,9 +9,11 @@
    <button type="button" (click)="nuevo()">
     Adicionar
   </button> -->
-  <button type="button" (click)="onFilter()" [disabled]="loaderNavbar">
-    Filtrar
+  <button type="button" (click)="onFilter()" [disabled]="loading">
+    <span *ngIf="loading">Cargando...</span>
+    <span *ngIf="!loading">Filtrar</span>
   </button>
+  
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
   <div #scrollToFilter>
@@ -85,9 +87,9 @@
               formControlName="registros"
               [clearable]="true"
             >
-              <ng-option value="100">100</ng-option>
-              <ng-option value="200">200</ng-option>
-              <ng-option value="300">300</ng-option>
+              <ng-option value="10">10</ng-option>
+              <ng-option value="25">25</ng-option>
+              <ng-option value="50">50</ng-option>
             </ng-select>
 
           </div>

@@ -234,7 +234,7 @@ export class ComercialCicloVendasCotacoesListaComponent
    //this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente'];
     //this.getVendedores();
     this.getDatosAutorizaciones();
-    this.search(null);
+    //this.search(null);
     this.getTodosVendedores();
   }
 
@@ -540,7 +540,7 @@ setRouterParams(params: any): void {
     queryParamsHandling: 'merge',
   });
   this.setSubmittedSearch();
-  this.search(params);
+  // this.search(params);
 }
 
 getFormFilterValues(): Object {
@@ -621,7 +621,7 @@ search(params: any): void {
       })
     )
     .subscribe({
-      next: (response: JsonResponse) => {console.log(params);
+      next: (response: JsonResponse) => {console.log("params2",params);
         if (response.hasOwnProperty('success') && response.success === true) {
           this.datos = response.data;
           this.datosAutorizaciones = this.datos.slice(0, this.itemsPerPage);
@@ -870,6 +870,7 @@ nuevo() {
   if (!this.loading) {
     this.loadingNavBar = false;
   }
+  console.log("params",params);
   this.cotacoesService
     .getAutorizaciones(params)
     .pipe(
@@ -896,45 +897,45 @@ nuevo() {
     );
 }
 
-onVista(id_oferta: number): void {
-  //this.router.navigate([]).then(result => {  window.open("/comercial/ciclo-vendas/23/cotacoes-pedidos/lista/vista", '_blank'); });
+// onVista(id_oferta: number): void {
+//   //this.router.navigate([]).then(result => {  window.open("/comercial/ciclo-vendas/23/cotacoes-pedidos/lista/vista", '_blank'); });
 
-  var params = {
-    "id_oferta": id_oferta
-  };
+//   var params = {
+//     "id_oferta": id_oferta
+//   };
 
-  this.loaderNavbar = true;
-  this.cotacoesService
-    .getDetalleOferta(params)
-    .pipe(
-      finalize(() => {
-        this.loaderNavbar = false;
-      })
-    )
-    .subscribe(
-      (response: JsonResponse) => {
-        if (response.estado === true) {
-          this.modalRef2 = this.modalService.show(VistaComponent, {
-            initialState: { resultFromParent: response.result },
-          });
+//   this.loaderNavbar = true;
+//   this.cotacoesService
+//     .getDetalleOferta(params)
+//     .pipe(
+//       finalize(() => {
+//         this.loaderNavbar = false;
+//       })
+//     )
+//     .subscribe(
+//       (response: JsonResponse) => {
+//         if (response.estado === true) {
+//           this.modalRef2 = this.modalService.show(VistaComponent, {
+//             initialState: { resultFromParent: response.result },
+//           });
 
-          this.modalRef2.content.onClose.subscribe(result => {
-            //console.log('Modal closed with result:', result);
-          });
-        } else {
-          this.pnotifyService.error();
-          //console.log(this.vendedores);
-        }
-      },
-      (error: any) => {
-        if (error.error.hasOwnProperty('mensagem')) {
-          this.pnotifyService.error(error.error.mensagem);
-        } else {
-          this.pnotifyService.error();
-        }
-      }
-    );
-}
+//           this.modalRef2.content.onClose.subscribe(result => {
+//             //console.log('Modal closed with result:', result);
+//           });
+//         } else {
+//           this.pnotifyService.error();
+//           //console.log(this.vendedores);
+//         }
+//       },
+//       (error: any) => {
+//         if (error.error.hasOwnProperty('mensagem')) {
+//           this.pnotifyService.error(error.error.mensagem);
+//         } else {
+//           this.pnotifyService.error();
+//         }
+//       }
+//     );
+// }
 
   getTodosVendedores(): void {
     this.cotacoesService.getTodosVendedores().subscribe(

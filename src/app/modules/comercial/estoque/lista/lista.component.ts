@@ -404,7 +404,6 @@ export class ComercialEstoqueListaComponent implements OnInit {
   }
 
   onPageChangedComprometido(event: PageChangedEvent): void {
-    //console.log(event)
     this.currentPageComprometido = event.page;
     this.getPaginateDataComprometido();
   }
@@ -414,7 +413,6 @@ export class ComercialEstoqueListaComponent implements OnInit {
     this.onGetEstoqueAlmacen();
 }
 
-
   getPaginateDataComprometido(): any[] {
     const startIndex =
       (this.currentPageComprometido - 1) * this.itemsPerPageComprometido;
@@ -422,6 +420,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
     //this.getPaginatedData = this.resuldata.slice(startIndex, endIndex);
     return this.estoqueComprometido.slice(startIndex, endIndex);
   }
+
   getPaginateDataAlmacen(): any[] {
     const startIndex = (this.currentPageAlmacen - 1) * this.itemsPerPageAlmacen;
     const endIndex = startIndex + this.itemsPerPageAlmacen;

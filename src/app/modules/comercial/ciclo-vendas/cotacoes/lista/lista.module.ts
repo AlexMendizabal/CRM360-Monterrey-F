@@ -88,7 +88,6 @@ import { VistaComponent } from './vista/vista.component';
     TemplatesModule,
     ComercialClientesDashboardModule,
     ComercialCicloVendasCotacoesFormularioModule
-
     ],
   exports: [
     ComercialCicloVendasCotacoesListaComponent,
@@ -104,8 +103,6 @@ import { VistaComponent } from './vista/vista.component';
     ComercialCicloVendasCotacoesListaTemplatesButtonImprimirComponent,
     ComercialCicloVendasCotacoesListaTemplatesButtonImprimirSeparacaoComponent,
     ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent
-
-
   ],
   entryComponents: [
     ComercialCicloVendasCotacoesListaModalHistoricoComercialComponent,
@@ -118,7 +115,6 @@ import { VistaComponent } from './vista/vista.component';
     ComercialCicloVendasCotacoesListaModalTrocarClienteComponent,
     ComercialCicloVendasCotacoesListaModalTransfereFaturamentoComponent,
     ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent,
-
   ],
   providers: [
     ComercialCicloVendasCotacoesListaModalHistoricoComercialService,
@@ -130,8 +126,6 @@ import { VistaComponent } from './vista/vista.component';
     ComercialCicloVendasCotacoesListaModalDesdobrarPropostaService,
     ComercialCicloVendasCotacoesListaModalTrocarClienteService,
     ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService
-    
-
   ],
 })
 export class ComercialCicloVendasCotacoesListaModule {}

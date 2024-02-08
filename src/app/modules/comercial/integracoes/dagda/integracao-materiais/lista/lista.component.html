@@ -1,16 +1,14 @@
-<loader-spinner-full-screen *ngIf="spinnerFullScreen"></loader-spinner-full-screen>
+<loader-spinner-full-screen
+  *ngIf="spinnerFullScreen"
+></loader-spinner-full-screen>
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
 <app-header [appTitle]="appTitle">
-<!--   <button
+  <!--   <button
     type="button"
     [routerLink]="['../novo']">
     Adicionar
   </button> -->
-  <button
-    type="button"
-    (click)="onFilter()">
-    Filtrar
-  </button>
+  <button type="button" (click)="onFilter()">Filtrar</button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
   <div class="row" #scrollToFilter>
@@ -24,27 +22,39 @@
                 <ng-template #tooltipLabelDeTemplate>
                   <p class="mb-0">Busca por Código de Material</p>
                 </ng-template>
-                <i class="far fa-question-circle" [tooltip]="tooltipLabelDeTemplate" container="body"></i>
+                <i
+                  class="far fa-question-circle"
+                  [tooltip]="tooltipLabelDeTemplate"
+                  container="body"
+                ></i>
               </label>
               <input
                 type="text"
                 class="form-control"
                 formControlName="codigoMaterial"
-                (keydown.enter)="onFilter()">
+                (keydown.enter)="onFilter()"
+              />
             </div>
             <div class="form-group col-lg-3">
               <label for="Material">
                 <span class="mr-1">Nombre de Material</span>
                 <ng-template #tooltipLabelParaTemplate>
-                  <p class="text-nowrap mb-0">busca por el Nombre de Material</p>
+                  <p class="text-nowrap mb-0">
+                    busca por el Nombre de Material
+                  </p>
                 </ng-template>
-                <i class="far fa-question-circle" [tooltip]="tooltipLabelParaTemplate" container="body"></i>
+                <i
+                  class="far fa-question-circle"
+                  [tooltip]="tooltipLabelParaTemplate"
+                  container="body"
+                ></i>
               </label>
               <input
                 type="text"
                 class="form-control"
                 formControlName="nomMaterial"
-                (keydown.enter)="onFilter()">
+                (keydown.enter)="onFilter()"
+              />
             </div>
             <div class="form-group col-md-6">
               <label for="Departamento">Departamento</label>
@@ -62,97 +72,139 @@
                 formControlName="id_dep"
               >
               </ng-select>
-             
             </div>
             <div class="form-group col-md-3">
-							<label for="status"> ESTADO </label>
-							<ng-select
-								[searchable]="true"
-								[clearable]="true"
-								[items]="situacao"
-								[virtualScroll]="true"
-								labelForId="status"
-								bindLabel="ds"
-								bindValue="cd"
-								placeholder="Selecione..."
-								formControlName="status"
-								[ngClass]="onFieldError('status') + ' ' + onFieldRequired('status')"
-							>
-							</ng-select>
-							<invalid-form-control
-								[show]="onFieldInvalid('status')"
-								message="La situación es obligatoria.">
-							</invalid-form-control>
-						</div>
+              <label for="status"> ESTADO </label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="situacao"
+                [virtualScroll]="true"
+                labelForId="status"
+                bindLabel="ds"
+                bindValue="cd"
+                placeholder="Selecione..."
+                formControlName="status"
+                [ngClass]="
+                  onFieldError('status') + ' ' + onFieldRequired('status')
+                "
+              >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalid('status')"
+                message="La situación es obligatoria."
+              >
+              </invalid-form-control>
+            </div>
             <div class="form-group col-md-3">
-							<label for="registros"> Registros </label>
-							<ng-select
-								[searchable]="true"
-								[clearable]="true"
-								[items]="reg"
-								[virtualScroll]="true"
-								labelForId="registros"
-								bindLabel="ds"
-								bindValue="cd"
-								placeholder="Selecione..."
-								formControlName="registros"
-								[ngClass]="onFieldError('registros') + ' ' + onFieldRequired('registros')"
-							>
-							</ng-select>
-							<invalid-form-control
-								[show]="onFieldInvalid('registros')"
-								message="Registros é obrigatório.">
-							</invalid-form-control>
-						</div>
+              <label for="registros"> Registros </label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="true"
+                [items]="reg"
+                [virtualScroll]="true"
+                labelForId="registros"
+                bindLabel="ds"
+                bindValue="cd"
+                placeholder="Selecione..."
+                formControlName="registros"
+                [ngClass]="
+                  onFieldError('registros') + ' ' + onFieldRequired('registros')
+                "
+              >
+              </ng-select>
+              <invalid-form-control
+                [show]="onFieldInvalid('registros')"
+                message="Registros é obrigatório."
+              >
+              </invalid-form-control>
+            </div>
           </div>
         </form>
       </advanced-filter>
     </div>
   </div>
-	<div class="row">
-    <div [ngClass]="{'col': !showDetailPanel, 'col-7 pr-0': showDetailPanel}">
-      <custom-table [config]="tableConfig" [hidden] = "!noResult">
+  <div class="row">
+    <div [ngClass]="{ col: !showDetailPanel, 'col-7 pr-0': showDetailPanel }">
+      <custom-table [config]="tableConfig" [hidden]="!noResult">
         <ng-template #thead let-thead>
           <tr>
-						<th></th>
-            <th class="text-nowrap" (click)="setOrderBy('ID_MATE_TID')">
-              <thead-sorter value="Cod. MATERIAL" [active]="orderBy == 'ID_MATE_TID'" [sort]="orderType"></thead-sorter>
+            <th></th>
+            <th class="text-nowrap" (click)="setOrderBy('ID_CODIGOMATERIAL')">
+              <thead-sorter
+                value="CODIGOMATERIAL"
+                [active]="orderBy == 'ID_CODIGOMATERIAL'"
+                [sort]="orderType"
+              ></thead-sorter>
             </th>
-						<th (click)="setOrderBy('DESCRICAO')">
-							<thead-sorter value="Material" [active]="orderBy == 'DESCRICAO'" [sort]="orderType"></thead-sorter>
-						</th>
-						<th class="text-left"> DEPARTAMENTO</th>
-            <th class="text-left"> RANGO INICIAL</th>
-            <th class="text-left"> RANGO FINAL</th>
-            <th class="text-left"> DESCUENTO</th>
+            <th (click)="setOrderBy('DESCRICAO')">
+              <thead-sorter
+                value="Material"
+                [active]="orderBy == 'DESCRICAO'"
+                [sort]="orderType"
+              ></thead-sorter>
+            </th>
+            <th class="text-left">DEPARTAMENTO</th>
+            <th class="text-left">RANGO INICIAL</th>
+            <th class="text-left">RANGO FINAL</th>
+            <th class="text-left">DESCUENTO</th>
             <th [hidden]="showDetailPanel"></th>
             <th></th>
             <th></th>
           </tr>
         </ng-template>
-        <ng-template #tbody let-tbody >
-          <tr *ngFor="let lista of listas | slice : begin : end; let i = index" [tooltip]="lista.estado == 0 ? 'Editar' : ''"
-               class="hover">
-						<td [ngClass]="{ 
-                'border-success' : lista.estado == 1, 
-                'border-danger'  : lista.estado == 0
-              }">
+        <ng-template #tbody let-tbody>
+          <tr
+            *ngFor="let lista of listas | slice : begin : end; let i = index"
+            class="hover">
+            <td
+              [ngClass]="{
+                'border-success': lista.estado == 1,
+                'border-danger': lista.estado == 0
+              }"
+            ></td>
+            <td class="text-center">{{ lista.CODIGOMATERIAL }}</td>
+            <td class="text-left" style="width: 50rem">
+              {{ lista.DESCRICAO | uppercase }}
             </td>
-            <td class="text-center" >{{ lista.CODIGOMATERIAL }}</td>
-            <td class="text-left" style="width: 50rem" >{{ lista.DESCRICAO | uppercase }}</td>
-            <td class="text-left" style="width: 15rem" >{{ lista.nombre_dep | uppercase }}</td>
-            <td class="text-left" style="width: 15rem" >{{ lista.rango_inicial }}</td>
-            <td class="text-left" style="width: 15rem" >{{ lista.rango_final}}</td>
-            <td class="text-left" style="width: 15rem" >{{ lista.descuento }} %</td>
-            <td  style="width: 10rem" [hidden]="showDetailPanel" ></td>
+            <td class="text-left" style="width: 15rem">
+              {{ lista.nombre_dep | uppercase }}
+            </td>
+            <td class="text-left" style="width: 15rem">
+              {{ lista.rango_inicial }}
+            </td>
+            <td class="text-left" style="width: 15rem">
+              {{ lista.rango_final }}
+            </td>
+            <td class="text-left" style="width: 15rem">
+              {{ lista.descuento }} %
+            </td>
+            <td style="width: 10rem" [hidden]="showDetailPanel"></td>
             <td class="text-right px-0" style="width: 10rem">
-              <span class="" [tooltip]="lista.estado == 1 ? 'Inativar' : 'Ativar'" placement="left" container="body">
-                <button type="button" class="btn-icon-sm" [style]="lista.estado == 1 ? 'color: green;' : 'color: red;'" (click)="onEditStatus(lista)" [disabled]="lista.estado == null">
-                  <i [ngClass]="lista.estado == 1 ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+              <span
+                class=""
+                [tooltip]="lista.estado == 1 ? 'Inativar' : 'Ativar'"
+                placement="left"
+                container="body"
+              >
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  [style]="lista.estado == 1 ? 'color: green;' : 'color: red;'"
+                  (click)="onEditStatus(lista)"
+                  [disabled]="lista.estado == null"
+                >
+                  <i
+                    [ngClass]="
+                      lista.estado == 1
+                        ? 'fas fa-toggle-on'
+                        : 'fas fa-toggle-off'
+                    "
+                  ></i>
                 </button>
               </span>
             </td>
-          <!--   <td class="text-center px-0" style="width: 4rem">
+            <!--   <td class="text-center px-0" style="width: 4rem">
               <span tooltip="Editar" placement="left" container="body">
                 <button class="btn-icon-sm" style="color: blue;" (click)="onEdit(lista)" [disabled]="lista.estado == 0">
                   <i class="fas fa-edit"></i>
@@ -163,28 +215,30 @@
         </ng-template>
       </custom-table>
       <div class="mt-3" [hidden]="!noResult">
-      <!--   Total {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        <!--   Total {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
          -->
         <pagination
-        [maxSize]="10"
-        [totalItems]="totalItems"
-        [(itemsPerPage)]="itemsPerPage"
-        (pageChanged)="onPageChanged($event)"
-        [boundaryLinks]="true"
-        [(ngModel)]="currentPage"
-        previousText="&lsaquo;"
-        nextText="&rsaquo;"
-        firstText="&laquo;"
-        lastText="&raquo;">
-      </pagination>
+          [maxSize]="10"
+          [totalItems]="totalItems"
+          [(itemsPerPage)]="itemsPerPage"
+          (pageChanged)="onPageChanged($event)"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
       </div>
       <empty-result
         message="Ningún registro encontrado."
         class="my-3"
-        *ngIf="dadosEmpty">
+        *ngIf="dadosEmpty"
+      >
       </empty-result>
     </div>
-   <!--  <div class="col-5" [hidden]="!showDetailPanel">
+    <!--  <div class="col-5" [hidden]="!showDetailPanel">
       <detail-panel [panelTitle]="panelTitle">
         <custom-table [hidden]="dadosEmptyDetalhes">
           <ng-template #thead let-thead>
@@ -217,4 +271,3 @@
     </div> -->
   </div>
 </app-body>
-
