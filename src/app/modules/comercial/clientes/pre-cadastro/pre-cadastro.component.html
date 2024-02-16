@@ -208,7 +208,7 @@
                   <label for="direccion">Direccion <span class="text-danger" style="font-size: 9px;">*</span> </label>
                   <input type="text" class="form-control" id="direccion" formControlName="" (input)="onInput()"
                     [(ngModel)]="ubicacionForm.direccion" 
-                    [value]="ubicacionForm.direccion" (ngModelChange)="actualizarDireccion($event, i, 1)" placeholder="Utilice el mapa para agregar dirección." readonly>
+                    [value]="ubicacionForm.direccion" (ngModelChange)="actualizarDireccion($event, i, 1)" placeholder="Utilice el mapa para agregar dirección.">
                 </div>
                 <div class="form-group col-md-12 text-center" *ngIf="ubicacionForm.swActivarLatitud === false">
                   <label for="direccion">Dirección </label> <br>
@@ -289,7 +289,7 @@
                       <input type="text" class="form-control" id="direccion_contacto"
                         formControlName="direccion_contacto" (input)="onInput()"
                         [value]="contactoForm.direccion_contacto" (ngModelChange)="actualizarContacto($event, 7,  i)"
-                        placeholder="Utilice el mapa para agregar dirección." readonly>
+                        placeholder="Utilice el mapa para agregar dirección.">
                     </div>
                     <div class="form-group col-md-12 mt-2 text-center">
                       <button class="btn btn-warning " (click)="openModalUbicacion(seleccionarUbicacion, i, 1)"> Agregar

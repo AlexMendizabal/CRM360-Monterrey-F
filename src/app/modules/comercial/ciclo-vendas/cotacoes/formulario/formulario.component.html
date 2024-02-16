@@ -59,7 +59,7 @@
       <div class="col-md" id="card-green">
         <div class="row d-flex">
           <div class="col-9">
-            <div class="col" id="card-label-light">Valor de la propuesta</div>
+            <div class="col" style="color: green">Valor de la Ofert</div>
             <div class="col" id="card-value-grey">
               USD. {{ valorProposta | number : '1.2-2' }}
             </div>
@@ -69,6 +69,22 @@
               class="fas fa-money-bill-wave d-flex p-3"
               id="icon-green"
             ></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md" id="card-purple">
+        <div class="row d-flex" id="marginRow">
+          <div class="col-2">
+            <span
+              class="fas fa-user-tie d-flex justify-content-center align-items-center"
+              id="icon-purple"
+            ></span>
+          </div>
+          <div class="col-10">
+            <div class="col" id="card-label-purple">
+              {{ dadosLancamento.nomeVendedor | uppercase }}
+            </div>
           </div>
         </div>
       </div>
@@ -90,38 +106,46 @@
           </div>
         </div>
       </div>
-      <div class="col-md" id="card-purple">
+
+      <div class="col" id="card-green">
         <div class="row d-flex" id="marginRow">
           <div class="col-2">
             <span
-              class="fas fa-user-tie d-flex justify-content-center align-items-center"
-              id="icon-purple"
+              class="fas fa-clock d-flex justify-content-center align-items-center"
+              id="icon-green"
             ></span>
           </div>
           <div class="col-10">
-            <div class="col" id="card-label-purple">
-              {{ dadosLancamento.nomeVendedor | uppercase }}
+            <div class="col" style="color: green">Fecha Valida Hasta</div>
+            <div class="col" id="card-value-light">
+              <input
+                class="form-control-plaintext"
+                id="dataValidade"
+                type="text"
+                bsDatepicker
+                [bsConfig]="bsConfig"
+                formControlName="dataValidade"
+                readonly
+                (bsValueChange)="onChangeValidadeProposta($event)"
+                [ngClass]="
+                  onFieldError('dataValidade') +
+                  ' ' +
+                  onFieldRequired(form.controls.dataValidade)
+                "
+                disabled
+              />
+              <invalid-form-control
+                [show]="onFieldInvalid('dataValidade') == 'required'"
+                message="La fecha de validez es obligatorio."
+              ></invalid-form-control>
+              <invalid-form-control
+                [show]="onFieldInvalid('dataValidade') == 'maxDate'"
+                message="No debe sobrepasar los 30 días ."
+              ></invalid-form-control>
             </div>
           </div>
         </div>
       </div>
-      <!-- <div class="col">
-        <div class="mtc-title">Dados de lançamento</div>
-        <div class="form-row">
-          <div class="form-group col-lg-2">
-            <label>Data/Hora</label>
-            <p class="mb-0">
-              {{ dadosLancamento.data | date:'dd/MM/yyyy' }} às {{ dadosLancamento.data | date:'HH:mm' }}
-            </p>
-          </div>
-          <div class="form-group col-lg-3">
-            <label>Usuário</label>
-            <p class="mb-0">
-              {{ dadosLancamento.nomeVendedor | uppercase }}
-            </p>
-          </div>
-        </div>
-      </div> -->
     </div>
     <!-- <div class="row shadow-sm">
       <div class="col">
@@ -129,7 +153,7 @@
       </div>
     </div> -->
     <!-- Datos de oferta -->
-    <div class="col shadow-sm mt-4" id="blocos">
+    <!--    <div class="col shadow-sm mt-4" id="blocos">
       <div
         class="row d-flex p-3"
         style="cursor: pointer"
@@ -247,16 +271,81 @@
               message="No debe sobrepasar los 30 días ."
             ></invalid-form-control>
           </div>
-          <!-- <div class="form-group col-lg-2">
+            <div class="form-group col-lg-2">
             <label for="dataValidade"> Cambio de estado</label>
             <input class="form-control" id="fechaRecordatorio" type="text" bsDatepicker [bsConfig]="bsConfig"
               formControlName="fechaRecordatorio" [readonly]="true"
               [ngClass]="onFieldError('fechaRecordatorio') + ' ' + onFieldRequired(form.controls.fechaRecordatorio)" >
-          </div>-->
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <!-- Clientes -->
+
+    <div class="container">
+      <div class="wrapper">
+        <div class="arrow-steps clearfix">
+          <div 
+          *ngIf="!swActivarCliente"
+          class="step current "
+          (click)="onShowBloco(2)"
+          >
+            <span> Datos de cliente </span>
+          </div>
+          <div 
+          *ngIf="swActivarCliente"
+          class="step current bg-success"
+          (click)="onShowBloco(2)"
+          >
+            <span> Datos de cliente </span>
+          </div>
+
+          <div
+          *ngIf="!swActivarCliente"
+          class="step current"
+          (click)="onShowBloco(3)"
+          >
+            <span> Busqueda y Seleccion de Maeriales </span>
+          </div>
+          <div
+          *ngIf="swActivarCliente"
+          class="step current bg-success"
+          (click)="onShowBloco(3)"
+          >
+            <span> Busqueda y Seleccion de Maeriales </span>
+          </div>
+          <div 
+          *ngIf="!swActivarEnvio"
+          class="step current"
+          (click)="onShowBloco(5)"
+          >
+            <span> Datos de Envio </span>
+          </div>
+          <div 
+          *ngIf="swActivarEnvio"
+          class="step current bg-success"
+          (click)="onShowBloco(5)"
+          >
+            <span> Datos de Envio </span>
+          </div>
+          <div 
+          *ngIf="!swActivarAdicionales"
+          class="step "
+          (click)="onShowBloco(6)"
+          >
+            <span>Datos Adicionales</span>
+          </div>
+          <div 
+          *ngIf="swActivarAdicionales"
+          class="step bg-success"
+          (click)="onShowBloco(6)"
+          >
+            <span>Datos Adicionales</span>
+          </div>
         </div>
       </div>
     </div>
-    <!-- Clientes -->
+
     <div class="col shadow-sm mt-4" id="blocos">
       <div
         class="row d-flex p-3"
@@ -311,6 +400,7 @@
               formControlName="codigo_cliente"
               [readonly]="true"
               [attr.disabled]="true"
+              (input)="onInput()"
             />
           </div>
           <div class="form-group col-lg-5">
@@ -677,7 +767,7 @@
     </div>
 
     <!-- Materiales -->
-    <div class="col shadow-sm mt-4" id="blocos">
+    <div class="col shadow-sm mt-4" id="blocos" [hidden]="!swActivarCliente">
       <div class="row" [hidden]="visualizar">
         <div class="col">
           <comercial-ciclo-vendas-cotacoes-formulario-materiais-lista
@@ -693,6 +783,7 @@
             (loaderFullScreen)="onLoaderFullScreen($event)"
             (scrollToFormOnTop)="onMateriaisScrollTop($event)"
             (scrollToCarrinho)="onScrollToCarrinho($event)"
+            (click)="onShowBloco(3)"
           >
           </comercial-ciclo-vendas-cotacoes-formulario-materiais-lista>
         </div>

@@ -4,13 +4,30 @@
     <div class="d-flex justify-content-center align-items-center">
       <button
         type="button"
-        class="close pull-right"
+        class="btn-danger pull-right"
         aria-label="Close"
         (click)="onClose()"
       >
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
+  </div>
+  <div class="modal-header">
+    <h3 class="pull-left"></h3>
+    <button
+      #botonGuardar
+      type="submit"
+      class="btn btn-success pull-right"
+      (click)="actualizarCliente()"
+    >
+      <span
+        *ngIf="isLoading"
+        class="spinner-border spinner-border-sm"
+        role="status"
+        aria-hidden="true"
+      ></span>
+      {{ isLoading ? 'Guardando...' : 'Guardar' }}
+    </button>
   </div>
   <div class="modal-body">
     <div class="col-md-12">
@@ -490,23 +507,7 @@
   </div>
   <div class="col-md-12">
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="onClose()">
-        Cancelar
-      </button>
-      <button
-        #botonGuardar
-        type="submit"
-        class="btn btn-success"
-        (click)="actualizarCliente()"
-      >
-        <span
-          *ngIf="isLoading"
-          class="spinner-border spinner-border-sm"
-          role="status"
-          aria-hidden="true"
-        ></span>
-        {{ isLoading ? 'Guardando...' : 'Guardar' }}
-      </button>
+      
     </div>
   </div>
 </div>

@@ -24,7 +24,7 @@ import { JsonResponse } from 'src/app/models/json-response';
 export class VistaComponent implements OnInit, AfterViewInit {
   myForm: FormGroup; 
   @ViewChild('contentToConvert', { static: true }) contentToConvert: ElementRef;
-
+  isLoading = false;
   loaderNavbar: boolean;
   loaderFullScreen = true;
   name = 'Angular ' + VERSION.major;
@@ -180,8 +180,10 @@ export class VistaComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
+    this.isLoading = true;
     this.cotacoesService.finalizarOferta(this.myForm.value).subscribe((response: JsonResponse) => {
       if (response.success == false) {
+        this.isLoading = false;
         this.pnotifyService.error(response.message);
       }
       else{

@@ -499,7 +499,7 @@ export class ComercialClientesPreCadastroComponent
 
       this.modalRef = this.modalService.show(template, {
         animated: false,
-        class: 'modal-md',
+        class: 'modal-lg',
       });
     } else {
       this.pnotifyService.notice('Porfavor seleccione un vendedor.');

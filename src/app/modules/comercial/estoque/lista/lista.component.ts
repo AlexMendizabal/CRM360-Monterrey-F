@@ -35,7 +35,6 @@ import { ComercialService } from '../../comercial.service';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { JsonResponse } from 'src/app/models/json-response';
 import { Console } from 'console';
-
 import * as ExcelJS from 'exceljs/dist/exceljs.min.js';
 
 @Component({
@@ -238,7 +237,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
           }
         },
         error: (error: any) => {
-          this.handleSearchError('Ocorreu um erro ao carregar filtros.');
+          this.handleSearchError('Se produjo un error al cargar filtros..');
         },
       });
   }
@@ -305,6 +304,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
       nombre_lista: [''],
     });
   }
+  
   cargarListasPrecios() {
     const nombreLista = this.form.get('nombre_lista').value;
 
@@ -319,7 +319,6 @@ export class ComercialEstoqueListaComponent implements OnInit {
     );
   }
 
-  
   
   onFilter() {
     this.totalItems = 0;
@@ -341,7 +340,8 @@ export class ComercialEstoqueListaComponent implements OnInit {
 
     this.comercialService.getMateriales(params).subscribe({
       next: (response: any) => {
-        if (response.responseCode === 200) {
+        if (response.responseCode === 200) {.0
+          2
           this.loaderNavbar = false;
 
           this.dados = [];
@@ -532,8 +532,6 @@ export class ComercialEstoqueListaComponent implements OnInit {
       this.onGetEstoqueAlmacen();
     }, 600);
   }
-  
-  
 
   closeModal(modalRef: TemplateRef<any>) {
     this.modalRef.hide();
@@ -693,8 +691,6 @@ export class ComercialEstoqueListaComponent implements OnInit {
       }
     );
   }
-
-
   onGetEstoqueAlmacen() {
     this.loading = true; // Activa el spinner de carga
     
@@ -731,8 +727,6 @@ export class ComercialEstoqueListaComponent implements OnInit {
     );
   }
   
-  
-
   onFieldError(field: string) {
     if (this.onFieldInvalid(field)) {
       return 'is-invalid';

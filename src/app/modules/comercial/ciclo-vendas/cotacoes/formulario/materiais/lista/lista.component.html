@@ -1,5 +1,5 @@
 <div *ngIf="showApp">
-  <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco()">
+  <div class="row d-flex p-3" style="cursor: pointer;" (click)="onShowBloco(3)">
     <span class="fas fa-search d-flex justify-content-center align-items-center" id="icon-gray"></span>
     <div class="d-flex justify-content-center align-items-center ml-2"><strong>Búsqueda de Materiales</strong></div>
     <div class="col"></div>
@@ -26,54 +26,60 @@
             <span>Limpiar</span>
           </button> -->
 
+          
+
+       <!--    <button type="button" class="btn btn-sm btn-primary" (click)="onFilterVend(3)" *ngIf="swAppSell === true">
+            <i class="fas fa-search"></i>
+            <span>UP SELL</span>
+          </button> -->
+          <!-- 
+                    <button type="button" class="btn btn-sm btn-secondary" (click)="onFilter()" *ngIf="swTodos === true">
+                      <i class="fas fa-search"></i>
+                      <span>Buscar en todos</span>
+                    </button>
+          -->
           <button type="button" class="btn btn-sm btn-secondary mr-3" (click)="onFilterVend(1)" *ngIf="swVendedor === true && swActivarBusqueda === true">
             <i class="fas fa-search"></i>
             <span>Buscar</span>
           </button>
-
-          <button type="button" class="btn btn-sm btn-primary" (click)="onFilterVend(3)" *ngIf="swAppSell === true">
-            <i class="fas fa-search"></i>
-            <span>UP SELL</span>
-          </button>
-<!-- 
-          <button type="button" class="btn btn-sm btn-secondary" (click)="onFilter()" *ngIf="swTodos === true">
-            <i class="fas fa-search"></i>
-            <span>Buscar en todos</span>
-          </button>
- -->
-          
         </div>
       </div>
     </div>
-    <tabset class="mx-3 pb-3 pt-1">
-      <tab heading="Filtros">
+    
         <form [formGroup]="form">
           <div class="form-row py-3">
             <div class="form-group col-lg-2">
               <label for="codLinha">Familia</label>
-              <ng-select [searchable]="true" [clearable]="false" placeholder="Selecione..." [items]="linhas"
-                placeholder="Seleccione..." formControlName="codLinha" [virtualScroll]="true" labelForId="idClasse"
-                bindLabel="nomeClasse" bindValue="idClasse" (change)="onChangeLinha($event.idClasse, true)">
+              <ng-select [searchable]="true" 
+              [clearable]="true" placeholder="Selecione..." 
+              [items]="linhas"
+                placeholder="Seleccione..." 
+                formControlName="codLinha" 
+                [virtualScroll]="true" 
+                labelForId="idClasse"
+                bindLabel="nomeClasse" 
+                bindValue="idClasseMt" 
+                (change)="onChangeLinha($event.idClasseMt, true)">
                 <!--  [ngClass]="onFieldError('codLinha') + ' ' + onFieldRequired(form.controls.codLinha)"-->
               </ng-select>
             </div>
             <div class="form-group col-lg-2">
               <label for="codClasse">Grupo</label>
-              <ng-select [searchable]="true" [clearable]="false" placeholder="Selecione..." [items]="grupos"
+              <ng-select [searchable]="true" [clearable]="true" placeholder="Selecione..." [items]="grupos"
                 placeholder="Seleccione..." formControlName="codClasse" [virtualScroll]="true" labelForId="id_linha"
                 bindLabel="descricao" bindValue="id_linha" (change)="onChangegrupo($event.id_linha)">
               </ng-select>
             </div>
             <div class="form-group col-lg-2">
               <label for="codLinea">Línea </label>
-              <ng-select [searchable]="true" [clearable]="false" placeholder="Selecione..." [items]="lineas"
+              <ng-select [searchable]="true" [clearable]="true" placeholder="Selecione..." [items]="lineas"
                 placeholder="Seleccione..." formControlName="codLinea" [virtualScroll]="true" labelForId="ID"
                 bindLabel="NM_SUB_LINH" bindValue="idClasse" (change)="onChangeClasse($event.ID, true, 'application')">
               </ng-select>
             </div>
             <div class="form-group col-lg-4">
               <label for="codMaterial"><span class="text-danger">(*)</span>Material</label>
-              <ng-select [searchable]="true" [clearable]="false" [items]="materiais" placeholder="Seleccione..."
+              <ng-select [searchable]="true" [clearable]="true" [items]="materiais" placeholder="Seleccione..."
                 formControlName="codMaterial" [virtualScroll]="true" labelForId="id_material" bindLabel="nombre"
                 bindValue="codigoMaterial" [loading]="materiaisLoader" loadingText="Cargando..."
                 (change)="cambioMaterial($event.id_material)">
@@ -130,13 +136,12 @@
             </div> -->
           </div>
         </form>
-      </tab>
-    </tabset>
+    
     <!-- <div *ngIf="dados.length > 0 && !dadosEmpty"> -->
     <div class="row">
-      <div class="col my-auto">
+    <!--   <div class="col my-auto">
         <subtitles [data]="subtitles" [show]="true"></subtitles>
-      </div>
+      </div> -->
       <div class="col mb-2">
         <div class="d-flex justify-content-end">
           <div class="form-group pt-1 mb-0 mr-3">
@@ -163,180 +168,410 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="table-responsive">
-        <custom-table [config]="tableConfig">
-          <ng-template #thead let-thead *ngIf="form.get('orderBy').value == 'nrPedido'">
-            <tr>
-              <th scope="col" class="text-center blue-header" [ngStyle]="{ width: columSize('disponibilidade') }">
-                <btn-icon [icon]="toggleAll ? 'fas fa-check-square' : 'far fa-square'" size="small"
-                  class="d-flex align-items-center justify-content-center" (click)="onToggleAll()">
-                </btn-icon>
-              </th>
-              <th scope="col" class="text-center align-items-center blue-header" [ngStyle]="{ width: columSize('codMaterial') }">
-                <thead-sorter value="Código" [active]="orderBy == 'codigo_material'" [sort]="orderType"
-                  (click)="setOrderBy('codigo_material')">
-                </thead-sorter>
-              </th>
-              <th scope="col" [ngStyle]="{ width: columSize('nomeMaterial') }">
-                <thead-sorter value="Descripción de material" [active]="orderBy == 'nombre_material'" [sort]="orderType"
-                  (click)="setOrderBy('nombre_material')">
-                </thead-sorter>
-              </th>
-              <th scope="col" [ngStyle]="{ width: columSize('nombre_almacen') }">
-                <thead-sorter value="Almacén" [active]="orderBy == 'nombre_almacen'" [sort]="orderType"
-                  (click)="setOrderBy('nombre_almacen')">
-                </thead-sorter>
-              </th>
-              <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
-                Unidades
-              </th>
-              <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
-                Cantidad
-              </th>
-              <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
-                Precio
-              </th>
-              <!--  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
-                Porcentaje Autorizado
-              </th> -->
-              <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
-                Precio Neto
-              </th> -->
-              <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
-                Moneda
-              </th>
-              <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
-                IVA
-              </th>
-              <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
-                Modo Entrega
-              </th> -->
-              <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
-              </th>
-            </tr>
-          </ng-template>
-          <ng-template #tbody let-tbody *ngIf="form.get('orderBy').value == 'nrPedido' && swAppSellColor === false">
-            <tr *ngFor="let material of dados; let i = index" [class.table-active]="i == activeRow">
-              <td class="text-truncate text-center" [ngClass]="classStatusBorder(material.disponibilidade)"
-                [ngStyle]="{ width: columSize('disponibilidade') }">
-                <ng-template #tooltipMaterialSemEstoqueTemplate>
-                  <p class="text-nowrap mb-0">Seleccionar material</p>
-                </ng-template>
-                <btn-icon [icon]="material.checked == 1 ? 'fas fa-check-square' : 'far fa-square'" size="small"
-                  [isDisabled]="material.disponibilidade === 1" [tooltip]="tooltipMaterialSemEstoqueTemplate"
-                  placement="left" (click)="onCheckMaterial(i, material)">
-                </btn-icon>
-              </td>
-              <td class="text-truncate text-center" [ngStyle]="{ width: columSize('codMaterial') }"
-                (click)="onClickMaterial(i, material)">
-                {{ material.codigo_material }}
-              </td>
-              <td class="text-truncate" [ngStyle]="{ width: columSize('nomeMaterial') }"
-                (click)="onClickMaterial(i, material)">
-                {{ material.nombre_material }}
-              </td>
-              <!--<td class="text-truncate" [ngStyle]="{ width: columSize('nomeLinha') }"
-                  (click)="onClickMaterial(i, material)">
-                  {{ material.nomeLinha }}
-                </td> -->
-              <td class="text-truncate" [ngStyle]="{ width: columSize('nomeDeposito') }"
-                (click)="onClickMaterial(i, material)">
-                {{ material.nombre_almacen }}
-              </td>
-              <!--- <td class="text-truncate text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }"
-                  (click)="onClickMaterial(i, material)">
-                  {{ material.estoqueDisponivel | number:'1.3-3' }} {{ material.unidade }}
-                </td> -->
-              <td class="text-center"> {{material.unidad}}</td>
-              <td class="text-center"> {{material.cantidad}}</td>
-              <td class="text-center"> {{ material.precio | number:'1.4-4' }}</td>
-              <!-- <td> {{ material.descuento | number:'1.2-2' }}</td> -->
-              <!-- <td class="text-center"> {{ material.precio_neto | number:'1.4-4' }}</td> -->
-              <td class="text-center"> {{material.nombre_moneda}}</td>
-              <td class="text-center"> {{material.iva | number:'1.2-2' }} %</td>
-              <!--  <td> {{material.columna8}}</td> -->
-              <td class="text-right" [ngStyle]="{ width: columSize('buttons') }">
-                <btn-icon icon="fas fa-warehouse" size="small" class="mr-3" tooltip="MATERIAL COMPROMETIDO"
-                  container="body" (click)="onEstoqueDetalhes(material)">
-                </btn-icon>
-                <!-- <comercial-ciclo-vendas-cotacoes-formulario-template-button-disponibilidade [index]="i"
-                  [codMaterial]="material.codMaterial"
-                  [deposito]="{ codDeposito: material.codDeposito, nomeDeposito: material.nomeDeposito, quantidade: material.estoqueAtual, unidade: material.unidade }"
-                  (onChange)="onChangeDeposito($event)" (activeRow)="onActiveRow($event)"
-                  tooltip="Estoque em outras unidades" container="body">
-                </comercial-ciclo-vendas-cotacoes-formulario-template-button-disponibilidade>
-                <comercial-ciclo-vendas-cotacoes-formulario-template-button-outros [codCliente]="this.codCliente"
-                  [codEndereco]="this.codEndereco" [index]="i" [material]="material"
-                  [codFormaPagamento]="this.codFormaPagamento" [freteConta]="this.freteConta"
-                  (activeRow)="onActiveRow($event)">
-                </comercial-ciclo-vendas-cotacoes-formulario-template-button-outros> -->
-              </td>
-            </tr>
-          </ng-template>
-          <!-- APP SELL -->
-          <ng-template #tbody let-tbody *ngIf="form.get('orderBy').value == 'nrPedido' && swAppSellColor === true">
-            <tr *ngFor="let material of dados; let i = index" [class.table-active]="i == activeRow">
-              <td class="text-truncate text-center " [ngClass]="classStatusBorder(swAppSellColor)"
-                [ngStyle]="{ width: columSize('disponibilidade') }">
-                <ng-template #tooltipMaterialSemEstoqueTemplate>
-                  <p class="text-nowrap mb-0">Seleccionar material</p>
-                </ng-template>
-                <btn-icon [icon]="material.checked == 1 ? 'fas fa-check-square' : 'far fa-square'" size="small"
-                  [isDisabled]="material.disponibilidade === 1" [tooltip]="tooltipMaterialSemEstoqueTemplate"
-                  placement="left" (click)="onCheckMaterial(i, material)">
-                </btn-icon>
-              </td>
-              <td class="text-truncate text-center " [ngStyle]="{ width: columSize('codMaterial') }"
-                (click)="onClickMaterial(i, material)">
-                {{ material.codigo_material }}
-              </td>
-              <td class="text-truncate" [ngStyle]="{ width: columSize('nomeMaterial') }"
-                (click)="onClickMaterial(i, material)">
-                {{ material.nombre_material }}
-              </td>
-              <!--<td class="text-truncate" [ngStyle]="{ width: columSize('nomeLinha') }"
-                  (click)="onClickMaterial(i, material)">
-                  {{ material.nomeLinha }}
-                </td> -->
-              <td class="text-truncate" [ngStyle]="{ width: columSize('nomeDeposito') }"
-                (click)="onClickMaterial(i, material)">
-                {{ material.nombre_almacen }}
-              </td>
-              <!--- <td class="text-truncate text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }"
-                  (click)="onClickMaterial(i, material)">
-                  {{ material.estoqueDisponivel | number:'1.3-3' }} {{ material.unidade }}
-                </td> -->
-              <td class="text-center"> {{material.unidad}}</td>
-              <td class="text-center"> {{material.cantidad}}</td>
-              <td class="text-center"> {{ material.precio | number:'1.4-4' }}</td>
-              <!-- <td> {{ material.descuento | number:'1.2-2' }}</td> -->
-              <!-- <td class="text-center"> {{ material.precio_neto | number:'1.4-4' }}</td> -->
-              <td class="text-center"> {{material.nombre_moneda}}</td>
-              <td class="text-center"> {{material.iva | number:'1.2-2' }} %</td>
-              <!--  <td> {{material.columna8}}</td> -->
-              <td class="text-right" [ngStyle]="{ width: columSize('buttons') }">
-                <btn-icon icon="fas fa-warehouse" size="small" class="mr-3" tooltip="MATERIAL COMPROMETIDO"
-                  container="body" (click)="onEstoqueDetalhes(material)">
-                </btn-icon>
-                <!-- <comercial-ciclo-vendas-cotacoes-formulario-template-button-disponibilidade [index]="i"
-                  [codMaterial]="material.codMaterial"
-                  [deposito]="{ codDeposito: material.codDeposito, nomeDeposito: material.nomeDeposito, quantidade: material.estoqueAtual, unidade: material.unidade }"
-                  (onChange)="onChangeDeposito($event)" (activeRow)="onActiveRow($event)"
-                  tooltip="Estoque em outras unidades" container="body">
-                </comercial-ciclo-vendas-cotacoes-formulario-template-button-disponibilidade>
-                <comercial-ciclo-vendas-cotacoes-formulario-template-button-outros [codCliente]="this.codCliente"
-                  [codEndereco]="this.codEndereco" [index]="i" [material]="material"
-                  [codFormaPagamento]="this.codFormaPagamento" [freteConta]="this.freteConta"
-                  (activeRow)="onActiveRow($event)">
-                </comercial-ciclo-vendas-cotacoes-formulario-template-button-outros> -->
-              </td>
-            </tr>
-          </ng-template>
+    <!--- datos de producto con almacenes-->
+    <div id='gfg'> 
+      <tabset> 
+          <tab heading="MATERIALES"> 
+            <div class="row">
+              <div class="table-responsive">
+                <custom-table [config]="tableConfig">
+                  <ng-template #thead let-thead *ngIf="form.get('orderBy').value == 'nrPedido'">
+                    <tr>
+                      <th scope="col" 
+                      class="text-center red-header" 
+                      [ngStyle]="{ width: columSize('disponibilidade') }">
+                      </th>
+                      <th scope="col" class="text-center align-items-center red-header" [ngStyle]="{ width: columSize('codMaterial') }">
+                        <thead-sorter value="Código" [active]="orderBy == 'codigo_material'" [sort]="orderType"
+                          (click)="setOrderBy('codigo_material')">
+                        </thead-sorter>
+                      </th>
+                      <th scope="col" [ngStyle]="{ width: columSize('nomeMaterial') }">
+                        <thead-sorter value="Descripción de material" [active]="orderBy == 'nombre_material'" [sort]="orderType"
+                          (click)="setOrderBy('nombre_material')">
+                        </thead-sorter>
+                      </th>
+                      <th scope="col" [ngStyle]="{ width: columSize('nombre_almacen') }">
+                        <thead-sorter value="Almacén" [active]="orderBy == 'nombre_almacen'" [sort]="orderType"
+                          (click)="setOrderBy('nombre_almacen')">
+                        </thead-sorter>
+                      </th>
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Unidades
+                      </th>
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Cantidad
+                      </th>
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Precio
+                      </th>
+                      <!--  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Porcentaje Autorizado
+                      </th> -->
+                      <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Precio Neto
+                      </th> -->
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Moneda
+                      </th>
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        IVA
+                      </th>
+                      <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Modo Entrega
+                      </th> -->
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody *ngIf="form.get('orderBy').value == 'nrPedido' && swAppSellColor === false">
+                    <tr *ngFor="let material of dados; let i = index" [class.table-active]="i == activeRow">
+                      <td class="text-truncate text-center" 
+                        [ngClass]="classStatusBorder(material.disponibilidade)"
+                        [ngStyle]="{ width: columSize('disponibilidade') }">
+                        <ng-template #tooltipMaterialSemEstoqueTemplate>
+                          <p class="text-nowrap mb-0">Seleccionar material</p>
+                        </ng-template>
+                        <btn-icon 
+                        [icon]="material.checked == 1 ? 'fas fa-check-square' : 'far fa-square'" 
+                        size="small"
+                        [isDisabled]="material.disponibilidade === 1" 
+                        [tooltip]="tooltipMaterialSemEstoqueTemplate"
+                        placement="left" (click)="onCheckMaterial(i, material)">
+                        </btn-icon>
+                      </td>
+                      <td class="text-truncate text-center" [ngStyle]="{ width: columSize('codMaterial') }"
+                        (click)="onClickMaterial(i, material)">
+                        {{ material.codigo_material }}
+                      </td>
+                      <td class="text-truncate" [ngStyle]="{ width: columSize('nomeMaterial') }"
+                        (click)="onClickMaterial(i, material)">
+                        {{ material.nombre_material }}
+                      </td>
+                      <!--<td class="text-truncate" [ngStyle]="{ width: columSize('nomeLinha') }"
+                          (click)="onClickMaterial(i, material)">
+                          {{ material.nomeLinha }}
+                        </td> -->
+                      <td class="text-truncate" [ngStyle]="{ width: columSize('nomeDeposito') }"
+                        (click)="onClickMaterial(i, material)">
+                        {{ material.nombre_almacen }}
+                      </td>
+                      <!--- <td class="text-truncate text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }"
+                          (click)="onClickMaterial(i, material)">
+                          {{ material.estoqueDisponivel | number:'1.3-3' }} {{ material.unidade }}
+                        </td> -->
+                      <td class="text-center"> {{material.unidad}}</td>
+                      <td class="text-center"> {{material.cantidad}}</td>
+                      <td class="text-center"> {{ material.precio | number:'1.4-4' }}</td>
+                      <!-- <td> {{ material.descuento | number:'1.2-2' }}</td> -->
+                      <!-- <td class="text-center"> {{ material.precio_neto | number:'1.4-4' }}</td> -->
+                      <td class="text-center"> {{material.nombre_moneda}}</td>
+                      <td class="text-center"> {{material.iva | number:'1.2-2' }} %</td>
+                      <!--  <td> {{material.columna8}}</td> -->
+                      <td class="text-right" [ngStyle]="{ width: columSize('buttons') }">
+                        <div style="display: flex; align-items: center;">
+                          <btn-icon icon="fas fa-warehouse" size="small" class="mr-3" tooltip="MATERIAL COMPROMETIDO" container="body" (click)="onEstoqueDetalhes(material)">
+                          </btn-icon>
+                      
+                          <a style="padding: 0%; color: rgb(6, 68, 14)" class="dropdown-item" data-toggle="modal" data-target="#ModalPDFMaterial" [tooltip]="'FICHA TECNICA'">
+                            <i class="far fa-file-pdf"></i>
+                          </a>
+                        </div>
+                      </td>
+                      <div class="modal fade" id="ModalPDFMaterial" tabindex="-1" role="dialog" aria-labelledby="ModalPDFMaterial" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="ModalPDFMaterial" [tooltip]="'FICHA TECNICA'"></h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <!-- Coloca aquí el contenido de tu modal, como un iframe para mostrar el PDF -->
+                              <iframe src="https://www.turnerlibros.com/wp-content/uploads/2021/02/ejemplo.pdf" width="100%" height="400px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </tr>
+                  </ng-template>
+                </custom-table>
+              </div>
+            </div>
+          </tab> 
+          
+          <tab heading="UP-SELL"> 
+              <div class="row">
+              <div class="table-responsive">
+                <custom-table [config]="tableConfig">
+                  <ng-template #thead let-thead *ngIf="form.get('orderBy').value == 'nrPedido'">
+                    <tr>
+                      <th scope="col" class="text-center blue-header" 
+                        [ngStyle]="{ width: columSize('disponibilidade') }">
+                      </th>
+                      <th scope="col" class="text-center align-items-center blue-header" [ngStyle]="{ width: columSize('codMaterial') }">
+                        <thead-sorter value="Código" [active]="orderBy == 'codigo_material'" [sort]="orderType"
+                          (click)="setOrderBy('codigo_material')">
+                        </thead-sorter>
+                      </th>
+                      <th scope="col" [ngStyle]="{ width: columSize('nomeMaterial') }">
+                        <thead-sorter value="Descripción de material" [active]="orderBy == 'nombre_material'" [sort]="orderType"
+                          (click)="setOrderBy('nombre_material')">
+                        </thead-sorter>
+                      </th>
+                      <th scope="col" [ngStyle]="{ width: columSize('nombre_almacen') }">
+                        <thead-sorter value="Almacén" [active]="orderBy == 'nombre_almacen'" [sort]="orderType"
+                          (click)="setOrderBy('nombre_almacen')">
+                        </thead-sorter>
+                      </th>
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Unidades
+                      </th>
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Cantidad
+                      </th>
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Precio
+                      </th>
+                      <!--  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Porcentaje Autorizado
+                      </th> -->
+                      <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Precio Neto
+                      </th> -->
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Moneda
+                      </th>
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        IVA
+                      </th>
+                      <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Modo Entrega
+                      </th> -->
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody *ngIf="form.get('orderBy').value == 'nrPedido' && swAppSellColor === false">
+                    <tr *ngFor="let material of upsell; let i = index" [class.table-active]="i == activeRow">
+                      <td class="text-truncate text-center" [ngClass]="classStatusBorder(material.disponibilidade)"
+                        [ngStyle]="{ width: columSize('disponibilidade') }">
+                        <ng-template #tooltipMaterialSemEstoqueTemplate>
+                          <p class="text-nowrap mb-0">Seleccionar material</p>
+                        </ng-template>
+                        <btn-icon [icon]="material.checked == 1 ? 'fas fa-check-square' : 'far fa-square'" size="small"
+                          [isDisabled]="material.disponibilidade === 1" [tooltip]="tooltipMaterialSemEstoqueTemplate"
+                          placement="left" (click)="onCheckMaterial2(i, material)">
+                        </btn-icon>
+                      </td>
+                      <td class="text-truncate text-center" [ngStyle]="{ width: columSize('codMaterial') }"
+                        (click)="onClickMaterial(i, material)">
+                        {{ material.codigo_material }}
+                      </td>
+                      <td class="text-truncate" [ngStyle]="{ width: columSize('nomeMaterial') }"
+                        (click)="onClickMaterial(i, material)">
+                        {{ material.nombre_material }}
+                      </td>
+                      <!--<td class="text-truncate" [ngStyle]="{ width: columSize('nomeLinha') }"
+                          (click)="onClickMaterial(i, material)">
+                          {{ material.nomeLinha }}
+                        </td> -->
+                      <td class="text-truncate" [ngStyle]="{ width: columSize('nomeDeposito') }"
+                        (click)="onClickMaterial(i, material)">
+                        {{ material.nombre_almacen }}
+                      </td>
+                      <!--- <td class="text-truncate text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }"
+                          (click)="onClickMaterial(i, material)">
+                          {{ material.estoqueDisponivel | number:'1.3-3' }} {{ material.unidade }}
+                        </td> -->
+                      <td class="text-center"> {{material.unidad}}</td>
+                      <td class="text-center"> {{material.cantidad}}</td>
+                      <td class="text-center"> {{ material.precio | number:'1.4-4' }}</td>
+                      <!-- <td> {{ material.descuento | number:'1.2-2' }}</td> -->
+                      <!-- <td class="text-center"> {{ material.precio_neto | number:'1.4-4' }}</td> -->
+                      <td class="text-center"> {{material.nombre_moneda}}</td>
+                      <td class="text-center"> {{material.iva | number:'1.2-2' }} %</td>
+                      <!--  <td> {{material.columna8}}</td> -->
+                      <td class="text-right" [ngStyle]="{ width: columSize('buttons') }">
+                        <div style="display: flex; align-items: center;">
+                          <btn-icon icon="fas fa-warehouse" size="small" class="mr-3" tooltip="MATERIAL COMPROMETIDO" container="body" (click)="onEstoqueDetalhes(material)">
+                          </btn-icon>
+                      
+                          <a style="padding: 0%; color: rgb(6, 68, 14)" class="dropdown-item" data-toggle="modal" data-target="#ModalPDFMaterialUpSell" [tooltip]="'FICHA TECNICA'">
+                            <i class="far fa-file-pdf"></i>
+                          </a>
+                        </div>
+                      </td>
+                      <div class="modal fade" id="ModalPDFMaterialUpSell" tabindex="-1" role="dialog" aria-labelledby="ModalPDFMaterialUpSell" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="ModalPDFMaterialUpSell" [tooltip]="'FICHA TECNICA'"></h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <!-- Coloca aquí el contenido de tu modal, como un iframe para mostrar el PDF -->
+                              <iframe src="https://www.turnerlibros.com/wp-content/uploads/2021/02/ejemplo.pdf" width="100%" height="400px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-        </custom-table>
-      </div>
-    </div>
+                    </tr>
+                  </ng-template>
+                  <!-- APP SELL -->
+        
+                </custom-table>
+              </div>
+            </div>
+          </tab> 
+
+
+
+          <tab heading="CROSS-SELL"> 
+                <div class="row">
+              <div class="table-responsive">
+                <custom-table [config]="tableConfig">
+                  <ng-template #thead let-thead *ngIf="form.get('orderBy').value == 'nrPedido'">
+                    <tr>
+                      <th scope="col" class="text-center blue-header" 
+                        [ngStyle]="{ width: columSize('disponibilidade') }">
+                      </th>
+                      <th scope="col" class="text-center align-items-center blue-header" [ngStyle]="{ width: columSize('codMaterial') }">
+                        <thead-sorter value="Código" [active]="orderBy == 'codigo_material'" [sort]="orderType"
+                          (click)="setOrderBy('codigo_material')">
+                        </thead-sorter>
+                      </th>
+                      <th scope="col" [ngStyle]="{ width: columSize('nomeMaterial') }">
+                        <thead-sorter value="Descripción de material" [active]="orderBy == 'nombre_material'" [sort]="orderType"
+                          (click)="setOrderBy('nombre_material')">
+                        </thead-sorter>
+                      </th>
+                      <th scope="col" [ngStyle]="{ width: columSize('nombre_almacen') }">
+                        <thead-sorter value="Almacén" [active]="orderBy == 'nombre_almacen'" [sort]="orderType"
+                          (click)="setOrderBy('nombre_almacen')">
+                        </thead-sorter>
+                      </th>
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Unidades
+                      </th>
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Cantidad
+                      </th>
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Precio
+                      </th>
+                      <!--  <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Porcentaje Autorizado
+                      </th> -->
+                      <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Precio Neto
+                      </th> -->
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Moneda
+                      </th>
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        IVA
+                      </th>
+                      <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                        Modo Entrega
+                      </th> -->
+                      <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template #tbody let-tbody *ngIf="form.get('orderBy').value == 'nrPedido' && swAppSellColor === false">
+                    <tr *ngFor="let material of crosell; let i = index" [class.table-active]="i == activeRow">
+                      <td class="text-truncate text-center" [ngClass]="classStatusBorder(material.disponibilidade)"
+                        [ngStyle]="{ width: columSize('disponibilidade') }">
+                        <ng-template #tooltipMaterialSemEstoqueTemplate>
+                          <p class="text-nowrap mb-0">Seleccionar material</p>
+                        </ng-template>
+                        <btn-icon [icon]="material.checked == 1 ? 'fas fa-check-square' : 'far fa-square'" size="small"
+                          [isDisabled]="material.disponibilidade === 1" [tooltip]="tooltipMaterialSemEstoqueTemplate"
+                          placement="left" (click)="onCheckMaterial3(i, material)">
+                        </btn-icon>
+                      </td>
+                      <td class="text-truncate text-center" [ngStyle]="{ width: columSize('codMaterial') }"
+                        (click)="onClickMaterial(i, material)">
+                        {{ material.codigo_material }}
+                      </td>
+                      <td class="text-truncate" [ngStyle]="{ width: columSize('nomeMaterial') }"
+                        (click)="onClickMaterial(i, material)">
+                        {{ material.nombre_material }}
+                      </td>
+                      <!--<td class="text-truncate" [ngStyle]="{ width: columSize('nomeLinha') }"
+                          (click)="onClickMaterial(i, material)">
+                          {{ material.nomeLinha }}
+                        </td> -->
+                      <td class="text-truncate" [ngStyle]="{ width: columSize('nomeDeposito') }"
+                        (click)="onClickMaterial(i, material)">
+                        {{ material.nombre_almacen }}
+                      </td>
+                      <!--- <td class="text-truncate text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }"
+                          (click)="onClickMaterial(i, material)">
+                          {{ material.estoqueDisponivel | number:'1.3-3' }} {{ material.unidade }}
+                        </td> -->
+                      <td class="text-center"> {{material.unidad}}</td>
+                      <td class="text-center"> {{material.cantidad}}</td>
+                      <td class="text-center"> {{ material.precio | number:'1.4-4' }}</td>
+                      <!-- <td> {{ material.descuento | number:'1.2-2' }}</td> -->
+                      <!-- <td class="text-center"> {{ material.precio_neto | number:'1.4-4' }}</td> -->
+                      <td class="text-center"> {{material.nombre_moneda}}</td>
+                      <td class="text-center"> {{material.iva | number:'1.2-2' }} %</td>
+                      <!--  <td> {{material.columna8}}</td> -->
+                      <td class="text-right" [ngStyle]="{ width: columSize('buttons') }">
+                        <div style="display: flex; align-items: center;">
+                          <btn-icon icon="fas fa-warehouse" size="small" class="mr-3" tooltip="MATERIAL COMPROMETIDO" container="body" (click)="onEstoqueDetalhes(material)">
+                          </btn-icon>
+                      
+                          <a style="padding: 0%; color: rgb(6, 68, 14)" class="dropdown-item" data-toggle="modal" data-target="#ModalPDFMaterialCrosSell" [tooltip]="'FICHA TECNICA'">
+                            <i class="far fa-file-pdf"></i>
+                          </a>
+                        </div>
+                      </td>
+                      <div class="modal fade" id="ModalPDFMaterialCrosSell" tabindex="-1" role="dialog" aria-labelledby="ModalPDFMaterialCrosSell" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="ModalPDFMaterialCrosSell" [tooltip]="'FICHA TECNICA'"></h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <!-- Coloca aquí el contenido de tu modal, como un iframe para mostrar el PDF -->
+                              <iframe src="https://www.turnerlibros.com/wp-content/uploads/2021/02/ejemplo.pdf" width="100%" height="400px"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </tr>
+                  </ng-template>
+                  <!-- APP SELL -->
+        
+                </custom-table>
+              </div>
+            </div>
+          </tab> 
+      </tabset> 
+  </div> 
+
+
     <!--     </div> -->
     <div class="row" *ngIf="searching === true">
       <div class="col">

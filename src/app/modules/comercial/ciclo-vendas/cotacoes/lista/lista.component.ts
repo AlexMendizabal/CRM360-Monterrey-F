@@ -126,7 +126,6 @@ export class ComercialCicloVendasCotacoesListaComponent
   };
 
   activatedRouteSubscription: Subscription;
-
   showDetailPanelSubscription: Subscription;
   showDetailPanel = false;
 
@@ -158,6 +157,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   ofer: Array<any> = [];
 
   dados: Array<any> = [];
+  datos: Array<any> = [];
 
   cotizacion: Array<any> = [];
   dadosLoaded = false;
@@ -857,7 +857,18 @@ export class ComercialCicloVendasCotacoesListaComponent
         if (Object.keys(response).length > 0) {
           const _response = this.routerService.getBase64UrlParams(response);
           this.form.patchValue(_response);
-        }
+          
+          /* this.maxSize = 10;
+          this.end = _response.registros
+          this.itemsPerPage = _response.registros;
+        
+         */
+        console.log(_response);
+        // Refresca la página
+       /*  this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate([decodeURI(this.location.path())]);
+        }); */
+              }
       this.search(this.getParams());
       });
   }
@@ -1010,6 +1021,7 @@ export class ComercialCicloVendasCotacoesListaComponent
         },
         error: (error) => this.pnotifyService.error(),
       });
+      
   }
 
  agregarCliente(id: number, nombre: string) {
@@ -1046,11 +1058,13 @@ export class ComercialCicloVendasCotacoesListaComponent
     });
   }
  */
+  
+
+
   onPageChanged(event: PageChangedEvent): void {
     this.begin = (event.page - 1) * event.itemsPerPage;
     this.end = event.page * event.itemsPerPage;
     this.dados.slice(this.begin, this.end);
-    
   }
   refreshPage() {
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {

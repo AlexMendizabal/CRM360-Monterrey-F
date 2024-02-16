@@ -519,14 +519,18 @@ filterByCodVendedorStatus(status: string): void {
 
 
 onFilter(): void {
-    this.itemsPerPage = this.formGroup.value.registros;
-    this.currentPage = 1;
+  this.loading = true;  // Establece loading a true antes de la llamada asincrónica
 
-    this.detailPanelService.hide();
-    this.setRouterParams(this.getFormFilterValues());
-    this.getDatosAutorizaciones();
+  this.itemsPerPage = this.formGroup.value.registros;
+  this.currentPage = 1;
+
+  this.detailPanelService.hide();
+  this.setRouterParams(this.getFormFilterValues());
+
+  this.getDatosAutorizaciones();  // Asegúrate de que esta llamada actualiza loading a false
   return;
 }
+
 
 
 setSubmittedSearch(): void {

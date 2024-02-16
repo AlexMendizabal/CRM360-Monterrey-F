@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   FormGroup,
+  FormsModule,
   FormBuilder,
   Validators,
   AbstractControl,
@@ -25,6 +26,8 @@ import { JsonResponse } from 'src/app/models/json-response';
 
 import { IMateriaisModel } from '../../models/materiais';
 import { ComercialEstoqueService } from '../../../../../../comercial/estoque/estoque.service';
+import { BrowserModule } from '@angular/platform-browser'; 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 
 
 @Component({
@@ -32,6 +35,8 @@ import { ComercialEstoqueService } from '../../../../../../comercial/estoque/est
   templateUrl: './lista.component.html',
   styleUrls: ['./lista.component.scss'],
 })
+
+
 export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   implements OnInit {
   @Input('codEmpresa') codEmpresa: number;
@@ -120,6 +125,9 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   firstSearch = false;
 
   dados: Array<IMateriaisModel> = [];
+  upsell: Array<IMateriaisModel> = [];
+  crosell: Array<IMateriaisModel> = [];
+  
   dadosLoaded = false;
   dadosEmpty = false;
   idMaterial: number = 0;
@@ -172,8 +180,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       .subscribe((response: any) => {
         if (response.responseCode === 200) {
           this.linhas = response.result;
-          /*           console.log(response.result)
-           */
+                 console.log(response.result);
+          
         } else {
           this.pnotifyService.error();
           this.location.back();
@@ -697,15 +705,28 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
               }); */
             if (response.responseCode === 200) {
               this.swAppSellColor = false;
-              this.dados = response.result.map((el) => {
+              this.dados = response.material.map((el) => {
                 var o = Object.assign({}, el);
                 o.checked = 0;
                 return o;
               });
 
+              this.upsell = response.upsell.map((el) => {
+                var o = Object.assign({}, el);
+                o.checked = 0;
+                return o;
+              });
+
+              this.crosell = response.crosell.map((el) => {
+                var o = Object.assign({}, el);
+                o.checked = 0;
+                return o;
+              });
+
+              console.log(this.upsell);
               this.dadosEmpty = false;
               this.form.controls.codMaterial.enable();
-              this.swAppSell= true ;
+              this.swActivarBusqueda = true ;
               //console.log('dados', this.dados);
               // if (this.dados.length > 10) {
               this.tableConfig.fixedHeader = true;
@@ -718,19 +739,16 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
             } else {
               this.swTodos = true;
               this.swVendedor = true;
-              this.swAppSell = true;
+              this.swActivarBusqueda = true;
               this.dadosEmpty = true;
               this.form.controls.codMaterial.disable();
               this.swAppSellColor = true;
-
-
-
             }
           },
           error: (error: any) => {
-            this.swTodos = false;
-              this.swVendedor = false;
-              this.swAppSell = true;
+              this.swTodos = false;
+              this.swVendedor = true;
+              this.swActivarBusqueda = true;
               this.dadosEmpty = true;
               this.form.controls.codMaterial.disable();
             if (error['error'].hasOwnProperty('mensagem')) {
@@ -739,7 +757,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
               this.pnotifyService.error();
             }
             this.dadosEmpty = true;
-            this.swAppSellColor = false;
+            this.swAppSellColor = true;
 
           }
         });
@@ -784,9 +802,6 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
                 return o;
               });
               this.dadosEmpty = false;
-
-
-
 
               //console.log('dados', this.dados);
 
@@ -955,6 +970,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         this.dados[index].checked = this.toggleAll === true ? 1 : 0;
       }
     }
+    console.log(this.dados);
   }
 
   onClickMaterial(index: number, material: IMateriaisModel) {
@@ -992,7 +1008,28 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     } else {
       this.pnotifyService.notice('Seleccione por lo menos un material');
     }
+  }
 
+  onCheckMaterial2(index: number, material: IMateriaisModel): void {
+    // @ts-ignore: Ignorar error TS2339
+    if (this.upsell[index].codigo_situacion == "A") {
+      this.upsell[index].checked = material.checked == 0 ? 1 : 0;
+/*  */
+    } else {
+      this.pnotifyService.notice('Seleccione por lo menos un material');
+    }
+    console.log('aqui',this.upsell[index]);
+  }
+
+  onCheckMaterial3(index: number, material: IMateriaisModel): void {
+    // @ts-ignore: Ignorar error TS2339
+    if (this.crosell[index].codigo_situacion == "A") {
+      this.crosell[index].checked = material.checked == 0 ? 1 : 0;
+/*  */
+    } else {
+      this.pnotifyService.notice('Seleccione por lo menos un material');
+    }
+    console.log('aqui',this.crosell[index]);
   }
 
   onAddMaterial(): void {
@@ -1004,19 +1041,35 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         materiais.push(this.dados[index]);
         this.dados[index].checked = 0;
         this.pnotifyService.success('Material agregado.');
+      }
+    }
 
+    for (let index = 0; index < this.upsell.length; index++) {
+      if (this.upsell[index].checked === 1) {
+        materiais.push(this.upsell[index]);
+        this.upsell[index].checked = 0;
+        this.pnotifyService.success('Material agregado.');
+      }
+    }
+
+    for (let index = 0; index < this.crosell.length; index++) {
+      if (this.crosell[index].checked === 1) {
+        materiais.push(this.crosell[index]);
+        this.crosell[index].checked = 0;
+        this.pnotifyService.success('Material agregado.');
       }
     }
 
     if (materiais.length > 0) {
-/*       console.log(materiais);
- */      this.formularioService.materiaisSubject.next(materiais);
+      this.formularioService.materiaisSubject.next(materiais);
       this.toggleAll = this.toggleAll === true ? false : this.toggleAll;
       this.scrollToCarrinho.emit(this.autoScroll);
     } else {
       this.pnotifyService.notice(' un material');
     }
     this.dados = [];
+    this.upsell = [];
+    this.crosell = [];
   }
 
   onActiveRow(index: number): void {

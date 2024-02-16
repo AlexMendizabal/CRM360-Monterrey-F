@@ -112,6 +112,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   carnet_cliente = '';
   tipo_documento = '';
 
+  swActivarCliente = false; 
+  swActivarEnvio = false; 
+  swActivarAdicionales = false;
+
   activatedRouteSubscription: Subscription;
 
   loaderFichaCadastralSubscription: Subscription;
@@ -319,7 +323,72 @@ export class ComercialCicloVendasCotacoesFormularioComponent
      */
 
     /*   this.form.controls.codigoCliente.setValue('Código'); */
+
+    const back = document.querySelector(".prev") as HTMLElement;
+    const next = document.querySelector(".next") as HTMLElement;
+    const steps = document.querySelectorAll(".step");
+
+    next.addEventListener("click", () => {
+      steps.forEach((step, i) => {
+        if (!step.classList.contains('current') && !step.classList.contains('done')) {
+          step.classList.add('current');
+          (steps[i - 1] as HTMLElement).classList.remove('current');
+          (steps[i - 1] as HTMLElement).classList.add('done');
+          return;
+        }
+      });
+    });
+
+    back.addEventListener("click", () => {
+      steps.forEach((step, i) => {
+        if (step.classList.contains('done') && (steps[i + 1] as HTMLElement).classList.contains('current')) {
+          (steps[i + 1] as HTMLElement).classList.remove('current');
+          step.classList.remove('done');
+          step.classList.add('current');
+          return;
+        }
+      });
+    });
+
   }
+
+  verificarCliente(){
+    const formValue = this.form.getRawValue();
+    var codigoCliente = formValue.codigo_cliente;
+    var idVendedor = this.idvendedor;
+    var id_lista_precio = this.idListaPrecio;
+    //console.log(codigoCliente, idVendedor, id_lista_precio);
+    if(idVendedor > 0 && id_lista_precio > 0 && codigoCliente!=''){
+      this.swActivarCliente = true;
+    }
+    else{
+      this.swActivarCliente = false;
+    }
+  }
+
+  verificarEnvio(){
+    const formValue = this.form.getRawValue();
+    var codEndereco = formValue.codEndereco;
+    if(codEndereco!=''){
+      this.swActivarEnvio = true;
+    }
+    else{
+      this.swActivarEnvio = false;
+    }
+  }
+
+  /* verificarAficionales(){
+    const formValue = this.form.getRawValue();  
+
+  } */
+
+
+
+  canDeactivate(): boolean {
+    // Implement canDeactivate logic if necessary
+    return true;
+  }
+
 
   getCiudades() {
     this.dadosFaturamentoService
@@ -628,6 +697,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           this.form.controls.nombreDepartamento.setValue(
             this.nombreDepartamento
           );
+          this.verificarCliente();
 
           /*  this.form.controls['lista'].setValue(response.detalle[0].id_lista); */
           // this.form.value.lista = response.detalle[0].id_lista;
@@ -639,6 +709,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         this.pnotifyService.error();
       },
     });
+    
   }
 
   getVendedor() {
@@ -2088,6 +2159,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   onShowBloco(bloco: number) {
+
+    //console.log(bloco);
     if (bloco == 1) {
       this.showBloco1 = !this.showBloco1;
     } else if (bloco == 2) {

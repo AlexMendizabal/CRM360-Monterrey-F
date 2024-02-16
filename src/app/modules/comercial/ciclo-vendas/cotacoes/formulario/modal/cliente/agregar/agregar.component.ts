@@ -13,7 +13,7 @@ import { Location } from '@angular/common';
 import { finalize } from 'rxjs/operators';
 import { ComercialCicloVendasCotacoesFormularioService } from './../../../formulario.service';
 import { NotificacionesService } from '../../../../../../../../core/header/notificaciones/notificaciones.service';
-
+import { ComercialClientesPreCadastroService } from 'src/app/modules/comercial/clientes/pre-cadastro/pre-cadastro.service';
 
 import {
   Component,
@@ -96,7 +96,7 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
   longitud: number = 0;
   id_vendedor: number = 0;
   tipos_personas: any = [];
-
+  tipos_documentos: any = [];
   /* Pagination */
   itemsPerPage = 10;
   begin = 0;
@@ -104,6 +104,7 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
   /* Pagination */
 
   constructor(
+    private preCadastroService: ComercialClientesPreCadastroService,
     private formBuilder: FormBuilder,
     private pnotifyService: PNotifyService,
     private bsModalRef: BsModalRef,
@@ -117,6 +118,7 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
   ngOnInit(): void {
     this.setFormBuilder();
     this.obtenerTipoPersonas();
+    this.obtenerTipoDocumento();
   }
 
   onClose(): void {
@@ -268,10 +270,9 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
       id_vendedor: [null, Validators.required],
       tipo_persona: [null, Validators.required],
       nombre_factura: [null],
-      nit: [null, [Validators.required, Validators.min(0)]],
+      tipo_documento: [null, [Validators.required]],
       telefono: [null, [Validators.required, Validators.min(0)]],
-      ci: [null, [Validators.required, Validators.maxLength(8)]],
-
+      numero_documento: [null, [Validators.required, Validators.min(6)]],
       celular: [null, [Validators.required, Validators.min(0)]],
 
       /* Detalle-contacto */
@@ -344,6 +345,23 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
     );
   }
 
+   obtenerTipoDocumento() {
+    this.preCadastroService.getTipoDocumento().subscribe(
+      (response: any) => {
+        if (response.responseCode === 200) {
+          console.log('Documentos', response);
+          this.tipos_documentos = response.result;
+        } else {
+          this.handleFormFieldsError();
+        }
+      },
+      (error) => {
+        /*           console.error('Error al cargar dependencias:', error);
+         */ this.handleFormFieldsError();
+      }
+    );
+  }
+
   onSubmit() {
     
     //Direcciones
@@ -376,9 +394,9 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
       this.botonGuardar.nativeElement.disabled = true;
       let formObj = {
         nombres: this.form.value.nombre,
-        cnpj_cpf: this.form.value.ci,
+        cnpj_cpf: this.form.value.numero_documento,
         razonSocial: this.form.value.razon_social,
-        nit: this.form.value.nit,
+        tipo_documento: this.form.value.tipo_documento,
         id_vendedor: this.form.value.id_vendedor,
         nombre_factura: this.form.value.nombre_factura,
         rubro: this.form.value.id_rubro,

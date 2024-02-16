@@ -456,16 +456,6 @@
                         <div *ngIf="contato.editing"></div> -->
                         </div>
                       </div>
-                      <!-- <div class="form-group col">
-                      <label>Tipo de Contacto</label>
-                      <div>
-                        <div *ngIf="!editingContacto">{{ contato.ds_tipo_cont }} {{ contato.ds_cont_meio }}</div>
-                        <div *ngIf="contato.editing">
-                          <input [(ngModel)]="contato.editedds_cont_meio">
-                        </div>
-                      </div>
-                    </div> -->
-
                       <div class="form-group col-lg-4">
                         <label>Dirección</label>
                         <div>
@@ -488,35 +478,8 @@
                         <div>
                           <input value="{{ contato.telefono_contacto || 'NO INFORMADO' }}" class="form-control"
                             readonly>
-                          <!--  <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
-                        <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedDireccion"></div> -->
                         </div>
                       </div>
-
-
-
-
-                      <!-- <div class="form-group col">
-                      <label>Nombre</label>
-                      <div>
-                        <ng-container *ngIf="!editingContacto">
-                          <div *ngIf="contato.ds_cont && contato.ds_cont.length > 1" class="mr-1">{{ contato.ds_cont }}
-                          </div>
-                        </ng-container>
-                        <ng-container *ngIf="contato.editing">
-                          <input [(ngModel)]="contato.editedDsCont">
-                        </ng-container>
-                      </div>
-                    </div> -->
-                      <!-- <button type="button" class="btn btn-light" (click)="editarContacto(contato)"
-                      *ngIf="!contato.editing">Editar Contacto</button>
-                    <div *ngIf="contato.editing">
-                      <button type="button" class="btn btn-secondary"
-                        (click)="cancelEditingContact(contato)">Cancelar</button>
-                      <button type="button" class="btn btn-primary" (click)="saveEditedContact(contato)">Guardar
-                        Cambios</button>
-                    </div> -->
-
                     </div>
                   </div>
                 </div>

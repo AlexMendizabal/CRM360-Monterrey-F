@@ -86,11 +86,12 @@
                                     message="Este campo es requerido."></invalid-form-control>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for=""> <strong> Nit </strong> <span class="text-danger">*</span> </label>
-                                    <input type="number" class="form-control" formControlName="nit" [ngClass]="onFieldError('nit') + ' ' + onFieldRequired('nit')">
-                                    <invalid-form-control [show]="onFieldInvalid('nit') == 'required'"
+                                    <label for=""> <strong> Celular <span class="text-danger">*</span> </strong> </label>
+                                    <input type="number" class="form-control" formControlName="celular" [ngClass]="onFieldError('celular') + ' ' + onFieldRequired('celular')">
+                                    <invalid-form-control [show]="onFieldInvalid('celular') == 'required'"
                                     message="Este campo es requerido."></invalid-form-control>
                                 </div>
+                                
                                 <div class="col-md-4">
                                     <label for=""> <strong> Teléfono <span class="text-danger">*</span> </strong>  </label>
                                     <input type="text" class="form-control" formControlName="telefono" [ngClass]="onFieldError('telefono') + ' ' + onFieldRequired('telefono')">
@@ -98,16 +99,15 @@
                                     message="Este campo es requerido."></invalid-form-control>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for=""> <strong> Celular <span class="text-danger">*</span> </strong> </label>
-                                    <input type="number" class="form-control" formControlName="celular" [ngClass]="onFieldError('celular') + ' ' + onFieldRequired('celular')">
-                                    <invalid-form-control [show]="onFieldInvalid('celular') == 'required'"
-                                    message="Este campo es requerido."></invalid-form-control>
+                                    <label for=""> <strong> Tipo de documento <span class="text-danger">*</span> </strong>  </label>
+                                    <select class="form-control" id="tipo_documento" formControlName="tipo_documento" (change)="onInput()" required>
+                                    <option *ngFor="let tipo of tipos_documentos" [value]="tipo.id">{{ tipo.siglas_doc }}-{{ tipo.nombre_doc }}</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for=""> <strong> CI </strong> <span class="text-danger">*</span> </label>
-                                    <input type="text" class="form-control" formControlName="ci" [ngClass]="onFieldError('ci') + ' ' + onFieldRequired('ci')">
-                                    <invalid-form-control [show]="onFieldInvalid('ci') == 'required'" message="Este campo es obligatorio/ Max. 8 caracteres"></invalid-form-control>
-
+                                    <label for=""> <strong> Numero de documento </strong> <span class="text-danger">*</span> </label>
+                                    <input type="text" class="form-control" formControlName="numero_documento" [ngClass]="onFieldError('numero_documento') + ' ' + onFieldRequired('numero_documento')">
+                                    <invalid-form-control [show]="onFieldInvalid('numero_documento') == 'required'" message="Este campo es obligatorio/ Max. 8 caracteres"></invalid-form-control>
                                 </div>
 
                             </div>

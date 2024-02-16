@@ -394,7 +394,7 @@
         <div class="d-flex flex-column align-items-center mt-3">
           <div class="d-flex justify-content-center">
             <pagination *ngIf="dados.length > itemsPerPage"
-              [maxSize]="10"
+              [maxSize]="maxSize"
               [totalItems]="totalItems"
               [(itemsPerPage)]="itemsPerPage"
               (pageChanged)="onPageChanged($event)"
