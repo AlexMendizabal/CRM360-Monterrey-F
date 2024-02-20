@@ -72,8 +72,10 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   @Output('hasError') hasError: EventEmitter<boolean> = new EventEmitter();
   @Output('scrollTop') scrollTop: EventEmitter<boolean> = new EventEmitter();
   @Output('carrinho') carrinho: EventEmitter<Object> = new EventEmitter();
-
+  
   @Output() resetRequested = new EventEmitter<void>();
+
+  @Output() cantidadNoCeroEvent = new EventEmitter<boolean>();
 
   @ViewChild('scrollToCarrinho', {}) scrollToCarrinho: ElementRef;
 
@@ -406,6 +408,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       materiais: this.form.value.materiais,
       total: this.total,
     });
+
+    console.log("estoy aquí", this.carrinho.emit);
     /*  (this.form.value.materiais) */
   }
 

@@ -340,16 +340,14 @@ export class ComercialEstoqueListaComponent implements OnInit {
 
     this.comercialService.getMateriales(params).subscribe({
       next: (response: any) => {
-        if (response.responseCode === 200) {.0
+        if (response.responseCode === 200) 
+        {.0
           2
           this.loaderNavbar = false;
-
           this.dados = [];
           this.datos = response.result;
           this.dadosReturned = this.datos.slice(0, this.itemsPerPage);
-
           this.totalItems = this.datos.length;
-          /* console.log(this.datos); */
           this.dadosEmpty = false;
         } else {
           this.loaderNavbar = false;

@@ -6,7 +6,7 @@
   <button type="button" (click)="nuevo()" [disabled]="swOfertaVencida">
     Adicionar
   </button>
-  <button type="button" (click)="onFilter()" [disabled]="loaderNavbar">
+  <button type="button"  (click)="onFilter()" [disabled]="!form.valid">
     Filtrar
   </button>
 </app-header>

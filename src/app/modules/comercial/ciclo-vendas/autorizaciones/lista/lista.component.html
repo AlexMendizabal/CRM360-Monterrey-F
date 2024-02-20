@@ -13,7 +13,6 @@
     <span *ngIf="loading">Cargando...</span>
     <span *ngIf="!loading">Filtrar</span>
   </button>
-  
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
   <div #scrollToFilter>
@@ -45,19 +44,22 @@
           <div class="form-group col-lg-3">
             <label for="codVendedor">Vendedor</label>
             <ng-select
-            class=""
-            formControlName="codVendedor"
-            [ngModel]="selectedVendedor"
-            (ngModelChange)="onChangeVendedor($event)"
-            [clearable]="true"
-            [(ngModel)]="defaultSelection"
-            (keydown.enter)="onFilter()"
-          >
-            <ng-option [value]="0" disabled>TODOS</ng-option>
-            <ng-option *ngFor="let vendedor of vendedores" [value]="vendedor.id">
-              {{ vendedor.nome }}
-            </ng-option>
-          </ng-select>
+              class=""
+              formControlName="codVendedor"
+              [ngModel]="selectedVendedor"
+              (ngModelChange)="onChangeVendedor($event)"
+              [clearable]="true"
+              [(ngModel)]="defaultSelection"
+              (keydown.enter)="onFilter()"
+            >
+              <ng-option [value]="0" disabled>TODOS</ng-option>
+              <ng-option
+                *ngFor="let vendedor of vendedores"
+                [value]="vendedor.id"
+              >
+                {{ vendedor.nome }}
+              </ng-option>
+            </ng-select>
           </div>
           <div class="form-group col-lg-3">
             <label for="codStatus">Estado Oferta</label>
@@ -91,7 +93,6 @@
               <ng-option value="25">25</ng-option>
               <ng-option value="50">50</ng-option>
             </ng-select>
-
           </div>
         </div>
       </form>
@@ -198,64 +199,76 @@
     >
 
     <ng-template #tbody let-tbody>
-      <tr *ngFor="let autorizacion of getPaginateData(); let i = index"
-        [class.table-active]="autorizacion.id_cliente == clienteSelecionado">
-        <td [ngClass]="{ 
-          'border-primary'  : autorizacion.id_estado_auto == 10,
-          'border-success' : autorizacion.id_estado_auto == 12, 
-          'border-danger'  : autorizacion.id_estado_auto == 11
-        }">
-        <td class="text-center hover">
-          {{ autorizacion.fecha_creacion | date : 'dd/MM/yyyy' }}
-        </td>
-        <!-- <td class="text-center hover">
+      <ng-container *ngIf="getPaginateData().length > 0; else noDataTemplate">
+        <tr
+          *ngFor="let autorizacion of getPaginateData(); let i = index"
+          [class.table-active]="autorizacion.id_cliente == clienteSelecionado"
+        >
+          <td
+            [ngClass]="{
+              'border-primary': autorizacion.id_estado_auto == 10,
+              'border-success': autorizacion.id_estado_auto == 12,
+              'border-danger': autorizacion.id_estado_auto == 11
+            }"
+          ></td>
+          <td class="text-center hover">
+            {{ autorizacion.fecha_creacion | date : 'dd/MM/yyyy' }}
+          </td>
+          <!-- <td class="text-center hover">
           {{ autorizacion.codigo_oferta }}
         </td> -->
-        <td class="text-center hover">
-          {{ autorizacion.id_cliente }}
-        </td>
-        <td class="text-center hover">
-          {{ autorizacion.nombre_cliente | uppercase }}
-        </td>
-        <td class="text-center hover">
-          {{ autorizacion.monto_total }}
-        </td>
-        <td class="text-center hover">
-          {{ autorizacion.monto_total_bruto }}
-        </td>
-        <td class="text-center hover">
-          {{ autorizacion.descuento_total }}
-        </td>
-        <td
-          class="text-center hover"
-          [ngStyle]="{ color: getColor(autorizacion.estado_oferta) }"
-        >
-          {{ autorizacion.estado_oferta | uppercase }}
-        </td>
-        <!--  <td class="text-center hover" *ngIf="autorizacion.estado_oferta === 'RECHAZADO'" style="color: red;">
+          <td class="text-center hover">
+            {{ autorizacion.id_cliente }}
+          </td>
+          <td class="text-center hover">
+            {{ autorizacion.nombre_cliente | uppercase }}
+          </td>
+          <td class="text-center hover">
+            {{ autorizacion.monto_total }}
+          </td>
+          <td class="text-center hover">
+            {{ autorizacion.monto_total_bruto }}
+          </td>
+          <td class="text-center hover">
+            {{ autorizacion.descuento_total }}
+          </td>
+          <td
+            class="text-center hover"
+            [ngStyle]="{ color: getColor(autorizacion.estado_oferta) }"
+          >
+            {{ autorizacion.estado_oferta | uppercase }}
+          </td>
+          <!--  <td class="text-center hover" *ngIf="autorizacion.estado_oferta === 'RECHAZADO'" style="color: red;">
           {{ autorizacion.estado_oferta | uppercase }}
         </td>
         <td class="text-center hover" *ngIf="autorizacion.estado_oferta === 'PENDIENTE'" style="color: blue;">
           {{ autorizacion.estado_oferta | uppercase }}
         </td> -->
-        <td class="text-center">
-          <a
-            class="dropdown-item"
-            routerLink="/modal-autorizacion"
-            (click)="openModal(autorizacion.id_autorizacion)"
-          >
-            <i class="fas fa-file"></i
-            ><span class="text-uppercase"> Detalles</span>
-          </a>
-          <!-- <a
+          <td class="text-center">
+            <a
+              class="dropdown-item"
+              routerLink="/modal-autorizacion"
+              (click)="openModal(autorizacion.id_autorizacion)"
+            >
+              <i class="fas fa-file"></i
+              ><span class="text-uppercase"> Detalles</span>
+            </a>
+            <!-- <a
             class="dropdown-item"
             routerLink="/vista"
             (click)="onVista(autorizacion.id_oferta)"
           >
             <i class="fas fa-eye"></i><span class="text-uppercase"> Vista</span>
           </a> -->
-        </td>
-      </tr>
+          </td>
+        </tr>
+      </ng-container>
+      <ng-template #noDataTemplate>
+        <!-- Mostrar un mensaje o realizar acciones cuando no hay datos -->
+        <tr>
+          <td colspan="9" class="text-center">No hay datos disponibles.</td>
+        </tr>
+      </ng-template>
     </ng-template>
   </custom-table>
   <div class="d-flex justify-content-center mt-3">

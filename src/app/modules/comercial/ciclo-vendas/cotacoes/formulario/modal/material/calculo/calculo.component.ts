@@ -475,6 +475,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       if (this.material.controladoPorLote == 1) {
         if (this.material.estoqueLote != this.form.value.quantidade) {
           this.pnotifyService.notice(`Quantidade diferente ao lote. Quantidade deve ser: ${this.material.estoqueLote}`);
+          
           return;
         }
         else {

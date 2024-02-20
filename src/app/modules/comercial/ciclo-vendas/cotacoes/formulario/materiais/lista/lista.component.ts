@@ -555,10 +555,10 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   setOrderBy(column: string) {
     /* console.log(column); */
     if (this.orderBy === column) {
-      this.orderType = this.orderType === 'asc' ? 'desc' : 'asc'; // Cambiar el tipo de orden si se hace clic nuevamente en la misma columna
+      this.orderType = this.orderType === 'asc' ? 'desc' : 'asc'; 
     } else {
       this.orderBy = column;
-      this.orderType = 'asc'; // Establecer el orden ascendente por defecto al hacer clic en una nueva columna
+      this.orderType = 'asc';
     }
 
     // Ordenar la matriz resultcliente en función del orden seleccionado
@@ -566,8 +566,6 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 
       const valueA = a[column]/* .toUpperCase(); */;
       const valueB = b[column]/* .toUpperCase() */;
-      /*       console.log(this.datos);
-            console.log(column); */
       if (valueA < valueB) {
         return this.orderType === 'asc' ? -1 : 1;
       }
@@ -580,31 +578,33 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 /*     this.onFilter();
  */  }
 
-  onFilter(): void {
-    var tipo = 2
-    if (this.checkFieldErrors() === false) {
-      //console.log(this.checkFieldErrors);
-      if (this.searching === false && this.form.valid) {
-        this.setRouterParams(this.getFormFilterValues(), tipo);
-      }
-    } else {
-      /*    console.log("hola"); */
-      this.setRouterParams(this.getFormFilterValues(), tipo);
-      /*   this.scrollToFormOnTop.emit(true); */
-    }
-  }
-
-  onFilterVend(a): void {
-    var tipo = a;
-
-    if (this.checkFieldErrors() === false) {
-      if (this.searching === false && this.form.valid) {
-        this.setRouterParams(this.getFormFilterValues(), tipo);
-      }
-    } else {
+ onFilter(): void {
+  var tipo = 2
+  if (this.checkFieldErrors() === false) {
+    if (this.searching === false && this.form.valid) {
       this.setRouterParams(this.getFormFilterValues(), tipo);
     }
+  } else {
+    this.setRouterParams(this.getFormFilterValues(), tipo);
   }
+}
+
+
+onFilterVend(tipo): void {
+  if (this.checkFieldErrors() === false) {
+    if (this.searching === false && this.form.valid) {
+      this.searching = true; 
+      this.setRouterParams(this.getFormFilterValues(), tipo);
+    }
+  } else {
+    this.searching = true; 
+    this.setRouterParams(this.getFormFilterValues(), tipo);
+  }
+
+  this.searching = false;
+}
+
+  
 
   setRouterParams(params: any, tipo: number): void {
     this.router.navigate([], {
@@ -659,6 +659,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     this.searching = true;
     /* this.searchParams = params; */
     this.dados = [];
+    this.upsell = [];
+    this.crosell = [];
     this.dadosLoaded = false;
     this.dadosEmpty = false;
      let params = {};
@@ -687,9 +689,9 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         .pipe(
           finalize(() => {
             this.loaderNavbar.emit(false);
-            this.searching = true;
             this.firstSearch = true;
             this.dadosLoaded = true;
+            this.searching = false;
           })
         )
         .subscribe({
@@ -772,9 +774,9 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         .pipe(
           finalize(() => {
             this.loaderNavbar.emit(false);
-            this.searching = false;
             this.firstSearch = true;
             this.dadosLoaded = true;
+            this.searching = false;
           })
         )
         .subscribe({
@@ -841,9 +843,9 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         .pipe(
           finalize(() => {
             this.loaderNavbar.emit(false);
-            this.searching = true;
             this.firstSearch = true;
             this.dadosLoaded = true;
+            this.searching = false;
           })
         )
         .subscribe({

@@ -105,7 +105,7 @@
                       *ngIf="form.value.materiais[i].cantidad == 0 || form.value.materiais[i].cantidad == null">
                       -
                     </td>
-                    <td class=" text-center border-light" [ngStyle]="{ width: columSize('valor') }">
+                    <td class=" text-center border-light" id="precio" [ngStyle]="{ width: columSize('valor') }">
                       <span *ngIf="checkValorMaterial(form.value.materiais[i]) === true">
                         {{ form.value.materiais[i].valor | number:'1.2-2' }}
                       </span>

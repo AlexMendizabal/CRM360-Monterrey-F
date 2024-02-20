@@ -3,21 +3,7 @@
     @import 'src/assets/scss/variables';
     @import 'src/app/modules/comercial/ciclo-vendas/cotacoes/formulario/formulario.component.scss';
 
-    [_nghost-sms-c7] .table th {
-        width: 100%;
-        border-collapse: collapse;
-        /* Otros estilos generales de la tabla */
-        background-color: #3e0752 !important;
-        font-weight: 600 !important;
-      }
 
-    [_ngcontent-hfy-c14] .table th {
-        width: 100%;
-        border-collapse: collapse;
-        /* Otros estilos generales de la tabla */
-        background-color: #3e0752 !important;
-        font-weight: 600 !important;
-      }
       
     .nav-tabs {
         border-bottom: none !important;
@@ -26,7 +12,7 @@
 
     .nav-tabs .nav-link.active {
         color: #fff;
-        background-color: rgb(101, 12, 92);
+        background-color: #3e0752;
         border-color: #3e0752; 
         padding-bottom: 6px;
         padding-top: 6px;
@@ -49,7 +35,6 @@
     }
 
 }
-
 
 .table-responsive .custom-table thead {
     background-color: #3498db; /* Cambia el color de fondo según tus preferencias */

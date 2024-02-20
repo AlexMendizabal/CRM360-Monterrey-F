@@ -519,7 +519,7 @@ filterByCodVendedorStatus(status: string): void {
 
 
 onFilter(): void {
-  this.loading = true;  // Establece loading a true antes de la llamada asincrónica
+  this.loading = true;
 
   this.itemsPerPage = this.formGroup.value.registros;
   this.currentPage = 1;
@@ -679,8 +679,11 @@ onPageChanged(event: PageChangedEvent) {
 getPaginateData(): any[] {
   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
   const endIndex = startIndex + this.itemsPerPage;
-  return this.autorizaciones.slice(startIndex, endIndex);
+
+  // Verifica si hay datos antes de intentar realizar la operación de corte
+  return this.autorizaciones ? this.autorizaciones.slice(startIndex, endIndex) : [];
 }
+
 
 onPageChangedModal(event: PageChangedEvent): void {
   this.currentPage = event.page;

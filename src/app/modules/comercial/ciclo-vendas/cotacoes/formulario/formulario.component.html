@@ -285,68 +285,56 @@
     <div class="container">
       <div class="wrapper">
         <div class="arrow-steps clearfix">
-          <div 
-          *ngIf="!swActivarCliente"
-          class="step current "
-          (click)="onShowBloco(2)"
+          <div
+            *ngIf="!swActivarCliente"
+            class="step current"
+            (click)="onShowBloco(2)"
           >
             <span> Datos de cliente </span>
           </div>
           <div 
-          *ngIf="swActivarCliente"
-          class="step current bg-success"
-          (click)="onShowBloco(2)"
+          *ngIf="swActivarCliente" 
+          class="step bg-success"
           >
             <span> Datos de cliente </span>
           </div>
 
           <div
-          *ngIf="!swActivarCliente"
-          class="step current"
-          (click)="onShowBloco(3)"
+            id="Materiales"
+            *ngIf="!swMateriales"
+            class="step"
+            (click)="onShowBloco(3)"
           >
-            <span> Busqueda y Seleccion de Maeriales </span>
+            <span> Busqueda y Seleccion de Materiales </span>
           </div>
           <div
-          *ngIf="swActivarCliente"
-          class="step current bg-success"
-          (click)="onShowBloco(3)"
+            *ngIf="swMateriales"
+            class="step bg-success"
+            (click)="onShowBloco(3)"
           >
             <span> Busqueda y Seleccion de Maeriales </span>
           </div>
-          <div 
-          *ngIf="!swActivarEnvio"
-          class="step current"
-          (click)="onShowBloco(5)"
-          >
+          <div *ngIf="!swActivarEnvio" class="step" (click)="onShowBloco(5)">
             <span> Datos de Envio </span>
           </div>
-          <div 
-          *ngIf="swActivarEnvio"
-          class="step current bg-success"
-          (click)="onShowBloco(5)"
+          <div
+            *ngIf="swActivarEnvio"
+            class="step bg-success"
+            (click)="onShowBloco(5)"
           >
             <span> Datos de Envio </span>
-          </div>
-          <div 
-          *ngIf="!swActivarAdicionales"
-          class="step "
-          (click)="onShowBloco(6)"
-          >
-            <span>Datos Adicionales</span>
-          </div>
-          <div 
-          *ngIf="swActivarAdicionales"
-          class="step bg-success"
-          (click)="onShowBloco(6)"
-          >
-            <span>Datos Adicionales</span>
           </div>
         </div>
+
+        <!-- <div class="nav clearfix">
+          <a href="#" class="prev" (click)="previousStep()">Previous</a>
+          <a href="#" class="next pull-right" (click)="nextStep()">Next</a>
+        </div> -->
+        
       </div>
     </div>
 
-    <div class="col shadow-sm mt-4" id="blocos">
+    <div class="col shadow-sm mt-4 cliente" id="blocos">
       <div
         class="row d-flex p-3"
         style="cursor: pointer"
@@ -1009,6 +997,18 @@
         <!--novos campos fim-->
         <div class="form-row"></div>
         <div class="row"></div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="observacoes">Observaciones</label>
+            <textarea
+              class="form-control"
+              id="observacoes"
+              formControlName="observacoes"
+              [readonly]="visualizar"
+            >
+            </textarea>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1017,7 +1017,7 @@
     <!--   <div class="row justify-content-between p x-3">-->
 
     <!-- Datos adicionales -->
-    <div class="col shadow-sm mt-4" id="blocos">
+    <!--    <div class="col shadow-sm mt-4" id="blocos">
       <div
         class="row d-flex p-3"
         style="cursor: pointer"
@@ -1062,10 +1062,10 @@
         </div>
       </div>
       <div class="col" [hidden]="showBloco6">
-        <!-- <div class="row">
+        <div class="row">
               <div class="col"><hr></div>
             </div> -->
-        <!--<div class="form-row">
+    <!--<div class="form-row">
               <div class="form-group col">
                 <label for="dadosAdicionais">Dados Adicionais da Nota Fiscal</label>
                 <textarea class="form-control" id="dadosAdicionais" formControlName="dadosAdicionais"
@@ -1073,20 +1073,9 @@
                 </textarea>
               </div>
             </div>-->
-        <div class="form-row">
-          <div class="form-group col">
-            <label for="observacoes">Observaciones</label>
-            <textarea
-              class="form-control"
-              id="observacoes"
-              formControlName="observacoes"
-              [readonly]="visualizar"
-            >
-            </textarea>
-          </div>
-        </div>
-      </div>
-    </div>
+
+    <!-- </div>
+    </div> -->
     <!--  </div> -->
     <!-- </div> -->
   </form>

@@ -10,6 +10,8 @@ import {
   HostListener,
   Input,
   TemplateRef,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -112,8 +114,9 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   carnet_cliente = '';
   tipo_documento = '';
 
-  swActivarCliente = false; 
-  swActivarEnvio = false; 
+  swActivarCliente = false;
+  swMateriales = false;
+  swActivarEnvio = false;
   swActivarAdicionales = false;
 
   activatedRouteSubscription: Subscription;
@@ -239,9 +242,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   showBloco3 = true;
   showBloco4 = true;
   showBloco5 = true;
-  loaderCotizacion: boolean = false;
-
   showBloco6 = true;
+
+  currentStep: number = 2;
+
+  loaderCotizacion: boolean = false;
 
   swEntrega = false;
   id_forma_contacto = 0;
@@ -324,13 +329,16 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
     /*   this.form.controls.codigoCliente.setValue('Código'); */
 
-    const back = document.querySelector(".prev") as HTMLElement;
-    const next = document.querySelector(".next") as HTMLElement;
-    const steps = document.querySelectorAll(".step");
+    const back = document.querySelector('.prev') as HTMLElement;
+    const next = document.querySelector('.next') as HTMLElement;
+    const steps = document.querySelectorAll('.step');
 
-    next.addEventListener("click", () => {
+    next.addEventListener('click', () => {
       steps.forEach((step, i) => {
-        if (!step.classList.contains('current') && !step.classList.contains('done')) {
+        if (
+          !step.classList.contains('current') &&
+          !step.classList.contains('done')
+        ) {
           step.classList.add('current');
           (steps[i - 1] as HTMLElement).classList.remove('current');
           (steps[i - 1] as HTMLElement).classList.add('done');
@@ -339,9 +347,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       });
     });
 
-    back.addEventListener("click", () => {
+    back.addEventListener('click', () => {
       steps.forEach((step, i) => {
-        if (step.classList.contains('done') && (steps[i + 1] as HTMLElement).classList.contains('current')) {
+        if (
+          step.classList.contains('done') &&
+          (steps[i + 1] as HTMLElement).classList.contains('current')
+        ) {
           (steps[i + 1] as HTMLElement).classList.remove('current');
           step.classList.remove('done');
           step.classList.add('current');
@@ -349,30 +360,36 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         }
       });
     });
-
   }
 
-  verificarCliente(){
+  verificarCliente() {
     const formValue = this.form.getRawValue();
     var codigoCliente = formValue.codigo_cliente;
     var idVendedor = this.idvendedor;
     var id_lista_precio = this.idListaPrecio;
     //console.log(codigoCliente, idVendedor, id_lista_precio);
-    if(idVendedor > 0 && id_lista_precio > 0 && codigoCliente!=''){
+    if (idVendedor > 0 && id_lista_precio > 0 && codigoCliente != '') {
       this.swActivarCliente = true;
-    }
-    else{
+      var elem = document.getElementById('Materiales');
+      elem.style.background = '#eadf04';
+      var elements = document.getElementsByClassName('cliente');
+      for (var i = 0; i < elements.length; i++) {
+        var element = elements[i] as HTMLElement;
+        if (element) {
+          element.style.display = 'none';
+        }
+      }
+    } else {
       this.swActivarCliente = false;
     }
   }
 
-  verificarEnvio(){
+  verificarEnvio() {
     const formValue = this.form.getRawValue();
     var codEndereco = formValue.codEndereco;
-    if(codEndereco!=''){
+    if (codEndereco != '') {
       this.swActivarEnvio = true;
-    }
-    else{
+    } else {
       this.swActivarEnvio = false;
     }
   }
@@ -382,13 +399,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   } */
 
-
-
   canDeactivate(): boolean {
     // Implement canDeactivate logic if necessary
     return true;
   }
-
 
   getCiudades() {
     this.dadosFaturamentoService
@@ -709,7 +723,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         this.pnotifyService.error();
       },
     });
-    
   }
 
   getVendedor() {
@@ -1391,8 +1404,27 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       //    }
     }
   }
+  back(){
+
+  }
+  
+  next(){
+    
+  }
 
   onCarrinho(carrinho: any): void {
+
+    for (let index = 0; index < carrinho.materiais.length; index++) {
+      
+      if (carrinho.materiais[index].qtdeItem!== 0 && carrinho.materiais[index].qtdeItem !== null) {
+        var elem = document.getElementById('Materiales');
+        elem.style.background = '#28A745';
+      } else {
+        var elem = document.getElementById('Materiales');
+        elem.style.background = '#FF0000';
+      }
+    }
+
     this.materiais = carrinho.materiais;
     this.valorProposta = carrinho.total.valorProposta;
     this.valorPropuestaBruto = carrinho.total.bruto;
@@ -1568,7 +1600,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
           this.cotacoesService
             .verificarOfertasCliente(paramsVerificacion)
-            .pipe(finalize(() => {this.loaderCotizacion = false;}))
+            .pipe(
+              finalize(() => {
+                this.loaderCotizacion = false;
+              })
+            )
             .subscribe((response: JsonResponse) => {
               if (response.pendiente === true) {
                 this.pnotifyService.error(
@@ -2160,6 +2196,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   onShowBloco(bloco: number) {
 
+    if (bloco === 3 && !this.swActivarCliente) {
+      // If trying to show step 3 without completing step 2, return
+      return;
+    }
+    this.currentStep = bloco;
     //console.log(bloco);
     if (bloco == 1) {
       this.showBloco1 = !this.showBloco1;
@@ -2173,6 +2214,25 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.showBloco6 = !this.showBloco6;
     }
   }
+
+  nextStep() {
+    if (this.currentStep < 5) { 
+      if (this.currentStep === 2 && !this.swActivarCliente) {
+        
+        return;
+      }
+      this.currentStep++;
+    }
+  }
+
+  
+  previousStep() {
+    if (this.currentStep > 2) { 
+      this.currentStep--;
+    }
+  }
+
+  
 
   getDadosRelacionamento(codCliente: number): void {
     this.clientesService.getDadosRelacionamento(codCliente).subscribe({
@@ -2198,8 +2258,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             );
           } else {
             this.form.controls.codRazaoSocial.setValue(this.clientes[0].carnet);
-                         this.form.controls.codigoCliente.setValue(this.clientes[0].tipo_documento);
-            
+            this.form.controls.codigoCliente.setValue(
+              this.clientes[0].tipo_documento
+            );
+
             this.onChangeCliente(this.clientes[0].codCliente, 'user');
           }
         }
