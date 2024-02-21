@@ -462,7 +462,7 @@
     
     .container {
         font-family: 'Lato', sans-serif;
-        width: 5000px;
+        width: 1000px;
         margin: 0 auto;
     }
     
@@ -490,15 +490,21 @@
     }
     
     /* Breadcrups CSS */
+
+    .arrow-steps {
+        display: flex; /* Cambiado a flexbox */
+
+      }
     
     .arrow-steps .step {
         font-size: 14px;
         text-align: center;
         color: black !important;
         cursor: default;
-        margin: 0 3px;
-        padding: 7px 7px 7px 30px;
+        margin: 100 0px;
+       /*  padding: 7px 10px 7px 160px; Adjusted left padding */
         min-width: 250px;
+        font-weight: 500;
         float: left;
         position: relative;
         background-color: #d9e3f7;
@@ -506,8 +512,11 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none; 
-      transition: background-color 0.2s ease;
+        transition: background-color 0.2s ease;
+        
     }
+    
+    
     
     /* .arrow-steps .step:after,
     .arrow-steps .step:before {
@@ -522,12 +531,12 @@
         border-left: 17px solid #d9e3f7;	
         z-index: 2;
       transition: border-color 0.2s ease;
-    } */
+    } */ 
     
     .arrow-steps .step:before {
         right: auto;
         left: 0;
-        border-left: 17px solid #fff;	
+        border-left: 100px solid #fff;	
         z-index: 0;
     }
     
@@ -536,12 +545,18 @@
     }
     
     .arrow-steps .step:first-child {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
+        border-top-left-radius: 100px;
+        border-bottom-left-radius: 100px;
     }
-    
+    .arrow-steps .step:last-child {
+        border-bottom-right-radius: 100px;
+        border-top-right-radius: 100px;
+    }
+
     .arrow-steps .step span {
-        position: relative;
+        position: relative; /* Ensure the span is positioned relatively */
+        left: -70px; /* Adjusted position for the text */
+        font-weight: 600;
     }
     
     .arrow-steps .step span:before {
@@ -565,8 +580,12 @@
         background-color: #eadf04;
     }
     
-    .arrow-steps .step.current:after {
-        border-left: 17px solid #eadf04;	
+    .arrow-steps h5{
+        font-size: 14px;
+        margin-bottom: 0;
+        font-weight: 600;
+        padding: 20px 30px; 
     }
+
 
 }

@@ -12,6 +12,7 @@ import {
   TemplateRef,
   EventEmitter,
   Output,
+  Renderer2,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -290,7 +291,9 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     private router: Router,
     private comercialService: ComercialService,
     private ubicacionService: ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionService,
-    private dadosFaturamentoService: ComercialClientesCadastroDadosFaturamentoFormularioService
+    private dadosFaturamentoService: ComercialClientesCadastroDadosFaturamentoFormularioService,
+    private elementRef: ElementRef,
+    private renderer: Renderer2
   ) {
     this.localeService.use('pt-br');
     this.bsConfig = Object.assign(
@@ -316,6 +319,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.getTodosVendedores();
     this.getCentrosLogisticos();
     this.getRubros();
+    this.verificarCliente();
     this.tipoEntrega = [
       { id: 1, nombre: 'entrega en almacen' },
       { id: 2, nombre: 'entrega en obra ' },
@@ -368,17 +372,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     var idVendedor = this.idvendedor;
     var id_lista_precio = this.idListaPrecio;
     //console.log(codigoCliente, idVendedor, id_lista_precio);
-    if (idVendedor > 0 && id_lista_precio > 0 && codigoCliente != '') {
+    if (idVendedor > 0 && id_lista_precio > 0 && codigoCliente != '' && codigoCliente != null) {
       this.swActivarCliente = true;
       var elem = document.getElementById('Materiales');
       elem.style.background = '#eadf04';
-      var elements = document.getElementsByClassName('cliente');
-      for (var i = 0; i < elements.length; i++) {
-        var element = elements[i] as HTMLElement;
-        if (element) {
-          element.style.display = 'none';
-        }
-      }
+     // elem.style['border-left'] = '17px solid #eadf04';
+      
+      this.swActivarCliente = true;
     } else {
       this.swActivarCliente = false;
     }
@@ -2215,24 +2215,48 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     }
   }
 
-  nextStep() {
-    if (this.currentStep < 5) { 
-      if (this.currentStep === 2 && !this.swActivarCliente) {
-        
-        return;
-      }
-      this.currentStep++;
-    }
+  ngAfterViewInit() {
+    const back = this.elementRef.nativeElement.querySelector('.prev');
+    const next = this.elementRef.nativeElement.querySelector('.next');
+    const steps = this.elementRef.nativeElement.querySelectorAll('.step');
+
+    next.addEventListener('click', () => {
+      steps.forEach((step, i) => {
+        if (!step.classList.contains('current') && !step.classList.contains('done')) {
+          this.renderer.addClass(step, 'current');
+          this.renderer.removeClass(steps[i - 1], 'current');
+          this.renderer.addClass(steps[i - 1], 'done');
+          return false;
+        }
+      });
+    });
+
+    back.addEventListener('click', () => {
+      steps.forEach((step, i) => {
+        if (step.classList.contains('done') && steps[i + 1].classList.contains('current')) {
+          this.renderer.removeClass(steps[i + 1], 'current');
+          this.renderer.removeClass(step, 'done');
+          this.renderer.addClass(step, 'current');
+          return false;
+        }
+      });
+    });
   }
 
-  
-  previousStep() {
+  onPreviousClick() {
+    const cliente = document.getElementById("contenedorCliente");
+    const materiales= document.getElementById("Materiales");
+    const envio = document.getElementById("datosEnvio");
+
+    cliente.style.background = 'blue';
+    
+  }
+
+  onNextClick() {
     if (this.currentStep > 2) { 
       this.currentStep--;
     }
   }
-
-  
 
   getDadosRelacionamento(codCliente: number): void {
     this.clientesService.getDadosRelacionamento(codCliente).subscribe({

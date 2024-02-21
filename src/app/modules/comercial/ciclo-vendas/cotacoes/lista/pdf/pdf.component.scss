@@ -155,8 +155,10 @@ input[type='button'] {
   margin-left: 10px;
 }
 
-.descripcion-font{
+.descripcion-font {
   font-size: 10px;
+  white-space: pre-wrap;
+  max-width: 200px;
 }
 
 .mensaje-font{

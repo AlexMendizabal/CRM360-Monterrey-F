@@ -964,6 +964,8 @@ nuevo() {
         return 'red';
       case 'PENDIENTE':
         return 'blue';
+      case 'CERRADO':
+          return 'red';
       default:
         return '';
     }

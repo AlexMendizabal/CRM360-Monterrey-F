@@ -832,6 +832,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   } */
   
   onFilter() {
+    //this.form.get('time').setValue(new Date().getTime());
     this.loaderNavbar = true;
     this.detailPanelService.hide();
     if (this.form.value['registros']) {
@@ -841,12 +842,9 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: this.routerService.setBase64UrlParams(this.getParams()),
-    })
-    .catch(error => {
-      console.error('Error during filtering:', error);
-    })
-    .finally(() => {
-      this.loaderNavbar = false;
+    }).then(() => {
+      // Recarga la página después de la navegación
+      window.location.reload();
     });
   }
 
@@ -857,20 +855,11 @@ export class ComercialCicloVendasCotacoesListaComponent
         if (Object.keys(response).length > 0) {
           const _response = this.routerService.getBase64UrlParams(response);
           this.form.patchValue(_response);
-          
-          /* this.maxSize = 10;
-          this.end = _response.registros
-          this.itemsPerPage = _response.registros;
-        
-         */
-        console.log(_response);
-        // Refresca la página
-       /*  this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this.router.navigate([decodeURI(this.location.path())]);
-        }); */
+          console.log(_response);
               }
       this.search(this.getParams());
       });
+     
   }
 
   getParams() {
@@ -888,6 +877,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     }
     return _params;
   }
+
 
 
 /*   setRouterParams(params: any): void {
@@ -1012,11 +1002,11 @@ export class ComercialCicloVendasCotacoesListaComponent
             this.dados = response.result;
             this.clientes = response.clientes;
             this.totalItems = this.dados.length;
-       
           } else {
             this.loaderNavbar = false;
             this.pnotifyService.notice('Ningún registro encontrado');
             this.dadosEmpty = false;
+            return;
           }
         },
         error: (error) => this.pnotifyService.error(),
@@ -1059,18 +1049,11 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
  */
   
-
-
   onPageChanged(event: PageChangedEvent): void {
     this.begin = (event.page - 1) * event.itemsPerPage;
     this.end = event.page * event.itemsPerPage;
-    this.dados.slice(this.begin, this.end);
   }
-  refreshPage() {
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([decodeURI(this.location.path())]);
-    });
-  }
+
  /*  getPaginateData(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
@@ -1094,7 +1077,6 @@ export class ComercialCicloVendasCotacoesListaComponent
         'border-color': cotacao.cor,
       };
     }
-
     return {};
   }
 
@@ -1658,16 +1640,20 @@ export class ComercialCicloVendasCotacoesListaComponent
       }
     );
   }
+  onEdit(item) {
+    console.log('datos item',item);
+    this.router.navigate(['./', item], {
+      relativeTo: this.activatedRoute,
+      queryParams: this.routerService.setBase64UrlParams(item),
+    });
+  }
 
-  onEdit(): void {
-    /* this.loaderNavbar = true; */
-
+  /* onEdit(): void {
+    // this.loaderNavbar = true;
     let empresa = this.activeCotacao.codEmpresa;
     const idSubModulo = this.activatedRoute.snapshot.params.idSubModulo;
-    this.router.navigate([
-      `/comercial/ciclo-vendas/${idSubModulo}/cotacoes-pedidos/editar/${this.activeCotacao.nrPedido}/${empresa}`,
-    ]);
-  }
+    this.router.navigate([`/comercial/ciclo-vendas/${idSubModulo}/cotacoes-pedidos/editar/${this.activeCotacao.nrPedido}/${empresa}`,]);
+  } */
 
   transformNumberToCEP(valor: any): string {
     const resto = 8 - String(valor).length;

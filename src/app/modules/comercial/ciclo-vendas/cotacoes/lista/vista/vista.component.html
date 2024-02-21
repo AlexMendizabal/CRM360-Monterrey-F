@@ -15,7 +15,7 @@
                   [style.height.px]="imageHeight"
                 />
                 <small class="float-right"
-                  >Nº Oferta: {{ resultFromParent.oferta[0].id_oferta }}</small
+                  >Nº Oferta: {{ resultFromParent.oferta[0].codigo_oferta }}</small
                 >
               </h2>
             </div>
@@ -33,19 +33,6 @@
                     <div class="card-body">
                       <div class="col-md-12">
                         <div class="row">
-                          <div class="col-md-3">
-                            <label for="">Nombre de Oferta:</label>
-                            <input
-                              type="text"
-                              name=""
-                              id=""
-                              value="{{
-                                resultFromParent.oferta[0].nombre_oferta
-                              }}"
-                              class="form-control"
-                              readonly
-                            />
-                          </div>
                           <div class="col-md-3">
                             <label for="">Fecha Inicial:</label>
                             <input
@@ -409,8 +396,11 @@
                         </td>
                         <td class="text-center">{{ analitico.total_bruto }}</td>
                         <td class="text-center">
-                          {{ analitico.precio_descuento }}
+                          <ng-container *ngIf="analitico.precio_descuento !== null && analitico.precio_descuento !== undefined">
+                            {{ analitico.precio_descuento + '%' }}
+                          </ng-container>
                         </td>
+                        
                         <td class="text-center">{{ analitico.subtotal }}</td>
                         <td class="text-center">
                           {{ analitico.nombre_almacen }}

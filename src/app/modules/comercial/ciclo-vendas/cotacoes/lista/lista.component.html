@@ -26,9 +26,7 @@
             <input
               class="form-control"
               id="dataInicial1"
-              type="text"
-              bsDatepicker
-              [bsConfig]="bsConfig"
+              type="date"
               formControlName="dataInicial1"
             />
           </div>
@@ -38,8 +36,7 @@
             <input
               class="form-control"
               id="dataInicial2"
-              type="text"
-              bsDatepicker
+              type="date"
               labelForId="dataInicial2"
               formControlName="dataInicial2"
             />
@@ -263,7 +260,7 @@
           </ng-template>
           
           <ng-template #tbody let-tbody *ngIf="dados">
-            <tr *ngFor="let pedido of dados | slice : begin : end; let i = index" class="hover">
+            <tr *ngFor="let pedido of dados | slice : begin : end; let i = index" [tooltip]="pedido.tipo_estado == 14 ? 'Editar' : ''" class="hover">
               <td
                 class="hover text-success"
                 *ngIf="pedido.codigo_oferta !== null; else segCodigo"
@@ -393,18 +390,18 @@
         </custom-table>
         <div class="d-flex flex-column align-items-center mt-3">
           <div class="d-flex justify-content-center">
-            <pagination *ngIf="dados.length > itemsPerPage"
-              [maxSize]="maxSize"
-              [totalItems]="totalItems"
-              [(itemsPerPage)]="itemsPerPage"
-              (pageChanged)="onPageChanged($event)"
-              [boundaryLinks]="true"
-              [(ngModel)]="currentPage"
-              previousText="&lsaquo;"
-              nextText="&rsaquo;"
-              firstText="&laquo;"
-              lastText="&raquo;"
-            ></pagination>
+            <pagination
+            [maxSize]="10"
+            [totalItems]="totalItems"
+            [(itemsPerPage)]="itemsPerPage"
+            (pageChanged)="onPageChanged($event)"
+            [boundaryLinks]="true"
+            [(ngModel)]="currentPage"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;">
+          </pagination>
           </div>
           <div class="mb-2">
             Total {{ itemsPerPage * (currentPage - 1) + 1 }} a
@@ -417,7 +414,6 @@
           </div>
         </div>
       </div>
-    
   </div>
 
   <div *ngIf="dadosEmpty && !dadosLoaded"

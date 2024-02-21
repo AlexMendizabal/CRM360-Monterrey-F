@@ -34,34 +34,38 @@
           utilidad. Para cualquier consulta no dude en comunicarse con nosotros
         </p>
       </div>
-      <div>
-        <table class="table tr">
-          <tr class="customer-info">
-            <th>NRO</th>
-            <th>COD</th>
-            <th>DESCRIPCIÓN</th>
-            <th>UND</th>
-            <th>CANT</th>
-            <th>PRECIO</th>
-            <th>Desc.%</th>
-            <th>PRECIO NETO</th>
-            <th>TOTAL USD.</th>
-            <th>PESO</th>
-          </tr>
-          <tr *ngFor="let material of materiais; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ material.codigo_material }}</td>
-            <td class="descripcion-font">{{ material.descripcion }}</td>
-            <td>{{ material.unidad }}</td>
-            <td>{{ material.cantidad }}</td>
-            <td>{{ material.precio }}</td>
-            <td>{{ material.descuento }}</td>
-            <td>{{ (material.subtotal).toFixed(2) }}</td>
-            <td>{{ (material.total).toFixed(2) }}</td>
-            <td>{{ material.preso }}</td>
-          </tr>
+      <div class="table-responsive">
+        <table class="table">
+            <thead class="customer-info">
+                <tr>
+                    <th>NRO</th>
+                    <th>COD</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th>UND</th>
+                    <th>CANT</th>
+                    <th>PRECIO</th>
+                    <th>Desc.%</th>
+                    <th>PRECIO NETO</th>
+                    <th>TOTAL USD.</th>
+                    <th>PESO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let material of materiais; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ material.codigo_material }}</td>
+                    <td class="descripcion-font">{{ material.descripcion }}</td>
+                    <td>{{ material.unidad }}</td>
+                    <td>{{ material.cantidad }}</td>
+                    <td>{{ material.precio }}</td>
+                    <td>{{ material.descuento }}</td>
+                    <td>{{ (material.subtotal).toFixed(2) }}</td>
+                    <td>{{ (material.total).toFixed(2) }}</td>
+                    <td>{{ material.preso }}</td>
+                </tr>
+            </tbody>
         </table>
-      </div>
+    </div>
       <div>
         <p>
 
