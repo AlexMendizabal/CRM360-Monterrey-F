@@ -53,8 +53,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
       color: 'white',
     },
   };
-  
-  
+
+
   metasProgresso = {
     toneladas: {
       valor: 0,
@@ -92,12 +92,12 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder
   ) {
-   
+
   }
   ngOnInit(): void {
     //this.confirmDuplicatas();
     this.checkoutForm = this.formBuilder.group({
-      observacion: ['', Validators.required], 
+      observacion: ['', Validators.required],
     });
   }
 
@@ -117,7 +117,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
 
   onSubmit() {
     if (this.checkoutForm.value !== undefined && this.checkoutForm.value !== null && this.checkoutForm.value.observacion !=="") {
-      
+
       this.id_oferta = this.dataCotacao.id_oferta;
       this.fecha = this.dataCotacao.fecha_inicial;
       const observacion_vendedor = this.checkoutForm.value;
@@ -129,14 +129,14 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
       };
       this.cotacoesService.autorizaciones(this.formObj)
         .pipe().subscribe(
-          (response: any) => {
-            console.log(response);
-          }
-        );
+        (response: any) => {
+          console.log(response);
+        }
+      );
       this.onClose();
     }
-    else {
-      //console.log('Llega sin autorizacion');
+    else
+    {
       this.onClose();
     }
   }

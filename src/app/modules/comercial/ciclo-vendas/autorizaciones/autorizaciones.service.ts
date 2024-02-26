@@ -19,7 +19,7 @@ import { JsonResponse } from 'src/app/models/json-response';
 export class ComercialCicloVendasAutorizacionesService {
   private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
   private readonly APIAutorizacion = `http://23.254.204.187/api/comercial/ciclo-vendas/autorizaciones`;
-  private readonly APIVendedor = `http://23.254.204.187/api/comercial/vendedor`;
+
 
   constructor(
     protected http: HttpClient,
