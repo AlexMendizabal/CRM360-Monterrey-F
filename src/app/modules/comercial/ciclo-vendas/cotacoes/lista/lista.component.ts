@@ -8,6 +8,7 @@ import {
   ViewContainerRef,
   ComponentFactoryResolver,
   ComponentRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -119,7 +120,23 @@ export class ComercialCicloVendasCotacoesListaComponent
   breadCrumbTree: Array<Breadcrumb> = [];
   spinnerFullScreen: boolean = true;
   subtitles: Array<Subtitles> = [];
-  leyendas: Array<Subtitles> = [];
+  leyendas: any[] = [
+    {
+      id: 1,
+      text: 'Enviado a SAP',
+      hex: '#32a852',
+    },
+    {
+      id: 2,
+      text: 'Sin envio a SAP',
+      hex: '#c40f06',
+    },
+    {
+      id: 3,
+      text: 'Pendiente de aprobacion',
+      hex: '#e8c515',
+    },
+  ];
 
   tableConfig: Partial<CustomTableConfig> = {
     subtitleBorder: true,
@@ -196,7 +213,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     {
       cd: 300,
       ds: '300',
-    }, 
+    },
   ];
 
   modalRef: BsModalRef;
@@ -215,7 +232,8 @@ export class ComercialCicloVendasCotacoesListaComponent
   maxSize = 10;
   totalModal = 0;
   itemsPerPageModal = 25;
-  registros:number = 10;
+  registros: number = 10;
+
   /* Paginação */
   itemsPerPage: number = this.registros;
   totalItems: number;
@@ -232,6 +250,9 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   filtroCotacoes: boolean;
   tipoEntregaSeleccionado: boolean = false;
+  disableButton: boolean;
+
+  selectedVendedor: any;
 
   constructor(
     private router: Router,
@@ -261,6 +282,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     private alertaOfertaService: ComercialCicloVendasCotacoesListaModalAlertaOfertaService,
     private modalService: BsModalService,
     private resolver: ComponentFactoryResolver,
+    private cdr: ChangeDetectorRef,
     private notificacionesService: NotificacionesService // private pdfService: PdfService
   ) {
     this.localeService.use('es');
@@ -298,14 +320,13 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.setLoaderEvents();
     this.setChangeEvents();
     this.getFilterValues();
-    this.verificarOfertaNotificacion();
     this.titleService.setTitle('Ofertas');
-    
-   /*  this.onDetailPanelEmitter(); *//* 
+    /*  this.onDetailPanelEmitter(); */ /* 
     this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente']; */
     this.getActiveRoute();
     this.getVendedores();
-    this.verificarOFertas();
+    /*  */
+    this.verificarOfertaNotificacion();
     this.onSubscription();
     /* this.result = this.resultFromParent; */
     /*this.analiticos = this.resultFromParent.analitico; */
@@ -318,6 +339,14 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   registrarAcesso(): void {
     this.atividadesService.registrarAcesso().subscribe();
+  }
+
+  seleccionVendedor() {
+    const perfil = this.activatedRoute.snapshot.data.profile.result;
+    if (perfil.coordenador === false && this.vendedores.length > 0) {
+      this.form.controls.codVendedor.setValue(this.vendedores[0].ID);
+      this.verificarOFertas();
+    }
   }
 
   setBreadCrumb() {
@@ -376,7 +405,7 @@ export class ComercialCicloVendasCotacoesListaComponent
         finalize(() => {
           /*  this.loaderNavbar = false;
          this.submittingForm = false; */
-       /*  })
+  /*  })
       )
       .subscribe(
         (response: any) => {
@@ -387,7 +416,7 @@ export class ComercialCicloVendasCotacoesListaComponent
           //this.pnotifyService.notice('Ocurrio un error.');
         }
       );
-  } */ 
+  } */
 
   setLoaderEvents(): void {
     this.loaderConsultaLiberacaoSubscription =
@@ -475,10 +504,11 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   onSubscription() {
-    this.showDetailPanelSubscription =
-      this.detailPanelService.config.subscribe((event: any) => {
+    this.showDetailPanelSubscription = this.detailPanelService.config.subscribe(
+      (event: any) => {
         this.showDetailPanel = event.showing;
-      });
+      }
+    );
   }
 
   /* onDetailPanelEmitter(): void {
@@ -495,7 +525,8 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   checkUserProfile(): void {
     const profile = this.activatedRoute.snapshot.data.profile.result;
-
+/*     console.log(profile);
+ */
     if (profile.coordenador === true || profile.gestor === true) {
       this.getVendedores();
     } else if (
@@ -547,6 +578,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.vendedoresService.getVendedores().subscribe((response: any) => {
       if (response.responseCode === 200) {
         this.vendedores = response.data;
+        this.seleccionVendedor();
       }
     });
   }
@@ -555,8 +587,8 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.vendedoresService.getVinculoOperadores().subscribe((response: any) => {
       if (response.responseCode === 200) {
         this.vendedores = response.result;
-        this.form.controls.codVendedor.setValue(parseInt(null));
-        this.form.controls.codVendedor.updateValueAndValidity();
+       /*  this.form.controls.codVendedor.setValue(parseInt(null)); */
+       /*  this.form.controls.codVendedor.updateValueAndValidity(); */
       }
     });
   }
@@ -573,7 +605,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       )
       .subscribe(
         (response: any | JsonResponse[]) => {
-         this.situacoes = [
+          this.situacoes = [
             {
               id: '',
               nombre: 'Todos',
@@ -586,7 +618,6 @@ export class ComercialCicloVendasCotacoesListaComponent
               id: 14,
               nombre: 'Abierto',
             },
-            
           ];
           this.empresas = response[1].result || [];
           this.depositos = response[2].result || [];
@@ -603,18 +634,17 @@ export class ComercialCicloVendasCotacoesListaComponent
     if (this.situacoesCores.length > 0) {
       this.dados.forEach((oferta) => {
         const situacao = oferta.id_oferta_estado;
-
         this.situacoesCores.map((situacao) => {
           this.leyendas = [
             {
               id: 1,
               text: 'Enviado a SAP',
-              hex: '#32a852', 
+              hex: '#32a852',
             },
             {
               id: 2,
               text: 'Sin envio a SAP',
-              hex: '#c40f06', 
+              hex: '#c40f06',
             },
             {
               id: 3,
@@ -650,18 +680,18 @@ export class ComercialCicloVendasCotacoesListaComponent
       codVendedor: [formValue.codVendedor, [Validators.required]],
       pagina: [formValue.pagina],
      /*  codSituacao: [this.selectedSituacao], */
-    //  registros: 10,
-     // statusCliente: ['Ativo'],
-   // });
+  //  registros: 10,
+  // statusCliente: ['Ativo'],
+  // });
 
-    //this.vendedorValue();
+  //this.vendedorValue();
 
-//    if (!formValue.codEmpresa) {
-   //   this.form.get('codDeposito').disable();
-   // }
+  //    if (!formValue.codEmpresa) {
+  //   this.form.get('codDeposito').disable();
+  // }
   //} */
 
- /*  checkRouterParams(): Object {
+  /*  checkRouterParams(): Object {
     let formValue = {
       tipoData: 1,
       dataInicial: this.dateService.getFirstDayMonth(),
@@ -677,7 +707,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       registros: this.itemsPerPage,
     }; */
 
-   /*  this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
+  /*  this.activatedRouteSubscription = this.activatedRoute.queryParams.subscribe(
       (queryParams: any) => {
         if (Object.keys(queryParams).length > 0) {
           let params = atob(queryParams.q);
@@ -716,8 +746,8 @@ export class ComercialCicloVendasCotacoesListaComponent
       }
     ); */
 
-    // Esto debería estar fuera del bloque de la suscripción
-    // this.activatedRouteSubscription.unsubscribe();
+  // Esto debería estar fuera del bloque de la suscripción
+  // this.activatedRouteSubscription.unsubscribe();
 
   /*   return formValue;
   } */
@@ -730,10 +760,10 @@ export class ComercialCicloVendasCotacoesListaComponent
       profile.coordenador === false &&
       profile.gestor === false
     ) {
-      this.form.controls.codVendedor.setValue(
+      /* this.form.controls.codVendedor.setValue(
         parseInt(this.user.info.idVendedor)
       );
-      this.form.controls.codVendedor.updateValueAndValidity();
+      this.form.controls.codVendedor.updateValueAndValidity(); */
     }
   }
 
@@ -787,8 +817,8 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   setOrderByModal(column: string) {
-    console.log(column);
-    if (this.orderBy === column) {
+/*     console.log(column);
+ */    if (this.orderBy === column) {
       this.orderType = this.orderType === 'asc' ? 'desc' : 'asc'; // Cambiar el tipo de orden si se hace clic nuevamente en la misma columna
     } else {
       this.orderBy = column;
@@ -810,7 +840,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     });
   }
 
-/*   onFilter(): void {
+  /*   onFilter(): void {
     this.loaderNavbar = true;
     this.detailPanelService.hide();
   
@@ -830,22 +860,33 @@ export class ComercialCicloVendasCotacoesListaComponent
       this.loaderNavbar = false;
     });
   } */
-  
+
   onFilter() {
-    //this.form.get('time').setValue(new Date().getTime());
+    // Deshabilita el botón al iniciar la función
+    this.disableButton = true;
+
     this.loaderNavbar = true;
     this.detailPanelService.hide();
     if (this.form.value['registros']) {
       this.itemsPerPage = this.form.value['registros'];
       this.end = this.form.value['registros'];
     }
-    this.router.navigate([], {
-      relativeTo: this.activatedRoute,
-      queryParams: this.routerService.setBase64UrlParams(this.getParams()),
-    }).then(() => {
-      // Recarga la página después de la navegación
-      window.location.reload();
-    });
+
+    this.router
+      .navigate([], {
+        relativeTo: this.activatedRoute,
+        queryParams: this.routerService.setBase64UrlParams(this.getParams()),
+      })
+      .then(() => {
+        // Recarga la página después de la navegación
+        window.location.reload();
+
+        // Habilita el botón al finalizar la recarga
+        this.disableButton = false;
+
+        // Forzar la detección de cambios manualmente
+        this.cdr.detectChanges();
+      });
   }
 
   getActiveRoute() {
@@ -855,11 +896,10 @@ export class ComercialCicloVendasCotacoesListaComponent
         if (Object.keys(response).length > 0) {
           const _response = this.routerService.getBase64UrlParams(response);
           this.form.patchValue(_response);
-          console.log(_response);
-              }
-      this.search(this.getParams());
+/*           console.log(_response);
+ */        }
+        this.search(this.getParams());
       });
-     
   }
 
   getParams() {
@@ -878,9 +918,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     return _params;
   }
 
-
-
-/*   setRouterParams(params: any): void {
+  /*   setRouterParams(params: any): void {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: { q: btoa(JSON.stringify(params)) },
@@ -888,7 +926,6 @@ export class ComercialCicloVendasCotacoesListaComponent
     
     this.search(this.getParams());
   } */
-
 
   /* getFormFilterValues(): Object {
     let params: any = {};
@@ -985,6 +1022,9 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.loaderNavbar = true;
     this.dadosLoaded = true;
     this.dadosEmpty = false;
+
+/*     console.log(params);
+ */
     this.cotacoesService
       .getOfertas(params)
       .pipe(
@@ -1011,26 +1051,26 @@ export class ComercialCicloVendasCotacoesListaComponent
         },
         error: (error) => this.pnotifyService.error(),
       });
-      
   }
 
- agregarCliente(id: number, nombre: string) {
+  agregarCliente(id: number, nombre: string) {
     interface Cliente {
       id: number;
       nombre: string;
     }
     const clientesUnicos: Cliente[] = [];
     // Verificar si el cliente ya existe en la matriz
-    const clienteExistente = clientesUnicos.find(cliente => cliente.id === id || cliente.nombre === nombre);
-  
+    const clienteExistente = clientesUnicos.find(
+      (cliente) => cliente.id === id || cliente.nombre === nombre
+    );
+
     if (!clienteExistente) {
       // Agregar el cliente si no existe
       clientesUnicos.push({ id, nombre });
-     
-    } 
+    }
   }
 
- /*  onReset() {
+  /*  onReset() {
     this.form.reset();
     this.form.patchValue({
       tipoData: 1,
@@ -1048,13 +1088,13 @@ export class ComercialCicloVendasCotacoesListaComponent
     });
   }
  */
-  
+
   onPageChanged(event: PageChangedEvent): void {
     this.begin = (event.page - 1) * event.itemsPerPage;
     this.end = event.page * event.itemsPerPage;
   }
 
- /*  getPaginateData(): any[] {
+  /*  getPaginateData(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     return this.dados.slice(startIndex, endIndex);
@@ -1082,7 +1122,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   viewRegister(index: number, cotacao: ICotacao): void {
     this.loaderNavbar = true;
-   /*  this.codSituacao = cotacao.codSituacao; */
+    /*  this.codSituacao = cotacao.codSituacao; */
     this.pedidoTransferido = cotacao.pedidoTransferido;
     this.imprimirSeparacao = cotacao.imprimirSeparacao;
 
@@ -1096,7 +1136,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
     this.setActiveRow(index);
     this.setActiveCotacao(cotacao);
-   /*  this.resetRegister(); */
+    /*  this.resetRegister(); */
 
     this.cotacoesService
       .getDetalhesCotacoes(
@@ -1171,7 +1211,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     return borderClass;
   }
 
-/*   resetRegister(): void {
+  /*   resetRegister(): void {
     this.detalhes.contatos = [];
     this.detalhes.itens = {
       materiais: [],
@@ -1294,9 +1334,9 @@ export class ComercialCicloVendasCotacoesListaComponent
     const codVendedor = data[1];
     const cotacao = data[2];
 
-    this.form.controls.nrPedido.setValue(nrProposta);
+   /*  this.form.controls.nrPedido.setValue(nrProposta);
     this.form.controls.codEmpresa.setValue(cotacao.codEmpresa);
-    this.form.controls.codVendedor.setValue(codVendedor);
+    this.form.controls.codVendedor.setValue(codVendedor); */
     this.onFilter();
   }
 
@@ -1427,8 +1467,8 @@ export class ComercialCicloVendasCotacoesListaComponent
     var params = {
       id_oferta: id_oferta,
     };
-    console.log("parametros", params);
-    this.loaderNavbar = true;
+/*     console.log('parametros', params);
+ */    this.loaderNavbar = true;
     this.cotacoesService
       .getDetalleOferta(params)
       .pipe(
@@ -1444,8 +1484,8 @@ export class ComercialCicloVendasCotacoesListaComponent
             });
 
             this.modalRef2.content.onClose.subscribe((result) => {
-              console.log('Modal closed with result:', result);
-            });
+/*               console.log('Modal closed with result:', result);
+ */            });
           } else {
             this.pnotifyService.error();
           }
@@ -1457,8 +1497,9 @@ export class ComercialCicloVendasCotacoesListaComponent
             this.pnotifyService.error();
           }
         }
-      ); console.log(params);
-  }
+      );
+/*     console.log(params);
+ */  }
 
   onImprimir(nmpedido: number): void {
     this.loaderNavbar = true;
@@ -1471,15 +1512,15 @@ export class ComercialCicloVendasCotacoesListaComponent
       )
       .subscribe(
         (response: JsonResponse) => {
-          console.log(response);
-          if (response.hasOwnProperty('success') && response.success === true) {
+/*           console.log(response);
+ */          if (response.hasOwnProperty('success') && response.success === true) {
             this.modalRef = this.modalService.show(PdfComponent, {
               initialState: { dataFromParent: response.data },
             });
 
             this.modalRef.content.onClose.subscribe((result) => {
-              console.log('Modal closed with result:', result);
-            });
+/*               console.log('Modal closed with result:', result);
+ */            });
           } else {
             this.pnotifyService.error();
           }
@@ -1556,7 +1597,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.modalRef = this.modalService.show(
       ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent,
       {
-        animated: false,
+        animated: true,
         class: 'modal-sm',
       }
     );
@@ -1641,8 +1682,8 @@ export class ComercialCicloVendasCotacoesListaComponent
     );
   }
   onEdit(item) {
-    console.log('datos item',item);
-    this.router.navigate(['./', item], {
+/*     console.log('datos item', item);
+ */    this.router.navigate(['./', item], {
       relativeTo: this.activatedRoute,
       queryParams: this.routerService.setBase64UrlParams(item),
     });
@@ -1672,13 +1713,12 @@ export class ComercialCicloVendasCotacoesListaComponent
     return '';
   }
 
-
   onFieldInvalid(field: any) {
     field = this.form.get(field);
     return field.status == 'INVALID' && field.touched;
   }
 
- /*  onFieldRequired(
+  /*  onFieldRequired(
     abstractControl: AbstractControl,
     abstractControlField?: string
   ): string {
@@ -1720,28 +1760,35 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
   onEnviarSap(nmpedido: number): void {
     this.loaderNavbar = true;
-    this.cotacoesService.getenviarsap(nmpedido)
+    this.cotacoesService
+      .getenviarsap(nmpedido)
       .pipe(
         finalize(() => {
           this.loaderNavbar = false;
         })
       )
-    .subscribe(
-      (response: JsonResponse) => {
-        if (response.data_sap.CodigoRespuesta === 200) {
-          this.pnotifyService.success('Se envio sap');
-          return;
-        } else {
-          this.pnotifyService.error(response.data_sap.message);
-        }
-      },
-      (error: any) => {
-        if (error.error.hasOwnProperty('mensagem')) {
-          this.pnotifyService.error(error.error.mensagem);
-        } else {
-          this.pnotifyService.error();
-        }
-      }
-    );
+      .subscribe(
+        (response: JsonResponse) => {
+          // console.log('Respuesta del servidor:', response);
+      
+          if (response.data_sap.CodigoRespuesta === 200) {
+            this.pnotifyService.success('Se envió SAP');
+            return;
+          } else {
+            console.error('Error al enviar SAP. Detalles:', response.data_sap);
+            this.pnotifyService.error(response.data_sap.Mensaje);
+          }
+        },
+        (error: any) => {
+          // console.error('Error en la solicitud:', error);
+      
+          if (error.error.hasOwnProperty('Mensaje')) {
+            console.error('Mensaje de error:', error.error.Mensaje);
+            this.pnotifyService.error(error.error.Mensaje);
+          } else {
+            this.pnotifyService.error();
+          }
+        }     
+      );
   }
 }

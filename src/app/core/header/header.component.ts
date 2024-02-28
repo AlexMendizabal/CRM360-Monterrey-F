@@ -241,7 +241,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    if (confirm('Tem certeza que deseja sair do MTCorp?')) {
+    if (confirm('¿Estás seguro de que quieres salir de CRM360?')) {
       this.authService.logout();
     }
   }

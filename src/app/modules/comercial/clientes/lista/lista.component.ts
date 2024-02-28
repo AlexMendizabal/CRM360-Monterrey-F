@@ -63,9 +63,13 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   dadosCadastraisEmpty = false;
   contatosLoaded = false;
   contatosEmpty = false;
+  agendaLoaded = false;
+  agendaEmpty = false;
   direccionEmpty = false;
   searchSubmitted = false;
   showAdvancedFilter = true;
+
+  sumaTotalPorTitulo: any = {};
 
   currentUser = JSON.parse(localStorage.getItem('currentUser'));
   matricula = this.currentUser['info']['matricula'];
@@ -83,7 +87,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   formFilter: FormGroup;
   buscandoPor: number;
   pesquisa: string;
-  orderBy = 'codCliente';
+  orderBy = 'codigo_cliente';
   orderType = 'desc';
 
   maxSize = 10;
@@ -211,6 +215,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     );
   }
 
+
   obtenerTipoDocumento() {
     this.preCadastroService.getTipoDocumento().subscribe(
       (response: any) => {
@@ -288,14 +293,16 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
   viewDetails(cliente: any): void {
     this.swSpinner = true;
-
+  
     this.detailPanelService.loadedFinished(false);
     this.clienteSelecionado = cliente.codCliente;
     this.dadosCadastraisLoaded = false;
     this.dadosCadastraisEmpty = false;
     this.contatosLoaded = false;
     this.contatosEmpty = false;
-
+    this.agendaLoaded = false;
+    this.agendaEmpty = false;
+  
     this.clientesService
       .getDetalhes(cliente.codCliente)
       .pipe(
@@ -305,64 +312,52 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       )
       .subscribe((response: JsonResponse) => {
         this.swSpinner = false;
-
+  
         this.informacionMarcador = null;
-        if (response.responseCode == 200) {
+        if (response.responseCode === 200) {
           this.cliente = response.result;
+          const idCliente = response.result.datos_cliente.id_cliente;
+  
+          // Llamar al método obtenerHistorialClientePorId
+          this.clientesService
+            .getObtenerHistorial(idCliente)
+            .subscribe((historialResponse) => {
+              // Asignar los datos a agendaLoaded
+              this.agendaLoaded = historialResponse.result || []; 
+              this.calcularSumaTotalPorTitulo();
 
+            });
+  
           this.contatosLoaded = true;
           this.dadosCadastrais = response.result.datos_cliente;
-          if (
-            response.result &&
-            response.result.datos_contacto &&
-            response.result.datos_contacto.length > 0
-          ) {
-            this.contatosEmpty = false;
-          } else {
-            this.contatos = [];
-            this.contatosEmpty = true;
-          }
-          if (
-            response.result &&
-            response.result.datos_direccion &&
-            response.result.datos_direccion.length > 0
-          ) {
-            this.direccionEmpty = false;
-          } else {
-            this.direcciones = [];
-            this.direccionEmpty = true;
-          }
-          this.contatos = response.result.datos_contacto;
-          this.calcularPromedioContacto(response.result.datos_contacto);
-
-          this.direcciones = response.result.datos_direccion;
+          this.contatos = response.result.datos_contacto || [];
+          this.direcciones = response.result.datos_direccion || [];
+  
+          this.contatosEmpty = this.contatos.length === 0;
+          this.direccionEmpty = this.direcciones.length === 0;
+  
+          this.calcularPromedioContacto(this.contatos);
           this.editedFields.id_vendedor = this.dadosCadastrais.id_vendedor;
-          this.calcularPromedioUbicaciones(response.result.datos_direccion);
-
-          //console.log("Datos de dadosCadastrais:", this.dadosCadastrais); // Agrega el console.log aquí
+          this.calcularPromedioUbicaciones(this.direcciones);
         } else {
           this.dadosCadastraisEmpty = true;
           this.contatosEmpty = true;
           this.cliente = [];
         }
       });
-
-    /* this.clientesService
-      .getContatosResumido(cliente.codCliente)
-      .subscribe((response: any) => {
-        this.contatosLoaded = true;
-
-        if (response['responseCode'] === 200) {
-          if (Object.keys(response['data']).length > 0) {
-            this.contatos = response['data'];
-          } else {
-            this.contatosEmpty = true;
-          }
-        } else {
-          this.contatosEmpty = true;
-        }
-      }); */
   }
+
+  calcularSumaTotalPorTitulo(): void {
+    // Restablecer la suma total por título
+    this.sumaTotalPorTitulo = {};
+  
+    // Calcular la suma total por título
+    this.agendaLoaded.forEach((item: any) => {
+      const titulo = item.Titulo;
+      this.sumaTotalPorTitulo[titulo] = (this.sumaTotalPorTitulo[titulo] || 0) + 1;
+    });
+  }
+  
 
   calcularPromedioUbicaciones(direcciones) {
     let sumLatitud = 0;
@@ -447,7 +442,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     }
     let formValue = {
       pesquisa: this.searchInputValue, // aquí se actualizaría el valor de pesquisa
-      buscarPor: 1,
+      buscarPor:'',
       situacao: 'T',
       setorAtividade: 'T',
       tipoPessoa: 'T',
@@ -710,11 +705,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
   setOrderBy(column: string): void {
     if (this.orderBy === column) {
-      if (this.orderType == 'desc') {
-        this.orderType = 'asc';
-      } else if (this.orderType == 'asc') {
-        this.orderType = 'desc';
-      }
+      this.orderType = this.orderType === 'desc' ? 'asc' : 'desc';
     } else {
       this.orderBy = column;
       this.orderType = 'asc';
@@ -732,11 +723,9 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   onFilter(): void {
-    let params = this.formFilter.value;
-    params['orderBy'] = this.orderBy;
-    params['orderType'] = this.orderType;
-
-    this.itemsPerPage = this.formFilter.value['registros'];
+    let params = { ...this.formFilter.value, orderBy: this.orderBy, orderType: this.orderType };
+    console.log('Datos en onFilter:', params);
+    this.itemsPerPage = params['registros'];
     this.currentPage = 1;
     this.setRouterParams(params);
   }

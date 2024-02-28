@@ -1,10 +1,19 @@
 <div class="modal-header">
   <h4 class="modal-title pull-left">Busqueda de clientes</h4>
   <div class="d-flex justify-content-center align-items-center">
-    <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingClientes">
+    <div
+      class="spinner-border text-primary mr-2"
+      role="status"
+      *ngIf="loadingClientes"
+    >
       <span class="sr-only">Loading...</span>
     </div>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+    <button
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="onClose()"
+    >
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -19,7 +28,8 @@
             class="form-control custom-select"
             formControlName="buscarPor"
           >
-            <option value="NM_CLIE" selected>Codigo, Nombre</option>
+            <option value="MI_NM_CLIE" selected>Mi Cartera -> Codigo, Nombre</option>
+            <option value="NM_CLIE">Todos -> Codigo, Nombre</option>
           </select>
         </div>
 
@@ -30,22 +40,31 @@
               type="text"
               class="form-control"
               formControlName="pesquisa"
+              placeholder="Mínimo 3 caracteres para la búsqueda"
+              pattern=".{3,}"
+              title="Por favor, ingrese al menos 3 caracteres"
+              required
+            />
+
+            <div class="input-group-append">
+              <span
+                [tooltip]="
+                  formClientes.get('pesquisa').invalid
+                    ? 'Ingrese al menos 3 caracteres'
+                    : ''
+                "
+                container="body"
+                placement="left"
               >
-              <div class="input-group-append">
-                <span 
-                  [tooltip]="formClientes.valid == false ? 'Digite um termo de pesquisa':''"
-                  container="body"
-                  placement ="left"
+                <button
+                  style="height: 100%; margin-left: 10px"
+                  [disabled]="formClientes.get('pesquisa').invalid"
+                  class="input-group-text hover"
+                  (click)="getClientes()"
                 >
-                  <button
-                  style="height: 100%; margin-left: 10px;"
-                    [disabled]="formClientes.valid == false"
-                    class="input-group-text hover"
-                    (click)="getClientes()"
-                    >
-                    <i class="fas fa-search"></i>
-                  </button>
-                </span>
+                  <i class="fas fa-search"></i>
+                </button>
+              </span>
             </div>
           </div>
         </div>
@@ -55,9 +74,9 @@
   <custom-table *ngIf="!noClientes" class="text-center">
     <ng-template #thead let-thead>
       <tr>
-        <th>Cód Cliente </th>
+        <th>Cód Cliente</th>
         <th>Nombre de Fantasia</th>
-       <!--  <th>Razon Social </th> -->
+        <!--  <th>Razon Social </th> -->
         <th></th>
       </tr>
     </ng-template>

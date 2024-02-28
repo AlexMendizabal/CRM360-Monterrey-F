@@ -71,3 +71,10 @@ table tr {
 .card-bodyy {
   padding: 20px; /* Adjust this value to control the space inside each card */
 }
+
+.multiline-input {
+  width: 100%; /* Ancho completo del input */
+  height: auto; /* Altura automática para ajustarse al contenido */
+  resize: none; /* Evitar que el usuario pueda redimensionar el input */
+  overflow: auto; /* Agrega barra de desplazamiento si es necesario */
+}

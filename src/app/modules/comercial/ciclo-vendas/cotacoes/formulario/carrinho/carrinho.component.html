@@ -18,7 +18,7 @@
     </div>
   </div>
 
-  <div class="col" [hidden]=showBloco3>
+  <div class="col" >
     <div class="row mb-5" #scrollToCarrinho>
       <div class="col">
         <div class="row">
@@ -47,7 +47,7 @@
             <i class="fas fa-percentage"></i>    o retirar un material  <i class="fas fa-trash"></i>.</p>
         </div>
         <form [formGroup]="form" autocomplete="off">
-          <div class="table-responsive">
+          <div class="Carrinho-responsive">
             <custom-table [config]="tableHeadConfig">
               <ng-template #thead let-thead>
                 <tr>
@@ -73,14 +73,14 @@
               </ng-template>
             </custom-table>
             <custom-table [config]="tableBodyConfig" style="position: relative; top: -2px;">
-              <div formArrayName="materiais">
+              <div formArrayName="materiais" class="Carrinho-responsive">
                 <ng-template #tbody let-tbody>
                   <tr class="mb-1" *ngFor="let material of materiais.controls; let i = index" [formGroupName]="i">
-                    <td class="align-middle text-center border-light"
+                    <td class="align-middle text-center border-light col-sm-6 col-md-3"
                       [ngClass]="classStatusBorder(form.value.materiais[i])" [ngStyle]="{ width: columSize('index') }">
                       {{ i + 1 }}
                     </td>
-                    <td class="align-middle text-truncate border-light"
+                    <td class="align-middle text-center border-light col-sm-6 col-md-3"
                       [ngStyle]="{ width: columSize('nomeMaterial') }">
                       <span [tooltip]="tooltipNomeMaterial" container="body">
                         {{ form.value.materiais[i].codMaterial }} - {{ form.value.materiais[i].nomeMaterial}}
@@ -91,26 +91,26 @@
                       </ng-template>
                     </td>
                    
-                    <td class=" text-center border-light" [ngStyle]="{ width: columSize('quantidade') }">
+                    <td class="align-middle text-center border-light col-sm-6 col-md-3" [ngStyle]="{ width: columSize('quantidade') }">
                       {{ form.value.materiais[i].quantidade | number:'1.2-2' }}
                     </td>
-                    <td class=" text-center border-light" [ngStyle]="{ width: columSize('qtdeItem') }"
+                    <td class="align-middle text-center border-light col-sm-6 col-md-3" [ngStyle]="{ width: columSize('qtdeItem') }"
                       *ngIf="form.value.materiais[i].cantidad > 0">
                       {{ form.value.materiais[i].qtdeItem }}
                     </td>
                     <!--  <td class=" text-center border-light" >
                       {{ form.value.materiais[i].unidad | number:'1.2-2' }}
                     </td> -->
-                    <td class=" text-center border-light" [ngStyle]="{ width: columSize('qtdeItem') }"
+                    <td class="align-middle text-center border-light col-sm-6 col-md-3" [ngStyle]="{ width: columSize('qtdeItem') }"
                       *ngIf="form.value.materiais[i].cantidad == 0 || form.value.materiais[i].cantidad == null">
                       -
                     </td>
-                    <td class=" text-center border-light" id="precio" [ngStyle]="{ width: columSize('valor') }">
+                    <td class="align-middle text-center border-light col-sm-6 col-md-3" id="precio" [ngStyle]="{ width: columSize('valor') }">
                       <span *ngIf="checkValorMaterial(form.value.materiais[i]) === true">
                         {{ form.value.materiais[i].valor | number:'1.2-2' }}
                       </span>
                       <span *ngIf="checkValorMaterial(form.value.materiais[i]) === false">
-                        <span class="text-danger font-weight-bolder mr-1" [tooltip]="tooltipPrecoMinimoTemplate"
+                        <span class="align-middle text-center border-light col-sm-6 col-md-3" [tooltip]="tooltipPrecoMinimoTemplate"
                           container="body">
                           {{ form.value.materiais[i].valor | number:'1.2-2' }}
                         </span>
@@ -140,10 +140,6 @@
                           <p class="text-nowrap mb-0"> Permitido {{ form.value.materiais[i].descuento_permitido }}%</p>
                         </ng-template>
                       </span>
-
-                
-                      
-
                       <span *ngIf="form.value.materiais[i].valorDesc > 0 &&  form.value.materiais[i].descuento_permitido  >= form.value.materiais[i].percentualDesc">
                         
                         <span class="text-success font-weight-bolder mr-1">
@@ -259,7 +255,6 @@
       </comercial-ciclo-vendas-cotacoes-formulario-materiais-relacionados>
     </div>
     <div class="row my-5">
-
       <div class="col"></div>
       <div class="col-3">
         <div class="col-md " id="card-strong-grey">
@@ -274,9 +269,7 @@
             </div>
           </div>
         </div>
-
         <div class="my-3"></div>
-
         <div class="col-md " id="card-strong-grey">
           <div class="row d-flex">
             <div class="col">
@@ -290,22 +283,36 @@
           </div>
         </div>
       </div>
-      <div class="col-3 d-flex justify-content-center align-items-center" id="card-strong-grey">
-        <div class="col-md" style="height: 140;">
-          <div class="row d-flex mh-100">
-            <div class="col-9">
+      <div class="col"></div>
+      <div class="col-3">
+        <div class="col-md " id="card-strong-grey">
+          <div class="row d-flex">
+            <div class="col">
               <div class="col" id="card-label-light" style="font-size: small;">Peso Total</div>
               <div class="col" id="card-value-grey">{{ total.quantidade | number:'1.2-2' }} Kg.</div>
               <div class="col" id=""></div>
             </div>
-            <div class="col-3">
-              <span class="fas fa-weight-hanging d-flex p-3" id="icon-strong-grey"></span>
+            <div class="col-4">
+              <span class="fas fa-money-bill-wave d-flex p-3" id="icon-strong-grey"></span>
+            </div>
+          </div>
+        </div>
+        <div class="my-3"></div>
+        <div class="col-md " id="card-strong-grey">
+          <div class="row d-flex">
+            <div class="col">
+              <div class="col" id="card-label-light" style="font-size: small;">Descuento Total</div>
+              <div class="col" id="card-value-grey">{{ descuentoTotal() | number:'1.2-2' }}%</div>
+              <div class="col" id=""></div>
+            </div>
+            <div class="col-4">
+              <span class="fas fa-tags d-flex p-3" id="icon-strong-grey"></span>
             </div>
           </div>
         </div>
       </div>
       <div class="col-3 d-flex justify-content-center align-items-center" id="card-green">
-        <div class="col-md" style="height: 140;">
+        <div class="col-md" style="height: 140px;">
           <div class="row d-flex mh-100">
             <div class="col-9">
               <div class="col" id="card-label-light" style="font-size: small;">Monto total </div>
@@ -317,7 +324,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>     
     </div>
   </div>
 </div>

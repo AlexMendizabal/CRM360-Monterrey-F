@@ -200,20 +200,23 @@
                               readonly
                             />
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-6">
                             <label for="">Nombre del cliente:</label>
                             <input
-                              type="text"
-                              name=""
-                              id=""
-                              value="{{
-                                resultFromParent.oferta[0].nombre_cliente
-                              }}"
-                              class="form-control"
-                              readonly
+                                type="text"
+                                name=""
+                                id="cliente"
+                                value="{{
+                                    resultFromParent.oferta[0].nombre_cliente
+                                }}"
+                                class="form-control"
+                                readonly
                             />
                           </div>
-                          <div class="col-md-3">
+                        </div>
+                        <br>
+                        <div class="row">
+                          <div class="col-md-4">
                             <label for="">Celular:</label>
                             <input
                               type="text"
@@ -226,7 +229,7 @@
                               readonly
                             />
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-4">
                             <label for="">E-mail:</label>
                             <input
                               type="text"
@@ -237,7 +240,7 @@
                               readonly
                             />
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-4">
                             <label for="">Contacto del cliente:</label>
                             <input
                               type="text"
@@ -246,10 +249,10 @@
                               value="{{
                                 resultFromParent.oferta[0].nombre_cont
                               }}"
-                              class="form-control"
+                              class="form-control multiline-input"
                               readonly
                             />
-                          </div>
+                          </div>  
                         </div>
                       </div>
                     </div>
@@ -276,7 +279,7 @@
                               value="{{
                                 resultFromParent.oferta[0].nombre_vendedor
                               }}"
-                              class="form-control"
+                              class="form-control multiline-input"
                               readonly
                             />
                           </div>
@@ -376,7 +379,7 @@
                         <th class="text-center">PRECIO DESCUENTO</th>
                         <th class="text-center">SUBTOTAL</th>
                         <th class="text-center">NOMBRE ALMACEN</th>
-                        <th class="text-center">NOMBRE MONEDA</th>
+                        
                       </tr>
                     </thead>
                     <tbody>
@@ -404,9 +407,6 @@
                         <td class="text-center">{{ analitico.subtotal }}</td>
                         <td class="text-center">
                           {{ analitico.nombre_almacen }}
-                        </td>
-                        <td class="text-center">
-                          {{ analitico.nombre_moneda }}
                         </td>
                       </tr>
                     </tbody>
@@ -447,10 +447,14 @@
                 </div>
                 <div class="card-body table-container">
                   <span>
-                    Es necesario rellenar los campos con <span class="text-danger">*</span>
+                    Es necesario rellenar los campos con <span class="text-danger" >* </span> 
                   </span>
                   <div class="col-md-6">
-                    <label for="">MOTIVO DE CIERRE <span class="text-danger">*</span></label>
+                    <label for="">MOTIVO DE CIERRE <span class="text-danger">*</span></label><i
+                    class="far fa-question-circle p-2"
+                    tooltip="Seleccione un motivo de cierre de la lista."
+                    placement="right">
+                  </i>
                     <select class="form-control" formControlName="estadoOfert">
                       <option value="" disabled selected>Selecciona...</option>
                       <option
@@ -464,6 +468,11 @@
 
                   <div class="col-md-6">
                     <label for="">Observación <span class="text-danger">*</span></label>
+                    <i
+                      class="far fa-question-circle p-2"
+                      tooltip="Coloque su justificacion de por que se cerro la oferta."
+                      placement="right">
+                    </i>
                     <input
                       type="text"
                       formControlName="descripcion"

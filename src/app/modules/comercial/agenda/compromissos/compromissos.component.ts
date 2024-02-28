@@ -127,7 +127,7 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
     /* this.fetchEvents(); */
 
     // Actualizar los eventos cada 20 seg
-    interval(20 * 1000) // 20 seg en milisegundos
+    interval(60 * 1000) // 20 seg en milisegundos
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.fetchEvents();
@@ -347,6 +347,7 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
                 color: {
                   primary: compromisso.color, //getColorFromVariable()
                 },
+                // Los datos que iran en el DIA en el calendario
                 title: `${compromisso.title} - ${compromisso.client} - ${compromisso.statusnome}`,
                 codClient: compromisso.codClient,
                 client: compromisso.client,

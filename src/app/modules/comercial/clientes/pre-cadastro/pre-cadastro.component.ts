@@ -69,7 +69,7 @@ export class ComercialClientesPreCadastroComponent
       routerLink: '/comercial/clientes',
     },
     {
-      descricao: 'Pre-Registro',
+      descricao: 'Registro',
     },
   ];
 
@@ -646,61 +646,6 @@ export class ComercialClientesPreCadastroComponent
       ubicacion: [],
       contactos: [],
     };
-    /* if (
-      this.contactoFormularios.length > 0 &&
-      this.contactoFormularios.length > 0
-    ) { */
-    /* const ubicacionFormulario = this.ubicacionFormularios;
-      const allFieldsFilledInUbicacionFormulario = Object.values(
-        ubicacionFormulario
-      ).every((direccion) => {
-        // Verificar que todos los campos en cada objeto estén llenos
-        return Object.keys(direccion).every(
-          (key) =>
-            direccion[key] !== null &&
-            direccion[key] !== undefined &&
-            direccion[key] !== ''
-        );
-      });
-
-      if (allFieldsFilledInUbicacionFormulario) {
-        data.ubicacion = ubicacionFormulario;
-        swDireccion = true;
-      } else {
-        this.pnotifyService.notice(
-          'Porfavor llene todos los campos requeridos de dirección.'
-        );
-      } */
-    /* 
-      const contactoFormulario = this.contactoFormularios;
-      console.log(this.contactoFormularios);
-      const requiredAttributes = [
-        'titulo_contacto',
-        'nombres_contacto',
-        'apellido_contacto',
-      ];
-
-      const allFieldsFilledInContactoFormulario = contactoFormulario.every(
-        (contacto) => {
-          // Verificar que los atributos requeridos estén llenos en cada objeto
-          return requiredAttributes.every(
-            (key) =>
-              contacto[key] !== null &&
-              contacto[key] !== undefined &&
-              contacto[key] !== ''
-          );
-        }
-      );
-
-      if (allFieldsFilledInContactoFormulario) {
-        data.contactos = contactoFormulario;
-      } else {
-        this.pnotifyService.notice(
-          'Por favor, llene todos los campos requeridos de contacto.'
-          );
-        } */
-
-    //if()
     const contactoFormulario = this.contactoFormularios;
     //console.log(this.contactoFormularios);
     const requiredAttributes = [
@@ -813,6 +758,7 @@ export class ComercialClientesPreCadastroComponent
               /* this.router.navigate(['../cadastro', response.Mensaje], {
                 relativeTo: this.activatedRoute,
               }); */
+              this.router.navigate(['/comercial/clientes/lista']);
               this.getNotificaciones();
             } else if (response.CodigoRespuesta === 204) {
               this.pnotifyService.notice(response.Mensaje);

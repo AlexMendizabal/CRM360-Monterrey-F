@@ -168,8 +168,10 @@ export class VistaComponent implements OnInit, AfterViewInit {
       // Add the captured image to the PDF
       pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgWidth, imgHeight);
 
-      // Download the PDF
-      pdf.save('your_pdf_filename.pdf');
+      // Download the PDF with a dynamic filename
+      const codOferta = this.resultFromParent?.oferta[0]?.codigo_oferta || 'default_filename.pdf';
+      const nombreVendedor = this.resultFromParent?.oferta[0]?.nombre_vendedor || 'default_filename.pdf';
+      pdf.save(`${nombreVendedor}-OFERTA-${codOferta}`);
     });
   }
 

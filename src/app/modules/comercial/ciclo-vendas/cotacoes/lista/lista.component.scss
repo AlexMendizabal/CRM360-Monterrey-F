@@ -75,6 +75,15 @@
           flex: 1; /* Distribuye el espacio disponible de manera uniforme entre los dos divs */
         }
 
-        
+        .horizontal-list {
+          list-style-type: none;
+          padding: 0;
+          margin: 0;
+        }
+        .horizontal-list li {
+          display: inline-block;
+          margin-right: 10px; /* Ajusta el espaciado entre elementos */
+          padding-bottom: 10px;
+        }  
     
 }

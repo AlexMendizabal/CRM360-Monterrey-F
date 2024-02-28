@@ -79,6 +79,18 @@ export class ComercialAgendaFormularioComponent
       descricao: 'Rojo',
     },
   ];
+
+  filteredBusqueda = [
+    {
+      id: 0,
+      descripcion: 'Todos'
+    },
+    {
+      id: 1,
+      descripcion: 'Cartera Cliente'
+    },
+  ];
+
   selectedColor: any; // Declaración en el componente
 
   loaderNavbar = false;
@@ -98,6 +110,7 @@ export class ComercialAgendaFormularioComponent
   breadCrumbTree: Array<Breadcrumb> = [];
   colorAleatorio: any;
   form: FormGroup;
+  form2: FormGroup;
   formChanged = false;
   submittingForm = false;
   labelOptions = {
@@ -185,6 +198,7 @@ export class ComercialAgendaFormularioComponent
     this.checkAcessos();
     this.checkUrlParams();
     this.getFormFields();
+    this.filteredBusqueda;
   }
 
   registrarAcesso(): void {
@@ -200,6 +214,25 @@ export class ComercialAgendaFormularioComponent
   //     this.permissoesAcesso.simuladorVendas = false;
   //   }
   // }
+
+  setFormBuildesClientes(): void{
+
+    this.form2 = this.formBuilder.group({
+        filtrobusqueda: [Validators.required]
+    });
+  }
+
+  onChangeclient(id:number): void{
+    this.formService.getclientes(id).pipe(
+      finalize(() => {
+        this.loaderFullScreen = false;
+      })
+    )
+    .subscribe((response: Array<JsonResponse>) => {
+    console.log('hola aqui',this.clientes);
+    });
+  }
+
   generarColorAleatorio(): string {
     if (this.coloresDisponibles.length === 0) {
       return null;
@@ -468,7 +501,7 @@ export class ComercialAgendaFormularioComponent
     this.loaderFullScreen = true;
 
     this.formService
-      .loadDependencies()
+      .loadDependencies(id)
       .pipe(
         finalize(() => {
           this.loaderFullScreen = false;

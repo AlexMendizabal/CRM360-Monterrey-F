@@ -30,6 +30,7 @@ import { ComercialCicloVendasCotacoesFormularioModalMaterialLoteService } from '
 import { ComercialCicloVendasCotacoesFormularioModalMaterialDescontoService } from '../modal/material/desconto/desconto.service';
 import { ComercialCicloVendasCotacoesFormularioModalMaterialComboService } from '../modal/material/combo/combo.service';
 
+
 // Interfaces
 import { Subtitles } from 'src/app/shared/modules/subtitles/subtitles';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
@@ -399,6 +400,15 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         this.onCalcularTotais(true);
       }
     );
+  }
+
+  descuentoTotal(): number {
+    let totalDiscountPercent = 0;
+    const materiais = this.form.get('materiais').value;
+    materiais.forEach(material => {
+      totalDiscountPercent += material.percentualDesc;
+    });
+    return totalDiscountPercent;
   }
 
   carrinhoEmitter(): void {

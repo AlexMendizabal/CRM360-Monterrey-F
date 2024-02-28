@@ -76,7 +76,7 @@ export class PdfComponent implements OnInit {
     //this.loaderNavbar = true;
     this.pdfService.download(
       'contentToConvert',
-      `${this.dataFromParent.pedido[0].codigo_oferta}_Monterrey`
+      `${this.dataFromParent.dadosVendedor[0].nombre_vendedor}${this.dataFromParent.dadosVendedor[0].apellido_vendedor}-OFERTA-${this.dataFromParent.pedido[0].codigo_oferta}`
     );
   }
   captureScreen(): void {

@@ -1,6 +1,6 @@
 <div class="modal-content custom-modal">
   <div class="modal-header">
-    <h6 class="modal-title pull-left">Resumen de autorización</h6>
+    <h6 class="modal-title pull-left">RESUMEN DE AUTORIZACION</h6>
     <div class="d-flex justify-content-center align-items-center">
       <button
         type="button"
@@ -17,8 +17,8 @@
       <div class="row">
         <div class="col-md-12 mt-2">
           <div class="card">
-            <div class="card-body">
-              <h6 class="card-title">Datos de autorización</h6>
+            <div class="card-body"> 
+              <h6 class="card-title">DATOS DE AUTORIZACION</h6>
               <div class="row">
                 <div class="col-md-2">
                   <label for="id_autorizacion"> <strong> N°:</strong></label>
@@ -54,6 +54,20 @@
                     }}"
                   />
                 </div>
+                <div class="col-md-4">
+                  <label for="fecha_solicitud">
+                    <strong> Fecha de Gestión</strong></label
+                  >
+                  <input
+                    type="text"
+                    id="fecha_gestion"
+                    class="form-control"
+                    readonly
+                    value="{{
+                      data.oferta[0].fecha_gestion | date : 'dd/MM/yyyy'
+                    }}"
+                  />
+                </div>
                 <div class="col-md-5">
                   <label for="vendedor"> <strong> Vendedor</strong></label>
                   <input
@@ -62,6 +76,16 @@
                     class="form-control"
                     readonly
                     value="{{ data.oferta[0].nombre_vendedor | uppercase }}"
+                  />
+                </div>
+                <div class="col-md-5">
+                  <label for="vendedor"> <strong> Autorizador </strong></label>
+                  <input
+                    type="text"
+                    id="nombre_usuario"
+                    class="form-control"
+                    readonly
+                    value="{{ data.oferta[0].nombre_usuario | uppercase }}"
                   />
                 </div>
               </div>

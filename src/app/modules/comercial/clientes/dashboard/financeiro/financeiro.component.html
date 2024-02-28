@@ -1,6 +1,56 @@
 <div class="row">
   <div class="col-md-3 mb-4">
     <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+      <div class="bg-green rounded-circle text-white icon-40 my-auto"><i class="far fa-check-circle"></i></div>
+      <div class="text-right" [hidden]="!creditoDisponivelLoaded || creditoDisponivelEmpty">
+        <h5
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="creditoDisponivel"
+          [countFrom]="0"
+          [duration]="3"
+          (countoChange)="countoCreditoDisponivel = $event">
+          {{ countoCreditoDisponivel | currency:'$':'symbol':'1.2-2' }}
+        </h5>
+        <div class="text-muted small font-weight-bold">CREDITO DISPONIBLE</div>
+      </div>
+      <div class="text-right" *ngIf="creditoDisponivelEmpty">
+        <h5 class="font-weight-bolder mb-1">$ 0,00</h5>
+        <div class="text-muted small font-weight-bold">CREDITO DISPONIBLE</div>
+      </div>
+      <div class="text-right my-auto" *ngIf="!creditoDisponivelLoaded && !creditoDisponivelEmpty">
+        <div class="spinner-border text-dark"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-4">
+    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
+      <div class="bg-orange rounded-circle text-white icon-40 my-auto"><i class="fas fa-file-invoice-dollar"></i></div>
+      <div class="text-right" [hidden]="!notasDebitoLoaded || notasDebitoEmpty">
+        <h5
+          class="font-weight-bolder mb-1"
+          counto
+          [step]="30"
+          [countTo]="notasDebito"
+          [countFrom]="0"
+          [duration]="3"
+          (countoChange)="countoNotasDebito = $event">
+          {{ countoNotasDebito | currency:'$':'symbol':'1.2-2' }}
+        </h5>
+        <div class="text-muted small font-weight-bold">FACTURA PENDIENTE DE ENTREGA</div>
+      </div>
+      <div class="text-right" *ngIf="notasDebitoEmpty">
+        <h5 class="font-weight-bolder mb-1">$ 0,00</h5>
+        <div class="text-muted small font-weight-bold">FACTURA PENDIENTE DE ENTREGA</div>
+      </div>
+      <div class="text-right my-auto" *ngIf="!notasDebitoLoaded && !notasDebitoEmpty">
+        <div class="spinner-border text-dark"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-4">
+    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
       <div class="bg-red rounded-circle text-white icon-40 my-auto"><i class="fas fa-dollar-sign"></i></div>
       <div class="text-right" [hidden]="!duplicatasAtrasoLoaded || duplicatasAtrasoEmpty">
         <h5
@@ -26,56 +76,6 @@
   </div>
   <div class="col-md-3 mb-4">
     <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
-      <div class="bg-orange rounded-circle text-white icon-40 my-auto"><i class="fas fa-file-invoice-dollar"></i></div>
-      <div class="text-right" [hidden]="!notasDebitoLoaded || notasDebitoEmpty">
-        <h5
-          class="font-weight-bolder mb-1"
-          counto
-          [step]="30"
-          [countTo]="notasDebito"
-          [countFrom]="0"
-          [duration]="3"
-          (countoChange)="countoNotasDebito = $event">
-          {{ countoNotasDebito | currency:'$':'symbol':'1.2-2' }}
-        </h5>
-        <div class="text-muted small font-weight-bold">NOTAS DE DÉBITO</div>
-      </div>
-      <div class="text-right" *ngIf="notasDebitoEmpty">
-        <h5 class="font-weight-bolder mb-1">$ 0,00</h5>
-        <div class="text-muted small font-weight-bold">NOTAS DE DÉBITO</div>
-      </div>
-      <div class="text-right my-auto" *ngIf="!notasDebitoLoaded && !notasDebitoEmpty">
-        <div class="spinner-border text-dark"></div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3 mb-4">
-    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
-      <div class="bg-green rounded-circle text-white icon-40 my-auto"><i class="far fa-check-circle"></i></div>
-      <div class="text-right" [hidden]="!creditoDisponivelLoaded || creditoDisponivelEmpty">
-        <h5
-          class="font-weight-bolder mb-1"
-          counto
-          [step]="30"
-          [countTo]="creditoDisponivel"
-          [countFrom]="0"
-          [duration]="3"
-          (countoChange)="countoCreditoDisponivel = $event">
-          {{ countoCreditoDisponivel | currency:'$':'symbol':'1.2-2' }}
-        </h5>
-        <div class="text-muted small font-weight-bold">CREDITO DISPONIBLE</div>
-      </div>
-      <div class="text-right" *ngIf="creditoDisponivelEmpty">
-        <h5 class="font-weight-bolder mb-1">$ 0,00</h5>
-        <div class="text-muted small font-weight-bold">CRÉDITO DISPONÍVEL</div>
-      </div>
-      <div class="text-right my-auto" *ngIf="!creditoDisponivelLoaded && !creditoDisponivelEmpty">
-        <div class="spinner-border text-dark"></div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3 mb-4">
-    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3">
       <div class="bg-blue rounded-circle text-white icon-40 my-auto"><i class="fas fa-hourglass-half"></i></div>
       <div class="text-right" [hidden]="!duplicatasVencerLoaded || duplicatasVencerEmpty">
         <h5
@@ -88,11 +88,11 @@
           (countoChange)="countoDuplicatasVencer = $event">
           {{ countoDuplicatasVencer | currency:'BRL':'symbol':'1.2-2' }}
         </h5>
-        <div class="text-muted small font-weight-bold">DUPLICATAS A VENCER</div>
+        <div class="text-muted small font-weight-bold">DEUDA A PAGAR</div>
       </div>
       <div class="text-right" *ngIf="duplicatasVencerEmpty">
         <h5 class="font-weight-bolder mb-1">R$ 0,00</h5>
-        <div class="text-muted small font-weight-bold">DUPLICATAS A VENCER</div>
+        <div class="text-muted small font-weight-bold">DEUDA A PAGAR</div>
       </div>
       <div class="text-right my-auto" *ngIf="!duplicatasVencerLoaded && !duplicatasVencerEmpty">
         <div class="spinner-border text-dark"></div>

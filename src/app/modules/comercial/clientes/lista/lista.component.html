@@ -1,8 +1,6 @@
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
 <app-header appTitle="Busqueda de clientes">
-  <button type="button" [routerLink]="['../pre-cadastro']">
-    Adicionar
-  </button>
+  <button type="button" [routerLink]="['../pre-cadastro']">Adicionar</button>
   <button type="button" (click)="onFilter()">Filtrar</button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
@@ -13,8 +11,14 @@
           <h6 class="text-muted font-weight-light">Activos</h6>
           <div class="text-success">
             <h4>
-              <strong counto [step]="30" [countTo]="ativos" [countFrom]="0" [duration]="3"
-                (countoChange)="countoAtivos = $event">
+              <strong
+                counto
+                [step]="30"
+                [countTo]="ativos"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countoAtivos = $event"
+              >
                 {{ handleCounter(countoAtivos) }}
               </strong>
             </h4>
@@ -24,8 +28,14 @@
           <h6 class="text-muted font-weight-light">Inactivos</h6>
           <div class="text-danger">
             <h4>
-              <strong counto [step]="30" [countTo]="inativos" [countFrom]="0" [duration]="3"
-                (countoChange)="countoInativos = $event">
+              <strong
+                counto
+                [step]="30"
+                [countTo]="inativos"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countoInativos = $event"
+              >
                 {{ handleCounter(countoInativos) }}
               </strong>
             </h4>
@@ -35,8 +45,14 @@
           <h6 class="text-muted font-weight-light">Potencial</h6>
           <div class="text-primary">
             <h4>
-              <strong counto [step]="30" [countTo]="potencial" [countFrom]="0" [duration]="3"
-                (countoChange)="countoPotencial = $event">
+              <strong
+                counto
+                [step]="30"
+                [countTo]="potencial"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countoPotencial = $event"
+              >
                 {{ handleCounter(countoPotencial) }}
               </strong>
             </h4>
@@ -46,8 +62,14 @@
           <h6 class="text-muted font-weight-light">Archivados</h6>
           <div class="text-secondary">
             <h4>
-              <strong counto [step]="30" [countTo]="arquivados" [countFrom]="0" [duration]="3"
-                (countoChange)="countoArquivados = $event">
+              <strong
+                counto
+                [step]="30"
+                [countTo]="arquivados"
+                [countFrom]="0"
+                [duration]="3"
+                (countoChange)="countoArquivados = $event"
+              >
                 {{ handleCounter(countoArquivados) }}
               </strong>
             </h4>
@@ -61,21 +83,34 @@
       <div class="form-row">
         <div class="form-group col-lg-3">
           <label for="buscarPor">Buscar por</label>
-          <select class="form-control custom-select" id="buscarPor" formControlName="buscarPor">
+          <select
+            class="form-control custom-select"
+            id="buscarPor"
+            formControlName="buscarPor"
+          >
             <option value="1">Código, nombre o razon social</option>
-            <option value="2">C.I. o NIT</option>
+            <option value="2">N° de documento</option>
           </select>
         </div>
         <div class="form-group col-lg-3">
           <label for="pesquisa">Termino de busqueda</label>
-          <input type="text" class="form-control" formControlName="pesquisa" (keydown.enter)="onFilter()" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="pesquisa"
+            (keydown.enter)="onFilter()"
+          />
         </div>
         <div class="form-group col-lg-3">
           <label for="situacao">Situacion</label>
-          <select class="form-control custom-select" id="situacao" formControlName="situacao">
+          <select
+            class="form-control custom-select"
+            id="situacao"
+            formControlName="situacao"
+          >
             <option value="Ativo">Activos</option>
             <option value="Inativo">Inactivos</option>
-       <!--      <option value="Potenci">Potenciales</option>
+            <!--      <option value="Potenci">Potenciales</option>
             <option value="Arquivo">Archivados</option> -->
             <option value="T">Todos</option>
           </select>
@@ -88,32 +123,49 @@
         </div> -->
         <div class="form-group col-lg-3 mb-lg-0">
           <label for="tipoPessoa">Tipo de persona</label>
-          <select class="form-control custom-select" id="tipoPessoa" formControlName="tipoPessoa">
-              <option *ngFor="let tipo of tipos_personas" [value]="tipo.sigla">{{ tipo.tipo_persona }}</option>
+          <select
+            class="form-control custom-select"
+            id="tipoPessoa"
+            formControlName="tipoPessoa"
+          >
+            <option *ngFor="let tipo of tipos_personas" [value]="tipo.sigla">
+              {{ tipo.tipo_persona }}
+            </option>
           </select>
         </div>
         <div class="form-group col-lg-3 mb-lg-0">
           <label for="tipoPessoa">Vendedor</label>
-          <select class="form-control custom-select" id="tipoPessoa" formControlName="vendedor">
-              <option *ngFor="let vendedor of vendedoresList" [value]="vendedor.ID">{{ vendedor.nombre }}</option>
+          <select
+            class="form-control custom-select"
+            id="tipoPessoa"
+            formControlName="vendedor"
+          >
+            <option
+              *ngFor="let vendedor of vendedoresList"
+              [value]="vendedor.ID"
+            >
+              {{ vendedor.nombre }}
+            </option>
           </select>
         </div>
         <div class="form-group col-lg-1 mb-lg-0">
           <label for="registros">Registros</label>
-          <select class="form-control custom-select" id="registros" formControlName="registros">
-            <option>10</option>
+          <select
+            class="form-control custom-select"
+            id="registros"
+            formControlName="registros"
+          >
             <option>25</option>
             <option>50</option>
             <option>100</option>
             <option>200</option>
             <option>1000</option>
-
           </select>
         </div>
       </div>
       <!-- <div class="form-row"> -->
-        
-        <!-- <div class="form-group col-lg-3 mb-lg-0">
+
+      <!-- <div class="form-group col-lg-3 mb-lg-0">
           <label for="grupoEconomico">Esta en grupo economico</label>
           <select
             class="form-control custom-select"
@@ -135,7 +187,7 @@
             <option value="T">Todos</option>
           </select>
         </div> -->
-        <!-- <div class="form-group col-lg-2 mb-lg-0">
+      <!-- <div class="form-group col-lg-2 mb-lg-0">
           <label for="carteira">Cartera</label>
           <select
             class="form-control custom-select"
@@ -145,7 +197,7 @@
             <option value="T">Todos</option>
           </select>
         </div> -->
-       <!--  <div class="form-group col-lg-1 mb-lg-0">
+      <!--  <div class="form-group col-lg-1 mb-lg-0">
           <label for="registros">Registros</label>
           <select class="form-control custom-select" id="registros" formControlName="registros">
             <option>10</option>
@@ -158,70 +210,136 @@
       </div> -->
     </form>
   </advanced-filter>
-  <div class="row mt-3" *ngIf="
+  <div
+    class="row mt-3"
+    *ngIf="
       dataLoaded && searchSubmitted && clientes.length == 0 && buscandoPor != 2
-    ">
+    "
+  >
     <div class="col-12">
-      <empty-result message="No se encontraron clientes para esta búsqueda." class="py-4"></empty-result>
+      <empty-result
+        message="No se encontraron clientes para esta búsqueda."
+        class="py-4"
+      ></empty-result>
     </div>
   </div>
-  <div class="row mt-3" *ngIf="
+  <div
+    class="row mt-3"
+    *ngIf="
       dataLoaded && searchSubmitted && clientes.length == 0 && buscandoPor == 2
-    ">
+    "
+  >
     <div class="col-7 d-flex justify-content-end w-100 pr-0">
-      <empty-result message="No se encontraron clientes para esta búsqueda." class="py-4"></empty-result>
+      <empty-result
+        message="No se encontraron clientes para esta búsqueda."
+        class="py-4"
+      ></empty-result>
     </div>
     <div class="col-5 d-flex w-100 pl-1">
-      <a [routerLink]="['../pre-cadastro']" [queryParams]="onPreCadastroCpfCnpj()" class="my-auto">
+      <a
+        [routerLink]="['../pre-cadastro']"
+        [queryParams]="onPreCadastroCpfCnpj()"
+        class="my-auto"
+      >
         <strong>Pulse aquí para registrarse..</strong>
       </a>
     </div>
   </div>
   <div class="row mt-4" *ngIf="dataLoaded && clientes.length > 0">
-    <div [ngClass]="{ 'col-12': !showDetailPanel, 'col-7 pr-0': showDetailPanel }">
+    <div
+      [ngClass]="{ 'col-12': !showDetailPanel, 'col-7 pr-0': showDetailPanel }"
+    >
       <custom-table [config]="tableConfig">
         <ng-template #thead let-thead>
           <tr>
             <th scope="col"></th>
-            <th scope="col" class="text-center hover" (click)="setOrderBy('codigo_cliente')">
-              <thead-sorter value="Código Cliente" [active]="orderBy == 'codigo_cliente'"
-                [sort]="orderType"></thead-sorter>
+            <th
+              scope="col"
+              class="text-center hover"
+              (click)="setOrderBy('codigo_cliente')"
+            >
+              <thead-sorter
+                value="Código Cliente"
+                [active]="orderBy == 'codigo_cliente'"
+                [sort]="orderType"
+              ></thead-sorter>
             </th>
-            <th scope="col" class="text-center hover" (click)="setOrderBy('cpf')">
-              <thead-sorter value="CI/NIT" [active]="orderBy == 'cpf'" [sort]="orderType"></thead-sorter>
+            <th
+              scope="col"
+              class="text-center hover"
+              (click)="setOrderBy('cpf')"
+            >
+              <thead-sorter
+                value="N° documento"
+                [active]="orderBy == 'cpf'"
+                [sort]="orderType"
+              ></thead-sorter>
             </th>
             <th scope="col" class="hover" (click)="setOrderBy('nomeFantasia')">
-              <thead-sorter value="Nombre y apellido" [active]="orderBy == 'nomeFantasia'"
-                [sort]="orderType"></thead-sorter>
+              <thead-sorter
+                value="Nombre y apellido"
+                [active]="orderBy == 'nomeFantasia'"
+                [sort]="orderType"
+              ></thead-sorter>
             </th>
-            <th scope="col" class="hover" (click)="setOrderBy('razaoSocial')" *ngIf="!showDetailPanel">
-              <thead-sorter value="Razon Social" [active]="orderBy == 'razaoSocial'" [sort]="orderType"></thead-sorter>
+            <th
+              scope="col"
+              class="hover"
+              (click)="setOrderBy('razaoSocial')"
+              *ngIf="!showDetailPanel"
+            >
+              <thead-sorter
+                value="Razon Social"
+                [active]="orderBy == 'razaoSocial'"
+                [sort]="orderType"
+              ></thead-sorter>
             </th>
             <th scope="col"></th>
           </tr>
         </ng-template>
         <ng-template #tbody let-tbody>
-          <tr *ngFor="let cliente of clientes" [class.table-active]="cliente.codigo_cliente == clienteSelecionado">
-            <td class="text-center hover" [ngClass]="classStatusBorder(cliente.situacao)"
-              >
-              <i class="text-primary fas fa-check-square mr-3" *ngIf="cliente.tieneOferta.result"
-                tooltip="Cliente tiene Oferta" placement="right"></i>
+          <tr
+            *ngFor="let cliente of clientes"
+            [class.table-active]="cliente.codigo_cliente == clienteSelecionado"
+          >
+            <td
+              class="text-center hover"
+              [ngClass]="classStatusBorder(cliente.situacao)"
+            >
+              <i
+                class="text-primary fas fa-check-square mr-3"
+                *ngIf="cliente.tieneOferta.result"
+                tooltip="Cliente tiene Oferta"
+                placement="right"
+              ></i>
 
-            <i class="text-black-50 far fa-check-square mr-3" *ngIf="!cliente.tieneOferta.result"
-              tooltip="Cliente no tiene oferta" placement="right"></i>
-
+              <i
+                class="text-black-50 far fa-check-square mr-3"
+                *ngIf="!cliente.tieneOferta.result"
+                tooltip="Cliente no tiene oferta"
+                placement="right"
+              ></i>
 
               <!-- <i class="text-black-50 far fa-folder-open" *ngIf="cliente.grupoEconomico == 0"
                 tooltip="No hace parte de grupo economico" placement="right" ></i> -->
-              <i class="text-warning fas fa-folder-open" *ngIf="cliente.grupoEconomico > 0"
-                tooltip="Datos" placement="right" (click)="viewRegister(cliente)"></i>
+              <i
+                class="text-warning fas fa-folder-open"
+                *ngIf="cliente.grupoEconomico > 0"
+                tooltip="Datos"
+                placement="right"
+                (click)="viewRegister(cliente)"
+              ></i>
             </td>
             <td class="text-center hover">
               {{ cliente.codigo_cliente }}
             </td>
             <td class="text-center hover">
-              {{ cliente.nit ? cliente.cnpj_cpf + ' - ' + cliente.nit : cliente.cnpj_cpf }}
-            </td>            
+              {{
+                cliente.nit
+                  ? cliente.cnpj_cpf + ' - ' + cliente.nit
+                  : cliente.cnpj_cpf
+              }}
+            </td>
             <td class="hover">
               {{ cliente.nomeFantasia | uppercase }}
             </td>
@@ -229,14 +347,33 @@
               {{ cliente.razaoSocial | uppercase }}
             </td>
             <td>
-              <a tooltip="ir a oferta" href="http://localhost:4200/#/comercial/ciclo-vendas/23/cotacoes-pedidos/novo/1">
+              <a
+                tooltip="Crear Cita"
+                href="http://23.254.204.187/#/comercial/agenda/novo"
+              >
+                <i class="fas fa-calendar"></i>
+              </a>
+            </td>
+            <td>
+              <a
+                tooltip="ir a oferta"
+                href="http://23.254.204.187/#/comercial/ciclo-vendas/23/cotacoes-pedidos/novo/1"
+              >
                 <i class="fas fa-random"></i>
               </a>
             </td>
-            
+
             <td>
-              <span tooltip="Datos registrados" placement="left" container="body">
-                <button type="button" class="btn-icon-sm" (click)="viewDetails(cliente)">
+              <span
+                tooltip="Datos registrados"
+                placement="left"
+                container="body"
+              >
+                <button
+                  type="button"
+                  class="btn-icon-sm"
+                  (click)="viewDetails(cliente)"
+                >
                   <i class="fas fa-user"></i>
                 </button>
               </span>
@@ -244,18 +381,22 @@
           </tr>
         </ng-template>
       </custom-table>
-      <div class="d-flex justify-content-center mt-3" *ngIf="clientes[0]['total'] > itemsPerPage">
-        <pagination 
-          [maxSize]="maxSize" 
-          [(totalItems)]="totalItems" 
+      <div
+        class="d-flex justify-content-center mt-3"
+        *ngIf="clientes[0]['total'] > itemsPerPage"
+      >
+        <pagination
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
           (pageChanged)="onPageChanged($event)"
-          [(itemsPerPage)]="itemsPerPage" 
-          [boundaryLinks]="true" 
-          [(ngModel)]="currentPage" 
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
           previousText="&lsaquo;"
-          nextText="&rsaquo;" 
-          firstText="&laquo;" 
-          lastText="&raquo;">
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
         </pagination>
       </div>
     </div>
@@ -266,31 +407,57 @@
             <tab heading="Datos registrados">
               <div class="border-right border-left border-bottom px-3 pt-3">
                 <div class="text-center" *ngIf="swSpinner">
-                  <div class="spinner-border text-dark text-center" style="font-size: 7px;"></div>
+                  <div
+                    class="spinner-border text-dark text-center"
+                    style="font-size: 7px"
+                  ></div>
                   <p><strong> Cargando... </strong></p>
                 </div>
-                <div *ngIf="dadosCadastraisLoaded && !dadosCadastraisEmpty && !swSpinner">
+                <div
+                  *ngIf="
+                    dadosCadastraisLoaded && !dadosCadastraisEmpty && !swSpinner
+                  "
+                >
                   <div class="container">
                     <div class="form-row">
                       <div class="form-group col-lg-6">
                         <label>Codigo Cliente </label>
                         <input
-                          value="{{ dadosCadastrais.id_cliente == null ? 'NO INFORMADO' : dadosCadastrais.id_cliente }}"
-                          class="form-control" readonly>
+                          value="{{
+                            dadosCadastrais.id_cliente == null
+                              ? 'NO INFORMADO'
+                              : dadosCadastrais.id_cliente
+                          }}"
+                          class="form-control"
+                          readonly
+                        />
                       </div>
                       <div class="form-group col-lg-6">
                         <label>Codigo Cliente SAP</label>
                         <input
-                          value="{{ dadosCadastrais.codigo_cliente == '' ? 'NO INFORMADO' : dadosCadastrais.codigo_cliente }}"
-                          class="form-control" readonly>
+                          value="{{
+                            dadosCadastrais.codigo_cliente == ''
+                              ? 'NO INFORMADO'
+                              : dadosCadastrais.codigo_cliente
+                          }}"
+                          class="form-control"
+                          readonly
+                        />
                       </div>
 
                       <div class="form-group col-lg-6">
                         <label>Tipo de Documento</label>
                         <div>
                           <div>
-                            <input value="{{ dadosCadastrais.tipo_documento == null ? 'NO INFORMADO' :
-                            dadosCadastrais.tipo_documento }}" class="form-control" readonly>
+                            <input
+                              value="{{
+                                dadosCadastrais.tipo_documento == null
+                                  ? 'NO INFORMADO'
+                                  : dadosCadastrais.tipo_documento
+                              }}"
+                              class="form-control"
+                              readonly
+                            />
                           </div>
                         </div>
                       </div>
@@ -300,8 +467,15 @@
                         <label>Nombre</label>
                         <div>
                           <div>
-                            <input value="{{ dadosCadastrais.nombre == null ? 'NO INFORMADO' :
-                            dadosCadastrais.nombre }}" class="form-control" readonly>
+                            <input
+                              value="{{
+                                dadosCadastrais.nombre == null
+                                  ? 'NO INFORMADO'
+                                  : dadosCadastrais.nombre
+                              }}"
+                              class="form-control"
+                              readonly
+                            />
                           </div>
                         </div>
                       </div>
@@ -309,10 +483,15 @@
                         <label>Razon social</label>
                         <div>
                           <div>
-
-                            <input value="{{ dadosCadastrais.razon_social == null ? 'NO INFORMADO' :
-                            dadosCadastrais.razon_social }}" class="form-control" readonly>
-
+                            <input
+                              value="{{
+                                dadosCadastrais.razon_social == null
+                                  ? 'NO INFORMADO'
+                                  : dadosCadastrais.razon_social
+                              }}"
+                              class="form-control"
+                              readonly
+                            />
                           </div>
                         </div>
                       </div>
@@ -321,15 +500,29 @@
                       <div class="form-group col-lg-6">
                         <label>Tipo Persona</label>
                         <div>
-                          <input value="{{ getTipoPersonaLabel(dadosCadastrais.id_tipo_persona) }}" class="form-control"
-                            readonly>
+                          <input
+                            value="{{
+                              getTipoPersonaLabel(
+                                dadosCadastrais.id_tipo_persona
+                              )
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                         </div>
                       </div>
                       <div class="form-group col-lg-6">
                         <label>Numero de documento.</label>
                         <div>
-                          <input value="{{ dadosCadastrais.numero_documento == null ? 'NO INFORMADO' :
-                          dadosCadastrais.numero_documento }}" class="form-control" readonly>
+                          <input
+                            value="{{
+                              dadosCadastrais.numero_documento == null
+                                ? 'NO INFORMADO'
+                                : dadosCadastrais.numero_documento
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                         </div>
                       </div>
                       <!--  </div> -->
@@ -337,85 +530,162 @@
                       <div class="form-group col-lg-6">
                         <label>Celular</label>
                         <div>
-                          <input value="{{ dadosCadastrais.celular == null ? 'NO INFORMADO' :
-                          dadosCadastrais.celular }}" class="form-control" readonly>
+                          <input
+                            value="{{
+                              dadosCadastrais.celular == null
+                                ? 'NO INFORMADO'
+                                : dadosCadastrais.celular
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                         </div>
                       </div>
                       <div class="form-group col-lg-6">
                         <label>Telefono</label>
                         <div>
-                          <input value="{{ dadosCadastrais.telefono == null ? 'NO INFORMADO' :
-                          dadosCadastrais.telefono }}" class="form-control" readonly>
+                          <input
+                            value="{{
+                              dadosCadastrais.telefono == null
+                                ? 'NO INFORMADO'
+                                : dadosCadastrais.telefono
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                         </div>
                       </div>
                       <div class="form-group col-lg-6">
                         <label for="rubro">Rubro</label>
                         <div>
-                          <input value="{{ dadosCadastrais.rubro || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <input
+                            value="{{
+                              dadosCadastrais.rubro || 'NO INFORMADO'
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                         </div>
                       </div>
                       <div class="form-group col-lg-6">
                         <label>Vendedor</label>
                         <div>
-                          <input value="{{ dadosCadastrais.vendedor || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <input
+                            value="{{
+                              dadosCadastrais.vendedor || 'NO INFORMADO'
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                         </div>
                       </div>
                       <div class="form-group col-lg-6">
                         <label>Tipo cliente</label>
                         <div>
-                          <input value="{{ dadosCadastrais.tipo_cliente || 'NO INFORMADO' }}" class="form-control"
-                            readonly>
+                          <input
+                            value="{{
+                              dadosCadastrais.tipo_cliente || 'NO INFORMADO'
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="mb-3" *ngIf="dadosCadastraisLoaded && dadosCadastraisEmpty">
-                    <empty-result message="Nenhuma informação encontrada"></empty-result>
-                    <div class="d-flex justify-content-center mb-3" *ngIf="!dadosCadastraisLoaded">
+                  <div
+                    class="mb-3"
+                    *ngIf="dadosCadastraisLoaded && dadosCadastraisEmpty"
+                  >
+                    <empty-result
+                      message="Nenhuma informação encontrada"
+                    ></empty-result>
+                    <div
+                      class="d-flex justify-content-center mb-3"
+                      *ngIf="!dadosCadastraisLoaded"
+                    >
                       <div class="spinner-border text-dark"></div>
                     </div>
                   </div>
                 </div>
                 <div *ngIf="editingMode">
                   <div class="text-right mt-3">
-                    <button type="button" class="btn btn-secondary" (click)="cancelEditing()">Cancelar</button>
-                    <button type="button" class="btn btn-primary" (click)="saveChanges()">Guardar Cambios</button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      (click)="cancelEditing()"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      (click)="saveChanges()"
+                    >
+                      Guardar Cambios
+                    </button>
                   </div>
                 </div>
                 <div *ngIf="!editingMode">
                   <div class="text-right mt-3">
-                    <button type="button" class="btn btn-light mb-2 text-center"
-                      (click)="openModalEditar(editarCliente)">Editar
-                      Cliente</button>
+                    <button
+                      type="button"
+                      class="btn btn-light mb-2 text-center"
+                      (click)="openModalEditar(editarCliente)"
+                    >
+                      Editar Cliente
+                    </button>
                   </div>
                 </div>
               </div>
             </tab>
             <tab heading="Contactos">
               <div class="text-center mt-2" *ngIf="swSpinner">
-                <div class="spinner-border text-dark text-center" style="font-size: 7px;"></div>
+                <div
+                  class="spinner-border text-dark text-center"
+                  style="font-size: 7px"
+                ></div>
                 <p><strong> Cargando... </strong></p>
               </div>
               <div class="border-right border-left border-bottom px-3 pt-3">
-                <div class="col-lg-12 mb-4" *ngIf="contatosLoaded && !contatosEmpty && !swSpinner">
-  
+                <div
+                  class="col-lg-12 mb-4"
+                  *ngIf="contatosLoaded && !contatosEmpty && !swSpinner"
+                >
                   <div class="embed-responsive embed-responsive-16by9">
-                    <agm-map [latitude]="latitudPromedioContacto" [longitude]="longitudPromedioContacto" [zoom]="16"
-                      class="embed-responsive-item">
-                      <agm-marker *ngFor="let ubicacion of contatos; let i = index" [latitude]="ubicacion.latitude_contacto"
-                        (markerClick)="verInformacionContacto(i)" [longitude]="ubicacion.longitude_contacto">
+                    <agm-map
+                      [latitude]="latitudPromedioContacto"
+                      [longitude]="longitudPromedioContacto"
+                      [zoom]="16"
+                      class="embed-responsive-item"
+                    >
+                      <agm-marker
+                        *ngFor="let ubicacion of contatos; let i = index"
+                        [latitude]="ubicacion.latitude_contacto"
+                        (markerClick)="verInformacionContacto(i)"
+                        [longitude]="ubicacion.longitude_contacto"
+                      >
                       </agm-marker>
                     </agm-map>
                     <div id="map-zoom-control" class="map-control"></div>
                   </div>
-                  <div *ngIf="informacionMarcadorContacto" class="info-box mt-3">
+                  <div
+                    *ngIf="informacionMarcadorContacto"
+                    class="info-box mt-3"
+                  >
                     <h6>Información de la ubicación</h6>
-                    <p style="font-size: 13px;"> <strong>Título: </strong> {{ informacionMarcadorContacto.nombre }}</p>
-                    <p style="font-size: 13px;"> <strong>Dirección: </strong> {{ informacionMarcadorContacto.direccion }}</p>
+                    <p style="font-size: 13px">
+                      <strong>Título: </strong>
+                      {{ informacionMarcadorContacto.nombre }}
+                    </p>
+                    <p style="font-size: 13px">
+                      <strong>Dirección: </strong>
+                      {{ informacionMarcadorContacto.direccion }}
+                    </p>
                   </div>
                 </div>
                 <div *ngIf="contatosLoaded && !contatosEmpty">
-                  <div *ngIf="contatos.lenght !==  0">
+                  <div *ngIf="contatos.lenght !== 0">
                     <div class="form-row" *ngFor="let contato of contatos">
                       <!-- <div class="form-group col" [ngClass]="{'hidden': contato.editing}">
                       <label>ID Contacto</label>
@@ -427,7 +697,11 @@
                       <div class="form-group col-lg-4">
                         <label>título</label>
                         <div>
-                          <input value="{{ contato.contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <input
+                            value="{{ contato.contacto || 'NO INFORMADO' }}"
+                            class="form-control"
+                            readonly
+                          />
                           <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
                         <div *ngIf="contato.editing"></div> -->
                         </div>
@@ -435,7 +709,13 @@
                       <div class="form-group col-lg-4">
                         <label>Nombre</label>
                         <div>
-                          <input value="{{ contato.nombres_contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <input
+                            value="{{
+                              contato.nombres_contacto || 'NO INFORMADO'
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                           <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
                         <div *ngIf="contato.editing"></div> -->
                         </div>
@@ -443,7 +723,13 @@
                       <div class="form-group col-lg-4">
                         <label>Apellido paterno</label>
                         <div>
-                          <input value="{{ contato.apellido_contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <input
+                            value="{{
+                              contato.apellido_contacto || 'NO INFORMADO'
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                           <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
                         <div *ngIf="contato.editing"></div> -->
                         </div>
@@ -451,7 +737,13 @@
                       <div class="form-group col-lg-4">
                         <label>Apellido materno</label>
                         <div>
-                          <input value="{{ contato.apellido2_contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <input
+                            value="{{
+                              contato.apellido2_contacto || 'NO INFORMADO'
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                           <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
                         <div *ngIf="contato.editing"></div> -->
                         </div>
@@ -459,8 +751,13 @@
                       <div class="form-group col-lg-4">
                         <label>Dirección</label>
                         <div>
-                          <input value="{{ contato.direccion_contacto || 'NO INFORMADO' }}" class="form-control"
-                            readonly>
+                          <input
+                            value="{{
+                              contato.direccion_contacto || 'NO INFORMADO'
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                           <!--  <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
                         <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedDireccion"></div> -->
                         </div>
@@ -468,7 +765,13 @@
                       <div class="form-group col-lg-4">
                         <label>Celular</label>
                         <div>
-                          <input value="{{ contato.celular_contacto || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <input
+                            value="{{
+                              contato.celular_contacto || 'NO INFORMADO'
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                           <!--  <div *ngIf="!editingContacto">{{ contato.direccion }}</div>
                         <div *ngIf="contato.editing"><input [(ngModel)]="contato.editedDireccion"></div> -->
                         </div>
@@ -476,8 +779,13 @@
                       <div class="form-group col-lg-4 mb-3">
                         <label>Teléfono</label>
                         <div>
-                          <input value="{{ contato.telefono_contacto || 'NO INFORMADO' }}" class="form-control"
-                            readonly>
+                          <input
+                            value="{{
+                              contato.telefono_contacto || 'NO INFORMADO'
+                            }}"
+                            class="form-control"
+                            readonly
+                          />
                         </div>
                       </div>
                     </div>
@@ -490,55 +798,132 @@
             </tab>
             <tab heading="Dirección">
               <div class="text-center mt-2" *ngIf="swSpinner">
-                <div class="spinner-border text-dark text-center" style="font-size: 7px;"></div>
+                <div
+                  class="spinner-border text-dark text-center"
+                  style="font-size: 7px"
+                ></div>
                 <p><strong> Cargando... </strong></p>
               </div>
               <div class="border-right border-left border-bottom px-3 pt-3">
                 <div *ngIf="contatosLoaded && !direccionEmpty && !swSpinner">
-                  <div class="col-lg-12 mb-4" *ngIf="direcciones.lenght !==  0">
-
+                  <div class="col-lg-12 mb-4" *ngIf="direcciones.lenght !== 0">
                     <div class="embed-responsive embed-responsive-16by9">
-                      <agm-map [latitude]="latitudPromedio" [longitude]="longitudPromedio" [zoom]="16"
-                        class="embed-responsive-item">
-                        <agm-marker *ngFor="let ubicacion of direcciones; let i = index" [latitude]="ubicacion.latitud"
-                          (markerClick)="verInformacion(i)" [longitude]="ubicacion.longitud">
+                      <agm-map
+                        [latitude]="latitudPromedio"
+                        [longitude]="longitudPromedio"
+                        [zoom]="16"
+                        class="embed-responsive-item"
+                      >
+                        <agm-marker
+                          *ngFor="let ubicacion of direcciones; let i = index"
+                          [latitude]="ubicacion.latitud"
+                          (markerClick)="verInformacion(i)"
+                          [longitude]="ubicacion.longitud"
+                        >
                         </agm-marker>
                       </agm-map>
                       <div id="map-zoom-control" class="map-control"></div>
                     </div>
                     <div *ngIf="informacionMarcador" class="info-box mt-3">
                       <h6>Información de la ubicación</h6>
-                      <p style="font-size: 13px;"> <strong>Título: </strong> {{ informacionMarcador.nombre }}</p>
-                      <p style="font-size: 13px;"> <strong>Dirección: </strong> {{ informacionMarcador.direccion }}</p>
+                      <p style="font-size: 13px">
+                        <strong>Título: </strong>
+                        {{ informacionMarcador.nombre }}
+                      </p>
+                      <p style="font-size: 13px">
+                        <strong>Dirección: </strong>
+                        {{ informacionMarcador.direccion }}
+                      </p>
                     </div>
                   </div>
-                  <div *ngIf="direcciones.lenght !==  0">
+                  <div *ngIf="direcciones.lenght !== 0">
                     <div class="form-row" *ngFor="let direccion of direcciones">
-
                       <div class="form-group col-lg-4">
                         <label>título</label>
                         <div>
-                          <input value="{{ direccion.ubicacion || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <input
+                            value="{{ direccion.ubicacion || 'NO INFORMADO' }}"
+                            class="form-control"
+                            readonly
+                          />
                         </div>
                       </div>
                       <div class="form-group col-lg-4">
                         <label>dirección</label>
                         <div>
-                          <input value="{{ direccion.direccion || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <input
+                            value="{{ direccion.direccion || 'NO INFORMADO' }}"
+                            class="form-control"
+                            readonly
+                          />
                         </div>
                       </div>
                       <div class="form-group col-lg-4 mb-3">
                         <label>ciudad</label>
                         <div>
-                          <input value="{{ direccion.ciudad || 'NO INFORMADO' }}" class="form-control" readonly>
+                          <input
+                            value="{{ direccion.ciudad || 'NO INFORMADO' }}"
+                            class="form-control"
+                            readonly
+                          />
                         </div>
                       </div>
-
                     </div>
                   </div>
                 </div>
                 <div *ngIf="direccionEmpty">
                   <label> <strong>Sin datos de dirección</strong></label>
+                </div>
+              </div>
+            </tab>
+            <tab heading="Agenda">
+              <div class="border-right border-left border-bottom px-3 pt-3">
+                <div class="text-center" *ngIf="swSpinner">
+                  <div
+                    class="spinner-border text-dark text-center"
+                    style="font-size: 7px"
+                  ></div>
+                  <p><strong> Cargando... </strong></p>
+                </div>
+                <div *ngIf="agendaLoaded && !agendaEmpty && !swSpinner">
+                  <div class="list-group-item d-flex justify-content-between">
+                    <strong class="w-25">Vendedor</strong>
+                    <strong class="w-25">Titulo</strong>
+                    <strong class="w-25">Fecha</strong>
+                  </div>
+                  <!-- Lista de datos en formato de lista -->
+                  <ul
+                    q
+                    class="list-group"
+                    *ngIf="agendaLoaded && agendaLoaded.length > 0"
+                  >
+                    <li
+                      class="list-group-item d-flex justify-content-between align-items-center"
+                      *ngFor="let item of agendaLoaded"
+                    >
+                      <i class="w-25">{{ item.Vendedor }}</i>
+                      <i class="w-25">{{ item.Titulo }}</i>
+                      <i class="w-25">{{ item.Fecha }}</i>
+                    </li>
+                  </ul>
+                  <div *ngIf="sumaTotalPorTitulo">
+                    <div *ngFor="let titulo of sumaTotalPorTitulo | keyvalue">
+                      <div
+                        class="list-group-item d-flex justify-content-between align-items-center"
+                      >
+                        <span class="w-25"
+                          ><strong>{{ titulo.key }}</strong></span
+                        >
+                        <span class="w-25">{{ titulo.value }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="!agendaLoaded || agendaLoaded.length === 0">
+                  <empty-result
+                    message="Sin Historial de Agenda"
+                  ></empty-result>
                 </div>
               </div>
             </tab>
@@ -549,13 +934,20 @@
   </div>
 
   <ng-template #editarCliente>
-    <editar-cliente (fecharModal)="onFecharModal($event)" [datos_cliente]="cliente" [vendedoresList]="vendedoresList"
-      [cnaes]="cnaes" [tipos_clientes]="tipos_clientes" [ciudades]="ciudades" [latitudPromedio]="latitudPromedio"
-      [longitudPromedio]="longitudPromedio"   [latitudPromedioContacto]="latitudPromedioContacto"
-      [longitudPromedioContacto]="longitudPromedioContacto"  [tipos_personas]="tipos_personas" 
-      [tipos_documentos]="tipos_documentos">
+    <editar-cliente
+      (fecharModal)="onFecharModal($event)"
+      [datos_cliente]="cliente"
+      [vendedoresList]="vendedoresList"
+      [cnaes]="cnaes"
+      [tipos_clientes]="tipos_clientes"
+      [ciudades]="ciudades"
+      [latitudPromedio]="latitudPromedio"
+      [longitudPromedio]="longitudPromedio"
+      [latitudPromedioContacto]="latitudPromedioContacto"
+      [longitudPromedioContacto]="longitudPromedioContacto"
+      [tipos_personas]="tipos_personas"
+      [tipos_documentos]="tipos_documentos"
+    >
     </editar-cliente>
   </ng-template>
-
-
 </app-body>
