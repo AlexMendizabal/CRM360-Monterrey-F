@@ -1,6 +1,12 @@
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
 <app-header appTitle="Busqueda de clientes">
-  <button type="button" [routerLink]="['../pre-cadastro']">Adicionar</button>
+  <button
+    type="button"
+    [routerLink]="['../pre-cadastro']"
+    [disabled]="isBotonDeshabilitado()"
+  >
+    Adicionar
+  </button>
   <button type="button" (click)="onFilter()">Filtrar</button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree">
@@ -627,11 +633,19 @@
                   </div>
                 </div>
                 <div *ngIf="!editingMode">
-                  <div class="text-right mt-3">
+                  <div
+                    class="text-right mt-3"
+                    *ngIf="
+                      dadosCadastraisLoaded &&
+                      !dadosCadastraisEmpty &&
+                      !swSpinner
+                    "
+                  >
                     <button
                       type="button"
                       class="btn btn-light mb-2 text-center"
                       (click)="openModalEditar(editarCliente)"
+                      [disabled]="isBotonDeshabilitado()"
                     >
                       Editar Cliente
                     </button>

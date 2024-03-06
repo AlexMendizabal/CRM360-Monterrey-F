@@ -119,7 +119,7 @@ export class ComercialCadastrosMateriaisSimilaridadeListaComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Cadastros',
+          descricao: 'Registros',
           routerLink: `/comercial/cadastros/${params.idSubModulo}`,
         },
         {

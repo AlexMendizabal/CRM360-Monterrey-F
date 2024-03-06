@@ -9,7 +9,7 @@
   <button
     type="button"
     (click)="onSubmit()"
-    [disabled]="submittingForm || !form.valid"
+    [disabled]="submittingForm "
   >
     Guardar
   </button>
@@ -65,26 +65,43 @@
               </div>
             </div>
           </div>
-          <div class="form-row">
-            <div class="form-group col">
-              <label for="promotor">Promotor</label>
-              <ng-select
-                [searchable]="true"
-                [clearable]="false"
-                [items]="promotores"
-                [virtualScroll]="true"
-                labelForId="promotor"
-                bindLabel="nombre"
-                bindValue="ID"
-                formControlName="promotor"
-                [ngClass]="
-                  onFieldError('promotor') + ' ' + onFieldRequired('promotor')
-                "
-                (change)="onInput()"
-              >
-              </ng-select>
+          <form [formGroup]="form2" autocomplete="off">
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="promotor">Promotor</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="promotores"
+                  [virtualScroll]="true"
+                  placeholder="Selecione..."
+                  labelForId="ID"
+                  bindLabel="nombre"
+                  bindValue="ID"
+                  formControlName="promotor"
+                  (change)="onChangeVendedor($event.ID)"
+                >
+                </ng-select>
+              </div>
             </div>
-          </div>
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="cliente">Cliente</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="true"
+                  [items]="clientes"
+                  [virtualScroll]="true"
+                  labelForId="cliente"
+                  bindLabel="nomeCliente"
+                  bindValue="codCliente"
+                  formControlName="cliente"
+                  (change)="updateDireccion($event)"
+                >
+                </ng-select>
+              </div>
+            </div>
+          </form>
         </div>
         <div *ngIf="showInputClientes">
           <div
@@ -106,66 +123,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Para clientes seleccione -->
-
-          <advanced-filter>
-            <form [formGroup]="form2" autocomplete="off">
-              <div class="form-row">
-                <div class="form-group col-lg-4">
-                  <label for="filtrobusqueda">Seleccion de filtro de Cliente</label>
-                  <ng-select
-                    [searchable]="true"
-                    [clearable]="false"
-                    [items]="filteredBusqueda"
-                    formControlName="filtrobusqueda"
-                    [virtualScroll]="true"
-                    labelForId="id"
-                    bindLabel="descripcion"
-                    bindValue="id"
-                    (change)="onChangeclient($event.id)">
-                 </ng-select>
-                </div>
-              </div>
-                <div class="form-row">
-                <div class="form-group col-lg-12">
-                  <label for="codMaterial">Cliente</label>
-                  <ng-select
-                    [searchable]="true"
-                    [clearable]="false"
-                    [items]="clientes"
-                    formControlName="codMaterial"
-                    [virtualScroll]="true"
-                    labelForId="codMaterial"
-                    bindLabel="codigoDescricaoMaterial"
-                    bindValue="codigoMaterial"
-                    [loading]="materiaisLoader"
-                    loadingText="Cargando...">
-                  </ng-select>
-                </div>
-              </div>
-               <div class="form-row">
-                <div class="form-group col-lg-12">
-                  <label for="codMaterial">Promotor</label>
-                  <ng-select
-                    [searchable]="true"
-                    [clearable]="false"
-                    [items]="clientes"
-                    formControlName="codMaterial"
-                    [virtualScroll]="true"
-                    labelForId="codMaterial"
-                    bindLabel="codigoDescricaoMaterial"
-                    bindValue="codigoMaterial"
-                    [loading]="materiaisLoader"
-                    loadingText="Cargando...">
-                  </ng-select>
-                </div>
-              </div>
-            </form>
-          </advanced-filter>
-     
-          <!-- para clientes seleccione final -->
-
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">

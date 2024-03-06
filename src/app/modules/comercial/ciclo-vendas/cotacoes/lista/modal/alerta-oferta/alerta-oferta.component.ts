@@ -10,6 +10,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent
   implements OnInit {
+    @Input() ofertasPendientes: any[] = [];
   //@Input('dadosLiberacao') dadosLiberacao: any = {};
 
   travasComercial = [];
@@ -19,6 +20,7 @@ export class ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent
   constructor(private bsModalRef: BsModalRef) {}
 
   ngOnInit(): void {
+    console.log(this.ofertasPendientes);
     //this.getTravas();
   }
 

@@ -74,6 +74,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   currentUser = JSON.parse(localStorage.getItem('currentUser'));
   matricula = this.currentUser['info']['matricula'];
 
+  
+
   ativos = 0;
   inativos = 0;
   potencial = 0;
@@ -159,7 +161,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.obtenerTiposClientes();
     this.obtenerTipoDocumento();
     this.getCiudades();
-   
     this.vendedoresService.getVendedores().subscribe(
       (response: any) => {
         this.vendedoresList = response.data;
@@ -208,7 +209,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.preCadastroService.getTipoPersona().subscribe(
       (response: any) => {
         if (response.responseCode === 200) {
-          console.log('tipo tipos_personas', response.result);
+         // console.log('tipo tipos_personas', response.result);
           this.tipos_personas = response.result;
         } 
       }
@@ -220,11 +221,16 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.preCadastroService.getTipoDocumento().subscribe(
       (response: any) => {
         if (response.responseCode === 200) {
-          console.log('Documentos', response);
+          //console.log('Documentos', response);
           this.tipos_documentos = response.result;
         }
       }
     );
+  }
+
+  isBotonDeshabilitado(): boolean {
+    // Si nomeAbreviado es "PROMOTOR", retorna true (deshabilitado), de lo contrario, retorna false
+    return this.currentUser && this.currentUser.info && this.currentUser.info.nomeAbreviado === "PROMOTOR";
   }
 
   getCenaes(): void {
@@ -323,6 +329,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
             .getObtenerHistorial(idCliente)
             .subscribe((historialResponse) => {
               // Asignar los datos a agendaLoaded
+              // @ts-ignore: Ignorar error TS2339
               this.agendaLoaded = historialResponse.result || []; 
               this.calcularSumaTotalPorTitulo();
 
@@ -351,7 +358,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     // Restablecer la suma total por título
     this.sumaTotalPorTitulo = {};
   
-    // Calcular la suma total por título
+    // Calcular la suma total por título.
+    // @ts-ignore: Ignorar error TS2339
     this.agendaLoaded.forEach((item: any) => {
       const titulo = item.Titulo;
       this.sumaTotalPorTitulo[titulo] = (this.sumaTotalPorTitulo[titulo] || 0) + 1;
@@ -381,7 +389,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         sumLatitud += ubicacion.latitude_contacto;
         sumLongitud += ubicacion.longitude_contacto;
       }
-      console.log(sumLatitud);
+      //console.log(sumLatitud);
       this.latitudPromedioContacto = sumLatitud / this.contatos.length;
       this.longitudPromedioContacto = sumLongitud / this.contatos.length;
     }
@@ -410,7 +418,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
   verInformacionContacto(index: number) {
     const ubicacion = this.contatos[index];
-    console.log(ubicacion);
+    //console.log(ubicacion);
     this.informacionMarcadorContacto = {
       // @ts-ignore: Ignorar error TS2339
       nombre: ubicacion.contacto || 'NO INFORMADO',
@@ -548,7 +556,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
     this.clientesService.sapUpdateContacto(codigoCliente, editedData).subscribe(
       (response) => {
-        console.log('Cambios en el contacto guardados exitosamente:', response);
+       // console.log('Cambios en el contacto guardados exitosamente:', response);
         contato.editing = false; // Salir del modo de edición
         this.editingContacto = false;
         // Actualizar los valores del contacto en el objeto local
@@ -656,11 +664,10 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       editedData.id_vendedor = this.editedFields.id_vendedor;
     }
 
-    console.log('Datos antes de enviarlos a sapUpdateClient:', editedData);
     // Llamar a la función para guardar los cambios
     this.clientesService.sapUpdateClient(codigoCliente, editedData).subscribe(
       (response) => {
-        console.log('Cambios guardados exitosamente:', response);
+       // console.log('Cambios guardados exitosamente:', response);
         // Limpiar los campos editados y desactivar el modo de edición
         this.editedFields = {};
         this.editingMode = false;
@@ -724,7 +731,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
   onFilter(): void {
     let params = { ...this.formFilter.value, orderBy: this.orderBy, orderType: this.orderType };
-    console.log('Datos en onFilter:', params);
+    //console.log('Datos en onFilter:', params);
     this.itemsPerPage = params['registros'];
     this.currentPage = 1;
     this.setRouterParams(params);
@@ -814,7 +821,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   viewRegister(cliente: any): void {
-    console.log('acceso', cliente);
+    /// console.log('acceso', cliente);
     if (cliente['podeAcessar'] == 1 || cliente['podeAcessar'] == 0) {
       this.router.navigate(['../detalhes', cliente.codCliente], {
         relativeTo: this.activatedRoute,

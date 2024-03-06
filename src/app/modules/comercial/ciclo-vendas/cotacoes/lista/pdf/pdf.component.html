@@ -89,7 +89,7 @@
             <div class="entrega-font">
               <div class="no-bullet">Lugar de entrega: {{ dataFromParent.parcelas[0].direccion_entrega }}</div>
               <div class="no-bullet">Forma de pago: {{ dataFromParent.parcelas[0].forma_pago }} </div>
-              <div class="no-bullet">Tiempo de entrega: 48 Hrs.</div>
+              <div class="no-bullet">Tiempo de entrega: {{ dataFromParent.pedido[0].vencimiento }} Hrs.</div>
             </div>
           </div>
         </div>
@@ -99,7 +99,7 @@
               Esta cotización está sujeta a stock.
             </div>
             <div class="espaciobot-font">
-              Comentario:
+              Comentario: {{ dataFromParent.pedido[0].observacion   }}
             </div>
           </div>
           TODOS NUESTROS PRECIOS INCLUYEN IMPUESTOS DE LEY.

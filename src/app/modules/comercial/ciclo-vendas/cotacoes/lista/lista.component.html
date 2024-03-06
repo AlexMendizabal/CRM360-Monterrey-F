@@ -98,6 +98,8 @@
               placeholder="Seleccione un vendedor"
               notFoundText="No se encontraron resultados"
               [(ngModel)]="this.selectedVendedor"
+              [attr.disabled]="selectedVendedor ? true : null"
+              [attr.readonly]="selectedVendedor ? 'readonly' : null"
             >
             </ng-select>
           </div>
@@ -187,14 +189,6 @@
               >
               </thead-sorter>
             </th>
-            <th scope="col" class="text-center" (click)="setOrderBy('id')">
-              <thead-sorter
-                value="Num. Pedido"
-                [active]="orderBy == 'id'"
-                [sort]="orderType"
-              >
-              </thead-sorter>
-            </th>
             <th
               scope="col"
               class="text-center"
@@ -231,15 +225,6 @@
                 [active]="orderBy == 'id_vendedor'"
                 [sort]="orderType"
                 (click)="setOrderBy('id_vendedor')"
-              >
-              </thead-sorter>
-            </th>
-            <th scope="col">
-              <thead-sorter
-                value="Lista"
-                [active]="orderBy == 'id_lista'"
-                [sort]="orderType"
-                (click)="setOrderBy('id_lista')"
               >
               </thead-sorter>
             </th>
@@ -295,9 +280,6 @@
               </td>
             </ng-template>
             <td class="text-center hover">
-              {{ pedido.id_oferta }}
-            </td>
-            <td class="text-center hover">
               {{ pedido.fecha_inicial | date : 'dd/MM/yyyy' }}
             </td>
             <td class="text-center hover">
@@ -307,9 +289,7 @@
               {{ pedido.prim_nome | uppercase }}
             </td>
             <td class="text-center hover">{{ pedido.nombre | uppercase }}</td>
-            <!-- <td class="text-center hover">{{ pedido.monto_total }}</td>
-              <td class="text-center hover">{{ pedido.peso_total }}</td> -->
-            <td class="text-center hover">{{ pedido.nombre_lista }}</td>
+         
             <td class="text-center hover">
               {{ pedido.nombre_modo_entrega }}
             </td>
@@ -332,7 +312,7 @@
                 <div class="col-md" style="padding: 0%">
                   <a
                     style="padding: 0%; color: rgb(6, 68, 14)"
-                    class="dropdown-item"
+                    class="dropdown-item btn btn-danger ml-1 text-white"
                     routerLink="/pdf"
                     [tooltip]="'PDF'"
                     (click)="onImprimir(pedido.id_oferta)"
@@ -340,18 +320,20 @@
                     ><span class="text-uppercase"> </span
                   ></a>
                 </div>
-                <div class="col-md" style="padding: 0%">
+                <div class="col-md text-center" style="padding: 0%;">
                   <a
-                    style="padding: 0%; color: rgb(0, 105, 128)"
-                    class="dropdown-item"
+                    class="btn btn-warning"
+                    style="padding: 0%;"
                     routerLink="/vista"
                     [tooltip]="'VISTA'"
                     (click)="onVista(pedido.id_oferta)"
-                    ><i class="far fa-eye"></i
-                    ><span class="text-uppercase"> </span
-                  ></a>
+                  >
+                    <i class="far fa-eye ml-1"></i>
+                    <!-- <span class="text-uppercase"></span> -->
+                  </a>
                 </div>
-                <div class="col-md" style="padding: 0%">
+                
+                <div class="col-md text-center" style="padding: 0%">
                   <a
                     style="padding: 0%"
                     class="dropdown-item text-danger"
@@ -399,6 +381,18 @@
                     </a>
                   </ng-template>
                 </div>
+
+                <div class="col-md" style="padding: 0%">
+                  <a
+                    style="padding: 0%; "
+                    class="dropdown-item text-dark"
+                    [tooltip]="'Vigencia de la Oferta'"
+                    (click)="onEstadoOferta(pedido.codigo_oferta)"
+                    ><i class="fas fa-sync-alt"  id="verificador"></i>
+                    <span class="sr-only">Refreshing...</span>
+                  </a>
+                </div>
+
               </div>
             </td>
             <!--
@@ -445,7 +439,7 @@
   </div>
 
   <ng-template #alertaOferta>
-    <comercial-ciclo-vendas-cotacoes-lista-modal-alerta-oferta>
+    <comercial-ciclo-vendas-cotacoes-lista-modal-alerta-oferta [ofertasPendientes]="arrayOfertas">
     </comercial-ciclo-vendas-cotacoes-lista-modal-alerta-oferta>
   </ng-template>
 </app-body>

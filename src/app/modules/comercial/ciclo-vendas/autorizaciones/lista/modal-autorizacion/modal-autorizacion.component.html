@@ -56,6 +56,20 @@
                 </div>
                 <div class="col-md-4">
                   <label for="fecha_solicitud">
+                    <strong> Hora de Solicitud</strong></label
+                  >
+                  <input
+                    type="text"
+                    id="hora_solicitud"
+                    class="form-control"
+                    readonly
+                    value="{{
+                      data.oferta[0].horasolicitud | time : 'H:i:s'
+                    }}"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label for="fecha_solicitud">
                     <strong> Fecha de Gestión</strong></label
                   >
                   <input
@@ -65,6 +79,20 @@
                     readonly
                     value="{{
                       data.oferta[0].fecha_gestion | date : 'dd/MM/yyyy'
+                    }}"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label for="hora_gestion">
+                    <strong> Hora de Gestion</strong></label
+                  >
+                  <input
+                    type="text"
+                    id="fecha_solicitud"
+                    class="form-control"
+                    readonly
+                    value="{{
+                      data.oferta[0].horasolicitud
                     }}"
                   />
                 </div>

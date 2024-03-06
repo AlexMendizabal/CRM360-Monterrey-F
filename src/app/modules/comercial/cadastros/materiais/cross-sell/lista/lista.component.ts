@@ -101,7 +101,7 @@ export class ComercialCadastrosMateriaisCrossSellListaComponent
     this.registrarAcesso();
     this.setBreadCrumb();
     this.setFormFilter();
-    this.titleService.setTitle('Cross-Sell de materiales');
+    this.titleService.setTitle('Materiales Complementarios');
     this.onDetailPanelEmitter();
     this.setCrossSellSelecionada();
   }
@@ -118,11 +118,11 @@ export class ComercialCadastrosMateriaisCrossSellListaComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Cadastros',
+          descricao: 'Registros',
           routerLink: `/comercial/cadastros/${params.idSubModulo}`,
         },
         {
-          descricao: 'Cross-Sell de materiales',
+          descricao: 'Materiales complementarios',
         },
       ];
     });

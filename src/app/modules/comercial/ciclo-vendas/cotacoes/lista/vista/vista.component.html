@@ -496,17 +496,18 @@
         (click)="toggleDescripcionCard()"
         >CIERRE OFERTA</a
       >
-      <button type="submit" class="btn btn-success" *ngIf="showGuardarButton">
+      <button type="submit" class="btn btn-success" *ngIf="showGuardarButton" [disabled]="isLoading">
         GUARDAR
       </button>
+      
       <a
         type="button"
-        class="btn btn-primary"
+        class="btn btn-secondary"
         #captureButton
         (click)="onDownloadPDF()"
         >DESCARGAR</a
       >
-      <a type="button" class="btn btn-primary" (click)="captureScreen()"
+      <a type="button" class="btn btn-secondary" (click)="captureScreen()"
         >IMPRIMIR</a
       >
     </div>

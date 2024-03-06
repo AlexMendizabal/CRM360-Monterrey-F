@@ -169,6 +169,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   result: [];
   clientes: [];
   analiticos: any[];
+  arrayOfertas: any[];
 
   items: Array<any> = [];
   ofer: Array<any> = [];
@@ -345,7 +346,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     const perfil = this.activatedRoute.snapshot.data.profile.result;
     if (perfil.coordenador === false && this.vendedores.length > 0) {
       this.form.controls.codVendedor.setValue(this.vendedores[0].ID);
-      this.verificarOFertas();
+      this.verificarOfertas();
     }
   }
 
@@ -1572,7 +1573,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     });
   }
 
-  verificarOFertas() {
+  verificarOfertas () {
     const params = {
       codVendedor: this.form.get('codVendedor').value,
     };
@@ -1586,23 +1587,29 @@ export class ComercialCicloVendasCotacoesListaComponent
       .subscribe((response: JsonResponse) => {
         if (response.pendiente === true) {
           this.swOfertaVencida = true;
-          this.openModalAd();
+          this.arrayOfertas = response.ofertas;
+          this.openModalAd(this.arrayOfertas); 
         } else {
           this.swOfertaVencida = false;
         }
-        //ofertasService.verificarOFertas()
       });
   }
-  openModalAd() {
+  
+  openModalAd(arrayOfertas: any[]) { 
+    const initialState = {
+      ofertasPendientes: arrayOfertas 
+    };
+  
     this.modalRef = this.modalService.show(
       ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent,
       {
+        initialState,
         animated: true,
         class: 'modal-sm',
       }
     );
-    //this.alertaOfertaService.showModal();
   }
+  
 
   hideModal() {
     this.modalRef.hide();
@@ -1758,6 +1765,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       return 'is-required';
     }
   }
+
   onEnviarSap(nmpedido: number): void {
     this.loaderNavbar = true;
     this.cotacoesService
@@ -1781,6 +1789,41 @@ export class ComercialCicloVendasCotacoesListaComponent
         },
         (error: any) => {
           // console.error('Error en la solicitud:', error);
+      
+          if (error.error.hasOwnProperty('Mensaje')) {
+            console.error('Mensaje de error:', error.error.Mensaje);
+            this.pnotifyService.error(error.error.Mensaje);
+          } else {
+            this.pnotifyService.error();
+          }
+        }     
+      );
+  }
+
+  onEstadoOferta(codigo_oferta): void {
+    this.loaderNavbar = true;
+  /*   const verificadorElement = document.getElementById('verificador');
+    verificadorElement.classList.replace('fas fa-sync-alt', 'far fa-sync-alt fa-spin'); */
+    this.cotacoesService
+      .postverifica_oferta(codigo_oferta)
+      .pipe(
+        finalize(() => {
+          this.loaderNavbar = false;
+        })
+      )
+      .subscribe(
+        (response: JsonResponse) => {
+          console.log('Resputs',response);
+          if (response.CodigoRespuesta === 200) {
+            this.pnotifyService.success(response.message);
+         /*    verificadorElement.classList.replace('far fa-sync-alt fa-spin', 'fas fa-sync-alt'); */
+            this.loaderNavbar = false;
+            return;
+          } else {
+            this.pnotifyService.error(response.message);
+          }
+        },
+        (error: any) => {
       
           if (error.error.hasOwnProperty('Mensaje')) {
             console.error('Mensaje de error:', error.error.Mensaje);

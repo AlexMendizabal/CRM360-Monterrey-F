@@ -943,9 +943,6 @@ export class ComercialClientesPreCadastroComponent
     //console.log(this.ubicacionFormularios)
   }
   actualizarDireccion(atributo, index, tipo) {
-    /*  console.log(atributo)
-    console.log(index) */
-
     if (tipo === 1) {
       this.index_array_ubicacion = index;
       this.ubicacionFormularios[index].direccion = atributo;

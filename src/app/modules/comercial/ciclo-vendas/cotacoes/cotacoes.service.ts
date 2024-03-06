@@ -460,4 +460,11 @@ export class ComercialCicloVendasCotacoesService {
       .get(`${this.API}/enviar_sap/${nrPedido}`)
       .pipe(take(1), retry(2));
   }
+
+  postverifica_oferta(data: any): Observable<Object> {
+    return this.http
+      .get(`${this.API}/vigencia_oferta/${data}`)
+      .pipe(take(1), retry(2));
+  }
+
 }

@@ -75,6 +75,7 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
     },
   ];
 
+
   activatedRouteSubscription: Subscription;
 
   showFilter = false;
@@ -99,6 +100,36 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   // ...
 
   switchEdit: boolean;
+
+  leyendas: any[] = [
+    {
+      id: 1,
+      text: 'Registrado por supervisor',
+      color: '#0453F1',
+    },
+    {
+      id: 2,
+      text: 'Registrado por promotor',
+      color: '#BC0BDF',
+    },
+    {
+      id: 3,
+      text: 'Re-Agendado',
+      color: '#D1CBD6',
+    },
+    {
+      id: 3,
+      text: 'En Proceso',
+      color: '#FF5208',
+    },
+    {
+      id: 3,
+      text: 'Finalizado',
+      color: '#21C710',
+    },
+  ];
+  
+  
 
   constructor(
     private router: Router,
@@ -348,7 +379,7 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
                   primary: compromisso.color, //getColorFromVariable()
                 },
                 // Los datos que iran en el DIA en el calendario
-                title: `${compromisso.title} - ${compromisso.client} - ${compromisso.statusnome}`,
+                title: `${compromisso.title} -  ${compromisso.client ? compromisso.client.toUpperCase() : ''}  - ${compromisso.statusnome}`,
                 codClient: compromisso.codClient,
                 client: compromisso.client,
                 formContactId: compromisso.formContactId,

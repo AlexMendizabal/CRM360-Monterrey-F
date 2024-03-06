@@ -172,7 +172,6 @@ throw new Error('Method not implemented.');
     detalhes.status = 4;
 
     this.router.navigate(['../../reagendar', detalhes.id], {
-
       relativeTo: this.activatedRoute
 
     });

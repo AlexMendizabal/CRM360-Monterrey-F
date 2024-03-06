@@ -47,6 +47,7 @@ export class VistaComponent implements OnInit, AfterViewInit {
   imageWidth = 300;
   imageHeight = 85;
   
+  shouldCloseModal: boolean = false;
 
   @Input() ofertaId: number; // Input property to receive the 'id_oferta'
 
@@ -183,17 +184,21 @@ export class VistaComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     this.isLoading = true;
+    this.shouldCloseModal = false; // Evitar que el modal se cierre automáticamente
+  
     this.cotacoesService.finalizarOferta(this.myForm.value).subscribe((response: JsonResponse) => {
+      this.isLoading = false;
       if (response.success == false) {
-        this.isLoading = false;
         this.pnotifyService.error(response.message);
-      }
-      else{
+      } else {
         this.pnotifyService.success(response.message);
+        this.shouldCloseModal = true; // Permitir el cierre del modal después del submit exitoso
       }
     });
-    this._bsModalRef.hide();
-    return '/comercial/ciclo-vendas/23/cotacoes-pedidos/lista';
+  
+    // No ocultar el modal aquí para que puedas controlarlo en tu lógica
+    // this._bsModalRef.hide();
+    // return '/comercial/ciclo-vendas/23/cotacoes-pedidos/lista';
   }
 
 }

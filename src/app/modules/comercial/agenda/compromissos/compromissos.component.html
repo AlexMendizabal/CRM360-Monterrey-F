@@ -66,6 +66,14 @@
           </div>
         </div>
       </div>
+      <div class="d-flex align-items-center">
+        <ng-container *ngFor="let leyenda of leyendas">
+          <div class="mr-3">
+            <div class="color-circle" [style.background]="leyenda.color"></div>
+            <span class="ml-2">{{ leyenda.text }}</span>
+          </div>
+        </ng-container>
+      </div>           
       <div class="row">
         <div class="col">
           <div *ngIf="events$ | async; else loading; let events">

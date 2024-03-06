@@ -195,6 +195,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   tipoEntrega = [];
   idListaPrecio: number;
   nombreDepartamento = '';
+  formaContacto: any[] = [];
+  tipoContacto: any[] = [];
 
   visualizar = false;
   duplicatasSomenteCarteira = false;
@@ -577,10 +579,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   onCliente(event) {
-    this.formularioService
+    /* this.formularioService
       .getVerificaOfertasCliente(event.codCliente)
       .subscribe((response: JsonResponse) => {
-        if (response.success == false) {
+        if (response.success == false) { */
           //console.log('cliente:', event);
           this.form.patchValue(event);
           this.onChangeCliente(event.codCliente, 'user');
@@ -608,10 +610,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           this.form.controls.celularcontacto.setValue(event.celularcontacto);
           this.form.controls.tipoEntrega.setValue(1);
           this.exibirClienteTerceiro(event);
-        } else {
+       /*  } else {
           this.pnotifyService.error('El Cliente tiene una oferta pendiente');
         }
-      });
+      }); */
   }
 
   datosVendedor(id_vendedor) {
@@ -1495,7 +1497,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             id_cliente: formValue.codCliente,
           };
 
-          this.cotacoesService
+   /*        this.cotacoesService
             .verificarOfertasCliente(paramsVerificacion)
             .pipe(finalize(() => {this.loaderCotizacion = false;}))
             .subscribe((response: JsonResponse) => {
@@ -1503,11 +1505,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
                 this.pnotifyService.error(
                   'Error, tiene una oferta abierta de este cliente, gestione la oferta pendiente antes de realizar una nueva oferta.'
                 );
-              } else {
+              } else { */
                 this.finalizacaoService.sendCotizacion(dataCotizacion);
-                this.router.navigate(['/cotacoes-pedidos/lista']);
-              }
-            });
+               
+            /*   }
+            }); */
           // this.onPostAnexos(dataCotacao.codCotacao);
         }
       });

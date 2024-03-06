@@ -419,7 +419,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       total: this.total,
     });
 
-    console.log("estoy aquí", this.carrinho.emit);
+    
     /*  (this.form.value.materiais) */
   }
 

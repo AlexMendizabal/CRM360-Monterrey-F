@@ -134,6 +134,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
           }
         );
       this.onClose();
+      
     }
     else {
       //console.log('Llega sin autorizacion');
@@ -144,7 +145,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
   onClose(): void {
     this.formularioService.limparCarrinhoSubject.next(true);
     this.bsModalRef.hide();
-    location.reload();
+    //location.reload();
     this.router.navigate([`/comercial/ciclo-vendas/23/cotacoes-pedidos/lista`]);
   }
 

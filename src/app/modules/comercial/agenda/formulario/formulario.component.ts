@@ -79,18 +79,6 @@ export class ComercialAgendaFormularioComponent
       descricao: 'Rojo',
     },
   ];
-
-  filteredBusqueda = [
-    {
-      id: 0,
-      descripcion: 'Todos'
-    },
-    {
-      id: 1,
-      descripcion: 'Cartera Cliente'
-    },
-  ];
-
   selectedColor: any; // Declaración en el componente
 
   loaderNavbar = false;
@@ -103,6 +91,11 @@ export class ComercialAgendaFormularioComponent
   marca_color = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00';
   id_marcador: number = 0;
   direccion: string;
+  /**form2 */
+  idClient: number = 0;
+  id_promotor: number = 0;
+
+  codClient:string;
 
   selectedImage: File;
   previewImage: string | ArrayBuffer;
@@ -110,7 +103,6 @@ export class ComercialAgendaFormularioComponent
   breadCrumbTree: Array<Breadcrumb> = [];
   colorAleatorio: any;
   form: FormGroup;
-  form2: FormGroup;
   formChanged = false;
   submittingForm = false;
   labelOptions = {
@@ -139,6 +131,8 @@ export class ComercialAgendaFormularioComponent
   marcadorArrastrable = true;
   attachedFiles: File[] = [];
   adjunto: File = null;
+
+  form2: FormGroup;
 
   showInputClientes = true;
   showInputVendedores = true;
@@ -198,7 +192,8 @@ export class ComercialAgendaFormularioComponent
     this.checkAcessos();
     this.checkUrlParams();
     this.getFormFields();
-    this.filteredBusqueda;
+
+   
   }
 
   registrarAcesso(): void {
@@ -214,25 +209,6 @@ export class ComercialAgendaFormularioComponent
   //     this.permissoesAcesso.simuladorVendas = false;
   //   }
   // }
-
-  setFormBuildesClientes(): void{
-
-    this.form2 = this.formBuilder.group({
-        filtrobusqueda: [Validators.required]
-    });
-  }
-
-  onChangeclient(id:number): void{
-    this.formService.getclientes(id).pipe(
-      finalize(() => {
-        this.loaderFullScreen = false;
-      })
-    )
-    .subscribe((response: Array<JsonResponse>) => {
-    console.log('hola aqui',this.clientes);
-    });
-  }
-
   generarColorAleatorio(): string {
     if (this.coloresDisponibles.length === 0) {
       return null;
@@ -296,6 +272,8 @@ export class ComercialAgendaFormularioComponent
     if (this.activatedRoute.snapshot.data.detalhes.responseCode === 200) 
     {
       const detalhes = this.activatedRoute.snapshot.data.detalhes.result;
+      this.clientes = [{'codCliente':  detalhes.codClient, 'nomeCliente': detalhes.client}];
+      console.log('detalle de clinete',detalhes);
       const isFinalizarAction = this.action === 'finalizar';
       let inicioData: Date,
         inicioHorario: Date,
@@ -313,6 +291,23 @@ export class ComercialAgendaFormularioComponent
         terminoData = new Date(detalhes.end);
         terminoHorario = new Date(detalhes.end);
       }
+      this.form2 = this.formBuilder.group({
+        cliente: [
+          {
+            value: detalhes.codClient,
+            disabled: this.action != 'novo',
+          },
+        ],
+        promotor: [
+          {
+            value: detalhes.id_vendedor,
+            disabled:
+              this.action == 'reagendar' || this.action === 'finalizar'
+                ? true
+                : false,
+          },
+        ],
+        });
 
       this.form = this.formBuilder.group({
         id: [detalhes.id], // Agrega el campo 'id' al formulario
@@ -499,16 +494,15 @@ export class ComercialAgendaFormularioComponent
 
   getFormFields(): void {
     this.loaderFullScreen = true;
-
     this.formService
-      .loadDependencies(id)
+      .loadDependencies()
       .pipe(
         finalize(() => {
           this.loaderFullScreen = false;
         })
       )
       .subscribe((response: Array<JsonResponse>) => {
-        if (response[0].success === true)
+       /*  if (response[0].success === true)
         {
           this.clientes = response[0].data;
         } else if (response[0].success === false) 
@@ -516,7 +510,7 @@ export class ComercialAgendaFormularioComponent
           this.showInputClientes = false;
         } else {
           this.handleLoadDependenciesError();
-        }
+        } */
 
         if (response[1].success === true) {
           this.formasContato = response[1].data;
@@ -560,13 +554,58 @@ export class ComercialAgendaFormularioComponent
         } */
       /*   else
         { */
-          if (response[5].success == true) {
-            this.promotores = response[5].data;
-          } else {
-            this.showInputVendedores = false;
-          }
-       /*  } */
+        if (response[5].success == true) {
+          // Merge the initial object with the data from response[5].data
+          const todos = [{ 'ID': 0, 'idEscritorio': 0, 'nombre': 'TODOS' }];
+          this.promotores = [...todos, ...response[5].data];
+      
+          console.log('promotores', this.promotores);
+      } else {
+          this.showInputVendedores = false;
+      }
+
       });
+  }
+
+  setFormBuildesClientes(): void {
+    this.form2 = this.formBuilder.group({
+      filtrobusqueda: [Validators.required],
+    });
+
+    this.form2.valueChanges.subscribe(newValue => {
+      // Actualiza los valores correspondientes en el form principal
+      this.form.patchValue({
+        // Asigna los campos del form2 al form principal
+        // Por ejemplo:
+        cliente: newValue.cliente,
+        promotor: newValue.promotor
+      });
+    });
+  }
+
+  onChangeVendedor(idvendedor:number):void{
+    this.form.controls.cliente.reset();
+    this.form.controls.cliente.setValue(null);
+    this.form.controls.cliente.enable();
+    this.form.controls.cliente.setValidators([Validators.required]);
+    this.form.controls.cliente.updateValueAndValidity();
+    this.id_promotor = idvendedor;
+    console.log('promotor s2', this.id_promotor);
+    this.formService
+      .getclientes(idvendedor)
+      .pipe(
+        finalize(() => {
+          this.loaderFullScreen = false;
+        })
+      )
+      .subscribe((response: Array<JsonResponse>) => {
+        if (response['success'] === true) {
+          this.clientes = response['data'];
+        } else {
+          this.handleLoadDependenciesError();
+        }
+      });
+   /*  this.getFormFields(); */
   }
 
   handleLoadDependenciesError(): void {
@@ -634,7 +673,6 @@ export class ComercialAgendaFormularioComponent
     if (this.onFieldInvalid(control)) {
       return 'is-invalid';
     }
-
     return '';
   }
 
@@ -664,8 +702,8 @@ export class ComercialAgendaFormularioComponent
       );
       return;
     }
-  
-    if (this.form && this.form.valid) {
+    
+    if (this.form ) {
       
       this.loaderNavbar = true;
       this.submittingForm = true;
@@ -756,16 +794,16 @@ export class ComercialAgendaFormularioComponent
       const termino = this.dateService.convert2PhpDate(terminoData);
 
       /* const observacaoUpperCase = formValue.observacao !== null && formValue.observacao !== undefined ? formValue.observacao.toUpperCase() : null; */
-      console.log(formValue);
+     
       let formObj = {
         id: formValue.id,
         color: {
           primary: formValue.cor,
         },
         codTitulo: formValue.codTitulo,
-        codClient: formValue.cliente,
-        idVendedor: formValue.promotor,
-        client: client,
+        codClient:this.idClient,
+        idVendedor: this.id_promotor,
+        client: this.codClient,
         formContactId: formValue.codFormaContato,
         formContactDesc: formContactDesc,
         typeContactId: formValue.codOrigemContato,
@@ -782,7 +820,7 @@ export class ComercialAgendaFormularioComponent
         /* id_status: id_status, */
         obsFinalizar: formValue.Obsfinalizar,
       };
-      
+      console.log('datos para envios agenda',formObj)
       this.agendaService.save(this.action, formObj).subscribe({
         next: (response: any) => {
           if (response.responseCode === 200) {
@@ -850,8 +888,10 @@ export class ComercialAgendaFormularioComponent
   }
 
   updateDireccion(event: any) {
-    const id = event.codCliente;
-    this.ComercialVendedoresService.getUbicaionesClientes(id).subscribe((response: JsonResponse) => {
+    this.idClient = event.codCliente;
+    this.codClient = event.codigo_cliente;
+
+    this.ComercialVendedoresService.getUbicaionesClientes(this.idClient).subscribe((response: JsonResponse) => {
       if(response.success == true){
         if(response.data[0] !== null)
         {

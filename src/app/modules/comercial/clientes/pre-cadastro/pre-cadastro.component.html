@@ -206,7 +206,7 @@
                 </div>
                 <div class="form-group col-md-12 " >
                   <label for="direccion">Direccion <span class="text-danger" style="font-size: 9px;">*</span> </label>
-                  <input type="text" class="form-control" id="direccion" formControlName="" (input)="onInput()"
+                  <input type="text" class="form-control" id="direccion" formControlName="direccion" (input)="onInput()"
                     [(ngModel)]="ubicacionForm.direccion" 
                     [value]="ubicacionForm.direccion" (ngModelChange)="actualizarDireccion($event, i, 1)" placeholder="Utilice el mapa para agregar dirección.">
                 </div>
