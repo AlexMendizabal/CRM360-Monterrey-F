@@ -76,6 +76,14 @@ export class ComercialService {
       })
       .pipe(take(1), retry(2));
   }
+  getAlmacenesLista(params: any) {
+    return this.http
+      .get(
+        `${this.API}/materiales/lista_almacen`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
 
 
 

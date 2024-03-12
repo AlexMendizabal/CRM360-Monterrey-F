@@ -11,12 +11,12 @@
           [countFrom]="0"
           [duration]="3"
           (countoChange)="countoCreditoDisponivel = $event">
-          {{ countoCreditoDisponivel | currency:'$':'symbol':'1.2-2' }}
+          {{ countoCreditoDisponivel | currency:'Bs.':'symbol':'1.2-2' }}
         </h5>
         <div class="text-muted small font-weight-bold">CREDITO DISPONIBLE</div>
       </div>
       <div class="text-right" *ngIf="creditoDisponivelEmpty">
-        <h5 class="font-weight-bolder mb-1">$ 0,00</h5>
+        <h5 class="font-weight-bolder mb-1">Bs. 0,00</h5>
         <div class="text-muted small font-weight-bold">CREDITO DISPONIBLE</div>
       </div>
       <div class="text-right my-auto" *ngIf="!creditoDisponivelLoaded && !creditoDisponivelEmpty">
@@ -36,12 +36,12 @@
           [countFrom]="0"
           [duration]="3"
           (countoChange)="countoNotasDebito = $event">
-          {{ countoNotasDebito | currency:'$':'symbol':'1.2-2' }}
+          {{ countoNotasDebito | currency:'Bs.':'symbol':'1.2-2' }}
         </h5>
         <div class="text-muted small font-weight-bold">FACTURA PENDIENTE DE ENTREGA</div>
       </div>
       <div class="text-right" *ngIf="notasDebitoEmpty">
-        <h5 class="font-weight-bolder mb-1">$ 0,00</h5>
+        <h5 class="font-weight-bolder mb-1">Bs. 0,00</h5>
         <div class="text-muted small font-weight-bold">FACTURA PENDIENTE DE ENTREGA</div>
       </div>
       <div class="text-right my-auto" *ngIf="!notasDebitoLoaded && !notasDebitoEmpty">
@@ -61,12 +61,12 @@
           [countFrom]="0"
           [duration]="3"
           (countoChange)="countoDuplicatasAtraso = $event">
-          {{ countoDuplicatasAtraso | currency:'$':'symbol':'1.2-2' }}
+          {{ countoDuplicatasAtraso | currency:'Bs.':'symbol':'1.2-2' }}
         </h5>
         <div class="text-muted small font-weight-bold">FACTURAS ATRASADAS</div>
       </div>
       <div class="text-right" *ngIf="duplicatasAtrasoEmpty">
-        <h5 class="font-weight-bolder mb-1">$0,00</h5>
+        <h5 class="font-weight-bolder mb-1">Bs. 0,00</h5>
         <div class="text-muted small font-weight-bold">FACTURAS ATRASADAS</div>
       </div>
       <div class="text-right my-auto" *ngIf="!duplicatasAtrasoLoaded && !duplicatasAtrasoEmpty">
@@ -86,12 +86,12 @@
           [countFrom]="0"
           [duration]="3"
           (countoChange)="countoDuplicatasVencer = $event">
-          {{ countoDuplicatasVencer | currency:'BRL':'symbol':'1.2-2' }}
+          {{ countoDuplicatasVencer | currency:'Bs.':'symbol':'1.2-2' }}
         </h5>
         <div class="text-muted small font-weight-bold">DEUDA A PAGAR</div>
       </div>
       <div class="text-right" *ngIf="duplicatasVencerEmpty">
-        <h5 class="font-weight-bolder mb-1">R$ 0,00</h5>
+        <h5 class="font-weight-bolder mb-1">Bs. 0,00</h5>
         <div class="text-muted small font-weight-bold">DEUDA A PAGAR</div>
       </div>
       <div class="text-right my-auto" *ngIf="!duplicatasVencerLoaded && !duplicatasVencerEmpty">

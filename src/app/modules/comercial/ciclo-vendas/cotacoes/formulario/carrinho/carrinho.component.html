@@ -64,10 +64,10 @@
         </div>
         <div class="alert alert-warning">
           <p class="alerta">
-            Utilice los iconos para calcular el total
-            <i class="fas fa-calculator"></i> aplicar un descuento
-            <i class="fas fa-percentage"></i> o retirar un material
-            <i class="fas fa-trash"></i>.
+           <strong>Importante:</strong> Utilice los iconos para:<br>
+            Calcular el total " <i class="fas fa-calculator"></i> ".
+            Aplicar un descuento " <i class="fas fa-percentage"></i> ".
+            Retirar un material " <i class="fas fa-trash"></i> " .
           </p>
           <p class="alerta">
             Si no le permite insertar descuento en
@@ -292,7 +292,7 @@
                               | number : '1.2-2'
                           }}%
                         </span>
-                        <i
+                        <!-- <i
                           class="far fa-question-circle text-danger"
                           [tooltip]="tooltipDescontoTemplate"
                           container="body"
@@ -302,7 +302,7 @@
                             Permitido
                             {{ form.value.materiais[i].descuento_permitido }}%
                           </p>
-                        </ng-template>
+                        </ng-template> -->
                       </span>
                       <span
                         *ngIf="

@@ -83,7 +83,7 @@
     <ng-template #tbody let-tbody>
       <tr *ngFor="let cliente of clientes | slice : begin : end; let i = index">
         <td>{{ cliente.codigo_cliente }}</td>
-        <td>{{ cliente.nomeCliente }}</td>
+        <td>{{ cliente.nomeCliente | uppercase }}</td>
         <!-- <td>{{ cliente.razaoSocial }}</td> -->
         <td>
           <button

@@ -174,20 +174,19 @@ onChangeLinha(codLinha: number) {
     this.form.controls.codMaterial.setValue(null);
     this.form.controls.codMaterial.updateValueAndValidity();
     
-    this.filteredClasses = this.classes.filter(
+    this.filteredClasses = this.grupos.filter(
       (value: any) => value.idClasseMt == codLinha
     );
 }
 
 onChangeGrupo(codClasse: number) {
-
   this.form.controls.codGrupo.reset();
- /*  this.form.controls.codGrupo.disable(); */
   this.form.controls.codGrupo.setValue(null);
   this.form.controls.codGrupo.updateValueAndValidity();
   this.filteredGrupos = this.grupos.filter(
     (value: any) => value.id_grupo == codClasse
   );
+  console.log('aqui grupos ', this.filteredGrupos);
 }
 
 onChangeClasse(codGrupo: number) {

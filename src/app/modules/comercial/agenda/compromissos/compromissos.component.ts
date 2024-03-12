@@ -146,8 +146,8 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
   ngOnInit(): void {
     //this.fetchEvents();
     this.cdr.detectChanges();
-    /* console.log('aqui usuarios', this.user.info); */
-    if (this.user.info.idVendedor == '88') {
+    console.log('aqui usuarios', this.user.info);
+    if (this.user.info.none_cargo == 1) {
       this.switchEdit = true;
     } else {
       this.switchEdit = false;

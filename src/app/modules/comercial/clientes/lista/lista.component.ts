@@ -230,7 +230,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
   isBotonDeshabilitado(): boolean {
     // Si nomeAbreviado es "PROMOTOR", retorna true (deshabilitado), de lo contrario, retorna false
-    return this.currentUser && this.currentUser.info && this.currentUser.info.nomeAbreviado === "PROMOTOR";
+    return this.currentUser && this.currentUser.info && this.currentUser.info.none_cargo === 6;
   }
 
   getCenaes(): void {

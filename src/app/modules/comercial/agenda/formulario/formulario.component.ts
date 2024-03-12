@@ -48,7 +48,8 @@ import { compileDirectiveFromRender2 } from '@angular/compiler/src/render3/view/
 export class ComercialAgendaFormularioComponent
   implements OnInit, IFormCanDeactivate
 {
-  private user = this.authService.getCurrentUser();
+  user = this.authService.getCurrentUser();
+  valorSeleccionado = this.user.info.idVendedor;
   permissoesAcesso: {
     simuladorVendas: boolean;
   };
@@ -122,7 +123,11 @@ export class ComercialAgendaFormularioComponent
     }
 
   clientes: any = [];
+  clientes2: any = [];
   clientesub: any = [];
+  promotorasignado: any = [];
+  promotorparaasignar: any = [];
+  id_promotorasignado: number;
   promotores: any = [];
   formasContato: any = [];
   origensContato: any = [];
@@ -146,6 +151,11 @@ export class ComercialAgendaFormularioComponent
   hideFormulario = true;
   color: string;
   userData: any;
+  
+  agendar: boolean = true;
+  reagendar: boolean =false;
+
+  aministrador:boolean = false;
 
   bsConfig: Partial<BsDatepickerConfig>;
   mostrarElemento: any;
@@ -156,7 +166,6 @@ export class ComercialAgendaFormularioComponent
     'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000',
     'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FC9F3A',
     'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00',
-    
     'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFFFF',
   ];
 
@@ -192,9 +201,16 @@ export class ComercialAgendaFormularioComponent
     this.checkAcessos();
     this.checkUrlParams();
     this.getFormFields();
-
-   
+    if(this.user.info.none_cargo === 1)
+    {
+      this.aministrador = true;
+    }
+    else
+    { 
+      this.aministrador = false;
+    }
   }
+
 
   registrarAcesso(): void {
     this.atividadesService.registrarAcesso().subscribe();
@@ -257,12 +273,20 @@ export class ComercialAgendaFormularioComponent
 
     if (this.action == 'novo') {
       title = 'Nuevo contacto';
+      this.agendar = true;
+      this.reagendar = false;
     } else if (this.action == 'editar') {
+      this.agendar = false;
+      this.reagendar =true;
       title = 'Editar contacto';
     } else if (this.action == 'reagendar') {
+      this.agendar = false;
+      this.reagendar =true;
       title = 'Reagendar contato';
     } else if (this.action == 'finalizar') {
       title = 'Finalizar Contacto';
+      this.agendar = false;
+      this.reagendar =true;
     }
 
     return title;
@@ -272,9 +296,12 @@ export class ComercialAgendaFormularioComponent
     if (this.activatedRoute.snapshot.data.detalhes.responseCode === 200) 
     {
       const detalhes = this.activatedRoute.snapshot.data.detalhes.result;
-      this.clientes = [{'codCliente':  detalhes.codClient, 'nomeCliente': detalhes.client}];
-      console.log('detalle de clinete',detalhes);
+      this.clientes2 = [{'codCliente':  detalhes.codClient, 'nomeCliente': detalhes.client}];
+      this.idClient = detalhes.codClient;
+      this.inicio_latitud = detalhes.latitud;
+      this.final_longitud = detalhes.longitud;
       const isFinalizarAction = this.action === 'finalizar';
+     
       let inicioData: Date,
         inicioHorario: Date,
         terminoData: Date,
@@ -308,11 +335,17 @@ export class ComercialAgendaFormularioComponent
           },
         ],
         });
-
+      
       this.form = this.formBuilder.group({
         id: [detalhes.id], // Agrega el campo 'id' al formulario
         cor: [detalhes.color.primary],
-
+        prompsig:[{
+          value: detalhes.prompsig, 
+        },],
+        promotorasignado: [ {
+          value: detalhes.vend_asig,
+          disabled: this.action == 'reagendar' || this.action == 'finalizar',
+        },],
         codTitulo: [
           {
             value: detalhes.codTitulo,
@@ -353,12 +386,13 @@ export class ComercialAgendaFormularioComponent
               this.action === 'novo' || this.action === 'editar' ? false : true,
           },
         ],
-
+       
         latitud_clie: [
           {
             value: detalhes.latitud,
           },
         ],
+       
         longitud_clie: [
           {
             value: detalhes.longitud,
@@ -538,7 +572,7 @@ export class ComercialAgendaFormularioComponent
         } else {
           this.handleLoadDependenciesError();
         }
-
+        
         if (response[4].success === true) {
           this.listarTitulosAgenda = response[4].data;
         } else {
@@ -556,10 +590,19 @@ export class ComercialAgendaFormularioComponent
         { */
         if (response[5].success == true) {
           // Merge the initial object with the data from response[5].data
-          const todos = [{ 'ID': 0, 'idEscritorio': 0, 'nombre': 'TODOS' }];
-          this.promotores = [...todos, ...response[5].data];
-      
-          console.log('promotores', this.promotores);
+         
+          if(this.user.info.none_cargo === 1)
+          {
+            const todos = [{ 'ID': 0, 'idEscritorio': 0, 'nombre': 'TODOS' }];
+            this.promotores = [...todos, ...response[5].data]; 
+            this.promotorparaasignar = response[5].data;
+          }
+          else
+          {
+            const todos = [{ 'ID': 0, 'idEscritorio': 0, 'nombre': 'TODOS' }];
+            this.promotores = [...todos, ...response[5].data]; 
+          }
+          
       } else {
           this.showInputVendedores = false;
       }
@@ -570,6 +613,7 @@ export class ComercialAgendaFormularioComponent
   setFormBuildesClientes(): void {
     this.form2 = this.formBuilder.group({
       filtrobusqueda: [Validators.required],
+     
     });
 
     this.form2.valueChanges.subscribe(newValue => {
@@ -590,7 +634,7 @@ export class ComercialAgendaFormularioComponent
     this.form.controls.cliente.setValidators([Validators.required]);
     this.form.controls.cliente.updateValueAndValidity();
     this.id_promotor = idvendedor;
-    console.log('promotor s2', this.id_promotor);
+    
     this.formService
       .getclientes(idvendedor)
       .pipe(
@@ -705,9 +749,11 @@ export class ComercialAgendaFormularioComponent
     
     if (this.form ) {
       
+      
       this.loaderNavbar = true;
       this.submittingForm = true;
       const formValue =  this.form.getRawValue();
+      console.log('datos angeda ',formValue)
       const obsFinalizar = this.form.get('Obsfinalizar');
       let client: string,
         formContactDesc: string,
@@ -789,7 +835,12 @@ export class ComercialAgendaFormularioComponent
           break;
       }
       // }
-
+      console.log('tiene los reagendar',formValue);
+      if(formValue.promotor > 0 && formValue.promotor != null)
+      {
+        this.id_promotor = formValue.promotor;
+      }
+     
       const inicio = this.dateService.convert2PhpDate(inicioData);
       const termino = this.dateService.convert2PhpDate(terminoData);
 
@@ -804,6 +855,8 @@ export class ComercialAgendaFormularioComponent
         codClient:this.idClient,
         idVendedor: this.id_promotor,
         client: this.codClient,
+        id_promotorasignado: this.id_promotorasignado,
+        promotorparaasignar: formValue.prompsig,
         formContactId: formValue.codFormaContato,
         formContactDesc: formContactDesc,
         typeContactId: formValue.codOrigemContato,
@@ -823,6 +876,7 @@ export class ComercialAgendaFormularioComponent
       console.log('datos para envios agenda',formObj)
       this.agendaService.save(this.action, formObj).subscribe({
         next: (response: any) => {
+          console.log(response);
           if (response.responseCode === 200) {
             this.pnotifyService.success(msgSuccess);
             this.formChanged = false;
@@ -842,12 +896,17 @@ export class ComercialAgendaFormularioComponent
               }
             }
           } else {
-            this.handleErrorOnSubmit(msgError);
+            let errorMessage = "";
+            for (const key in response.error) {
+                if (response.error.hasOwnProperty(key)) {
+                    errorMessage += `${key}: ${response.error[key]}\n`;
+                  
+                }
+            }
+           this.pnotifyService.error(errorMessage);
           }
         },
-        error: (error: any) => {
-          this.handleErrorOnSubmit(msgError);
-        },
+     
       });
     }
     const formData = new FormData();
@@ -880,11 +939,11 @@ export class ComercialAgendaFormularioComponent
       idVendedor: idVendedor,
 
     }
-    this.ComercialVendedoresService.getCarteiraClientes(params).subscribe((response: JsonResponse) => {
+    /* this.ComercialVendedoresService.getCarteiraClientes(params).subscribe((response: JsonResponse) => {
       if(response.success== true){
         this.clientes = response.data;
       }
-    })
+    }) */
   }
 
   updateDireccion(event: any) {
@@ -898,15 +957,12 @@ export class ComercialAgendaFormularioComponent
           this.clientesub = response.data;
         
           this.clientesub.forEach((item, index) => {
-            console.log(`Item at index ${index}:`, item.latitude, item.longitude);
+            
             this.clientesub[index] =  {
               latitude:  item.latitude,
               longitude: item.longitude,
               color: this.generarColorAleatorio(),
             };
-
-            console.log('aqui datos de ub', this.clientesub);
-
             var codigo_cliente = item.codigo_cliente;
             this.form.controls['codigo_cliente'].setValue(codigo_cliente);
           });
@@ -919,8 +975,21 @@ export class ComercialAgendaFormularioComponent
       {
         console.log('sin aqui datos de ub')
       }
-    })
- 
+    });
+
+    this.formService.getpromotoresporcliente(this.idClient).pipe(
+        finalize(() => {
+          this.loaderFullScreen = false;
+        })
+      ).subscribe((response: JsonResponse) => {
+       if (response['success'] === true) {
+          this.promotorasignado = response['data'][0];
+          this.form.get('promotorasignado').setValue(this.promotorasignado.nombre_promotor);
+          this.id_promotorasignado = this.promotorasignado.id_promotor
+        } else {
+          this.handleLoadDependenciesError();
+        }
+    });
   }
 
   actualizarMapa(event: any) {
@@ -936,7 +1005,6 @@ export class ComercialAgendaFormularioComponent
   }
 
   actualizarDireccion(index, event: any) {
-    console.log('clickclick',event);
     this.obtenerDireccion(event.coords.lat, event.coords.lng)
       .then((direccion_mapa: string) => {
         this.form.controls['direccion'].setValue(direccion_mapa);

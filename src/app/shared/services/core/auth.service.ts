@@ -47,14 +47,7 @@ export class AuthService {
   return this.http.post(`http://192.168.0.123:4100/api/Login`, data).pipe(take(1), retry(2));
   }
   
-  /* verificarConexion(): Observable<any> {
-    var data = {
-      Usuario: 'crm360',
-      Password: 'M1ddlewareCRM360$/',
-    };
-    this.hasSession = true;
-    return this.http.post(`http://192.168.0.123:4100/api/VerificarConectividad`, data).pipe(take(1), retry(2));
-  } */
+
 
   logout(): boolean {
     this.resetCurrentUser();

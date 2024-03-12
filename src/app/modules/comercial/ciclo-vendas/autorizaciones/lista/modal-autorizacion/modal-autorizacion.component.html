@@ -17,7 +17,7 @@
       <div class="row">
         <div class="col-md-12 mt-2">
           <div class="card">
-            <div class="card-body"> 
+            <div class="card-body">
               <h6 class="card-title">DATOS DE AUTORIZACION</h6>
               <div class="row">
                 <div class="col-md-2">
@@ -40,10 +40,10 @@
                     value="{{ data.oferta[0].nombre_cliente | uppercase }}"
                   />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <label for="fecha_solicitud">
-                    <strong> Fecha Solicitada</strong></label
-                  >
+                    <strong> Fecha y Hora de Solicitud</strong>
+                  </label>
                   <input
                     type="text"
                     id="fecha_solicitud"
@@ -51,27 +51,13 @@
                     readonly
                     value="{{
                       data.oferta[0].fecha_solicitud | date : 'dd/MM/yyyy'
-                    }}"
+                    }} - {{ data.oferta[0].horasolicitud | time : 'H:i:s' }}"
                   />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <label for="fecha_solicitud">
-                    <strong> Hora de Solicitud</strong></label
-                  >
-                  <input
-                    type="text"
-                    id="hora_solicitud"
-                    class="form-control"
-                    readonly
-                    value="{{
-                      data.oferta[0].horasolicitud | time : 'H:i:s'
-                    }}"
-                  />
-                </div>
-                <div class="col-md-4">
-                  <label for="fecha_solicitud">
-                    <strong> Fecha de Gestión</strong></label
-                  >
+                    <strong> Fecha y hora de Gestión</strong>
+                  </label>
                   <input
                     type="text"
                     id="fecha_gestion"
@@ -79,21 +65,7 @@
                     readonly
                     value="{{
                       data.oferta[0].fecha_gestion | date : 'dd/MM/yyyy'
-                    }}"
-                  />
-                </div>
-                <div class="col-md-4">
-                  <label for="hora_gestion">
-                    <strong> Hora de Gestion</strong></label
-                  >
-                  <input
-                    type="text"
-                    id="fecha_solicitud"
-                    class="form-control"
-                    readonly
-                    value="{{
-                      data.oferta[0].horasolicitud
-                    }}"
+                    }} - {{ data.oferta[0].horagestion }}"
                   />
                 </div>
                 <div class="col-md-5">
@@ -125,10 +97,8 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
-          <div class="card-header">
-            <h5>Detalle</h5>
-          </div>
           <div class="card-body table-container">
+            <h5>Detalle</h5>
             <table class="table table-striped">
               <thead>
                 <tr>
@@ -153,26 +123,45 @@
                     {{ detalles.cantidad_total }}
                   </td>
                   <td class="font-weight-bold text-center">
-                    {{ detalles.subtotal }}
+                    $. {{ detalles.subtotal }}
                   </td>
                   <td class="font-weight-bold text-center">
-                    <ng-container *ngIf="detalles.descuento_solicitado !== null && detalles.descuento_solicitado !== undefined">
+                    <ng-container
+                      *ngIf="
+                        detalles.descuento_solicitado !== null &&
+                        detalles.descuento_solicitado !== undefined
+                      "
+                    >
                       {{ detalles.descuento_solicitado + '%' }}
                     </ng-container>
                   </td>
-                  
+
                   <td class="font-weight-bold text-center">
-                    <ng-container *ngIf="detalles.descuento_permitido !== null && detalles.descuento_permitido !== undefined">
+                    <ng-container
+                      *ngIf="
+                        detalles.descuento_permitido !== null &&
+                        detalles.descuento_permitido !== undefined
+                      "
+                    >
                       {{ detalles.descuento_permitido + '%' }}
                     </ng-container>
                   </td>
-                  
-                  <td class="font-weight-bold text-center" [ngStyle]="{ color: detalles.excedente >= 0 ? 'red' : 'green' }">
-                    <ng-container *ngIf="detalles.excedente !== null && detalles.excedente !== undefined">
+
+                  <td
+                    class="font-weight-bold text-center"
+                    [ngStyle]="{
+                      color: detalles.excedente >= 0 ? 'red' : 'green'
+                    }"
+                  >
+                    <ng-container
+                      *ngIf="
+                        detalles.excedente !== null &&
+                        detalles.excedente !== undefined
+                      "
+                    >
                       {{ detalles.excedente + '%' }}
                     </ng-container>
                   </td>
-                  
                 </tr>
               </tbody>
             </table>
@@ -204,7 +193,7 @@
           <div class="card">
             <div class="card-body">
               <h6 class="card-title">Observaciones</h6>
-              <div class="row" *ngIf="idVend === 88">
+              <div class="row" *ngIf="admin">
                 <form [formGroup]="myForm" (ngSubmit)="submitForm()">
                   <div class="col-md-9">
                     <input
@@ -217,8 +206,12 @@
                   </div>
                 </form>
               </div>
-              <div class="row" >
-                <form [formGroup]="myForm" (ngSubmit)="submitForm()" *ngIf="idVend !== 88">
+              <div class="row">
+                <form
+                  [formGroup]="myForm"
+                  (ngSubmit)="submitForm()"
+                  *ngIf="admin != true"
+                >
                   <div class="col-md-9">
                     <input
                       type="text"
@@ -238,7 +231,7 @@
       </div>
     </div>
     <div class="col-md-12">
-      <div class="modal-footer" id="botones" *ngIf="idVend === 88">
+      <div class="modal-footer" id="botones" *ngIf="admin">
         <button
           type="submit"
           id="aceptado"
@@ -246,7 +239,13 @@
           (click)="boton(data.oferta[0].id_autorizacion, 12)"
           [disabled]="loader || myForm.get('observacion').invalid"
         >
-          Aprobar
+          <span *ngIf="!loading">Aprobar</span>
+          <span
+            *ngIf="loading"
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
         </button>
         <button
           type="button"

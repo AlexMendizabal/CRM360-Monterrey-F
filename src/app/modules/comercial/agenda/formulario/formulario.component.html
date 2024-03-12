@@ -6,11 +6,7 @@
   <button type="button" (click)="onCancel()" [disabled]="submittingForm">
     Cancelar
   </button>
-  <button
-    type="button"
-    (click)="onSubmit()"
-    [disabled]="submittingForm "
-  >
+  <button type="button" (click)="onSubmit()" [disabled]="submittingForm">
     Guardar
   </button>
 </app-header>
@@ -65,14 +61,15 @@
               </div>
             </div>
           </div>
-          <form [formGroup]="form2" autocomplete="off">
+          <form [formGroup]="form2" autocomplete="off" *ngIf="agendar">
             <div class="form-row">
               <div class="form-group col">
-                <label for="promotor">Promotor</label>
+                <label for="promotor">Promotor.</label>
                 <ng-select
                   [searchable]="true"
                   [clearable]="false"
                   [items]="promotores"
+                  [(ngModel)]="valorSeleccionado"
                   [virtualScroll]="true"
                   placeholder="Selecione..."
                   labelForId="ID"
@@ -84,13 +81,71 @@
                 </ng-select>
               </div>
             </div>
+
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="cliente">Cliente.</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="clientes"
+                  [virtualScroll]="true"
+                  labelForId="cliente"
+                  placeholder="Selecione..."
+                  bindLabel="nomeCliente"
+                  bindValue="codCliente"
+                  formControlName="cliente"
+                  (change)="updateDireccion($event)"
+                >
+                </ng-select>
+              </div>
+            </div>
+          </form>
+
+          <div class="form-row" *ngIf="aministrador">
+            <div class="form-group col">
+              <label for="promotor">Promotor para asignar.</label>
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="promotorparaasignar"
+                [virtualScroll]="true"
+                placeholder="Selecione..."
+                bindLabel="nombre"
+                bindValue="ID"
+                formControlName="prompsig"
+              >     
+              </ng-select>
+            </div>
+          </div>
+
+          <div *ngIf="reagendar">
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="promotor">Promotor</label>
+                <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="promotores"
+                  [ngModel]="valorSeleccionado"
+                  [virtualScroll]="true"
+                  placeholder="Selecione..."
+                  labelForId="ID"
+                  bindLabel="nombre"
+                  bindValue="ID"
+                  formControlName="promotor"
+                >
+                </ng-select>
+              </div>
+            </div>
+
             <div class="form-row">
               <div class="form-group col">
                 <label for="cliente">Cliente</label>
                 <ng-select
                   [searchable]="true"
                   [clearable]="true"
-                  [items]="clientes"
+                  [items]="clientes2"
                   [virtualScroll]="true"
                   labelForId="cliente"
                   bindLabel="nomeCliente"
@@ -101,7 +156,18 @@
                 </ng-select>
               </div>
             </div>
-          </form>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="codOrigemContato">PROMOTOR ASIGNADO</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="promotorasignado"
+                readonly
+              />
+            </div>
+          </div>
         </div>
         <div *ngIf="showInputClientes">
           <div
@@ -374,7 +440,6 @@
               class="form-control"
               id="observacao"
               formControlName="observacao"
-              (input)="onInput()"
             >
             </textarea>
           </div>
@@ -387,7 +452,6 @@
               class="form-control"
               id="Obsfinalizar"
               formControlName="Obsfinalizar"
-              (input)="onInput()"
             >
             </textarea>
           </div>

@@ -41,6 +41,9 @@ export class VistaComponent implements OnInit, AfterViewInit {
   showCierreButton: boolean = true;
   showDescripcionCard: boolean = false;
   showGuardarButton: boolean = false;
+
+  loading: boolean = false;
+  
   dadosEmpty = false;
   public onClose: Subject<boolean>;
 
@@ -48,6 +51,16 @@ export class VistaComponent implements OnInit, AfterViewInit {
   imageHeight = 85;
   
   shouldCloseModal: boolean = false;
+
+// Propiedad para controlar si los inputs están habilitados
+public inputsHabilitados = false;
+
+// Función para cambiar el estado de habilitación de los inputs
+public toggleInputs() {
+  this.inputsHabilitados = !this.inputsHabilitados;
+}
+
+
 
   @Input() ofertaId: number; // Input property to receive the 'id_oferta'
 
@@ -90,6 +103,7 @@ export class VistaComponent implements OnInit, AfterViewInit {
 
   public cierreOferta()
   {
+    
     this.cotacoesService.getCierreOferta().pipe()
     .subscribe({
       next: (response: any) => {
@@ -102,6 +116,7 @@ export class VistaComponent implements OnInit, AfterViewInit {
         }
       }
     });
+    
   }
 
   public onConfirm(): void 
@@ -185,7 +200,8 @@ export class VistaComponent implements OnInit, AfterViewInit {
   onSubmit() {
     this.isLoading = true;
     this.shouldCloseModal = false; // Evitar que el modal se cierre automáticamente
-  
+    this.loading = true;
+
     this.cotacoesService.finalizarOferta(this.myForm.value).subscribe((response: JsonResponse) => {
       this.isLoading = false;
       if (response.success == false) {
@@ -195,6 +211,9 @@ export class VistaComponent implements OnInit, AfterViewInit {
         this.shouldCloseModal = true; // Permitir el cierre del modal después del submit exitoso
       }
     });
+    setTimeout(() => {
+      this.loading = false;
+    }, 10000)
   
     // No ocultar el modal aquí para que puedas controlarlo en tu lógica
     // this._bsModalRef.hide();

@@ -62,6 +62,8 @@ export class AdminUsuariosCadastroComponent implements OnInit {
   perfisLoading = false;
 
   perfisAssociados = [];
+  cargos: any = [];
+  departamentos: any = [];
   perfisAssociadosLoading = false;
 
   tableConfigPerfisAssociados: Partial<CustomTableConfig> = {
@@ -105,6 +107,8 @@ export class AdminUsuariosCadastroComponent implements OnInit {
     this.onActivatedRoute();
     this.setBreadCrumb();
     this.getModulos();
+    this.getCargo();
+    this.getDepartamento();
   }
 
   setBreadCrumb() {
@@ -137,7 +141,6 @@ export class AdminUsuariosCadastroComponent implements OnInit {
   }
 
   buildForm() {
-
     this.form = this.formBuilder.group({
       id: [null],
       nome: [null, Validators.required],
@@ -145,7 +148,7 @@ export class AdminUsuariosCadastroComponent implements OnInit {
       apelido: [null, Validators.required],
       pessoaTipo: ['F', Validators.required],
       departamento: [null, Validators.required],
-      empresa: [null, Validators.required],
+      empresa: ['MONTERREY', Validators.required],
       cargo: [null, Validators.required],
       dataAniversario: [null],
       email: [null, Validators.required],
@@ -161,7 +164,6 @@ export class AdminUsuariosCadastroComponent implements OnInit {
       buscarPor: ['nome'],
       pesquisa: [null, Validators.required]
     });
-
   }
 
   onFieldError(field: string) {
@@ -192,9 +194,7 @@ export class AdminUsuariosCadastroComponent implements OnInit {
   }
 
   getUsuario(id) {
-    
     this.loading = true;
-    
     this.service
       .getUsuarios({id: id})
       .pipe(
@@ -208,14 +208,35 @@ export class AdminUsuariosCadastroComponent implements OnInit {
           if(response.status !== 200){
             return
           }
-
           let data = response.body["data"][0];
-
           data.dataAniversario = data.dataAniversario ? new Date(data.dataAniversario) : null;
-
           this.form.patchValue(data)
         }
       )
+  }
+
+  getCargo(){
+    this.service.getCargos()
+    .pipe(finalize(() => {this.loading = false}))
+    .subscribe( 
+      response =>{
+        if(response['success'])
+        {
+          this.cargos = response['data'];
+        }
+      });
+  }
+
+  getDepartamento(){
+    this.service.getDepartamentos()
+    .pipe(finalize(() => {this.loading = false}))
+    .subscribe( 
+      response =>{
+        if(response['success'])
+        {
+          this.departamentos = response['data'];
+        }
+      });
   }
 
   onSave() {

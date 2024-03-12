@@ -23,6 +23,7 @@ import { ICalculoModel } from './models/calculo';
 import { IDescontoModel } from './models/descontos';
 import { ILoteModel } from './models/lote';
 import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.service';
+export { ComercialAgendaFormularioService };
 
 @Injectable({
   providedIn: 'root',
@@ -171,3 +172,4 @@ export class ComercialCicloVendasCotacoesFormularioService {
 
 
 }
+

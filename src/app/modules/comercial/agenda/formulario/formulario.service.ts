@@ -31,6 +31,12 @@ export class ComercialAgendaFormularioService {
     .pipe(take(1), retry(2));
   }
 
+  getpromotoresporcliente(codCliente){
+    return this.http
+    .get(`${this.API2}/clientes/getvendedorporcliente/${codCliente}`)
+    .pipe(take(1), retry(2));
+  }
+
   loadDependencies(): Observable<Object | JsonResponse> {
     let clientes = this.vendedoresService.getCarteiraClientes();
     let vendedores = this.vendedoresService.getVendedores();

@@ -22,7 +22,7 @@
         <div class="form-group col">
           <label>Cliente</label>
           <div *ngIf="!detalhes.client">Sin informacion</div>
-          <div *ngIf="detalhes.client">{{ detalhes.client }}</div>
+          <div *ngIf="detalhes.client">{{ detalhes.client | uppercase }}</div>
         </div>
       </div>
       <div class="form-row">
@@ -30,7 +30,7 @@
           <label>FORMA DE CONTACTO</label>
           <div *ngIf="!detalhes.formContactDesc">Sin informacion</div>
           <div *ngIf="detalhes.formContactDesc">
-            {{ detalhes.formContactDesc }}
+            {{ detalhes.formContactDesc | uppercase }}
           </div>
         </div>
         <div class="form-row">

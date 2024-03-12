@@ -68,7 +68,7 @@
     <form [formGroup]="form">
       <div class="form-row py-3">
         <div class="form-group col-lg-2">
-          <label for="codLinha">Familia</label>
+          <label for="codLinha">Familia:</label>
           <ng-select
             [searchable]="true"
             [clearable]="true"
@@ -86,7 +86,7 @@
           </ng-select>
         </div>
         <div class="form-group col-lg-2">
-          <label for="codClasse">Grupo</label>
+          <label for="codClasse">Grupo:</label>
           <ng-select
             [searchable]="true"
             [clearable]="true"
@@ -103,7 +103,7 @@
           </ng-select>
         </div>
         <div class="form-group col-lg-2">
-          <label for="codLinea">Línea </label>
+          <label for="codLinea">Línea: </label>
           <ng-select
             [searchable]="true"
             [clearable]="true"
@@ -121,7 +121,7 @@
         </div>
         <div class="form-group col-lg-4">
           <label for="codMaterial"
-            ><span class="text-danger">(*)</span>Material</label
+            ><span class="text-danger text-muted">(*)</span> Material: </label
           >
           <ng-select
             [searchable]="true"
@@ -139,6 +139,25 @@
           >
           </ng-select>
         </div>
+         <div class="form-group col-lg-2">
+          <label for="codMaterial"
+            ><span class="text-danger text-muted">(*)</span> Almacén:</label
+          >
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="this.almacenes"
+            placeholder="Seleccione..."
+            formControlName="almacenForm"
+            [virtualScroll]="true"
+            labelForId="id_almacen"
+            bindLabel="codigo_almacen"
+            bindValue="id_almacen"
+            
+            (change)="seleccionarAlmacen($event.id_almacen)"
+          >
+          </ng-select>
+        </div> 
         <!--<div class="form-group col-lg-3">
               <label for="codClasse">Unid</label>
               <select class="form-control custom-select" formControlName="orderBy" id="orderBy">

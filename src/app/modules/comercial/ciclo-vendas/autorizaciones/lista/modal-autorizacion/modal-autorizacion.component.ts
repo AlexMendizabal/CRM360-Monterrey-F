@@ -40,13 +40,18 @@ export class ModalAutorizacionComponent implements OnInit {
   detalle: any[];
   observacion: string = '';
   loader: boolean = false;
-  idVend: any;
+  admin:  boolean = false;
+  loading: boolean = false;
+
 
   ngOnInit(): void {
     this.data = this.dataForm;
     this.detalle = this.dataForm.detalle;
     this.oferta = this.data['oferta'][0];
-    this.idVend = this.user.info.idVendedor;
+    if(this.user.info.none_cargo === 1)
+    {
+        this.admin = true;
+    }
     if(this.oferta['estado'] == 10)
     {
         this.loader = false;
@@ -76,7 +81,8 @@ export class ModalAutorizacionComponent implements OnInit {
   
     // Iniciar loader y deshabilitar botones
     this.loader = true;
-  
+    this.loading = true;
+
     this.autorizacionService
       .updateAutorizacion(params)
       .pipe(
@@ -102,7 +108,9 @@ export class ModalAutorizacionComponent implements OnInit {
           }
         }
       );
+    setTimeout(() => {
+      this.loading = false;
+    }, 8000)
   }
-
 
 }

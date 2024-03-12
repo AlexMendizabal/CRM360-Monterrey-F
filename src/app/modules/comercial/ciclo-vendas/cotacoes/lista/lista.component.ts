@@ -10,6 +10,7 @@ import {
   ComponentRef,
   ChangeDetectorRef,
 } from '@angular/core';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import {
@@ -21,6 +22,10 @@ import {
 } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { saveAs } from 'file-saver';
+//import * as XLSX from 'xlsx';
+import * as XLSXStyle from 'xlsx-style';
+import * as ExcelJS from 'exceljs/dist/exceljs.min.js';
 
 // ngx-bootstrap
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
@@ -128,12 +133,12 @@ export class ComercialCicloVendasCotacoesListaComponent
     },
     {
       id: 2,
-      text: 'Sin envio a SAP',
+      text: 'Sin envío a SAP',
       hex: '#c40f06',
     },
     {
       id: 3,
-      text: 'Pendiente de aprobacion',
+      text: 'Pendiente de aprobación',
       hex: '#e8c515',
     },
   ];
@@ -350,6 +355,95 @@ export class ComercialCicloVendasCotacoesListaComponent
     }
   }
 
+  async exportarExcel(): Promise<void> {
+    /* alert('click'); */
+    const headers = [
+      '',
+      'Código SAP',
+      'Fecha Creación',
+      'Fecha Validez',
+      'Cliente',
+      'Vendedor',
+      'Modo de entrega',
+      'Monto total USD.',
+      'Monto total Bs.',
+      'Tipo de cambio',
+      'Descuento total',
+      'Autorización solicitada',
+      'Estado autorizacion',
+      'Autorizador',
+      'Situación',
+      'Estado oferta',
+    ];
+    const data = this.dados.map((oferta) => [
+      '', // Columna A vacía
+      oferta.codigo_oferta,
+      oferta.fecha_inicial,
+      oferta.fecha_final,
+      oferta.prim_nome,
+      oferta.nombre,
+      oferta.nombre_modo_entrega,
+      oferta.monto_total,
+      (oferta.monto_total * 6.96).toFixed(2),
+      '6.96',
+      oferta.descuento_total,
+      oferta.id_autorizacion > 0 ? 'SI' : 'NO',
+      oferta.id_estado_autorizacion === 12
+        ? 'AUTORIZADO'
+        : oferta.id_estado_autorizacion === 11
+        ? 'RECHAZADO'
+        : oferta.id_estado_autorizacion === 10? 'PENDIENTE': '',
+      oferta.nombre_usuario,
+      oferta.tipo_estado === 14 ? 'Abierto' : 'Cerrado',
+      oferta.descripcion,
+    ]);
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('data');
+
+    worksheet.addRow(headers);
+    data.forEach((row, rowIndex) => {
+      const formattedDate1 = formatDate(row[2]);
+      row[2] = formattedDate1;
+      const formattedDate2 = formatDate(row[3]);
+      row[3] = formattedDate2;
+      worksheet.addRow(row);
+    });
+
+    worksheet.eachRow((row, rowNumber) => {
+      row.eachCell((cell) => {
+        cell.alignment = { vertical: 'middle', horizontal: 'center' };
+      });
+      if (rowNumber === 1) {
+        row.font = { bold: true };
+      }
+    });
+
+    for (let i = 2; i <= headers.length; i++) {
+      const column = worksheet.getColumn(i);
+      column.width = 20;
+    }
+
+    worksheet.getColumn('D').width = 25;
+
+    function formatDate(date: string): string {
+      const currentDate = new Date(date);
+      const day = currentDate.getDate();
+      const month = currentDate.getMonth() + 1;
+      const year = currentDate.getFullYear();
+
+      return `${day}-${month}-${year}`;
+    }
+
+    const currentDate = new Date().toISOString().split('T')[0]; 
+    const fileName = `${currentDate}_reporte_ofertas.xlsx`;
+    const buffer = await workbook.xlsx.writeBuffer();
+    const excelBlob: Blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    saveAs(excelBlob, fileName);
+  }
+
   setBreadCrumb() {
     const id = this.activatedRoute.snapshot.params.idSubModulo;
     this.activatedRoute.params.subscribe((params: any) => {
@@ -526,8 +620,8 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   checkUserProfile(): void {
     const profile = this.activatedRoute.snapshot.data.profile.result;
-/*     console.log(profile);
- */
+    /*     console.log(profile);
+     */
     if (profile.coordenador === true || profile.gestor === true) {
       this.getVendedores();
     } else if (
@@ -588,8 +682,8 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.vendedoresService.getVinculoOperadores().subscribe((response: any) => {
       if (response.responseCode === 200) {
         this.vendedores = response.result;
-       /*  this.form.controls.codVendedor.setValue(parseInt(null)); */
-       /*  this.form.controls.codVendedor.updateValueAndValidity(); */
+        /*  this.form.controls.codVendedor.setValue(parseInt(null)); */
+        /*  this.form.controls.codVendedor.updateValueAndValidity(); */
       }
     });
   }
@@ -640,17 +734,17 @@ export class ComercialCicloVendasCotacoesListaComponent
             {
               id: 1,
               text: 'Enviado a SAP',
-              hex: '#32a852',
+              /* hex: '#32a852', */
             },
             {
               id: 2,
               text: 'Sin envio a SAP',
-              hex: '#c40f06',
+              /* hex: '#c40f06', */
             },
             {
               id: 3,
-              text: 'Pendiente de aprobacion',
-              hex: '#e8c515',
+              text: 'Pendiente de aprobación',
+              /* hex: '#e8c515', */
             },
           ];
         });
@@ -818,8 +912,8 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   setOrderByModal(column: string) {
-/*     console.log(column);
- */    if (this.orderBy === column) {
+    /*     console.log(column);
+     */ if (this.orderBy === column) {
       this.orderType = this.orderType === 'asc' ? 'desc' : 'asc'; // Cambiar el tipo de orden si se hace clic nuevamente en la misma columna
     } else {
       this.orderBy = column;
@@ -897,8 +991,9 @@ export class ComercialCicloVendasCotacoesListaComponent
         if (Object.keys(response).length > 0) {
           const _response = this.routerService.getBase64UrlParams(response);
           this.form.patchValue(_response);
-/*           console.log(_response);
- */        }
+          /*           console.log(_response);
+           */
+        }
         this.search(this.getParams());
       });
   }
@@ -1024,8 +1119,8 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.dadosLoaded = true;
     this.dadosEmpty = false;
 
-/*     console.log(params);
- */
+    /*     console.log(params);
+     */
     this.cotacoesService
       .getOfertas(params)
       .pipe(
@@ -1335,7 +1430,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     const codVendedor = data[1];
     const cotacao = data[2];
 
-   /*  this.form.controls.nrPedido.setValue(nrProposta);
+    /*  this.form.controls.nrPedido.setValue(nrProposta);
     this.form.controls.codEmpresa.setValue(cotacao.codEmpresa);
     this.form.controls.codVendedor.setValue(codVendedor); */
     this.onFilter();
@@ -1468,8 +1563,8 @@ export class ComercialCicloVendasCotacoesListaComponent
     var params = {
       id_oferta: id_oferta,
     };
-/*     console.log('parametros', params);
- */    this.loaderNavbar = true;
+    /*     console.log('parametros', params);
+     */ this.loaderNavbar = true;
     this.cotacoesService
       .getDetalleOferta(params)
       .pipe(
@@ -1485,8 +1580,9 @@ export class ComercialCicloVendasCotacoesListaComponent
             });
 
             this.modalRef2.content.onClose.subscribe((result) => {
-/*               console.log('Modal closed with result:', result);
- */            });
+              /*               console.log('Modal closed with result:', result);
+               */
+            });
           } else {
             this.pnotifyService.error();
           }
@@ -1499,8 +1595,9 @@ export class ComercialCicloVendasCotacoesListaComponent
           }
         }
       );
-/*     console.log(params);
- */  }
+    /*     console.log(params);
+     */
+  }
 
   onImprimir(nmpedido: number): void {
     this.loaderNavbar = true;
@@ -1513,15 +1610,19 @@ export class ComercialCicloVendasCotacoesListaComponent
       )
       .subscribe(
         (response: JsonResponse) => {
-/*           console.log(response);
- */          if (response.hasOwnProperty('success') && response.success === true) {
+          /*           console.log(response);
+           */ if (
+            response.hasOwnProperty('success') &&
+            response.success === true
+          ) {
             this.modalRef = this.modalService.show(PdfComponent, {
               initialState: { dataFromParent: response.data },
             });
 
             this.modalRef.content.onClose.subscribe((result) => {
-/*               console.log('Modal closed with result:', result);
- */            });
+              /*               console.log('Modal closed with result:', result);
+               */
+            });
           } else {
             this.pnotifyService.error();
           }
@@ -1573,7 +1674,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     });
   }
 
-  verificarOfertas () {
+  verificarOfertas() {
     const params = {
       codVendedor: this.form.get('codVendedor').value,
     };
@@ -1588,18 +1689,18 @@ export class ComercialCicloVendasCotacoesListaComponent
         if (response.pendiente === true) {
           this.swOfertaVencida = true;
           this.arrayOfertas = response.ofertas;
-          this.openModalAd(this.arrayOfertas); 
+          this.openModalAd(this.arrayOfertas);
         } else {
           this.swOfertaVencida = false;
         }
       });
   }
-  
-  openModalAd(arrayOfertas: any[]) { 
+
+  openModalAd(arrayOfertas: any[]) {
     const initialState = {
-      ofertasPendientes: arrayOfertas 
+      ofertasPendientes: arrayOfertas,
     };
-  
+
     this.modalRef = this.modalService.show(
       ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent,
       {
@@ -1609,7 +1710,6 @@ export class ComercialCicloVendasCotacoesListaComponent
       }
     );
   }
-  
 
   hideModal() {
     this.modalRef.hide();
@@ -1689,8 +1789,8 @@ export class ComercialCicloVendasCotacoesListaComponent
     );
   }
   onEdit(item) {
-/*     console.log('datos item', item);
- */    this.router.navigate(['./', item], {
+    /*     console.log('datos item', item);
+     */ this.router.navigate(['./', item], {
       relativeTo: this.activatedRoute,
       queryParams: this.routerService.setBase64UrlParams(item),
     });
@@ -1778,7 +1878,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       .subscribe(
         (response: JsonResponse) => {
           // console.log('Respuesta del servidor:', response);
-      
+
           if (response.data_sap.CodigoRespuesta === 200) {
             this.pnotifyService.success('Se envió SAP');
             return;
@@ -1789,20 +1889,20 @@ export class ComercialCicloVendasCotacoesListaComponent
         },
         (error: any) => {
           // console.error('Error en la solicitud:', error);
-      
+
           if (error.error.hasOwnProperty('Mensaje')) {
             console.error('Mensaje de error:', error.error.Mensaje);
             this.pnotifyService.error(error.error.Mensaje);
           } else {
             this.pnotifyService.error();
           }
-        }     
+        }
       );
   }
 
   onEstadoOferta(codigo_oferta): void {
     this.loaderNavbar = true;
-  /*   const verificadorElement = document.getElementById('verificador');
+    /*   const verificadorElement = document.getElementById('verificador');
     verificadorElement.classList.replace('fas fa-sync-alt', 'far fa-sync-alt fa-spin'); */
     this.cotacoesService
       .postverifica_oferta(codigo_oferta)
@@ -1813,10 +1913,10 @@ export class ComercialCicloVendasCotacoesListaComponent
       )
       .subscribe(
         (response: JsonResponse) => {
-          console.log('Resputs',response);
+          console.log('Resputs', response);
           if (response.CodigoRespuesta === 200) {
             this.pnotifyService.success(response.message);
-         /*    verificadorElement.classList.replace('far fa-sync-alt fa-spin', 'fas fa-sync-alt'); */
+            /*    verificadorElement.classList.replace('far fa-sync-alt fa-spin', 'fas fa-sync-alt'); */
             this.loaderNavbar = false;
             return;
           } else {
@@ -1824,14 +1924,13 @@ export class ComercialCicloVendasCotacoesListaComponent
           }
         },
         (error: any) => {
-      
           if (error.error.hasOwnProperty('Mensaje')) {
             console.error('Mensaje de error:', error.error.Mensaje);
             this.pnotifyService.error(error.error.Mensaje);
           } else {
             this.pnotifyService.error();
           }
-        }     
+        }
       );
   }
 }

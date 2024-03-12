@@ -6,29 +6,239 @@
         <section class="invoice">
           <!-- title row -->
           <div class="row">
-            <div class="col-12">
+            <div class="col-12" style="padding: 5px 35px 0!important;">
               <h2 class="page-header">
                 <img
+                  class="img-logo"
                   [src]="imageSrc"
                   alt="Logo"
                   [style.width.px]="imageWidth"
                   [style.height.px]="imageHeight"
                 />
-                <small class="float-right"
-                  >Nº Oferta: {{ resultFromParent.oferta[0].codigo_oferta }}</small
+                <small class="float-right numero"
+                  >Nº Oferta:
+                  {{ resultFromParent.oferta[0].codigo_oferta }}</small
                 >
               </h2>
             </div>
             <!-- /.col -->
           </div>
           <!-- info row -->
+
+          <!-- Caja Padre -->
           <div class="row invoice-info">
+            <!-- VENDEDOR -->
             <div class="col-md-12">
               <div class="row">
                 <div class="col-md-12">
                   <div class="card wider-card">
                     <div class="card-header">
-                      <h5>DATOS DE OFERTA</h5>
+                      <h5 class="t-1">DATOS DEL VENDEDOR</h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <label for="">Nombre vendedor:</label>
+                            <input
+                              type="text"
+                              name=""
+                              id=""
+                              value="{{
+                                resultFromParent.oferta[0].nombre_vendedor
+                              }}"
+                              class="form-control multiline-input"
+                              readonly
+                            />
+                          </div>
+                          <div class="col-md-6">
+                            <label for="">Nombre lista:</label>
+                            <input
+                              type="text"
+                              name=""
+                              id=""
+                              value="{{
+                                resultFromParent.oferta[0].nombre_lista
+                              }}"
+                              class="form-control"
+                              readonly
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- AUTORIZACION -->
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-12">
+                  <ng-container
+                    *ngIf="
+                      resultFromParent.oferta[0].gestor !== '' &&
+                      resultFromParent.oferta[0].gestor !== null
+                    "
+                  >
+                    <div class="card wider-card">
+                      <div class="card-header">
+                        <h5 class="t-1">DATOS DE AUTORIZACION</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="col-md-3">
+                              <label for="autorizador">Autorizador:</label>
+                              <input
+                                type="text"
+                                id="autorizador"
+                                [value]="resultFromParent.oferta[0].gestor"
+                                class="form-control"
+                                readonly
+                              />
+                            </div>
+                            <div class="col-md-3">
+                              <label for="fechaGestion"
+                                >Fecha de Gestion:</label
+                              >
+                              <input
+                                type="text"
+                                id="fechaGestion"
+                                [value]="
+                                  resultFromParent.oferta[0].fecha_gestion
+                                "
+                                class="form-control"
+                                readonly
+                              />
+                            </div>
+                            <div class="col-md-3">
+                              <label for="obsSolicitante"
+                                >Observacion Solicitante:</label
+                              >
+                              <input
+                                type="text"
+                                id="obsSolicitante"
+                                [value]="
+                                  resultFromParent.oferta[0].obs_solicitante
+                                "
+                                class="form-control"
+                                readonly
+                              />
+                            </div>
+                            <div class="col-md-3">
+                              <label for="obsGestor">Observacion Gestor:</label>
+                              <input
+                                type="text"
+                                id="obsGestor"
+                                [value]="resultFromParent.oferta[0].obs_gestor"
+                                class="form-control"
+                                readonly
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+
+            <!-- CLIENTES -->
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card wider-card">
+                    <div class="card-header">
+                      <h5 class="t-1">DATOS DEL CLIENTE</h5>
+                    </div>
+
+                    <div class="card-body">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <label for="">Codigo del cliente:</label>
+                            <input
+                              type="text"
+                              name=""
+                              id=""
+                              value="{{
+                                resultFromParent.oferta[0].codigo_cliente
+                              }}"
+                              class="form-control"
+                              readonly
+                            />
+                          </div>
+                          <div class="col-md-3">
+                            <label for="">Nombre del cliente:</label>
+                            <input
+                              type="text"
+                              name=""
+                              id="cliente"
+                              value="{{
+                                resultFromParent.oferta[0].nombre_cliente
+                              }}"
+                              class="form-control"
+                              readonly
+                            />
+                          </div>
+                          <div class="col-md-3">
+                            <label for="">Celular:</label>
+                            <input
+                              type="text"
+                              name=""
+                              id=""
+                              value="{{
+                                resultFromParent.oferta[0].celular_clie
+                              }}"
+                              class="form-control"
+                              readonly
+                            />
+                          </div>
+                          <div class="col-md-3">
+                            <label for="">E-mail:</label>
+                            <input
+                              type="text"
+                              name=""
+                              id=""
+                              value="{{ resultFromParent.oferta[0].e_mail }}"
+                              class="form-control"
+                              readonly
+                            />
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-3">
+                            <label for="">Contacto del cliente:</label>
+                            <input
+                              type="text"
+                              name=""
+                              id=""
+                              value="{{
+                                resultFromParent.oferta[0].nombre_cont
+                              }}"
+                              class="form-control multiline-input"
+                              readonly
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- OFERTAS -->
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card wider-card">
+                    <div class="card-header">
+                      <h5 class="t-1">DATOS DE OFERTA</h5>
                     </div>
                     <div class="card-body">
                       <div class="col-md-12">
@@ -177,13 +387,16 @@
                 </div>
               </div>
             </div>
+
+            <!-- CLIENTES 
             <div class="col-md-12">
               <div class="row">
                 <div class="col-md-12">
-                  <div class="cardwider-card">
+                  <div class="card wider-card">
                     <div class="card-header">
-                      <h5>DATOS DEL CLIENTE</h5>
+                      <h5 class="t-1">DATOS DEL CLIENTE</h5>
                     </div>
+
                     <div class="card-body">
                       <div class="col-md-12">
                         <div class="row">
@@ -200,23 +413,20 @@
                               readonly
                             />
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-3">
                             <label for="">Nombre del cliente:</label>
                             <input
-                                type="text"
-                                name=""
-                                id="cliente"
-                                value="{{
-                                    resultFromParent.oferta[0].nombre_cliente
-                                }}"
-                                class="form-control"
-                                readonly
+                              type="text"
+                              name=""
+                              id="cliente"
+                              value="{{
+                                resultFromParent.oferta[0].nombre_cliente
+                              }}"
+                              class="form-control"
+                              readonly
                             />
                           </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                          <div class="col-md-4">
+                          <div class="col-md-3">
                             <label for="">Celular:</label>
                             <input
                               type="text"
@@ -229,7 +439,7 @@
                               readonly
                             />
                           </div>
-                          <div class="col-md-4">
+                          <div class="col-md-3">
                             <label for="">E-mail:</label>
                             <input
                               type="text"
@@ -240,7 +450,10 @@
                               readonly
                             />
                           </div>
-                          <div class="col-md-4">
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-3">
                             <label for="">Contacto del cliente:</label>
                             <input
                               type="text"
@@ -252,25 +465,26 @@
                               class="form-control multiline-input"
                               readonly
                             />
-                          </div>  
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-12">
+            </div>-->
+
+            <!-- <div class="col-md-12">
               <div class="row">
                 <div class="col-md-12">
                   <div class="card wider-card">
                     <div class="card-header">
-                      <h5>DATOS DEL VENDEDOR</h5>
+                      <h5 class="t-1">DATOS DEL VENDEDOR</h5>
                     </div>
                     <div class="card-body">
                       <div class="col-md-12">
                         <div class="row">
-                          <div class="col-md-3">
+                          <div class="col-md-6">
                             <label for="">Nombre vendedor:</label>
                             <input
                               type="text"
@@ -283,7 +497,7 @@
                               readonly
                             />
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-6">
                             <label for="">Nombre lista:</label>
                             <input
                               type="text"
@@ -303,7 +517,7 @@
                   <ng-container *ngIf="resultFromParent.oferta[0].gestor !== '' && resultFromParent.oferta[0].gestor !== null">
                     <div class="card wider-card">
                       <div class="card-header">
-                        <h5>DATOS DE AUTORIZACION</h5>
+                        <h5 class="t-1">DATOS DE AUTORIZACION</h5>
                       </div>
                       <div class="card-body">
                         <div class="col-md-12">
@@ -356,18 +570,133 @@
                   
                 </div>
               </div>
-            </div>
+            </div> -->
+
+            <!-- VENDEDOR 
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card wider-card">
+                    <div class="card-header">
+                      <h5 class="t-1">DATOS DEL VENDEDOR</h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <label for="">Nombre vendedor:</label>
+                            <input
+                              type="text"
+                              name=""
+                              id=""
+                              value="{{
+                                resultFromParent.oferta[0].nombre_vendedor
+                              }}"
+                              class="form-control multiline-input"
+                              readonly
+                            />
+                          </div>
+                          <div class="col-md-6">
+                            <label for="">Nombre lista:</label>
+                            <input
+                              type="text"
+                              name=""
+                              id=""
+                              value="{{
+                                resultFromParent.oferta[0].nombre_lista
+                              }}"
+                              class="form-control"
+                              readonly
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>-->
+
+            <!-- AUTORIZACION 
+                  <ng-container
+                    *ngIf="
+                      resultFromParent.oferta[0].gestor !== '' &&
+                      resultFromParent.oferta[0].gestor !== null
+                    "
+                  >
+                    <div class="card wider-card">
+                      <div class="card-header">
+                        <h5 class="t-1">DATOS DE AUTORIZACION</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="col-md-3">
+                              <label for="autorizador">Autorizador:</label>
+                              <input
+                                type="text"
+                                id="autorizador"
+                                [value]="resultFromParent.oferta[0].gestor"
+                                class="form-control"
+                                readonly
+                              />
+                            </div>
+                            <div class="col-md-3">
+                              <label for="fechaGestion"
+                                >Fecha de Gestion:</label
+                              >
+                              <input
+                                type="text"
+                                id="fechaGestion"
+                                [value]="
+                                  resultFromParent.oferta[0].fecha_gestion
+                                "
+                                class="form-control"
+                                readonly
+                              />
+                            </div>
+                            <div class="col-md-3">
+                              <label for="obsSolicitante"
+                                >Observacion Solicitante:</label
+                              >
+                              <input
+                                type="text"
+                                id="obsSolicitante"
+                                [value]="
+                                  resultFromParent.oferta[0].obs_solicitante
+                                "
+                                class="form-control"
+                                readonly
+                              />
+                            </div>
+                            <div class="col-md-3">
+                              <label for="obsGestor">Observacion Gestor:</label>
+                              <input
+                                type="text"
+                                id="obsGestor"
+                                [value]="resultFromParent.oferta[0].obs_gestor"
+                                class="form-control"
+                                readonly
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>-->
             <!-- /.col -->
           </div>
           <!-- Table row -->
+
+          <!-- CARRITO -->
           <div class="row">
             <div class="col-12">
               <div class="card wider-card">
                 <div class="card-header">
-                  <h5>DETALLE</h5>
+                  <h5 class="t-1">DETALLE DEL CARRITO</h5>
                 </div>
-                <div class="card-body table-container" >
-                  <table class="table table-striped">
+                <div class="card-body table-container">
+                  <table class="table table-striped table-bordered">
                     <thead>
                       <tr>
                         <th class="text-center">CODIGO MATERIAL</th>
@@ -375,11 +704,10 @@
                         <th class="text-center">UNIDAD</th>
                         <th class="text-center">PRECIO</th>
                         <th class="text-center">CANTIDAD</th>
-                        <th class="text-center">TOTAL BRUTO</th>
+                        <th class="text-center"></th>
                         <th class="text-center">PRECIO DESCUENTO</th>
                         <th class="text-center">SUBTOTAL</th>
                         <th class="text-center">NOMBRE ALMACEN</th>
-                        
                       </tr>
                     </thead>
                     <tbody>
@@ -399,11 +727,16 @@
                         </td>
                         <td class="text-center">{{ analitico.total_bruto }}</td>
                         <td class="text-center">
-                          <ng-container *ngIf="analitico.precio_descuento !== null && analitico.precio_descuento !== undefined">
+                          <ng-container
+                            *ngIf="
+                              analitico.precio_descuento !== null &&
+                              analitico.precio_descuento !== undefined
+                            "
+                          >
                             {{ analitico.precio_descuento + '%' }}
                           </ng-container>
                         </td>
-                        
+
                         <td class="text-center">{{ analitico.subtotal }}</td>
                         <td class="text-center">
                           {{ analitico.nombre_almacen }}
@@ -411,27 +744,35 @@
                       </tr>
                     </tbody>
                   </table>
-                  <div class="col-md-3">
-                    <label for="">Monto total Bruto:</label>
-                    <input
-                      type="text"
-                      name=""
-                      id=""
-                      value="{{ resultFromParent.oferta[0].monto_total_bruto }}"
-                      class="form-control"
-                      readonly
-                    />
-                  </div>
-                  <div class="col-md-3">
-                    <label for="">Monto Total:</label>
-                    <input
-                      type="text"
-                      name=""
-                      id=""
-                      value="{{ resultFromParent.oferta[0].monto_total }}"
-                      class="form-control"
-                      readonly
-                    />
+
+                  <div class="container">
+                    <div class="row justify-content-end">
+                      <div class="col-md-3">
+                        <label for="">Monto total Bruto:</label>
+                        <input
+                          type="text"
+                          name=""
+                          id=""
+                          value="{{
+                            resultFromParent.oferta[0].monto_total_bruto
+                          }}"
+                          class="form-control"
+                          readonly
+                        />
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="">Monto Total:</label>
+                        <input
+                          type="text"
+                          name=""
+                          id=""
+                          value="{{ resultFromParent.oferta[0].monto_total }}"
+                          class="form-control"
+                          readonly
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -439,22 +780,29 @@
             <!-- /.col -->
           </div>
           <!-- /.row -->
+
+          <!-- CIERRE DE OFERTA -->
           <div class="row" *ngIf="showDescripcionCard">
             <div class="col-12">
               <div class="card wider-card">
                 <div class="card-header">
-                  <h5>CIERRE DE OFERTA</h5>
+                  <h5 class="t-1">CIERRE DE OFERTA</h5>
                 </div>
                 <div class="card-body table-container">
                   <span>
-                    Es necesario rellenar los campos con <span class="text-danger" >* </span> 
+                    Es necesario rellenar los campos con
+                    <span class="text-danger">* </span>
                   </span>
                   <div class="col-md-6">
-                    <label for="">MOTIVO DE CIERRE <span class="text-danger">*</span></label><i
-                    class="far fa-question-circle p-2"
-                    tooltip="Seleccione un motivo de cierre de la lista."
-                    placement="right">
-                  </i>
+                    <label for=""
+                      >MOTIVO DE CIERRE
+                      <span class="text-danger">*</span></label
+                    ><i
+                      class="far fa-question-circle p-2"
+                      tooltip="Seleccione un motivo de cierre de la lista."
+                      placement="right"
+                    >
+                    </i>
                     <select class="form-control" formControlName="estadoOfert">
                       <option value="" disabled selected>Selecciona...</option>
                       <option
@@ -467,11 +815,14 @@
                   </div>
 
                   <div class="col-md-6">
-                    <label for="">Observación <span class="text-danger">*</span></label>
+                    <label for=""
+                      >Observación <span class="text-danger">*</span></label
+                    >
                     <i
                       class="far fa-question-circle p-2"
                       tooltip="Coloque su justificacion de por que se cerro la oferta."
-                      placement="right">
+                      placement="right"
+                    >
                     </i>
                     <input
                       type="text"
@@ -490,16 +841,31 @@
       </div>
     </div>
     <div class="modal-footer">
+      <!-- Botón para habilitar/deshabilitar inputs -->
+      <button class="btn btn-primary" (click)="toggleInputs()">
+        EDITAR
+      </button>
       <a
         class="btn btn-danger"
         *ngIf="showCierreButton"
         (click)="toggleDescripcionCard()"
         >CIERRE OFERTA</a
       >
-      <button type="submit" class="btn btn-success" *ngIf="showGuardarButton" [disabled]="isLoading">
-        GUARDAR
+      <button
+        type="submit"
+        class="btn btn-success"
+        *ngIf="showGuardarButton"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!loading">GUARDAR</span>
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
       </button>
-      
+
       <a
         type="button"
         class="btn btn-secondary"
