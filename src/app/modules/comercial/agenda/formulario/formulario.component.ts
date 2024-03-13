@@ -48,8 +48,8 @@ import { compileDirectiveFromRender2 } from '@angular/compiler/src/render3/view/
 export class ComercialAgendaFormularioComponent
   implements OnInit, IFormCanDeactivate
 {
-  user = this.authService.getCurrentUser();
-  valorSeleccionado = this.user.info.idVendedor;
+  private user = this.authService.getCurrentUser();
+  valorSeleccionado = Number(this.user.info.idVendedor);
   permissoesAcesso: {
     simuladorVendas: boolean;
   };
@@ -95,7 +95,7 @@ export class ComercialAgendaFormularioComponent
   /**form2 */
   idClient: number = 0;
   id_promotor: number = 0;
-
+  id_ejecutivo: number;
   codClient:string;
 
   selectedImage: File;
@@ -176,7 +176,7 @@ export class ComercialAgendaFormularioComponent
     private agendaService: ComercialAgendaService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private location: Location,
+    private location  : Location,
     private localeService: BsLocaleService,
     private pnotifyService: PNotifyService,
     private dateService: DateService,
@@ -201,13 +201,14 @@ export class ComercialAgendaFormularioComponent
     this.checkAcessos();
     this.checkUrlParams();
     this.getFormFields();
-    if(this.user.info.none_cargo === 1)
+    if(this.user.info.none_cargo === '1')
     {
       this.aministrador = true;
     }
     else
     { 
       this.aministrador = false;
+      this.onChangeVendedor(this.user.info.idVendedor);
     }
   }
 
@@ -591,7 +592,7 @@ export class ComercialAgendaFormularioComponent
         if (response[5].success == true) {
           // Merge the initial object with the data from response[5].data
          
-          if(this.user.info.none_cargo === 1)
+          if(this.user.info.none_cargo === '1')
           {
             const todos = [{ 'ID': 0, 'idEscritorio': 0, 'nombre': 'TODOS' }];
             this.promotores = [...todos, ...response[5].data]; 
@@ -633,7 +634,6 @@ export class ComercialAgendaFormularioComponent
     this.form.controls.cliente.enable();
     this.form.controls.cliente.setValidators([Validators.required]);
     this.form.controls.cliente.updateValueAndValidity();
-    this.id_promotor = idvendedor;
     
     this.formService
       .getclientes(idvendedor)

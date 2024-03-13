@@ -702,9 +702,9 @@
                         <th class="text-center">CODIGO MATERIAL</th>
                         <th class="text-center">NOMBRE MATERIAL</th>
                         <th class="text-center">UNIDAD</th>
-                        <th class="text-center">PRECIO</th>
+                        <th class="text-center">PRECIO UNI.</th>
                         <th class="text-center">CANTIDAD</th>
-                        <th class="text-center"></th>
+                        <th class="text-center">TOTAL BRUTO</th>
                         <th class="text-center">PRECIO DESCUENTO</th>
                         <th class="text-center">SUBTOTAL</th>
                         <th class="text-center">NOMBRE ALMACEN</th>
@@ -720,7 +720,7 @@
                         </td>
                         <td class="text-center">{{ analitico.unidad }}</td>
                         <td class="text-center">
-                          {{ analitico.precio.toFixed(2) }}
+                          {{ analitico.precio.toFixed(2) }} $
                         </td>
                         <td class="text-center">
                           {{ analitico.cantidad.toFixed(2) }}
@@ -737,7 +737,7 @@
                           </ng-container>
                         </td>
 
-                        <td class="text-center">{{ analitico.subtotal }}</td>
+                        <td class="text-center">{{ analitico.subtotal }} $</td>
                         <td class="text-center">
                           {{ analitico.nombre_almacen }}
                         </td>

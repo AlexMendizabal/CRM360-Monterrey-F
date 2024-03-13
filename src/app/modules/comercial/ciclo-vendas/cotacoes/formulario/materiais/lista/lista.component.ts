@@ -273,6 +273,11 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   seleccionarAlmacen(codigo_almacen: any) {
     if (codigo_almacen != '') {
       this.codigo_almacen = codigo_almacen;
+      this.form.controls.almacenForm.disable();
+
+    }else{
+      this.form.controls.almacenForm.enable();
+
     }
   }
   cambioRegistros(registro) {
@@ -463,6 +468,11 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         {
           value: formValue.codLinea,
           disabled: formValue.codLinea == null ? true : false,
+        },
+      ],
+      almacenForm: [
+        {
+          
         },
       ],
       comEstoque: [formValue.comEstoque, [Validators.required]],
@@ -683,6 +693,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         id_material: this.idMaterial,
         id_lista: this.id_lista,
         id_vendedor: this.id_vendedor,
+        codigo_almacen: this.codigo_almacen,
+
         registros: this.form.controls.registros.value,
       };
     } else if (tipo == 2) {
@@ -690,6 +702,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         id_material: this.idMaterial,
         codigo_material: this.codigo_material,
         id_lista: this.id_lista,
+        codigo_almacen: this.codigo_almacen,
         registros: this.form.controls.registros.value,
       };
     }
@@ -756,7 +769,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
               this.swVendedor = true;
               this.swActivarBusqueda = true;
               this.dadosEmpty = true;
-              this.form.controls.codMaterial.disable();
+              //this.form.controls.codMaterial.disable();
               this.swAppSellColor = true;
             }
           },

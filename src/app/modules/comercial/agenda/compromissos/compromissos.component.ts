@@ -147,7 +147,7 @@ export class ComercialAgendaCompromissosComponent implements OnInit {
     //this.fetchEvents();
     this.cdr.detectChanges();
     console.log('aqui usuarios', this.user.info);
-    if (this.user.info.none_cargo == 1) {
+    if (this.user.info.none_cargo == '1') {
       this.switchEdit = true;
     } else {
       this.switchEdit = false;

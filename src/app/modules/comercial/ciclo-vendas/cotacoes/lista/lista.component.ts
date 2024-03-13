@@ -1789,19 +1789,19 @@ export class ComercialCicloVendasCotacoesListaComponent
     );
   }
   onEdit(item) {
-    /*     console.log('datos item', item);
-     */ this.router.navigate(['./', item], {
+     this.router.navigate(['./', item], {
       relativeTo: this.activatedRoute,
       queryParams: this.routerService.setBase64UrlParams(item),
     });
   }
 
-  /* onEdit(): void {
+  onEdit2(pedido): void {
     // this.loaderNavbar = true;
-    let empresa = this.activeCotacao.codEmpresa;
+    let empresa = 1;
     const idSubModulo = this.activatedRoute.snapshot.params.idSubModulo;
-    this.router.navigate([`/comercial/ciclo-vendas/${idSubModulo}/cotacoes-pedidos/editar/${this.activeCotacao.nrPedido}/${empresa}`,]);
-  } */
+    this.router.navigate([`/comercial/ciclo-vendas/${idSubModulo}/cotacoes-pedidos/editar/${pedido}/${empresa}`,]);
+    
+  }
 
   transformNumberToCEP(valor: any): string {
     const resto = 8 - String(valor).length;

@@ -490,6 +490,7 @@ width:100%;
   border: none;
   background-color: #d8d8d8;
   transition: .4s;
+  color: #707070;
 }
 
 .step-button[aria-expanded="true"] {
@@ -523,14 +524,10 @@ width:100%;
 
 /* to customize progress bar */
 #progress::-webkit-progress-value {
-  background-color: var(--prm-color);
-  transition: .2s ease;
+  background-color: #3ab265c7!important;
+  transition: 1.2s ease;
 }
 
-#progress::-webkit-progress-bar {
-  background-color: var(--prm-gray);
-
-}
 
 .mt-60{
   margin-top:20px;
@@ -653,6 +650,9 @@ h5.h5-g{
     color: #707070;
 }
 
+
+
+
 /* Determinate: */
 
 progress {
@@ -663,7 +663,6 @@ progress {
     border-radius: 7px;
   }
   progress::-webkit-progress-value {
-  //  background-color: blue;
     border-radius: 7px;
   }
 

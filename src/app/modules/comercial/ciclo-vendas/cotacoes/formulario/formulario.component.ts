@@ -86,15 +86,15 @@ import { ComercialClientesCadastroDadosFaturamentoFormularioService } from '../.
 export class ComercialCicloVendasCotacoesFormularioComponent
   implements OnInit, OnDestroy, IFormCanDeactivate
 {
-  
-
-  
   private user = this.authService.getCurrentUser();
+  valorSeleccionado = Number(this.user.info.idVendedor);
+
   permissoesAcesso: IPermissoesAcessoModel = {
     acessoClientes: false,
     historicoExclusao: false,
     duplicataCarteira: false,
   };
+
   @ViewChild(ComercialCicloVendasCotacoesFormularioMateriaisListaComponent, {
     static: false,
   })
@@ -326,6 +326,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       { id: 2, nombre: 'entrega en obra ' },
     ];
 
+    if(this.user.info.none_cargo === '1')
+    {
+    }
+    else
+    { 
+      this.datosVendedor(this.user.info.idVendedor);
+    }
     //this.form.controls.codEndereco.setValue(1);
     this.getIdOferta(); /* this.finalizacaoService.showModal(this.tipoEntrega, 1);  */
     // console.log(this.swExisteCliente);
@@ -334,6 +341,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
     /*   this.form.controls.codigoCliente.setValue('Código'); */
   }
+ 
 
   getCiudades() {
     this.dadosFaturamentoService
@@ -401,7 +409,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   getTodosVendedores(): void {
     this.comercialService.getTodosVendedores().subscribe(
       (response: any) => {
-        console.log('aqui vendedores',response);
         this.listaEjecutivo = response.data;
       },
       (error: any) => {}
@@ -429,7 +436,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   getAlmacenes(id_vendedor): void {
-    console.log('ingreso');
     const params = {
       id_vendedor,
     };
@@ -650,7 +656,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.form.controls.celularcontacto.setValue(event.celularcontacto);
     this.form.controls.codFormaPagamento.setValue(1);
     this.form.controls.id_tipo_cliente.setValue(event.tipoCliente);
-    this.idListaPrecio = event.id_lista_precio;
+    /* this.idListaPrecio = event.id_lista_precio; */
     this.codigoRubro = event.codigo_rubro;
     this.form.controls.nombreTipo.setValue(event.nombreTipo);
     this.form.controls.celularcontacto.setValue(event.celularcontacto);
@@ -715,10 +721,9 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     const resolver = this.activatedRoute.snapshot.data.data;
     if (resolver.success === true) {
       const data = resolver.data;
-      /* console.log(data.carnet); */
+      console.log('data todo los datos', data);
       const formValue: any = this.checkRouterParams();
-      /* ('datos');
-         (data); */
+      console.log('formValue aqui entra con datos',formValue);
 
       let dataEntrega: Date,
         dataEncerramento: Date,
@@ -872,7 +877,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         ],
         codTransportadora: [data.codTransportadora, [Validators.required]],
         observacoes: [data.observacao],
-        lista: [],
+       /*  lista: [], */
         anexos: this.formBuilder.array([]),
         novo: this.activatedRoute.snapshot.url[0].path,
         COD_CLIE_TERC: [data.COD_CLIE_TERC],
@@ -1983,7 +1988,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   onHistoricoExclusao(): void {
     const params = this.form.value;
-
     if (
       this.appTitle == 'Editar cotação/pedido' ||
       this.appTitle == 'visualizar cotação/pedido'
@@ -2087,8 +2091,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       }
     }
     return '';
-
-    return '';
   }
 
   onFieldRequired(
@@ -2183,7 +2185,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           this.clientes = response.data;
           if (this.clientes[0].nomeSituacao == 'Arquivo') {
             this.pnotifyService.notice(
-              'Cliente arquivado, favor entrar em contato com o Marketing'
+              'Cliente archivado, por favor contacte con Marketing'
             );
           } else {
             this.form.controls.codRazaoSocial.setValue(this.clientes[0].carnet);
@@ -2300,6 +2302,59 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       });
   }
 
+ /* Progress Bar */
 
-  
+ currentStep: number = 1; // Comienza en el paso 1
+
+ goToNextStep(): void {
+   if (this.currentStep < 4) { // Suponiendo 4 pasos
+     this.currentStep++;
+   }
+   this.toggleCollapse();
+ }
+
+ goToPreviousStep(): void {
+   if (this.currentStep > 1) {
+     this.currentStep--;
+   }
+   this.toggleCollapse();
+ }
+
+ toggleCollapse(): void {
+  // Selecciona todos los elementos de collapse
+  const collapses = document.querySelectorAll('.collapse');
+  // También selecciona todos los botones de los pasos
+  const stepButtons = document.querySelectorAll('.step-button');
+  // Selecciona todos los títulos de los pasos
+  const stepTitles = document.querySelectorAll('.step-title');
+
+  collapses.forEach((collapse, index) => {
+    const stepButton = stepButtons[index]; // Obtén el botón correspondiente al paso
+    const stepTitle = stepTitles[index]; // Obtén el título correspondiente al paso
+    if (index + 1 === this.currentStep) {
+      collapse.classList.add('show');
+      if (stepButton && stepTitle instanceof HTMLElement) { // Asegurar que stepTitle es un HTMLElement para acceder a .style
+        stepButton.setAttribute('aria-expanded', 'true');
+        // Aplica el estilo directamente al título del paso actual
+        stepTitle.style.color = "#441157";
+      }
+    } else {
+      collapse.classList.remove('show');
+      if (stepButton && stepTitle instanceof HTMLElement) { // Asegurar que stepTitle es un HTMLElement para acceder a .style
+        stepButton.setAttribute('aria-expanded', 'false');
+        // Restablece el estilo para los títulos de los pasos no activos
+        stepTitle.style.color = "#707070"; // Restablecer al valor predeterminado o aplicar otro color
+      }
+    }
+  });
+}
+
+
+
+
+ get progressPercentage(): number {
+   // Asegúrate de ajustar este cálculo si cambia el número total de pasos.
+   return ((this.currentStep - 1) / (4 - 1)) * 100;
+ }   
+
 }

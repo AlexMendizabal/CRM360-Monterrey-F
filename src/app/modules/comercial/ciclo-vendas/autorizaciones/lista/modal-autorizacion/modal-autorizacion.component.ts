@@ -48,7 +48,7 @@ export class ModalAutorizacionComponent implements OnInit {
     this.data = this.dataForm;
     this.detalle = this.dataForm.detalle;
     this.oferta = this.data['oferta'][0];
-    if(this.user.info.none_cargo === 1)
+    if(this.user.info.none_cargo === '1')
     {
         this.admin = true;
     }

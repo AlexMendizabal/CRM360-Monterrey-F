@@ -161,6 +161,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.obtenerTiposClientes();
     this.obtenerTipoDocumento();
     this.getCiudades();
+    this.listStatus();
     this.vendedoresService.getVendedores().subscribe(
       (response: any) => {
         this.vendedoresList = response.data;
@@ -229,8 +230,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   }
 
   isBotonDeshabilitado(): boolean {
-    // Si nomeAbreviado es "PROMOTOR", retorna true (deshabilitado), de lo contrario, retorna false
-    return this.currentUser && this.currentUser.info && this.currentUser.info.none_cargo === 6;
+    
+    return this.currentUser && this.currentUser.info && this.currentUser.info.none_cargo === '6';
   }
 
   getCenaes(): void {
@@ -687,7 +688,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
           this.setStatus(response['result']);
         }
       },
-      error: (error: any) => {
+      error: (error: any) => {  
         this.pnotifyService.error();
       },
     });

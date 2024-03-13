@@ -83,7 +83,7 @@ export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
   setCliente(cliente) {
     if (cliente.nomeSituacao == 'Arquivo') {
       this.pnotifyService.notice(
-        'Cliente arquivado, favor entrar em contato com o Marketing'
+        'Cliente archivado, por favor contacte a Marketing'
       );
     } else {
       this.cliente.emit(cliente);
