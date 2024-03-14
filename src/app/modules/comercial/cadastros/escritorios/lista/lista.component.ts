@@ -408,9 +408,9 @@ export class ComercialCadastrosEscritorioListaComponent
   classStatusBorder(escritorio: Escritorio): string {
     let borderClass: string;
 
-    if (escritorio.codSituacao === 0) {
+    if (escritorio.codSituacao === 1) {
       borderClass = 'border-success';
-    } else if (escritorio.codSituacao === 1) {
+    } else if (escritorio.codSituacao === 2 || 0) {
       borderClass = 'border-danger';
     }
 
@@ -517,7 +517,7 @@ export class ComercialCadastrosEscritorioListaComponent
 
   activateEscritorio(index: number, escritorio: Escritorio): Observable<any> {
     this.loaderNavbar = true;
-    this.dadosPagination[index].codSituacao = 0;
+    this.dadosPagination[index].codSituacao = 1;
 
     return this.escritorioService.activateEscritorio(escritorio.codEscritorio);
   }
@@ -529,7 +529,7 @@ export class ComercialCadastrosEscritorioListaComponent
         take(1),
         switchMap(result =>
           result ? this.inactivateEscritorio(index, escritorio) : EMPTY
-        ),
+        ), 
         finalize(() => {
           this.loaderNavbar = false;
         })
@@ -558,7 +558,7 @@ export class ComercialCadastrosEscritorioListaComponent
 
   inactivateEscritorio(index: number, escritorio: Escritorio): Observable<any> {
     this.loaderNavbar = true;
-    this.dadosPagination[index].codSituacao = 1;
+    this.dadosPagination[index].codSituacao = 2;
 
     return this.escritorioService.inactivateEscritorio(
       escritorio.codEscritorio

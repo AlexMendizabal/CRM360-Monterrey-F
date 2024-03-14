@@ -112,12 +112,12 @@
             <!-- (click)="onDetails(escritorio)" -->
             <!-- (click)="onDetails(escritorio)" -->
             <td class="text-right" [hidden]="showDetailPanel">
-              <span *ngIf="escritorio.codSituacao == 0" class="mr-3" tooltip="Inactivar" placement="left" container="body">
+              <span *ngIf="escritorio.codSituacao == 1" class="mr-3" tooltip="Inactivar" placement="left" container="body">
                 <button type="button" class="btn-icon-sm" (click)="onInactivate(i, escritorio)">
                   <i class="fas fa-toggle-on"></i>
                 </button>
               </span>
-              <span *ngIf="escritorio.codSituacao == 1" class="mr-3" tooltip="Activar" placement="left" container="body">
+              <span *ngIf="escritorio.codSituacao == 2||0" class="mr-3" tooltip="Activar" placement="left" container="body">
                 <button type="button" class="btn-icon-sm" (click)="onActivate(i, escritorio)" > 
                   <!--  -->
                   <i class="fas fa-toggle-off"></i>

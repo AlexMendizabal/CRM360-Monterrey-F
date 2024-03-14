@@ -200,7 +200,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   idVendedor = 0;
   tipoEntrega = [];
   idListaPrecio: number;
-  nombreDepartamento = '';
+  nombreDepartamento2 = '';
   formaContacto: any[] = [];
   tipoContacto: any[] = [];
   selectedFormaContacto: any;
@@ -316,7 +316,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.getCiudades();
     this.getListarPrecios();
     this.getTodosVendedores();
-   
+
     this.getCentrosLogisticos();
     this.getRubros();
     this.getFormasContato();
@@ -326,11 +326,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       { id: 2, nombre: 'entrega en obra ' },
     ];
 
-    if(this.user.info.none_cargo === '1')
-    {
-    }
-    else
-    { 
+    if (this.user.info.none_cargo === '1') {
+    } else {
       this.datosVendedor(this.user.info.idVendedor);
     }
     //this.form.controls.codEndereco.setValue(1);
@@ -341,7 +338,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
     /*   this.form.controls.codigoCliente.setValue('Código'); */
   }
- 
 
   getCiudades() {
     this.dadosFaturamentoService
@@ -652,11 +648,9 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.form.controls.correo_electronico.setValue(event.correo_electronico);
     this.form.controls.celular.setValue(event.celular);
     this.form.controls.telefono.setValue(event.telefono);
-    this.form.controls.id_departamento.setValue(event.id_departamento_lista);
     this.form.controls.celularcontacto.setValue(event.celularcontacto);
     this.form.controls.codFormaPagamento.setValue(1);
     this.form.controls.id_tipo_cliente.setValue(event.tipoCliente);
-    /* this.idListaPrecio = event.id_lista_precio; */
     this.codigoRubro = event.codigo_rubro;
     this.form.controls.nombreTipo.setValue(event.nombreTipo);
     this.form.controls.celularcontacto.setValue(event.celularcontacto);
@@ -678,11 +672,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       next: (response: JsonResponse) => {
         if (response.responseCode == 200) {
           this.idListaPrecio = response.detalle[0].id_lista;
-          this.nombreDepartamento = response.detalle[0].nombre_departamento;
-          this.form.controls.nombreDepartamento.setValue(
-            this.nombreDepartamento
+          this.nombreDepartamento2 = response.detalle[0].nombre_departamento;
+          this.form.controls.nombreDepartamento2.setValue(
+            this.nombreDepartamento2
           );
-          this.getAlmacenes( id_vendedor);
+          this.getAlmacenes(id_vendedor);
 
           /*  this.form.controls['lista'].setValue(response.detalle[0].id_lista); */
           // this.form.value.lista = response.detalle[0].id_lista;
@@ -723,7 +717,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       const data = resolver.data;
       console.log('data todo los datos', data);
       const formValue: any = this.checkRouterParams();
-      console.log('formValue aqui entra con datos',formValue);
+      console.log('formValue aqui entra con datos', formValue);
 
       let dataEntrega: Date,
         dataEncerramento: Date,
@@ -815,7 +809,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           data.codSituacao != 0 ? data.codSituacao : null,
           [Validators.required],
         ],
-        nombreDepartamento: [],
+        nombreDepartamento2: [],
         codCliente: [data.codCliente],
         razaoSocial: [data.razaoSocial],
         nombre_factura: [data.nombre_factura],
@@ -877,7 +871,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         ],
         codTransportadora: [data.codTransportadora, [Validators.required]],
         observacoes: [data.observacao],
-       /*  lista: [], */
+        /*  lista: [], */
         anexos: this.formBuilder.array([]),
         novo: this.activatedRoute.snapshot.url[0].path,
         COD_CLIE_TERC: [data.COD_CLIE_TERC],
@@ -2077,7 +2071,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
     return '';
   }
-
+  /* aca */
   onFieldInvalid(field: any) {
     field = this.form.get(field);
 
@@ -2302,59 +2296,125 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       });
   }
 
- /* Progress Bar */
+  /* Progress Bar */
 
- currentStep: number = 1; // Comienza en el paso 1
+  currentStep: number = 1; // Comienza en el paso 1
 
- goToNextStep(): void {
-   if (this.currentStep < 4) { // Suponiendo 4 pasos
-     this.currentStep++;
-   }
-   this.toggleCollapse();
- }
+  goToNextStep(): void {
+    // Suponiendo 4 pasos
+    switch (this.currentStep) {
+      case 1:
+        // Aquí irían validaciones o acciones específicas del paso 1 si las hubiera
+        this.currentStep++;
+        break;
+        case 2:
+          // Obteniendo inputs
+          const cliente = document.querySelector('#nomeCliente') as HTMLInputElement;
+          const nombreFac = document.querySelector('#namefactura') as HTMLInputElement;
+          const nombreEjec = document.querySelector('#nameEjec') as HTMLInputElement;
+        
+          // Textos de validación feedback
+          const validationFeedback01 = document.getElementById('validationServer01Feedback');
+          const validationFeedback02 = document.getElementById('validationServer02Feedback');
+          const validationFeedback03 = document.getElementById('validationServer03Feedback');
+    
+          // Validar todos los campos antes de avanzar
+          let isValid = true;
+        
+          if (!cliente || cliente.value === "") {
+            cliente.classList.add('is-invalid');
+            validationFeedback01.style.display = 'block';
+            isValid = false;
+          }
+        
+          if (!nombreFac || nombreFac.value === "") {
+            nombreFac.classList.add('is-invalid');
+            validationFeedback02.style.display = 'block';
+            isValid = false;
+          }
+        
+          if (!nombreEjec || nombreEjec.value === "") {
+            validationFeedback03.style.display = 'block';
+            isValid = false;
+          }
+        
+          if (isValid) {
+            cliente.classList.remove('is-invalid');
+            nombreFac.classList.remove('is-invalid');
+            nombreEjec.classList.remove('is-invalid');
 
- goToPreviousStep(): void {
-   if (this.currentStep > 1) {
-     this.currentStep--;
-   }
-   this.toggleCollapse();
- }
+            cliente.classList.add('is-valid');
+            nombreFac.classList.add('is-valid');
+            nombreEjec.classList.add('is-valid');
 
- toggleCollapse(): void {
-  // Selecciona todos los elementos de collapse
-  const collapses = document.querySelectorAll('.collapse');
-  // También selecciona todos los botones de los pasos
-  const stepButtons = document.querySelectorAll('.step-button');
-  // Selecciona todos los títulos de los pasos
-  const stepTitles = document.querySelectorAll('.step-title');
-
-  collapses.forEach((collapse, index) => {
-    const stepButton = stepButtons[index]; // Obtén el botón correspondiente al paso
-    const stepTitle = stepTitles[index]; // Obtén el título correspondiente al paso
-    if (index + 1 === this.currentStep) {
-      collapse.classList.add('show');
-      if (stepButton && stepTitle instanceof HTMLElement) { // Asegurar que stepTitle es un HTMLElement para acceder a .style
-        stepButton.setAttribute('aria-expanded', 'true');
-        // Aplica el estilo directamente al título del paso actual
-        stepTitle.style.color = "#441157";
-      }
-    } else {
-      collapse.classList.remove('show');
-      if (stepButton && stepTitle instanceof HTMLElement) { // Asegurar que stepTitle es un HTMLElement para acceder a .style
-        stepButton.setAttribute('aria-expanded', 'false');
-        // Restablece el estilo para los títulos de los pasos no activos
-        stepTitle.style.color = "#707070"; // Restablecer al valor predeterminado o aplicar otro color
-      }
+            validationFeedback01.style.display = 'none';
+            validationFeedback02.style.display = 'none';
+            validationFeedback03.style.display = 'none';
+            this.currentStep++;
+          }
+        
+          break;
+      case 3:
+        // Aquí irían validaciones o acciones específicas del paso 3 si las hubiera
+        this.currentStep++;
+        break;
+      // No necesitas un caso para el paso 4 si simplemente estás avanzando a un paso que no existe
     }
-  });
-}
+  
+    // Llamar a toggleCollapse solo si está dentro del rango de pasos válidos
+    if (this.currentStep <= 4) {
+      this.toggleCollapse();
+    }
+  }
+  
 
+  goToPreviousStep(): void {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
+    this.toggleCollapse();
+  }
 
+  toggleCollapse(): void {
+    // Selecciona todos los elementos de collapse
+    const collapses = document.querySelectorAll('.collapse');
+    // También selecciona todos los botones de los pasos
+    const stepButtons = document.querySelectorAll('.step-button');
+    // Selecciona todos los títulos de los pasos
+    const stepTitles = document.querySelectorAll('.step-title');
 
+    collapses.forEach((collapse, index) => {
+      const stepButton = stepButtons[index]; // Obtén el botón correspondiente al paso
+      const stepTitle = stepTitles[index]; // Obtén el título correspondiente al paso
+      if (index + 1 === this.currentStep) {
+        collapse.classList.add('show');
+        
 
- get progressPercentage(): number {
-   // Asegúrate de ajustar este cálculo si cambia el número total de pasos.
-   return ((this.currentStep - 1) / (4 - 1)) * 100;
- }   
+        if (stepButton && stepTitle instanceof HTMLElement) {
+          // Asegurar que stepTitle es un HTMLElement para acceder a .style
+          stepButton.setAttribute('aria-expanded', 'true');
+          // Aplica el estilo directamente al título del paso actual
+          stepTitle.style.color = '#441157';
+        }
+      } else {
+        collapse.classList.remove('show');
+        if (stepButton && stepTitle instanceof HTMLElement) {
+          // Asegurar que stepTitle es un HTMLElement para acceder a .style
+          stepButton.setAttribute('aria-expanded', 'false');
+          // Restablece el estilo para los títulos de los pasos no activos
+          stepTitle.style.color = '#707070'; // Restablecer al valor predeterminado o aplicar otro color
+        }
+      }
+    });
+  }
 
+  get progressPercentage(): number {
+    // Asegúrate de ajustar este cálculo si cambia el número total de pasos.
+    return ((this.currentStep - 1) / (4 - 1)) * 100;
+  }
+
+  /*
+  const cliente = document.querySelector('#nomeCliente');
+  
+  */
 }

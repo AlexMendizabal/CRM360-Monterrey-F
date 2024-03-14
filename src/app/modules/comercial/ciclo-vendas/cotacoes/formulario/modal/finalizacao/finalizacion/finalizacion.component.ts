@@ -116,6 +116,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
   }
 
   onSubmit() {
+
+    console.log('con authorizacion',this.checkoutForm.value, this.checkoutForm.value, this.checkoutForm.value.observacion )
     if (this.checkoutForm.value !== undefined && this.checkoutForm.value !== null && this.checkoutForm.value.observacion !=="") {
       
       this.id_oferta = this.dataCotacao.id_oferta;
@@ -127,18 +129,20 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
         id_oferta: this.id_oferta,
         fecha_solicitud: this.fecha,
       };
+
       this.cotacoesService.autorizaciones(this.formObj)
         .pipe().subscribe(
           (response: any) => {
             console.log(response);
+            this.pnotifyService.notice(
+              'se envio una auntorización.'
+            );
           }
         );
       this.onClose();
-      
     }
     else {
-      //console.log('Llega sin autorizacion');
-      this.onClose();
+     this.pnotifyService.error();
     }
   }
 
@@ -210,7 +214,6 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
           })
         )
         .subscribe((response: JsonResponse) => {
-          console.log('cotizaciones', response);
           if (response.success === true) {
             this.metasProgresso.toneladas.progresso = response.data.toneladas;
             this.metasProgresso.clientes.progresso = response.data.clientes;

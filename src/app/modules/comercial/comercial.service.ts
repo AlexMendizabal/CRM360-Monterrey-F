@@ -46,7 +46,7 @@ export class ComercialService {
 
   getAlmacen(params?: any): Observable<Object | JsonResponse> {
     return this.http
-      .get(`${this.API}/almacen`)
+      .get(`${this.API}/estoque`)
       .pipe(take(1), retry(2));
   }
   getLinhasId(id: any) {

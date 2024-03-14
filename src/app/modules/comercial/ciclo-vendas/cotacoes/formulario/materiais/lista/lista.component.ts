@@ -273,7 +273,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   seleccionarAlmacen(codigo_almacen: any) {
     if (codigo_almacen != '') {
       this.codigo_almacen = codigo_almacen;
-      this.form.controls.almacenForm.disable();
+      // this.form.controls.almacenForm.disable();
 
     }else{
       this.form.controls.almacenForm.enable();

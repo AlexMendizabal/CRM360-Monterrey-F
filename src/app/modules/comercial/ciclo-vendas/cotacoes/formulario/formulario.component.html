@@ -4,15 +4,6 @@
 ></loader-spinner-full-screen>
 <app-header [appTitle]="appTitle">
   <button
-    class="btn btn-success"
-    type="button"
-    (click)="onSubmit()"
-    *ngIf="!visualizar"
-    [disabled]="loaderCotizacion || loaderNavbar"
-  >
-    Finalizar
-  </button>
-  <button
     class="btn btn-danger"
     type="button"
     (click)="onCancel()"
@@ -123,7 +114,9 @@
               >
                 1
               </button>
-              <div class="step-title" style="color:#441157;">DATOS DE LA OFERTA</div>
+              <div class="step-title" style="color: #441157">
+                DATOS DE LA OFERTA
+              </div>
             </div>
 
             <div class="step-item">
@@ -383,13 +376,13 @@
                           style="height: 19px"
                         >
                           <label class="my-auto" for="nomeCliente">
-                            <!-- <span class="text-danger">(*)</span> -->
                             <span class="text-danger">(*)</span> Cliente:
                           </label>
                           <div
                             class="my-auto text-uppercase"
                             style="font-size: 11px"
                             *ngIf="!visualizar"
+                            required
                           >
                             <a
                               *ngIf="urlPath != 'editar'"
@@ -440,6 +433,13 @@
                           placeholder="Seleccionar..."
                           [attr.disabled]="true"
                         />
+                        <div
+                          class="invalid-feedback"
+                          id="validationServer01Feedback"
+                          style="display: none"
+                        >
+                          Este campo es requerido.
+                        </div>
                       </div>
                       <div class="form-group col-lg-2">
                         <label class="my-auto">Tipo de Cliente:</label>
@@ -456,16 +456,7 @@
                           />
                         </div>
                       </div>
-                      <div class="form-group col-lg-2">
-                        <label for="orderBy">Departamento:</label>
-                        <input
-                          formControlName="nombreDepartamento"
-                          type="text"
-                          class="form-control"
-                          [value]="id_departamento"
-                          readonly
-                        />
-                      </div>
+
                       <div class="form-group col-lg-2">
                         <label class="my-auto" for="">Rubro:</label>
                         <select
@@ -496,7 +487,7 @@
                         <div class="d-flex p-1 ml-2">
                           <label
                             class="form-label font-weight-bold text-uppercase"
-                            >Información de contacto</label
+                            >Información de contacto del Cliente</label
                           >
                         </div>
                       </div>
@@ -668,15 +659,21 @@
                             <span class="text-danger">(*)</span> Nombre de
                             factura:</label
                           >
-                          <div
-                            class="my-1 text-uppercase"
-                            style="font-size: 11px"
-                          >
+                          <div class="my-1" style="font-size: 11px">
                             <input
+                              id="namefactura"
                               formControlName="razaoSocial"
                               type="text"
-                              class="form-control"
+                              class="form-control text-uppercase"
+                              required
                             />
+                            <div
+                              class="invalid-feedback"
+                              id="validationServer02Feedback"
+                              style="display: none"
+                            >
+                              Este campo es requerido.
+                            </div>
                             <input
                               formControlName="id_tipo_cliente"
                               type="hidden"
@@ -819,9 +816,10 @@
                             bindLabel="nome"
                             bindValue="id"
                             (change)="datosVendedor($event.id)"
+                            required
                           >
                           </ng-select>
-
+                          
                           <!-- <ng-select
                             class=""
                             [formControlName]="ejecutivo_ventas"
@@ -881,6 +879,24 @@ For="let listaPrecio of listaPrecios">
 </ng-container>
 </ng-select> -->
                         </div>
+                        <div class="form-group col-lg-2">
+                          <label for="orderBy">Departamento:</label>
+                          <input
+                            id="nameEjec"
+                            formControlName="nombreDepartamento2"
+                            type="text"
+                            class="form-control"
+                            [value]="id_departamento"
+                            readonly
+                          />
+                        </div>
+                        <div
+                            class="invalid-feedback"
+                            id="validationServer03Feedback"
+                            style="display: none;"
+                          >
+                            Selecciona un Ejecutivo, para continuar.
+                          </div>
                       </div>
                     </div>
                   </div>
@@ -1017,9 +1033,9 @@ For="let listaPrecio of listaPrecios">
                           class="mb-1 d-flex justify-content-between w-100"
                           style="height: 19px"
                         >
-                        
                           <label class="my-auto" for="">
-                            <span class="text-danger">(*)</span> Tipo de entrega:
+                            <span class="text-danger">(*)</span> Tipo de
+                            entrega:
                           </label>
                           <div
                             class="my-auto text-uppercase"
@@ -1222,6 +1238,15 @@ For="let listaPrecio of listaPrecios">
                 >
                   Siguiente
                 </button>
+                <button
+                  class="btn btn-success"
+                  type="button"
+                  (click)="onSubmit()"
+                  *ngIf="!visualizar"
+                  [disabled]="loaderCotizacion || loaderNavbar"
+                >
+                  Finalizar
+                </button>
               </div>
             </div>
           </div>
@@ -1229,6 +1254,7 @@ For="let listaPrecio of listaPrecios">
       </div>
     </section>
   </form>
+
   <ng-template #selecionarCliente>
     <comercial-ciclo-vendas-cotacoes-formulario-modal-selecionar
       (fecharModal)="onFecharModal($event)"

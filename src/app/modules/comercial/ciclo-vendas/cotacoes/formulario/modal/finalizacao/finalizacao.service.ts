@@ -72,7 +72,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
 
   sendCotizacion(dataCotacao: any): void{
     this.loaderNavbar.emit(true);
-
+    console.log("al final: ",dataCotacao);
     this.cotacoesService
       .postCotizacion(dataCotacao)
       .pipe(

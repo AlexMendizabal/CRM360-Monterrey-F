@@ -56,7 +56,7 @@
             type="button"
             class="btn btn-sm btn-secondary mr-3"
             (click)="onFilterVend(1)"
-            *ngIf="swVendedor === true && swActivarBusqueda === true  && codigo_almacen > 0"
+            *ngIf="swVendedor === true && swActivarBusqueda === true  && codigo_almacen != ''"
           >
             <i class="fas fa-search"></i>
             <span>Buscar</span>
@@ -154,7 +154,7 @@
             bindLabel="codigo_almacen"
             bindValue="id_almacen"
             
-            (change)="seleccionarAlmacen($event.id_almacen)"
+            (change)="seleccionarAlmacen($event.codigo_almacen)"
           >
           </ng-select>
         </div> 
