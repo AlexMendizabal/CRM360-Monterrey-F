@@ -234,7 +234,7 @@
           </td>
           <td
             class="text-center hover"
-            [ngStyle]="{ color: getColor(autorizacion.estado_oferta) }"
+            [ngStyle]="{ color: getColor(autorizacion.estado_oferta) }" style="font-weight: 500;"
           >
             {{ autorizacion.estado_oferta | uppercase }}
           </td>
@@ -250,8 +250,9 @@
               routerLink="/modal-autorizacion"
               (click)="openModal(autorizacion.id_autorizacion)"
             >
-              <i class="fas fa-file"></i
-              ><span class="text-uppercase"> Detalles</span>
+              <i class="fas fa-file" style="padding-right: 4px;"></i
+              ><span class="text-uppercase" style="font-weight: 500;
+              "> Detalles</span>
             </a>
             <!-- <a
             class="dropdown-item"

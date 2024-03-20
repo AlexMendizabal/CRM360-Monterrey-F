@@ -205,7 +205,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   tipoContacto: any[] = [];
   selectedFormaContacto: any;
   selectedTipoContacto: any;
-
+  contacto_cliente:any
   visualizar = false;
   duplicatasSomenteCarteira = false;
   urlPath: string;
@@ -248,6 +248,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   loaderCotizacion: boolean = false;
 
   showBloco6 = true;
+
+  swActivarAlmacen: boolean = true;
+  estadoAlmacenObj = { value: true };
+
 
   swEntrega = false;
   id_forma_contacto = 0;
@@ -337,6 +341,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
      */
 
     /*   this.form.controls.codigoCliente.setValue('Código'); */
+    if(this.form.value.id_vendedor != 0 && this.form.value.id_vendedor !== null)
+    {
+      this.valorSeleccionado = Number(this.form.value.id_vendedor);
+      this.datosVendedor(this.valorSeleccionado);
+      console.log('valor seleccionado vendedor',this.valorSeleccionado);
+    }
+   
   }
 
   getCiudades() {
@@ -369,6 +380,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       },
       (error: any) => {}
     );
+  }
+
+  onListaVacia(evento): void {   
+    if(evento){
+      this.estadoAlmacenObj.value = evento
+    } 
+    console.log(this.estadoAlmacenObj.value);
   }
 
   getCarteira(action: string) {
@@ -635,7 +653,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       .getVerificaOfertasCliente(event.codCliente)
       .subscribe((response: JsonResponse) => {
         if (response.success == false) { */
-    //console.log('cliente:', event);
+    // console.log('cliente:', event);
     this.form.patchValue(event);
     this.onChangeCliente(event.codCliente, 'user');
     this.onLoadCliente(true);
@@ -644,6 +662,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.form.controls.nombreTipo.setValue(event.nombreTipo);
     this.form.controls.carnet.setValue(event.numero_documento);
     this.form.controls.tipo_documento.setValue(event.tipo_documento);
+    this.form.controls.codigoRubro.setValue(event.rubro);
     this.form.controls.razaoSocial.setValue(event.razaoSocial);
     this.form.controls.correo_electronico.setValue(event.correo_electronico);
     this.form.controls.celular.setValue(event.celular);
@@ -651,10 +670,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.form.controls.celularcontacto.setValue(event.celularcontacto);
     this.form.controls.codFormaPagamento.setValue(1);
     this.form.controls.id_tipo_cliente.setValue(event.tipoCliente);
-    this.codigoRubro = event.codigo_rubro;
+    // this.codigoRubro.setValue(event.rubro); 
     this.form.controls.nombreTipo.setValue(event.nombreTipo);
     this.form.controls.celularcontacto.setValue(event.celularcontacto);
-    this.form.controls.tipoEntrega.setValue(1);
+    this.form.controls.tipoEntrega.setValue(1); 
     this.exibirClienteTerceiro(event);
     /*  } else {
           this.pnotifyService.error('El Cliente tiene una oferta pendiente');
@@ -713,11 +732,184 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
   setFormBuilder(): void {
     const resolver = this.activatedRoute.snapshot.data.data;
-    if (resolver.success === true) {
-      const data = resolver.data;
-      console.log('data todo los datos', data);
-      const formValue: any = this.checkRouterParams();
-      console.log('formValue aqui entra con datos', formValue);
+    const data = resolver.data;
+    const formValue: any = this.checkRouterParams();
+    console.log('formValue aqui entra con datos', data);
+    if (data.codSituacao === 1 && data.tipo_estado === 14 && resolver.success === true) {
+
+      let dataEntrega: Date,
+        dataEncerramento: Date,
+        dataValidade: Date,
+        fechaRecordatorio: Date,
+        codEmpresa: number,
+        codDeposito: number,
+        codFormaContato: number,
+        codOrigemContato: number;
+
+      if (data.codEmpresa === null) {
+        codEmpresa = formValue.codEmpresa;
+      } else {
+        codEmpresa = data.codEmpresa;
+      }
+
+      if (data.codDeposito === null) {
+        codDeposito = formValue.codDeposito;
+      } else {
+        codDeposito = data.codDeposito;
+      }
+
+      if (data.dataEntrega !== null) {
+        dataEntrega = this.dateService.convertStringToDate(
+          data.dataEntrega,
+          'latam'
+        );
+      } else {
+        dataEntrega = data.dataEntrega;
+      }
+
+      if (data.dataEncerramento !== null) {
+        dataEncerramento = this.dateService.convertStringToDate(data.dataEncerramento,'latam');
+      } else {
+        dataEncerramento = new Date(); // Asigna la fecha actual
+      }
+
+      if (data.dataValidade === null) {
+        dataValidade = this.dateService.addDaysToDate(new Date(), 7);
+      } else {
+        dataValidade = this.dateService.convertStringToDate(data.dataValidade,'latam');
+      }
+
+      fechaRecordatorio = this.dateService.addDaysToDate(new Date(), 7);
+
+      if (data.codFormaContato === null || data.codFormaContato === 0) {
+        codFormaContato = formValue.codFormaContato;
+      } else {
+        codFormaContato = data.codFormaContato;
+      }
+
+      if (data.codOrigemContato === null || data.codOrigemContato === 0) {
+        codOrigemContato = formValue.codOrigemContato;
+      } else {
+        codOrigemContato = data.codOrigemContato;
+      }
+
+      const codCotacao =
+        typeof this.codCotacao == 'undefined'
+          ? this.idReservado
+          : this.codCotacao;
+
+      if (this.duplicatasSomenteCarteira == true) {
+        data.duplicatasSomenteCarteira = 1;
+      } else {
+        data.duplicatasSomenteCarteira = 0;
+      }
+      //console.log(data);
+
+      this.form = this.formBuilder.group({
+        codCotacao: [{ value: codCotacao, disabled: true }],
+        tipoCotacao: [{ value: data.tipoCotacao, disabled: true }],
+        notaFiscal: [{ value: data.nrNotaFical, disabled: true }],
+        codSituacao: [data.codSituacao != 0 ? data.codSituacao : null,[Validators.required],],
+        nombreDepartamento2: [],
+        codCliente: [data.codCliente],
+        razaoSocial: [data.nomeFantasia],
+        nombre_factura: [data.codRazaoSocial],
+        correo_electronico: [data.correo_electronico],
+        nomeCliente: [data.nomeFantasia],
+        carnet: [data.numero_documento],
+        tipo_documento: [data.tipo_documento],
+        nombreVendedor: [data.nombreVendedor],
+        codigo_oferta: [],
+        codigo_oferta_crm: [data.nrPedido],
+        /*   id_lista_precio: [data.id_lista_precio], */
+        codigo_cliente: [data.codigo_cliente],
+        telefono: [data.telefono],
+        celular: [data.celular],
+        nit: [data.nit],
+        nombreTipo: [data.tipo_cliente],
+        id_tipo_cliente: [data.tipoCliente],
+        id_departamento: [data.id_departamento_lista],
+        ejecutivo_ventas: [data.codVendedor, [Validators.required]],
+        direccion_entrega: [],
+        direccionEntrega: [],
+        formaContacto: [null],
+        tipodecontacto: [null],
+        codigoRubro:[data.rubro],
+        contacto_cliente: [null],
+        id_vendedor: [data.codVendedor],
+        /*  centroLogisticoControl:[], */
+
+        /* codEndereco: [data.direccion], */
+        codContato: [
+          data.codContato != 0 ? data.codContato : null,
+          [Validators.required],
+        ],
+        codEndereco: [
+          data.codEnderecoEntrega != 0 ? data.codEnderecoEntrega : null,
+          [Validators.required],
+        ],
+        titulo: [data.titulo],
+        codEmpresa: [codEmpresa],
+        codDeposito: [data.codDeposito],
+        notaFiscalMae: [
+          data.notaFiscalMae != 0 ? data.notaFiscalMae : null,
+          [Validators.required],
+        ],
+        codFormaPagamento: [1],
+        // alterado de duplicatasSomenteCarteira para duplicataSomenteCarteira aqui...
+        duplicatasSomenteCarteira: [data.duplicatasSomenteCarteira],
+        fechaRecordatorio: [fechaRecordatorio],
+        dataEntrega: [dataEntrega, [Validators.required]],
+        dataEncerramento: [{ value: dataEncerramento, disabled: true }],
+        dataValidade: [dataValidade, [Validators.required]],
+        codFormaContato: [codFormaContato, [Validators.required]],
+        codOrigemContato: [codOrigemContato, [Validators.required]],
+        telefonoCliente: [],
+        dadosAdicionais: [
+          data.dadosAdicionaisNotaFiscal,
+          [Validators.required],
+        ],
+        freteConta: [
+          data.codFretePorConta != 0 ? data.codFretePorConta : null,
+          [Validators.required],
+        ],
+        codTransportadora: [data.codTransportadora, [Validators.required]],
+        observacoes: [data.observacao],
+        /*  lista: [], */
+        
+        novo: this.activatedRoute.snapshot.url[0].path,
+        COD_CLIE_TERC: [data.COD_CLIE_TERC],
+        TP_ACAO: [data.TP_ACAO],
+        correoElectronico: [],
+      });
+      if (data.codEnderecoEntrega) {
+        this.exibirClienteTerceiro(data.notaFiscalMae);
+      }
+
+      this.dadosLancamento.data = data.dataLancamento;
+      // this.dadosLancamento.codVendedor = data.codVendedor;
+      // this.dadosLancamento.nomeVendedor = data.nomeVendedor;
+
+      this.checkPermissoesAcesso();
+      /* this.checkSituacaoCotacao(data.codSituacao); */
+      this.checkClienteCotacao(data.codCliente);
+      /* this.checkMateriaisCarrinho(data.carrinho); */
+
+      if (this.form.value.codSituacao == null) {
+        this.form.controls.codSituacao.setValue(1);
+        this.form.controls.codSituacao.updateValueAndValidity();
+      }
+
+      this.form.controls.codEmpresa.disable();
+      this.form.controls.codDeposito.disable();
+
+      if (codCotacao != null) {
+        this.getAnexos(codCotacao);
+      }
+
+      this.carrinho = data.carrinho;
+    }
+    else if (resolver.success === true) {
 
       let dataEntrega: Date,
         dataEncerramento: Date,
@@ -800,27 +992,28 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         data.duplicatasSomenteCarteira = 0;
       }
       //console.log(data);
+     this.valorSeleccionado = Number(data.codVendedor);
+     console.log('valor seleccionado vendedor',this.valorSeleccionado);
+  
+    
 
       this.form = this.formBuilder.group({
         codCotacao: [{ value: codCotacao, disabled: true }],
         tipoCotacao: [{ value: data.tipoCotacao, disabled: true }],
         notaFiscal: [{ value: data.nrNotaFical, disabled: true }],
-        codSituacao: [
-          data.codSituacao != 0 ? data.codSituacao : null,
-          [Validators.required],
-        ],
+        codSituacao: [data.codSituacao != 0 ? data.codSituacao : null,[Validators.required],],
         nombreDepartamento2: [],
         codCliente: [data.codCliente],
         razaoSocial: [data.razaoSocial],
         nombre_factura: [data.nombre_factura],
-        correo_electronico: [data.correo_electronico],
+        correo_electronico: [data.correo],
         nomeCliente: [data.nomeCliente],
         carnet: [data.numero_documento],
         tipo_documento: [data.tipo_documento],
         nombreVendedor: [data.nombreVendedor],
         codigo_oferta: [],
         codigo_oferta_crm: [],
-        /*   id_lista_precio: [data.id_lista_precio], */
+        id_lista_precio: [data.id_lista_precio], 
         codigo_cliente: [data.codigo_cliente],
         telefono: [data.telefono],
         celular: [data.celular],
@@ -828,14 +1021,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         nombreTipo: [data.nombreTipo],
         id_tipo_cliente: [data.tipoCliente],
         id_departamento: [data.id_departamento_lista],
-        ejecutivo_ventas: [null, [Validators.required]],
+        ejecutivo_ventas: [data.codVendedor, [Validators.required]],
         direccion_entrega: [],
         direccionEntrega: [],
-        formaContacto: [null],
+        formaContacto: [data.formaContacto],
         tipodecontacto: [null],
-        /*  centroLogisticoControl:[], */
-
-        /* codEndereco: [data.direccion], */
+        codigoRubro:[data.nit],
+        
         codContato: [
           data.codContato != 0 ? data.codContato : null,
           [Validators.required],
@@ -846,7 +1038,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         ],
         titulo: [data.titulo],
         codEmpresa: [codEmpresa],
-        codDeposito: [codDeposito],
+        codDeposito: [data.codDeposito],
         notaFiscalMae: [
           data.notaFiscalMae != 0 ? data.notaFiscalMae : null,
           [Validators.required],
@@ -872,7 +1064,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         codTransportadora: [data.codTransportadora, [Validators.required]],
         observacoes: [data.observacao],
         /*  lista: [], */
-        anexos: this.formBuilder.array([]),
+        
         novo: this.activatedRoute.snapshot.url[0].path,
         COD_CLIE_TERC: [data.COD_CLIE_TERC],
         TP_ACAO: [data.TP_ACAO],
@@ -908,6 +1100,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.pnotifyService.error();
       this.location.back();
     }
+    // console.log('data con form de novo', this);
   }
 
   setFreteConta(event) {
@@ -1453,9 +1646,9 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   changeContacto(id) {
-    //console.log(id);
     this.id_forma_contacto = id;
-  }
+}
+
 
   onFormaContactoChange(event: any): void {
     // Puedes hacer algo con el evento si es necesario
@@ -1547,6 +1740,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             telefono: formValue.telefonoCliente,
             formaContacto: this.form.controls.formaContacto.value,
             tipoContacto: this.form.controls.tipodecontacto.value,
+            
           };
           /* this.autorizacionService.showModal();  */
           /* console.log(dataCotizacion); */
@@ -1843,7 +2037,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           this.form.controls.codContato.enable();
         })
       )
-      .subscribe((response: JsonResponse) => {
+      .subscribe((response: JsonResponse) => {      
         if (response.success === true) {
           const _contatos = response.data;
           const contatos = [];
@@ -2307,66 +2501,77 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         // Aquí irían validaciones o acciones específicas del paso 1 si las hubiera
         this.currentStep++;
         break;
-        case 2:
-          // Obteniendo inputs
-          const cliente = document.querySelector('#nomeCliente') as HTMLInputElement;
-          const nombreFac = document.querySelector('#namefactura') as HTMLInputElement;
-          const nombreEjec = document.querySelector('#nameEjec') as HTMLInputElement;
-        
-          // Textos de validación feedback
-          const validationFeedback01 = document.getElementById('validationServer01Feedback');
-          const validationFeedback02 = document.getElementById('validationServer02Feedback');
-          const validationFeedback03 = document.getElementById('validationServer03Feedback');
-    
-          // Validar todos los campos antes de avanzar
-          let isValid = true;
-        
-          if (!cliente || cliente.value === "") {
-            cliente.classList.add('is-invalid');
-            validationFeedback01.style.display = 'block';
-            isValid = false;
-          }
-        
-          if (!nombreFac || nombreFac.value === "") {
-            nombreFac.classList.add('is-invalid');
-            validationFeedback02.style.display = 'block';
-            isValid = false;
-          }
-        
-          if (!nombreEjec || nombreEjec.value === "") {
-            validationFeedback03.style.display = 'block';
-            isValid = false;
-          }
-        
-          if (isValid) {
-            cliente.classList.remove('is-invalid');
-            nombreFac.classList.remove('is-invalid');
-            nombreEjec.classList.remove('is-invalid');
+      case 2:
+        // Obteniendo inputs
+        const cliente = document.querySelector(
+          '#nomeCliente'
+        ) as HTMLInputElement;
+        const nombreFac = document.querySelector(
+          '#namefactura'
+        ) as HTMLInputElement;
+        const nombreEjec = document.querySelector(
+          '#nameEjec'
+        ) as HTMLInputElement;
 
-            cliente.classList.add('is-valid');
-            nombreFac.classList.add('is-valid');
-            nombreEjec.classList.add('is-valid');
+        // Textos de validación feedback
+        const validationFeedback01 = document.getElementById(
+          'validationServer01Feedback'
+        );
+        const validationFeedback02 = document.getElementById(
+          'validationServer02Feedback'
+        );
+        const validationFeedback03 = document.getElementById(
+          'validationServer03Feedback'
+        );
 
-            validationFeedback01.style.display = 'none';
-            validationFeedback02.style.display = 'none';
-            validationFeedback03.style.display = 'none';
-            this.currentStep++;
-          }
-        
-          break;
+        // Validar todos los campos antes de avanzar
+        let isValid = true;
+
+        if (!cliente || cliente.value === '') {
+          /*cliente.classList.add('is-invalid');
+          validationFeedback01.style.display = 'block';
+          isValid = false;*/
+        }
+
+        if (!nombreFac || nombreFac.value === '') {
+         /*  nombreFac.classList.add('is-invalid');
+          validationFeedback02.style.display = 'block';
+          isValid = false; */
+        }
+
+        if (!nombreEjec || nombreEjec.value === '') {
+        /*   validationFeedback03.style.display = 'block';
+          isValid = false; */
+        }
+
+        if (isValid) {
+/*           cliente.classList.remove('is-invalid');
+          nombreFac.classList.remove('is-invalid');
+          nombreEjec.classList.remove('is-invalid');
+
+          cliente.classList.add('is-valid');
+          nombreFac.classList.add('is-valid');
+          nombreEjec.classList.add('is-valid');
+
+          validationFeedback01.style.display = 'none';
+          validationFeedback02.style.display = 'none';
+          validationFeedback03.style.display = 'none'; */
+          this.currentStep++;
+        }
+
+        break;
       case 3:
         // Aquí irían validaciones o acciones específicas del paso 3 si las hubiera
         this.currentStep++;
         break;
       // No necesitas un caso para el paso 4 si simplemente estás avanzando a un paso que no existe
     }
-  
+
     // Llamar a toggleCollapse solo si está dentro del rango de pasos válidos
     if (this.currentStep <= 4) {
       this.toggleCollapse();
     }
   }
-  
 
   goToPreviousStep(): void {
     if (this.currentStep > 1) {
@@ -2388,7 +2593,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       const stepTitle = stepTitles[index]; // Obtén el título correspondiente al paso
       if (index + 1 === this.currentStep) {
         collapse.classList.add('show');
-        
 
         if (stepButton && stepTitle instanceof HTMLElement) {
           // Asegurar que stepTitle es un HTMLElement para acceder a .style
@@ -2409,12 +2613,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   get progressPercentage(): number {
-    // Asegúrate de ajustar este cálculo si cambia el número total de pasos.
     return ((this.currentStep - 1) / (4 - 1)) * 100;
   }
-
-  /*
-  const cliente = document.querySelector('#nomeCliente');
-  
-  */
 }

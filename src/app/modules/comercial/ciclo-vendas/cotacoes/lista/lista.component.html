@@ -6,7 +6,7 @@
   <button *ngIf="dados.length > 0" type="button" (click)="exportarExcel()">
     Exportar a Excel
   </button>
-  
+
   <button type="button" (click)="nuevo()" [disabled]="swOfertaVencida">
     Adicionar
   </button>
@@ -167,8 +167,9 @@
   </div>
 
   <ul class="horizontal-list">
-    <li *ngFor="let item of leyendas " class="text-muted" st>
-      <i class="fas fa-paper-plane" style="color:{{ item.hex }};"></i> {{ item.text }}
+    <li *ngFor="let item of leyendas" class="text-muted" st>
+      <i class="fas fa-paper-plane" style="color:{{ item.hex }};"></i>
+      {{ item.text }}
     </li>
   </ul>
 
@@ -271,7 +272,8 @@
           >
             <td
               class="hover text-dark text-center"
-              *ngIf="pedido.codigo_oferta !== null; else segCodigo"  style="border-left-color:  #32A852; font-weight: bold;"
+              *ngIf="pedido.codigo_oferta !== null; else segCodigo"
+              style="border-left-color: #32a852; font-weight: bold"
             >
               {{ pedido.codigo_oferta }}
             </td>
@@ -279,7 +281,8 @@
               <td
                 class="hover-danger text-dark text-center"
                 *ngIf="pedido.codigo_oferta === null"
-              style="border-left-color:  #C40F06; font-weight: bold;">
+                style="border-left-color: #c40f06; font-weight: bold"
+              >
                 Sin codigo SAP
               </td>
             </ng-template>
@@ -293,7 +296,7 @@
               {{ pedido.prim_nome | uppercase }}
             </td>
             <td class="text-center hover">{{ pedido.nombre | uppercase }}</td>
-         
+
             <td class="text-center hover">
               {{ pedido.nombre_modo_entrega }}
             </td>
@@ -313,6 +316,19 @@
             <td class="text-center hover">{{ pedido.descripcion_cierre }}</td>
             <td class="text-center hover">
               <div class="row">
+                <!-- EDITAR -->
+                <div class="col text-center" style="padding: 0%">
+                  <a
+                    style="padding: 0%"
+                    class=""
+                    [tooltip]="'Editar Oferta'"
+                    (click)="onEdit2(pedido.id_oferta)"
+                    ><i class="fas fa-pencil-alt mr-2 icono" style="margin-right: 2px !important; color:black!important;"></i>
+                   
+                    <span class="sr-only">Refreshing...</span>
+                  </a>
+                </div>
+                <!-- PDF -->
                 <div class="col-md text-center" style="padding: 0%">
                   <a
                     style="padding: 0%; color: rgb(6, 68, 14)"
@@ -324,19 +340,20 @@
                     ><span class="text-uppercase"> </span
                   ></a>
                 </div>
-                <div class="col-md text-center " style="padding: 0%;">
+                <!-- VISTA -->
+                <div class="col-md text-center" style="padding: 0%;">
                   <a
                     class=""
-                    style="padding: 0%;"
+                    style="padding: 0%"
                     routerLink="/vista"
                     [tooltip]="'VISTA'"
                     (click)="onVista(pedido.id_oferta)"
                   >
-                    <i class="far fa-eye text-primary icono"></i>
+                    <i class="far fa-eye icono" style="color:#3e0752 !important;"></i>
                     <!-- <span class="text-uppercase"></span> -->
                   </a>
                 </div>
-                
+                <!-- ESTADO -->
                 <div class="col-md text-center" style="padding: 0%">
                   <a
                     style="padding: 0%"
@@ -351,7 +368,7 @@
                     routerLink="/enviar_sap"
                     (click)="onEnviarSap(pedido.id_oferta)"
                   >
-                    <i class="far fa-paper-plane text-danger  icono"></i>
+                    <i class="far fa-paper-plane text-danger icono"></i>
                     <span class="text-uppercase"></span>
                   </a>
 
@@ -367,7 +384,10 @@
                       "
                       disabled
                     >
-                      <i class="fas fa-paper-plane text-warning icono" disabled></i
+                      <i
+                        class="fas fa-paper-plane text-warning icono"
+                        disabled
+                      ></i
                       ><span class="text-uppercase"></span>
                     </a>
                   </ng-template>
@@ -380,29 +400,25 @@
                       *ngIf="pedido.codigo_oferta !== null"
                       disabled
                     >
-                      <i class="fas fa-paper-plane icono text-success" disabled ></i
+                      <i
+                        class="fas fa-paper-plane icono text-success"
+                        disabled
+                      ></i
                       ><span class="text-uppercase"></span>
                     </a>
                   </ng-template>
                 </div>
-
-                <div class="col text-center " style="padding: 0%">
+                <!-- ACTUALIZAR -->
+                <div class="col text-center" style="padding: 0%">
                   <a
-                    style="padding: 0%; "
+                    style="padding: 0%"
                     class=""
                     [tooltip]="'Vigencia de la Oferta'"
                     (click)="onEstadoOferta(pedido.codigo_oferta)"
-                    ><i class="fas fa-sync mr-2 icono text-dark"  id="verificador"></i>
-                    <span class="sr-only">Refreshing...</span>
-                  </a>
-                </div>
-                <div class="col text-center " style="padding: 0%">
-                  <a
-                    style="padding: 0%; "
-                    class="btn-primary"
-                    [tooltip]="'Editar Oferta'"
-                    (click)="onEdit2(pedido.id_oferta)"
-                    ><i class="fas fa-edit mr-2 icono"></i>
+                    ><i
+                      class="fas fa-sync-alt mr-2 icono text-dark"
+                      id="verificador"
+                    ></i>
                     <span class="sr-only">Refreshing...</span>
                   </a>
                 </div>
@@ -452,7 +468,9 @@
   </div>
 
   <ng-template #alertaOferta>
-    <comercial-ciclo-vendas-cotacoes-lista-modal-alerta-oferta [ofertasPendientes]="arrayOfertas">
+    <comercial-ciclo-vendas-cotacoes-lista-modal-alerta-oferta
+      [ofertasPendientes]="arrayOfertas"
+    >
     </comercial-ciclo-vendas-cotacoes-lista-modal-alerta-oferta>
   </ng-template>
 </app-body>

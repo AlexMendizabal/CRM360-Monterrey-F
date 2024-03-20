@@ -153,10 +153,12 @@
             labelForId="id_almacen"
             bindLabel="codigo_almacen"
             bindValue="id_almacen"
-            
             (change)="seleccionarAlmacen($event.codigo_almacen)"
-          >
+            [readonly]="!estadoAlmacen.value"  
+            >
+            
           </ng-select>
+       
         </div> 
         <!--<div class="form-group col-lg-3">
               <label for="codClasse">Unid</label>
@@ -232,7 +234,7 @@
               </label>
             </div> -->
           </div>
-          <div class="form-group mb-0" *ngIf="dados.length != 0">
+          <div class="form-group mb-0" *ngIf="dados.length != 0 || crosell.length != 0 || upsell.length != 0">
             <button
               type="button"
               class="btn btn-sm btn-success"
@@ -261,12 +263,12 @@
                     <th
                       scope="col"
                       class="text-center red-header"
-                      [ngStyle]="{ width: columSize('disponibilidade') }"
+                      style="width: 0!important;border-right: 0 !important;"
                     ></th>
                     <th
                       scope="col"
-                      class="text-center align-items-center red-header"
-                      [ngStyle]="{ width: columSize('codMaterial') }"
+                      class="align-items-center red-header"
+                      style="border-left: 0 !important; text-align: center;"
                     >
                       <thead-sorter
                         value="Código"
@@ -349,7 +351,7 @@
                       class="text-center"
                       [ngStyle]="{ width: columSize('estoqueDisponivel') }"
                     >
-                  ACCIONES
+                  Acciones
                 </th>
                   </tr>
                 </ng-template>
@@ -519,12 +521,12 @@
                     <th
                       scope="col"
                       class="text-center blue-header"
-                      [ngStyle]="{ width: columSize('disponibilidade') }"
+                      style="width: 0!important;border-right: 0 !important;"
                     ></th>
                     <th
                       scope="col"
                       class="text-center align-items-center blue-header"
-                      [ngStyle]="{ width: columSize('codMaterial') }"
+                      style="border-left: 0 !important; text-align: center;"
                     >
                       <thead-sorter
                         value="Código"
@@ -779,12 +781,12 @@
                     <th
                       scope="col"
                       class="text-center blue-header"
-                      [ngStyle]="{ width: columSize('disponibilidade') }"
+                      style="width: 0!important;border-right: 0 !important;"
                     ></th>
                     <th
                       scope="col"
                       class="text-center align-items-center blue-header"
-                      [ngStyle]="{ width: columSize('codMaterial') }"
+                      style="border-left: 0 !important; text-align: center;"
                     >
                       <thead-sorter
                         value="Código"
@@ -868,7 +870,7 @@
                       class="text-center"
                       [ngStyle]="{ width: columSize('estoqueDisponivel') }"
                     >
-                  ACCIONES</th>
+                  Acciones</th>
                   </tr>
                 </ng-template>
                 <ng-template

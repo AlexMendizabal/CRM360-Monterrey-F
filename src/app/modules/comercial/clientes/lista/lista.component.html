@@ -712,9 +712,11 @@
                         <label>título</label>
                         <div>
                           <input
-                            value="{{ contato.contacto || 'NO INFORMADO' }}"
-                            class="form-control"
-                            readonly
+                          value="{{ contato.contacto || 'NO INFORMADO' }}"
+                          class="form-control"
+                          type="text"
+                          readonly
+                          disabled
                           />
                           <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
                         <div *ngIf="contato.editing"></div> -->
@@ -859,6 +861,7 @@
                             value="{{ direccion.ubicacion || 'NO INFORMADO' }}"
                             class="form-control"
                             readonly
+                            disabled
                           />
                         </div>
                       </div>
@@ -899,37 +902,27 @@
                   ></div>
                   <p><strong> Cargando... </strong></p>
                 </div>
-                <div *ngIf="agendaLoaded && !agendaEmpty && !swSpinner">
+                <div *ngIf="agendaLoaded && !agendaEmpty && !swSpinner" class="scrollable-list">
                   <div class="list-group-item d-flex justify-content-between">
                     <strong class="w-25">Vendedor</strong>
                     <strong class="w-25">Titulo</strong>
                     <strong class="w-25">Fecha</strong>
                   </div>
                   <!-- Lista de datos en formato de lista -->
-                  <ul
-                    q
-                    class="list-group"
-                    *ngIf="agendaLoaded && agendaLoaded.length > 0"
-                  >
-                    <li
-                      class="list-group-item d-flex justify-content-between align-items-center"
-                      *ngFor="let item of agendaLoaded"
-                    >
+                  <ul class="list-group" *ngIf="agendaLoaded && agendaLoaded.length > 0">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of agendaLoaded">
                       <i class="w-25">{{ item.Vendedor }}</i>
                       <i class="w-25">{{ item.Titulo }}</i>
                       <i class="w-25">{{ item.Fecha }}</i>
                     </li>
                   </ul>
-                  <div *ngIf="sumaTotalPorTitulo">
-                    <div *ngFor="let titulo of sumaTotalPorTitulo | keyvalue">
-                      <div
-                        class="list-group-item d-flex justify-content-between align-items-center"
-                      >
-                        <span class="w-25"
-                          ><strong>{{ titulo.key }}</strong></span
-                        >
-                        <span class="w-25">{{ titulo.value }}</span>
-                      </div>
+                  
+                </div>
+                <div *ngIf="sumaTotalPorTitulo">
+                  <div *ngFor="let titulo of sumaTotalPorTitulo | keyvalue">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                      <span class="w-25"><strong>{{ titulo.key }}</strong></span>
+                      <span class="w-25">{{ titulo.value }}</span>
                     </div>
                   </div>
                 </div>

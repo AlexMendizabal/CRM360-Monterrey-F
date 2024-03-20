@@ -62,18 +62,21 @@
             </div>
           </div>
         </div>
-        <div class="alert alert-warning">
-          <p class="alerta">
-           <strong>Importante:</strong> Utilice los iconos para:<br>
-            Calcular el total " <i class="fas fa-calculator"></i> ".
-            Aplicar un descuento " <i class="fas fa-percentage"></i> ".
-            Retirar un material " <i class="fas fa-trash"></i> " .
+        <div class="alert alert-warning" style="width: 100%;">
+          <p class="alerta titulo" style="margin-bottom: 3px;">
+            <strong><i class="fas fa-exclamation"></i> IMPORTANTE:</strong>
           </p>
+          Por favor, haga uso de los siguientes iconos para facilitar su gestión:
+          <ul style="margin-top: 6px;">
+            <li><Strong style="text-transform: math-auto!important;">Calcular el total:</Strong> Utilice el ícono de calculadora "<i class="fas fa-calculator"></i>".</li>
+            <li><Strong style="text-transform: math-auto!important;">Aplicar un descuento:</Strong> Haga clic en el ícono de porcentaje "<i class="fas fa-percentage"></i>".</li>
+            <li><Strong style="text-transform: math-auto!important;">Retirar un material:</Strong> Seleccione el ícono de basura "<i class="fas fa-trash"></i>".</li>
+          </ul>
           <p class="alerta">
-            Si no le permite insertar descuento en
-            <i class="fas fa-percentage"></i> el material no tiene descuento
+            <strong style="text-transform: math-auto!important;">Nota:</strong> Si el sistema no le permite aplicar un descuento "<i class="fas fa-percentage"></i>", significa que el material seleccionado no cuenta con descuentos disponibles.
           </p>
         </div>
+        
         <form [formGroup]="form" autocomplete="off">
           <div class="Carrinho-responsive">
             <custom-table [config]="tableHeadConfig">
@@ -156,9 +159,10 @@
                     scope="col"
                     class="text-center"
                     [ngStyle]="{ width: columSize('codDeposito') }"
+                    style="border-right: 0 !important;"
                   ></th>
 
-                  <th scope="col" class="text-end">Acciones</th>
+                  <th scope="col" class="text-end" style="border-left: 0 !important;">Acciones</th>
                 </tr>
               </ng-template>
             </custom-table>

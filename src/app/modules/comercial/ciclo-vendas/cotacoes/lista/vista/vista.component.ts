@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import html2canvas from 'html2canvas';
 import * as jsPDF from 'jspdf';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-
+import { Validators } from '@angular/forms';
 
 import { AuthService } from 'src/app/shared/services/core/auth.service';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
@@ -85,9 +85,9 @@ public toggleInputs() {
   
 
     this.myForm = this.fb.group({
-      id_oferta:  [this.resultFromParent.oferta[0].id_oferta],
-      estadoOfert: [''],
-      descripcion: ['']
+      id_oferta: [this.resultFromParent.oferta[0].id_oferta],
+      estadoOfert: ['', Validators.required], // Agrega Validators.required para hacer que este campo sea requerido
+      descripcion: ['', Validators.required] // Agrega Validators.required para hacer que este campo sea requerido
     });
   
    /*  if(this.resultFromParent.oferta[0].estado_of === 3) {
@@ -118,6 +118,7 @@ public toggleInputs() {
     });
     
   }
+  
 
   public onConfirm(): void 
   {

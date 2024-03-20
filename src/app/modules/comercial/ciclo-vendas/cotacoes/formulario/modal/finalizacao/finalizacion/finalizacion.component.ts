@@ -142,7 +142,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
       this.onClose();
     }
     else {
-     this.pnotifyService.error();
+      this.onClose();
     }
   }
 

@@ -152,10 +152,10 @@ export class ComercialAgendaFormularioComponent
   color: string;
   userData: any;
   
-  agendar: boolean = true;
-  reagendar: boolean =false;
+  agendar: boolean;
+  reagendar: boolean;
 
-  aministrador:boolean = false;
+  administrador:boolean = false;
 
   bsConfig: Partial<BsDatepickerConfig>;
   mostrarElemento: any;
@@ -203,11 +203,11 @@ export class ComercialAgendaFormularioComponent
     this.getFormFields();
     if(this.user.info.none_cargo === '1')
     {
-      this.aministrador = true;
+      this.administrador = true;
     }
     else
     { 
-      this.aministrador = false;
+      this.administrador = false;
       this.onChangeVendedor(this.user.info.idVendedor);
     }
   }
@@ -603,7 +603,7 @@ export class ComercialAgendaFormularioComponent
             const todos = [{ 'ID': 0, 'idEscritorio': 0, 'nombre': 'TODOS' }];
             this.promotores = [...todos, ...response[5].data]; 
           }
-          
+          console.log('Promotores:', this.promotores); 
       } else {
           this.showInputVendedores = false;
       }
@@ -873,7 +873,7 @@ export class ComercialAgendaFormularioComponent
         /* id_status: id_status, */
         obsFinalizar: formValue.Obsfinalizar,
       };
-      console.log('datos para envios agenda',formObj)
+     
       this.agendaService.save(this.action, formObj).subscribe({
         next: (response: any) => {
           console.log(response);

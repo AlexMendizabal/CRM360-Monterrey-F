@@ -19,7 +19,7 @@
             <label for="codTitulo">Título</label>
             <div class="input-group-prepend">
               <ng-select
-                class="custom-control-input form-control"
+                cedlass="custom-control-input form-control"
                 [searchable]="true"
                 [clearable]="true"
                 [items]="listarTitulosAgenda"
@@ -41,7 +41,7 @@
             ></invalid-form-control>
           </div>
         </div>
-        <div *ngIf="showInputVendedores">
+        <div >
           <div
             class="form-row"
             *ngIf="permissoesAcesso.simuladorVendas === true"
@@ -102,7 +102,7 @@
             </div>
           </form>
 
-          <div class="form-row" *ngIf="aministrador">
+          <div class="form-row" *ngIf="administrador">
             <div class="form-group col">
               <label for="promotor">Promotor para asignar.</label>
               <ng-select

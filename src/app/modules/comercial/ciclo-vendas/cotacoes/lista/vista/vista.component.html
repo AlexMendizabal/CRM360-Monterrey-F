@@ -6,7 +6,7 @@
         <section class="invoice">
           <!-- title row -->
           <div class="row">
-            <div class="col-12" style="padding: 5px 35px 0!important;">
+            <div class="col-12" style="padding: 5px 35px 0 !important">
               <h2 class="page-header">
                 <img
                   class="img-logo"
@@ -842,9 +842,6 @@
     </div>
     <div class="modal-footer">
       <!-- Botón para habilitar/deshabilitar inputs -->
-      <button class="btn btn-primary" (click)="toggleInputs()">
-        EDITAR
-      </button>
       <a
         class="btn btn-danger"
         *ngIf="showCierreButton"
@@ -855,7 +852,7 @@
         type="submit"
         class="btn btn-success"
         *ngIf="showGuardarButton"
-        [disabled]="isLoading"
+        [disabled]="myForm.invalid || isLoading"
       >
         <span *ngIf="!loading">GUARDAR</span>
         <span
@@ -865,6 +862,7 @@
           aria-hidden="true"
         ></span>
       </button>
+      
 
       <a
         type="button"

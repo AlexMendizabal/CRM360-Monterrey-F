@@ -1,6 +1,6 @@
 .custom-modal {
     position: fixed;
-    top: 45%; /* Centrar verticalmente en la mitad de la pantalla */
+    top: 50%; /* Centrar verticalmente en la mitad de la pantalla */
     left: 50%; /* Centrar horizontalmente en la mitad de la pantalla */
     transform: translate(-50%, -50%); /* Ajustar para centrar completamente */
     width: 80%; /* Ajusta el ancho según tus necesidades */
@@ -15,6 +15,42 @@
   }
   .table-container {
     max-height: 1000px; /* Altura máxima para el scroll vertical */
-    overflow-y: auto; /* Añade el scroll vertical si la tabla excede la altura máxima */
+  /*   overflow-y: auto;  *//* Añade el scroll vertical si la tabla excede la altura máxima */
     border: 1px solid #ccc; /* Opcional: un borde para el contenedor */
   }
+
+.title-g{
+  color:black;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+  margin-bottom: 20px!important;
+}
+.card {
+  margin-bottom: 7px;
+}
+.modal-footer{
+  border:0!important;
+}
+.box-g1{
+  padding-left: 0;
+}
+.box-g2{
+  padding-right: 0;
+}
+div#botones{
+  justify-content: space-between;
+}
+/* 
+.modal .modal-header .modal-title {
+  font-size: 17px!important;
+  margin-left: 15px!important;
+} */
+
+textarea#observacion1 {
+  min-height: 50px !important;
+  height: 50px !important;
+}
+.form-control{
+  font-weight:400!important;
+}

@@ -357,10 +357,10 @@
         }
 
         th{
-            background-color: #7E839B !important;
-            color: #FFF !important;
+           /* background-color: #7E839B !important;
+            color: #FFF !important;*/
             font-size: 13px !important;
-            font-weight: 400 !important;
+            /*font-weight: 400 !important;*/
             text-transform: capitalize !important;
         }
 
@@ -419,9 +419,9 @@
     }
 
     thead-sorter button span {
-        color: #fff !important;
+        color: #0b0b0b !important;
+        font-weight: 500 !important;
         font-size: 13px !important;
-        font-weight: 400 !important;
         text-transform: capitalize !important;
     }
 
@@ -615,13 +615,7 @@ width:100%;
   padding-right: 50px;
 }
 
-// .serv-section-2:hover .serv-section-2-icon i {
-//   color: #fff;
-// }
 
-// .serv-section-2:hover:before {
-//   background: #441157;
-// }
 
 /* CSS GABI */
 
@@ -676,3 +670,41 @@ div.row-g{
     color: #441157;
   }
   
+  /* Materiales - Tabla */
+
+.nav-tabs .nav-link, .nav-tabs .nav-link.active {
+    margin-right: 4px;
+    border-top-right-radius: 8px !important;
+    border-top-left-radius: 8px !important;
+}
+
+.nav-tabs .nav-link.active {
+    color: #731d93!important;
+    background-color: white!important;
+    border-color: #bebebe!important;
+    border-top: 3px solid #9d26ca!important;
+    height: 30px!important;
+    padding: 4px 17px 0 !important;
+    font-weight: 600;
+}
+
+.table.custom-border > thead tr th:first-child {
+    border-left: 5px solid #495057 !important;
+}
+
+.table-responsive{
+    margin-left: 15px!important;
+}
+// ul.nav.nav-tabs{
+//     padding-bottom: 6px!important;
+// }
+
+.table th{
+    color: #000 !important;
+    border: 2px solid #dee2e6!important;
+    font-weight: 500 !important;
+}
+
+i.fas.fa-sort{
+    color: black !important;
+}

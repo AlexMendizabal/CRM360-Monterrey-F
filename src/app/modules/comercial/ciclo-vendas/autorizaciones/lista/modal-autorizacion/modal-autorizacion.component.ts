@@ -31,9 +31,11 @@ export class ModalAutorizacionComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
   ) {
-    this.myForm = this.formBuilder.group({
+
+  this.myForm = this.formBuilder.group({
     observacion: ['', Validators.required]  // inicializa con un valor por defecto y agrega validador
   });}
+
   dataForm: any;
   data: [];
   oferta: Array<any> = [];
@@ -42,16 +44,34 @@ export class ModalAutorizacionComponent implements OnInit {
   loader: boolean = false;
   admin:  boolean = false;
   loading: boolean = false;
-
+  observa1: boolean = false;
 
   ngOnInit(): void {
     this.data = this.dataForm;
     this.detalle = this.dataForm.detalle;
     this.oferta = this.data['oferta'][0];
+
+    const observable1 = document.getElementById("observacion1") as HTMLTextAreaElement;
+    const datosObservacion =  this.myForm.get('observacion')?.setValue(this.data['oferta'][0].desc_usuario);
+
     if(this.user.info.none_cargo === '1')
     {
-        this.admin = true;
+      if(this.data['oferta'][0].desc_usuario !== null)
+      {
+        datosObservacion;
+        observable1.disabled = true;
+        this.admin = false;
+      }
+      else
+      {
+        this.admin = true; 
+      }
     }
+    else{
+      datosObservacion;
+      observable1.disabled = true;
+    }
+
     if(this.oferta['estado'] == 10)
     {
         this.loader = false;

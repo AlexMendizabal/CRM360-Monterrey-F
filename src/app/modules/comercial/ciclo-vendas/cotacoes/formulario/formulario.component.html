@@ -457,22 +457,16 @@
                         </div>
                       </div>
 
+                      <!-- En el HTML del componente -->
                       <div class="form-group col-lg-2">
                         <label class="my-auto" for="">Rubro:</label>
-                        <select
-                          class="form-control custom-select"
-                          formControlName="id_rubro"
-                          disabled
-                        >
-                          <ng-container *ngFor="let rubro of rubros">
-                            <option
-                              [value]="rubro.codigo_rubro"
-                              [selected]="rubro.codigo_rubro === codigoRubro"
-                            >
-                              {{ rubro.descricao }}
-                            </option>
-                          </ng-container>
-                        </select>
+                        <input
+                          formControlName="codigoRubro"
+                          type="text"
+                          class="form-control"
+                          [readonly]="true"
+                          style="min-width: 0; width: auto; overflow: hidden"
+                        />
                       </div>
                     </div>
 
@@ -506,6 +500,7 @@
                               [formControl]="form.controls.tipodecontacto"
                               [(ngModel)]="selectedTipoContacto"
                               (ngModelChange)="onTipoContactoChange($event)"
+                              formControlName="codContato"
                             >
                               <ng-option
                                 *ngFor="let tipo of tipoContacto"
@@ -551,6 +546,7 @@
                             [formControl]="form.controls.formaContacto"
                             [(ngModel)]="selectedFormaContacto"
                             (ngModelChange)="onFormaContactoChange($event)"
+                            formControlName="formaContacto"
                           >
                             <ng-option
                               *ngFor="let forma of formaContacto"
@@ -819,7 +815,7 @@
                             required
                           >
                           </ng-select>
-                          
+
                           <!-- <ng-select
                             class=""
                             [formControlName]="ejecutivo_ventas"
@@ -852,7 +848,7 @@
                           <label for="orderBy">Lista de precios:</label>
                           <select
                             class="form-control custom-select"
-                            formControlName="lista"
+                            formControlName="id_lista_precio"
                             (change)="updateLista()"
                             disabled
                           >
@@ -891,12 +887,12 @@ For="let listaPrecio of listaPrecios">
                           />
                         </div>
                         <div
-                            class="invalid-feedback"
-                            id="validationServer03Feedback"
-                            style="display: none;"
-                          >
-                            Selecciona un Ejecutivo, para continuar.
-                          </div>
+                          class="invalid-feedback"
+                          id="validationServer03Feedback"
+                          style="display: none"
+                        >
+                          Este campo es requerido.
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -930,8 +926,11 @@ For="let listaPrecio of listaPrecios">
                         (loaderFullScreen)="onLoaderFullScreen($event)"
                         (scrollToFormOnTop)="onMateriaisScrollTop($event)"
                         (scrollToCarrinho)="onScrollToCarrinho($event)"
+                        [estadoAlmacen]="estadoAlmacenObj"
                         [almacenes]="this.almacenes"
+                       
                       >
+                    
                       </comercial-ciclo-vendas-cotacoes-formulario-materiais-lista>
                     </div>
                   </div>
@@ -961,6 +960,7 @@ For="let listaPrecio of listaPrecios">
                         (carrinho)="onCarrinho($event)"
                         [id_vendedor]="this.idvendedor"
                         [id_lista]="this.idListaPrecio"
+                        (listaVacio)="onListaVacia($event)"
                       >
                       </comercial-ciclo-vendas-cotacoes-formulario-carrinho>
                     </div>
@@ -1235,6 +1235,7 @@ For="let listaPrecio of listaPrecios">
                   style="background-color: #441157 !important"
                   (click)="goToNextStep()"
                   [disabled]="currentStep === 4"
+                  [style.display]="currentStep === 4 ? 'none' : 'inline-block'"
                 >
                   Siguiente
                 </button>
@@ -1244,6 +1245,7 @@ For="let listaPrecio of listaPrecios">
                   (click)="onSubmit()"
                   *ngIf="!visualizar"
                   [disabled]="loaderCotizacion || loaderNavbar"
+                  [style.display]="currentStep <= 3 ? 'none' : 'inline-block'"
                 >
                   Finalizar
                 </button>

@@ -330,6 +330,7 @@
                     <input
                       [(ngModel)]="contacto.contacto"
                       class="form-control"
+                      readonly
                     />
                   </div>
                   <label>Nombre <span class="text-danger">*</span> </label>
@@ -385,12 +386,12 @@
                       class="form-control"
                     />
                   </div>
-                  <button
+                  <!-- <button
                     (click)="eliminarContacto(i)"
                     class="btn btn-danger mt-2 text-center"
                   >
                     Eliminar
-                  </button>
+                  </button> -->
                 </div>
               </div>
             </div>
@@ -452,6 +453,7 @@
                     <input
                       [(ngModel)]="direccion.ubicacion"
                       class="form-control"
+                      readonly
                     />
                   </div>
                   <label>Ciudad <span class="text-danger">*</span> </label>
@@ -482,12 +484,12 @@
                       class="form-control"
                     />
                   </div>
-                  <button
+                  <!-- <button
                     (click)="eliminarUbicacion(i)"
                     class="btn btn-danger mt-2 text-center"
                   >
                     Eliminar
-                  </button>
+                  </button> -->
                 </div>
               </div>
             </div>
