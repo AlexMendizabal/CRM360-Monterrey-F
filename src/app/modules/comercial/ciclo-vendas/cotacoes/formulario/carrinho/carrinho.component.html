@@ -62,21 +62,46 @@
             </div>
           </div>
         </div>
-        <div class="alert alert-warning" style="width: 100%;">
-          <p class="alerta titulo" style="margin-bottom: 3px;">
-            <strong><i class="fas fa-exclamation"></i> IMPORTANTE:</strong>
+        <div class="alert alert-warning" style="width: 100%">
+          <p class="alerta titulo" style="margin-bottom: 3px">
+            <strong><i class="fas fa-exclamation-triangle"></i> IMPORTANTE:</strong>
           </p>
-          Por favor, haga uso de los siguientes iconos para facilitar su gestión:
-          <ul style="margin-top: 6px;">
-            <li><Strong style="text-transform: math-auto!important;">Calcular el total:</Strong> Utilice el ícono de calculadora "<i class="fas fa-calculator"></i>".</li>
-            <li><Strong style="text-transform: math-auto!important;">Aplicar un descuento:</Strong> Haga clic en el ícono de porcentaje "<i class="fas fa-percentage"></i>".</li>
-            <li><Strong style="text-transform: math-auto!important;">Retirar un material:</Strong> Seleccione el ícono de basura "<i class="fas fa-trash"></i>".</li>
+          Por favor, haga uso de los siguientes iconos para facilitar su
+          gestión:
+          <ul style="margin-top: 6px">
+            <li>
+              <Strong style="text-transform: math-auto !important"
+                >Calcular el total:</Strong
+              >
+              Utilice el ícono de calculadora "<i class="fas fa-calculator"></i
+              >".
+            </li>
+            <li>
+              <Strong style="text-transform: math-auto !important"
+                >Aplicar un descuento:</Strong
+              >
+              Haga clic en el ícono de porcentaje "<i
+                class="fas fa-percentage"
+              ></i
+              >".
+            </li>
+            <li>
+              <Strong style="text-transform: math-auto !important"
+                >Retirar un material:</Strong
+              >
+              Seleccione el ícono de basura "<i class="fas fa-trash"></i>".
+            </li>
           </ul>
           <p class="alerta">
-            <strong style="text-transform: math-auto!important;">Nota:</strong> Si el sistema no le permite aplicar un descuento "<i class="fas fa-percentage"></i>", significa que el material seleccionado no cuenta con descuentos disponibles.
+            <strong style="text-transform: math-auto !important">Nota:</strong>
+            Si el sistema no le permite aplicar un descuento "<i
+              class="fas fa-percentage"
+            ></i
+            >", significa que el material seleccionado no cuenta con descuentos
+            disponibles.
           </p>
         </div>
-        
+
         <form [formGroup]="form" autocomplete="off">
           <div class="Carrinho-responsive">
             <custom-table [config]="tableHeadConfig">
@@ -159,10 +184,16 @@
                     scope="col"
                     class="text-center"
                     [ngStyle]="{ width: columSize('codDeposito') }"
-                    style="border-right: 0 !important;"
+                    style="border-right: 0 !important"
                   ></th>
 
-                  <th scope="col" class="text-end" style="border-left: 0 !important;">Acciones</th>
+                  <th
+                    scope="col"
+                    class="text-end"
+                    style="border-left: 0 !important"
+                  >
+                    Acciones
+                  </th>
                 </tr>
               </ng-template>
             </custom-table>
@@ -241,10 +272,10 @@
                         <ng-template #tooltipPrecoMinimoTemplate>
                           <p class="text-nowrap mb-0">Este material está com</p>
                           <p class="text-nowrap mb-0">
-                            preço abaixo do mínimo.
+                            precio por debajo del mínimo.
                           </p>
                           <p class="text-nowrap mb-0">
-                            O ideal é acima de
+                            El ideal esta arriba
                             {{
                               form.value.materiais[i].valorUnit
                                 | number : '1.2-2'
@@ -371,7 +402,7 @@
                         {{ form.value.materiais[i].codDeposito | uppercase }}
                       </span>
                     </td>
-                     <td
+                    <td
                       class="text-right border-light"
                       [ngStyle]="{ width: columSize('buttons') }"
                     >
@@ -538,8 +569,32 @@
       >
       </comercial-ciclo-vendas-cotacoes-formulario-materiais-relacionados>
     </div>
-    <div class="row my-5">
-      <div class="col"></div>
+    <div class="row my-5 custom-col">
+      
+      <!--  Descuento total -->
+      <div class="col-3">
+        <div class="col-md" id="card-strong-grey">
+          <div class="row d-flex">
+            <div class="col">
+              <div class="col" id="card-label-light" style="font-size: small">
+                Descuento Total
+              </div>
+              <div class="col" id="card-value-grey">
+                {{ descuentoTotal() | number : '1.2-2' }}%
+              </div>
+              <div class="col" id=""></div>
+            </div>
+            <div class="col-4">
+              <span
+                class="fas fa-percentage d-flex p-3"
+                id="icon-strong-grey"
+              ></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total -->
       <div class="col-3">
         <!-- <div class="col-md" id="card-strong-grey">
           <div class="row d-flex">
@@ -564,7 +619,7 @@
         <div class="col-md" id="card-strong-grey">
           <div class="row d-flex">
             <div class="col">
-              <div class="col" id="card-label-light" style="font-size: small">
+              <div class="col" id="card-label-light" style="font-size: small; padding-right: 0!important;">
                 Total en Bs. 6.96
               </div>
               <div class="col" id="card-value-grey">
@@ -578,6 +633,8 @@
           </div>
         </div>
       </div>
+
+      <!-- Peso total -->
       <div class="col-3">
         <div class="col-md" id="card-strong-grey">
           <div class="row d-flex">
@@ -592,37 +649,19 @@
             </div>
             <div class="col-4">
               <span
-                class="fas fa-money-bill-wave d-flex p-3"
+                class="fas fa-balance-scale d-flex p-3"
                 id="icon-strong-grey"
               ></span>
             </div>
           </div>
         </div>
-        <div class="my-3"></div>
-        <div class="col-md" id="card-strong-grey">
-          <div class="row d-flex">
-            <div class="col">
-              <div class="col" id="card-label-light" style="font-size: small">
-                Descuento Total
-              </div>
-              <div class="col" id="card-value-grey">
-                {{ descuentoTotal() | number : '1.2-2' }}%
-              </div>
-              <div class="col" id=""></div>
-            </div>
-            <div class="col-4">
-              <span class="fas fa-tags d-flex p-3" id="icon-strong-grey"></span>
-            </div>
-          </div>
-        </div>
       </div>
-      <div
-        class="col-3 d-flex justify-content-center align-items-center"
-        id="card-green"
-      >
-        <div class="col-md" style="height: 75px">
-          <div class="row d-flex mh-100">
-            <div class="col-9">
+
+      <!-- Monto total -->
+      <div class="col-3">
+        <div class="col-md" id="card-green">
+          <div class="row d-flex ">
+            <div class="col">
               <div class="col" id="card-label-light" style="font-size: small">
                 Monto total
               </div>
@@ -631,7 +670,7 @@
               </div>
               <div class="col" id=""></div>
             </div>
-            <div class="col-3">
+            <div class="col-4">
               <span
                 class="fas fa-money-bill-wave d-flex p-3"
                 id="icon-green"

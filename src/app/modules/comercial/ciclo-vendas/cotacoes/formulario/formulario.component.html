@@ -131,7 +131,7 @@
               >
                 2
               </button>
-              <div class="step-title">DATOS DE CLIENTE</div>
+              <div class="step-title">DATOS DEL CLIENTE</div>
             </div>
             <div class="step-item">
               <button
@@ -321,7 +321,7 @@
                     <div
                       class="d-flex justify-content-center align-items-center ml-2"
                     >
-                      <strong>Datos de cliente</strong>
+                      <strong>Datos del cliente</strong>
                     </div>
                     <div class="col"></div>
                     <div class="d-flex justify-content-end align-items-center">
@@ -404,24 +404,23 @@
                             >
                               Seleccionar
                             </a>
-                            <!-- <a
-                    id="top-links"
-                    *ngIf="form.value.codCliente != null"
-                    class="text-primary mr-2"
-                    href="javascript:void(0)"
-                    (click)="onClienteDetalhes()"
-                    style="font-weight: bold"
-                  >
-                    Detalles
-                  </a> -->
-                            <!-- <a id="top-links" *ngIf="form.value.codCliente != null" class="text-primary mr-2"
-          href="javascript:void(0)" (click)="onHistoricoCompras()">
-          Histórico de Compras
-        </a>
-        <a id="top-links" *ngIf="form.value.codCliente != null" class="text-primary mr-2"
-          href="javascript:void(0)" (click)="navegarHistoricoFinanceiro()">
-          Histórico Financeiro
-        </a> -->
+                          <!-- <a id="top-links"
+                                    *ngIf="form.value.codCliente != null"
+                                    class="text-primary mr-2"
+                                    href="javascript:void(0)"
+                                    (click)="onClienteDetalhes()"
+                                    style="font-weight: bold"
+                                  >
+                                    Detalles
+                                  </a> -->
+                                            <!-- <a id="top-links" *ngIf="form.value.codCliente != null" class="text-primary mr-2"
+                          href="javascript:void(0)" (click)="onHistoricoCompras()">
+                          Histórico de Compras
+                        </a>
+                        <a id="top-links" *ngIf="form.value.codCliente != null" class="text-primary mr-2"
+                          href="javascript:void(0)" (click)="navegarHistoricoFinanceiro()">
+                          Histórico Financeiro
+                        </a> -->
                           </div>
                         </div>
                         <input
@@ -510,7 +509,7 @@
                               </ng-option>
                             </ng-select>
                           </div>
-                        </div>
+                      </div>
 
                         <div class="form-group col-lg-2">
                           <label class="my-auto" for="celular">Celular: </label>
@@ -767,7 +766,24 @@
                             style="font-size: 11px"
                           >
                             <input
-                              formControlName="celularcontacto"
+                              formControlName="celularContacto"
+                              type="text"
+                              class="form-control"
+                              [readonly]="true"
+                              [attr.disabled]="true"
+                            />
+                          </div>
+                        </div>
+                        <div class="form-group col-lg-2">
+                          <label class="my-auto" for="celularContacto"
+                            >Número de Teléfono:</label
+                          >
+                          <div
+                            class="my-1 text-uppercase"
+                            style="font-size: 11px"
+                          >
+                            <input
+                              formControlName="telefonoContacto"
                               type="text"
                               class="form-control"
                               [readonly]="true"
@@ -913,6 +929,7 @@ For="let listaPrecio of listaPrecios">
                 <div class="col shadow-sm mt-4" id="blocos">
                   <div class="row" [hidden]="visualizar">
                     <div class="col">
+                      
                       <comercial-ciclo-vendas-cotacoes-formulario-materiais-lista
                         [codEndereco]="form.value.codEndereco"
                         [codCliente]="form.value.codCliente"
@@ -928,7 +945,6 @@ For="let listaPrecio of listaPrecios">
                         (scrollToCarrinho)="onScrollToCarrinho($event)"
                         [estadoAlmacen]="estadoAlmacenObj"
                         [almacenes]="this.almacenes"
-                       
                       >
                     
                       </comercial-ciclo-vendas-cotacoes-formulario-materiais-lista>
@@ -1088,7 +1104,7 @@ For="let listaPrecio of listaPrecios">
                         class="form-group col-lg-4"
                         *ngIf="swEntrega == true"
                       >
-                        <label class="my-auto" for="razaoSocial"
+                        <label class="my-auto" for="direccion_entrega"
                           >Dirección entrega:</label
                         >
                         <div
@@ -1096,7 +1112,7 @@ For="let listaPrecio of listaPrecios">
                           style="font-size: 11px"
                         >
                           <input
-                            formControlName="razaoSocial"
+                            formControlName="direccion_entrega"
                             type="text"
                             class="form-control"
                           />

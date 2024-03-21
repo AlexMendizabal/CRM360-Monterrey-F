@@ -39,7 +39,8 @@
       <div class="form-row">
         <div class="form-group col">
           <label>Fecha</label>
-          <div>{{ detalhes.fullDate | uppercase }}</div>
+          <div *ngIf="detalhes.fecha_inicio">
+            {{ detalhes.fecha_inicio }}</div>
         </div>
       </div>
       <!-- <div class="form-row">

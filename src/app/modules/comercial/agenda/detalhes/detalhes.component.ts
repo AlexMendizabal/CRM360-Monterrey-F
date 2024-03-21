@@ -118,6 +118,7 @@ throw new Error('Method not implemented.');
     this.latitud_final = detalhes.latitud_final;
     this.longitud_final = detalhes.longitud_final;
     this.detalhes.url_web = detalhes.url_web;
+    this.detalhes.fecha_inicio = detalhes.fecha_inicio;
 
     this.filtrarPosiciones(detalhes.id)
     this.imagenesAnexo(detalhes.id)

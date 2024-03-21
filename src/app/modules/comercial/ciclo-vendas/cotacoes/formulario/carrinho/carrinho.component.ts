@@ -521,11 +521,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
               pesoEspecifico: [materiais[i].peso],
               quantidade: [materiais[i].quantidade, [Validators.required]],
               quantidadeItem: [quantidadeItem],
-              qtdeItem: [
-                materiais[i].qtdeItem === materiais[i].quantidade
-                  ? 0
-                  : materiais[i].qtdeItem,
-              ],
+              qtdeItem: [ materiais[i].qtdeItem],
               qtdePecas: [materiais[i].qtdePecas],
               unidade: [materiais[i].unidade],
               // @ts-ignore: Ignorar error TS2339
@@ -568,7 +564,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
               descuento_permitido: [this.descuento_permitido],
               // @ts-ignore: Ignorar error TS2339
               id_presentacion: [materiais[i].id_presentacion_material],
-              cantidad: [2],
+              cantidad: [materiais[i].qtdeItem],
               id_departamento: [this.id_departamento],
               id_tipo_cliente: [this.id_tipo_cliente],
               /*  id_presentacion: form[] */

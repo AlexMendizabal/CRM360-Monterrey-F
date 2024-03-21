@@ -366,7 +366,7 @@ export class ComercialAgendaFormularioComponent
           {
             value: detalhes.id_vendedor,
             disabled:
-              this.action == 'reagendar' || this.action === 'finalizar'
+              this.action == 'reagendar' || this.action === 'finalizar' || this.action === 'editar'
                 ? true
                 : false,
           },

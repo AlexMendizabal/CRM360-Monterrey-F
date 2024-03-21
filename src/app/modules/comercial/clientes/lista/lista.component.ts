@@ -768,18 +768,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
           switchMap((response: any) => {
             if (response['responseCode'] === 200) {
               const clientes = response['result']['analitico'];
-              const observables = clientes.map((cliente: any) => {
-                return this.clientesService.VerificaOfertaAbierta(cliente.codCliente)
-                  .pipe(
-                    map((ofertaResponse: any) => {
-                      cliente.tieneOferta = ofertaResponse; // Agrega la propiedad al objeto cliente
-                      return cliente;
-                    })
-                  );
-              });
-  
-              // Combina todas las llamadas en paralelo y emite un solo observable
-              return forkJoin(observables);
+              // Aquí devolvemos los clientes como un observable
+              return of(clientes);
             } else {
               // Si no hay clientes, emite un observable vacío
               return of([]);
@@ -794,7 +784,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
           (clientes: any[]) => {
             // Actualiza la lista de clientes con la información de la oferta
             this.clientes = clientes.slice(0, this.itemsPerPage);
-            this.totalItems = clientes[0]?.length|| 0;
+            this.totalItems = clientes[0]?.length || 0;
             //this.setStatus(Response['result']['sintetico']);
           },
           (error: any) => {
@@ -802,8 +792,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
           }
         );
     }
-  }
-  
+}
+ 
 
   classStatusBorder(status: string): string {
     let borderClass: string;

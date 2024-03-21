@@ -417,7 +417,9 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.calculo.tipoCalculo = tipoCalculo;
     this.calculo.tipoLancamento = tipoLancamento;
     // @ts-ignore: Ignorar error TS2339
-    this.calculo.descuento = data.descuento.toFixed(2);
+    if (data.descuento !== null ){
+      this.calculo.descuento = data.descuento.toFixed(2);
+    }
     // @ts-ignore: Ignorar error TS2339
     this.calculo.descuentoAplicado = this.calculo.valorTotalBruto * data.descuento;
     this.calculo.valorTotal = this.calculo.valorTotalBruto - this.calculo.descuentoAplicado ;

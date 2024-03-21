@@ -1,8 +1,12 @@
 .Carrinho-responsive {
     overflow-x: auto;
   }
+  div#card-label-light {
+    color: black !important;
+}
 
-
-
+div.custom-col > div.col-3{
+  max-width: 24.5%!important;
+}
   
   

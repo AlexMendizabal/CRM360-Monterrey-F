@@ -314,14 +314,14 @@
             >
               <i
                 class="text-primary fas fa-check-square mr-3"
-                *ngIf="cliente.tieneOferta.result"
+                *ngIf="cliente.tieneCot === 1"
                 tooltip="Cliente tiene Oferta"
                 placement="right"
               ></i>
 
               <i
                 class="text-black-50 far fa-check-square mr-3"
-                *ngIf="!cliente.tieneOferta.result"
+                *ngIf="cliente.tieneCot === 0"
                 tooltip="Cliente no tiene oferta"
                 placement="right"
               ></i>
@@ -365,7 +365,7 @@
                 tooltip="ir a oferta"
                 href="http://23.254.204.187/#/comercial/ciclo-vendas/23/cotacoes-pedidos/novo/1"
               >
-              <i class="fas fa-shopping-cart"></i>
+                <i class="fas fa-shopping-cart"></i>
               </a>
             </td>
 
@@ -712,11 +712,11 @@
                         <label>título</label>
                         <div>
                           <input
-                          value="{{ contato.contacto || 'NO INFORMADO' }}"
-                          class="form-control"
-                          type="text"
-                          readonly
-                          disabled
+                            value="{{ contato.contacto || 'NO INFORMADO' }}"
+                            class="form-control"
+                            type="text"
+                            readonly
+                            disabled
                           />
                           <!-- <div *ngIf="!editingContacto">{{ contato.titulo }}</div>
                         <div *ngIf="contato.editing"></div> -->
@@ -902,26 +902,38 @@
                   ></div>
                   <p><strong> Cargando... </strong></p>
                 </div>
-                <div *ngIf="agendaLoaded && !agendaEmpty && !swSpinner" class="scrollable-list">
+                <div
+                  *ngIf="agendaLoaded && !agendaEmpty && !swSpinner"
+                  class="scrollable-list"
+                >
                   <div class="list-group-item d-flex justify-content-between">
                     <strong class="w-25">Vendedor</strong>
                     <strong class="w-25">Titulo</strong>
                     <strong class="w-25">Fecha</strong>
                   </div>
                   <!-- Lista de datos en formato de lista -->
-                  <ul class="list-group" *ngIf="agendaLoaded && agendaLoaded.length > 0">
-                    <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of agendaLoaded">
+                  <ul
+                    class="list-group"
+                    *ngIf="agendaLoaded && agendaLoaded.length > 0"
+                  >
+                    <li
+                      class="list-group-item d-flex justify-content-between align-items-center"
+                      *ngFor="let item of agendaLoaded"
+                    >
                       <i class="w-25">{{ item.Vendedor }}</i>
                       <i class="w-25">{{ item.Titulo }}</i>
                       <i class="w-25">{{ item.Fecha }}</i>
                     </li>
                   </ul>
-                  
                 </div>
                 <div *ngIf="sumaTotalPorTitulo">
                   <div *ngFor="let titulo of sumaTotalPorTitulo | keyvalue">
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                      <span class="w-25"><strong>{{ titulo.key }}</strong></span>
+                    <div
+                      class="list-group-item d-flex justify-content-between align-items-center"
+                    >
+                      <span class="w-25"
+                        ><strong>{{ titulo.key }}</strong></span
+                      >
                       <span class="w-25">{{ titulo.value }}</span>
                     </div>
                   </div>

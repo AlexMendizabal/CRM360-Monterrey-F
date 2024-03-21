@@ -31,14 +31,17 @@
                   <div class="form-row">
                     <div class="form-group col">
                       <label for="preco1">Precio USD</label>
+
                       <input type="text" id="preco1" class="form-control" formControlName="preco1"
                         placeholder="USD. 0,00"
                         [ngClass]="onFieldError('preco1') + ' ' + onFieldRequired(form.controls.preco1)"
                         aria-describedby="preco1-help" (ngModelChange)="onDisablePreco2()" readonly>
+
                       <small *ngIf="tipoCalculo1 == 6 && material.valorMaterialContrato == 0" id="preco1-help"
                         class="text-muted" style="font-size: 11px">
                         Preço ideal acima de <strong>{{ material.valorUnit | currency:'BRL':'symbol':'1.2-2' }}</strong>
                       </small>
+
                       <small *ngIf="tipoCalculo1 != 6 && material.valorMaterialContrato == 0" id="preco1-help"
                         class="text-muted" style="font-size: 11px">
                         Preço ideal acima de <strong *ngIf="material.valorMaterialBarra > 0">{{
@@ -46,16 +49,19 @@
                         <strong *ngIf="material.valorMaterialBarra == 0">{{ material.valorUnit |
                           currency:'BRL':'symbol':'1.2-2' }}</strong>
                       </small>
+
                       <small *ngIf="material.valorMaterialContrato > 0 && tipoCalculo1 == 6" id="preco1-help"
                         class="text-muted" style="font-size: 11px">
                         Preço do contrato <strong>{{ material.valorMaterialContrato | currency:'BRL':'symbol':'1.2-2'
                           }}</strong> por tonelada
                       </small>
+
                       <small *ngIf="material.valorMaterialContrato > 0 && tipoCalculo1 != 6" id="preco1-help"
                         class="text-muted" style="font-size: 11px">
                         Preço do contrato <strong>{{ material.valorMaterialContrato | currency:'BRL':'symbol':'1.2-2'
                           }}</strong> por tonelada, calcular o preço por {{ nomeTipoCalculo1 | titlecase }}
                       </small>
+                      
                     </div>
                   </div>
                   <div class="form-row" *ngIf="tipoCalculo2 > 0 && material.valorMaterialContrato == 0">

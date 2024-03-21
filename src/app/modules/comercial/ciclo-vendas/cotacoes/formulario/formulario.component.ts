@@ -203,9 +203,9 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   nombreDepartamento2 = '';
   formaContacto: any[] = [];
   tipoContacto: any[] = [];
-  selectedFormaContacto: any;
-  selectedTipoContacto: any;
-  contacto_cliente:any
+  selectedFormaContacto: number;
+  selectedTipoContacto: number = 0;
+  contacto_cliente: any;
   visualizar = false;
   duplicatasSomenteCarteira = false;
   urlPath: string;
@@ -252,12 +252,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   swActivarAlmacen: boolean = true;
   estadoAlmacenObj = { value: true };
 
-
   swEntrega = false;
   id_forma_contacto = 0;
   centrosLogisticos: any[] = [];
   swExisteCliente = true;
   ciudades: any = [];
+
+  /* valorOrigenContacto:number = 0; */
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -335,19 +336,43 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.datosVendedor(this.user.info.idVendedor);
     }
     //this.form.controls.codEndereco.setValue(1);
-    this.getIdOferta(); /* this.finalizacaoService.showModal(this.tipoEntrega, 1);  */
+    /*  this.getIdOferta();  */ /* this.finalizacaoService.showModal(this.tipoEntrega, 1);  */
     // console.log(this.swExisteCliente);
     /*     this.swExisteCliente = true;
      */
 
     /*   this.form.controls.codigoCliente.setValue('Código'); */
-    if(this.form.value.id_vendedor != 0 && this.form.value.id_vendedor !== null)
-    {
+    if (
+      this.form.value.id_vendedor != 0 &&
+      this.form.value.id_vendedor !== null
+    ) {
       this.valorSeleccionado = Number(this.form.value.id_vendedor);
       this.datosVendedor(this.valorSeleccionado);
-      console.log('valor seleccionado vendedor',this.valorSeleccionado);
+      //console.log('valor seleccionado vendedor', this.valorSeleccionado);
     }
-   
+
+    this.getOrigendeContacto();
+    this.getFormaContacto();
+  }
+
+  getOrigendeContacto() {
+    if (
+      this.form.value.selectedTipoContacto !== 0 &&
+      this.form.value.selectedTipoContacto !== null
+    ) {
+      this.selectedTipoContacto = Number(this.form.value.codOrigemContato);
+      //console.log('valor seleccionado vendedor', this.selectedTipoContacto);
+    }
+  }
+
+  getFormaContacto() {
+    if (
+      this.form.value.selectedFormaContacto !== 0 &&
+      this.form.value.selectedFormaContacto !== null
+    ) {
+      this.selectedFormaContacto = Number(this.form.value.codFormaContato);
+     // console.log('valor seleccionado vendedor', this.selectedFormaContacto);
+    }
   }
 
   getCiudades() {
@@ -382,11 +407,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     );
   }
 
-  onListaVacia(evento): void {   
-    if(evento){
-      this.estadoAlmacenObj.value = evento
-    } 
-    console.log(this.estadoAlmacenObj.value);
+  onListaVacia(evento): void {
+    if (evento) {
+      this.estadoAlmacenObj.value = evento;
+    }
+    //console.log(this.estadoAlmacenObj.value);
   }
 
   getCarteira(action: string) {
@@ -402,7 +427,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     }
   }
 
-  getIdOferta() {
+  /*   getIdOferta() {
     this.cotacoesService.getIdOferta().subscribe((response: JsonResponse) => {
       if (response.responseCode == 200) {
         this.id_oferta = response.result.id_oferta + 1;
@@ -412,7 +437,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         );
       }
     });
-  }
+  } */
 
   changeLatitudLongitud(event: { latitud: number; longitud: number }) {
     /*  alert('click'); */
@@ -511,6 +536,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         this.setBreadCrumb();
         this.getUserPermissoes();
         this.getFormFields();
+        //console.log('aqui');
         this.setFormBuilder();
         this.setLoaderEvents();
         this.setClienteSubscription();
@@ -667,13 +693,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     this.form.controls.correo_electronico.setValue(event.correo_electronico);
     this.form.controls.celular.setValue(event.celular);
     this.form.controls.telefono.setValue(event.telefono);
-    this.form.controls.celularcontacto.setValue(event.celularcontacto);
+    /* this.form.controls.celularcontacto.setValue(event.celularcontacto);  */
     this.form.controls.codFormaPagamento.setValue(1);
     this.form.controls.id_tipo_cliente.setValue(event.tipoCliente);
-    // this.codigoRubro.setValue(event.rubro); 
+    // this.codigoRubro.setValue(event.rubro);
     this.form.controls.nombreTipo.setValue(event.nombreTipo);
-    this.form.controls.celularcontacto.setValue(event.celularcontacto);
-    this.form.controls.tipoEntrega.setValue(1); 
+    /*  this.form.controls.celularcontacto.setValue(event.celularcontacto); */
+    //this.form.controls.tipoEntrega.setValue(1);
     this.exibirClienteTerceiro(event);
     /*  } else {
           this.pnotifyService.error('El Cliente tiene una oferta pendiente');
@@ -734,9 +760,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     const resolver = this.activatedRoute.snapshot.data.data;
     const data = resolver.data;
     const formValue: any = this.checkRouterParams();
-    console.log('formValue aqui entra con datos', data);
-    if (data.codSituacao === 1 && data.tipo_estado === 14 && resolver.success === true) {
-
+    //console.log('formValue aqui entra con datos', data);
+    if (
+      data.codSituacao === 1 &&
+      data.tipo_estado === 14 &&
+      resolver.success === true
+    ) {
       let dataEntrega: Date,
         dataEncerramento: Date,
         dataValidade: Date,
@@ -768,7 +797,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       }
 
       if (data.dataEncerramento !== null) {
-        dataEncerramento = this.dateService.convertStringToDate(data.dataEncerramento,'latam');
+        dataEncerramento = this.dateService.convertStringToDate(
+          data.dataEncerramento,
+          'latam'
+        );
       } else {
         dataEncerramento = new Date(); // Asigna la fecha actual
       }
@@ -776,7 +808,10 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       if (data.dataValidade === null) {
         dataValidade = this.dateService.addDaysToDate(new Date(), 7);
       } else {
-        dataValidade = this.dateService.convertStringToDate(data.dataValidade,'latam');
+        dataValidade = this.dateService.convertStringToDate(
+          data.dataValidade,
+          'latam'
+        );
       }
 
       fechaRecordatorio = this.dateService.addDaysToDate(new Date(), 7);
@@ -806,10 +841,16 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       //console.log(data);
 
       this.form = this.formBuilder.group({
+        codigo_oferta: [data.codigo_oferta],
+        nombre_oferta: [data.nombre_oferta],
+        id_oferta: [data.nrPedido],
         codCotacao: [{ value: codCotacao, disabled: true }],
         tipoCotacao: [{ value: data.tipoCotacao, disabled: true }],
         notaFiscal: [{ value: data.nrNotaFical, disabled: true }],
-        codSituacao: [data.codSituacao != 0 ? data.codSituacao : null,[Validators.required],],
+        codSituacao: [
+          data.codSituacao != 0 ? data.codSituacao : null,
+          [Validators.required],
+        ],
         nombreDepartamento2: [],
         codCliente: [data.codCliente],
         razaoSocial: [data.nomeFantasia],
@@ -819,12 +860,14 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         carnet: [data.numero_documento],
         tipo_documento: [data.tipo_documento],
         nombreVendedor: [data.nombreVendedor],
-        codigo_oferta: [],
+
         codigo_oferta_crm: [data.nrPedido],
         /*   id_lista_precio: [data.id_lista_precio], */
         codigo_cliente: [data.codigo_cliente],
         telefono: [data.telefono],
         celular: [data.celular],
+        celularContacto: [],
+        telefonoContacto: [],
         nit: [data.nit],
         nombreTipo: [data.tipo_cliente],
         id_tipo_cliente: [data.tipoCliente],
@@ -834,7 +877,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         direccionEntrega: [],
         formaContacto: [null],
         tipodecontacto: [null],
-        codigoRubro:[data.rubro],
+        codigoRubro: [data.rubro],
         contacto_cliente: [null],
         id_vendedor: [data.codVendedor],
         /*  centroLogisticoControl:[], */
@@ -869,6 +912,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           data.dadosAdicionaisNotaFiscal,
           [Validators.required],
         ],
+       
         freteConta: [
           data.codFretePorConta != 0 ? data.codFretePorConta : null,
           [Validators.required],
@@ -876,7 +920,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         codTransportadora: [data.codTransportadora, [Validators.required]],
         observacoes: [data.observacao],
         /*  lista: [], */
-        
+
         novo: this.activatedRoute.snapshot.url[0].path,
         COD_CLIE_TERC: [data.COD_CLIE_TERC],
         TP_ACAO: [data.TP_ACAO],
@@ -908,9 +952,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       }
 
       this.carrinho = data.carrinho;
-    }
-    else if (resolver.success === true) {
-
+    } else if (resolver.success === true) {
       let dataEntrega: Date,
         dataEncerramento: Date,
         dataValidade: Date,
@@ -992,16 +1034,16 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         data.duplicatasSomenteCarteira = 0;
       }
       //console.log(data);
-     this.valorSeleccionado = Number(data.codVendedor);
-     console.log('valor seleccionado vendedor',this.valorSeleccionado);
-  
-    
+      this.valorSeleccionado = Number(data.codVendedor);
 
       this.form = this.formBuilder.group({
         codCotacao: [{ value: codCotacao, disabled: true }],
         tipoCotacao: [{ value: data.tipoCotacao, disabled: true }],
         notaFiscal: [{ value: data.nrNotaFical, disabled: true }],
-        codSituacao: [data.codSituacao != 0 ? data.codSituacao : null,[Validators.required],],
+        codSituacao: [
+          data.codSituacao != 0 ? data.codSituacao : null,
+          [Validators.required],
+        ],
         nombreDepartamento2: [],
         codCliente: [data.codCliente],
         razaoSocial: [data.razaoSocial],
@@ -1011,12 +1053,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         carnet: [data.numero_documento],
         tipo_documento: [data.tipo_documento],
         nombreVendedor: [data.nombreVendedor],
-        codigo_oferta: [],
         codigo_oferta_crm: [],
-        id_lista_precio: [data.id_lista_precio], 
+        id_lista_precio: [data.id_lista_precio],
         codigo_cliente: [data.codigo_cliente],
         telefono: [data.telefono],
         celular: [data.celular],
+        celularContacto: [],
+        telefonoContacto: [],
         nit: [data.nit],
         nombreTipo: [data.nombreTipo],
         id_tipo_cliente: [data.tipoCliente],
@@ -1026,8 +1069,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         direccionEntrega: [],
         formaContacto: [data.formaContacto],
         tipodecontacto: [null],
-        codigoRubro:[data.nit],
-        
+        codigoRubro: [data.nit],
+
         codContato: [
           data.codContato != 0 ? data.codContato : null,
           [Validators.required],
@@ -1064,7 +1107,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         codTransportadora: [data.codTransportadora, [Validators.required]],
         observacoes: [data.observacao],
         /*  lista: [], */
-        
+
         novo: this.activatedRoute.snapshot.url[0].path,
         COD_CLIE_TERC: [data.COD_CLIE_TERC],
         TP_ACAO: [data.TP_ACAO],
@@ -1647,8 +1690,24 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   changeContacto(id) {
     this.id_forma_contacto = id;
-}
-
+    var contactoSeleccionado = this.contatos.find(
+      (contacto) => contacto.codContato === id
+    );
+  
+    /* console.log(this.form.controls)
+    console.log('Contacto seleccionado:', contactoSeleccionado); */
+  
+    if (contactoSeleccionado) {
+     
+      this.form.patchValue({
+        celularContacto: contactoSeleccionado.celularContato,
+        telefonoContacto: contactoSeleccionado.telefonoContato
+      });
+     
+    } else {
+     
+    }
+  }
 
   onFormaContactoChange(event: any): void {
     // Puedes hacer algo con el evento si es necesario
@@ -1708,18 +1767,20 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
           const borrador = 0;
           const dataCotizacion = {
+            codigo_oferta: formValue.codigo_oferta,
+            nombre_oferta: formValue.nombre_oferta,
             monto_total: this.valorProposta,
             monto_total_bruto: this.valorPropuestaBruto,
             peso_total: this.pesoTotal,
             descuento_total: this.descuentoTotal,
             cantidad_total: this.cantidadTotal,
+            id_oferta: formValue.id_oferta,
             id_forma_pago: formValue.codFormaPagamento,
             id_lista_precio: this.idListaPrecio,
             id_modo_entrega: formValue.codEndereco,
             id_cliente: formValue.codCliente,
             id_vendedor: this.idvendedor,
             id_almacen: this.id_centro_logistico,
-            codigo_oferta: null,
             fecha_final: formValue.dataValidade,
             fecha_inicial: formValue.dataEncerramento,
             latitud: this.latitud,
@@ -1730,20 +1791,19 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             observacion: formValue.observacoes,
             nit_factura: formValue.codRazaoSocial,
             nombre_factura: formValue.razaoSocial,
-            direccion_cliente: this.direccion_cliente,
-            direccion_entrega: formValue.direccionEntrega,
+            direccion_cliente: formValue.codEndereco,
+            direccion_entrega: formValue.direccion_entrega,
             carnet_cliente: this.carnet_cliente,
             tipo_documento: this.tipo_documento,
-            correo_electronico: formValue.correoElectronico,
+            correo_electronico: formValue.correo_electronico,
             celular: formValue.celular,
-            id_oferta: this.id_oferta,
             telefono: formValue.telefonoCliente,
             formaContacto: this.form.controls.formaContacto.value,
             tipoContacto: this.form.controls.tipodecontacto.value,
-            
           };
           /* this.autorizacionService.showModal();  */
           /* console.log(dataCotizacion); */
+          /* console.log('datos para enviar', dataCotizacion); */
           const paramsVerificacion = {
             codVendedor: this.idvendedor,
             id_cliente: formValue.codCliente,
@@ -1961,8 +2021,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   datoEntrega(a: number) {
-    // console.log(a);
-    // @ts-ignore
+    1; // @ts-ignore
     if (a.id == 2) {
       this.swEntrega = true;
     } else {
@@ -2037,10 +2096,14 @@ export class ComercialCicloVendasCotacoesFormularioComponent
           this.form.controls.codContato.enable();
         })
       )
-      .subscribe((response: JsonResponse) => {      
+      .subscribe((response: JsonResponse) => {
+        const contatos = [];
+        this.form.controls.codContato.setValue('');
+        this.form.controls.celularContacto.setValue('');
+        this.form.controls.telefonoContacto.setValue('');
         if (response.success === true) {
           const _contatos = response.data;
-          const contatos = [];
+          /* console.log(response.data); */
 
           for (let i = 0; i < _contatos.length; i++) {
             if (
@@ -2052,10 +2115,14 @@ export class ComercialCicloVendasCotacoesFormularioComponent
               contatos.push({
                 codContato: _contatos[i].id,
                 nomeContato: _contatos[i].nomeCompleto,
+                celularContato: _contatos[i].contatos[0].contato,
+                telefonoContato: _contatos[i].contatos[1].contato,
               });
             }
           }
+          /* console.log(contatos); */
           this.contatos = contatos;
+         
         }
       });
   }
@@ -2494,77 +2561,81 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   currentStep: number = 1; // Comienza en el paso 1
 
+  /**/
   goToNextStep(): void {
-    // Suponiendo 4 pasos
     switch (this.currentStep) {
       case 1:
-        // Aquí irían validaciones o acciones específicas del paso 1 si las hubiera
+        //console.log('Paso Actual', this.currentStep);
+
         this.currentStep++;
         break;
+
       case 2:
-        // Obteniendo inputs
-        const cliente = document.querySelector(
-          '#nomeCliente'
-        ) as HTMLInputElement;
-        const nombreFac = document.querySelector(
-          '#namefactura'
-        ) as HTMLInputElement;
-        const nombreEjec = document.querySelector(
-          '#nameEjec'
-        ) as HTMLInputElement;
+        const campos = [
+          {
+            input: document.querySelector('#nomeCliente'),
+            feedback: document.getElementById('validationServer01Feedback'),
+          },
+          {
+            input: document.querySelector('#namefactura'),
+            feedback: document.getElementById('validationServer02Feedback'),
+          },
+          {
+            input: document.querySelector('#nameEjec'),
+            feedback: document.getElementById('validationServer03Feedback'),
+          },
+        ];
 
-        // Textos de validación feedback
-        const validationFeedback01 = document.getElementById(
-          'validationServer01Feedback'
-        );
-        const validationFeedback02 = document.getElementById(
-          'validationServer02Feedback'
-        );
-        const validationFeedback03 = document.getElementById(
-          'validationServer03Feedback'
-        );
+        // Función para validar un campo
+        function validarCampo(campo) {
+          const { input, feedback } = campo;
 
-        // Validar todos los campos antes de avanzar
-        let isValid = true;
-
-        if (!cliente || cliente.value === '') {
-          /*cliente.classList.add('is-invalid');
-          validationFeedback01.style.display = 'block';
-          isValid = false;*/
+          if (!input.value) {
+            input.classList.add('is-invalid');
+            feedback.style.display = 'block';
+            return false;
+          } else {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+            feedback.style.display = 'none';
+            return true;
+          }
         }
 
-        if (!nombreFac || nombreFac.value === '') {
-         /*  nombreFac.classList.add('is-invalid');
-          validationFeedback02.style.display = 'block';
-          isValid = false; */
-        }
+        // Añade manejadores de eventos para la validación en tiempo real
+        campos.forEach((campo) => {
+          campo.input.addEventListener('input', () => validarCampo(campo));
+        });
 
-        if (!nombreEjec || nombreEjec.value === '') {
-        /*   validationFeedback03.style.display = 'block';
-          isValid = false; */
-        }
+        // Validar todos los campos y reducir a un valor booleano que indica si todos son válidos
+        const isValid = campos.reduce(
+          (valido, campo) => validarCampo(campo) && valido,
+          true
+        );
 
         if (isValid) {
-/*           cliente.classList.remove('is-invalid');
-          nombreFac.classList.remove('is-invalid');
-          nombreEjec.classList.remove('is-invalid');
-
-          cliente.classList.add('is-valid');
-          nombreFac.classList.add('is-valid');
-          nombreEjec.classList.add('is-valid');
-
-          validationFeedback01.style.display = 'none';
-          validationFeedback02.style.display = 'none';
-          validationFeedback03.style.display = 'none'; */
           this.currentStep++;
         }
+        break;
 
-        break;
       case 3:
-        // Aquí irían validaciones o acciones específicas del paso 3 si las hubiera
-        this.currentStep++;
-        break;
-      // No necesitas un caso para el paso 4 si simplemente estás avanzando a un paso que no existe
+        let todasLasCantidadesSonNoCero = true; // Asumimos inicialmente que todas las cantidades son no cero
+
+        this.materiais.forEach((material) => {
+          if (material.quantidade === 0) {
+            todasLasCantidadesSonNoCero = false;
+            this.pnotifyService.error('Por favor, Ingrese una cantidad.');
+          }
+        });
+
+        if (this.materiais.length != 0 && todasLasCantidadesSonNoCero) {
+          this.currentStep++;
+          break;
+          // Suponiendo que este código está dentro de un bucle o función que maneja "steps", y quieres salir de él cuando se cumple la condición.
+        } else {
+          // Código en caso de que haya materiales con cantidad 0 o el array esté vacío´
+          this.pnotifyService.error('Seleccione y Adicione un material.');
+        }
     }
 
     // Llamar a toggleCollapse solo si está dentro del rango de pasos válidos
