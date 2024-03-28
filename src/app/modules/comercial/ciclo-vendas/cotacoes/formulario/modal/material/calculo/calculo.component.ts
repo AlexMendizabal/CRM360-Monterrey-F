@@ -84,6 +84,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
 
   form: FormGroup;
 
+  enterKeyPressCount = 0;
+
   tipoCalculo: number;
   descPreco: string;
   descQtde: string;
@@ -101,6 +103,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   swPresentacion = false;
   id_presentacion: number = 0;
   showImpostos = false;
+  valorInput: number = 0;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -341,94 +344,6 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
 
     this.swDesactivarForm == false;
 
-
-    /* this.form.controls['formPresentacion'].enable(); */
-    /* this.form.controls['formPresentacion'].setValue(3); */
-
-
-
-    /* if (this.checkFormValidators() === false && this.form.valid) {
-      if (this.material.valorMaterialContrato > 0) {
-        this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
-      } else if (this.form.value.preco2 > 0) {
-        if (
-          Math.floor(this.material.valorUnit * 100) / 100 >
-          this.form.value.preco2
-          ) {
-            this.confirmModalService
-            .showConfirm(
-              null,
-              'Preço abaixo do mínimo',
-              'O preço informado está abaixo do valor mínimo. Deseja continuar mesmo assim?',
-              'Cancelar',
-              'Confirmar'
-              )
-            .subscribe((response: boolean) =>
-            response
-            ? this.postCalculoMaterial(
-              this.tipoCalculo2,
-              this.form.value.preco2
-              )
-              : EMPTY
-              );
-            } else {
-              this.postCalculoMaterial(this.tipoCalculo2, this.form.value.preco2);
-            }
-          } else if (this.form.value.preco1 > 0 && this.tipoLancamento == 6) {
-            if (
-              Math.floor(this.material.valorUnit * 100) / 100 >
-              this.form.value.preco1
-              ) {
-                this.confirmModalService
-            .showConfirm(
-              null,
-              'Preço abaixo do mínimo',
-              'O preço informado está abaixo do valor mínimo. Deseja continuar mesmo assim?',
-              'Cancelar',
-              'Confirmar'
-            )
-            .subscribe((response: boolean) =>
-              response
-                ? this.postCalculoMaterial(
-                  this.tipoCalculo1,
-                  this.form.value.preco1
-                )
-                : EMPTY
-            );
-        } else {
-          ///ewqeqweqwqw////////////////
-          this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
-        }
-      } else {
-        if (
-          Math.floor(this.material.valorMaterialBarra * 100) / 100 >
-          this.form.value.preco1
-        ) {
-          this.confirmModalService
-            .showConfirm(
-              null,
-              'Preço abaixo do mínimo',
-              'O preço informado está abaixo do valor mínimo. Deseja continuar mesmo assim?',
-              'Cancelar',
-              'Confirmar'
-            )
-            .subscribe((response: boolean) =>
-              response
-                ? this.postCalculoMaterial(
-                  this.tipoCalculo1,
-                  this.form.value.preco1
-                )
-                : EMPTY
-            );
-        } else {
-          this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
-        }
-      }
-    } */
-    /*     this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
-    
-     */
-
     this.calcularTotais(this.material, 1, this.tipoLancamento, this.material.unidade);
 
 
@@ -502,7 +417,9 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.calculo.tipoCalculo = tipoCalculo;
     this.calculo.tipoLancamento = tipoLancamento;
     // @ts-ignore: Ignorar error TS2339
-    this.calculo.descuento = data.descuento.toFixed(2);
+    if (data.descuento !== null ){
+      this.calculo.descuento = data.descuento.toFixed(2);
+    }
     // @ts-ignore: Ignorar error TS2339
     this.calculo.descuentoAplicado = this.calculo.valorTotalBruto * data.descuento;
     this.calculo.valorTotal = this.calculo.valorTotalBruto - this.calculo.descuentoAplicado ;
@@ -560,6 +477,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       if (this.material.controladoPorLote == 1) {
         if (this.material.estoqueLote != this.form.value.quantidade) {
           this.pnotifyService.notice(`Quantidade diferente ao lote. Quantidade deve ser: ${this.material.estoqueLote}`);
+          
           return;
         }
         else {
@@ -637,4 +555,16 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       this.calculo.codItemPedidoCliente = this.form.value.codItemPedidoCliente,
       this.calculo.codProdutoCliente = this.form.value.codProdutoCliente
   }
+
+  onEnterKeyPress() {
+    if (this.enterKeyPressCount === 0) {
+        this.onCalcular();
+    } else if (this.enterKeyPressCount === 1) {
+        this.onSubmit();
+    } else {  
+        this.onSubmit();
+    }
+    this.enterKeyPressCount++;
+  }
+
 }

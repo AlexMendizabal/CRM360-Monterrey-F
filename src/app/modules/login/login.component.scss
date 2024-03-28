@@ -8,12 +8,12 @@
   }
   #logo-fin{
     position: absolute;
+    top: -25px;
     width: 15%;
-    height: 15%;
     z-index: 10;
     left: 15px;
-    margin-left: 20px;
-    bottom: 80%;
+    margin-left: 05px;
+    bottom: 75%;
   }
   #background-login {
     background-image: url('../../../assets/images/backgrounds/hand-shake.jpg');
@@ -23,7 +23,7 @@
     filter: blur(2px);
     height: 100vh;
     margin-top: -$navbar-size;
-    -webkit-filter: blur(2px);
+    -webkit-filter: blur(3px);
   }
   #login {
     height: 100vh;
@@ -34,16 +34,16 @@
     form {
       background: $white;
       border: 1px solid #dadce0;
-      border-radius: 8px;
-      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      border-radius: 5px;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12),
         0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
       height: auto;
-      padding: 48px 40px 36px;
+      padding: 70px 40px 53px;
       width: 380px;
       h4 {
         color: $dark-gray;
         font-size: 24px;
-        font-weight: 400;
+        font-weight: 600;
         line-height: 1.3333;
         margin: 0;
       }
@@ -85,8 +85,20 @@
         }
       }
       .btn:hover{
-        background-color: $purpleLightMtCorp;
+        background-color: #6c3082;
       }
     }
   }
+
+input#usuario:focus, input#senha:focus {
+    border-color: #815d8e!important;
+   /*  background-color: #e097fba3 !important; */
+    box-shadow: 0 0 0 0.2em rgb(89 0 220 / 30%)!important;
+}
+.labelRe{
+  font-weight: 500!important;
+  color: #5a5a5a!important;
+  font-size: 12px !important;
+}
+
 }

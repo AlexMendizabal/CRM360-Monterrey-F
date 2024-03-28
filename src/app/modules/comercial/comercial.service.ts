@@ -46,7 +46,7 @@ export class ComercialService {
 
   getAlmacen(params?: any): Observable<Object | JsonResponse> {
     return this.http
-      .get(`${this.API}/almacen`)
+      .get(`${this.API}/estoque`)
       .pipe(take(1), retry(2));
   }
   getLinhasId(id: any) {
@@ -72,6 +72,14 @@ export class ComercialService {
     return this.http
       .get(
         `${this.API}/materiales/lista`, {
+        params: params,
+      })
+      .pipe(take(1), retry(2));
+  }
+  getAlmacenesLista(params: any) {
+    return this.http
+      .get(
+        `${this.API}/materiales/lista_almacen`, {
         params: params,
       })
       .pipe(take(1), retry(2));
@@ -120,13 +128,25 @@ export class ComercialService {
 
   getClasses(params: any): Observable<Object> {
     let httpParams = new HttpParams();
-
     for (let param in params) {
       httpParams = httpParams.append(param, params[param]);
     }
 
     return this.http
       .get(`${this.API}/classes`, {
+        params: httpParams,
+      })
+      .pipe(take(1), retry(2));
+  }
+
+  getGrupo(params: any){
+    let httpParams = new HttpParams();
+    for (let param in params) {
+      httpParams = httpParams.append(param, params[param]);
+    }
+
+    return this.http
+      .get(`${this.API}/grupos`, {
         params: httpParams,
       })
       .pipe(take(1), retry(2));

@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 // Services
 import { ComercialCadastrosTitulosAgendaService } from './../../cadastros/titulos-agenda/titulos-agenda.service';
 import { ComercialVendedoresService } from '../../services/vendedores.service';
-
+import { AuthService } from 'src/app/shared/services/core/auth.service';
 // Interfaces
 import { JsonResponse } from 'src/app/models/json-response';
 
@@ -17,12 +17,25 @@ import { JsonResponse } from 'src/app/models/json-response';
 })
 export class ComercialAgendaFormularioService {
   private readonly API = `http://23.254.204.187/api/comercial/agenda/formulario`;
+  private readonly API2 = `http://23.254.204.187/api/comercial`;
 
   constructor(
     protected http: HttpClient,
     private vendedoresService: ComercialVendedoresService,
     private titulosAgendaService: ComercialCadastrosTitulosAgendaService
   ) {}
+
+  getclientes(id){
+    return this.http
+    .get(`${this.API2}/clientes/todosclientes/${id}`)
+    .pipe(take(1), retry(2));
+  }
+
+  getpromotoresporcliente(codCliente){
+    return this.http
+    .get(`${this.API2}/clientes/getvendedorporcliente/${codCliente}`)
+    .pipe(take(1), retry(2));
+  }
 
   loadDependencies(): Observable<Object | JsonResponse> {
     let clientes = this.vendedoresService.getCarteiraClientes();

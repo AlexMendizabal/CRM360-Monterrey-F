@@ -1,4 +1,6 @@
 export interface ICotacao {
+  dataFaturamento: any;
+  id_oferta: any;
   codCliente: number;
   codDeposito: number;
   codEmpresa: number;

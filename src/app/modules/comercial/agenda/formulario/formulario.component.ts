@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import {
   FormGroup,
   FormBuilder,
@@ -17,6 +18,7 @@ import { esLocale } from 'ngx-bootstrap/locale';
 defineLocale('es', esLocale);
 
 // Services
+import { AuthService } from 'src/app/shared/services/core/auth.service';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { DateService } from 'src/app/shared/services/core/date.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
@@ -46,6 +48,8 @@ import { compileDirectiveFromRender2 } from '@angular/compiler/src/render3/view/
 export class ComercialAgendaFormularioComponent
   implements OnInit, IFormCanDeactivate
 {
+  private user = this.authService.getCurrentUser();
+  valorSeleccionado = Number(this.user.info.idVendedor);
   permissoesAcesso: {
     simuladorVendas: boolean;
   };
@@ -83,16 +87,47 @@ export class ComercialAgendaFormularioComponent
   action: string;
   latitud: number = -17.78629;
   longitud: number = -63.18117;
-
+  inicio_latitud: number = 0;
+  final_longitud: number = 0;
+  marca_color = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00';
+  id_marcador: number = 0;
   direccion: string;
+  /**form2 */
+  idClient: number = 0;
+  id_promotor: number = 0;
+  id_ejecutivo: number;
+  codClient:string;
+
+  selectedImage: File;
+  previewImage: string | ArrayBuffer;
 
   breadCrumbTree: Array<Breadcrumb> = [];
-
+  colorAleatorio: any;
   form: FormGroup;
   formChanged = false;
   submittingForm = false;
+  labelOptions = {
+    color: 'blue',
+    fontFamily: '',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    text: 'UB Agenda',
+    }
+
+    labelOptions2 = {
+      color: 'blue',
+      fontFamily: '',
+      fontSize: '14px',
+      fontWeight: 'bold',
+      text: 'UB Cliente',
+    }
 
   clientes: any = [];
+  clientes2: any = [];
+  clientesub: any = [];
+  promotorasignado: any = [];
+  promotorparaasignar: any = [];
+  id_promotorasignado: number;
   promotores: any = [];
   formasContato: any = [];
   origensContato: any = [];
@@ -101,6 +136,8 @@ export class ComercialAgendaFormularioComponent
   marcadorArrastrable = true;
   attachedFiles: File[] = [];
   adjunto: File = null;
+
+  form2: FormGroup;
 
   showInputClientes = true;
   showInputVendedores = true;
@@ -113,12 +150,24 @@ export class ComercialAgendaFormularioComponent
   showFormulario = true;
   hideFormulario = true;
   color: string;
+  userData: any;
+  
+  agendar: boolean;
+  reagendar: boolean;
+
+  administrador:boolean = false;
 
   bsConfig: Partial<BsDatepickerConfig>;
   mostrarElemento: any;
   detalhes: any = {
     status: null,
   };
+ private coloresDisponibles: string[] = [
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000',
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FC9F3A',
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00',
+    'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFFFF',
+  ];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -127,13 +176,14 @@ export class ComercialAgendaFormularioComponent
     private agendaService: ComercialAgendaService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private location: Location,
+    private location  : Location,
     private localeService: BsLocaleService,
     private pnotifyService: PNotifyService,
     private dateService: DateService,
     private titleService: TitleService,
     private cotacoesService: ComercialCicloVendasCotacoesService,
-    private ComercialVendedoresService: ComercialVendedoresService
+    private ComercialVendedoresService: ComercialVendedoresService,
+    private authService: AuthService,
   ) {
     this.localeService.use('es');
     this.bsConfig = Object.assign(
@@ -143,6 +193,7 @@ export class ComercialAgendaFormularioComponent
       { showWeekNumbers: false }
     );
     this.pnotifyService.getPNotify();
+    
   }
 
   ngOnInit() {
@@ -150,7 +201,17 @@ export class ComercialAgendaFormularioComponent
     this.checkAcessos();
     this.checkUrlParams();
     this.getFormFields();
+    if(this.user.info.none_cargo === '1')
+    {
+      this.administrador = true;
+    }
+    else
+    { 
+      this.administrador = false;
+      this.onChangeVendedor(this.user.info.idVendedor);
+    }
   }
+
 
   registrarAcesso(): void {
     this.atividadesService.registrarAcesso().subscribe();
@@ -165,6 +226,16 @@ export class ComercialAgendaFormularioComponent
   //     this.permissoesAcesso.simuladorVendas = false;
   //   }
   // }
+  generarColorAleatorio(): string {
+    if (this.coloresDisponibles.length === 0) {
+      return null;
+    }
+    const indiceAleatorio = Math.floor(
+      Math.random() * this.coloresDisponibles.length
+    );
+    this.colorAleatorio = this.coloresDisponibles.splice(indiceAleatorio,1)[0];
+    return this.colorAleatorio;
+  }
 
   checkAcessos(): void {
     const acessos = this.activatedRoute.snapshot.data.detalhes;
@@ -185,7 +256,6 @@ export class ComercialAgendaFormularioComponent
         this.action = 'novo';
         this.setBreadCrumb(this.action);
       }
-
       this.setFormBuilder();
     });
   }
@@ -204,21 +274,35 @@ export class ComercialAgendaFormularioComponent
 
     if (this.action == 'novo') {
       title = 'Nuevo contacto';
+      this.agendar = true;
+      this.reagendar = false;
     } else if (this.action == 'editar') {
+      this.agendar = false;
+      this.reagendar =true;
       title = 'Editar contacto';
     } else if (this.action == 'reagendar') {
+      this.agendar = false;
+      this.reagendar =true;
       title = 'Reagendar contato';
     } else if (this.action == 'finalizar') {
       title = 'Finalizar Contacto';
+      this.agendar = false;
+      this.reagendar =true;
     }
 
     return title;
   }
 
   setFormBuilder(): void {
-    if (this.activatedRoute.snapshot.data.detalhes.responseCode === 200) {
+    if (this.activatedRoute.snapshot.data.detalhes.responseCode === 200) 
+    {
       const detalhes = this.activatedRoute.snapshot.data.detalhes.result;
+      this.clientes2 = [{'codCliente':  detalhes.codClient, 'nomeCliente': detalhes.client}];
+      this.idClient = detalhes.codClient;
+      this.inicio_latitud = detalhes.latitud;
+      this.final_longitud = detalhes.longitud;
       const isFinalizarAction = this.action === 'finalizar';
+     
       let inicioData: Date,
         inicioHorario: Date,
         terminoData: Date,
@@ -235,11 +319,34 @@ export class ComercialAgendaFormularioComponent
         terminoData = new Date(detalhes.end);
         terminoHorario = new Date(detalhes.end);
       }
-
+      this.form2 = this.formBuilder.group({
+        cliente: [
+          {
+            value: detalhes.codClient,
+            disabled: this.action != 'novo',
+          },
+        ],
+        promotor: [
+          {
+            value: detalhes.id_vendedor,
+            disabled:
+              this.action == 'reagendar' || this.action === 'finalizar'
+                ? true
+                : false,
+          },
+        ],
+        });
+      
       this.form = this.formBuilder.group({
         id: [detalhes.id], // Agrega el campo 'id' al formulario
         cor: [detalhes.color.primary],
-
+        prompsig:[{
+          value: detalhes.prompsig, 
+        },],
+        promotorasignado: [ {
+          value: detalhes.vend_asig,
+          disabled: this.action == 'reagendar' || this.action == 'finalizar',
+        },],
         codTitulo: [
           {
             value: detalhes.codTitulo,
@@ -259,7 +366,7 @@ export class ComercialAgendaFormularioComponent
           {
             value: detalhes.id_vendedor,
             disabled:
-              this.action == 'reagendar' || this.action === 'finalizar'
+              this.action == 'reagendar' || this.action === 'finalizar' || this.action === 'editar'
                 ? true
                 : false,
           },
@@ -280,12 +387,13 @@ export class ComercialAgendaFormularioComponent
               this.action === 'novo' || this.action === 'editar' ? false : true,
           },
         ],
-
+       
         latitud_clie: [
           {
             value: detalhes.latitud,
           },
         ],
+       
         longitud_clie: [
           {
             value: detalhes.longitud,
@@ -347,8 +455,14 @@ export class ComercialAgendaFormularioComponent
       if (detalhes.allDay) {
         this.isDisabledTime = true;
       }
-      this.latitud = detalhes.latitud;
-      this.longitud = detalhes.longitud;
+      if (detalhes.latitud !== undefined && detalhes.longitud !== undefined) {
+        this.latitud = detalhes.latitud;
+        this.longitud = detalhes.longitud;
+      } else {
+        this.latitud = -17.783384728226157;
+        this.longitud = -63.1820969584504;
+      }
+      
       if (this.action == 'reagendar') {
         this.form.controls.motivoReagendamento.setValidators([
           Validators.required,
@@ -415,7 +529,6 @@ export class ComercialAgendaFormularioComponent
 
   getFormFields(): void {
     this.loaderFullScreen = true;
-
     this.formService
       .loadDependencies()
       .pipe(
@@ -424,17 +537,18 @@ export class ComercialAgendaFormularioComponent
         })
       )
       .subscribe((response: Array<JsonResponse>) => {
-        if (response[0].success === true) {
+       /*  if (response[0].success === true)
+        {
           this.clientes = response[0].data;
-        } else if (response[0].success === false) {
+        } else if (response[0].success === false) 
+        {
           this.showInputClientes = false;
         } else {
           this.handleLoadDependenciesError();
-        }
+        } */
 
         if (response[1].success === true) {
           this.formasContato = response[1].data;
-
           this.formasContato.unshift({
             codFormaContato: null,
             nomeFormaContato: '',
@@ -459,21 +573,83 @@ export class ComercialAgendaFormularioComponent
         } else {
           this.handleLoadDependenciesError();
         }
-
+        
         if (response[4].success === true) {
           this.listarTitulosAgenda = response[4].data;
         } else {
           this.handleLoadDependenciesError();
         }
-        // @ts-ignore: Ignorar error TS2339
-        if (response[5].responseCode == 200) {
-          console.log(response[5].data);
-          // @ts-ignore: Ignorar error TS2339
-          this.promotores = response[5].result;
-        } else {
+        /* if(this.user.info.matricula != 1)
+        {
+          //console.log(this.user)
+          this.promotores =[{
+            'id': this.user.info.idVendedor,
+            'nombre': this.user.info.nomeCompleto
+          }];
+        } */
+      /*   else
+        { */
+        if (response[5].success == true) {
+          // Merge the initial object with the data from response[5].data
+         
+          if(this.user.info.none_cargo === '1')
+          {
+            const todos = [{ 'ID': 0, 'idEscritorio': 0, 'nombre': 'TODOS' }];
+            this.promotores = [...todos, ...response[5].data]; 
+            this.promotorparaasignar = response[5].data;
+          }
+          else
+          {
+            const todos = [{ 'ID': 0, 'idEscritorio': 0, 'nombre': 'TODOS' }];
+            this.promotores = [...todos, ...response[5].data]; 
+          }
+          console.log('Promotores:', this.promotores); 
+      } else {
           this.showInputVendedores = false;
+      }
+
+      });
+  }
+
+  setFormBuildesClientes(): void {
+    this.form2 = this.formBuilder.group({
+      filtrobusqueda: [Validators.required],
+     
+    });
+
+    this.form2.valueChanges.subscribe(newValue => {
+      // Actualiza los valores correspondientes en el form principal
+      this.form.patchValue({
+        // Asigna los campos del form2 al form principal
+        // Por ejemplo:
+        cliente: newValue.cliente,
+        promotor: newValue.promotor
+      });
+    });
+  }
+
+  onChangeVendedor(idvendedor:number):void{
+    this.form.controls.cliente.reset();
+    this.form.controls.cliente.setValue(null);
+    this.form.controls.cliente.enable();
+    this.form.controls.cliente.setValidators([Validators.required]);
+    this.form.controls.cliente.updateValueAndValidity();
+    
+    this.formService
+      .getclientes(idvendedor)
+      .pipe(
+        finalize(() => {
+          this.loaderFullScreen = false;
+        })
+      )
+      .subscribe((response: Array<JsonResponse>) => {
+        if (response['success'] === true) {
+          this.clientes = response['data'];
+        } else {
+          this.handleLoadDependenciesError();
         }
       });
+   /*  this.getFormFields(); */
   }
 
   handleLoadDependenciesError(): void {
@@ -541,19 +717,12 @@ export class ComercialAgendaFormularioComponent
     if (this.onFieldInvalid(control)) {
       return 'is-invalid';
     }
-
     return '';
   }
 
   onFieldInvalid(control: AbstractControl): boolean {
     return control && control.invalid && (control.touched || control.dirty);
   }
-
-
-
-
-
-
 
   onFieldRequired(field: string): string {
     let required = false;
@@ -577,12 +746,14 @@ export class ComercialAgendaFormularioComponent
       );
       return;
     }
-
-    if (this.form && this.form.valid) {
+    
+    if (this.form ) {
+      
+      
       this.loaderNavbar = true;
       this.submittingForm = true;
-      const formValue = this.form.getRawValue();
-      console.log(formValue);
+      const formValue =  this.form.getRawValue();
+      console.log('datos angeda ',formValue)
       const obsFinalizar = this.form.get('Obsfinalizar');
       let client: string,
         formContactDesc: string,
@@ -599,7 +770,7 @@ export class ComercialAgendaFormularioComponent
         msgSuccess = 'Su cita fue editada.';
         msgError = 'Ocurrió un error al editar la cita.';
       }
-
+    
       if (formValue.cliente != '') {
         for (let index = 0; index < this.clientes.length; index++) {
           if (this.clientes[index].id == formValue.cliente) {
@@ -607,13 +778,10 @@ export class ComercialAgendaFormularioComponent
           }
         }
       }
-
+      
       if (formValue.codFormaContato != '') {
         for (let index = 0; index < this.formasContato.length; index++) {
-          if (
-            this.formasContato[index].codFormaContato ==
-            formValue.codFormaContato
-          ) {
+          if ( this.formasContato[index].codFormaContato == formValue.codFormaContato) {
             formContactDesc = this.formasContato[index].nomeFormaContato;
           }
         }
@@ -621,35 +789,26 @@ export class ComercialAgendaFormularioComponent
 
       if (formValue.codOrigemContato != '') {
         for (let index = 0; index < this.origensContato.length; index++) {
-          if (
-            this.origensContato[index].codOrigemContato ==
-            formValue.codOrigemContato
-          ) {
+          if ( this.origensContato[index].codOrigemContato == formValue.codOrigemContato) {
             typeContactDesc = this.origensContato[index].nomeOrigemContato;
           }
         }
       }
-
-      if (formValue.diaInteiro) {
-        inicioData = formValue.inicioData;
-        terminoData = inicioData;
-
-        inicioData.setHours(0, 0, 0);
-        terminoData.setHours(0, 0, 0);
+     
+      if (formValue.diaInteiro) 
+      {
+         inicioData = formValue.inicioData;
+         terminoData = inicioData;
+         inicioData.setHours(0, 0, 0);
+         terminoData.setHours(0, 0, 0);
       } else {
         inicioData = formValue.inicioData;
         inicioHorario = formValue.inicioHorario;
         terminoData = formValue.terminoData;
         terminoHorario = formValue.terminoHorario;
 
-        inicioData.setHours(
-          inicioHorario.getHours(),
-          inicioHorario.getMinutes()
-        );
-        terminoData.setHours(
-          terminoHorario.getHours(),
-          terminoHorario.getMinutes()
-        );
+        inicioData.setHours(inicioHorario.getHours(), inicioHorario.getMinutes());
+        terminoData.setHours(terminoHorario.getHours(), terminoHorario.getMinutes());
       }
 
       let status: number;
@@ -676,26 +835,29 @@ export class ComercialAgendaFormularioComponent
           break;
       }
       // }
-
+      console.log('tiene los reagendar',formValue);
+      if(formValue.promotor > 0 && formValue.promotor != null)
+      {
+        this.id_promotor = formValue.promotor;
+      }
+     
       const inicio = this.dateService.convert2PhpDate(inicioData);
       const termino = this.dateService.convert2PhpDate(terminoData);
 
-      const observacaoUpperCase =
-        formValue.observacao !== null && formValue.observacao !== undefined
-          ? formValue.observacao.toUpperCase()
-          : null;
-
+      /* const observacaoUpperCase = formValue.observacao !== null && formValue.observacao !== undefined ? formValue.observacao.toUpperCase() : null; */
+     
       let formObj = {
         id: formValue.id,
         color: {
           primary: formValue.cor,
         },
         codTitulo: formValue.codTitulo,
-        codClient: formValue.cliente,
-        idVendedor: formValue.promotor,
-        client: client,
+        codClient:this.idClient,
+        idVendedor: this.id_promotor,
+        client: this.codClient,
+        id_promotorasignado: this.id_promotorasignado,
+        promotorparaasignar: formValue.prompsig,
         formContactId: formValue.codFormaContato,
-        codigo_cliente: formValue.codigo_cliente.value,
         formContactDesc: formContactDesc,
         typeContactId: formValue.codOrigemContato,
         typeContactDesc: typeContactDesc,
@@ -705,16 +867,16 @@ export class ComercialAgendaFormularioComponent
         rescheduleId: formValue.motivoReagendamento,
         description: formValue.observacao,
         direccion: formValue.direccion,
-        latitud: this.latitud,
-        longitud: this.longitud,
+        latitud: this.inicio_latitud,
+        longitud: this.final_longitud,
         status: status,
         /* id_status: id_status, */
         obsFinalizar: formValue.Obsfinalizar,
       };
-      console.log(formObj.codClient);
-      console.log(formObj.idVendedor);
+     
       this.agendaService.save(this.action, formObj).subscribe({
         next: (response: any) => {
+          console.log(response);
           if (response.responseCode === 200) {
             this.pnotifyService.success(msgSuccess);
             this.formChanged = false;
@@ -734,14 +896,34 @@ export class ComercialAgendaFormularioComponent
               }
             }
           } else {
-            this.handleErrorOnSubmit(msgError);
+            let errorMessage = "";
+            for (const key in response.error) {
+                if (response.error.hasOwnProperty(key)) {
+                    errorMessage += `${key}: ${response.error[key]}\n`;
+                  
+                }
+            }
+           this.pnotifyService.error(errorMessage);
           }
         },
-        error: (error: any) => {
-          this.handleErrorOnSubmit(msgError);
-        },
+     
       });
     }
+    const formData = new FormData();
+    formData.append('imagen', this.selectedImage);
+    //console.log('imagen')
+    //console.log(formData)
+  }
+
+  onImageSelected(event: any) {
+    this.selectedImage = event.target.files[0];
+
+    // Generar la vista previa de la imagen
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewImage = reader.result;
+    };
+    reader.readAsDataURL(this.selectedImage);
   }
 
   handleErrorOnSubmit(message: string): void {
@@ -757,34 +939,105 @@ export class ComercialAgendaFormularioComponent
       idVendedor: idVendedor,
 
     }
-    this.ComercialVendedoresService.getCarteiraClientes(params).subscribe((response: JsonResponse) => {
+    /* this.ComercialVendedoresService.getCarteiraClientes(params).subscribe((response: JsonResponse) => {
       if(response.success== true){
         this.clientes = response.data;
       }
-    })
+    }) */
   }
 
   updateDireccion(event: any) {
-    var direccion_cliente = event.direccion;
-    var latitud_cliente = event.latitud;
-    var longitud_cliente = event.longitud;
-    var codigo_cliente = event.codigo_cliente;
+    this.idClient = event.codCliente;
+    this.codClient = event.codigo_cliente;
 
-    this.form.controls['latitud_clie'].setValue(latitud_cliente);
-    this.form.controls['longitud_clie'].setValue(longitud_cliente);
-    this.form.controls['direccion'].setValue(direccion_cliente);
-    this.form.controls['codigo_cliente'].setValue(codigo_cliente);
+    this.ComercialVendedoresService.getUbicaionesClientes(this.idClient).subscribe((response: JsonResponse) => {
+      if(response.success == true){
+        if(response.data[0] !== null)
+        {
+          this.clientesub = response.data;
+        
+          this.clientesub.forEach((item, index) => {
+            
+            this.clientesub[index] =  {
+              latitude:  item.latitude,
+              longitude: item.longitude,
+              color: this.generarColorAleatorio(),
+            };
+            var codigo_cliente = item.codigo_cliente;
+            this.form.controls['codigo_cliente'].setValue(codigo_cliente);
+          });
+        }
+        else{
+          console.log('sdata 0')
+        }
+      }
+      else
+      {
+        console.log('sin aqui datos de ub')
+      }
+    });
 
-    this.latitud = latitud_cliente;
-    this.longitud = longitud_cliente;
+    this.formService.getpromotoresporcliente(this.idClient).pipe(
+        finalize(() => {
+          this.loaderFullScreen = false;
+        })
+      ).subscribe((response: JsonResponse) => {
+       if (response['success'] === true) {
+          this.promotorasignado = response['data'][0];
+          this.form.get('promotorasignado').setValue(this.promotorasignado.nombre_promotor);
+          this.id_promotorasignado = this.promotorasignado.id_promotor
+        } else {
+          this.handleLoadDependenciesError();
+        }
+    });
   }
-  actualizarMarcador(event: any) {
+
+  actualizarMapa(event: any) {
     this.latitud = event.coords.lat;
     this.longitud = event.coords.lng;
-    this.form.controls['latitud_clie'].setValue(this.latitud);
-    this.form.controls['longitud_clie'].setValue(this.longitud);
-    this.actualizarDireccion(event);
+    this.actualizarMarcador(this.id_marcador, this.latitud, this.longitud);
+    this.actualizarDireccion(this.id_marcador, event);
   }
+  actualizarMarcador(index: number, latitud, longitud): void {
+    this.id_marcador = index;
+    this.inicio_latitud = latitud;
+    this.final_longitud = longitud;
+  }
+
+  actualizarDireccion(index, event: any) {
+    this.obtenerDireccion(event.coords.lat, event.coords.lng)
+      .then((direccion_mapa: string) => {
+        this.form.controls['direccion'].setValue(direccion_mapa);
+      })
+      .catch((error: any) => {
+        //console.log(error);
+      });
+  }
+
+  actualizarUbicacion(index: number) {
+    this.clientesub[index].latitude = this.latitud;
+    this.clientesub[index].longitude = this.longitud;
+  }
+  
+
+  /*   actualizarMarcador(event: any) {
+      this.latitud = event.coords.lat;
+      this.longitud = event.coords.lng;
+      this.form.controls['latitud_clie'].setValue(this.latitud);
+      this.form.controls['longitud_clie'].setValue(this.longitud);
+      this.actualizarDireccion(event);
+    } */
+/*  actualizarDireccion(event: any) {
+    this.obtenerDireccion(event.latitude, event.longitude)
+      .then((direccion_mapa: string) => {
+        this.form.controls['direccion'].setValue(direccion_mapa);
+      })
+      .catch((error: any) => {
+        this.form.controls['direccion'].setValue(
+          'Error al obtener la dirección'
+        );
+      });
+  } */
 
   public obtenerDireccion(latitud: number, longitud: number): Promise<string> {
     return fetch(
@@ -794,25 +1047,13 @@ export class ComercialAgendaFormularioComponent
       .then((data) => {
         const resultado = data.results[0];
         if (resultado) {
-          return resultado.formatted_address;
+          return resultado.formatted_address.substring(0, 49);
         } else {
           return 'Dirección no encontrada';
         }
       })
       .catch((error) => {
         return 'Error al obtener la dirección';
-      });
-  }
-
-  actualizarDireccion(event: any) {
-    this.obtenerDireccion(event.coords.lat, event.coords.lng)
-      .then((direccion_mapa: string) => {
-        this.form.controls['direccion'].setValue(direccion_mapa );
-      })
-      .catch((error: any) => {
-        this.form.controls['direccion'].setValue(
-          'Error al obtener la dirección'
-        );
       });
   }
 
@@ -882,6 +1123,7 @@ export class ComercialAgendaFormularioComponent
         })
       )
       .subscribe((response: JsonResponse) => {
+        
         if (response.hasOwnProperty('success') && response.success === true) {
           this.router.navigate(
             [
@@ -898,9 +1140,8 @@ export class ComercialAgendaFormularioComponent
         }
       });
   }
-  filtrovendedor(): void {
 
-    console.log(this.form.value.promotor)
+  filtrovendedor(): void {
     var params = this.form.value.promotor
     this.agendaService.reporte(params);
   }

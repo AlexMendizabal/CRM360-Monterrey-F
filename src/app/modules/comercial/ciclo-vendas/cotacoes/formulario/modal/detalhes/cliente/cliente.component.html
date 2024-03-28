@@ -11,42 +11,48 @@
         <div class="form-row">
           <div class="form-group col-lg-6">
             <label><strong>NOMBRE</strong></label>
-            <div *ngIf="cliente.nomeFantasia == null">SIN INFORMACION</div>
-            <div *ngIf="cliente.nomeFantasia != null">{{ cliente.nomeFantasia }}</div>
+            <div *ngIf="datoscliente.nombre == null">SIN INFORMACION</div>
+            <div *ngIf="datoscliente.nombre != null">{{ datoscliente.nombre }}</div>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col">
             <label><strong>RAZON SOCIAL</strong></label>
-            <div *ngIf="cliente.razaoSocial == null">SIN INFORMACION</div>
-            <div *ngIf="cliente.razaoSocial != null">{{ cliente.razaoSocial }}</div>
+            <div *ngIf="datoscliente.razon_social == null">SIN INFORMACION</div>
+            <div *ngIf="datoscliente.razon_social != null">{{ datoscliente.datos_cliente }}</div>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col">
-            <label><strong>DIRECCION</strong></label>
-            <div *ngIf="cliente.endereco == null">SIN INFORMACION</div>
-            <div *ngIf="cliente.endereco != null">{{ cliente.endereco }}</div>
+            <label><strong>DIRECCIONES</strong></label>
+            <div *ngIf="datosdireccion.length === 0">SIN INFORMACION</div>
+              <div *ngFor="let direccion of datosdireccion">
+                {{ direccion.direccion }} <br>
+              </div>
           </div>
+    
         </div>
         <div class="form-row">
           <div class="form-group col-lg-8">
+
             <label><strong>CIUDAD</strong></label>
-            <div *ngIf="cliente.cidade == null">SIN INFORMACION</div>
-            <div *ngIf="cliente.cidade != null">{{ cliente.cidade }} </div>
+            <div *ngIf="datosdireccion.length === 0">SIN INFORMACION</div>
+              <div *ngFor="let direccion of datosdireccion">
+                {{ direccion.ciudad }} <br>
+              </div>
           </div>
 
         </div>
         <div class="form-row">
           <div class="form-group col-lg-6">
             <label><strong>PROMOTOR</strong></label>
-            <div *ngIf="cliente.vendedor == null">SIN INFORMACION</div>
-            <div *ngIf="cliente.vendedor != null">{{ cliente.vendedor }}</div>
+            <div *ngIf="datoscliente.vendedor == null">SIN INFORMACION</div>
+            <div *ngIf="datoscliente.vendedor != null">{{ datoscliente.vendedor }}</div>
           </div>
           <div class="form-group col-lg-6">
-            <label><strong>SUCURSAL</strong></label>
-            <div *ngIf="cliente.escritorio == null">SIN INFORMACION</div>
-            <div *ngIf="cliente.escritorio != null">{{ cliente.escritorio }}</div>
+            <label><strong>Tipo de Cliente</strong></label>
+            <div *ngIf="datoscliente.tipo_cliente == null">SIN INFORMACION</div>
+            <div *ngIf="datoscliente.tipo_cliente != null">{{ datoscliente.tipo_cliente }}</div>
           </div>
         </div>
       </div>

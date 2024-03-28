@@ -302,8 +302,11 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   }
 
   onCalcular(): void {
-    if (this.checkFormValidators() === false && this.form.valid) {
+    console.log("calculaaaaaaaar",this.form ,this.checkFormValidators());
+  /*   if (this.checkFormValidators() === false && this.form.valid) {
+  
       if (this.material.valorMaterialContrato > 0) {
+        console.log("valormaterial",this.material.valorMaterialContrato);
         this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
       } else if (this.form.value.preco2 > 0) {
         if (
@@ -378,7 +381,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
           this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
         }
       }
-    }
+    } */
   }
 
   postCalculoMaterial(tipoCalculo: number, preco: number): void {
@@ -397,7 +400,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       codEmpresa: this.material.codEmpresa,
       codEndereco: this.codEndereco
     };
-
+    console.log("algo referencial",params);
     this.cotacoesService
       .postCalculoMaterial(params)
       .pipe(
@@ -408,7 +411,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       .subscribe((response: JsonResponse) => {
         if (response.success === true) {
           if (response.data.length === 1) {
-            this.calcularTotais(response.data[0], tipoCalculo, this.tipoLancamento, this.material.unidade);
+            console.log("algo referencial", response.data[0], tipoCalculo, this.tipoLancamento, this.material.unidade);
+          /*   this.calcularTotais(response.data[0], tipoCalculo, this.tipoLancamento, this.material.unidade); */
           }
         } else {
           this.pnotifyService.notice(response.mensagem);
@@ -416,8 +420,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       });
   }
 
-  calcularTotais(data: any, tipoCalculo: number, tipoLancamento: number, unidade: string): void {
-    this.resetTotais();
+ calcularTotais(data: any, tipoCalculo: number, tipoLancamento: number, unidade: string): void {
+     /* this.resetTotais();
 
     this.calculo.tonelada = data.tonelada;
     this.calculo.qtde = data.qtde;
@@ -437,8 +441,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     this.calculo.nrPedidoCliente = this.form.value.nrPedidoCliente,
     this.calculo.codItemPedidoCliente = this.form.value.codItemPedidoCliente,
     this.calculo.codProdutoCliente = this.form.value.codProdutoCliente
-    this.calculo.medida = this.form.getRawValue().medida;
-  }
+    this.calculo.medida = this.form.getRawValue().medida;*/
+  } 
 
   resetTotais(): void {
     this.calculo = {

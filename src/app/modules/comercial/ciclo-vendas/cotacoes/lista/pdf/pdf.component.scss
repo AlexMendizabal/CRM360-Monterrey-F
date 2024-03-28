@@ -25,22 +25,15 @@ table {
   margin-top: 20px;
 }
 
-.custom-modal-content {
 
-  margin: auto;
-  border: 2px solid black;
-  padding: 20px;
-}
 
 th, td {
-  border: 1px solid #ccc;
+  border: 1px solid #000!important;
   padding: 5px;
   text-align: center;
 }
 
-th {
-  background-color: #f2f2f2;
-}
+
 
 input[type='button'] {
   background-color: #007bff;
@@ -84,14 +77,13 @@ th, td {
   text-overflow: ellipsis;
 }
 
-th {
-  background-color: #f2f2f2;
-}
 
+.custom-modal-content,
 .customer-info,
 .company-info {
   margin-top: 4px;
-  border: 2px solid #000000;
+  //border: 2px solid #ececec;
+  border: 2px solid black;
   padding: 10px;
 }
 
@@ -147,20 +139,24 @@ input[type='button'] {
 }
 
 .cotizacion-font{
-  font-size: 30px;
+  font-size: 28px;
   text-decoration: underline;
   font-weight: bold;
-  margin-right: 50px;
+  margin-right: 45px;
   margin-top: 20px;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
-.descripcion-font{
-  font-size: 10px;
+.descripcion-font {
+  font-size: 13px; //10
+  white-space: pre-wrap;
+  max-width: 200px;
 }
 
 .mensaje-font{
   font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 0;
 }
 
 .custinf-weight{
@@ -169,6 +165,7 @@ input[type='button'] {
 
 .datcotizacion-font{
   font-size: 15px;
+  font-weight: 700;
 }
 
 .left-align {
@@ -232,7 +229,15 @@ table tr {
 
 .flex-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-top: 5px;
+}
+
+/* CSS GABI */
+span.span-g{
+  font-weight: 400;
+}
+span.customer-info.custom-modal-content {
+  padding: 3px 47px;
 }

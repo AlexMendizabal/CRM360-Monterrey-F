@@ -19,7 +19,7 @@ import { JsonResponse } from 'src/app/models/json-response';
 export class ComercialCicloVendasAutorizacionesService {
   private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
   private readonly APIAutorizacion = `http://23.254.204.187/api/comercial/ciclo-vendas/autorizaciones`;
-
+  private readonly APIVendedor = `http://23.254.204.187/api/comercial/vendedor`;
 
   constructor(
     protected http: HttpClient,
@@ -54,6 +54,12 @@ traerAutorizacion(id_autorizacion: number){
   return this.http
   .post(`${this.APIAutorizacion}/update_autorizacion`, params)
   .pipe(take(1), retry(2));
+}
+
+//////QUE trae los vendedores en autorizacion//////
+getTodosVendedores() {
+  return this.http.get(`${this.APIVendedor}/allvendedor`)
+    .pipe(take(1), retry(2));
 }
 
   getPermissoesAcesso(): Observable<Object | JsonResponse> {

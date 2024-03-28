@@ -46,6 +46,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
 
   appTitle: string;
   action: string;
+  codGrupos: number = null;
 
   breadCrumbTree: Array<Breadcrumb> = [];
 
@@ -70,6 +71,8 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
 
   linhas: Array<any> = [];
   classes: Array<any> = [];
+  grupos: Array<any> = [];
+
   filteredClasses: Array<any> = [];
 
   toggleAll = false;
@@ -98,7 +101,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
     this.setBreadCrumb();
     this.getFilterValues();
     this.setFormBuilder();
-    this.titleService.setTitle('Cadastro de cross-sell de materiais');
+    this.titleService.setTitle('Registro de cross-sell de materiales');
   }
 
   registrarAcesso(): void {
@@ -108,10 +111,10 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
   setBreadCrumb(): void {
     this.activatedRoute.params.subscribe((params: any) => {
       if (params.id) {
-        this.appTitle = 'Editar cross-sell de materiais';
+        this.appTitle = 'Editar cross-sell de materiales';
         this.action = 'update';
       } else {
-        this.appTitle = 'Nova cross-sell de materiais';
+        this.appTitle = 'Nuevo cross-sell de materiales';
         this.action = 'create';
       }
 
@@ -157,6 +160,13 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
           this.pnotifyService.error();
           this.location.back();
         }
+
+        if (response[2].responseCode === 200) {
+          this.grupos = response[2].result;
+        } else {
+          this.pnotifyService.error();
+          this.location.back();
+        }
       });
   }
 
@@ -170,6 +180,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
         codCrossSell: [detalhes.codCrossSell],
         codLinha: [detalhes.codLinha],
         codClasse: [detalhes.codClasse],
+        codGrupos: [detalhes.codGrupos],
         codMaterial: [{ value: detalhes.codMaterial, disabled: true }],
         nomeMaterial: [{ value: detalhes.nomeMaterial, disabled: true }],
         codSituacao: [detalhes.codSituacao, [Validators.required]],
@@ -242,8 +253,8 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
   confirmDelete(): any {
     return this.confirmModalService.showConfirm(
       'delete',
-      'Confirmar exclusão',
-      'Deseja realmente prosseguir com a exclusão do registro?',
+      'Confirmar la eliminación',
+      '¿Realmente desea continuar con la eliminación del registro?',
       'Cancelar',
       'Confirmar'
     );
@@ -317,6 +328,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
         )
         .subscribe(
           (response: JsonResponse) => {
+            //console.log('aqui crossell', response);
             if (
               response.hasOwnProperty('success') &&
               response.success === true
@@ -478,10 +490,10 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
               }
             );
         } else {
-          this.pnotifyService.notice('Associe pelo menos um material.');
+          this.pnotifyService.notice('Asociar al menos un material.');
         }
       } else {
-        this.pnotifyService.notice('Selecione um material.');
+        this.pnotifyService.notice('Selecione un material.');
       }
     }
   }
@@ -538,6 +550,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
 
     this.form.controls.codLinha.setValue(material.codLinha);
     this.form.controls.codClasse.setValue(material.codClasse);
+    this.form.controls.codGrupos.setValue(material.codGrupos);
     this.form.controls.codMaterial.setValue(material.codigoMaterial);
     this.form.controls.nomeMaterial.setValue(material.descricao);
 

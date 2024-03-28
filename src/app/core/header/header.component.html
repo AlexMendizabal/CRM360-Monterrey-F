@@ -1,26 +1,44 @@
 <nav id="navbar" class="navbar fixed-top navbar-expand navbar-light">
+  <li class="d-flex mr-2" >
+    <label id="verificador" class="conectividadStatus" style="background-color: red;">
+      SAP-Desconectado
+    </label>
+  </li>
   <img [src]="srcLogoCliente" (error)="onLogoClienteError($event)" id="logo-manetoni" height="20"
     *ngIf="showLogoCliente">
-  <ul class="navbar-nav ml-auto">
+    <li class="d-flex mr-2">
+      <span class="my-auto version version">V. 1.0.91</span>
+    </li>
+  <ul class="navbar-nav ml-auto text-cente">
     <li id="spinner" [hidden]="!showLoader">
       <div class="spinner-border"></div>
     </li>
     <li class="d-flex mr-2">
-      <span class="my-auto version">Version 1.0.41</span>
+      <img src="/assets/images/logo/CRM -360-white.png" height="22" class="my-auto" />
     </li>
-    <li class="d-flex mr-2">
-      <img
-        src="/assets/images/logo/logo-branco.png"
-        height="22"
-        class="my-auto"
-      />
+
+    <li class="nav-item">
+      <div class="btn-group" dropdown>
+        <button dropdownToggle type="button" class="nav-link notifications-btn" tooltip="Notificaciones">
+          <i class="fas fa-bell fa-1x"></i>
+          <span class="badge" *ngIf="notificaciones && notificaciones.length > 0">{{ notificaciones.length }}</span>
+        </button>
+        <ul *dropdownMenu class="dropdown-menu left" style="max-height: 300px; overflow-y: auto;">
+          <li *ngFor="let notificacion of notificaciones" class="notification-item">
+            <a href="{{ notificacion.url_notificacion }}" (click)="actualizarNotificacion(notificacion.id)"
+              target="_blank" class="text-dark" style="text-decoration: none;">{{ notificacion.mensaje }}</a>
+          </li>
+          <li class="divider dropdown-divider" *ngIf="notificaciones && notificaciones.length > 0"></li>
+          <li *ngIf="notificaciones && notificaciones.length === 0" class="empty-notification">
+            <a class="text-dark" style="text-decoration: none;">No hay notificaciones</a>
+          </li>
+          <li *ngIf="notificaciones.length > 0" class="read-all-btn text-center" style="background-color: #faf9f9; width: 100%;">
+            <button class="btn btn-link w-100 text-dark" (click)="leerNotificaciones()" style="text-decoration: none; border:none;">Leer todas</button>
+          </li>
+        </ul>
+      </div>
     </li>
-    <li
-      class="nav-item"
-      placement="left"
-      tooltip="Módulos"
-      *ngIf="checkTipoAcessoUser()"
-    >
+    <li class="nav-item" placement="left" tooltip="Módulos" *ngIf="checkTipoAcessoUser()">
       <div class="btn-group" dropdown>
         <button dropdownToggle type="button" class="nav-link">
           <i class="fas fa-th"></i>
@@ -28,11 +46,7 @@
         <ul *dropdownMenu id="dropdown-modulos" class="dropdown-menu left">
           <div *ngIf="modulosLoaded && !modulosError">
             <li *ngFor="let modulo of modulos">
-              <a
-                class="dropdown-item"
-                href="javascript:void(0)"
-                (click)="onModulo(modulo)"
-              >
+              <a class="dropdown-item" href="javascript:void(0)" (click)="onModulo(modulo)">
                 <i [class]="modulo.icone"></i>
                 <span>{{ modulo.nome | uppercase }}</span>
               </a>
@@ -58,16 +72,17 @@
       </div>
     </li>
 
-      <li class="nav-item" placement="bottom" tooltip="Reserva de Salas" *ngIf="checkTipoAcessoUser()" style="display: none;">
-        <a class="nav-link" [routerLink]="['/home/reserva-salas']">
-          <i class="fas fa-calendar-alt"></i>
-        </a>
-      </li>
-      <li class="nav-item" placement="bottom" tooltip="Contatos" *ngIf="checkTipoAcessoUser()" style="display: none;">
-        <a class="nav-link" [routerLink]="['/home/contatos']">
-          <i class="fas fa-id-card"></i>
-        </a>
-      </li>
+    <li class="nav-item" placement="bottom" tooltip="Reserva de Salas" *ngIf="checkTipoAcessoUser()"
+      style="display: none;">
+      <a class="nav-link" [routerLink]="['/home/reserva-salas']">
+        <i class="fas fa-calendar-alt"></i>
+      </a>
+    </li>
+    <li class="nav-item" placement="bottom" tooltip="Contatos" *ngIf="checkTipoAcessoUser()" style="display: none;">
+      <a class="nav-link" [routerLink]="['/home/contatos']">
+        <i class="fas fa-id-card"></i>
+      </a>
+    </li>
 
 
     <li class="nav-item">
@@ -84,22 +99,14 @@
           </li>
           <li class="divider dropdown-divider"></li>
           <li>
-            <a
-              class="dropdown-item"
-              href="javascript:void(0)"
-              (click)="openModal(template)"
-            >
+            <a class="dropdown-item" href="javascript:void(0)" (click)="openModal(template)">
               <i class="fas fa-key"></i>
               <span>Cambiar la contraseña</span>
             </a>
           </li>
           <li class="divider dropdown-divider"></li>
           <li>
-            <a
-              class="dropdown-item"
-              href="javascript:void(0)"
-              (click)="logout()"
-            >
+            <a class="dropdown-item" href="javascript:void(0)" (click)="logout()">
               <i class="fas fa-sign-out-alt"></i>
               <span>SAIR</span>
             </a>

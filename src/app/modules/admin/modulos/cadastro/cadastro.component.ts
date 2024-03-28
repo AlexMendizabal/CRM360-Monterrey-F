@@ -176,8 +176,8 @@ export class AdminModulosCadastroComponent implements OnInit {
           this.icones = response.body['icones'];
         }
       });
-      console.log()
-      console.log(this.getIcones)
+      //console.log()
+      //console.log(this.getIcones)
   }
 
   getModulo(id){

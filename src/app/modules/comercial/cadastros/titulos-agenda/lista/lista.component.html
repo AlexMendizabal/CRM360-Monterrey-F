@@ -1,6 +1,6 @@
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
-<app-header appTitle="Títulos para agenda do vendedor">
+<app-header appTitle="Titulos para agenda de vendedor">
   <button
     type="button"
     [routerLink]="['../novo']">
@@ -19,7 +19,7 @@
           <form [formGroup]="form" autocomplete="off">
             <div class="form-row">
               <div class="form-group col-lg-7">
-                <label for="descricaoTitulo">Título para agenda do vendedor</label>
+                <label for="descricaoTitulo">Título para agenda de vendedor</label>
                 <input
                   type="text"
                   class="form-control"
@@ -27,14 +27,14 @@
                   (keydown.enter)="onFilter()">
               </div>
               <div class="form-group col-lg-3">
-                <label for="codSituacao">Situação</label>
+                <label for="codSituacao">Estado</label>
                 <select
                   class="form-control custom-select"
                   id="codSituacao"
                   formControlName="codSituacao">
                   <option value="2">Todos</option>
-                  <option value="1">Ativos</option>
-                  <option value="0">Inativos</option>
+                  <option value="1">Activos</option>
+                  <option value="0">Inactivos</option>
                 </select>
               </div>
               <div class="form-group col-lg-2">
@@ -87,12 +87,12 @@
                 {{ titulosAgenda.situacao | uppercase }}
               </td> -->
               <td class="text-right" [hidden]="showDetailPanel">
-                <span *ngIf="titulosAgenda.codSituacao == 1" class="mr-3" tooltip="Inativar" placement="left" container="body">
+                <span *ngIf="titulosAgenda.codSituacao == 1" class="mr-3" tooltip="Inactivar" placement="left" container="body">
                   <button type="button" class="btn-icon-sm" (click)="onInactivate(i, titulosAgenda)">
                     <i class="fas fa-toggle-on"></i>
                   </button>
                 </span>
-                <span *ngIf="titulosAgenda.codSituacao == 0" class="mr-3" tooltip="Ativar" placement="left" container="body">
+                <span *ngIf="titulosAgenda.codSituacao == 0" class="mr-3" tooltip="Activar" placement="left" container="body">
                   <button type="button" class="btn-icon-sm" (click)="onActivate(i, titulosAgenda)">
                     <i class="fas fa-toggle-off"></i>
                   </button>
@@ -107,7 +107,7 @@
           </ng-template>
         </custom-table>
         <empty-result
-          message="Nenhuma informação encontrada"
+          message="Ninguna informacion encontrada"
           class="my-3"
           *ngIf="dadosEmpty">
         </empty-result>
@@ -127,12 +127,12 @@
         </div>
       </div>
       <div class="col-7" [hidden]="!showDetailPanel">
-        <detail-panel panelTitle="Última alteração">
+        <detail-panel panelTitle="Ultima edicion">
           <custom-table>
             <ng-template #thead let-thead>
               <tr>
-                <th scope="col" class="text-center">Data</th>
-                <th scope="col">Usuário</th>
+                <th scope="col" class="text-center">Fecha</th>
+                <th scope="col">Usuario</th>
               </tr>
             </ng-template>
             <ng-template #tbody let-tbody>

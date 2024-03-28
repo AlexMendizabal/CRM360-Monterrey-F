@@ -1,4 +1,4 @@
-
+    
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject, Observable, forkJoin, BehaviorSubject, of } from 'rxjs';
@@ -23,6 +23,7 @@ import { ICalculoModel } from './models/calculo';
 import { IDescontoModel } from './models/descontos';
 import { ILoteModel } from './models/lote';
 import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.service';
+export { ComercialAgendaFormularioService };
 
 @Injectable({
   providedIn: 'root',
@@ -62,6 +63,7 @@ export class ComercialCicloVendasCotacoesFormularioService {
 
   public onNotifySubmit(data: boolean) {
     this.notifySubmit.next(data);
+    console.log(data);
   }
 
   loadDependencies(): Observable<Array<Object | JsonResponse>> {
@@ -129,8 +131,15 @@ export class ComercialCicloVendasCotacoesFormularioService {
   }
 
   getLocaisEntrega(codCliente: number): Observable<Object | JsonResponse> {
-    return this.clientesService.getEnderecos(codCliente, { localEntrega: 1 });
+    return this.clientesService.getEnderecos(codCliente, { localEntrega: codCliente});
   }
+
+  getVerificaOfertasCliente(codCliente: number): Observable<Object | JsonResponse> {
+    return this.http
+      .get(`${this.API}/verifica-oferta/${codCliente}`)
+      .pipe(take(1));
+  }
+
 
   getAnexos(codCotacao: number): Observable<any> {
     return this.http
@@ -163,3 +172,4 @@ export class ComercialCicloVendasCotacoesFormularioService {
 
 
 }
+

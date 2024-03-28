@@ -15,6 +15,11 @@ import { ComercialClientesDetalhesComponent } from './detalhes/detalhes.componen
 import { ComercialClientesDashboardComponent } from './dashboard/dashboard.component';
 import { ComercialClientesPropostaAnaliseCreditoComponent } from './proposta-analise-credito/proposta-analise-credito.component';
 import { ComercialClientesUltimosPrecosComponent } from './ultimos-precos/ultimos-precos.component';
+import { ComercialCicloVendasCotacoesFormularioComponent } from '../ciclo-vendas/cotacoes/formulario/formulario.component';
+import { ComercialCicloVendasCotacoesFormularioClienteResolverGuard } from '../ciclo-vendas/cotacoes/formulario/guards/cliente-resolver.guard';
+import { ComercialCicloVendasCotacoesFormularioDataResolverGuard } from '../ciclo-vendas/cotacoes/formulario/guards/data-resolver.guard';
+import { ComercialCicloVendasCotacoesFormularioPermissoesResolverGuard } from '../ciclo-vendas/cotacoes/formulario/guards/permissoes-resolver.guard';
+import { ComercialCicloVendasCotacoesFormularioProfilesResolverGuard } from '../ciclo-vendas/cotacoes/formulario/guards/profile-resolver.guard';
 
 const routes: Routes = [
   { path: 'lista', component: ComercialClientesListaComponent },

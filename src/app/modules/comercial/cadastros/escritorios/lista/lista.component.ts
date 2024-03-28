@@ -51,12 +51,12 @@ export class ComercialCadastrosEscritorioListaComponent
   subtitles: Array<Subtitles> = [
     {
       id: 1,
-      text: 'Ativo',
+      text: 'Activo',
       color: 'green'
     },
     {
       id: 2,
-      text: 'Inativo',
+      text: 'Inactivo',
       color: 'red'
     }
   ];
@@ -111,7 +111,7 @@ export class ComercialCadastrosEscritorioListaComponent
     this.setBreadCrumb();
     this.getFormFields();
     this.setFormFilter();
-    this.titleService.setTitle('Escritórios');
+    this.titleService.setTitle('ALMACENES');
     this.onDetailPanelEmitter();
     this.setEscritorioSelecionado();
   }
@@ -132,11 +132,11 @@ export class ComercialCadastrosEscritorioListaComponent
           routerLink: '/comercial/home'
         },
         {
-          descricao: 'Cadastros',
+          descricao: 'Registros',
           routerLink: `/comercial/cadastros/${params['idSubModulo']}`
         },
         {
-          descricao: 'Escritórios'
+          descricao: 'Almacenes'
         }
       ];
     });
@@ -185,6 +185,7 @@ export class ComercialCadastrosEscritorioListaComponent
     this.form = this.formBuilder.group({
       nomeEscritorio: [formValue.nomeEscritorio],
       codEmpresa: [formValue.codEmpresa],
+      codReferenteErp: [formValue.codReferenteErp],
       codSituacao: [formValue.codSituacao],
       orderBy: [formValue.orderBy],
       orderType: [formValue.orderType],
@@ -200,6 +201,7 @@ export class ComercialCadastrosEscritorioListaComponent
       nomeEscritorio: null,
       codEmpresa: 0,
       codSituacao: 0,
+      codReferenteErp: null,
       orderBy: this.orderBy,
       orderType: this.orderType,
       pagina: 1,
@@ -348,10 +350,13 @@ export class ComercialCadastrosEscritorioListaComponent
     if (this.form.value.codSituacao) {
       params.codSituacao = this.form.value.codSituacao;
     }
+    if (this.form.value.codReferenteErp) {
+      params.codReferenteErp = this.form.value.codReferenteErp;
+    }
 
     params.orderBy = this.form.value.orderBy;
     params.orderType = this.form.value.orderType;
-
+   
     return params;
   }
 
@@ -405,7 +410,7 @@ export class ComercialCadastrosEscritorioListaComponent
 
     if (escritorio.codSituacao === 1) {
       borderClass = 'border-success';
-    } else if (escritorio.codSituacao === 2) {
+    } else if (escritorio.codSituacao === 2 || 0) {
       borderClass = 'border-danger';
     }
 
@@ -524,7 +529,7 @@ export class ComercialCadastrosEscritorioListaComponent
         take(1),
         switchMap(result =>
           result ? this.inactivateEscritorio(index, escritorio) : EMPTY
-        ),
+        ), 
         finalize(() => {
           this.loaderNavbar = false;
         })

@@ -2,16 +2,17 @@
 <div *ngIf="!redirectTo">
   <div id="background-login"></div>
   <div id="login" class="container">
-    <img src="/assets/images/logo/Short-Degrade-Morado.png" class="" id="logo-fin" >
+    <img src="/assets/images/logo/Logo_RIA_Green.png" class="" id="logo-fin" >
     <div class="row justify-content-center h-100">
       <div class="my-auto">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="form-row justify-content-center mb-4">
-            <img [src]="srcLogoCliente" (error)="onLogoClienteError($event)" height="35">
+            <img [src]="srcLogoCliente" (error)="onLogoClienteError($event)" height="auto" width="200px">
           </div>
-          <div class="form-row text-center mb-5">
-            <div class="col-12 mb-2">
-              <h4>{{ 'login.title' | translate }}</h4>
+          <div class="form-row text-center mb-4">
+            <div class="col-12">
+             <!--  <h4>{{ 'login.title' | translate }}</h4> -->
+              <h4>Inicie Sesión</h4>
             </div>
             <div class="col-12">
               <h6>{{ 'login.text' | translate }}</h6>
@@ -42,13 +43,29 @@
               </div>
             </div>
           </div>
+<!-- 2 column grid layout -->
+<div class="row mb-3">
+  <div class="col-md-6 d-flex justify-content-center">
+    <!-- Checkbox -->
+    <div class="form-check mb-3 mb-md-0 pl-0">
+      <input class="form-check-input" type="checkbox" value="" id="loginCheck" checked />
+      <label class="form-check-label" for="loginCheck" class="labelRe"> Recuerdame </label>
+    </div>
+  </div>
+ 
+<!--   <div class="col-md-6 d-flex justify-content-center">
+    <a href="#!">¿Olvidaste tu contraseña?</a>
+  </div> -->
+
+</div>
+
           <div class="form-row">
             <div class="col">
               <button
                 type="submit"
                 class="btn  btn-block"
                 [disabled]="!form.valid || waitingLoginResponse">
-                <span *ngIf="!waitingLoginResponse">{{ 'login.form.button' | translate }}</span>
+                <span *ngIf="!waitingLoginResponse">Ingresar</span>
                 <div class="spinner-border text-light" *ngIf="waitingLoginResponse"></div>
               </button>
             </div>

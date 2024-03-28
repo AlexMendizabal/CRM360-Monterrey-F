@@ -117,7 +117,7 @@
         </ng-template>
       </custom-table>
      <div class="d-flex justify-content-center mt-3">
-        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        Total {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
         <pagination
           [maxSize]="10"
           [totalItems]="totalItems"

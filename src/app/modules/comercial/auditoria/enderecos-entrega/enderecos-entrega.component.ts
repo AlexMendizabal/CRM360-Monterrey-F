@@ -947,10 +947,10 @@ export class ComercialAuditoriaEnderecosEntregaComponent implements OnInit {
   }
 
   onDeleteAnexoAprovacao(codAnexo: number, index: number): void {
-    console.log(index)
+    //console.log(index)
     this.confirmDelete().subscribe((r: boolean) => {
       if (codAnexo) {
-        console.log("codAnexo");
+        //console.log("codAnexo");
         this.loaderNavbar = true;
         this.auditoriaService
           .deleteAnexoAprovacao(codAnexo)
@@ -985,7 +985,7 @@ export class ComercialAuditoriaEnderecosEntregaComponent implements OnInit {
             }
           });
       } else {
-        console.log("i")
+        //console.log("i")
         r ? this.deleteDocumento(index) : null;
         this.formData.splice(index, 1);
       }

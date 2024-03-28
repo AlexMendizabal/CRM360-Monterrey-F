@@ -28,7 +28,6 @@ const routes: Routes = [
       profile: ComercialCicloVendasCotacoesListaProfilesResolverGuard,
     }
   },
-
   {
     path: 'lista/:codCotacao/:codEmpresa',
     component: ComercialCicloVendasCotacoesListaComponent,
@@ -96,6 +95,9 @@ const routes: Routes = [
       {
         path: 'vista/:id_oferta',
         component: VistaComponent
+      },
+      {
+        path: 'enviar_sap/:id_oferta'
       },
     ]
   },

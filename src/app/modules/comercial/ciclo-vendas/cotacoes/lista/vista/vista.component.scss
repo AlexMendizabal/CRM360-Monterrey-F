@@ -1,6 +1,7 @@
 .custom-modal {
+  padding: 20px;
   width: 100%;
-  max-width: 95%;
+  max-width: 100%;
   margin: auto;
 }
 
@@ -64,10 +65,44 @@ table tr {
 }
 
 .table-container {
-  max-height: 300px; /* Adjust the height as per your requirements */
+  max-height: auto; /* Ajusta la altura según tus necesidades */
   overflow-y: auto;
 }
 
-.card-bodyy {
-  padding: 20px; /* Adjust this value to control the space inside each card */
+/*.card-bodyy {
+  padding: 20px; 
+}*/
+
+.multiline-input {
+  width: 100%; /* Ancho completo del input */
+  height: auto; /* Altura automática para ajustarse al contenido */
+  resize: none; /* Evitar que el usuario pueda redimensionar el input */
+  overflow: auto; /* Agrega barra de desplazamiento si es necesario */
+}
+
+/***/
+
+h5.t-1{
+  font-size: 14px!important;
+  font-weight: 700!important;
+  margin-bottom: 0 !important;
+}
+label{
+  margin-bottom: 1.5px!important;
+}
+input.form-control {
+  margin-bottom: 10px!important; 
+}
+img.img-logo{
+  width: 230px!important; 
+  height: auto!important; 
+  margin-bottom: 15px!important; 
+}
+small.numero{
+  font-weight: 600!important;
+  font-size: 22px!important;
+  margin-top: 15px!important;
+}
+.table thead th {
+  vertical-align: top!important;
 }

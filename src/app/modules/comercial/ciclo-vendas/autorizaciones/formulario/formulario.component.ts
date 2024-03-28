@@ -77,6 +77,8 @@ import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/
 export class ComercialCicloVendasCotacoesFormularioComponent
   implements OnInit, OnDestroy, IFormCanDeactivate {
   private user = this.authService.getCurrentUser();
+
+  idVendedor = Number(this.user.info.idVendedor);
   permissoesAcesso: IPermissoesAcessoModel = {
     acessoClientes: false,
     historicoExclusao: false,
@@ -148,6 +150,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
 
   locaisEntrega: Array<any> = [];
   locaisEntregaLoader: boolean;
+
+  descuento_total:any;
 
   clientes: any;
   obsPropostas = [];
@@ -254,7 +258,12 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     /*   this.form.controls.codigoCliente.setValue('Código'); */
 
   }
-
+ /*  seleccionVendedor() {
+    const perfil = this.activatedRoute.snapshot.data.profile.result;
+    if (perfil.coordenador === false && this.vendedores.length > 0) {
+      this.form.controls.codVendedor.setValue(this.vendedores[0].ID);
+    }
+  } */
   getCarteira(action: string) {
     if (action == 'editar') {
       this.cotacoesService
@@ -434,10 +443,8 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   getVendedor() {
-
     this.dadosLancamento.codVendedor = this.user.info.idVendedor;
     this.dadosLancamento.nomeVendedor = this.user.info.nomeCompleto;
-
     // this.vendedoresService.getVendedores().subscribe((response: any) => {
     //   if (response.responseCode === 200) {
     //     this.vendedores = response.result;
@@ -1186,6 +1193,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             codContato: formValue.codContato,
             codEmpresa: formValue.codEmpresa,
             codDeposito: formValue.codDeposito,
+            descuento_total: formValue.descuento_total,
             notaFiscalMae: Number(formValue.notaFiscalMae),
             codFormaPagamento: formValue.codFormaPagamento,
             duplicatasSomenteCarteira: formValue.duplicatasSomenteCarteira,

@@ -11,7 +11,7 @@
     type="button"
     (click)="onSubmit()"
     [disabled]="!form.valid || submittingForm">
-    Salvar
+    Guardar
   </button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
@@ -20,7 +20,7 @@
       <form [formGroup]="form">
         <div class="form-row">
           <div class="form-group col">
-            <label for="descricaoTitulo">Título para agenda do vendedor</label>
+            <label for="descricaoTitulo">Titulo para agenda de vendedor</label>
             <input
               type="text"
               class="form-control"
@@ -29,21 +29,21 @@
               (input)="onInput()"
               autocomplete="new-password"
               [ngClass]="onFieldError('descricaoTitulo') + ' ' + onFieldRequired(form.controls.descricaoTitulo)">
-            <invalid-form-control [show]="onFieldInvalid('descricaoTitulo')" message="Nome do Título é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('descricaoTitulo')" message="Nombre de titulo es obligatorio."></invalid-form-control>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-lg-6">
-            <label for="codSituacao">Situação</label>
+            <label for="codSituacao">Estado</label>
             <select
               class="form-control custom-select"
               id="codSituacao"
               formControlName="codSituacao"
               [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
-              <option value="1" selected >Ativo</option>
-              <option value="0">Inativo</option>
+              <option value="1" selected >Activo</option>
+              <option value="0">Inactivo </option>
             </select>
-            <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Estado es obligatorio."></invalid-form-control>
           </div>
         </div>
       </form>

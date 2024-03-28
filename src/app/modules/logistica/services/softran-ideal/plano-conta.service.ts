@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 })
 export class LogisticaSofranIdealPlanoContaService {
 
-  private readonly API = `https://crm360.monterrey.com.bo/api`;
+  private readonly API = `https://23.254.204.187/api`;
 
   constructor(private http: HttpClient) { }
 

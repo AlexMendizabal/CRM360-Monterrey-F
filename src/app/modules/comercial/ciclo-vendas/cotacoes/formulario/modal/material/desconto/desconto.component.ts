@@ -27,6 +27,8 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoComponen
 
   maxValue: number;
 
+  enterKeyPressCount = 0;
+
   currencyMaskOptions = {
     align: 'left',
     prefix: '',
@@ -170,4 +172,28 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoComponen
 
     return '';
   }
+
+  onEnterKeyPress() {
+    if (this.enterKeyPressCount === 0) {
+      this.onSubmit();
+    } 
+  }
+
+  
+  isDescuentoAutorizadoDisabled(): boolean {
+    
+    return this.form.controls.descuentoAutorizado.value === 'No definido';
+  }
+
+  isDescuentoInputDisabled(): boolean {
+    
+    return this.isDescuentoAutorizadoDisabled();
+  }
+
+  isConfirmarButtonDisabled(): boolean {
+    
+    return this.isDescuentoAutorizadoDisabled() || this.form.invalid;
+  }
+
+
 }

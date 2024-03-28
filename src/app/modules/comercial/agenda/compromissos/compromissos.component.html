@@ -54,19 +54,26 @@
   <div class="row" *ngIf="showCalendar">
     <div class="col">
       <div class="row mb-3"
-        *ngIf="(nomeEscritorio != null && nomeEscritorio.length > 0) || (nomeVendedor != null && nomeVendedor.length > 0)">
+        *ngIf="(this.nomeEscritorio !== null ) || (this.nomeVendedor != null )">
         <div class="col">
           <div class="d-flex">
-            <h6 class="mb-0 mr-2"
-              *ngIf="nomeVendedor != null && nomeEscritorio != null && nomeEscritorio.length > 0">
-              <span class="badge badge-secondary">{{ nomeEscritorio }}</span>
+            <h6 class="mb-0 mr-2" *ngIf="this.nomeVendedor != null || this.nomeEscritorio != null ">
+              <span class="badge badge-secondary">{{ this.nomeEscritorio }}</span>
             </h6>
-            <h6 class="mb-0" *ngIf="nomeVendedor.length > 0">
+            <h6 class="mb-0">
               <span class="badge badge-primary">{{ nomeVendedor }}</span>
             </h6>
           </div>
         </div>
       </div>
+      <div class="d-flex align-items-center">
+        <ng-container *ngFor="let leyenda of leyendas">
+          <div class="mr-3">
+            <div class="color-circle" [style.background]="leyenda.color"></div>
+            <span class="ml-2">{{ leyenda.text }}</span>
+          </div>
+        </ng-container>
+      </div>           
       <div class="row">
         <div class="col">
           <div *ngIf="events$ | async; else loading; let events">
@@ -79,7 +86,6 @@
                 [activeDayIsOpen]="activeDayIsOpen"
                 (dayClicked)="dayClicked($event.day)"
                 (eventClicked)="eventClicked($event.event)">
-
               </mwl-calendar-month-view>
             </div>
           </div>

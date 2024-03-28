@@ -30,8 +30,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoPadraoCompone
   viewChecked = false;
 
   user = {
-    idVendedor: 88,
-    idEscritorio: 58,
+    idVendedor: 55,
+    idEscritorio: 88,
   };
 
   loaderFullScreen = true;

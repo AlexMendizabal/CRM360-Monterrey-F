@@ -55,6 +55,14 @@ export class ComercialVendedoresService {
       .pipe(take(1), retry(2));
   }
 
+  getUbicaionesClientes(
+    codCliente: number
+  ): Observable<Object | JsonResponse> {
+    return this.http
+      .get(`${this.API}/cliente/ubicacionescliente/${codCliente}`)
+      .pipe(take(1), retry(2));
+  }
+
   getValidaClienteCarteira(
     codCliente: number
   ): Observable<Object | JsonResponse> {
@@ -78,9 +86,22 @@ export class ComercialVendedoresService {
   }
 
   getRubros(){
-
     return this.http
       .get(`${this.API}/rubros`)
       .pipe(take(1), retry(2));
+  }
+
+  getVendedorSucursal(id_vendedor: number): Observable<Object | JsonResponse>
+  {
+      return this.http
+        .get(`${this.API}/datosvendedor/${id_vendedor}`)
+        .pipe(take(1), retry(2));
+  }
+  
+  getSucursalVendedor(id_sucursal: number): Observable<Object | JsonResponse>
+  {
+      return this.http
+        .get(`${this.API_CADASTROS}/datossucursal/${id_sucursal}`)
+        .pipe(take(1), retry(2));
   }
 }

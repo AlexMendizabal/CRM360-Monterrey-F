@@ -3,10 +3,10 @@
     <div class="mtc-title mb-0">
       <i
         class="far fa-question-circle p-2"
-        tooltip="Evolução do faturamento diário em toneladas do mês atual e do mesmo mês do ano anterior. O ritmo mostra a tendência de faturamento até o final do mês."
+        tooltip="Volumen de facturacion diaria en toneladas del mes en curso y del mismo mes del año anterior. El ritmo muestra la tendencia de la facturación hasta final de mes."
         placement="right">
       </i>
-      Desempenho em toneladas
+      Desempeño en toneladas
     </div>
     <div class="btn-group btn-group-sm" *ngIf="currMonth && pastMonth">
       <button
@@ -32,11 +32,11 @@
       <div [hidden]="!chartLoaded">
         <div [hidden]="activeMonth == pastMonth">
           <div id="current-line-chart" class="amcharts" [hidden]="currEmpty"></div>
-          <empty-result message="Nenhuma informação encontrada" [hidden]="!currEmpty"></empty-result>
+          <empty-result message="Ninguna informacion encontrada" [hidden]="!currEmpty"></empty-result>
         </div>
         <div [hidden]="activeMonth == currMonth">
           <div id="past-line-chart" class="amcharts" [hidden]="pastEmpty"></div>
-          <empty-result message="Nenhuma informação encontrada" [hidden]="!pastEmpty"></empty-result>
+          <empty-result message="Ninguna informacion encontrada" [hidden]="!pastEmpty"></empty-result>
         </div>
       </div>
       <div *ngIf="!chartLoaded" class="text-center">

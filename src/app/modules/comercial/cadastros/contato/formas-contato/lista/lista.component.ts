@@ -49,12 +49,12 @@ export class ComercialCadastrosContatoFormasContatoListaComponent
   subtitles: Array<Subtitles> = [
     {
       id: 1,
-      text: 'Ativo',
+      text: 'Activo',
       color: 'green',
     },
     {
       id: 2,
-      text: 'Inativo',
+      text: 'Inactivo',
       color: 'red',
     },
   ];
@@ -103,7 +103,7 @@ export class ComercialCadastrosContatoFormasContatoListaComponent
     this.registrarAcesso();
     this.setBreadCrumb();
     this.setFormFilter();
-    this.titleService.setTitle('Formas de Contato');
+    this.titleService.setTitle('Formas de contacto');
     this.onDetailPanelEmitter();
     this.setFormaContatoSelecionada();
   }
@@ -124,11 +124,11 @@ export class ComercialCadastrosContatoFormasContatoListaComponent
           routerLink: '/comercial/home',
         },
         {
-          descricao: 'Cadastros',
+          descricao: 'Registros',
           routerLink: `/comercial/cadastros/${params['idSubModulo']}`,
         },
         {
-          descricao: 'Formas de contato',
+          descricao: 'Formas de contacto',
         },
       ];
     });
@@ -329,7 +329,7 @@ export class ComercialCadastrosContatoFormasContatoListaComponent
             this.dadosPagination = this.dados.slice(0, this.itemsPerPage);
             this.totalItems = this.dados.length;
             this.dadosLoaded = true;
-            console.log(this.dados)
+            //console.log(this.dados)
           } else if (
             response.hasOwnProperty('success') &&
             response.success === false

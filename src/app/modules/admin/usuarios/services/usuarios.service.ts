@@ -17,7 +17,15 @@ export class AdminUsuariosService {
     return this.http.get(`${this.API}/core/usuarios`, {
       params: usuario,
       observe: "response"
-    })
+    });
+  }
+
+  getCargos(){
+    return this.http.get(`${this.API}/core/usuarios/cargos`, {});
+  }
+
+  getDepartamentos(){
+    return this.http.get(`${this.API}/core/usuarios/departamentos`, {});
   }
 
   postUsuario(usuario) {
@@ -37,7 +45,7 @@ export class AdminUsuariosService {
   sincronizaAD() {
     return this.http.get(`${this.API}/core/usuarios/ad/sincronismo`, {
       observe: "response"
-    })
+    });
   }
 
 }

@@ -15,9 +15,9 @@ export class CorteDobraDashboardService {
   private AnaliticoTransporte: boolean = false;
 
 
-  private readonly API_URL_MT: string = `https://crm360.monterrey.com.bo/api`;
+  private readonly API_URL_MT: string = `https://23.254.204.187/api`;
 
-  //API_URL: string = 'https://crm360.monterrey.com.bo';
+  //API_URL: string = 'https://23.254.204.187';
   //API_URL_MT:string = '/api/';
 
   constructor(

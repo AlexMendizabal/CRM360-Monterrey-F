@@ -82,6 +82,7 @@ export class ComercialAknaContatosClientesComponent implements OnInit {
   totalClientes = 0;
   gerentes: any = [];
   clientes: any = [];
+  tipos_cliente: any = [];
   allClientes: any = [];
   clientesPagination: any = [];
 

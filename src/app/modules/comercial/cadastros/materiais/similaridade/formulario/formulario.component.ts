@@ -50,6 +50,7 @@ export class ComercialCadastrosMateriaisSimilaridadeFormularioComponent
   };
 
   codClasse: number = null;
+  codGrupos: number = null;
 
   form: FormGroup;
   formChanged = false;
@@ -59,6 +60,7 @@ export class ComercialCadastrosMateriaisSimilaridadeFormularioComponent
 
   linhas: Array<any> = [];
   classes: Array<any> = [];
+  grupos: Array<any> = [];
 
   materiaisLista: Array<any> = [];
   materiaisListaLoaded = false;
@@ -110,7 +112,7 @@ export class ComercialCadastrosMateriaisSimilaridadeFormularioComponent
           routerLink: `/comercial/cadastros/${params.idSubModulo}`,
         },
         {
-          descricao: 'Similaridade de materiais',
+          descricao: 'MATERIALES SIMILARES - UPSELL',
           routerLink: `/comercial/cadastros/${params.idSubModulo}/materiais/similaridade/lista`,
         },
         {
@@ -129,6 +131,7 @@ export class ComercialCadastrosMateriaisSimilaridadeFormularioComponent
         })
       )
       .subscribe((response: any) => {
+
         if (response[0].responseCode === 200) {
           this.linhas = response[0].result;
         } else {
@@ -138,6 +141,13 @@ export class ComercialCadastrosMateriaisSimilaridadeFormularioComponent
 
         if (response[1].responseCode === 200) {
           this.classes = response[1].result;
+        } else {
+          this.pnotifyService.error();
+          this.location.back();
+        }
+
+        if (response[2].responseCode === 200) {
+          this.grupos = response[2].result;
         } else {
           this.pnotifyService.error();
           this.location.back();
@@ -155,6 +165,7 @@ export class ComercialCadastrosMateriaisSimilaridadeFormularioComponent
         codSimilaridade: [detalhes.codSimilaridade],
         codLinha: [detalhes.codLinha],
         codClasse: [detalhes.codClasse],
+        codGrupos: [detalhes.codGrupos],
         codMaterial: [{ value: detalhes.codMaterial, disabled: true }],
         nomeMaterial: [{ value: detalhes.nomeMaterial, disabled: true }],
         codSituacao: [detalhes.codSituacao, [Validators.required]],

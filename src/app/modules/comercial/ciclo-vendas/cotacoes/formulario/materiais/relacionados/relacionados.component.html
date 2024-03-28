@@ -1,4 +1,4 @@
-<div class="row justify-content-left align-items-center my-2">
+<!-- <div class="row justify-content-left align-items-center my-2">
   <div class="col-3">
     <div class="d-flex mb-3">
       <button type="button" class="btn btn-block btn-success" (click)="onShow()" *ngIf="show">
@@ -31,8 +31,8 @@
   <div class="col">
     <div [hidden]="show">
       <tabset>
-        <!-- Vendas Gerais -->
-        <!-- <tab  heading="Vendas Gerais"  (selectTab)="onSelectVendasGerais()">
+        Vendas Gerais
+        <tab  heading="Vendas Gerais"  (selectTab)="onSelectVendasGerais()">
           <div *ngIf="!materiaisRelacionadosLoader" >
             <div class="mt-2 mb-4" id="carousel-gerais" *ngIf="vendasGerais.length > 0">
                 <carousel
@@ -52,35 +52,35 @@
                     </comercial-ciclo-vendas-cotacoes-formulario-template-card-material>
                   </slide>
                 </carousel>
+              </div>
+              <empty-result message="Nenhuma informação encontrada" class="my-4" *ngIf="vendasGerais.length == 0 && !vendasGeraisLoader"></empty-result>
             </div>
-            <empty-result message="Nenhuma informação encontrada" class="my-4" *ngIf="vendasGerais.length == 0 && !vendasGeraisLoader"></empty-result>
-          </div> -->
-        <!-- <div class="d-flex justify-content-center mb-3" *ngIf="vendasGeraisLoader">
-            <div class="spinner-border text-dark"></div>
-          </div> -->
-        <!-- </tab> -->
-        <!-- Vendas Cliente -->
-        <!-- <tab heading="Vendas do Cliente" (selectTab)="onSelectVendasCliente()">
-          <div *ngIf="!materiaisRelacionadosLoader">
-            <div class="mt-2 mb-4" id="carousel-cliente" *ngIf="vendasCliente.length > 0">
-              <carousel class="d-block" [itemsPerSlide]="itemsPerSlide" [singleSlideOffset]="false"
-                [noWrap]="noWrapSlides" [interval]="false" [showIndicators]="false" [ngClass]="carouselClienteClass()">
-                <slide *ngFor="let material of vendasCliente">
-                  <br>
-                  <comercial-ciclo-vendas-cotacoes-formulario-template-card-material size="small" [material]="material"
-                    (onMaterial)="onMaterial($event)" class="d-block w-100 px-3">
-                  </comercial-ciclo-vendas-cotacoes-formulario-template-card-material>
-                </slide>
-              </carousel>
+          <div class="d-flex justify-content-center mb-3" *ngIf="vendasGeraisLoader">
+              <div class="spinner-border text-dark"></div>
             </div>
-            <empty-result message="Nenhuma informação encontrada" class="my-4"
-              *ngIf="vendasCliente.length == 0 && !vendasClienteLoader"></empty-result>
-          </div> -->
-          <!-- <div class="d-flex justify-content-center mb-3" *ngIf="vendasClienteLoader">
-            <div class="spinner-border text-dark"></div>
-          </div> -->
-       <!--  </tab> -->
-      <!-- Materiais Relacionados -->
+          </tab>
+          Vendas Cliente
+          <tab heading="Vendas do Cliente" (selectTab)="onSelectVendasCliente()">
+            <div *ngIf="!materiaisRelacionadosLoader">
+              <div class="mt-2 mb-4" id="carousel-cliente" *ngIf="vendasCliente.length > 0">
+                <carousel class="d-block" [itemsPerSlide]="itemsPerSlide" [singleSlideOffset]="false"
+                  [noWrap]="noWrapSlides" [interval]="false" [showIndicators]="false" [ngClass]="carouselClienteClass()">
+                  <slide *ngFor="let material of vendasCliente">
+                    <br>
+                    <comercial-ciclo-vendas-cotacoes-formulario-template-card-material size="small" [material]="material"
+                      (onMaterial)="onMaterial($event)" class="d-block w-100 px-3">
+                    </comercial-ciclo-vendas-cotacoes-formulario-template-card-material>
+                  </slide>
+                </carousel>
+              </div>
+              <empty-result message="Nenhuma informação encontrada" class="my-4"
+                *ngIf="vendasCliente.length == 0 && !vendasClienteLoader"></empty-result>
+            </div>
+            <div class="d-flex justify-content-center mb-3" *ngIf="vendasClienteLoader">
+              <div class="spinner-border text-dark"></div>
+            </div>
+         </tab>
+        Materiais Relacionados
         <tab heading="Materiales Relacionados"  (selectTab)="onSelectMateriaisRelacionados()">
           <div *ngIf="!materiaisRelacionadosLoader">
             <button class="mt-2 display-center btn btn-primary" (click)="cambiar()">  <i class="fas fa-sync-alt"></i> Filtrar </button>
@@ -99,11 +99,11 @@
             <empty-result message="Ninguna información encontrada" class="my-4"
               *ngIf="materiaisRelacionados.length == 0 && !materiaisRelacionadosLoader"></empty-result>
           </div>
-          <!-- <div class="d-flex justify-content-center mb-3" *ngIf="materiaisRelacionadosLoader">
+          <div class="d-flex justify-content-center mb-3" *ngIf="materiaisRelacionadosLoader">
             <div class="spinner-border text-dark"></div>
-          </div> -->
+          </div>
         </tab>
       </tabset>
     </div>
   </div>
-</div>
+</div> -->

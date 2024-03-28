@@ -440,7 +440,7 @@
     </custom-table>
   </div>
   <div class="col-12 mb-2 ml-2" *ngIf="data.length > itemsPerPage && loading">
-    Exibindo {{ begin + 1 }} a {{ end }} de {{ data?.length }}
+    Total {{ begin + 1 }} a {{ end }} de {{ data?.length }}
     <pagination
       [maxSize]="10"
       [totalItems]="data?.length"
@@ -700,7 +700,7 @@
             </custom-table>
           </div>
           <div class="col-12 mb-2 ml-2" *ngIf="dataLogs.length > itemsPerPage && loadingLogs">
-            Exibindo {{ beginA + 1 }} a {{ endA }} de {{ dataLogs?.length }}
+            Total {{ beginA + 1 }} a {{ endA }} de {{ dataLogs?.length }}
             <pagination
               [maxSize]="10"
               [totalItems]="dataLogs?.length"

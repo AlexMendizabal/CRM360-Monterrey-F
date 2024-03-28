@@ -7,7 +7,7 @@
         <div class="text-muted small font-weight-bold">ÚLTIMA COMPRA</div>
       </div>
       <div class="text-right" *ngIf="ultimaCompraEmpty">
-        <h5 class="font-weight-bolder mb-1">Sem data</h5>
+        <h5 class="font-weight-bolder mb-1">Sin datos</h5>
         <div class="text-muted small font-weight-bold">ÚLTIMA COMPRA</div>
       </div>
       <div class="text-right my-auto" *ngIf="!ultimaCompraLoaded && !ultimaCompraEmpty">
@@ -19,11 +19,11 @@
     <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3 hover" (click)="onUltimosPrecos()">
       <div class="bg-green rounded-circle text-white icon-40 my-auto"><i class="fas fa-dollar-sign"></i></div>
       <div class="text-right" [hidden]="!ultimaCompraLoaded || ultimaCompraEmpty">
-        <h5 class="font-weight-bolder mb-1">Política de preços</h5>
+        <h5 class="font-weight-bolder mb-1">Politica de precios</h5>
         <div class="text-muted small font-weight-bold">PRATICADOS NOS ÚLTIMOS {{ ultimosPrecosDias }} DIAS</div>
       </div>
       <div class="text-right" *ngIf="ultimaCompraEmpty">
-        <h5 class="font-weight-bolder mb-1">Política de preços</h5>
+        <h5 class="font-weight-bolder mb-1">Politica de precios</h5>
         <div class="text-muted small font-weight-bold">PRATICADOS NOS ÚLTIMOS DIAS</div>
       </div>
       <div class="text-right my-auto" *ngIf="!ultimaCompraLoaded && !ultimaCompraEmpty">
@@ -36,7 +36,7 @@
   <div class="col mb-4">
     <div class="border rounded bg-white shadow-sm p-3">
       <div class="d-flex justify-content-between mb-3">
-        <div class="mtc-title mb-0">Política de preços praticados</div>
+        <div class="mtc-title mb-0">Politica de precios en lineas</div>
         <button
           type="button"
           class="btn-icon"

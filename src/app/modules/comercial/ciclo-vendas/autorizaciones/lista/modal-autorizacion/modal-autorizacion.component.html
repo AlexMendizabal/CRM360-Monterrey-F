@@ -1,8 +1,14 @@
 <div class="modal-content custom-modal">
   <div class="modal-header">
-    <h6 class="modal-title pull-left">Resumen de autorización </h6>
+    <h6 class="modal-title pull-left">RESUMEN DE AUTORIZACIÓN</h6>
     <div class="d-flex justify-content-center align-items-center">
-      <button type="button" class="close pull-right" aria-label="Close" (click)="cerrar()">
+      <button
+        type="button"
+        class="close pull-right"
+        aria-label="Close"
+        (click)="cerrar()"
+        style="font-size: 20px!important;"
+      >
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -13,22 +19,75 @@
         <div class="col-md-12 mt-2">
           <div class="card">
             <div class="card-body">
-              <h6 class="card-title"> Datos de autorización</h6>
+              <h6 class="card-title title-g">DATOS DE AUTORIZACIÓN</h6>
               <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-2 mb-3">
                   <label for="id_autorizacion"> <strong> N°:</strong></label>
-                  <input type="text" id="id_autorizacion" class="form-control" readonly
-                    value="{{data.oferta[0].id_autorizacion}}">
+                  <input
+                    type="text"
+                    id="id_autorizacion"
+                    class="form-control"
+                    readonly
+                    value="{{ data.oferta[0].id_autorizacion }}"
+                  />
                 </div>
                 <div class="col-md-4">
-                  <label for="fecha_solicitud"> <strong> Fecha Solicitada</strong></label>
-                  <input type="text" id="fecha_solicitud" class="form-control" readonly
-                    value="{{data.oferta[0].fecha_solicitud | date: 'dd/MM/yyyy'}}">
+                  <label for="cliente"> <strong> Cliente:</strong></label>
+                  <input
+                    type="text"
+                    id="cliente"
+                    class="form-control"
+                    readonly
+                    value="{{ data.oferta[0].nombre_cliente | uppercase }}"
+                  />
                 </div>
-                <div class="col-md-5">
-                  <label for="vendedor"> <strong> Vendedor</strong></label>
-                  <input type="text" id="vendedor" class="form-control" readonly
-                    value="{{data.oferta[0].nombre_vendedor | uppercase}}">
+                <div class="col-md-3">
+                  <label for="fecha_solicitud">
+                    <strong> Solicitud realizada el:</strong>
+                  </label>
+                  <input
+                    type="text"
+                    id="fecha_solicitud"
+                    class="form-control"
+                    readonly
+                    value="{{
+                      data.oferta[0].fecha_solicitud | date : 'dd/MM/yyyy'
+                    }} - {{ data.oferta[0].horasolicitud | time : 'H:i:s' }}"
+                  />
+                </div>
+                <div class="col-md-3">
+                  <label for="fecha_solicitud">
+                    <strong> Fecha y Hora de Gestión:</strong>
+                  </label>
+                  <input
+                    type="text"
+                    id="fecha_gestion"
+                    class="form-control"
+                    readonly
+                    value="{{
+                      data.oferta[0].fecha_gestion | date : 'dd/MM/yyyy'
+                    }} - {{ data.oferta[0].horagestion }}"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label for="vendedor"> <strong> Vendedor:</strong></label>
+                  <input
+                    type="text"
+                    id="vendedor"
+                    class="form-control"
+                    readonly
+                    value="{{ data.oferta[0].nombre_vendedor | uppercase }}"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label for="vendedor"> <strong> Autorizador:</strong></label>
+                  <input
+                    type="text"
+                    id="nombre_usuario"
+                    class="form-control"
+                    readonly
+                    value="{{ data.oferta[0].nombre_usuario | uppercase }}"
+                  />
                 </div>
               </div>
             </div>
@@ -37,16 +96,14 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-12 ">
+      <div class="col-12">
         <div class="card">
-          <div class="card-header">
-            <h5>Detalle</h5>
-          </div>
-          <div class="card-body table-container">
-            <table class="table table-striped">
+          <div class="card-body">
+            <h6 class="card-title title-g">DETALLE DE AUTORIZACIÓN</h6>
+            <table class="table table-striped table-bordered">
               <thead>
                 <tr>
-                  <th class="text-truncate text-center">Código</th>  
+                  <th class="text-truncate text-center">Código</th>
                   <th class="text-truncate text-center">Material</th>
                   <th class="text-truncate text-center">Cantidad</th>
                   <th class="text-truncate text-center">Subtotal</th>
@@ -57,20 +114,55 @@
               </thead>
               <tbody>
                 <tr *ngFor="let detalles of detalle">
-                  <td class="font-weight-bold  text-center">
-                    {{detalles.CODIGOMATERIAL}}</td>
-                  <td class="font-weight-bold  text-center">
-                    {{detalles.DESCRICAO | uppercase}}</td>
-                  <td class="font-weight-bold  text-center">
-                    {{detalles.cantidad_total}}</td>
-                  <td class="font-weight-bold  text-center">
-                    {{detalles.subtotal}}</td>
-                  <td class="font-weight-bold  text-center">
-                    {{detalles.descuento_solicitado}}</td>
-                  <td class="font-weight-bold  text-center">
-                    {{detalles.descuento_permitido}}</td>
-                  <td class="font-weight-bold  text-center text-danger">
-                    {{detalles.excedente}}</td>
+                  <td class="font-weight-bold text-center">
+                    {{ detalles.CODIGOMATERIAL }}
+                  </td>
+                  <td class="font-weight-bold text-center">
+                    {{ detalles.DESCRICAO | uppercase }}
+                  </td>
+                  <td class="font-weight-bold text-center">
+                    {{ detalles.cantidad_total }}
+                  </td>
+                  <td class="font-weight-bold text-center">
+                    $. {{ detalles.subtotal }}
+                  </td>
+                  <td class="font-weight-bold text-center">
+                    <ng-container
+                      *ngIf="
+                        detalles.descuento_solicitado !== null &&
+                        detalles.descuento_solicitado !== undefined
+                      "
+                    >
+                      {{ detalles.descuento_solicitado + '%' }}
+                    </ng-container>
+                  </td>
+
+                  <td class="font-weight-bold text-center">
+                    <ng-container
+                      *ngIf="
+                        detalles.descuento_permitido !== null &&
+                        detalles.descuento_permitido !== undefined
+                      "
+                    >
+                      {{ detalles.descuento_permitido + '%' }}
+                    </ng-container>
+                  </td>
+
+                  <td
+                    class="font-weight-bold text-center"
+                    [ngStyle]="{
+                      color: detalles.excedente >= 0 ? 'red' : 'green'
+                    }"
+                  >
+                    <ng-container
+                      *ngIf="
+                        detalles.excedente !== null &&
+                        detalles.excedente !== undefined
+                      "
+                    >
+                      {{ detalles.excedente + '%' }}
+                    </ng-container>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -80,43 +172,88 @@
     </div>
     <div class="col-md-12">
       <div class="row">
-        <div class="col-md-6 mt-2">
+        <div class="col-md-6 mt-2 box-g1">
           <div class="card">
-            <div class="card-body">
-              <h6 class="card-title"> Descripción</h6>
+            <div class="card-body" style="padding-bottom: 45px;">
+              <h6 class="card-title title-g">Descripción</h6>
               <div class="row">
                 <div class="col-md-9">
-                  <input type="text" id="customerName" class="form-control" readonly
-                    value="{{data.oferta[0].descripcion_vend | uppercase}}">
+                  <input
+                    type="text"
+                    id="customerName"
+                    class="form-control"
+                    readonly
+                    value="{{ data.oferta[0].descripcion_vend | uppercase }}"
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-6 mt-2">
+        <div class="col-md-6 mt-2 box-g2">
           <div class="card">
-            <div class="card-body"> 
-              <h6 class="card-title"> Observaciones</h6>
+            <div class="card-body">
+              <h6 class="card-title title-g">Observaciones</h6>
               <div class="row">
                 <form [formGroup]="myForm" (ngSubmit)="submitForm()">
-                  <div class="col-md-12">
-                    <input type="text" id="observacion" formControlName="observacion" class="form-control">
+                  <div class="col">
+                    <textarea
+                      type="text"
+                      size="300"
+                      id="observacion1"
+                      formControlName="observacion"
+                      class="form-control" 
+                      rows="4" cols="50"
+                      >
+                    </textarea>
                   </div>
                 </form>
               </div>
+              <!-- <div class="row">
+                <div class="col-md-9" *ngIf="admin != true">
+                    <textarea
+                    type="text"
+                      size="300"
+                      class="form-control" 
+                      rows="4" cols="50"
+                      disabled
+                      value="{{ data.oferta[0].desc_usuario}}"
+                      >
+                    </textarea>
+                  </div>
+                </div> -->
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="col-md-12">
-      <div class="modal-footer">
-          <button type="submit" class="btn btn-success" (click)="boton(data.oferta[0].id_autorizacion, 2)">
-            Aprobar
-          </button>
-          <button type="button" class="btn btn-danger" (click)="boton(data.oferta[0].id_autorizacion, 3)">
-            Rechazar
-          </button>
+      <div class="modal-footer" id="botones" *ngIf="admin">
+        <button
+          type="button"
+          id="rechazado"
+          class="btn btn-danger"
+          (click)="boton(data.oferta[0].id_autorizacion, 11)"
+          [disabled]="loader || myForm.get('observacion').invalid"
+        >
+          Rechazar
+        </button>
+        <button
+          type="submit"
+          id="aceptado"
+          class="btn btn-success"
+          (click)="boton(data.oferta[0].id_autorizacion, 12)"
+          [disabled]="loader || myForm.get('observacion').invalid"
+        >
+          <span *ngIf="!loading">Aprobar</span>
+          <span
+            *ngIf="loading"
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+        </button>
       </div>
     </div>
   </div>
+</div>

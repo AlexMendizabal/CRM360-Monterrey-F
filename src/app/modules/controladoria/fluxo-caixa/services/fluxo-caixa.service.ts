@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class ControladoriaFluxoCaixaService {
-  private readonly BASE_URL: string = `https://crm360.monterrey.com.bo/api`;
+  private readonly BASE_URL: string = `https://23.254.204.187/api`;
 
   private modalEmitter: EventEmitter<any> = new EventEmitter();
   private detailPanelEmitter: EventEmitter<string> = new EventEmitter();

@@ -1,7 +1,7 @@
 <div *ngIf="linhas.length > 0 && classes.length > 0">
   <div class="row mb-2">
     <div class="col mt-auto">
-      <div class="mtc-title mb-0">Pesquisar por materiais para associação</div>
+      <div class="mtc-title mb-0">Buscar materiales para asocciar</div>
     </div>
     <div class="col">
       <div class="d-flex justify-content-end">
@@ -19,8 +19,8 @@
   <advanced-filter>
     <form [formGroup]="form" autocomplete="off">
       <div class="form-row">
-        <div class="form-group col-lg-6">
-          <label for="codLinha">Linha</label>
+        <div class="form-group col-lg-4">
+          <label for="codLinha">Familia</label>
           <ng-select
             [searchable]="true"
             [clearable]="false"
@@ -33,8 +33,8 @@
             (change)="onChangeLinha($event.id)">
           </ng-select>
         </div>
-        <div class="form-group col-lg-6">
-          <label for="codClasse">Classe</label>
+        <div class="form-group col-lg-4">
+          <label for="codClasse">Grupo</label>
           <ng-select
             [searchable]="true"
             [clearable]="false"
@@ -44,7 +44,21 @@
             labelForId="codClasse"
             bindLabel="nomeClasse"
             bindValue="idClasse"
-            (change)="onChangeClasse($event.idClasse)">
+            (change)="onChangeGrupo($event.idClasse)">
+          </ng-select>
+        </div>
+        <div class="form-group col-lg-4">
+          <label for="codGrupo">Linea</label>
+          <ng-select
+            [searchable]="true"
+            [clearable]="false"
+            [items]="filteredGrupos"
+            formControlName="codGrupo"
+            [virtualScroll]="true"
+            labelForId="idSubLinea"
+            bindLabel="descripcion"
+            bindValue="idSubLinea"
+            (change)="onChangeClasse($event.idSubLinea)">
           </ng-select>
         </div>
         </div>
@@ -70,7 +84,7 @@
   <div *ngIf="materiaisLista.length > 0">
     <div class="row mb-2">
       <div class="col mt-auto">
-        <div class="mtc-title mb-0">Seleção de materiais</div>
+        <div class="mtc-title mb-0">Selección de materiales</div>
       </div>
       <div class="col">
         <div class="d-flex justify-content-end">
@@ -128,7 +142,7 @@
     <div class="col">
       <message
         icon="fas fa-cog fa-spin"
-        text="Estamos pesquisando os materiais para você...">
+        text="Estamos investigando los materiales para ti...">
       </message>
     </div>
   </div>
@@ -137,7 +151,7 @@
       <div class="col">
         <message
           icon="fas fa-box-open"
-          text="Nenhuma informação encontrada">
+          text="No se encontró información">
         </message>
       </div>
     </div>
@@ -145,7 +159,7 @@
       <div class="col">
         <message
           icon="fas fa-search"
-          text="Preecha os campos acima para pesquisar materiais">
+          text="Complete los campos de arriba para buscar materiales">
         </message>
       </div>
     </div>

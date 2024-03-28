@@ -43,7 +43,7 @@ export class ComercialComissoesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.titleService.setTitle('Comissões');
+    this.titleService.setTitle('Comisiones');
     this.activatedRoute.params.subscribe((params: any) => {
       this.registrarAcesso();
       this.getAtividadesInternas(params['idSubModulo']);

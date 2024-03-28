@@ -164,7 +164,7 @@
     </tabset>
   </div>
   <div class="mt-2 mb-2" *ngIf="dataModal?.length > itemsPerPage">
-    Exibindo {{ begin + 1 }} a {{ end }} de
+    Total {{ begin + 1 }} a {{ end }} de
     {{ dataModal?.length }}
     <div class="d-flex">
       <pagination [maxSize]="10" [totalItems]="dataModal?.length" (pageChanged)="onPageChanged($event)"

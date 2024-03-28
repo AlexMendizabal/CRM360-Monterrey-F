@@ -1,15 +1,15 @@
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
-<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
-<app-header appTitle="Estoque">
-  <button type="button" (click)="onResetForm()">
-    Limpiar
-  </button>
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<app-header appTitle="Stock">
+  <button type="button" (click)="onResetForm()">Limpiar</button>
   <button type="button" (click)="onFilter()" [disabled]="!form.valid">
     Filtrar
   </button>
-  <button type="button" (click)="sincronizar()" [disabled]="!form.valid">
+  <!-- <button type="button" (click)="sincronizar()" [disabled]="!form.valid">
     <i class="fas fa-sync"></i> Sincronizar
-  </button>
+  </button> -->
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
   <div #scrollToFilter>
@@ -32,16 +32,28 @@
             </ng-select>
             <invalid-form-control [show]="onFieldInvalid('empresa')" message="Empresa é obrigatório."></invalid-form-control>
           </div> -->
-          <div class="form-group col-lg-3">
+          <!-- <div class="form-group col-lg-3">
             <label for="empresa"> Almacén </label>
-            <ng-select [searchable]="true" [clearable]="false" [items]="almacenes" formControlName="empresa"
-              [virtualScroll]="true" labelForId="empresa" bindLabel="ALMACEN" bindValue="id"
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="almacenes"
+              formControlName="empresa"
+              [virtualScroll]="true"
+              labelForId="empresa"
+              bindLabel="ALMACEN"
+              bindValue="id"
               (change)="onChangeAlmacen($event.id)"
-              [ngClass]="onFieldError('empresa') + ' ' + onFieldRequired('empresa')">
+              [ngClass]="
+                onFieldError('empresa') + ' ' + onFieldRequired('empresa')
+              "
+            >
             </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('empresa')"
-              message="Empresa é obrigatório."></invalid-form-control>
-          </div>
+            <invalid-form-control
+              [show]="onFieldInvalid('empresa')"
+              message="Empresa é obrigatório."
+            ></invalid-form-control>
+          </div> -->
           <!-- <div class="form-group col-lg-3">
             <label for="deposito">Depósito</label>
             <ng-select
@@ -60,36 +72,83 @@
           </div> -->
           <div class="form-group col-lg-3">
             <label for="linha">Familia</label>
-            <ng-select [searchable]="true" [clearable]="false" [items]="classes" formControlName="classeMaterial"
-              [virtualScroll]="true" labelForId="classeMaterial" bindLabel="nomeClasse" bindValue="idClasse"
-              (change)="onChangeClasse($event)">
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="classes"
+              formControlName="classeMaterial"
+              [virtualScroll]="true"
+              labelForId="classeMaterial"
+              bindLabel="nomeClasse"
+              bindValue="idClasse"
+              (change)="onChangeClasse($event)"
+            >
             </ng-select>
           </div>
           <div class="form-group col-lg-3">
             <label for="linha">Grupo</label>
-            <ng-select [searchable]="true" [clearable]="false" [items]="grupos" formControlName="grupo"
-              [virtualScroll]="true" labelForId="classeMaterial" bindLabel="descricao" bindValue="id_linha"
-              (change)="onChangegrupo($event)">
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="grupos"
+              formControlName="grupo"
+              [virtualScroll]="true"
+              labelForId="classeMaterial"
+              bindLabel="descricao"
+              bindValue="id_linha"
+              (change)="onChangegrupo($event)"
+            >
             </ng-select>
           </div>
           <div class="form-group col-lg-3">
             <label for="classeMaterial">Linea</label>
-            <ng-select [searchable]="true" [clearable]="false" [items]="linhas" formControlName="linha"
-              [virtualScroll]="true" labelForId="classeMaterial" bindLabel="NM_SUB_LINH" bindValue="ID">
+            <ng-select
+              [searchable]="true"
+              [clearable]="false"
+              [items]="linhas"
+              formControlName="linha"
+              [virtualScroll]="true"
+              labelForId="classeMaterial"
+              bindLabel="NM_SUB_LINH"
+              bindValue="ID"
+            >
             </ng-select>
           </div>
-
-        </div>
-        <div class="form-row">
-          <div class="form-group col-lg-3 mb-0">
+          <div class="form-group col-lg-2 mb-0">
             <label for="codMaterial">Código material</label>
-            <input type="text" class="form-control" formControlName="codMaterial" (keydown.enter)="onFilter()">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="codMaterial"
+              (keydown.enter)="onFilter()"
+            />
           </div>
-          <div class="form-group col-lg-4 mb-0">
+          <div class="form-group col-lg-3 mb-0">
             <label for="descMaterial">Nombre material</label>
-            <input type="text" class="form-control" formControlName="descMaterial" (keydown.enter)="onFilter()">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="descMaterial"
+              (keydown.enter)="onFilter()"
+            />
           </div>
-          <!-- <div class="form-group col-lg-3 mb-0">
+          <div class="form-group col-lg-2 mb-0">
+            <label for="registros">Registros</label>
+            <select
+              class="form-control"
+              id="registros"
+              formControlName="registros"
+            >
+              <option>25</option>
+              <option>50</option>
+              <option>100</option>
+              <option>200</option>
+              <option>300</option>
+            </select>
+          </div>
+
+          <!--<div class="form-row">
+            <div class="form-group col-lg-3 mb-0">
             <label for="estoqueDisponivel">Solo stock disponible</label>
             <select class="form-control" id="estoqueDisponivel" formControlName="estoqueDisponivel">
               <option value="0">Mostrar todo
@@ -98,16 +157,6 @@
               <option value="2">No disponible</option>
             </select>
           </div> -->
-          <div class="form-group col-lg-2 mb-0">
-            <label for="registros">Registros</label>
-            <select class="form-control" id="registros" formControlName="registros">
-              <option>25</option>
-              <option>50</option>
-              <option>100</option>
-              <option>200</option>
-              <option>300</option>
-            </select>
-          </div>
         </div>
       </form>
     </advanced-filter>
@@ -116,168 +165,431 @@
   </subtitles>
   <div class="row">
     <div class="col-12">
-      <custom-table [config]="tableConfig" *ngIf="datos.length > 0 && !dadosEmpty">
+      <custom-table
+        [config]="tableConfig"
+        *ngIf="datos.length > 0 && !dadosEmpty"
+      >
         <ng-template #thead let-thead>
           <tr>
-            <th class="text-truncate text-center"
-            (click)="setOrderBy('codigo_material')">              
-              <thead-sorter value="codigo" [active]="orderBy == 'codigo'" [sort]="orderType"> Código </thead-sorter>
+            <th
+              class="text-truncate text-center"
+              (click)="setOrderBy('codigo_material')"
+            >
+              <thead-sorter
+                value="codigo"
+                [active]="orderBy == 'codigo'"
+                [sort]="orderType"
+              >
+                Código
+              </thead-sorter>
             </th>
-            <th class="text-truncate text-left"
-            (click)="setOrderBy('nombre')">
-              <thead-sorter value="Nombre Material"  [active]="orderBy == 'Nombre Material'" [sort]="orderType"></thead-sorter>
+            
+            <th class="text-truncate text-center" (click)="setOrderBy('familia')">
+              <thead-sorter value="Familia"></thead-sorter>
             </th>
-            <th class="text-truncate text-center"
-            (click)="setOrderBy('cantidad')">
-              <thead-sorter value="Cantidad Disp."></thead-sorter>
+            <th class="text-truncate text-center" (click)="setOrderBy('grupo')">
+              <thead-sorter value="Grupo"></thead-sorter>
             </th>
-            <th class="text-truncate text-center"
-            (click)="setOrderBy('sigla')">
-              <thead-sorter value="Un."></thead-sorter>
+            <th class="text-truncate text-center" (click)="setOrderBy('linea')">
+              <thead-sorter value="Linea"></thead-sorter>
             </th>
-            <th class="text-truncate text-center"
-            (click)="setOrderBy('codigo_almacen')">
-              <thead-sorter value="Almacén"></thead-sorter>
+            <th class="text-truncate text-left" (click)="setOrderBy('nombre')">
+              <thead-sorter
+                value="Nombre Material"
+                [active]="orderBy == 'Nombre Material'"
+                [sort]="orderType"
+              ></thead-sorter>
             </th>
-            <th class="text-truncate text-center"
-            (click)="setOrderBy('nombre_almacen')">
-              <thead-sorter value="Nombre almacén"></thead-sorter>
+            <th class="text-truncate text-center" (click)="setOrderBy('sigla')">
+              <thead-sorter value="Unidad"></thead-sorter>
             </th>
-            <th></th>
           </tr>
         </ng-template>
         <ng-template #tbody let-tbody>
           <ng-container>
             <tr *ngFor="let dato of getPaginateData()">
-              <td class="font-weight-bold hover text-center"
-                (click)="openModal(modalDetalhes, dado.nombre, dato.id_material, dato.codigo_material, dato.cantidad)">
-                {{dato.codigo_material}}</td>
-              <td class="font-weight-bold hover text-left"
-                (click)="openModal(modalDetalhes, dato.nombre, dato.id_material, dato.codigo_material, dato.cantidad)">
-                {{dato.nombre}}</td>
-              <td class="font-weight-bold hover text-center"
-                (click)="openModal(modalDetalhes, dato.nombre, dato.id_material, dato.codigo_material, dato.cantidad)">
-                {{dato.cantidad}}</td>
-              <td class="font-weight-bold hover text-center"
-                (click)="openModal(modalDetalhes, dato.nombre, dato.id_material, dato.codigo_material, dato.cantidad)">
-                {{dato.sigla}}</td>
-              <td class="font-weight-bold hover text-center"
-                (click)="openModal(modalDetalhes, dato.nombre, dato.id_material, dato.codigo_material, dato.cantidad)">
-                {{dato.codigo_almacen}}</td>
-              <td class="font-weight-bold hover text-center"
-                (click)="openModal(modalDetalhes, dado.nombre, dato.codigo_material, dato.cantidad)">
-                {{dato.nombre_almacen}}</td>
+              <td
+                class="font-weight-bold hover text-center"
+                (click)="
+                  openModal(
+                    modalDetalhes,
+                    dado.nombre,
+                    dato.id_material,
+                    dato.codigo_material,
+                    dato.cantidad
+                  )
+                "
+              >
+                {{ dato.codigo_material }}
+              </td>
+              
+              <td
+                class="font-weight-bold hover text-center"
+                (click)="
+                  openModal(
+                    modalDetalhes,
+                    dato.nombre,
+                    dato.id_material,
+                    dato.codigo_material,
+                    dato.cantidad
+                  )
+                "
+              >
+                {{ dato.familia }}
+              </td>
+              <td
+                class="font-weight-bold hover text-center"
+                (click)="
+                  openModal(
+                    modalDetalhes,
+                    dato.nombre,
+                    dato.id_material,
+                    dato.codigo_material,
+                    dato.cantidad
+                  )
+                "
+              >
+                {{ dato.grupo }}
+              </td>
+              <td
+                class="font-weight-bold hover text-center"
+                (click)="
+                  openModal(
+                    modalDetalhes,
+                    dato.nombre,
+                    dato.id_material,
+                    dato.codigo_material,
+                    dato.cantidad
+                  )
+                "
+              >
+                {{ dato.linea }}
+              </td>
+              <td
+                class="font-weight-bold hover text-left"
+                (click)="
+                  openModal(
+                    modalDetalhes,
+                    dato.nombre,
+                    dato.id_material,
+                    dato.codigo_material,
+                    dato.cantidad
+                  )
+                "
+              >
+                {{ dato.nombre }}
+              </td>
+              <td
+                class="font-weight-bold hover text-center"
+                (click)="
+                  openModal(
+                    modalDetalhes,
+                    dato.nombre,
+                    dato.id_material,
+                    dato.codigo_material,
+                    dato.cantidad
+                  )
+                "
+              >
+                {{ dato.sigla }}
+              </td>
             </tr>
           </ng-container>
         </ng-template>
       </custom-table>
 
-      <empty-result message="Ningún registro encontrado." *ngIf="dadosEmpty"></empty-result>
-      <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
+      <empty-result
+        message="Ningún registro encontrado."
+        *ngIf="dadosEmpty"
+      ></empty-result>
+      <div
+        class="d-flex justify-content-center mt-3"
+        *ngIf="totalItems > itemsPerPage && !loaderNavbar"
+      >
         <pagination
-            [maxSize]="maxSize"
-            [(totalItems)]="totalItems"
-            (pageChanged)="onPageChanged($event)"
-            [(itemsPerPage)]="itemsPerPage"
-            [boundaryLinks]="true"
-            [(ngModel)]="currentPage"
-            previousText="&lsaquo;"
-            nextText="&rsaquo;"
-            firstText="&laquo;"
-            lastText="&raquo;">
-          </pagination>
+          [maxSize]="maxSize"
+          [(totalItems)]="totalItems"
+          (pageChanged)="onPageChanged($event)"
+          [(itemsPerPage)]="itemsPerPage"
+          [boundaryLinks]="true"
+          [(ngModel)]="currentPage"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
       </div>
     </div>
   </div>
 </app-body>
+
 <ng-template #modalDetalhes>
   <div class="modal-header">
     <h4 id="dialog-sizes-name1" class="modal-title pull-left">
       {{ nomeMaterial }}
     </h4>
-    <button type="button" class="close pull-right" (click)="closeModal(modalDetalhes)" aria-label="Close">
+    <button
+      type="button"
+      class="close pull-right"
+      (click)="closeModal(modalDetalhes)"
+      aria-label="Close"
+    >
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <tabset>
-      <!-- <tab heading="Estoque outras unidades" class="border-right border-left border-bottom">
-        <div class="px-3 pt-3">
-          <div class="form-row" *ngIf="unidadesLoaded">
-            <div class="form-group col-lg-3" *ngFor="let estoque of estoqueUnidades">
-              <label>{{ estoque.descEmpresa }}</label>
-              <div>{{ estoque.estoque | number:'1.3-3' }} {{ estoque.unidade }}</div>
+      <!-- <tab
+      heading="Stock Almacenes"
+      class="border-right border-left border-bottom"
+      *ngIf="true">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2 mb-0">
+              <label for="codigo_almacen">Código almacen</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="codigo_almacen"
+               
+              />
             </div>
+            <div class="form-group col-lg-3 mb-0">
+              <label for="nombre_almacen">Nombre Almacen</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="nombre_almacen"
+                
+              />
+            </div>
+            <div class="form-group col-lg-3 mb-0">
+              <label for="nombre_lista">Lista precio</label>
+              <select class="form-control" formControlName="nombre_lista">
+                <option value="" disabled selected>Select Lista Precio</option>
+                <option *ngFor="let listaPrecio of uniqueListasPrecios" [value]="listaPrecio.id"> <!-- Ajusta según la estructura de tus datos -->
+      <!--    {{ listaPrecio.nombre_lista }}
+                </option>
+              </select>
+            </div>
+            
+            
           </div>
-          <div class="d-flex justify-content-center mb-3" *ngIf="!unidadesLoaded">
-            <div class="spinner-border text-dark"></div>
+          <div class="form-row" style="margin-top: 10px; margin-bottom: 10px">
+            <button
+              type="button"
+              (click)="onGetEstoqueAlmacen()"
+              [disabled]="!form.valid || allFieldsEmpty"
+              style="border: none"
+            >
+              Filtrar
+            </button>
+          </div>
+        </form>
+      </advanced-filter>
+      <div class="p-3">
+        <div class="d-flex">
+          <div class="legend blue">
+            <div class="square"></div>
+            <div class="text">Stock Almacenes</div>
           </div>
         </div>
-      </tab> -->
 
-      <tab heading="Stock comprometido" class="border-right border-left border-bottom"
-        (selectTab)="onSelectComprometidos()">
-        <div class="p-3">
-          <div *ngIf="comprometidoLoaded">
-            <div class="d-flex">
-              <div class="legend blue">
-                <div class="square"></div>
-                <div class="text">STOCK COMPROMETIDO</div>
+        <custom-table
+          [config]="tableConfig"
+          *ngIf="detalhesAlmacen.length > 0"
+        >
+          <ng-template #thead let-thead>
+            <tr>
+              <th scope="col" class="text-center">CODIGO ALMACEN</th>
+              <th scope="col" class="text-center">NOMBRE ALMACEN</th>
+              <th scope="col" class="text-center">LISTA DE PRECIO</th>
+              <th scope="col" class="text-center">PRECIO U.</th>
+              <th scope="col" class="text-center">CANTIDAD</th>
+            </tr>
+          </ng-template>
+          <ng-template #tbody let-tbody>
+            <tr *ngFor="let item of detalhesAlmacen">
+              <td class="text-center">{{ item.codigo_almacen }}</td>
+              <td class="text-center">{{ item.nombre_almacen }}</td>
+              <td class="text-center">{{ item.lista }}</td>
+              <td class="text-center">
+                {{ item.precio | number : '1.2-2' }}
+              </td>
+              <td class="text-center">
+                {{ item.cantidad | number : '1.0-0' }} {{ item.unidad }}
+              </td>
+            </tr>
+          </ng-template>
+        </custom-table>
+        <empty-result
+          message="Ninguna información encontrada"
+          class="my-4"
+          *ngIf="stockEmpty && !stockLoaded"
+        ></empty-result>
+        <div class="d-flex justify-content-center mt-3">
+          <pagination
+            [maxSize]="maxSizeAlmacen"
+            [(totalItems)]="totalAlmacen"
+            (pageChanged)="onPageChangedAlmacen($event)"
+            [(itemsPerPage)]="itemsPerPageAlmacen"
+            [boundaryLinks]="true"
+            [(ngModel)]="currentPageAlmacen"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;"
+          >
+          </pagination>
+        </div>
+      </div>
+     </tab>  -->
+
+      <tab
+        heading="Stock Almacenes"
+        class="border-right border-left border-bottom"
+      >
+        <advanced-filter>
+          <form [formGroup]="form" autocomplete="off">
+            <div class="form-row">
+              <div class="form-group col-lg-2 mb-0">
+                <label for="codigo_almacen">Código almacen</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="codigo_almacen"
+                />
+              </div>
+              <div class="form-group col-lg-3 mb-0">
+                <label for="nombre_almacen">Nombre Almacen</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="nombre_almacen"
+                />
+              </div>
+              <div class="form-group col-lg-3 mb-0">
+                <label for="nombre_lista">Lista precio</label>
+                <select class="form-control" formControlName="nombre_lista">
+                  <option value="" disabled selected>
+                    Select Lista Precio
+                  </option>
+                  <option
+                    *ngFor="let listaPrecio of uniqueListasPrecios"
+                    [value]="listaPrecio.id"
+                  >
+                    <!-- Ajusta según la estructura de tus datos -->
+                    {{ listaPrecio.nombre_lista }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group col-lg-2 mb-0">
+                <label for="registrosLista">Registros</label>
+                <select
+                  class="form-control"
+                  id="registrosLista"
+                  formControlName="registrosLista"
+                >
+                  <option>25</option>
+                  <option>50</option>
+                  <option>100</option>
+                  <option>200</option>
+                  <option>300</option>
+                </select>
               </div>
             </div>
-            <custom-table [config]="tableConfig" *ngIf="estoqueComprometido.length > 0 && !comprometidoEmpty">
-              <ng-template #thead let-thead>
-                <tr>
-                  <th class="text-center">Código</th>
-                  <th class="text-center">Oferta</th>
-                  <th class="text-center">Fecha</th>
-                  <th class="text-center">Cliente</th>
-                  <th class="text-center">Vendedor</th>
-                  <th class="text-center">Cantidad</th>
-                </tr>
-              </ng-template>
-              <ng-template #tbody let-tbody>
-                <tr *ngFor="let item of getPaginateDataComprometido()">
-                  <td [ngClass]="estoqueComprometidoClassStatusBorder(item.id_oferta)" class="text-center">{{
-                    item.codigo_oferta }}</td>
-                  <td class="text-center">{{ item.nombre_oferta }}</td>
-                  <td class="text-center">{{ item.fecha_oferta }}</td>
-                  <td class="text-center">{{ item.cliente }}</td>
-                  <td class="text-center">{{ item.vendedor }}</td>
-                  <td class="text-center">{{ item.cantidad | number:'1.4-4' }} {{ item.unidad }}</td>
-                </tr>
-                <tr class="bg-dark text-center text-dark">
-                  <td colspan="4" class="border-dark"></td>
-                  <td><strong>Total</strong></td>
-                  <td class="text-center"><strong>{{ totaisComprometido.cantidad | number:'1.4-4' }}</strong></td>
-                </tr>
-              </ng-template>
-            </custom-table>
-          </div>
-          <empty-result message="Ninguna información encontrada" class="my-4"
-            *ngIf="comprometidoEmpty && !comprometidoLoaded"></empty-result>
-            <div class="d-flex justify-content-center mt-3" >
-              <pagination [maxSize]="maxSizeComprometido" [(totalItems)]="totalComprometido"
-                (pageChanged)="onPageChangedComprometido($event)" [(itemsPerPage)]="itemsPerPageComprometido"
-                [boundaryLinks]="true" [(ngModel)]="currentPageComprometido" previousText="&lsaquo;" nextText="&rsaquo;"
-                firstText="&laquo;" lastText="&raquo;">
-              </pagination>
+            <div class="form-row" style="margin-top: 10px; margin-bottom: 10px">
+              <button
+                type="button"
+                (click)="onGetEstoqueAlmacen()"
+                [disabled]="!form.valid || allFieldsEmpty || loading"
+                style="border: none"
+              >
+                Filtrar
+                <span
+                  *ngIf="loading"
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>
             </div>
-          <div class="d-flex justify-content-center mb-3" *ngIf="!comprometidoLoaded && !comprometidoEmpty">
-            <div class="spinner-border text-dark"></div>
+          </form>
+        </advanced-filter>
+        <div class="p-3">
+          <div class="d-flex">
+            <div class="legend blue">
+              <div class="square"></div>
+              <div class="text">Stock Almacenes</div>
+            </div>
+          </div>
+          <custom-table
+            [config]="tableConfig"
+            *ngIf="detalhesAlmacen.length > 0"
+            class="stocktable custom-styling"
+          >
+            <ng-template #thead let-thead>
+              <tr style="border-color: blue">
+                <th scope="col" class="text-center">CODIGO ALMACEN</th>
+                <th scope="col" class="text-center">NOMBRE ALMACEN</th>
+                <th scope="col" class="text-center">LISTA DE PRECIO</th>
+                <th scope="col" class="text-center">PRECIO U.</th>
+                <th scope="col" class="text-center">CANTIDAD</th>
+              </tr>
+            </ng-template>
+            <ng-template #tbody let-tbody>
+              <tr *ngFor="let item of detalhesAlmacen">
+                <td class="text-center">{{ item.codigo_almacen }}</td>
+                <td class="text-center">{{ item.nombre_almacen }}</td>
+                <td class="text-center">{{ item.lista }}</td>
+                <td class="text-center">
+                  {{ item.precio | number : '1.2-2' }}
+                </td>
+                <td class="text-center">
+                  {{ item.cantidad | number : '1.0-0' }} {{ item.unidad }}
+                </td>
+              </tr>
+            </ng-template>
+          </custom-table>
+          <empty-result
+            message="Ninguna información encontrada"
+            class="my-4"
+            *ngIf="stockEmpty && !stockLoaded"
+          ></empty-result>
+          <div class="d-flex justify-content-center mt-3">
+            <pagination
+              [(ngModel)]="currentPageAlmacen"
+              [totalItems]="totalAlmacen"
+              [itemsPerPage]="itemsPerPageAlmacen"
+              (pageChanged)="onPageChangedAlmacen($event)"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+            ></pagination>
           </div>
         </div>
       </tab>
-      <tab heading="Stock en suspenso" class="border-right border-left border-bottom"
-        (selectTab)="onSelectEstoqueSuspenso()" *ngIf="possuiLote">
-        <div class="p-3" >
+
+      <tab
+        heading="Stock en suspenso"
+        class="border-right border-left border-bottom"
+        (selectTab)="onSelectEstoqueSuspenso()"
+        *ngIf="true"
+      >
+        <div class="p-3">
           <div class="d-flex" *ngIf="suspensoLoaded">
             <div class="legend red">
               <div class="square"></div>
               <div class="text">STOCK EN SUSPENSO</div>
             </div>
           </div>
-          <custom-table [config]="tableConfig" *ngIf="detalhesSuspenso.length > 0 && suspensoLoaded">
+          <custom-table
+            [config]="tableConfig"
+            *ngIf="detalhesSuspenso.length > 0 && suspensoLoaded"
+          >
             <ng-template #thead let-thead>
               <tr>
                 <th scope="col" class="text-center">Fecha</th>
@@ -287,28 +599,144 @@
             </ng-template>
             <ng-template #tbody let-tbody>
               <tr *ngFor="let item of detalhesSuspenso">
-                <td [ngClass]="estoqueSuspensoClassStatusBorder(item.id)" class="text-center">{{ item.fecha }}</td>
-                <td class="text-center" [ngClass]="border-danger" class="text-center">{{ item.descripcion }}</td>
-                <td class="text-center" [ngClass]="border-danger">{{ item.cantidad | number:'1.3-3' }} {{ item.unidad }}
+                <td
+                  [ngClass]="estoqueSuspensoClassStatusBorder(item.id)"
+                  class="text-center"
+                >
+                  {{ item.fecha }}
+                </td>
+                <td
+                  class="text-center"
+                  [ngClass]="border - danger"
+                  class="text-center"
+                >
+                  {{ item.descripcion }}
+                </td>
+                <td class="text-center" [ngClass]="border - danger">
+                  {{ item.cantidad | number : '1.0-0' }} {{ item.unidad }}
                 </td>
               </tr>
               <tr class="bg-dark text-center text-dark">
-                <td class="border-dark"></td> 
+                <td class="border-dark"></td>
                 <td><strong>Total</strong></td>
-                <td class="text-center"><strong>{{ totalSuspenso.cantidad | number:'1.4-4' }}</strong></td>
+                <td class="text-center">
+                  <strong>{{
+                    totalSuspenso.cantidad | number : '1.0-0'
+                  }}</strong>
+                </td>
               </tr>
             </ng-template>
           </custom-table>
-          <empty-result message="Ninguna información encontrada" class="my-4"
-            *ngIf="suspensoEmpty && !suspensoLoaded"></empty-result>
-            <div class="d-flex justify-content-center mt-3" >
-              <pagination [maxSize]="maxSizeSuspenso" [(totalItems)]="totalSuspenso"
-                (pageChanged)="onPageChangedSuspenso($event)" [(itemsPerPage)]="itemsPerPageSuspenso"
-                [boundaryLinks]="true" [(ngModel)]="currentPageSuspenso" previousText="&lsaquo;" nextText="&rsaquo;"
-                firstText="&laquo;" lastText="&raquo;">
-              </pagination>
+          <empty-result
+            message="Ninguna información encontrada"
+            class="my-4"
+            *ngIf="suspensoEmpty && !suspensoLoaded"
+          ></empty-result>
+          <div class="d-flex justify-content-center mt-3">
+            <pagination
+              [maxSize]="maxSizeSuspenso"
+              [(totalItems)]="totalSuspenso"
+              (pageChanged)="onPageChangedSuspenso($event)"
+              [(itemsPerPage)]="itemsPerPageSuspenso"
+              [boundaryLinks]="true"
+              [(ngModel)]="currentPageSuspenso"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+            >
+            </pagination>
+          </div>
+          <div
+            class="d-flex justify-content-center mb-3"
+            *ngIf="!suspensoLoaded && !suspensoEmpty"
+          >
+            <div class="spinner-border text-dark"></div>
+          </div>
+        </div>
+      </tab>
+
+      <tab
+        heading="Stock comprometido"
+        class="border-right border-left border-bottom"
+        (selectTab)="onSelectComprometidos()"
+      >
+        <div class="p-3">
+          <div *ngIf="comprometidoLoaded">
+            <div class="d-flex">
+              <div class="legend blue">
+                <div class="square"></div>
+                <div class="text">STOCK COMPROMETIDO</div>
+              </div>
             </div>
-          <div class="d-flex justify-content-center mb-3" *ngIf="!suspensoLoaded && !suspensoEmpty">
+            <custom-table
+              [config]="tableConfig"
+              *ngIf="estoqueComprometido.length > 0 && !comprometidoEmpty"
+            >
+              <ng-template #thead let-thead>
+                <tr>
+                  <th class="text-center">Código</th>
+                  <th class="text-center">Oferta</th>
+                  <th class="text-center">Fecha</th>
+                  <th class="text-center">Cliente/Razon Social</th>
+                  <th class="text-center">Vendedor</th>
+                  <th class="text-center">Cantidad/Unidad</th>
+                </tr>
+              </ng-template>
+              <ng-template #tbody let-tbody>
+                <tr *ngFor="let item of getPaginateDataComprometido()">
+                  <td
+                    [ngClass]="
+                      estoqueComprometidoClassStatusBorder(item.id_oferta)
+                    "
+                    class="text-center"
+                  >
+                    {{ item.id_oferta }}
+                  </td>
+                  <td class="text-center">{{ item.codigo_oferta }}</td>
+                  <td class="text-center">{{ item.fecha_oferta }}</td>
+                  <td class="text-center">{{ item.cliente }}</td>
+                  <td class="text-center">{{ item.vendedor }}</td>
+                  <td class="text-center">
+                    {{ item.cantidad | number : '1.0-0' }} {{ item.unidad }}
+                  </td>
+                </tr>
+                <tr class="bg-dark text-center text-dark">
+                  <td colspan="4" class="border-dark"></td>
+                  <td><strong>Total</strong></td>
+                  <td class="text-center">
+                    <strong>{{
+                      totaisComprometido.cantidad | number : '1.0-0'
+                    }}</strong>
+                  </td>
+                </tr>
+              </ng-template>
+            </custom-table>
+          </div>
+          <empty-result
+            message="Ninguna información encontrada"
+            class="my-4"
+            *ngIf="comprometidoEmpty && !comprometidoLoaded"
+          ></empty-result>
+          <div class="d-flex justify-content-center mt-3">
+            <pagination
+              [maxSize]="maxSizeComprometido"
+              [(totalItems)]="totalComprometido"
+              (pageChanged)="onPageChangedComprometido($event)"
+              [(itemsPerPage)]="itemsPerPageComprometido"
+              [boundaryLinks]="true"
+              [(ngModel)]="currentPageComprometido"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+            >
+            </pagination>
+          </div>
+          <div
+            class="d-flex justify-content-center mb-3"
+            *ngIf="!comprometidoLoaded && !comprometidoEmpty"
+          >
             <div class="spinner-border text-dark"></div>
           </div>
         </div>

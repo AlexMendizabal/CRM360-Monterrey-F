@@ -71,7 +71,6 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
       .pipe(
         finalize(() => {
           this.loaderFullScreen = false;
-
           if (this.showAll === true) {
             this.formValue.emit({
               idEscritorio: 0,
@@ -108,7 +107,6 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
           } else {
             this.handleLoadDependenciesError();
           }
-
           if (response[0]['responseCode'] === 200) {
             this.vendedores = response[1]['result'];
             this.filteredVendedores = this.vendedores;
@@ -131,7 +129,6 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
   loadEscritoriosVendedores(): Observable<any> {
     const escritorios = this.comercialService.getEscritorios();
     const vendedores = this.vendedoresService.getVendedores();
-
     return forkJoin([escritorios, vendedores]).pipe(take(1));
   }
 
@@ -191,43 +188,75 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
    /*  alert(this.form.value['idVendedor']) */
     if (this.form.valid) {
       if (this.adminOnly()) {
-        if (this.form.value['idEscritorio'] === 0) {
-          this.form.get('nomeEscritorio').setValue('TODAS LAS SUCURSALES');
-        } else {
-          for (let i = 0; i < this.escritorios.length; i++) {
-            if (this.form.value['idEscritorio'] === this.escritorios[i]['id']) {
-              this.form
-                .get('nomeEscritorio')
-                .setValue(this.escritorios[i]['nome']);
+        var id_vendedor = this.form.value['idVendedor'];
+        var id_sucursal = this.form.value['idEscritorio'];
+          //datos de sucursal 
+          this.vendedoresService.getSucursalVendedor(id_sucursal).pipe(
+            finalize(() => {
+              this.loaderFullScreen = false;
+            })
+          )
+          .subscribe(
+            (response: any) => {
+              if (response['success'] === true) {
+                this.escritorios = response['data'];
+                const nombreSucursal = `${this.escritorios['nm_escr']}`;
+                this.form.get('nomeEscritorio').setValue(nombreSucursal);
+              } else {
+                this.handleLoadDependenciesError();
+              }
+            },
+            (error: any) => {
+              this.handleLoadDependenciesError();
             }
-          }
-        }
-
-        if (this.form.value['idVendedor'] === 0) {
-          this.form.get('nomeVendedor').setValue('TODOS LOS VENDEDORES');
-        } else {
-          for (let i = 0; i < this.vendedores.length; i++) {
-            if (this.form.value['idVendedor'] === this.vendedores[i]['id']) {
-              this.form
-                .get('nomeVendedor')
-                .setValue(this.vendedores[i]['nome']);
+          );
+          //metodos para traer el vendedor con su sucursal
+          this.vendedoresService.getVendedorSucursal(id_vendedor).pipe(
+            finalize(() => {
+              this.loaderFullScreen = false;
+            })
+          )
+          .subscribe(
+            (response: any) => {
+              if (response['success'] === true) {
+                this.filteredVendedores = response['data'];
+                const nombresVendedor = `${this.filteredVendedores['NM_VEND']} ${this.filteredVendedores['NM_RAZA_SOCI']}`;
+                this.form.get('nomeVendedor').setValue(nombresVendedor);
+              } else {
+                this.handleLoadDependenciesError();
+              }
+            },
+            (error: any) => {
+              this.handleLoadDependenciesError();
             }
-          }
-        }
+          );
+          
       } else {
-        for (let i = 0; i < this.filteredVendedores.length; i++) {
-          if (
-            this.form.value['idVendedor'] === this.filteredVendedores[i]['id']
-          ) {
-            this.form
-              .get('idEscritorio')
-              .setValue(this.filteredVendedores[i]['idEscritorio']);
-            this.form
-              .get('nomeVendedor')
-              .setValue(this.filteredVendedores[i]['nome']);
+       //metodos para traer el vendedor con su sucursal
+       this.vendedoresService.getVendedorSucursal(id_vendedor).pipe(
+          finalize(() => {
+            this.loaderFullScreen = false;
+          })
+        )
+        .subscribe(
+          (response: any) => {
+            if (response['responseCode'] === 200) {
+              this.filteredVendedores = response['data'];
+              const nombreVendedor = `${this.filteredVendedores['NM_VEND']} ${this.filteredVendedores['NM_RAZA_SOCI']}`;
+              this.form.get('idEscritorio').setValue(this.filteredVendedores['ID_ESCR']);
+              this.form.get('nomeVendedor').setValue(nombreVendedor);
+
+             
+            } else {
+              this.handleLoadDependenciesError();
+            }
+          },
+          (error: any) => {
+            this.handleLoadDependenciesError();
           }
-        }
+        );
       }
+     
       this.formValue.emit(this.form.value);
     }
   }
@@ -238,11 +267,8 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
     //if (escritorio> 0){
       this.vendedoresService.getVendedoresSucursal(escritorio).subscribe(
         (response: any) => {
-          //console.log(response)
           if (response['success'] === true) {
-            //this.setFormFilter();
-            this.filteredVendedores = response['data'];
-
+              this.filteredVendedores = response['data'];
           } else {
             this.handleLoadDependenciesError();
           }
@@ -257,9 +283,8 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
   }
 
   filterVendedores(idEscritorio: any) {
-    this.form.controls['idVendedor'].setValue(null);
-
-    if (idEscritorio == 0) {
+   this.form.controls['idVendedor'].setValue(null);
+     if (idEscritorio == 0) {
       this.filteredVendedores = [
         {
           id: 0,
@@ -269,11 +294,11 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
       ];
       this.form.controls['idVendedor'].setValue(idEscritorio);
       this.onInput();
+     
     } else {
       this.filteredVendedores = this.vendedores.filter(
         value => value.idEscritorio == idEscritorio
       );
-
       if (this.filteredVendedores.length > 0 && this.showAll === true) {
         this.filteredVendedores.unshift({
           id: 0,
@@ -283,5 +308,4 @@ export class ComercialTemplatesFiltroVendedorEscritorioComponent
     }
   }
 
-  //
 }

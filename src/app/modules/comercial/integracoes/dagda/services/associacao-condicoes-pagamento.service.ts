@@ -12,7 +12,7 @@ import { Observable, forkJoin } from 'rxjs';
   providedIn: 'root',
 })
 export class ComercialIntegracoesDagdaServicesAssociacaoCondicoesPagamento {
-  private readonly BASE_URL: string = `https://crm360.monterrey.com.bo/api`;
+  private readonly BASE_URL: string = `http://23.254.204.187/api`;
 
   constructor(
     private http: HttpClient,

@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewChecked, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 // ngx-bootstrap
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
@@ -22,6 +22,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   templateUrl: './finalizacion.component.html',
   styleUrls: ['./finalizacion.component.scss'],
 })
+
 export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
   implements OnInit, AfterViewChecked {
   items;
@@ -52,7 +53,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
       color: 'white',
     },
   };
-
+  
+  
   metasProgresso = {
     toneladas: {
       valor: 0,
@@ -90,15 +92,13 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder
   ) {
-    this.checkoutForm = this.formBuilder.group({
-      observacion: ''
-    });
+   
   }
-
-
   ngOnInit(): void {
     //this.confirmDuplicatas();
-
+    this.checkoutForm = this.formBuilder.group({
+      observacion: ['', Validators.required], 
+    });
   }
 
   ngAfterViewChecked() {
@@ -115,50 +115,41 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
     this.getComissao();
   }
 
-  onSubmit(customerData) {
-    if (customerData !== undefined && customerData !== null) {
-      this.checkoutForm.reset();
+  onSubmit() {
+
+    console.log('con authorizacion',this.checkoutForm.value, this.checkoutForm.value, this.checkoutForm.value.observacion )
+    if (this.checkoutForm.value !== undefined && this.checkoutForm.value !== null && this.checkoutForm.value.observacion !=="") {
+      
       this.id_oferta = this.dataCotacao.id_oferta;
       this.fecha = this.dataCotacao.fecha_inicial;
-      const observacion_vendedor = customerData.observacion;
-
-      let mayor = null;
-      let item = null;
-      this.dataCotacao.carrinho.forEach((data) => {
-          if (data.percentualDesc > data.descuento_permitido) {
-              if (mayor === null || data.percentualDesc > mayor) {
-                  item = data.codMaterial;
-                  mayor = data.percentualDesc;
-              }
-          }
-      });
+      const observacion_vendedor = this.checkoutForm.value;
 
       this.formObj = {
-        descripcion_vend: observacion_vendedor,
+        descripcion_vend: this.checkoutForm.get('observacion').value,
         id_oferta: this.id_oferta,
         fecha_solicitud: this.fecha,
-        rango: mayor,
-        id_item:item
       };
-      console.log(this.formObj);
+
       this.cotacoesService.autorizaciones(this.formObj)
         .pipe().subscribe(
           (response: any) => {
             console.log(response);
+            this.pnotifyService.notice(
+              'se envio una auntorización.'
+            );
           }
         );
-          this.onClose();
+      this.onClose();
     }
-    else
-    {
-        this.onClose();
+    else {
+      this.onClose();
     }
- }
+  }
 
   onClose(): void {
     this.formularioService.limparCarrinhoSubject.next(true);
     this.bsModalRef.hide();
-    location.reload();
+    //location.reload();
     this.router.navigate([`/comercial/ciclo-vendas/23/cotacoes-pedidos/lista`]);
   }
 
@@ -175,20 +166,23 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
   }
 
   verificador(): boolean {
+    const titulo_observacionElement = document.getElementById('titulo_observacio') as HTMLButtonElement;
+    const finalizar = document.getElementById('finalizar') as HTMLButtonElement;
+    const observacionElement = document.getElementById('observacion') as HTMLInputElement;
     this.dataCotacao.carrinho.forEach((data) => {
       if (data.percentualDesc > data.descuento_permitido) {
         this.deshabilitar = false;
+        finalizar.disabled = !this.checkoutForm.get('observacion').value;
         return;
       }
     });
     if (this.deshabilitar) {
-      const observacionElement = document.getElementById('observacion') as HTMLButtonElement;
-      const titulo_observacionElement = document.getElementById('titulo_observacio') as HTMLButtonElement;
-      observacionElement.disabled = this.deshabilitar;
-      observacionElement.style.display = this.deshabilitar ? 'none' : 'block';
+      observacionElement.value = '';
+      observacionElement.disabled = true;
+      observacionElement.hidden = true;
       titulo_observacionElement.disabled = this.deshabilitar;
       titulo_observacionElement.style.display = this.deshabilitar ? 'none' : 'block';
-      console.log(this.deshabilitar);
+      finalizar.disabled = this.checkoutForm.get('observacion').value;
       return;
     }
   }
@@ -220,7 +214,6 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
           })
         )
         .subscribe((response: JsonResponse) => {
-          console.log('cotizaciones', response);
           if (response.success === true) {
             this.metasProgresso.toneladas.progresso = response.data.toneladas;
             this.metasProgresso.clientes.progresso = response.data.clientes;

@@ -1321,7 +1321,7 @@
       </custom-table>
     </div>
     <div class="mt-2" *ngIf="totalItems > itemsPerPageParam">
-      Exibindo {{ itemsPerPageParam * (currentPage - 1) + 1 }} a
+      Total {{ itemsPerPageParam * (currentPage - 1) + 1 }} a
       {{
         currentPage * itemsPerPageParam > totalItems
           ? totalItems

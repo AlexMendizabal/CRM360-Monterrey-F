@@ -94,13 +94,29 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
     this.rutaService.indiceVendedor = vendedorSeleccionado
   }
 
+  onEscritorioChange(escritorio: any) {
+    // alert(1)
+    //console.log(escritorio);
+    //if (escritorio> 0){
+      this.vendedoresService.getVendedoresSucursal(escritorio).subscribe(
+        (response: any) => {
+          //console.log(response)
+          if (response['success'] === true) {
+            //this.setFormFilter();
+            this.filteredVendedores = response['data'];
 
+          } else {
+            this.handleLoadDependenciesError();
+          }
+        },
+      )
+    //}
+    // //else{
+    //   this.vendedoresService.getVendedoresSucursal(escritorio.idEscritorio)
 
-
-
-
-
-
+    // }
+    this.form.get('idVendedor').setValue(0);
+  }
 
   adminOnly(): boolean {
     if (this.profile.coordenador === true || this.profile.gestor === true) {

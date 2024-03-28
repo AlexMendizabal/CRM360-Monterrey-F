@@ -22,7 +22,7 @@
         <div class="form-group col">
           <label>Cliente</label>
           <div *ngIf="!detalhes.client">Sin informacion</div>
-          <div *ngIf="detalhes.client">{{ detalhes.client }}</div>
+          <div *ngIf="detalhes.client">{{ detalhes.client | uppercase }}</div>
         </div>
       </div>
       <div class="form-row">
@@ -30,7 +30,7 @@
           <label>FORMA DE CONTACTO</label>
           <div *ngIf="!detalhes.formContactDesc">Sin informacion</div>
           <div *ngIf="detalhes.formContactDesc">
-            {{ detalhes.formContactDesc }}
+            {{ detalhes.formContactDesc | uppercase }}
           </div>
         </div>
         <div class="form-row">
@@ -39,7 +39,8 @@
       <div class="form-row">
         <div class="form-group col">
           <label>Fecha</label>
-          <div>{{ detalhes.fullDate | uppercase }}</div>
+          <div *ngIf="detalhes.fecha_inicio">
+            {{ detalhes.fecha_inicio }}</div>
         </div>
       </div>
       <!-- <div class="form-row">
@@ -143,6 +144,10 @@
               </agm-polyline-point>
             </ng-container>
           </agm-polyline>
+
+          <agm-marker [latitude]="latitud_final" [longitude]="longitud_final" [iconUrl]="marca_color" [label]="''" >
+          </agm-marker>
+
         </agm-map>
       </div>
     </div>

@@ -119,7 +119,7 @@ export class ComercialDashboardVendedorDesempenhoToneladasComponent
 
       chart.data = data;
 
-      console.log(data)
+
 
       chart.language.locale = am4lang_pt_BR;
 
@@ -129,7 +129,7 @@ export class ComercialDashboardVendedorDesempenhoToneladasComponent
       // valueAxisX.tooltip.disabled = true;
 
       let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-      categoryAxis.dataFields.category = "data";
+      categoryAxis.dataFields.category = "DATA";
       categoryAxis.tooltip.disabled = true;
 
       let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
@@ -138,7 +138,7 @@ export class ComercialDashboardVendedorDesempenhoToneladasComponent
 
       let seriesPassado = chart.series.push(new am4charts.LineSeries());
       seriesPassado.dataFields.valueY = 'passado';
-      seriesPassado.dataFields.categoryX = 'data';
+      seriesPassado.dataFields.categoryX = 'DATA';
       seriesPassado.tensionX = 0.8;
       seriesPassado.strokeWidth = 3;
       seriesPassado.tooltipText = '{categoryX}: {valueY.value}t';
@@ -160,7 +160,7 @@ export class ComercialDashboardVendedorDesempenhoToneladasComponent
 
       let seriesPresente = chart.series.push(new am4charts.LineSeries());
       seriesPresente.dataFields.valueY = 'presente';
-      seriesPresente.dataFields.categoryX  = 'data';
+      seriesPresente.dataFields.categoryX  = 'DATA';
       seriesPresente.tensionX = 0.8;
       seriesPresente.strokeWidth = 3;
       seriesPresente.tooltipText = '{categoryX}: {valueY.value}t';
@@ -186,7 +186,7 @@ export class ComercialDashboardVendedorDesempenhoToneladasComponent
 
       let seriesProjecao = chart.series.push(new am4charts.LineSeries());
       seriesProjecao.dataFields.valueY = 'projecao';
-      seriesProjecao.dataFields.categoryX  = 'data';
+      seriesProjecao.dataFields.categoryX  = 'DATA';
       seriesProjecao.tensionX = 0.8;
       seriesProjecao.strokeWidth = 3;
       seriesProjecao.tooltipText = '{categoryX}: {valueY.value}t';

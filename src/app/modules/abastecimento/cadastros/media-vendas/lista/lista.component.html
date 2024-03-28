@@ -178,7 +178,7 @@
       </custom-table>
     </div>
     <div class="mt-2 text-center" *ngIf="mediaVendas.length > itemsPerPage">
-      Exibindo {{ begin + 1 }} a {{ end }} de {{ mediaVendas?.length }}
+      Total {{ begin + 1 }} a {{ end }} de {{ mediaVendas?.length }}
       <div class="d-flex align-items-center justify-content-center">
         <pagination
           [maxSize]="10"
@@ -345,7 +345,7 @@
           </custom-table>
         </div>
         <div class="col-12 mb-2 ml-2" *ngIf="dadosLogs.length > itemsPerPage && loadingLogs">
-          Exibindo {{ beginA + 1 }} a {{ endA }} de {{ dadosLogs?.length }}
+          Total {{ beginA + 1 }} a {{ endA }} de {{ dadosLogs?.length }}
           <pagination
             [maxSize]="10"
             [totalItems]="dadosLogs?.length"

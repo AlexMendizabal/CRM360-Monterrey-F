@@ -1,11 +1,11 @@
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
-<app-header appTitle="Escritórios">
-  <button
+<app-header appTitle="Almacenes">
+  <!-- <button
     type="button"
     [routerLink]="['../novo']">
     Adicionar
-  </button>
+  </button> -->
   <button
     type="button"
     (click)="onFilter()">
@@ -19,14 +19,22 @@
         <form [formGroup]="form" autocomplete="off">
           <div class="form-row">
             <div class="form-group col-lg-4">
-              <label for="nomeEscritorio">Nome do escritório</label>
+              <label for="nomeEscritorio">Nombre de Almacen</label>
               <input
                 type="text"
                 class="form-control"
                 formControlName="nomeEscritorio"
                 (keydown.enter)="onFilter()">
             </div>
-            <div class="form-group col-lg-3">
+            <div class="form-group col-lg-4">
+              <label for="codReferenteErp">Codigo Almacen</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="codReferenteErp"
+                (keydown.enter)="onFilter()">
+            </div>
+            <!-- <div class="form-group col-lg-3">
               <label for="codEmpresa">Empresa</label>
               <ng-select
                 [searchable]="true"
@@ -37,18 +45,18 @@
                 bindLabel="nomeEmpresa"
                 bindValue="idEmpresa">
               </ng-select>
-            </div>
-            <div class="form-group col-lg-3">
-              <label for="codSituacao">Situação</label>
+            </div> -->
+            <!-- <div class="form-group col-lg-3">
+              <label for="codSituacao">Situacion</label>
               <select
                 class="form-control custom-select"
                 id="codSituacao"
                 formControlName="codSituacao">
                 <option value="0">Todos</option>
-                <option value="1">Ativos</option>
-                <option value="2">Inativos</option>
+                <option value="1">Activos</option>
+                <option value="2">Inactivos</option>
               </select>
-            </div>
+            </div> -->
             <div class="form-group col-lg-2">
               <label for="registros">Registros</label>
               <select
@@ -80,8 +88,9 @@
       <custom-table [config]="tableConfig" *ngIf="dadosPagination.length > 0 && !dadosEmpty">
         <ng-template #thead let-thead>
           <tr>
-            <th scope="col">Escritório</th>
-            <th scope="col" [hidden]="showDetailPanel">Empresa</th>
+            <th scope="col">Codigo Almacen</th>
+            <th scope="col">Almacen</th>
+            <!-- <th scope="col" [hidden]="showDetailPanel">Empresa</th> -->
             <th scope="col" [hidden]="showDetailPanel"></th>
           </tr>
         </ng-template>
@@ -90,37 +99,41 @@
             <td
               class="hover"
               [ngClass]="classStatusBorder(escritorio)"
-              (click)="onDetails(escritorio)">
-              {{ escritorio.nomeEscritorio | uppercase }}
+              >
+              <!-- (click)="onDetails(escritorio)" -->
+              {{ escritorio.codReferenteErp | uppercase }}
             </td>
             <td
               class="hover"
-              (click)="onDetails(escritorio)"
+              
               [hidden]="showDetailPanel">
-              {{ escritorio.nomeEmpresa | uppercase }}
+              {{ escritorio.nomeEscritorio | uppercase }}
             </td>
+            <!-- (click)="onDetails(escritorio)" -->
+            <!-- (click)="onDetails(escritorio)" -->
             <td class="text-right" [hidden]="showDetailPanel">
-              <span *ngIf="escritorio.codSituacao == 1" class="mr-3" tooltip="Inativar" placement="left" container="body">
+              <span *ngIf="escritorio.codSituacao == 1" class="mr-3" tooltip="Inactivar" placement="left" container="body">
                 <button type="button" class="btn-icon-sm" (click)="onInactivate(i, escritorio)">
                   <i class="fas fa-toggle-on"></i>
                 </button>
               </span>
-              <span *ngIf="escritorio.codSituacao == 2" class="mr-3" tooltip="Ativar" placement="left" container="body">
-                <button type="button" class="btn-icon-sm" (click)="onActivate(i, escritorio)">
+              <span *ngIf="escritorio.codSituacao == 2||0" class="mr-3" tooltip="Activar" placement="left" container="body">
+                <button type="button" class="btn-icon-sm" (click)="onActivate(i, escritorio)" > 
+                  <!--  -->
                   <i class="fas fa-toggle-off"></i>
                 </button>
               </span>
-              <span class="mr-3" tooltip="Editar" placement="left" container="body">
+              <!-- <span class="mr-3" tooltip="Editar" placement="left" container="body">
                 <button type="button" class="btn-icon-sm" (click)="onEdit(escritorio)">
                   <i class="fas fa-edit"></i>
                 </button>
-              </span>
+              </span> -->
             </td>
           </tr>
         </ng-template>
       </custom-table>
       <empty-result
-        message="Nenhuma informação encontrada"
+        message="Ninguna informacion encontrada"
         class="my-3"
         *ngIf="dadosEmpty">
       </empty-result>

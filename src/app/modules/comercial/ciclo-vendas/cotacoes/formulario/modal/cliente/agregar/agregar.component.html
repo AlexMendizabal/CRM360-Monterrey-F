@@ -1,0 +1,272 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Agregar cliente</h4>
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary mr-2" role="status" *ngIf="loadingClientes">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="col-md-12">
+        <form [formGroup]="form" autocomplete="off">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-warning">
+                        <strong> Los campos marcados con <span class="text-danger"> * </span> son campos
+                            obligatorios.</strong>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title"> Datos de cliente</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for=""> <strong> Nombre completo <span
+                                                class="text-danger">*</span></strong>
+                                    </label>
+                                    <input type="text" class="form-control" formControlName="nombre"    [ngClass]="onFieldError('nombre') + ' ' + onFieldRequired('nombre')">
+                                    <invalid-form-control [show]="onFieldInvalid('nombre') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for=""> <strong> Razon social <span class="text-danger">*</span> </strong>
+                                    </label>
+                                    <input type="text" class="form-control" formControlName="razon_social" 
+                                    [ngClass]="onFieldError('razon_social') + ' ' + onFieldRequired('razon_social')"
+                                    placeholder="En caso de no tener, colocar nombre completo">
+                                    <invalid-form-control [show]="onFieldInvalid('razon_social') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control>
+                                </div>
+                                <!-- <div class="col-md-4">
+                                    <label for=""> <strong> Rubro negocio </strong>
+                                    </label>
+                                    <ng-select class="" [formControlName]="'id_rubro'" id="orderBy"
+                                        (change)="datosVendedor($event);" >
+                                        <ng-container *ngFor="let rubro of rubros">
+                                            <ng-option [value]="rubro.id_cnae">
+                                                {{ rubro.descricao}}
+                                            </ng-option>
+                                        </ng-container>
+                                    </ng-select>
+                                  
+                                </div> -->
+                                <div class="col-md-4">
+                                    <label for=""> <strong> Tipo de persona <span class="text-danger">*</span> </strong>
+                                    </label>
+                                    <ng-select class="" [formControlName]="'tipo_persona'" id="orderBy"
+                                        (change)="datosVendedor($event);" >
+                                        <ng-container *ngFor="let tipo_persona of tipos_personas">
+                                            <ng-option [value]="tipo_persona.sigla">
+                                                {{ tipo_persona.tipo_persona}}
+                                            </ng-option>
+                                        </ng-container>
+                                    </ng-select>
+                                  
+                                </div>
+                                <div class="col-md-4">
+                                    <label for=""><strong>Ejecutivo de venta</strong> <span class="text-danger">*</span></label>
+                                    <ng-select class="" [formControlName]="'id_vendedor'" id="orderBy" (change)="changeVendedor($event);">
+                                        <ng-container *ngFor="let listaEjecutivo of vendedores">
+                                            <ng-option [value]="listaEjecutivo.id">
+                                                {{ listaEjecutivo.nome }}
+                                            </ng-option>
+                                        </ng-container>
+                                    </ng-select>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label for=""> <strong> Nombre factura </strong> </label>
+                                    <input type="text" class="form-control" formControlName="nombre_factura" [ngClass]="onFieldError('nombre_factura') + ' ' + onFieldRequired('nombre_factura')">
+                                    <invalid-form-control [show]="onFieldInvalid('nombre_factura') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for=""> <strong> Celular <span class="text-danger">*</span> </strong> </label>
+                                    <input type="number" class="form-control" formControlName="celular" [ngClass]="onFieldError('celular') + ' ' + onFieldRequired('celular')">
+                                    <invalid-form-control [show]="onFieldInvalid('celular') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label for=""> <strong> Teléfono <span class="text-danger">*</span> </strong>  </label>
+                                    <input type="text" class="form-control" formControlName="telefono" [ngClass]="onFieldError('telefono') + ' ' + onFieldRequired('telefono')">
+                                    <invalid-form-control [show]="onFieldInvalid('nombre_factura') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for=""> <strong> Tipo de documento <span class="text-danger">*</span> </strong>  </label>
+                                    <select class="form-control" id="tipo_documento" formControlName="tipo_documento" (change)="onInput()" required>
+                                    <option *ngFor="let tipo of tipos_documentos" [value]="tipo.id">{{ tipo.siglas_doc }}-{{ tipo.nombre_doc }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for=""> <strong> Nº de documento </strong> <span class="text-danger">*</span> </label>
+                                    <input type="text" class="form-control" formControlName="numero_documento" [ngClass]="onFieldError('numero_documento') + ' ' + onFieldRequired('numero_documento')">
+                                    <invalid-form-control [show]="onFieldInvalid('numero_documento') == 'required'" message="Este campo es obligatorio/ Max. 8 caracteres"></invalid-form-control>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h6 class="card-title"> Datos de contacto </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for=""> <strong> Título contacto  <span class="text-danger">*</span> 
+                                            </strong> </label>
+                                        <input type="text" class="form-control" formControlName="contacto" [ngClass]="onFieldError('contacto') + ' ' + onFieldRequired('contacto')">
+                                        <invalid-form-control [show]="onFieldInvalid('contacto') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for=""> <strong> Nombre contacto  <span class="text-danger">*</span> 
+                                            </strong> </label>
+                                        <input type="text" class="form-control" formControlName="nombre_contacto" [ngClass]="onFieldError('nombre_contacto') + ' ' + onFieldRequired('nombre_contacto')">
+                                        <invalid-form-control [show]="onFieldInvalid('nombre_contacto') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for=""> <strong> Apellido paterno  <span class="text-danger">*</span> 
+                                            </strong> </label>
+                                        <input type="text" class="form-control" formControlName="apellido_p_contacto" [ngClass]="onFieldError('apellido_p_contacto') + ' ' + onFieldRequired('apellido_p_contacto')">
+                                        <invalid-form-control [show]="onFieldInvalid('apellido_p_contacto') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for=""> <strong> Apellido materno <!-- <span class="text-danger">*</span> -->
+                                            </strong> </label>
+                                        <input type="text" class="form-control" formControlName="apellido_m_contacto" [ngClass]="onFieldError('apellido_m_contacto') + ' ' + onFieldRequired('apellido_m_contacto')">
+                                        <invalid-form-control [show]="onFieldInvalid('apellido_m_contacto') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for=""> <strong> Teléfono  <span class="text-danger">*</span>  </strong>
+                                        </label>
+                                        <input type="text" class="form-control" formControlName="telefono_contacto" [ngClass]="onFieldError('telefono_contacto') + ' ' + onFieldRequired('telefono_contacto')">
+                                        <invalid-form-control [show]="onFieldInvalid('telefono_contacto') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for=""> <strong> Celular </strong> </label>
+                                        <input type="text" class="form-control" formControlName="celular_contacto" [ngClass]="onFieldError('celular_contacto') + ' ' + onFieldRequired('celular_contacto')">
+                                        <invalid-form-control [show]="onFieldInvalid('celular_contacto') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control>
+                                    </div>
+                                    <div class="col-md-6" *ngIf="swDireccionContacto === true">
+                                        <label for=""> <strong> Dirección  <span class="text-danger" style="font-size: 9px;">*</span> </strong>
+                                        </label>
+                                        <input type="text" class="form-control" formControlName="direccion_contacto" [ngClass]="onFieldError('direccion_contacto') + ' ' + onFieldRequired('direccion_contacto')"
+                                        placeholder="Puede escribir aquí, o agregar ubicación por el mapa." >
+                                        <invalid-form-control [show]="onFieldInvalid('direccion_contacto') == 'required'"
+                                    message="Este campo es requerido/ Max. 50 caracteres."></invalid-form-control>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for=""><strong>Ubicación</strong></label><br>
+                                        <button class="btn btn-warning btn-block"
+                                            (click)="openModalUbicacion(seleccionarUbicacion, 1)"
+                                            [disabled]="id_vendedor.length > 0">Agregar Dirección</button>
+                                    </div>
+
+
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h6 class="card-title"> Datos de dirección </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for=""> <strong> Título de ubicación <span class="text-danger">*</span>
+                                            </strong> </label>
+                                        <input type="text" class="form-control" formControlName="titulo_direccion" [ngClass]="onFieldError('titulo_direccion') + ' ' + onFieldRequired('titulo_direccion')">
+                                        <invalid-form-control [show]="onFieldInvalid('razon_social') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for=""> <strong> Ciudad <span class="text-danger">*</span> </strong>
+                                        </label>
+                                        <ng-select class="" [formControlName]="'id_ciudad'" id="orderBy">
+                                            <ng-container *ngFor="let ciudad of ciudades">
+                                                <ng-option [value]="ciudad.id">
+                                                    {{ ciudad.nombre_ciudad}}
+                                                </ng-option>
+                                            </ng-container>
+                                        </ng-select>
+                                        <!-- <invalid-form-control [show]="onFieldInvalid('razon_social') == 'required'"
+                                    message="Este campo es requerido."></invalid-form-control> -->
+                                    </div>
+                                    <div class="col-md-12"*ngIf="swDireccion === true">
+                                        <label for=""> <strong> Dirección <span class="text-danger" style="font-size: 9px;">*</span> </strong>
+                                        </label>
+                                        <input type="text" class="form-control" formControlName="direccion" [ngClass]="onFieldError('direccion') + ' ' + onFieldRequired('direccion')"  placeholder="Puede escribir aquí, o agregar ubicación por el mapa." >
+                                        <invalid-form-control [show]="onFieldInvalid('direccion') == 'required'"
+                                    message="Este campo es requerido/ Max. 50 caracteres."></invalid-form-control>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for=""> <strong> Ubicación  <span class="text-danger">*</span>  </strong>
+                                        </label>
+                                        <button class="btn btn-warning btn-block"
+                                            (click)="openModalUbicacion(seleccionarUbicacion, 2)"
+                                            [disabled]="id_vendedor.length > 0"> Agregar Dirección </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="onClose()">
+            Cancelar
+        </button>
+        <!-- <button type="button" class="btn btn-success" (click)="onSubmit()">
+            Confirmar
+        </button> -->
+        <button
+        #botonGuardar
+        type="submit"
+        class="btn btn-success"
+        (click)="onSubmit()"
+      >
+        <span
+          *ngIf="isLoading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        {{ isLoading ? 'Guardando...' : 'Guardar' }}
+      </button>
+      
+    </div>
+    <ng-template #seleccionarUbicacion>
+        <app-comercial-ciclo-vendas-cotacoes-precadastro-modal-ubicacion-contacto
+            (latLngChanged)="changeLatitudLongitud($event)" (fecharModal)="onFecharModal($event)"
+            [latitud]="this.latitud" [longitud]="this.longitud" [tipo]=this.tipo_peticion
+            [latitud_inicial]="this.latitud_inicial" [longitud_inicial]="this.longitud_inicial">
+        </app-comercial-ciclo-vendas-cotacoes-precadastro-modal-ubicacion-contacto>
+    </ng-template>
+</div>

@@ -90,7 +90,8 @@ export class ComercialCadastrosMateriaisSimilaridadeService {
   getFilterValues(): Observable<Object | JsonResponse> {
     const linhas = this.tidSoftwareService.getLinhas();
     const classes = this.comercialService.getClasses(null);
-
-    return forkJoin([linhas, classes]);
+    const grupos = this.comercialService.getGrupo(null);
+    
+    return forkJoin([linhas, classes, grupos]);
   }
 }

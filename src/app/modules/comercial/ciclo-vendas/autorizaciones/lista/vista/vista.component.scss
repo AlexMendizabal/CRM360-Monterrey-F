@@ -1,0 +1,73 @@
+.custom-modal {
+  width: 100%;
+  max-width: 95%;
+  margin: auto;
+}
+
+.custom-modal table {
+  width: 100%;
+}
+
+.customer-info,
+.company-info {
+  margin-top: 4px;
+  margin-right: 5px;
+  border: 2px solid #000000;
+  padding: 10px;
+}
+
+.custinf-weight{
+  font-weight: bold;
+}
+
+.custom-modal-content {
+  margin: auto;
+  border: 2px solid black;
+  padding: 20px;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.datcotizacion-font{
+  font-size: 15px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.cuerpo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.monterrey-info{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+table tr {
+  height: 1px;
+}
+
+.wider-card {
+  width: 100%; /* Adjust this value as needed */
+}
+
+.table-container {
+  max-height: 300px; /* Adjust the height as per your requirements */
+  overflow-y: auto;
+}
+
+.card-bodyy {
+  padding: 20px; /* Adjust this value to control the space inside each card */
+}

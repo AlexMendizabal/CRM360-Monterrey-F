@@ -109,7 +109,7 @@
   </custom-table>
 </div>
 <div class="col-12 mt-2" *ngIf="dataLogs.length > itemsPerPage && loadingLogs">
-  Exibindo {{ begin + 1 }} a {{ end }} de {{ dataLogs?.length }}
+  Total {{ begin + 1 }} a {{ end }} de {{ dataLogs?.length }}
   <pagination [maxSize]="10" [totalItems]="dataLogs?.length" (pageChanged)="onPageChanged($event)"
     [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
     nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">

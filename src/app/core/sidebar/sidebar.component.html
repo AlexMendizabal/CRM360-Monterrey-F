@@ -55,10 +55,7 @@
             [routerLinkActive]="['active']"
             [routerLink]="[atividade.rota, atividade.submoduloId]"
             (click)="onHideMenu()"
-            *ngIf="
-              atividade.renderizacao == 'ATIVIDADE_COM_SUBMODULO' &&
-              atividade.versao != 2
-            "
+            *ngIf="atividade.renderizacao == 'ATIVIDADE_COM_SUBMODULO' && atividade.versao != 2"
           >
             <!-- *ngIf="atividade.rota != null && atividade.submoduloId != null && atividade.url == null" -->
             <i [class]="atividade.icone"></i>
@@ -87,10 +84,7 @@
             [routerLinkActive]="['active']"
             [routerLink]="[atividade.rota, atividade.id]"
             (click)="onHideMenu()"
-            *ngIf="
-              atividade.renderizacao ==
-              'ATIVIDADE_EXTERNA_RENDERIZADA_INTERNAMENTE'
-            "
+            *ngIf=" atividade.renderizacao == 'ATIVIDADE_EXTERNA_RENDERIZADA_INTERNAMENTE' "
           >
             <!-- *ngIf="atividade.url != null && atividade.exibeNovaAba == 0" -->
             <i [class]="atividade.icone"></i>

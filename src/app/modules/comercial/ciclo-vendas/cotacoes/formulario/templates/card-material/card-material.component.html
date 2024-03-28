@@ -53,12 +53,15 @@
 </div> -->
 
 <div class="card">
-  <div class="card-header">
+  <div class="card-header" *ngIf="material.onCarrinho === false" >
+    {{ material.codigo_material }} - {{ material.nombre_material }}
+  </div>
+  <div class="card-header" *ngIf="material.onCarrinho === true" style="background-color: #28a745; color:white">
     {{ material.codigo_material }} - {{ material.nombre_material }}
   </div>
   <div class="card-body">
     <p class="text-dark mb-0">Relacionado con:</p>
-    <p class="text-dark mb-0">{{ filtro[0].codigo_material}} - {{ filtro[0].nombre_material }}</p>
+    <p class="text-dark mb-0">{{ filtro[0]?.codigo_material }} - {{ filtro[0]?.nombre_material }}</p>
     <div class="d-flex justify-content-end mt-2">
       <div >
         <button

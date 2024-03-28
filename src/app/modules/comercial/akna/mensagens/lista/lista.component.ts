@@ -188,10 +188,10 @@ export class ComercialAknaMensagensListaComponent implements OnInit, OnDestroy {
     await promise
       .then((mensagens: IComercialAknaMensagens[]) => {
         this.mensagensFiltrados = mensagens;
-        console.log(mensagens);
+       // console.log(mensagens);
       })
       .catch((error) => {
-        console.log(error);
+        //console.log(error);
       });
   }
 

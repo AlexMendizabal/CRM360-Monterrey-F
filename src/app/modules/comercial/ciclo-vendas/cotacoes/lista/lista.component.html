@@ -1,508 +1,476 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
 <loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
-<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
-<app-header appTitle="Cotizaciones">
-  <button type="button" (click)="onReset()">
-    Limpar
+<app-header [appTitle]="appTitle">
+  <button *ngIf="dados.length > 0" type="button" (click)="exportarExcel()">
+    Exportar a Excel
   </button>
-  <button type="button" (click)="nuevo()">
+
+  <button type="button" (click)="nuevo()" [disabled]="swOfertaVencida">
     Adicionar
   </button>
-  <button type="button" (click)="onFilter()" [disabled]="loaderNavbar ">
+  <button
+    type="button"
+    (click)="onFilter()"
+    [disabled]="disableButton || !form.valid"
+  >
     Filtrar
   </button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
   <div #scrollToFilter>
     <advanced-filter>
-      <form [formGroup]="form">
+      <form [formGroup]="form" autocomplete="off">
         <div class="form-row">
-          <div class="form-group col-lg-3">
+          <!--  <div class="form-group col-lg-3">
             <label for="tipoData">Buscar por</label>
             <select class="form-control custom-select" id="tipoData" formControlName="tipoData">
               <option value="1">Fecha de publicacion</option>
             </select>
-          </div>
+          </div> -->
           <div class="form-group col-lg-2">
-            <label for="dataInicial">Fecha inicial</label>
-            <input class="form-control" id="dataInicial" type="text" bsDatepicker [bsConfig]="bsConfig"
-              formControlName="dataInicial">
+            <label for="dataInicial">Fecha Creación</label>
+            <input
+              class="form-control"
+              id="dataInicial1"
+              type="date"
+              formControlName="dataInicial1"
+            />
           </div>
+
           <div class="form-group col-lg-2">
-            <label for="dataFinal">Fecha final</label>
-            <input class="form-control" id="dataFinal" type="text" bsDatepicker [bsConfig]="bsConfig"
-              formControlName="dataFinal">
+            <label for="dataFinal">Fecha validez</label>
+            <input
+              class="form-control"
+              id="dataInicial2"
+              type="date"
+              labelForId="dataInicial2"
+              formControlName="dataInicial2"
+            />
           </div>
+
           <div class="form-group col-lg-3">
-            <label for="codStatus">Situacion</label>
-            <ng-select [items]="situacoes" [searchable]="true" [clearable]="false" labelForId="id" bindLabel="nombre"
-              formControlName="codSituacao" [(ngModel)]="defaultSelection">
+            <label for="status"> ESTADO </label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="situacoes"
+              [virtualScroll]="true"
+              labelForId="status"
+              bindLabel="nombre"
+              bindValue="id"
+              placeholder="Selecione..."
+              formControlName="status"
+            >
             </ng-select>
-
-
-
           </div>
+
           <div class="form-group col-lg-2">
             <label for="nrPedido">Núm. pedido</label>
-            <input type="text" id="nrPedido" placeholder="Digite..." class="form-control" formControlName="nrPedido"
-              (keydown.enter)="onFilter()">
+            <input
+              type="text"
+              id="id_oferta"
+              placeholder="Digite..."
+              class="form-control"
+              formControlName="nrPedido"
+              (keydown.enter)="onFilter()"
+            />
+          </div>
+          <div class="form-group col-lg-2">
+            <label for="codSAP">Cod. SAP</label>
+            <input
+              type="text"
+              id="codigo_oferta"
+              placeholder="Digite..."
+              class="form-control"
+              formControlName="codigo_oferta"
+              (keydown.enter)="onFilter()"
+            />
+          </div>
+
+          <div class="form-group col-lg-3">
+            <label for="codVendedor">Vendedor</label>
+            <ng-select
+              [items]="vendedores"
+              [searchable]="true"
+              [clearable]="true"
+              labelForId="ID"
+              bindValue="ID"
+              bindLabel="nombre"
+              formControlName="codVendedor"
+              placeholder="Seleccione un vendedor"
+              notFoundText="No se encontraron resultados"
+              [(ngModel)]="this.selectedVendedor"
+              [attr.disabled]="selectedVendedor ? true : null"
+              [attr.readonly]="selectedVendedor ? 'readonly' : null"
+            >
+            </ng-select>
+          </div>
+
+          <div class="form-group col-lg-4">
+            <label for="cliente">Clientes</label>
+            <ng-select
+              [items]="clientes"
+              [searchable]="true"
+              [clearable]="true"
+              labelForId="id_cliente"
+              bindValue="id_cliente"
+              bindLabel="nombre"
+              formControlName="cliente"
+              placeholder="Selecciona un cliente"
+              notFoundText="No se encontraron resultados"
+              >
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label for="registros"> Registros </label>
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="reg"
+              [virtualScroll]="true"
+              labelForId="registros"
+              bindLabel="ds"
+              bindValue="cd"
+              placeholder="Selecione..."
+              formControlName="registros"
+              [ngClass]="
+                onFieldError('registros') + ' ' + onFieldRequired('registros')
+              "
+            >
+            </ng-select>
+            <invalid-form-control
+              [show]="onFieldInvalid('registros')"
+              message="Los registros son obligatorios"
+            >
+            </invalid-form-control>
           </div>
         </div>
         <div class="form-row">
-          <!-- <div class="form-group col-lg-3">
-            <label for="codEmpresa">Empresa</label>
-            <ng-select
-              [searchable]="true"
-              [clearable]="false"
-              [items]="empresas"
-              placeholder="Selecione..."
-              formControlName="codEmpresa"
-              [virtualScroll]="true"
-              labelForId="codEmpresa"
-              bindLabel="nomeEmpresa"
-              bindValue="idEmpresa"
-              (change)="onChangeEmpresa($event.idEmpresa)"
-              [ngClass]="onFieldError('codEmpresa') + ' ' + onFieldRequired(form.controls.codEmpresa)">
-            </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('codEmpresa')" message="Empresa é obrigatório."></invalid-form-control>
-          </div> -->
-          <!-- <div class="form-group col-lg-2">
-            <label for="codDeposito">Depósito</label>
-            <ng-select
-              [searchable]="true"
-              [clearable]="false"
-              [items]="filteredDepositos"
-              placeholder="Selecione..."
-              formControlName="codDeposito"
-              [virtualScroll]="true"
-              labelForId="codDeposito"
-              bindLabel="nomeDeposito"
-              bindValue="idDeposito"
-              (change)="onChangeDeposito($event.idDeposito)"
-              [ngClass]="onFieldError('codDeposito') + ' ' + onFieldRequired(form.controls.codDeposito)">
-            </ng-select>
-            <invalid-form-control [show]="onFieldInvalid('codDeposito')" message="Depósito é obrigatório."></invalid-form-control>
-          </div> -->
-          <!-- <div class="form-group col-lg-2">
-            <label for="cliente">Cliente</label>
-            <input
-              type="text"
-              class="form-control"
-              id="cliente"
-              placeholder="Digite..."
-              formControlName="cliente"
-              (keydown.enter)="onFilter()">
-          </div> -->
-          <div class="form-group col-lg-3">
-            <label for="codVendedor">Vendedor</label>
-            <ng-select [searchable]="true" [clearable]="false" placeholder="Selecione..." [items]="vendedores"
-              formControlName="codVendedor" [virtualScroll]="true" labelForId="codVendedor" bindLabel="nome"
-              bindValue="id">
-            </ng-select>
-          </div>
           <div *ngIf="filtroCotacoes" class="form-group col-lg-1">
             <label for="statusCliente">Status Cliente</label>
-            <select class="form-control custom-select" id="statusCliente" formControlName="statusCliente">
+            <select
+              class="form-control custom-select"
+              id="statusCliente"
+              formControlName="statusCliente"
+            >
               <option>TODOS</option>
-              <option value="Ativo">ACTIVO</option>
-              <option value="Inativo">INACTIVO</option>
-            </select>
-          </div>
-          <div class="form-group " [ngClass]="{'col-lg-2': !filtroCotacoes , 'col-lg-1': filtroCotacoes}">
-            <label for="registros">Registros</label>
-            <select class="form-control custom-select" id="registros" formControlName="registros">
-              <option>100</option>
-              <option>200</option>
-              <option>300</option>
+              <option value="Ativo">CERRADO</option>
+              <option value="Inativo">BORRADOR</option>
             </select>
           </div>
         </div>
       </form>
     </advanced-filter>
   </div>
-  <subtitles [data]="leyendas" [allowActivation]="false" [show]="dados.length > 0 && !dadosEmpty">
 
-  </subtitles>
-  <div class="row" *ngIf="dados.length > 0 && !dadosEmpty">
-    <div [ngClass]="{'col-12': !showDetailPanel, 'col-6 pr-0': showDetailPanel}">
-      <div class="table-responsive">
-        <custom-table [config]="tableConfig">
-          <ng-template #thead let-thead>
-            <tr>
-              <!--  <th scope="col"></th> -->
-              <th scope="col" class="text-center">
-                <thead-sorter value="Núm." [active]="orderBy == 'codigo_oferta'" [sort]="orderType"
-                  (click)="setOrderBy('codigo_oferta')">
-                </thead-sorter>
-              </th>
-              <th scope="col" class="text-center">
-                <thead-sorter value="Fecha inicial" [active]="orderBy == 'fecha_inicial'" [sort]="orderType"
-                  (click)="setOrderBy('fecha_inicial')">
-                </thead-sorter>
-              </th>
-              <th scope="col" class="text-center">
-                <thead-sorter value="Fecha final" [active]="orderBy == 'fecha_final'" [sort]="orderType"
-                  (click)="setOrderBy('fecha_final')">
-                </thead-sorter>
-              </th>
-              <th scope="col">
-                <thead-sorter value="Cliente" [active]="orderBy == 'cliente'" [sort]="orderType"
-                  (click)="setOrderBy('cliente')">
-                </thead-sorter>
-              </th>
-              <th scope="col">
-                <thead-sorter value="Vendedor" [active]="orderBy == 'vendedor'" [sort]="orderType"
-                  (click)="setOrderBy('vendedor')">
-                </thead-sorter>
-              </th>
-              <!--  <th scope="col">
-                <thead-sorter value="Monto total bruto" [active]="orderBy == 'monto_total_bruto'" [sort]="orderType"
-                  (click)="setOrderBy('monto_total_bruto')">
-                </thead-sorter>
-              </th>
-              <th scope="col">
-                <thead-sorter value="Descuento" [active]="orderBy == 'descuento'" [sort]="orderType"
-                  (click)="setOrderBy('descuento')">
-                </thead-sorter>
-              </th> -->
-              <th scope="col">
-                <thead-sorter value="Monto total" [active]="orderBy == 'monto_total'" [sort]="orderType"
-                  (click)="setOrderBy('monto_total')">
-                </thead-sorter>
-              </th>
-              <th scope="col">
-                <thead-sorter value="Peso total kg." [active]="orderBy == 'peso'" [sort]="orderType"
-                  (click)="setOrderBy('peso_total')">
-                </thead-sorter>
-              </th>
-              <th scope="col">
-                <thead-sorter value="Lista" [active]="orderBy == 'lista_precio'" [sort]="orderType"
-                  (click)="setOrderBy('lista_precio')">
-                </thead-sorter>
-              </th>
-              <th scope="col">
-                <thead-sorter value="Modo de entrega" [active]="orderBy == 'modo_entrega'" [sort]="orderType"
-                  (click)="setOrderBy('modo_entrega')">
-                </thead-sorter>
-              </th>
-              <th scope="col">
-                <thead-sorter value="Estado" [active]="orderBy == 'estado_oferta'" [sort]="orderType"
-                  (click)="setOrderBy('estado_oferta')">
-                </thead-sorter>
-              </th>
-              <th scope="col">
-                <thead-sorter value="Acciones" [active]="orderBy == 'Acciones'" [sort]="orderType"
-                  (click)="setOrderBy('Acciones')">
-                </thead-sorter>
-              </th>
-            </tr>
-          </ng-template>
-          <ng-template #tbody let-tbody>
-            <tr *ngFor="let pedido of dados; let i = index"[class.table-active]="i == activeRow">
-              <td class="text-center" [ngStyle]="styleStatusBorder(pedido)">
-                <span class="d-inline-flex">
-                <ng-template #tooltipLiberacao>
-                  <p class="mb-2">ESPERANDO LIBERACION:</p><br>
-                  <div *ngIf="pedido.travas.length > 0">
-                    <dl>
-                      <ng-container *ngFor="let trava of pedido.travas">
-                        <dd><i class="fas fa-exclamation-triangle small mr-1"></i> {{ trava['desTrava'] }}</dd>
-                      </ng-container>
-                    </dl>
-                  </div>
-                </ng-template>
-                <ng-template #tooltipLiberacaoAberto>
-                    <p class="mb-2">ESPERANDO LIBERACION:</p><br>
-                    <div>
-                      <dl>
-                        <ng-container>
-                          <dd><i class="fas fa-exclamation-triangle small mr-1"></i> PEDIDO EN ABIERTO</dd>
-                        </ng-container>
-                      </dl>
-                    </div>
+  <ul class="horizontal-list">
+    <li *ngFor="let item of leyendas" class="text-muted" st>
+      <i class="fas fa-paper-plane" style="color:{{ item.hex }};"></i>
+      {{ item.text }}
+    </li>
+  </ul>
+
+  <div class="row">
+    <div class="col-12">
+      <custom-table
+        class="table-responsive"
+        [config]="tableConfig"
+        [hidden]="!noResult"
+      >
+        <ng-template #thead let-thead>
+          <tr class="text-center">
+            <th
+              scope="col"
+              class="text-center"
+              (click)="setOrderBy('codigo_oferta')"
+            >
+              <thead-sorter
+                value="Cod.SAP"
+                [active]="orderBy == 'codigo_oferta'"
+                [sort]="orderType"
+              >
+              </thead-sorter>
+            </th>
+            <th
+              scope="col"
+              class="text-center"
+              (click)="setOrderBy('fecha_inicial')"
+            >
+              <thead-sorter
+                value="Fecha CREACIÓN"
+                [active]="orderBy == 'fecha_inicial'"
+                [sort]="orderType"
+              >
+              </thead-sorter>
+            </th>
+            <th scope="col" class="text-center">
+              <thead-sorter
+                value="Fecha VALIDEZ"
+                [active]="orderBy == 'fecha_final'"
+                [sort]="orderType"
+                (click)="setOrderBy('fecha_final')"
+              >
+              </thead-sorter>
+            </th>
+            <th scope="col">
+              <thead-sorter
+                value="Cliente"
+                [active]="orderBy == 'id_cliente'"
+                [sort]="orderType"
+                (click)="setOrderBy('id_cliente')"
+              >
+              </thead-sorter>
+            </th>
+            <th scope="col">
+              <thead-sorter
+                value="Vendedor"
+                [active]="orderBy == 'id_vendedor'"
+                [sort]="orderType"
+                (click)="setOrderBy('id_vendedor')"
+              >
+              </thead-sorter>
+            </th>
+            <th scope="col">
+              <thead-sorter
+                value="Modo de entrega"
+                [active]="orderBy == 'id_modo_entrega'"
+                [sort]="orderType"
+                (click)="setOrderBy('id_modo_entrega')"
+              >
+              </thead-sorter>
+            </th>
+            <th scope="col">
+              <thead-sorter
+                value="Situacion"
+                [active]="orderBy == 'estado_oferta'"
+                [sort]="orderType"
+                (click)="setOrderBy('estado_oferta')"
+              >
+              </thead-sorter>
+            </th>
+            <th scope="col">
+              <thead-sorter
+                value="Estado Oferta"
+                [active]="orderBy == 'tipo_estado'"
+                [sort]="orderType"
+                (click)="setOrderBy('tipo_estado')"
+              >
+              </thead-sorter>
+            </th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </ng-template>
+
+        <ng-template #tbody let-tbody *ngIf="dados">
+          <tr
+            *ngFor="let pedido of dados | slice : begin : end; let i = index"
+            [tooltip]="pedido.tipo_estado == 14 ? '' : ''"
+            class="hover"
+          >
+            <td
+              class="hover text-dark text-center"
+              *ngIf="pedido.codigo_oferta !== null; else segCodigo"
+              style="border-left-color: #32a852; font-weight: bold"
+            >
+              {{ pedido.codigo_oferta }}
+            </td>
+            <ng-template #segCodigo>
+              <td
+                class="hover-danger text-dark text-center"
+                *ngIf="pedido.codigo_oferta === null"
+                style="border-left-color: #c40f06; font-weight: bold"
+              >
+                Sin codigo SAP
+              </td>
+            </ng-template>
+            <td class="text-center hover">
+              {{ pedido.fecha_inicial | date : 'dd/MM/yyyy' }}
+            </td>
+            <td class="text-center hover">
+              {{ pedido.fecha_final | date : 'dd/MM/yyyy' }}
+            </td>
+            <td class="text-center hover">
+              {{ pedido.prim_nome | uppercase }}
+            </td>
+            <td class="text-center hover">{{ pedido.nombre | uppercase }}</td>
+
+            <td class="text-center hover">
+              {{ pedido.nombre_modo_entrega }}
+            </td>
+
+            <td class="text-center hover">
+              <i
+                *ngIf="pedido.tipo_estado !== 14"
+                class="text-danger"
+                [tooltip]="'Cerrado por: ' + pedido.descripcionofe"
+                >CERRADO</i
+              >
+              <i *ngIf="pedido.tipo_estado === 14" class="text-primary"
+                >ABIERTO</i
+              >
+            </td>
+
+            <td class="text-center hover">{{ pedido.descripcion_cierre }}</td>
+            <td class="text-center hover">
+              <div class="row">
+                <!-- EDITAR -->
+                <div class="col text-center" style="padding: 0%">
+                  <a
+                    style="padding: 0%"
+                    class=""
+                    [tooltip]="'Editar Oferta'"
+                    (click)="onEdit2(pedido.id_oferta)"
+                    ><i class="fas fa-pencil-alt mr-2 icono" style="margin-right: 2px !important; color:black!important;"></i>
+                   
+                    <span class="sr-only">Refreshing...</span>
+                  </a>
+                </div>
+                <!-- PDF -->
+                <div class="col-md text-center" style="padding: 0%">
+                  <a
+                    style="padding: 0%; color: rgb(6, 68, 14)"
+                    class=""
+                    routerLink="/pdf"
+                    [tooltip]="'PDF'"
+                    (click)="onImprimir(pedido.id_oferta)"
+                    ><i class="far fa-file-pdf text-primary icono"></i
+                    ><span class="text-uppercase"> </span
+                  ></a>
+                </div>
+                <!-- VISTA -->
+                <div class="col-md text-center" style="padding: 0%;">
+                  <a
+                    class=""
+                    style="padding: 0%"
+                    routerLink="/vista"
+                    [tooltip]="'VISTA'"
+                    (click)="onVista(pedido.id_oferta)"
+                  >
+                    <i class="far fa-eye icono" style="color:#3e0752 !important;"></i>
+                    <!-- <span class="text-uppercase"></span> -->
+                  </a>
+                </div>
+                <!-- ESTADO -->
+                <div class="col-md text-center" style="padding: 0%">
+                  <a
+                    style="padding: 0%"
+                    class=""
+                    [tooltip]="'Sin Codigo de SAP'"
+                    *ngIf="
+                      pedido.codigo_oferta === null &&
+                        pedido.tipo_estado === 14 &&
+                        pedido.estado_oferta === 1;
+                      else otroBoton
+                    "
+                    routerLink="/enviar_sap"
+                    (click)="onEnviarSap(pedido.id_oferta)"
+                  >
+                    <i class="far fa-paper-plane text-danger icono"></i>
+                    <span class="text-uppercase"></span>
+                  </a>
+
+                  <ng-template #otroBoton>
+                    <a
+                      style="padding: 0%"
+                      class=""
+                      [tooltip]="'Pendiente'"
+                      *ngIf="
+                        pedido.estado_oferta === 10 &&
+                          pedido.tipo_estado === 14;
+                        else tercerBoton
+                      "
+                      disabled
+                    >
+                      <i
+                        class="fas fa-paper-plane text-warning icono"
+                        disabled
+                      ></i
+                      ><span class="text-uppercase"></span>
+                    </a>
                   </ng-template>
 
-                  <i class="mr-2 text-warning fas fa-random" *ngIf="pedido.estado_oferta === 1"
-                    tooltip="Pedido transferido" placement="right"></i>
-                  <i class="mr-2 text-black-50 fas fa-random" *ngIf="pedido.estado_oferta === 0"
-                    tooltip="Pedido não transferido" placement="right"></i>
-
-                  <i class="mr-2 text-black-50 fas fa-lock" *ngIf="pedido.pedidoEmLiberacao === 1"
-                    [tooltip]="tooltipLiberacao" placement="right"></i>
-                  <i class="mr-2 text-warning fas fa-unlock"
-                    *ngIf="pedido.pedidoEmLiberacao === 0 && pedido.codSituacao !== 1" tooltip="Pedido liberado"
-                    placement="right"></i>
-                  <i class="mr-2 text-black-50 fas fa-lock"
-                    *ngIf="pedido.pedidoEmLiberacao === 0 && pedido.codSituacao == 1" [tooltip]="tooltipLiberacaoAberto"
-                    placement="right"></i>
-
-                  <i class="mr-2 text-warning fas fa-dollar-sign" *ngIf="pedido.pedidoPreFaturado === 1"
-                    tooltip="Pré-faturado" placement="right"></i>
-                  <i class="mr-2 text-black-50 fas fa-dollar-sign" *ngIf="pedido.pedidoPreFaturado === 0"
-                    tooltip="Pré-faturado" placement="right"></i>
-
-                  <i class="mr-2 text-warning fas fa-check-square" *ngIf="pedido.pedidoFaturado === 1"
-                    tooltip="Pedido faturado" placement="right"></i>
-                  <i class="mr-2 text-black-50 far fa-check-square" *ngIf="pedido.pedidoFaturado === 0"
-                    tooltip="Pedido não faturado" placement="right"></i>
-                </span>
-              </td>
-
-              <!--<td class="text-center hover" (click)="openModal(modalDetalhes, pedido.id_oferta)"
-                [ngClass]="estoqueSuspensoClassStatusBorder(pedido.estado_oferta)">
-                {{ pedido.codigo_oferta }}
-              </td>-->
-              <td class="text-center hover">{{ pedido.fecha_inicial | date: 'dd/MM/yyyy' }}</td>
-              <td class="text-center hover">{{ pedido.fecha_final | date: 'dd/MM/yyyy' }}</td>
-              <td class="hover">{{ pedido.cliente | uppercase }}
-              </td>
-              <td class="hover">{{ pedido.vendedor | uppercase }}
-              </td>
-              <!-- <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.monto_total_bruto }}</td>
-              <td class="hover" (click)="openModal(modalDetalhes, pedido.id_oferta)">{{ pedido.descuento }}</td> -->
-              <td class="hover">{{ pedido.monto_total }}</td>
-              <td class="hover">{{ pedido.peso_total }}</td>
-              <td class="hover">{{ pedido.lista_precio }}</td>
-              <td class="hover">{{ pedido.modo_entrega }}</td>
-              <td class="hover">{{ pedido.estado_oferta }}</td>
-              <td class="">
-                <a class="dropdown-item" routerLink="/pdf" (click)="onImprimir(pedido.id_oferta)"><i class="fas fa-print"></i><span class="text-uppercase">
-                  PDF</span></a>
-                <a class="dropdown-item" routerLink="/vista" (click)="onVista(pedido.id_oferta)"><i class="fas fa-print"></i><span class="text-uppercase">
-                    Vista</span></a>
-              </td>
-              <!--
+                  <ng-template #tercerBoton>
+                    <a
+                      style="padding: 0%"
+                      class=""
+                      [tooltip]="'Enviado a SAP'"
+                      *ngIf="pedido.codigo_oferta !== null"
+                      disabled
+                    >
+                      <i
+                        class="fas fa-paper-plane icono text-success"
+                        disabled
+                      ></i
+                      ><span class="text-uppercase"></span>
+                    </a>
+                  </ng-template>
+                </div>
+                <!-- ACTUALIZAR -->
+                <div class="col text-center" style="padding: 0%">
+                  <a
+                    style="padding: 0%"
+                    class=""
+                    [tooltip]="'Vigencia de la Oferta'"
+                    (click)="onEstadoOferta(pedido.codigo_oferta)"
+                    ><i
+                      class="fas fa-sync-alt mr-2 icono text-dark"
+                      id="verificador"
+                    ></i>
+                    <span class="sr-only">Refreshing...</span>
+                  </a>
+                </div>
+              </div>
+            </td>
+            <!--
               <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeEmpresa | uppercase }}</td>
               <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeVendedor | uppercase }}</td> -->
-            </tr>
-          </ng-template>
-        </custom-table>
-        <div class="d-flex justify-content-center mt-3" >
-          <pagination [maxSize]="maxSize" [(totalItems)]="totalItems" (pageChanged)="onPageChanged($event)"
-            [(itemsPerPage)]="itemsPerPage" [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;"
-            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+          </tr>
+        </ng-template>
+      </custom-table>
+      <div class="d-flex flex-column align-items-center mt-3">
+        <div class="d-flex justify-content-center">
+          <pagination
+            [maxSize]="10"
+            [totalItems]="totalItems"
+            [(itemsPerPage)]="itemsPerPage"
+            (pageChanged)="onPageChanged($event)"
+            [boundaryLinks]="true"
+            [(ngModel)]="currentPage"
+            previousText="&lsaquo;"
+            nextText="&rsaquo;"
+            firstText="&laquo;"
+            lastText="&raquo;"
+          >
           </pagination>
         </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div *ngIf="dadosEmpty && !dadosLoaded" class="text-center d-flex justify-content-center align-items-center"
-    style="height: 80%">
-    <empty-result message="Ninguna información encontrada"></empty-result>
-  </div>
-  <ng-template #modalDetalhes>
-    <div class="modal-header">
-      <h6 class="modal-title pull-left">Detalle de la oferta </h6>
-      <div class="d-flex justify-content-center align-items-center">
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div class="col-md-12">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <h6 class="card-title">Datos de la oferta</h6>
-                <div class="row">
-                  <div class="col-md-2">
-                    <label for="customerName"> <strong> N°:</strong></label>
-                    <input type="text" id="customerName" class="form-control" readonly value="{{ofer.codigo_oferta}}">
-                  </div>
-                  <div class="col-md-3">
-                    <label for="sellerName"> <strong>F. Cotizacion: </strong></label>
-                    <input type="text" id="sellerName" class="form-control" readonly value="{{ofer.fecha_inicial}}">
-                  </div>
-                  <div class="col-md-3">
-                    <label for="sellerName"> <strong>F. validez: </strong></label>
-                    <input type="text" id="sellerName" class="form-control" readonly value="{{ofer.fecha_final}}">
-                  </div>
-                  <div class="col-md-4">
-                    <label for="sellerName"> <strong>Vendedor: </strong></label>
-                    <input type="text" id="sellerName" class="form-control" readonly value="{{ofer.nombre_vendedor}}">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <h6 class="card-title">Datos del cliente</h6>
-                <div class="row">
-                  <div class="col-md-3">
-                    <label for="customerName"> <strong> Cod. Cliente:</strong></label>
-                    <input type="text" id="customerName" class="form-control" readonly
-                      value="{{ofer.codigo_cliente}}">
-                  </div>
-                  <div class="col-md-5">
-                    <label for="sellerName"> <strong>Cliente: </strong></label>
-                    <input type="text" id="sellerName" value="{{ofer.nombre_cliente}}" class="form-control" readonly>
-                  </div>
-                  <div class="col-md-4">
-                    <label for="sellerName"> <strong>Lista de precios </strong>:</label>
-                    <input type="text" id="sellerName" class="form-control" readonly value="{{ofer.nombre_lista}}">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-12 mt-2">
-            <div class="card">
-              <div class="card-body">
-                <h6 class="card-title">Detalle de la cotización</h6>
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="table-responsive">
-                      <custom-table [config]="tableConfig" *ngIf="dados.length > 0 && !dadosEmpty">
-                        <ng-template #thead let-thead>
-                          <tr>
-                            <th class="text-truncate text-center" (click)="setOrderByModal('codigo_material')">
-                              <thead-sorter value="Articulo" [active]="orderBy == 'Articulo'" [sort]="orderType"> Código
-                              </thead-sorter>
-                            </th>
-                            <th class="text-truncate text-left" (click)="setOrderByModal('nombre_material')">
-                              <thead-sorter value="Descripcion" [active]="orderBy == 'nombre_material'"
-                                [sort]="orderType"></thead-sorter>
-                            </th>
-                            <th class="text-truncate text-center" (click)="setOrderByModal('cantidad')">
-                              <thead-sorter value="cantidad" [active]="orderBy == 'cantidad'" [sort]="orderType"></thead-sorter>
-                            </th>
-                            <th class="text-truncate text-center" (click)="setOrderByModal('unidad')">
-                              <thead-sorter value="unidad " [active]="orderBy == 'unidad'" [sort]="orderType"></thead-sorter>
-                            </th>
-                            <th class="text-truncate text-center" (click)="setOrderByModal('precio')">
-                              <thead-sorter value="precio" [active]="orderBy == 'precio'" [sort]="orderType"></thead-sorter>
-                            </th>
-                            <th class="text-truncate text-center" (click)="setOrderByModal('total_bruto')">
-                              <thead-sorter value="total_bruto" [active]="orderBy == 'total_bruto'"
-                                [sort]="orderType"></thead-sorter>
-                            </th>
-                            <th class="text-truncate text-center" (click)="setOrderByModal('nombre_almacen')">
-                              <thead-sorter value="% Descuento" [active]="orderBy == 'descuento'" [sort]="orderType"></thead-sorter>
-                            </th>
-                            <th class="text-truncate text-center" (click)="setOrderByModal('precio_descuento')">
-                              <thead-sorter value="Precio descuento" [active]="orderBy == 'precio_descuento'"
-                                [sort]="orderType"></thead-sorter>
-                            </th>
-                            <th class="text-truncate text-center" (click)="setOrderByModal('nombre_almacen')">
-                              <thead-sorter value="Almacen" [active]="orderBy == 'nombre_almacen'"
-                                [sort]="orderType"></thead-sorter>
-                            </th>
-                            <th class="text-truncate text-center" (click)="setOrderByModal('nombre_moneda')">
-                              <thead-sorter value="Total con descuento" [active]="orderBy == 'nombre_moneda'"
-                                [sort]="orderType"></thead-sorter>
-                            </th>
-                          </tr>
-                        </ng-template>
-                        <ng-template #tbody let-tbody>
-                          <ng-container>
-                            <tr *ngFor="let item of items">
-                              <td class="font-weight-bold hover text-center">
-                                {{items.codigo_material}}</td>
-                              <td class="font-weight-bold hover text-left">
-                                {{items.nombre_material}}</td>
-                              <td class="font-weight-bold hover text-center">
-                                {{items.cantidad}}</td>
-                              <td class="font-weight-bold hover text-center">
-                                {{items.unidad}}</td>
-                              <td class="font-weight-bold hover text-center">
-                                {{items.precio}}</td>
-                              <td class="font-weight-bold hover text-center">
-                                {{items.total_bruto}}</td>
-                              <td class="font-weight-bold hover text-center">
-                                0.00</td>
-                              <td class="font-weight-bold hover text-center">
-                                {{items.precio_descuento}}</td>
-                              <td class="font-weight-bold hover text-center">
-                                {{items.nombre_almacen}}</td>
-                              <td class="font-weight-bold hover text-center">
-                                {{items.total_bruto}} {{item.nombre_moneda}}</td>
-                            </tr>
-                            <tr class="bg-dark text-center text-dark">
-                              <td colspan="8" class="border-dark"></td>
-                              <td><strong>Total</strong></td>
-                              <td class="text-center"><strong>{{ totalMateriales[0].cantidad | number:'1.4-4' }} DOLARES </strong></td>
-                            </tr>
-                          </ng-container>
-                        </ng-template>
-                      </custom-table>
-                      <empty-result message="Ningún registro encontrado." *ngIf="dadosEmptyModal"></empty-result>
-                      <div class="d-flex justify-content-center mt-3">
-                        <pagination [maxSize]="maxSizeModal" [(totalItems)]="totalModal"
-                          (pageChanged)="onPageChangedModal($event)" [(itemsPerPage)]="itemsPerPageModal"
-                          [boundaryLinks]="true" [(ngModel)]="currentPage" previousText="&lsaquo;" nextText="&rsaquo;"
-                          firstText="&laquo;" lastText="&raquo;">
-                        </pagination>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 mt-2">
-            <div class="card">
-              <div class="card-body">
-                <h6 class="card-title">Datos de envío</h6>
-                <div class="row">
-                  <div class="col-md-4">
-                    <label for="customerName"> <strong> Tipo entrega:</strong></label>
-                    <input type="text" id="customerName" class="form-control" readonly
-                      value="{{oferta.nombre_modo_entrega}}">
-                  </div>
-                  <div class="col-md-4">
-                    <label for="customerName"><strong>Referencia:</strong></label>
-                    <ng-container *ngIf="oferta.latitud && oferta.longitud; else emptyLocation">
-                      <!-- <a [href]="'http://google.com/maps/bylatlng?lat=' + oferta.latitud + '&lng=' + oferta.longitud" target="_blank" style="cursor: pointer;">
-                            <input type="text" id="customerName" class="form-control text-primary" readonly value="Google">
-                        </a> -->
-                      <a [href]="'http://maps.google.com/maps?q=' + oferta.latitud + ',' + oferta.longitud"
-                        target="_blank" style="cursor: pointer; text-decoration: none;">
-                        <span class="form-control text-primary" style="display: inline-block;">Google Maps</span>
-                      </a>
-
-
-                    </ng-container>
-                    <ng-template #emptyLocation>
-                      <input type="text" id="customerName" class="form-control text-primary" readonly value="">
-                    </ng-template>
-                  </div>
-
-                  <div class="col-md-4">
-                    <label for="customerName"> <strong> Centro logístico:</strong></label>
-                    <input type="text" id="customerName" class="form-control" readonly
-                      value="{{oferta.ubicacion_almacen}}">
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 mt-2">
-            <div class="card">
-              <div class="card-body">
-                <h6 class="card-title">Datos adicionales</h6>
-                <div class="row">
-                  <div class="col-md-12">
-                    <label for="customerName"> <strong> Observaciones:</strong></label>
-                    <input type="text" id="customerName" class="form-control" readonly value="{{oferta.observacion}}">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="mb-2">
+          Total {{ itemsPerPage * (currentPage - 1) + 1 }} a
+          {{
+            currentPage * itemsPerPage > totalItems
+              ? totalItems
+              : currentPage * itemsPerPage
+          }}
+          de {{ totalItems }} ofertas
         </div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary">
-        Ver información completa
-      </button>
-    </div>
+  </div>
+
+  <div
+    *ngIf="dadosEmpty && !dadosLoaded"
+    class="text-center d-flex justify-content-center align-items-center"
+    style="height: 80%"
+  >
+    <empty-result message="Ninguna información encontrada"></empty-result>
+  </div>
+
+  <ng-template #alertaOferta>
+    <comercial-ciclo-vendas-cotacoes-lista-modal-alerta-oferta
+      [ofertasPendientes]="arrayOfertas"
+    >
+    </comercial-ciclo-vendas-cotacoes-lista-modal-alerta-oferta>
   </ng-template>
 </app-body>

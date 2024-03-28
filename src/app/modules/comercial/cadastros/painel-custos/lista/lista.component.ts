@@ -135,7 +135,7 @@ export class ComercialCadastroPainelCustosListaComponent
             if (response.status == 200) {
               this.listas = response.body;
               this.totalItems = response.body.length
-              console.log(this.totalItems);
+              //console.log(this.totalItems);
             }
             else{
               this.pnotifyService.error('Erro ao carregar');

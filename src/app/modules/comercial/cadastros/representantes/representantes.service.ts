@@ -38,9 +38,9 @@ export class ComercialCadastrosRepresentantesService {
   }
 
   save(record: any, action: string): Observable<Object | JsonResponse> {
-    console.log(record)
+    //console.log(record)
     if (action === 'update') {
-      console.log(record)
+      //console.log(record)
       return this.updateERP(record);
     }
 

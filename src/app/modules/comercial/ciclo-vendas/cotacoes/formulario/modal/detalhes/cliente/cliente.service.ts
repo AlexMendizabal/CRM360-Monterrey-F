@@ -40,17 +40,17 @@ export class ComercialCicloVendasCotacoesFormularioModalDetalhesClienteService {
       )
       .subscribe(
         (response: JsonResponse) => {
-          if (response.success === true) {
+          if (response.responseCode === 200) {
+
             const modalConfig = {
               animated: false,
             };
 
             const initialState = {
-              cliente: response.data,
+              cliente: response.result,
             };
 
-            this.modalService.show(
-              ComercialCicloVendasCotacoesFormularioModalDetalhesClienteComponent,
+            this.modalService.show(ComercialCicloVendasCotacoesFormularioModalDetalhesClienteComponent,
               Object.assign({}, modalConfig, {
                 initialState,
               })

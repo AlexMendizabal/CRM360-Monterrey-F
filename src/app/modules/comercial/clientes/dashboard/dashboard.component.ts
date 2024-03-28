@@ -37,20 +37,20 @@ export class ComercialClientesDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
+    
+  
     if (this.activatedRoute.snapshot.data['response']['responseCode'] === 200) {
       this.titleService.setTitle('Dashboard de cliente');
       this.registrarAcesso();
       this.getDetalhes();
-    } else if (
-      this.activatedRoute.snapshot.data['response']['responseCode'] === 403
-    ) {
-      this.pnotifyService.notice('Este cliente no pertenece a su cartera.');
-      this.router.navigate(['/comercial/home']);
     } else {
-      this.pnotifyService.error();
-      this.location.back();
+      // No importa el código de respuesta, permitir el acceso
+      this.titleService.setTitle('Dashboard de cliente');
+      this.registrarAcesso();
+      this.getDetalhes();
     }
   }
+  
 
   registrarAcesso() {
     this.atividadesService.registrarAcesso().subscribe();

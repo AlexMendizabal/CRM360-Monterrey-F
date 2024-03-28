@@ -32,12 +32,12 @@ export class TitleService {
       this.title.setTitle(
         `${this.upperCase.transform(newTitle)} | ${this.upperCase.transform(
           moduleName
-        )} MTCORP`
+        )} CRM360`
       );
     }
   }
 
   resetTitle(): void {
-    this.title.setTitle('MTCORP');
+    this.title.setTitle('CRM360');
   }
 }

@@ -1,0 +1,35 @@
+<div class="modal-content">
+  <div class="modal-header bg-light">
+    <h4 class="mtc-title mb-0 my-auto text-black">
+      <i class="fas fa-exclamation-circle fa-1x text-danger"></i> Atención
+    </h4>
+    <button type="button" class="close" (click)="onClose()">
+      <span aria-hidden="true" class="text-white">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p class="titulo">
+      <strong> </strong>
+    </p>
+    <p class="cuerpo text-center">
+      
+        Tiene ofertas pendientes de gestión, actualice el estado de las ofertas
+        para realizar nuevos pedidos.
+    </p>
+    <h6 class="text-center">Ofertas pendientes:
+    <span *ngFor="let oferta of ofertasPendientes; let last = last">
+      {{ oferta }}
+      <ng-container *ngIf="!last">, </ng-container>
+    </span></h6>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="submittingForm"
+      (click)="onClose()"
+    >
+      Aceptar
+    </button>
+  </div>
+</div>

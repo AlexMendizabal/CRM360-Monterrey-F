@@ -1,9 +1,9 @@
 <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
 <div class="modal-content" *ngIf="dataCotacao" [hidden]="loaderFullScreen">
-  <form [formGroup]="checkoutForm" autocomplete="off" #autorizaciones (ngSubmit)="onSubmit(checkoutForm.value)">
+  <form [formGroup]="checkoutForm" autocomplete="off" #autorizaciones (ngSubmit)="onSubmit()">
   <div class="modal-header" id="actions">
     <h4 class="mtc-title mb-0 my-auto">Cotización #{{ dataCotacao.id_oferta }} / Realizada con éxito</h4>
-    <button class="btn btn-success" type="submit">Finalizar</button>
+    <button class="btn btn-success" id="finalizar" type="submit" >Finalizar</button>
   </div>
   <div class="modal-body py-5">
     <div class="row">
@@ -22,7 +22,7 @@
               <th scope="col" width="12%" class="text-center">Peso Kg.</th>
               <th scope="col" width="12%" class="text-center">Cantidad.</th>
               <th scope="col" width="12%" class="text-center">Descuento.</th>
-              <th scope="col" width="12%" class="text-center">Descuento Permitido.</th>
+              <!-- <th scope="col" width="12%" class="text-center">Desc. Permitido.</th> -->
               <th scope="col" width="12%" class="text-center">USD.</th>
               <th scope="col" width="20%">Almacen</th>
             </tr>
@@ -39,9 +39,9 @@
                   [tooltip]="formatVariacaoPreco(material.variacaoPreco)">
                 </i>
               </td>
-              <td width="12%" class="text-center" [ngStyle]="{'color': material.percentualDesc > material.descuento_permitido ? 'red' : 'green'}">{{ material.percentualDesc| number:'1.2-2'  }} </td>
-              <td width="12%" class="text-center">{{ material.descuento_permitido| number:'1.2-2'  }} </td>
-              <td width="12%" class="text-center">{{ material.valorTotal| number:'1.2-2'  }} </td>
+              <td width="12%" class="text-center" [ngStyle]="{'color': material.percentualDesc > material.descuento_permitido ? 'red' : 'green'}">{{ material.percentualDesc| number:'1.2-2' }} % </td>
+              <!-- <td width="12%" class="text-center">{{ material.descuento_permitido| number:'1.2-2'  }} </td> -->
+              <td width="12%" class="text-center">{{ material.valorTotal| number:'1.2-2'  }}$ </td>
               <td width="20%" class="text-truncate">{{ material.codDeposito | uppercase }}  </td>
             </tr>
             <tr>
@@ -65,7 +65,7 @@
         <div class="col-md-5" *ngIf="deshabilitar === false">
         </div>
         <div class="col-md-6" >
-          <span class="mtc-title"  id="titulo_observacio">Observación del Ejecutivo de venta:</span>
+          <span class="mtc-title" id="titulo_observacio">Observación del Ejecutivo de venta:</span>
           <br>
             <input type="text" name="observacion" formControlName="observacion" id="observacion" class="form-control" [disabled]="verificador()">
         </div>

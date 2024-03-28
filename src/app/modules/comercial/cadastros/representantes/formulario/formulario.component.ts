@@ -531,7 +531,7 @@ export class ComercialCadastrosRepresentantesFormularioComponent
     this.loaderFullScreen = true;
     this.tipoComissaoModal = [];
     const codTipoComissionamento = this.form.value.tipoPagamentoComissao;
-    console.log(codTipoComissionamento)
+    //console.log(codTipoComissionamento)
 
     this.tipoComissionamentoService
     .getDetailTipoComissionamento(codTipoComissionamento)

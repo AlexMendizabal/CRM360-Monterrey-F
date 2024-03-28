@@ -28,7 +28,8 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
   implements OnInit, OnChanges {
   @Input('linhas') linhas: any[] = [];
   @Input('classes') classes: any[] = [];
-
+  @Input('grupos') grupos: any[] = [];
+  
   @Input('limparMaterialSelecionado') limparMaterialSelecionado: boolean;
 
   @Output('loaderNavbar') loaderNavbar: EventEmitter<
@@ -44,8 +45,8 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
   };
 
   form: FormGroup;
-
   filteredClasses: Array<any> = [];
+  filteredGrupos: Array<any> = [];
   materiais: Array<any> = [];
   materiaisLoader: boolean;
 
@@ -83,6 +84,7 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
     this.form = this.formBuilder.group({
       codLinha: [null, [Validators.required]],
       codClasse: [null, [Validators.required]],
+      codGrupo: [null, [Validators.required]],
       codMaterial: [null, [Validators.required]],
     });
   }
@@ -96,7 +98,7 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
       this.materiaisListaEmpty = false;
 
       let params = {
-        codClasse: this.form.value.codClasse,
+        codClasse: this.form.value.codGrupo,
       };
 
       if (this.form.value.codMaterial !== 0) {
@@ -160,7 +162,7 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
     this.codMaterialSelecionado = codMaterial;
   }
 
-  onChangeLinha(codLinha: number) {
+onChangeLinha(codLinha: number) {
     this.form.controls.codClasse.reset();
     this.form.controls.codClasse.setValue(null);
     this.form.controls.codClasse.enable();
@@ -171,20 +173,29 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
     this.form.controls.codMaterial.disable();
     this.form.controls.codMaterial.setValue(null);
     this.form.controls.codMaterial.updateValueAndValidity();
-
-    this.filteredClasses = this.classes.filter(
-      (value: any) => value.idLinha == codLinha
+    
+    this.filteredClasses = this.grupos.filter(
+      (value: any) => value.idClasseMt == codLinha
     );
-  }
+}
 
-  onChangeClasse(codClasse: number) {
+onChangeGrupo(codClasse: number) {
+  this.form.controls.codGrupo.reset();
+  this.form.controls.codGrupo.setValue(null);
+  this.form.controls.codGrupo.updateValueAndValidity();
+  this.filteredGrupos = this.grupos.filter(
+    (value: any) => value.id_grupo == codClasse
+  );
+  console.log('aqui grupos ', this.filteredGrupos);
+}
+
+onChangeClasse(codGrupo: number) {
     this.form.controls.codMaterial.reset();
     this.form.controls.codMaterial.enable();
     this.form.controls.codMaterial.setValue(null);
     this.form.controls.codMaterial.updateValueAndValidity();
-
-    this.getMateriais(codClasse);
-  }
+    this.getMateriais(codGrupo);
+}
 
   getMateriais(codClasse: number): void {
     if (typeof codClasse !== 'undefined' && codClasse !== null) {

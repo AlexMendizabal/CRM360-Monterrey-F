@@ -53,7 +53,7 @@ export class PdfService {
     const fileName = name === null ? 'Documento.pdf' : `${name}.pdf`;
 
     let document = {
-      pageSize: 'A4',
+      pageSize: 'LETTER',
       pageOrientation: 'portrait',
       pageMargins: [20, 20, 20, 20],
       content: [],

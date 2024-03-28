@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
   }
 
   getLogoInicio() {
-    this.srcLogoInicio = `src/assets/images/logo/Short-Degrade-Morado.png`;
+    this.srcLogoInicio = `src/assets/images/logo/Logo_RIA_Green.png`;
   }
 
   getClienteLogo() {
@@ -118,7 +118,6 @@ export class LoginComponent implements OnInit {
             if (response.responseCode === 200) {
               this.setUserLogin(response);
 
-              /*  console.log(response); */
               if (response.token) {/* 
                 var params = {
                   Usuario: 'crm360',
@@ -162,28 +161,19 @@ export class LoginComponent implements OnInit {
     let idModuloPrincipal: number;
     let nomeModuloPrincipal: string;
     let rotaModuloPrincipal: string;
-
+    let none_cargo: string;
+    console.log('aqui usuario para eso ',response);
     if (response.result.versao_mtcorp != 2) {
       this.pnotifyService.notice('No tiene acceso a MTCorp.');
     } else {
       if (response.result.id_modulo_home != null) {
         if (isDevMode()) {
-          /* console.log(response.result)  */
-          matriculaTid =
-            response.result.matricula_tid != null
-              ? response.result.matricula_tid
-              : 1642;
-
-          idVendedor =
-            response.result.id_vendedor != null
-              ? response.result.id_vendedor
-              : 88;
-          console.log(response.result.id_vendedor)
-          idEscritorio =
-            response.result.id_escritorio != null
+          matriculaTid =  response.result.matricula;
+          none_cargo = response.result.nome_cargo;
+          idVendedor = response.result.id_vendedor; 
+          idEscritorio = response.result.id_escritorio != null
               ? response.result.id_escritorio
-              : 58;
-
+              : 0;
           idModuloPrincipal =
             response.result.id_modulo_home != null
               ? response.result.id_modulo_home
@@ -198,11 +188,10 @@ export class LoginComponent implements OnInit {
               : 'comercial';
         } else {
           matriculaTid = response.result.matricula_tid;
-          idVendedor = response.result.matricula_vendedor;
+          idVendedor = response.result.id_vendedor;
           idEscritorio = response.result.id_escritorio
             ? response.result.id_escritorio
             : null;
-
           idModuloPrincipal = response.result.id_modulo_home;
           nomeModuloPrincipal = response.result.modu_nome;
           rotaModuloPrincipal = response.result.modu_rota;
@@ -212,12 +201,12 @@ export class LoginComponent implements OnInit {
           info: {
             id: response.result.id_usuario,
             matricula: response.result.matricula,
-            matriculaTid: matriculaTid,
-            idVendedor: idVendedor,
+            idVendedor: response.result.id_vendedor,
             idEscritorio: idEscritorio,
             nomeCompleto: response.result.func_nome,
             nomeAbreviado: response.result.nome_abreviado,
             tipoAcesso: response.result.tipo_acesso,
+            none_cargo:response.result.nome_cargo,
             moduloPrincipal: {
               id: idModuloPrincipal,
               nome: nomeModuloPrincipal,
@@ -242,7 +231,6 @@ export class LoginComponent implements OnInit {
     const urlAfterLogin = routerParams?.urlAfterLogin
 
     const modulo = urlAfterLogin ? urlAfterLogin?.split('/')[1] : undefined;
-    console.log(modulo)
     if (!modulo) {
       this.modulosService.setCurrentModule(moduloPrincipal);
       this.router.navigate([moduloPrincipal.rota]);

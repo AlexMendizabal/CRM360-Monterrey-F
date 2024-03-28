@@ -281,7 +281,7 @@ export class ComercialCadastrosConcorrenteListaComponent implements OnInit {
         next: (response: any) => {
           if (response.hasOwnProperty('success') && response.success === true) {
             this.dados = response.data;
-            console.log(this.dados)
+            //console.log(this.dados)
             this.dadosPagination = this.dados.slice(0, this.itemsPerPage);
             this.totalItems = this.dados.length;
             this.dadosLoaded = true;

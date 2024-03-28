@@ -13,8 +13,9 @@ import { JsonResponse } from 'src/app/models/json-response';
 })
 export class ComercialClientesService {
   private readonly API = `http://23.254.204.187/api/comercial/clientes`;
+  BASE_URL: any;
 
-  constructor(protected http: HttpClient) { }
+  constructor(protected http: HttpClient) {}
 
   getStatus(): Observable<Object> {
     return this.http.get(`${this.API}/pesquisa/status`).pipe(take(1), retry(2));
@@ -37,6 +38,9 @@ export class ComercialClientesService {
       .get(`${this.API}/pesquisa/grupo-economico/${codCliente}`)
       .pipe(take(1), retry(2));
   }
+  getTipoPersona() {
+    return this.http.get(`${this.API}/tipo_persona/`).pipe(take(1));
+  }
 
   getVendedorCiudad(id_vendedor): Observable<Object> {
     const httpParams = new HttpParams().set('id_vendedor', id_vendedor);
@@ -54,36 +58,35 @@ export class ComercialClientesService {
   getDetalhes(codCliente: number): Observable<Object | JsonResponse> {
     return this.http
       .get(`${this.API}/pesquisa/detalhes/${codCliente}`)
-      .pipe(
-        take(1),
-        retry(2));
+      .pipe(take(1), retry(2));
+  }
+
+  VerificaOfertaAbierta(codCliente: number): Observable<Object | JsonResponse> {
+    return this.http
+      .get(`${this.API}/pesquisa/verificaoferta/${codCliente}`)
+      .pipe(take(1), retry(2));
   }
   sapUpdateClient(codigo_cliente: number, data: any): Observable<Object> {
-    console.log("update Cliente:", data);
+    console.log('update Cliente:', data);
     return this.http
       .post(`${this.API}/pesquisa/updatesap`, data)
       .pipe(take(1), retry(2));
   }
   sapUpdateContacto(codigo_cliente: number, data: any): Observable<Object> {
-    console.log("update Contacto:", data);
+    console.log('update Contacto:', data);
     return this.http
       .post(`${this.API}/pesquisa/updatesapcontacto`, data)
       .pipe(take(1), retry(2));
   }
 
-
   getContatosResumido(codCliente: number): Observable<Object> {
     return this.http
       .get(`${this.API}/pesquisa/contactodetalle/${codCliente}`)
-      .pipe(take(1),
-        retry(2),
-      );
+      .pipe(take(1), retry(2));
   }
 
   getTipoClientes() {
-    return this.http.get(`${this.API}/tipo_cliente`).pipe(
-      take(1)
-    );
+    return this.http.get(`${this.API}/tipo_cliente`).pipe(take(1));
   }
 
   getExisteCpfCnpj(
@@ -92,7 +95,8 @@ export class ComercialClientesService {
   ): Observable<Object> {
     return this.http
       .get(
-        `${this.API}/verificar-cpf-cnpj/${documento}?getDadosCliente=${getDadosCliente === true ? 1 : 0
+        `${this.API}/verificar-cpf-cnpj/${documento}?getDadosCliente=${
+          getDadosCliente === true ? 1 : 0
         }`
       )
       .pipe(take(1), retry(2));
@@ -105,9 +109,7 @@ export class ComercialClientesService {
   }
 
   sapPostClient(data: any): Observable<Object> {
-    return this.http
-      .post(`${this.API}/postsap`, data)
-      .pipe(take(1), retry(2));
+    return this.http.post(`${this.API}/postsap`, data).pipe(take(1), retry(0));
   }
 
   getPropostaAnaliseCredito(codCliente: number): Observable<Object> {
@@ -258,17 +260,17 @@ export class ComercialClientesService {
   getAnexos(codCliente: number): Observable<Object> {
     return this.http
       .get(`${this.API}/cadastro/carregar/anexos/${codCliente}`)
-      .pipe(take(1)
+      .pipe(
+        take(1)
         // , retry(2)
       );
   }
 
   uploadAnexo(data: any): Observable<Object> {
-    return this.http
-      .post(`${this.API}/cadastro/upload/anexo`, data)
-      .pipe(take(1)
-        // , retry(2)
-      );
+    return this.http.post(`${this.API}/cadastro/upload/anexo`, data).pipe(
+      take(1)
+      // , retry(2)
+    );
   }
 
   deleteAnexo(idAnexo: number): Observable<Object> {
@@ -308,4 +310,11 @@ export class ComercialClientesService {
       .get(`${this.API}/emails/lista/${codCliente}`)
       .pipe(take(1), retry(2));
   }
+  getObtenerHistorial(idCliente: number): Observable<Object> {
+    return this.http
+      .get(`${this.API}/obtenerHistorial/${idCliente}`)
+      .pipe(take(1), retry(2));
+  }
+  
+  
 }

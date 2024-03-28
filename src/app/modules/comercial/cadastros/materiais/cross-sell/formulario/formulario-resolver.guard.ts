@@ -27,6 +27,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioResolverGuard
         codCrossSell: null,
         codLinha: null,
         codClasse: null,
+        codGrupos: null,
         codMaterial: null,
         nomeMaterial: null,
         codSituacao: null,

@@ -436,10 +436,11 @@ export class ComercialLoteRutaComponent implements OnInit {
     }
 
     selectVendedorDefault(cliente: any, mapa: any) {
-        //console.log(mapa.id_vendedor);
-        const vendedorEncontrado = this.filteredVendedores.find(vendedor => vendedor.id === mapa.ID_VENDEDOR);
+       
+        const vendedorEncontrado = this.filteredVendedores.find(vendedor => vendedor.ID === mapa.ID_VENDEDOR);
+        console.log('aquie mapa', vendedorEncontrado);
         if (vendedorEncontrado) {
-            cliente.vendedor_id = vendedorEncontrado.id;
+            cliente.vendedor_id = vendedorEncontrado.ID;
         } else {
             cliente.vendedor_id = ''; // Valor por defecto si el vendedor no se encuentra en filteredVendedores
         }
@@ -472,7 +473,7 @@ export class ComercialLoteRutaComponent implements OnInit {
         this.vendedoresService.getVendedores().subscribe(
             (response: any) => {
                 if (response['responseCode'] === 200) {
-                    this.filteredVendedores = response['result'];
+                    this.filteredVendedores = response['data'];
                     if (this.filteredVendedores.length > 0) {
                         //this.indiceVendedor = this.filteredVendedores[].id;
                     }
@@ -482,9 +483,6 @@ export class ComercialLoteRutaComponent implements OnInit {
             }
         );
     }
-
-
-
 
     gestiones() {
         this.vendedoresService.getGestiones().subscribe(
@@ -503,14 +501,13 @@ export class ComercialLoteRutaComponent implements OnInit {
     public mostrarSpinner = false;
     private enviarDatosSubject = new Subject<void>();
 
-
     enviarDatos() {
         let msgSuccess = 'Cita creada exitosamente.';
         let msgError = 'Ocurrio un error al agendar la cita.';
         const datos = this.atividades;
 
-        /* console.log(datos);
-
+       console.log('aqui es datos de cita',datos);
+        
         // Muestra el spinner
         this.mostrarSpinner = true;
 
@@ -528,7 +525,7 @@ export class ComercialLoteRutaComponent implements OnInit {
                     this.mostrarSpinner = false;
                 }
             );
-        this.limpiarDatos(); */
+        this.limpiarDatos();
     }
     limpiarDatos() {
 
@@ -548,8 +545,8 @@ export class ComercialLoteRutaComponent implements OnInit {
         this.enviarDatosSubject.next();
         this.enviarDatosSubject.complete();
     }
-    onVendedorChange(item: any, newValue: any) {
 
+    onVendedorChange(item: any, newValue: any) {
         item.id_vendedor = newValue;
 
     }
@@ -560,11 +557,6 @@ export class ComercialLoteRutaComponent implements OnInit {
     onFechaChange(item: any, newValue: any) {
         item.fechaVisita = newValue;
     }
-
-
-
-
-
 
     /*   dayClicked({
         date,

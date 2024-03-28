@@ -47,6 +47,7 @@ import { ComercialCicloVendasCotacoesListaModalEmailCotacaoService } from './mod
 import { ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService } from './modal/transfere-faturamento/transfere-faturamento.service';
 import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
 import { ModalAutorizacionService} from '../../autorizaciones/lista/modal-autorizacion/modal-autorizacion.service';
+import { ComercialCicloVendasCotacoesService } from '../../cotacoes/cotacoes.service';   /////para la funcion onVista
 
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
@@ -55,6 +56,8 @@ import { ICotacao } from './models/cotacao';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { JsonResponse } from 'src/app/models/json-response';
 import { IAssociacao } from '../../../cadastros/propostas/associacao-situacoes-proposta/models/associacao-situacoes-proposta';
+import { VistaComponent } from './vista/vista.component';
+
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-lista',
@@ -91,9 +94,9 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   estado_oferta = [
     { "id": "T", "nombre": "Todos" },
-    { "id": 0, "nombre": "Aprobado" },
-    { "id": 1, "nombre": "Pendiente" },
-    { "id": 2, "nombre": "Rechazado" },
+    { "id": 12, "nombre": "Aprobado" },
+    { "id": 10, "nombre": "Pendiente" },
+    { "id": 1, "nombre": "Rechazado" },
   ];
 
   formGroup: FormGroup;
@@ -131,6 +134,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   vendedores: any = [];
   dataInicial:  Array<any> = []; //////aumente esto para usar en la funcion getFilterValues
   dataFinal: Array<any> = []; //////aumente esto para usar en la funcion getFilterValues
+  listaEjecutivo: any[] = [];
   totalMateriales: Array<any> = [];
 
   dataFromParent: any;
@@ -155,6 +159,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   };
 
   modalRef: BsModalRef;
+  modalRef2:BsModalRef;
   loadingModal = false;
 
   contatosLoaded = false;
@@ -204,7 +209,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     private emailCotacaoService: ComercialCicloVendasCotacoesListaModalEmailCotacaoService,
     private modalService: BsModalService,
     private modalAutorizacionService:  ModalAutorizacionService,
-
+   
   ) {
     this.localeService.use('es');
     this.bsConfig = Object.assign(
@@ -227,9 +232,10 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.titleService.setTitle('Autorizaciones');
     this.onDetailPanelEmitter();
    //this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente'];
-   this.getVendedores();
+    //this.getVendedores();
     this.getDatosAutorizaciones();
-    this.search(null);
+    //this.search(null);
+    this.getTodosVendedores();
   }
 
   ngOnDestroy(): void {
@@ -373,11 +379,12 @@ export class ComercialCicloVendasCotacoesListaComponent
       next: (response: JsonResponse) => {
         //console.log(response);
         if (response.hasOwnProperty('success') && response.success === true) {
+
           this.vendedores = response.data;
         }
       }
     });
-  }
+  } 
 
   getVinculoOperadores(): void {
     this.vendedoresService.getVinculoOperadores().subscribe((response: any) => {
@@ -402,22 +409,10 @@ export class ComercialCicloVendasCotacoesListaComponent
       .subscribe(
         (response: any | JsonResponse[]) => {
            this.estado_oferta = [
-            {
-              "id": "T",
-              "nombre": "Todos"
-            },
-            {
-              "id": 1,
-              "nombre": "Pendiente"
-            },
-            {
-              "id": 2,
-              "nombre": "Aprobado"
-            },
-            {
-              "id": 3,
-              "nombre": "Rechazado"
-            },
+            { "id": "T", "nombre": "Todos" },
+            { "id": 12, "nombre": "Aprobado" },
+            { "id": 10, "nombre": "Pendiente" },
+            { "id": 11, "nombre": "Rechazado" },
           ]
         },
         (error: any) => {
@@ -468,19 +463,17 @@ export class ComercialCicloVendasCotacoesListaComponent
     return formValue;
   }
 
-setOrderBy(column: string) {
-  if (this.orderBy === column) {
-    if (this.orderType == 'DESC') {
-      this.orderType = 'ASC';
-    } else if (this.orderType == 'ASC') {
+  setOrderBy(column: string) {
+    if (this.orderBy === column) {
+      this.orderType = this.orderType === 'DESC' ? 'ASC' : 'DESC';
+    } else {
+      this.orderBy = column;
       this.orderType = 'DESC';
     }
-  } else {
-    this.orderBy = column;
-    this.orderType = 'DESC';
+    this.getDatosAutorizaciones();  // Llama directamente a la función para obtener los datos ordenados.
   }
-  this.onFilter();
-}
+  
+  
 
 setOrderByModal(column: string) {
   //console.log(column);
@@ -505,8 +498,8 @@ setOrderByModal(column: string) {
     }
     return 0;
   });
-
 }
+
 filterByFechaInicialStatus(status: string): void {
   this.formGroup.get('dataInicial').setValue(status);
   this.onFilter();
@@ -526,14 +519,18 @@ filterByCodVendedorStatus(status: string): void {
 
 
 onFilter(): void {
-    this.itemsPerPage = this.formGroup.value.registros;
-    this.currentPage = 1;
+  this.loading = true;
 
-    this.detailPanelService.hide();
-    this.setRouterParams(this.getFormFilterValues());
-    this.getDatosAutorizaciones();
+  this.itemsPerPage = this.formGroup.value.registros;
+  this.currentPage = 1;
+
+  this.detailPanelService.hide();
+  this.setRouterParams(this.getFormFilterValues());
+
+  this.getDatosAutorizaciones();  // Asegúrate de que esta llamada actualiza loading a false
   return;
 }
+
 
 
 setSubmittedSearch(): void {
@@ -547,7 +544,7 @@ setRouterParams(params: any): void {
     queryParamsHandling: 'merge',
   });
   this.setSubmittedSearch();
-  this.search(params);
+  // this.search(params);
 }
 
 getFormFilterValues(): Object {
@@ -619,8 +616,8 @@ search(params: any): void {
   this.datosAutorizaciones = [];
   this.totalItems = 0;
 
-  this.cotacoesService
-    .getAutorizaciones(params)
+  this.cotacoesService 
+    .getAutorizaciones(params) 
     .pipe(
       finalize(() => {
         this.loading = false;
@@ -628,7 +625,7 @@ search(params: any): void {
       })
     )
     .subscribe({
-      next: (response: JsonResponse) => {
+      next: (response: JsonResponse) => {console.log("params2",params);
         if (response.hasOwnProperty('success') && response.success === true) {
           this.datos = response.data;
           this.datosAutorizaciones = this.datos.slice(0, this.itemsPerPage);
@@ -682,8 +679,11 @@ onPageChanged(event: PageChangedEvent) {
 getPaginateData(): any[] {
   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
   const endIndex = startIndex + this.itemsPerPage;
-  return this.autorizaciones.slice(startIndex, endIndex);
+
+  // Verifica si hay datos antes de intentar realizar la operación de corte
+  return this.autorizaciones ? this.autorizaciones.slice(startIndex, endIndex) : [];
 }
+
 
 onPageChangedModal(event: PageChangedEvent): void {
   this.currentPage = event.page;
@@ -877,6 +877,7 @@ nuevo() {
   if (!this.loading) {
     this.loadingNavBar = false;
   }
+  console.log("params",params);
   this.cotacoesService
     .getAutorizaciones(params)
     .pipe(
@@ -902,4 +903,72 @@ nuevo() {
       }
     );
 }
+
+// onVista(id_oferta: number): void {
+//   //this.router.navigate([]).then(result => {  window.open("/comercial/ciclo-vendas/23/cotacoes-pedidos/lista/vista", '_blank'); });
+
+//   var params = {
+//     "id_oferta": id_oferta
+//   };
+
+//   this.loaderNavbar = true;
+//   this.cotacoesService
+//     .getDetalleOferta(params)
+//     .pipe(
+//       finalize(() => {
+//         this.loaderNavbar = false;
+//       })
+//     )
+//     .subscribe(
+//       (response: JsonResponse) => {
+//         if (response.estado === true) {
+//           this.modalRef2 = this.modalService.show(VistaComponent, {
+//             initialState: { resultFromParent: response.result },
+//           });
+
+//           this.modalRef2.content.onClose.subscribe(result => {
+//             //console.log('Modal closed with result:', result);
+//           });
+//         } else {
+//           this.pnotifyService.error();
+//           //console.log(this.vendedores);
+//         }
+//       },
+//       (error: any) => {
+//         if (error.error.hasOwnProperty('mensagem')) {
+//           this.pnotifyService.error(error.error.mensagem);
+//         } else {
+//           this.pnotifyService.error();
+//         }
+//       }
+//     );
+// }
+
+  getTodosVendedores(): void {
+    this.cotacoesService.getTodosVendedores().subscribe(
+      (response: any) => {
+        this.vendedores = response.data;
+        //console.log(this.vendedores);
+      },
+      (error: any) => {
+
+      }
+    );
+  }
+
+  getColor(estado) {
+    switch (estado) {
+      case 'APROBADO':
+        return 'green';
+      case 'RECHAZADO':
+        return 'red';
+      case 'PENDIENTE':
+        return 'blue';
+      case 'CERRADO':
+          return 'red';
+      default:
+        return '';
+    }
+  }
+
 }

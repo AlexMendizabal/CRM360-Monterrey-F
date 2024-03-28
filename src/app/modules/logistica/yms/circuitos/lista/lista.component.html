@@ -155,7 +155,7 @@
         </custom-table><br>
       </div>
       <div *ngIf="totalItems > itemsPerPage">
-        Exibindo {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
+        Total {{ itemsPerPage*(currentPage - 1) + 1 }} a {{ currentPage*(itemsPerPage) > totalItems ? totalItems : currentPage*(itemsPerPage) }} de {{ totalItems }}
         <pagination
           [maxSize]="10"
           [totalItems]="totalItems"

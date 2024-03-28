@@ -72,7 +72,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
 
   sendCotizacion(dataCotacao: any): void{
     this.loaderNavbar.emit(true);
-
+    console.log("al final: ",dataCotacao);
     this.cotacoesService
       .postCotizacion(dataCotacao)
       .pipe(
@@ -82,24 +82,25 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
       )
       .subscribe(
         (response: JsonResponse) => {
-          this.eventDirty.emit(true)
+              this.eventDirty.emit(true)
           // @ts-ignore: Ignorar error TS2339
-          if (response.responseCode == 200) {
-            /* dataCotacao.carrinho = [];
+          if (response.success == true) {
+         /*     dataCotacao.carrinho = [];
             dataCotacao.carrinho = response.data; */
-            setTimeout(()=>{
-              /* if (dataCotacao.id_oferta.codTipoFinalizacao >0) {
+            this.showModal(
+              ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
+              dataCotacao
+            );
+            /* setTimeout(()=>{
+               if (dataCotacao.id_oferta.codTipoFinalizacao >0) {
                 this.showModal(
                   ComercialCicloVendasCotacoesFormularioModalFinalizacaoPerdidaComponent,
                   dataCotacao
                 );
-              } else { */
-                this.showModal(
-                  ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
-                  dataCotacao
-                );
-             /*  } */
-            }, 200)
+              } else { 
+                //aqui va el modal de finalizar en la otra version
+               } 
+            }, 200) */
           } else {
             this.pnotifyService.error(response.mensagem);
           }

@@ -48,7 +48,7 @@ export class ComercialCicloVendasCotacoesFormularioModalDetalhesClienteService {
             const initialState = {
               cliente: response.data,
             };
-            console.log(initialState)
+            //console.log(initialState)
 
             this.modalService.show(
               ComercialCicloVendasCotacoesFormularioModalDetalhesClienteComponent,

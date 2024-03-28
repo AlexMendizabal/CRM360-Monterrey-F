@@ -7,7 +7,7 @@ import { observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LogisticaEstoqueInventarioFiltroService {
-  private readonly API: string = `https://crm360.monterrey.com.bo/api`;
+  private readonly API: string = `https://23.254.204.187/api`;
 
   constructor(private http: HttpClient) {}
 

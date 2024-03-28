@@ -21,23 +21,22 @@
         <comercial-cadastros-materiais-templates-material-principal
           [linhas]="linhas"
           [classes]="classes"
+          [grupos]="grupos"
           [limparMaterialSelecionado]="limparMaterialPrincipal"
           (loaderNavbar)="onLoaderNavbar($event)"
           (materialPrincipal)="materialPrincipal($event)">
         </comercial-cadastros-materiais-templates-material-principal>
-
         <div class="row">
           <div class="col">
             <hr>
           </div>
         </div>
       </div>
-
       <form [formGroup]="form">
         <div [hidden]="form.getRawValue().codMaterial === null">
           <div class="row mb-3">
             <div class="col mt-auto">
-              <div class="mtc-title mb-0">Principal material da similaridade</div>
+              <div class="mtc-title mb-0">Material de similitud principal</div>
             </div>
             <div class="col" *ngIf="form.getRawValue().codMaterial != null">
               <div class="d-flex justify-content-end">
@@ -61,7 +60,7 @@
                 formControlName="codMaterial"
                 (input)="onInput()"
                 autocomplete="new-password">
-              <invalid-form-control [show]="onFieldInvalid('codMaterial')" message="Código é obrigatório."></invalid-form-control>
+              <invalid-form-control [show]="onFieldInvalid('codMaterial')" message="El código es obligatorio."></invalid-form-control>
             </div>
             <div class="form-group col-lg-7">
               <label for="nomeMaterial">Material</label>
@@ -72,21 +71,21 @@
                 formControlName="nomeMaterial"
                 (input)="onInput()"
                 autocomplete="new-password">
-              <invalid-form-control [show]="onFieldInvalid('nomeMaterial')" message="Material é obrigatório."></invalid-form-control>
+            <invalid-form-control [show]="onFieldInvalid('nomeMaterial')" message="El material es obligatorio."></invalid-form-control>
             </div>
             <div class="form-group col-lg-3">
-              <label for="codSituacao">Situação</label>
+              <label for="codSituacao">Situación</label>
               <select
                 class="form-control"
                 id="codSituacao"minha
                 formControlName="codSituacao"
                 (change)="onInput()"
                 [ngClass]="onFieldError('codSituacao') + ' ' + onFieldRequired(form.controls.codSituacao)">
-                <option value="">SELECIONE UMA OPÇÃO</option>
-                <option value="0">Inativo</option>
-                <option value="1">Ativo</option>
+                <option value="">SELECCIONE UNA OPCIÓN</option>
+                <option value="0">Inactivo</option>
+                <option value="1">Activo</option>
               </select>
-              <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="Situação é obrigatório."></invalid-form-control>
+              <invalid-form-control [show]="onFieldInvalid('codSituacao')" message="La situación es obligatoria."></invalid-form-control>
             </div>
           </div>
           <div class="form-row">
@@ -128,7 +127,7 @@
             <div class="col">
               <message
                 icon="fas fa-exchange-alt"
-                text="Nenhuma associação encontrada">
+                text="No se encontraron asociaciones">
               </message>
             </div>
           </div>
@@ -140,6 +139,7 @@
       <comercial-cadastros-materiais-templates-associacoes
         [linhas]="linhas"
         [classes]="classes"
+        [grupos]="grupos"
         [linhaSelecionada]="form.value.codLinha"
         [classeSelecionada]="form.value.codClasse"
         (loaderNavbar)="onLoaderNavbar($event)"

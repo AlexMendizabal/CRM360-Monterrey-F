@@ -1,4 +1,3 @@
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -49,6 +48,7 @@ import { ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService } fro
 import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
 import { ModalAutorizacionComponent } from './modal-autorizacion/modal-autorizacion.component';
 import { ModalAutorizacionService } from './modal-autorizacion/modal-autorizacion.service';
+import { VistaComponent } from '../lista/vista/vista.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +64,8 @@ import { ModalAutorizacionService } from './modal-autorizacion/modal-autorizacio
     ComercialCicloVendasCotacoesListaModalDesdobrarPropostaComponent,
     ComercialCicloVendasCotacoesListaModalTrocarClienteComponent,
     ComercialCicloVendasCotacoesListaModalTransfereFaturamentoComponent,
-    ModalAutorizacionComponent
+    ModalAutorizacionComponent,
+    VistaComponent
   ],
 
   imports: [

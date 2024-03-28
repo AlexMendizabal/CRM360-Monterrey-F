@@ -187,7 +187,7 @@ export class ComercialDashboardVendedorConcentracaoVendasComponent
       columnSeries.tooltip.label.textAlign = 'start';
 
       let lineSeries = chart.series.push(new am4charts.LineSeries());
-      lineSeries.name = 'Representação acumulada';
+      lineSeries.name = 'Representacion acumulada';
       lineSeries.dataFields.valueY = 'representacaoAcumulada';
       lineSeries.dataFields.categoryX = 'razaoSocial';
 
@@ -253,7 +253,7 @@ export class ComercialDashboardVendedorConcentracaoVendasComponent
     this.dataEmitter.emit({
       config: {
         type: 'desempenhoCliente',
-        title: 'Concentração de vendas'
+        title: 'Acumulacion de ventas'
       },
       data: {
         tipo: tipo,

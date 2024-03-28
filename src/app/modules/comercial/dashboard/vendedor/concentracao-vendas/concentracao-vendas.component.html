@@ -3,10 +3,10 @@
     <div class="mtc-title mb-0">
       <i
         class="far fa-question-circle p-2"
-        tooltip="Ranking do desempenho de venda por cliente"
+        tooltip="Ranking de desempeño de ventas por cliente"
         placement="right">
       </i>
-      Concentração de vendas
+      Acumulacion de ventas
     </div>
     <div class="btn-group btn-group-sm" *ngIf="!pastEmpty || !currEmpty">
       <button
@@ -32,11 +32,11 @@
       <div [hidden]="!chartLoaded">
         <div [hidden]="activeMonth == currMonth">
           <div id="past-clients-chart" class="amcharts" [hidden]="pastEmpty" tooltip="tooltip" containerClass="d-none" triggers="click"></div>
-          <empty-result message="Nenhuma informação encontrada" [hidden]="!pastEmpty"></empty-result>
+          <empty-result message="Ninguna informacion encontrada" [hidden]="!pastEmpty"></empty-result>
         </div>
         <div [hidden]="activeMonth == pastMonth">
           <div id="current-clients-chart" class="amcharts" [hidden]="currEmpty" tooltip="tooltip" containerClass="d-none" triggers="click"></div>
-          <empty-result message="Nenhuma informação encontrada" [hidden]="!currEmpty"></empty-result>
+          <empty-result message="Ninguna informacion encontrada" [hidden]="!currEmpty"></empty-result>
         </div>
       </div>
       <div *ngIf="!chartLoaded" class="text-center">

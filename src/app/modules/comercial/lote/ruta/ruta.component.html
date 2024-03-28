@@ -20,8 +20,7 @@
               <div class="marker-info-window">
                 <h5 class="marker-name">{{ mapa.NOMBRE }}</h5>
                 <p class="marker-info"><strong>Dirección:</strong> {{ mapa.DIRECCION }}</p>
-                <p class="marker-info"><strong>Fecha de inicio:</strong> {{ mapa.FECHA_INICIO | date:'dd/MM/yyyy
-                  HH:mm:ss' }}</p>
+                <p class="marker-info"><strong>Fecha de inicio:</strong> {{ mapa.FECHA_INICIO | date:'dd/MM/yyyy HH:mm:ss' }}</p>
                 <p class="marker-info"><strong>Fecha de fin:</strong> {{ mapa.FECHA_FIN | date:'dd/MM/yyyy HH:mm:ss' }}
                 </p>
 
@@ -36,8 +35,6 @@
             <div class="spinner"></div>
           </div>
         </agm-map>
-
-
         <div id="map-zoom-control" class="map-control"></div>
       </div>
     </div>
@@ -67,7 +64,7 @@
             </td>
             <td class="hover text-center " style="width: 30%" (click)="item.checked = !item.checked">
               <ng-select [searchable]="true" [clearable]="false" [items]="filteredVendedores" [virtualScroll]="true"
-                labelForId="vendedor" bindLabel="nome" bindValue="id" [(ngModel)]="item.vendedor_id"
+                labelForId="vendedor" bindLabel="nombre" bindValue="ID" [(ngModel)]="item.vendedor_id"
                 (ngModelChange)="onVendedorChange(item, $event)" class="select-control">
                 <option value="">Seleccionar</option>
               </ng-select>

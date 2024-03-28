@@ -1,5 +1,5 @@
 <loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
-<app-header appTitle="Similaridade de materiais">
+<app-header appTitle="MATERIALES SIMILARES - UPSELL">
   <button
     type="button"
     [routerLink]="['../novo']">
@@ -19,9 +19,9 @@
           <div class="form-row">
             <div class="form-group col-lg-3">
               <label for="de">
-                <span class="mr-1">origem</span>
+                <span class="mr-1">origen</span>
                 <ng-template #tooltipLabelDeTemplate>
-                  <p class="mb-0">Código ou Descrição do material</p>
+                  <p class="mb-0">Código o descripción del material</p>
                 </ng-template>
                 <i class="far fa-question-circle" [tooltip]="tooltipLabelDeTemplate" container="body"></i>
               </label>
@@ -35,7 +35,7 @@
               <label for="para">
                 <span class="mr-1">Similar</span>
                 <ng-template #tooltipLabelParaTemplate>
-                  <p class="text-nowrap mb-0">Código ou nome do grupo</p>
+                  <p class="text-nowrap mb-0">Código o nombre del grupo</p>
                 </ng-template>
                 <i class="far fa-question-circle" [tooltip]="tooltipLabelParaTemplate" container="body"></i>
               </label>
@@ -46,14 +46,14 @@
                 (keydown.enter)="onFilter()">
             </div>
             <div class="form-group col-lg-3">
-              <label for="codSituacao">Situação</label>
+              <label for="codSituacao">Situación</label>
               <select
                 class="form-control custom-select"
                 id="codSituacao"
                 formControlName="codSituacao">
                 <option value="">Todos</option>
-                <option value="0">Inativos</option>
-                <option value="1">Ativos</option>
+                <option value="0">Inactivo</option>
+                <option value="1">Activo</option>
               </select>
             </div>
             <div class="form-group col-lg-3">
@@ -95,7 +95,7 @@
                 (click)="setOrderBy('nomeMaterial')">
               </thead-sorter>
             </th>
-            <th scope="col" [hidden]="showDetailPanel">Usuário cadastro</th>
+            <th scope="col" [hidden]="showDetailPanel">Registro de usuario</th>
             <th scope="col"></th>
           </tr>
         </ng-template>
@@ -116,13 +116,13 @@
               class="hover"
               (click)="onDetails(similaridade)"
               [hidden]="showDetailPanel">
-              <span *ngIf="similaridade.nomeUsuario === null">NÃO INFORMADO</span>
+              <span *ngIf="similaridade.nomeUsuario === null">NO INFORMADO</span>
               <span *ngIf="similaridade.nomeUsuario !== null">
                 {{ similaridade.nomeUsuario | uppercase }}
               </span>
             </td>
             <td class="text-right">
-              <span *ngIf="similaridade.codSituacao == 1" class="mr-3" tooltip="Inativar" placement="left" container="body">
+              <span *ngIf="similaridade.codSituacao == 1" class="mr-3" tooltip="Inactivar" placement="left" container="body">
                 <button type="button" class="btn-icon-sm" (click)="onInactivate(i, similaridade)">
                   <i class="fas fa-toggle-on"></i>
                 </button>
@@ -141,7 +141,7 @@
           </tr>
         </ng-template>
       </custom-table>
-      <empty-result message="Nenhuma informação encontrada" *ngIf="dadosEmpty && !dadosLoaded"></empty-result>
+      <empty-result message="No se encontró información" *ngIf="dadosEmpty && !dadosLoaded"></empty-result>
       <div class="d-flex justify-content-center mt-3" *ngIf="totalItems > itemsPerPage && !loaderNavbar">
         <pagination
           [maxSize]="maxSize"

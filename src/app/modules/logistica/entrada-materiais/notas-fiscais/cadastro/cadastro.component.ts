@@ -533,7 +533,7 @@ export class LogisticaEntradaMateriaisNotasFiscaisCadastroComponent
 
     } else{
       params = JSON.parse(JSON.stringify(this.form.value)) ;
-      params['SG_ORIG'] ='MTCORP'
+      params['SG_ORIG'] ='CRM360'
     }
 
     delete params['materiais'];
