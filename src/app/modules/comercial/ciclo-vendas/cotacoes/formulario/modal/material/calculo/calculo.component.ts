@@ -79,7 +79,9 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
     totalMaterial: 0,
     pesoEspecifico: 0,
     calculo: 0,
-    descuentoAplicado: 0
+    descuentoAplicado: 0,
+    id_presentacion : 0,
+    descuento : 0
   };
 
   form: FormGroup;
@@ -443,28 +445,34 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   resetTotais(): void {
     this.calculo = {
       index: null,
-      tipoCalculo: 0,
-      tipoLancamento: 0,
-      tonelada: 0,
-      qtde: 0,
-      valorUnitario: 0,
-      // @ts-ignore: Ignorar error TS2339
-      descuento: 0.00,
-      valorItem: 0,
-      aliquotaIpi: 0,
-      valorIpi: 0,
-      aliquotaIcms: 0,
-      valorIcms: 0,
-      valorIcmsSt: 0,
-      valorTotal: 0,
-      valorBaseIcmsSt: 0,
-      aliquotaReducaoIcms: 0,
-      unidade: '',
-      medida: 0,
-      nrPedidoCliente: '',
-      codItemPedidoCliente: '',
-      codProdutoCliente: '',
-      id_presentacion: 0,
+    tipoCalculo: 0,
+    tipoLancamento: 0,
+    tonelada: 0,
+    qtde: 0,
+    valorUnitario: 0,
+    valorItem: 0,
+    aliquotaIpi: 0,
+    valorIpi: 0,
+    aliquotaIcms: 0,
+    valorIcms: 0,
+    valorIcmsSt: 0,
+    valorTotal: 0,
+    valorBaseIcmsSt: 0,
+    aliquotaReducaoIcms: 0,
+    unidade: '',
+    medida: 0,
+    nrPedidoCliente: '',
+    codItemPedidoCliente: '',
+    codProdutoCliente: '',
+    // @ts-ignore: Ignorar error TS2339
+    valorTotalBruto: 0,
+    presentacionSeleccionado: 0,
+    totalMaterial: 0,
+    pesoEspecifico: 0,
+    calculo: 0,
+    descuentoAplicado: 0,
+    id_presentacion : 0,
+    descuento : 0
     };
   }
 

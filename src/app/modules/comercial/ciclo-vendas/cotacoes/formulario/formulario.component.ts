@@ -197,14 +197,13 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   almacenes: any[] = [];
 
   listaEjecutivo: any[] = [];
-  idVendedor = 0;
   tipoEntrega = [];
   idListaPrecio: number;
   nombreDepartamento2 = '';
   formaContacto: any[] = [];
   tipoContacto: any[] = [];
   selectedFormaContacto: number;
-  selectedTipoContacto: number = 0;
+  selectedTipoContacto: number;
   contacto_cliente: any;
   visualizar = false;
   duplicatasSomenteCarteira = false;
@@ -253,11 +252,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   estadoAlmacenObj = { value: true };
 
   swEntrega = false;
-  id_forma_contacto = 0;
+  id_forma_contacto : any;
   centrosLogisticos: any[] = [];
   swExisteCliente = true;
   ciudades: any = [];
-
+  selectedcodEndereco: any = [];
   /* valorOrigenContacto:number = 0; */
 
   constructor(
@@ -350,28 +349,40 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.datosVendedor(this.valorSeleccionado);
       //console.log('valor seleccionado vendedor', this.valorSeleccionado);
     }
-
-    this.getOrigendeContacto();
+ 
     this.getFormaContacto();
+    this.getcodEnderecoEntrega();
+    this.getOrigendeContacto();
   }
 
-  getOrigendeContacto() {
+  getcodEnderecoEntrega(){
     if (
-      this.form.value.selectedTipoContacto !== 0 &&
-      this.form.value.selectedTipoContacto !== null
+      this.form.value.codEndereco !== 0 &&
+      this.form.value.codEndereco !== null
     ) {
-      this.selectedTipoContacto = Number(this.form.value.codOrigemContato);
-      //console.log('valor seleccionado vendedor', this.selectedTipoContacto);
+      this.selectedcodEndereco = Number(this.form.value.codEndereco);
+      this.datoEntrega(Number(this.selectedcodEndereco));
+      console.log('valor seleccionado selectedcodEndereco', this.selectedcodEndereco);
     }
   }
 
-  getFormaContacto() {
+  getOrigendeContacto(){
     if (
-      this.form.value.selectedFormaContacto !== 0 &&
-      this.form.value.selectedFormaContacto !== null
+      this.form.value.codOrigemContato !== 0 &&
+      this.form.value.codOrigemContato !== null
+    ) {
+      this.selectedTipoContacto = Number(this.form.value.codOrigemContato);
+      console.log('valor seleccionado codOrigemContato', this.selectedTipoContacto);
+    }
+  }
+
+  getFormaContacto(){
+    if (
+      this.form.value.codFormaContato !== 0 &&
+      this.form.value.codFormaContato !== null
     ) {
       this.selectedFormaContacto = Number(this.form.value.codFormaContato);
-     // console.log('valor seleccionado vendedor', this.selectedFormaContacto);
+     console.log('valor seleccionado codFormaContato', this.selectedFormaContacto);
     }
   }
 
@@ -760,7 +771,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     const resolver = this.activatedRoute.snapshot.data.data;
     const data = resolver.data;
     const formValue: any = this.checkRouterParams();
-    //console.log('formValue aqui entra con datos', data);
+    console.log('formValue aqui entra con datos', data);
     if (
       data.codSituacao === 1 &&
       data.tipo_estado === 14 &&
@@ -880,17 +891,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         codigoRubro: [data.rubro],
         contacto_cliente: [null],
         id_vendedor: [data.codVendedor],
-        /*  centroLogisticoControl:[], */
+        centroLogisticoControl:[],
 
         /* codEndereco: [data.direccion], */
-        codContato: [
-          data.codContato != 0 ? data.codContato : null,
-          [Validators.required],
-        ],
-        codEndereco: [
-          data.codEnderecoEntrega != 0 ? data.codEnderecoEntrega : null,
-          [Validators.required],
-        ],
+        codContato: [],
+        codEndereco: [data.codEnderecoEntrega],
         titulo: [data.titulo],
         codEmpresa: [codEmpresa],
         codDeposito: [data.codDeposito],
@@ -1037,6 +1042,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.valorSeleccionado = Number(data.codVendedor);
 
       this.form = this.formBuilder.group({
+        id_oferta:[],
         codCotacao: [{ value: codCotacao, disabled: true }],
         tipoCotacao: [{ value: data.tipoCotacao, disabled: true }],
         notaFiscal: [{ value: data.nrNotaFical, disabled: true }],
@@ -1054,6 +1060,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         tipo_documento: [data.tipo_documento],
         nombreVendedor: [data.nombreVendedor],
         codigo_oferta_crm: [],
+        centroLogisticoControl: [],
         id_lista_precio: [data.id_lista_precio],
         codigo_cliente: [data.codigo_cliente],
         telefono: [data.telefono],
@@ -1071,14 +1078,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
         tipodecontacto: [null],
         codigoRubro: [data.nit],
 
-        codContato: [
-          data.codContato != 0 ? data.codContato : null,
-          [Validators.required],
-        ],
+        codContato: [],
         codEndereco: [
-          data.codEnderecoEntrega != 0 ? data.codEnderecoEntrega : null,
           [Validators.required],
         ],
+        codigoEndereco: [],
         titulo: [data.titulo],
         codEmpresa: [codEmpresa],
         codDeposito: [data.codDeposito],
@@ -1777,7 +1781,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             id_oferta: formValue.id_oferta,
             id_forma_pago: formValue.codFormaPagamento,
             id_lista_precio: this.idListaPrecio,
-            id_modo_entrega: formValue.codEndereco,
             id_cliente: formValue.codCliente,
             id_vendedor: this.idvendedor,
             id_almacen: this.id_centro_logistico,
@@ -1797,9 +1800,11 @@ export class ComercialCicloVendasCotacoesFormularioComponent
             tipo_documento: this.tipo_documento,
             correo_electronico: formValue.correo_electronico,
             celular: formValue.celular,
-            telefono: formValue.telefonoCliente,
+            telefono: formValue.telefono,
             formaContacto: this.form.controls.formaContacto.value,
             tipoContacto: this.form.controls.tipodecontacto.value,
+            centroLogisticoControl: formValue.centroLogisticoControl,
+            tipo_entrega: formValue.codigoEndereco,
           };
           /* this.autorizacionService.showModal();  */
           /* console.log(dataCotizacion); */
@@ -2021,8 +2026,7 @@ export class ComercialCicloVendasCotacoesFormularioComponent
   }
 
   datoEntrega(a: number) {
-    1; // @ts-ignore
-    if (a.id == 2) {
+    if (a == 2) {
       this.swEntrega = true;
     } else {
       this.swEntrega = false;

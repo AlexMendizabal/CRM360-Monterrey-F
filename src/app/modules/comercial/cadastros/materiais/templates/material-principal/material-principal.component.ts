@@ -25,19 +25,18 @@ import { JsonResponse } from 'src/app/models/json-response';
   styleUrls: ['./material-principal.component.scss'],
 })
 export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
-  implements OnInit, OnChanges {
+  implements OnInit, OnChanges
+{
   @Input('linhas') linhas: any[] = [];
   @Input('classes') classes: any[] = [];
   @Input('grupos') grupos: any[] = [];
-  
+
   @Input('limparMaterialSelecionado') limparMaterialSelecionado: boolean;
 
-  @Output('loaderNavbar') loaderNavbar: EventEmitter<
-    boolean
-  > = new EventEmitter();
-  @Output('materialPrincipal') materialPrincipal: EventEmitter<
-    object
-  > = new EventEmitter();
+  @Output('loaderNavbar') loaderNavbar: EventEmitter<boolean> =
+    new EventEmitter();
+  @Output('materialPrincipal') materialPrincipal: EventEmitter<object> =
+    new EventEmitter();
 
   tableConfigMateriais: Partial<CustomTableConfig> = {
     fixedHeader: false,
@@ -47,6 +46,8 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
   form: FormGroup;
   filteredClasses: Array<any> = [];
   filteredGrupos: Array<any> = [];
+  lineas: Array<any> = [];
+
   materiais: Array<any> = [];
   materiaisLoader: boolean;
 
@@ -57,7 +58,7 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
   materiaisListaLoaded = false;
   materiaisListaEmpty = false;
 
-  codMaterialSelecionado: number = null;
+  codMaterialSeleccionado: number = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -72,20 +73,20 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
   }
 
   ngOnChanges(events: SimpleChanges): void {
-    if (
+   /*  if (
       events.limparMaterialSelecionado &&
       events.limparMaterialSelecionado.currentValue === true
     ) {
       this.setMaterialSelecionado(null);
-    }
+    } */
   }
 
   setFormBuilder(): void {
     this.form = this.formBuilder.group({
-      codLinha: [null, [Validators.required]],
-      codClasse: [null, [Validators.required]],
-      codGrupo: [null, [Validators.required]],
-      codMaterial: [null, [Validators.required]],
+      codLinha: [null],
+      codClasse: [null],
+      codGrupo: [null],
+      codMaterial: [null/* , [Validators.required] */],
     });
   }
 
@@ -97,15 +98,20 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
       this.materiaisListaLoaded = false;
       this.materiaisListaEmpty = false;
 
-      let params = {
+     /*  let params = {
         codClasse: this.form.value.codGrupo,
       };
 
       if (this.form.value.codMaterial !== 0) {
         Object.assign(params, {
-          codMaterial: this.form.value.codMaterial,
+          codMaterial: this.codMaterialSeleccionado,
         });
-      }
+      } */
+
+      let params = {
+        codMaterial: this.codMaterialSeleccionado,
+      };
+      
 
       this.comercialService
         .getMateriais(params)
@@ -143,62 +149,103 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
             }
           },
           (error: any) => {
-            if (error['error'].hasOwnProperty('mensagem')) {
-              this.pnotifyService.error(error.error.mensagem);
+            /* if (error['error'].hasOwnProperty('mensagem')) {
+              this.pnotifyService.error('error.error.mensagem');
             } else {
               this.pnotifyService.error();
-            }
+            } */
           }
         );
     }
   }
 
+
+  onChangeMaterial(id_material): void {
+    this.codMaterialSeleccionado = id_material;
+  }
   onCheckMaterial(material: any): void {
-    this.setMaterialSelecionado(material.codigoMaterial);
     this.materialPrincipal.emit(material);
   }
 
-  setMaterialSelecionado(codMaterial: number): void {
-    this.codMaterialSelecionado = codMaterial;
+ /*  setMaterialSelecionado(codMaterial: number): void {
+    this.codMaterialSeleccionado = codMaterial;
+    console.log( this.codMaterialSeleccionado)
   }
-
-onChangeLinha(codLinha: number) {
+ */
+  onChangeLinha(codLinha: number) {
+    /* console.log(codLinha); */
     this.form.controls.codClasse.reset();
-    this.form.controls.codClasse.setValue(null);
+    this.form.controls.codGrupo.reset();
+
+    /* this.form.controls.codClasse.setValue(null); */
     this.form.controls.codClasse.enable();
     this.form.controls.codClasse.setValidators([Validators.required]);
     this.form.controls.codClasse.updateValueAndValidity();
+
+    var idClase = codLinha;
+    this.comercialService.getLinhasId(idClase).subscribe({
+      next: (response: any) => {
+        if (response.responseCode == 200) {
+          this.grupos = response.result;
+        } else {
+          this.grupos = [];
+        }
+        this.grupos.unshift({
+          id_linha: 0,
+          descricao: 'TODOS',
+        });
+      },
+    });
 
     this.form.controls.codMaterial.reset();
     this.form.controls.codMaterial.disable();
     this.form.controls.codMaterial.setValue(null);
     this.form.controls.codMaterial.updateValueAndValidity();
-    
+
     this.filteredClasses = this.grupos.filter(
       (value: any) => value.idClasseMt == codLinha
     );
-}
+  }
 
-onChangeGrupo(codClasse: number) {
-  this.form.controls.codGrupo.reset();
-  this.form.controls.codGrupo.setValue(null);
-  this.form.controls.codGrupo.updateValueAndValidity();
-  this.filteredGrupos = this.grupos.filter(
-    (value: any) => value.id_grupo == codClasse
-  );
-  console.log('aqui grupos ', this.filteredGrupos);
-}
+  onChangeGrupo(codClasse: number) {
+    /* this.form.controls.codGrupo.reset(); */
+    /*   console */
 
-onChangeClasse(codGrupo: number) {
+    var idClase = codClasse;
+    this.comercialService.getSublineasId(idClase).subscribe({
+      next: (response: any) => {
+        if (response.responseCode == 200) {
+          this.classes = response.result;
+        }
+        this.classes.unshift({
+          ID: 0,
+          NM_SUB_LINH: 'TODOS',
+        });
+      },
+      error: (error: any) => {
+        /* this.handleSearchError('Ocurrió un error al cargar los datos.'); */
+      },
+    });
+    this.form.controls.codGrupo.setValue(null);
+    this.form.controls.codGrupo.updateValueAndValidity();
+    this.filteredGrupos = this.grupos.filter(
+      (value: any) => value.id_grupo == codClasse
+    );
+/*     console.log('aqui grupos ', this.filteredGrupos);
+ */  }
+
+  onChangeClasse(codGrupo: number) {
+    this.materiais = [];
     this.form.controls.codMaterial.reset();
     this.form.controls.codMaterial.enable();
     this.form.controls.codMaterial.setValue(null);
     this.form.controls.codMaterial.updateValueAndValidity();
     this.getMateriais(codGrupo);
-}
+  }
 
   getMateriais(codClasse: number): void {
-    if (typeof codClasse !== 'undefined' && codClasse !== null) {
+    /* console.log('aqui materiales'); */
+    /* if (typeof codClasse !== 'undefined' && codClasse !== null) {
       this.materiaisLoader = true;
       this.materiais = [];
 
@@ -234,6 +281,66 @@ onChangeClasse(codGrupo: number) {
             }
           }
         );
+    } */
+    if (codClasse === null || codClasse === undefined) {
+      const params = {
+        id_familia: '',
+        id_grupo: '',
+        id_linea: '',
+      };
+      this.getMateriales(params);
+    } else {
+      if (typeof codClasse !== 'undefined' && codClasse !== null) {
+        this.materiaisLoader = true;
+
+        const params = {
+          id_familia: this.form.controls.codLinha.value,
+          id_grupo: this.form.controls.codClasse.value,
+          id_linea: this.form.controls.codGrupo.value,
+        };
+        this.getMateriales(params);
+      }
     }
+  }
+  getMateriales(params) {
+    /* console.log('ingreso' + params); */
+    this.materiaisLoader = true;
+
+    this.comercialService
+      .getMaterialesLista(params)
+      .pipe(
+        finalize(() => {
+          this.materiaisLoader = false;
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response.responseCode == 200) {
+            this.materiais = response.result;
+
+            this.form.controls.codMaterial.enable();
+            this.form.controls.codMaterial.setValue(0);
+            this.form.controls.codMaterial.updateValueAndValidity();
+          } else if (
+            response.hasOwnProperty('success') &&
+            response.success === false &&
+            response.hasOwnProperty('mensagem')
+          ) {
+            this.pnotifyService.notice('Nenhum material encontrado!');
+            this.form.controls.codMaterial.disable();
+            this.form.controls.codMaterial.setValue(null);
+            this.form.controls.codMaterial.updateValueAndValidity();
+          } else {
+            this.pnotifyService.error(response.mensagem);
+          }
+        },
+        error: (error: any) => {
+          if (error['error'].hasOwnProperty('mensagem')) {
+            this.pnotifyService.error(error.error.mensagem);
+          } else {
+            this.pnotifyService.error();
+          }
+        },
+      });
   }
 }

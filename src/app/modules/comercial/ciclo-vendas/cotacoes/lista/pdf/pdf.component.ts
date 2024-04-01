@@ -38,8 +38,9 @@ export class PdfComponent implements OnInit {
 
   public onClose: Subject<boolean>;
 
-  imageWidth = 300; // Increase the width as needed
-  imageHeight = 85; // Increase the height as needed
+  imageWidth = 270; // Increase the width as needed
+  imageHeight = 74; // Increase the height as needed
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,

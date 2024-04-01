@@ -104,7 +104,7 @@ export class ComercialCadastrosMateriaisCrossSellService {
 
   getFilterValues(): Observable<Object | JsonResponse> {
     const linhas = this.tidSoftwareService.getLinhas();
-    const classes = this.comercialService.getClasses(null);
+    const classes = this.comercialService.getSublineasId(null);
     const grupos = this.comercialService.getGrupo(null);
 
     return forkJoin([linhas, classes, grupos]);

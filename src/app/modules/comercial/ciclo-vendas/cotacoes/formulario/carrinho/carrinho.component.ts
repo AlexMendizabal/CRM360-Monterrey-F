@@ -123,6 +123,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   descontoSubscription: Subscription;
 
   selectedCodEmpresa: number = null;
+  almacenSeleccionado: number = null;
 
   descontoCarrinho: IDescontoCarrinhoModel = {
     tipo: null,
@@ -187,9 +188,6 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     if (this.appTitle == 'visualizar cotizacion/pedido') {
       this.visualizar = true;
     }
-    
-
-
     // this.checkPreviously();
   }
   /*  ngOnChanges(): void {
@@ -469,19 +467,19 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
   onAddMaterial(materiais: Array<ICarrinhoModel>): void {
     console.log('materiales aqui estan',materiais)
+   
     if (materiais.length > 0) {
       let hasError = false,
         qtdeAdicionados = 0;
+        this.almacenSeleccionado = materiais[0]['id_almacen_carrito'];
+
+        
 
       for (let i = 0; i < materiais.length; i++) {
-        /* (materiais[i]); */
-        if (
-          (this.selectedCodEmpresa === null ||
-            this.selectedCodEmpresa === materiais[i].codEmpresa) &&
-          hasError === false
-        ) {
+       
+        if ( this.almacenSeleccionado === materiais[i]['id_almacen_carrito'] && hasError === false ) 
+        {
           let quantidadeItem: number;
-
           if (materiais[i].unidade == 'To' || materiais[i].unidade == 'Ton') {
             quantidadeItem = materiais[i].quantidade;
           } else {
@@ -581,10 +579,10 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
       if (hasError === true) {
         this.pnotifyService.notice(
-          'Favor adicionar materiais do mesmo depósito.'
+          'Por favor agregue materiales del mismo almacén.'
         );
       }
-
+      console.log('hola en',  this.almacenSeleccionado, materiais[0]['id_almacen_carrito'],  qtdeAdicionados++);
       if (qtdeAdicionados > 0) {
         this.setLocalStorage(this.form.value.materiais);
         this.onCalcularTotais(true);

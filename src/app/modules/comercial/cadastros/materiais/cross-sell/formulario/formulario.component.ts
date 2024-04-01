@@ -149,6 +149,10 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
       .subscribe((response: any) => {
         if (response[0].responseCode === 200) {
           this.linhas = response[0].result;
+          this.linhas.unshift({
+            id: 0,
+            descricao: 'TODOS',
+          });
         } else {
           this.pnotifyService.error();
           this.location.back();
@@ -156,6 +160,11 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
 
         if (response[1].responseCode === 200) {
           this.classes = response[1].result;
+          this.classes.unshift({
+            ID: 0,
+            NM_SUB_LINH: 'TODOS',
+          });
+  
         } else {
           this.pnotifyService.error();
           this.location.back();
@@ -163,6 +172,10 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
 
         if (response[2].responseCode === 200) {
           this.grupos = response[2].result;
+          this.grupos.unshift({
+            id_linha: 0,
+            descricao: 'TODOS',
+          });
         } else {
           this.pnotifyService.error();
           this.location.back();
@@ -210,6 +223,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
    * @source = 'application' || 'user'
    * */
   onAddMaterial(material: any, manipulateForm: boolean, source: string): void {
+    console.log(material);
     if (this.checkMaterialExists(material) === false) {
       this.assocMateriais.push(
         this.formBuilder.group({
@@ -312,7 +326,6 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
   onFilterMateriaisMaisVendidos(): void {
     if (this.form.getRawValue().codMaterial !== null) {
       this.searching = true;
-
       let params = {
         codMaterial: this.form.getRawValue().codMaterial,
       };
@@ -551,10 +564,10 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
     this.form.controls.codLinha.setValue(material.codLinha);
     this.form.controls.codClasse.setValue(material.codClasse);
     this.form.controls.codGrupos.setValue(material.codGrupos);
-    this.form.controls.codMaterial.setValue(material.codigoMaterial);
+    this.form.controls.codMaterial.setValue(material.id_material);
     this.form.controls.nomeMaterial.setValue(material.descricao);
 
-    this.onFilterMateriaisMaisVendidos();
+    //this.onFilterMateriaisMaisVendidos();
   }
 
   materialAssociado(material: any): void {

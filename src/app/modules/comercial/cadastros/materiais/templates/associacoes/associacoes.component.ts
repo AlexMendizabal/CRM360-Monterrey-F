@@ -24,7 +24,8 @@ import { JsonResponse } from 'src/app/models/json-response';
   styleUrls: ['./associacoes.component.scss'],
 })
 export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
-  implements OnInit, OnChanges {
+  implements OnInit, OnChanges
+{
   @Input('linhas') linhas: any[] = [];
   @Input('classes') classes: any[] = [];
   @Input('grupos') grupos: any[] = [];
@@ -32,12 +33,10 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
   @Input('linhaSelecionada') linhaSelecionada: number = null;
   @Input('classeSelecionada') classeSelecionada: number = null;
 
-  @Output('loaderNavbar') loaderNavbar: EventEmitter<
-    boolean
-  > = new EventEmitter();
-  @Output('materialAssociado') materialAssociado: EventEmitter<
-    object
-  > = new EventEmitter();
+  @Output('loaderNavbar') loaderNavbar: EventEmitter<boolean> =
+    new EventEmitter();
+  @Output('materialAssociado') materialAssociado: EventEmitter<object> =
+    new EventEmitter();
 
   tableConfigMateriais: Partial<CustomTableConfig> = {
     fixedHeader: false,
@@ -80,8 +79,12 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
       this.onChangeClasse(this.form.value.codClasse);
     }
 
-    if (events.linhaSelecionada && events.linhaSelecionada.currentValue !== null && !events.linhaSelecionada.firstChange ) {
-      this.setLinhaSelecionada(events.linhaSelecionada.currentValue);
+    if (
+      events.linhaSelecionada &&
+      events.linhaSelecionada.currentValue !== null &&
+      !events.linhaSelecionada.firstChange
+    ) {
+      //this.setLinhaSelecionada(events.linhaSelecionada.currentValue);
     }
 
     if (
@@ -89,28 +92,28 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
       events.classeSelecionada.currentValue !== null &&
       !events.classeSelecionada.firstChange
     ) {
-      this.setClasseSelecionada(events.classeSelecionada.currentValue);
+      //this.setClasseSelecionada(events.classeSelecionada.currentValue);
     }
   }
 
   setFormBuilder(): void {
     this.form = this.formBuilder.group({
-      codLinha: [this.linhaSelecionada, [Validators.required]],
-      codClasse: [this.classeSelecionada, [Validators.required]],
-      codGrupo: [null, [Validators.required]],
+      codLinha: [this.linhaSelecionada /* , [Validators.required] */],
+      codClasse: [this.classeSelecionada /* , [Validators.required] */],
+      codGrupo: [null /* , [Validators.required] */],
       codMaterial: [null, [Validators.required]],
     });
   }
 
   onFilter(): void {
-    if (this.form.valid) {
-      this.loaderNavbar.emit(true);
-      this.searching = true;
-      this.materiaisLista = [];
-      this.materiaisListaLoaded = false;
-      this.materiaisListaEmpty = false;
+    /* if (this.form.valid) { */
+    this.loaderNavbar.emit(true);
+    this.searching = true;
+    this.materiaisLista = [];
+    this.materiaisListaLoaded = false;
+    this.materiaisListaEmpty = false;
 
-      let params = {
+    /*  let params = {
         codClasse: this.form.value.codGrupo,
       };
 
@@ -118,56 +121,56 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
         Object.assign(params, {
           codMaterial: this.form.value.codMaterial,
         });
-      }
+      } */
+    let params = {
+      codMaterial: this.form.value.codMaterial,
+    };
 
-      this.comercialService
-        .getMateriais(params)
-        .pipe(
-          finalize(() => {
-            this.firstSearch = true;
-            this.searching = false;
-            this.loaderNavbar.emit(false);
-            this.materiaisListaLoaded = true;
-          })
-        )
-        .subscribe(
-          (response: JsonResponse) => {
-            if (
-              response.hasOwnProperty('success') &&
-              response.success === true
-            ) {
-              this.materiaisLista = response.data.map(function (el: any) {
-                var o = Object.assign({}, el);
-                o.checked = 0;
-                return o;
-              });
+    this.comercialService
+      .getMateriais(params)
+      .pipe(
+        finalize(() => {
+          this.firstSearch = true;
+          this.searching = false;
+          this.loaderNavbar.emit(false);
+          this.materiaisListaLoaded = true;
+        })
+      )
+      .subscribe(
+        (response: JsonResponse) => {
+          if (response.hasOwnProperty('success') && response.success === true) {
+            this.materiaisLista = response.data.map(function (el: any) {
+              var o = Object.assign({}, el);
+              o.checked = 0;
+              return o;
+            });
 
-              if (this.materiaisLista.length > 9) {
-                this.tableConfigMateriais.fixedHeader = true;
-              } else {
-                this.tableConfigMateriais.fixedHeader = false;
-              }
-            } else if (
-              response.hasOwnProperty('success') &&
-              response.success === false &&
-              response.hasOwnProperty('mensagem')
-            ) {
-              this.pnotifyService.error(response.mensagem);
-              this.materiaisListaEmpty = true;
+            if (this.materiaisLista.length > 9) {
+              this.tableConfigMateriais.fixedHeader = true;
             } else {
-              this.pnotifyService.error();
-              this.materiaisListaEmpty = true;
+              this.tableConfigMateriais.fixedHeader = false;
             }
-          },
-          (error: any) => {
-            if (error['error'].hasOwnProperty('mensagem')) {
-              this.pnotifyService.error(error.error.mensagem);
-            } else {
-              this.pnotifyService.error();
-            }
+          } else if (
+            response.hasOwnProperty('success') &&
+            response.success === false &&
+            response.hasOwnProperty('mensagem')
+          ) {
+            this.pnotifyService.error(response.mensagem);
+            this.materiaisListaEmpty = true;
+          } else {
+            this.pnotifyService.error();
+            this.materiaisListaEmpty = true;
           }
-        );
-    }
+        },
+        (error: any) => {
+          if (error['error'].hasOwnProperty('mensagem')) {
+            this.pnotifyService.error(error.error.mensagem);
+          } else {
+            this.pnotifyService.error();
+          }
+        }
+      );
+    /* } */
   }
 
   onToggleAll() {
@@ -189,7 +192,7 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
       if (this.materiaisLista[index].checked === 1) {
         const material = {
           codClasse: this.materiaisLista[index].codClasse,
-          codMaterial: this.materiaisLista[index].codigoMaterial,
+          codMaterial: this.materiaisLista[index].id_material,
           nomeMaterial: this.materiaisLista[index].descricao,
         };
 
@@ -203,11 +206,26 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
     if (resetClasse) {
       this.form.controls.codClasse.reset();
       this.form.controls.codClasse.setValue(null);
+      this.form.controls.codGrupo.reset();
     }
 
     this.form.controls.codClasse.enable();
     this.form.controls.codClasse.setValidators([Validators.required]);
     this.form.controls.codClasse.updateValueAndValidity();
+
+    this.comercialService.getLinhasId(codLinha).subscribe({
+      next: (response: any) => {
+        if (response.responseCode == 200) {
+          this.grupos = response.result;
+        } else {
+          this.grupos = [];
+        }
+        this.grupos.unshift({
+          id_linha: 0,
+          descricao: 'TODOS',
+        });
+      },
+    });
 
     this.form.controls.codMaterial.reset();
     this.form.controls.codMaterial.disable();
@@ -220,9 +238,22 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
   }
 
   onChangeGrupo(codClasse: number) {
-
     this.form.controls.codGrupo.reset();
-   /*  this.form.controls.codGrupo.disable(); */
+    /*  this.form.controls.codGrupo.disable(); */
+    this.comercialService.getSublineasId(codClasse).subscribe({
+      next: (response: any) => {
+        if (response.responseCode == 200) {
+          this.classes = response.result;
+        }
+        this.classes.unshift({
+          ID: 0,
+          NM_SUB_LINH: 'TODOS',
+        });
+      },
+      error: (error: any) => {
+        /* this.handleSearchError('Ocurrió un error al cargar los datos.'); */
+      },
+    });
     this.form.controls.codGrupo.setValue(null);
     this.form.controls.codGrupo.updateValueAndValidity();
     this.filteredGrupos = this.grupos.filter(
@@ -240,7 +271,7 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
   }
 
   getMateriais(codClasse: number): void {
-    if (typeof codClasse !== 'undefined' && codClasse !== null) {
+    /* if (typeof codClasse !== 'undefined' && codClasse !== null) {
       this.materiaisLoader = true;
       this.materiais = [];
 
@@ -277,7 +308,68 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
             }
           }
         );
+    } */
+
+    if (codClasse === null || codClasse === undefined) {
+      const params = {
+        id_familia: '',
+        id_grupo: '',
+        id_linea: '',
+      };
+      this.getMateriales(params);
+    } else {
+      if (typeof codClasse !== 'undefined' && codClasse !== null) {
+        this.materiaisLoader = true;
+
+        const params = {
+          id_familia: this.form.controls.codLinha.value,
+          id_grupo: this.form.controls.codClasse.value,
+          id_linea: this.form.controls.codGrupo.value,
+        };
+        this.getMateriales(params);
+      }
     }
+  }
+  getMateriales(params) {
+    /* console.log('ingreso' + params); */
+    this.materiaisLoader = true;
+
+    this.comercialService
+      .getMaterialesLista(params)
+      .pipe(
+        finalize(() => {
+          this.materiaisLoader = false;
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response.responseCode == 200) {
+            this.materiais = response.result;
+
+            this.form.controls.codMaterial.enable();
+            this.form.controls.codMaterial.setValue(0);
+            this.form.controls.codMaterial.updateValueAndValidity();
+          } else if (
+            response.hasOwnProperty('success') &&
+            response.success === false &&
+            response.hasOwnProperty('mensagem')
+          ) {
+            this.pnotifyService.notice('Nenhum material encontrado!');
+            this.form.controls.codMaterial.disable();
+            this.form.controls.codMaterial.setValue(null);
+            this.form.controls.codMaterial.updateValueAndValidity();
+          } else {
+            this.pnotifyService.error(response.mensagem);
+          }
+        },
+        error: (error: any) => {
+          if (error['error'].hasOwnProperty('mensagem')) {
+            this.pnotifyService.error(error.error.mensagem);
+          } else {
+            this.pnotifyService.error();
+          }
+        },
+      });
   }
 
   setLinhaSelecionada(codLinha: number): void {

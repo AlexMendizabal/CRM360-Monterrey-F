@@ -360,10 +360,12 @@
                               readonly
                             />
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-3" *ngIf="resultFromParent.oferta[0].ubicacion.trim() !== '0' && resultFromParent.oferta[0].ubicacion.trim() !== '' && resultFromParent.oferta[0].ubicacion !== null">
                             <label for="">Ubicacion:</label>
-                            <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].ubicacion}}" class="form-control" readonly>
-                          </div>
+                            <input type="text" name="" id="" value="{{ resultFromParent.oferta[0].ubicacion }}" class="form-control" readonly>
+                        </div>
+                        
+                                                  
                           <div
                             class="col-md-3"
                             *ngIf="
@@ -737,7 +739,10 @@
                               analitico.precio_descuento !== undefined
                             "
                           >
-                            {{ analitico.precio_descuento + '%' }}
+                            {{ analitico.precio_descuento + '%' }}  
+                          </ng-container>
+                          <ng-container *ngIf="analitico.precio_descuento == null || analitico.precio_descuento === undefined">
+                            0%
                           </ng-container>
                         </td>
 

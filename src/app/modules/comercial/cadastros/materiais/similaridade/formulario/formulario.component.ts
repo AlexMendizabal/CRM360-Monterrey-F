@@ -134,6 +134,11 @@ export class ComercialCadastrosMateriaisSimilaridadeFormularioComponent
 
         if (response[0].responseCode === 200) {
           this.linhas = response[0].result;
+          this.linhas.unshift({
+            id: 0,
+            descricao: 'TODOS',
+          });
+          
         } else {
           this.pnotifyService.error();
           this.location.back();

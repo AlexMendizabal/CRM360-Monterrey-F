@@ -87,6 +87,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
           if (response.success == true) {
          /*     dataCotacao.carrinho = [];
             dataCotacao.carrinho = response.data; */
+            console.log('datos del post oferta', response);
+            dataCotacao['id_oferta'] = response['data'];
             this.showModal(
               ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,
               dataCotacao

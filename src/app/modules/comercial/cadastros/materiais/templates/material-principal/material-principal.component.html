@@ -37,13 +37,13 @@
         <ng-select
           [searchable]="true"
           [clearable]="false"
-          [items]="filteredClasses"
+          [items]="grupos"
           formControlName="codClasse"
           [virtualScroll]="true"
-          labelForId="codClasse"
-          bindLabel="nomeClasse"
-          bindValue="idClasse"
-          (change)="onChangeGrupo($event.idClasse)">
+          labelForId="id_linha"
+          bindLabel="descricao"
+          bindValue="id_linha"
+          (change)="onChangeGrupo($event.id_linha)">
         </ng-select>
       </div>
       <div class="form-group col-lg-4">
@@ -51,13 +51,13 @@
         <ng-select
           [searchable]="true"
           [clearable]="false"
-          [items]="filteredGrupos"
+          [items]="classes"
           formControlName="codGrupo"
           [virtualScroll]="true"
-          labelForId="idSubLinea"
-          bindLabel="descripcion"
-          bindValue="idSubLinea"
-          (change)="onChangeClasse($event.idSubLinea)">
+          labelForId="ID"
+          bindLabel="NM_SUB_LINH"
+          bindValue="ID"
+          (change)="onChangeClasse($event.ID)">
         </ng-select>
       </div>
     </div>
@@ -70,11 +70,15 @@
           [items]="materiais"
           formControlName="codMaterial"
           [virtualScroll]="true"
-          labelForId="codMaterial"
-          bindLabel="codigoDescricaoMaterial"
+          labelForId="id_material"
+          bindLabel="nombre"
           bindValue="codigoMaterial"
           [loading]="materiaisLoader"
-          loadingText="Cargando...">
+          loadingText="Cargando..."
+          (change)="onChangeMaterial($event.id_material)">
+          
+          >
+
         </ng-select>
       </div>
     </div>
@@ -83,7 +87,7 @@
 <div *ngIf="materiaisLista.length > 0">
   <div class="row">
     <div class="col">
-      <div class="mtc-title">Selecione o material principal</div>
+      <div class="mtc-title">Selecione el material principal</div>
       <custom-table [config]="tableConfigMateriais">
         <ng-template #thead let-thead>
           <tr>
@@ -92,10 +96,10 @@
           </tr>
         </ng-template>
         <ng-template #tbody let-tbody>
-          <tr *ngFor="let material of materiaisLista" [class.table-active]="material.codigoMaterial == codMaterialSelecionado">
+          <tr *ngFor="let material of materiaisLista" [class.table-active]="material.codigoMaterial == codMaterialSeleccionado">
             <td class="text-center" style="width: 5%">
               <btn-icon
-                [icon]="material.codigoMaterial == codMaterialSelecionado ? 'fas fa-check-square' : 'far fa-square'"
+                [icon]="material.codigoMaterial == codMaterialSeleccionado ? 'fas fa-check-square' : 'far fa-square'"
                 size="small"
                 (click)="onCheckMaterial(material)">
               </btn-icon>

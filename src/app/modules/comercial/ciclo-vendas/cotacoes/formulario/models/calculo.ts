@@ -25,4 +25,6 @@ export interface ICalculoModel {
   presentacionSeleccionado:number;
   calculo: number;
   descuentoAplicado: number;
+  id_presentacion: number;
+  descuento: number;
 }

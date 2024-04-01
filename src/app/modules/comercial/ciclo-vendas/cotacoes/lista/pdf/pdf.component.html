@@ -1,33 +1,74 @@
-<div class="modal-content " id="contentToConvert" >
-  <div class="modal-body ">
+<div class="modal-content" id="contentToConvert">
+  <div class="modal-body">
     <div #contentToConvert>
       <div class="header monterrey-info">
-        <div class="group col">
-          <img [src]="imageSrc" alt="Logo" [style.width.px]="imageWidth" [style.height.px]="imageHeight" />
-          <p>
+        <div class="" style="margin-left: 15px; margin-right: 60px !important;">
+          <img
+            [src]="imageSrc"
+            alt="Logo"
+            [style.width.px]="imageWidth"
+            [style.height.px]="imageHeight"
+            style="padding-top: 5px;"
+          />
+          <p></p>
 
+          <!-- Ubicacion -->
+          <p class="direccion-font">
+            {{
+              dataFromParent.pedido[0].nombre_almacen
+                ? dataFromParent.pedido[0].nombre_almacen
+                : 'DIRECCION'
+            }}
           </p>
-          <p class="direccion-font"> {{ dataFromParent.pedido[0].nombre_almacen }}</p>
         </div>
-        <div class="title customer-info custinf-weight custom-modal-content" style="padding: 0 38px;">
+        <div
+          class="title customer-info custinf-weight custom-modal-content"
+          style="padding: 0 8px; width: 574px"
+        >
           <div class="vertical-text form-row">
             <div>
               <h3 class="cotizacion-font">COTIZACIÓN</h3>
             </div>
           </div>
-          <div>
+
+          <div style="margin-right: 15px">
             <div>
-              <div class="no-bullet datcotizacion-font">N°: <span class="text-right span-g">{{dataFromParent.pedido[0].codigo_oferta}}</span> </div>
-              <div class="no-bullet datcotizacion-font">FECHA: <span class="text-right span-g"> {{dataFromParent.pedido[0].fecha_inicial | date:'short'}}</span>  </div>
-              <div class="no-bullet datcotizacion-font">ALMACEN: <span class="text-right span-g">{{dataFromParent.pedido[0].codigo_almacen}}</span>  </div>
+              <div class="no-bullet datcotizacion-font font-weight-bold">N°:</div>
+              <div class="no-bullet datcotizacion-font">FECHA:</div>
+              <div class="no-bullet datcotizacion-font">ALMACEN:</div>
+            </div>
+          </div>
+          <div class="info-text" style="margin-right: 30px">
+            <div class="no-bullet datcotizacion-font">
+              <span class="text-right span-g" style="font-weight: 600 !important;">{{
+                dataFromParent.pedido[0].codigo_oferta
+              }}</span
+              ><br />
+            </div>
+            <div class="no-bullet datcotizacion-font">
+              <span class="text-right span-g">{{
+                dataFromParent.pedido[0].fecha_inicial | date : 'short'
+              }}</span>
+            </div>
+            <div class="no-bullet datcotizacion-font">
+              <span class="text-right span-g">{{
+                dataFromParent.pedido[0].codigo_almacen
+                  ? dataFromParent.pedido[0].codigo_almacen
+                  : 'Texto random'
+              }}</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="custom-modal-content" style="margin-top: 18px;">
-        <h4 class="medium-font"> Señor(es): {{ dataFromParent.pedido[0].nombre_cliente }} </h4>
-      </div>
       <div class="custom-modal-content">
+        <h4 class="medium-font">
+          Señor(es):
+          <span class="font-weight-normal text-uppercase">{{
+            dataFromParent.pedido[0].nombre_cliente | uppercase
+          }}</span>
+        </h4>
+      </div>
+      <div class="custom-modal-content" style="padding: 5px; line-height: 1">
         <p class="mensaje-font">
           De nuestra mayor consideración tenemos a bien hacerle llegar nuestra
           cotización de los materiales solicitados, esperando sea de su
@@ -35,77 +76,112 @@
         </p>
       </div>
 
-      <div class="table-responsive" style="margin-left: 0!important;" >
-        <table class="table">
-            <thead >
-                <tr>
-                    <th>NRO.</th>
-                    <th>COD.</th>
-                    <th>DESCRIPCIÓN</th>
-                    <th>UND.</th>
-                    <th>CANT.</th>
-                    <th>PRECIO</th>
-                    <th>DESC.%</th>
-                    <th>PRECIO NETO</th>
-                    <th>TOTAL USD.</th>
-                    <th>PESO</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let material of materiais; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ material.codigo_material }}</td>
-                    <td class="descripcion-font">{{ material.descripcion }}</td>
-                    <td>{{ material.unidad }}</td>
-                    <td>{{ material.cantidad }}</td>
-                    <td>{{ material.precio }}</td>
-                    <td>{{ material.descuento }}</td>
-                    <td>{{ (material.subtotal).toFixed(2) }}</td>
-                    <td>{{ (material.total).toFixed(2) }}</td>
-                    <td>{{ material.preso }}</td>
-                </tr>
-            </tbody>
+      <div class="table-responsive" style="margin-left: 0 !important">
+        <table class="table" style="margin-bottom: 0">
+          <thead>
+            <tr>
+              <th style="text-align: center">NRO</th>
+              <th style="text-align: center">CODIGO</th>
+              <th style="text-align: center">DESCRIPCIÓN</th>
+              <th style="text-align: center">UND</th>
+              <th style="text-align: center">CANT.</th>
+              <th style="text-align: center">PRECIO</th>
+              <th style="text-align: center">%</th>
+              <th style="text-align: center">PRECIO NETO</th>
+              <th style="text-align: center">TOTAL USD.</th>
+              <th style="text-align: center">PESO</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let material of materiais; let i = index">
+              <td style="text-align: center">{{ i + 1 }}</td>
+              <td style="text-align: center">{{ material.codigo_material }}</td>
+              <td class="descripcion-font">{{ material.descripcion }}</td>
+              <td>{{ material.unidad }}</td>
+              <td style="text-align: right">{{ material.cantidad }}</td>
+              <td style="text-align: right">{{ material.precio }}</td>
+              <td style="text-align: right">{{ material.descuento }}</td>
+              <td style="text-align: right">
+                {{ material.subtotal.toFixed(2) }}
+              </td>
+              <td style="text-align: right">{{ material.total.toFixed(2) }}</td>
+              <td style="text-align: right">{{ material.preso }}</td>
+            </tr>
+          </tbody>
         </table>
-    </div>
+      </div>
 
-      <div class="flex-container">
-        <p class="totalpeso-font"> TOTAL PESO Kg . {{ dataFromParent.pedido[0].peso_total }}</p>
-        <p class="total">Total Bs. <span class="customer-info custom-modal-content"> BS.{{ (dataFromParent.pedido[0].total * 6.96).toFixed(2) }}</span> </p>
-      </div>
-      <style>
-        .total p {
-          margin-bottom: 25px; /* You can adjust the value to control the amount of space */
-        }
-      </style>
-      <div class="total">
-        <p class="total">Total Bs.
-          <span class="customer-info custom-modal-content">
+      <div class="row d-flex align-items-start" style="margin-top: 5px;">
+        <div class="col-3"></div>
+        <!-- Peso -->
+        <div class="col-3">
+          <div class="flex-container info-div" style="margin-top: 0;">
+            <p class="totalpeso-font" style="margin-bottom: 25px">
+              TOTAL PESO Kg . {{ dataFromParent.pedido[0].peso_total }}
+            </p>
+          </div>
+        </div>
+
+       
+        <!--  Total BS y USD -->
+        <div class="col-4">
+          <div class="d-flex flex-row justify-content-between">
+           <div style="display: flex; align-items: center;"><p class="total" style="margin-bottom: 0;">Total Bs.</p></div> 
+            <div style="width: 180px!important;">
+              <span class="customer-info custom-modal-content d-flex justify-content-between" style="font-weight: 600;">
               <span class="currency">BS.</span>
-              <span class="value">{{ (dataFromParent.pedido[0].total * 6.96).toFixed(2) }}</span>
-          </span>
-      </p>
-      
+              <span class="value">{{ (dataFromParent.pedido[0].total * 6.96).toFixed(2) }}</span></span
+            ></div>
+          </div>
+         
+            <div class="total info-div d-flex flex-row justify-content-between" style="margin-top: 0;">
+              <div style="display: flex; align-items: center;"><p class="total">Total USD.</p></div>
+
+              <div style="width: 180px!important;">
+                <span class="customer-info custom-modal-content d-flex justify-content-between">
+                  <span class="currency">USD.</span>
+                  <span class="value">
+                    {{ dataFromParent.pedido[0].total.toFixed(2) }}</span
+                  >
+                </span>
+              </div>
+            </div>
+        </div>
       </div>
-      <div class="form-row">
+
+      <div class="form-row" style="margin-bottom: 5px!important;">
         <div class="group col-6 upspace">
           <div class="left-div customer-info custom-modal-content">
             <div class="entrega-font">
-              <div class="no-bullet">Lugar de entrega: <span class="span-g">{{ dataFromParent.parcelas[0].direccion_entrega }}</span></div>
-              <div class="no-bullet">Forma de pago: <span class="span-g">{{ dataFromParent.parcelas[0].forma_pago }} </span></div>
-              <div class="no-bullet">Tiempo de entrega: <span class="span-g">{{ dataFromParent.pedido[0].vencimiento }} Hrs.</span></div>
+              <div class="no-bullet">
+                Lugar de entrega:
+                <span class="span-g">{{
+                  dataFromParent.parcelas[0].direccion_entrega
+                }}</span>
+              </div>
+              <div class="no-bullet">
+                Forma de pago:
+                <span class="span-g"
+                  >{{ dataFromParent.parcelas[0].forma_pago }}
+                </span>
+              </div>
+              <div class="no-bullet">
+                Tiempo de entrega:
+                <span class="span-g"
+                  >{{ dataFromParent.pedido[0].vencimiento }} Hrs.</span
+                >
+              </div>
             </div>
           </div>
         </div>
-        <div class="group col-6 negrita-font upspace">
-          <div class="left-div customer-info custom-modal-content ">
-            <div >
-              Esta cotización está sujeta a stock.
-            </div>
-            <div class="espaciobot-font">
-              Comentario: {{ dataFromParent.pedido[0].observacion   }}
+        <div class="group col-6 upspace">
+          <div class="left-div customer-info custom-modal-content">
+            <div style="font-size: 15px;" >Esta cotización está sujeta a stock.</div>
+            <div class="espaciobot-font" style="font-size: 15px;">
+              Comentario: {{ dataFromParent.pedido[0].observacion }}
             </div>
           </div>
-          <span style="font-size: 14px;">
+          <span style="font-weight: 600; font-size: 14px;">
             TODOS NUESTROS PRECIOS INCLUYEN IMPUESTOS DE LEY.
           </span>
         </div>
@@ -114,19 +190,35 @@
         <div class="footer-line">
           <div class="signature-line"></div>
           <div class="negrita-font">Vendedor</div>
-          <div>{{ dataFromParent.dadosVendedor[0].nombre_vendedor }} {{dataFromParent.dadosVendedor[0].apellido_vendedor}}</div>
+          <div>
+            {{ dataFromParent.dadosVendedor[0].nombre_vendedor }}
+            {{ dataFromParent.dadosVendedor[0].apellido_vendedor }}
+          </div>
         </div>
         <div class="footer-line">
           <div class="signature-line"></div>
-          <div>Visto Bueno</div>
+          <div class="font-weight-bold">Visto Bueno</div>
           <div>Cliente</div>
         </div>
       </div>
     </div>
-    
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" #captureButton (click)="onDownlaod()">DESCARGAR</button>
-  <button type="button" class="btn btn-secondary" #contentToConvert (click)="captureScreen()">IMPRIMIR</button>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    #captureButton
+    (click)="onDownlaod()"
+  >
+    DESCARGAR
+  </button>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    #contentToConvert
+    (click)="captureScreen()"
+  >
+    IMPRIMIR
+  </button>
 </div>

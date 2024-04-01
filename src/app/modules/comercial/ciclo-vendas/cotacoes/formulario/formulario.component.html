@@ -496,17 +496,22 @@
                             style="font-size: 11px"
                           >
                             <ng-select
+                              [searchable]="false"
+                              [clearable]="true"
                               [formControl]="form.controls.tipodecontacto"
+                              formControlName="codOrigemContato"
+                              [items]="tipoContacto"
+                              bindLabel="DS_MEIO_CONT"
+                              bindValue="ID_MEIO_CONT"
                               [(ngModel)]="selectedTipoContacto"
-                              (ngModelChange)="onTipoContactoChange($event)"
-                              formControlName="codContato"
+                              required
                             >
-                              <ng-option
+                            <!--   <ng-option
                                 *ngFor="let tipo of tipoContacto"
                                 [value]="tipo.ID_MEIO_CONT"
                               >
                                 {{ tipo.DS_MEIO_CONT }}
-                              </ng-option>
+                              </ng-option> -->
                             </ng-select>
                           </div>
                       </div>
@@ -1064,8 +1069,9 @@ For="let listaPrecio of listaPrecios">
                           [searchable]="true"
                           [clearable]="false"
                           [items]="tipoEntrega"
-                          (change)="datoEntrega($event)"
-                          formControlName="codEndereco"
+                          (change)="datoEntrega($event.id)"
+                          formControlName="codigoEndereco"
+                          [(ngModel)]="selectedcodEndereco"
                           [virtualScroll]="true"
                           bindLabel="nombre"
                           bindValue="id"
@@ -1075,9 +1081,9 @@ For="let listaPrecio of listaPrecios">
                           groupBy="tipo"
                           [readonly]="visualizar"
                           [ngClass]="
-                            onFieldError('codEndereco') +
+                            onFieldError('codigoEndereco') +
                             ' ' +
-                            onFieldRequired(form.controls.codEndereco)
+                            onFieldRequired(form.controls.codigoEndereco)
                           "
                         >
                         </ng-select>
@@ -1104,8 +1110,7 @@ For="let listaPrecio of listaPrecios">
                         class="form-group col-lg-4"
                         *ngIf="swEntrega == true"
                       >
-                        <label class="my-auto" for="direccion_entrega"
-                          >Dirección entrega:</label
+                        <label class="my-auto" for="direccion_entrega">Dirección entrega:</label
                         >
                         <div
                           class="my-1 text-uppercase"
@@ -1128,17 +1133,14 @@ For="let listaPrecio of listaPrecios">
                         >
                         <ng-select
                           class=""
-                          [formControlName]="centroLogisticoControl"
+                          formControlName="centroLogisticoControl"
                           id="orderBy"
                           (change)="onCentroLogisticoChange($event)"
+                          [items]="centrosLogisticos"
+                          bindLabel="NOMBRE_DEPOSITO"
+                          bindValue="id"
+                          placeholder="Selecione..."
                         >
-                          <ng-container
-                            *ngFor="let centroLogistico of centrosLogisticos"
-                          >
-                            <ng-option [value]="centroLogistico.id">
-                              {{ centroLogistico.NOMBRE_DEPOSITO }}
-                            </ng-option>
-                          </ng-container>
                         </ng-select>
                       </div>
 
