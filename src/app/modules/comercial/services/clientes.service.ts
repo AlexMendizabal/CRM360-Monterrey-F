@@ -12,7 +12,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialClientesService {
-  private readonly API = `http://23.254.204.187/api/comercial/clientes`;
+  private readonly API = `${environment.URL_MTCORP}comercial/clientes`;
   BASE_URL: any;
 
   constructor(protected http: HttpClient) {}
@@ -67,13 +67,11 @@ export class ComercialClientesService {
       .pipe(take(1), retry(2));
   }
   sapUpdateClient(codigo_cliente: number, data: any): Observable<Object> {
-    console.log('update Cliente:', data);
     return this.http
       .post(`${this.API}/pesquisa/updatesap`, data)
       .pipe(take(1), retry(2));
   }
   sapUpdateContacto(codigo_cliente: number, data: any): Observable<Object> {
-    console.log('update Contacto:', data);
     return this.http
       .post(`${this.API}/pesquisa/updatesapcontacto`, data)
       .pipe(take(1), retry(2));

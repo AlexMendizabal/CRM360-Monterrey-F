@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
-import { PageChangedEvent } from 'ngx-bootstrap';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 

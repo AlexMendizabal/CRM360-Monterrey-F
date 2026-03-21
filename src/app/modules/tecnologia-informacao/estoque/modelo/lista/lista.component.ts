@@ -22,7 +22,7 @@ import { DateService } from 'src/app/shared/services/core/date.service';
 
 import { ITecnologiaInformacaoEstoqueModelo } from './../models/modelo';
 import { ITecnologiaInformacaoTipoProduto } from '../../tipo-produto/models/tipoProduto';
-import { PageChangedEvent } from 'ngx-bootstrap';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 @Component({
   selector: 'tecnologia-informacao-estoque-produtos-modelo-lista',

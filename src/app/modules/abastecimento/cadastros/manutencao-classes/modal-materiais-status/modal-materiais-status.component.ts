@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { PageChangedEvent } from 'ngx-bootstrap';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 @Component({
   selector: 'abastecimento-cadastro-manutencao-classe-modal-materiais-status',

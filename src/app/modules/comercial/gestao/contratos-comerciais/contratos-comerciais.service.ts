@@ -10,7 +10,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialGestaoContratosComerciaisService {
-  private readonly API = `http://23.254.204.187/api/comercial/gestao/contratos-comerciais`;
+  private readonly API = `${environment.URL_MTCORP}comercial/gestao/contratos-comerciais`;
 
   constructor(protected http: HttpClient) {}
 

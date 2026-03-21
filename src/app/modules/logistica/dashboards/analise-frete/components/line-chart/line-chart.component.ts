@@ -2,7 +2,8 @@
 import { Input, Output, OnChanges, TemplateRef } from '@angular/core';
 import { SimpleChanges, EventEmitter } from '@angular/core';
 import { Component } from '@angular/core';
-import { BsDatepickerConfig, BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { LogisticaDashboardsChartService } from '../../services/chart.service';
 
 // service

@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class ControladoriaBancosService {
-  private readonly BASE_URL: string = `https://23.254.204.187/api`;
+  private readonly BASE_URL: string = `${environment.URL_MTCORP}`;
   constructor(private http: HttpClient) {}
 
   getBancos(param) {

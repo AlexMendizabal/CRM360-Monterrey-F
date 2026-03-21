@@ -12,7 +12,9 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsModalRef, BsLocaleService, PageChangedEvent } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 //Angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';

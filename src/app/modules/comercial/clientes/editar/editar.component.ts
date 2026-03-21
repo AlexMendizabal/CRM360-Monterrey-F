@@ -8,7 +8,7 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { JsonResponse } from 'src/app/models/json-response';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
@@ -138,7 +138,6 @@ export class EditarClienteComponent implements OnInit {
     this.categorizarUbicacion();
     this.categorizarContacto();
     this.ciudadVendedor();
-    console.log(this.datos_cliente.datos_cliente);
     this.id_client = this.datos_cliente.datos_cliente.id_cliente;
 
  
@@ -568,7 +567,6 @@ export class EditarClienteComponent implements OnInit {
     // @ts-ignore: Ignorar error TS2339
     var idEstadoInput = document.getElementById('id_estado').value;
 
-    console.log(celularInput);
     const tipoPessoaOptions = {
       S: 'Sociedades',
       P: 'Privado',
@@ -604,7 +602,6 @@ export class EditarClienteComponent implements OnInit {
       ciudad: ubicacion[0]['ciudad']
     };
 
-    console.log(data);
 
     // Especifica los campos requeridos
     const requiredFields = [
@@ -642,7 +639,6 @@ export class EditarClienteComponent implements OnInit {
   enviarPeticion(data: any): void {
     this.isLoading = true;
     this.botonGuardar.nativeElement.disabled = true;
-    console.log();
     this.preCadastroService
       .updateCliente(data)
       .pipe(finalize(() => {}))

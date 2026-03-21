@@ -253,7 +253,6 @@ export class LogisticaYmsEtapasAssociacaoSetoresComponent implements OnInit {
       .subscribe(
         response => {
           let setores = response.body['data'];
-          console.log(setores)
           this.setores = setores.filter(setor => {
             return !this.setoresAssociados.some(item => item.UUID_LOGI_YMS_SETO == setor.ID)
           })
@@ -292,7 +291,6 @@ export class LogisticaYmsEtapasAssociacaoSetoresComponent implements OnInit {
   onAssociarSetores(){
     let setores = this.setores.filter(setor => setor.checked && setor.NR_SQNC != null);
 
-    console.log(setores)
     this.toggle.setores = false;
     setores.map(item => {
       
@@ -327,7 +325,6 @@ export class LogisticaYmsEtapasAssociacaoSetoresComponent implements OnInit {
                   UUID_LOGI_YMS_ETAP: this.form.get('UUID_LOGI_YMS_ETAP').value
                 }
               ];
-              console.log(this.setoresAssociados)
               
               this.setores = this.setores.filter(setor => !setor.checked)
               this.tableConfigSetoresAssociados.fixedHeader = this.setoresAssociados.length > 9 ? true : false;
@@ -351,7 +348,6 @@ export class LogisticaYmsEtapasAssociacaoSetoresComponent implements OnInit {
 
   onRemoverAssociacao(setor?){
     let setores = setor ? [setor] : this.setoresAssociados.filter(setor => setor.checked);
-    console.log(setores)
     this.toggle.setoresAssociados = false;
 
     if(setores.length == 0){
@@ -399,7 +395,6 @@ export class LogisticaYmsEtapasAssociacaoSetoresComponent implements OnInit {
   }
 
   onToggleAll(item: string){
-    console.log(item)
     this.toggle[item] = !this.toggle[item];
     this[item].map(setor => setor.checked = this.toggle[item]);
 
@@ -434,7 +429,6 @@ export class LogisticaYmsEtapasAssociacaoSetoresComponent implements OnInit {
   }
 
 setValidacao(event){
-  console.log(event)
 }
  
 }

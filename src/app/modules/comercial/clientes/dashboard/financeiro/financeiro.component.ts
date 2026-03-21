@@ -80,14 +80,12 @@ export class ComercialClientesDashboardFinanceiroComponent implements OnInit {
       this.dashboardService
         .getCreditoDisponivel(params['id'])
         .subscribe((response: any) => {
-          console.log('Respuesta de getCreditoDisponivel:', response);
           if (response['responseCode'] === 200) {
             if (
               response['result']['valor'] &&
               response['result']['valor'] != 0
             ) {
               this.creditoDisponivel = response['result']['valor'];
-              console.log("Quiero esto", response['result']['valor']);
 
             } else {
               this.creditoDisponivelEmpty = true;

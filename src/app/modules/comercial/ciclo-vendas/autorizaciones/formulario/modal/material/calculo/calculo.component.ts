@@ -302,11 +302,9 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
   }
 
   onCalcular(): void {
-    console.log("calculaaaaaaaar",this.form ,this.checkFormValidators());
   /*   if (this.checkFormValidators() === false && this.form.valid) {
   
       if (this.material.valorMaterialContrato > 0) {
-        console.log("valormaterial",this.material.valorMaterialContrato);
         this.postCalculoMaterial(this.tipoCalculo1, this.form.value.preco1);
       } else if (this.form.value.preco2 > 0) {
         if (
@@ -400,7 +398,6 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       codEmpresa: this.material.codEmpresa,
       codEndereco: this.codEndereco
     };
-    console.log("algo referencial",params);
     this.cotacoesService
       .postCalculoMaterial(params)
       .pipe(
@@ -411,7 +408,6 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoComponent
       .subscribe((response: JsonResponse) => {
         if (response.success === true) {
           if (response.data.length === 1) {
-            console.log("algo referencial", response.data[0], tipoCalculo, this.tipoLancamento, this.material.unidade);
           /*   this.calcularTotais(response.data[0], tipoCalculo, this.tipoLancamento, this.material.unidade); */
           }
         } else {

@@ -21,7 +21,8 @@ import { Subscription, EMPTY } from 'rxjs';
 
 //modelos
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
-import { BsModalRef, BsModalService, BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap';
+import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subtitles } from 'src/app/shared/modules/subtitles/subtitles';
 import { CustomTableConfig } from './../../../../../shared/templates/custom-table/models/config';
 

@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class LogisticaEstoquePainelInventarioInventarioService {
-  private readonly BASE_URL: string = `https://23.254.204.187/api`;
+  private readonly BASE_URL: string = `${environment.URL_MTCORP}`;
 
   constructor(private http: HttpClient, private dateService: DateService) {}
 

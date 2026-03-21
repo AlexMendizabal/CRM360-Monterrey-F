@@ -7,7 +7,9 @@ import { LogisticaDashboadsConferenciaCteRoutingModule } from './conferencia-cte
 
 import { NotFoundModule } from './../../../../core/not-found/not-found.module';
 
-import { BsDatepickerModule, PaginationModule, TooltipModule } from 'ngx-bootstrap';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CountoModule } from 'angular2-counto';

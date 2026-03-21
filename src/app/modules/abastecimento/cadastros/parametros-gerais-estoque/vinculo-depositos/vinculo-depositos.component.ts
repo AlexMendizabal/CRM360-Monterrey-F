@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EMPTY, Subscription } from 'rxjs';
 import { finalize, switchMap, take } from 'rxjs/operators';
 
-import { PageChangedEvent } from 'ngx-bootstrap';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
@@ -699,7 +699,6 @@ export class  AbastecimentoCadastrosParametrosGeraisEstoqueVinculoDepositosCompo
   }
 
   handleFormSituacao(): void {
-    console.log(this.form.value['ID_DEPO']);
     if(this.form.value['ID_DEPO'] !== null) {
       this.form.get('ID_SITU_MATE').reset();
       this.tipoSituacao = [

@@ -142,7 +142,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   getVendedores(): void {
     this.vendedoresService.getVendedores().subscribe(
       (response: any) => {
-        console.log("lista vendedores",response); // Verificar el tipo de datos de la respuesta
+
         this.vendedores = response.data;
       },
       (error: any) => {
@@ -154,7 +154,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   estadosAgenda(): void {
     this.agendaService.estadosAgenda().subscribe(
       (response: any) => {
-        console.log(response); // Verificar el tipo de datos de la respuesta
+
         this.estados = response.result; // Almacena los estados en la variable estados
       },
       (error: any) => {
@@ -168,7 +168,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
   getEscritorios(): void {
     this.escritoriosService.getEscritorios().subscribe(
       (response: any) => {
-        console.log(response); // Verificar la respuesta en la consola
+
         this.escritorios = response.result;
       },
       (error: any) => {
@@ -197,7 +197,7 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
 
     this.agendaService.getCompromissos(params).subscribe(
       (response: any) => {
-        console.log(response); // Verifica la respuesta en la consola
+
         this.compromissos = response.result;
       },
       (error: any) => {
@@ -247,8 +247,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
     this.agendaService.reporte_cliente(data).subscribe(
       (response: any) => {
         this.resultcliente = response.result;
-        console.log('respuesta56');
-        console.log(this.resuldata);
         // Realizar las acciones necesarias con la respuesta
       },
       (error: any) => {
@@ -436,8 +434,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         (response: any) => {
           if (response.result) {
             this.resultcliente = response.result;
-            console.log('respuesta123456');
-            console.log(this.resultcliente);
           } else {
             this.dadosCadastraisEmpty = true;
           }
@@ -475,7 +471,6 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
       cliente.fecha, // Asegúrate de que cliente.fechaInicial sea una cadena de caracteres o un objeto de tipo Date
       cliente.obs_final
     ]);
-    console.log(this.resuldata)
   
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('data');

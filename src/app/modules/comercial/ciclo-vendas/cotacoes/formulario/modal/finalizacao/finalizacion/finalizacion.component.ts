@@ -99,7 +99,6 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
     this.checkoutForm = this.formBuilder.group({
       observacion: ['', Validators.required], 
     });
-    console.log('con authorizacion',this.dataCotacao)
   }
 
   ngAfterViewChecked() {
@@ -118,7 +117,6 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
 
   onSubmit() {
 
-    console.log('con authorizacion',this.dataCotacao)
     if (this.checkoutForm.value !== undefined && this.checkoutForm.value !== null && this.checkoutForm.value.observacion !=="") {
       
       this.id_oferta = this.dataCotacao.id_oferta;
@@ -134,7 +132,6 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
       this.cotacoesService.autorizaciones(this.formObj)
         .pipe().subscribe(
           (response: any) => {
-            console.log(response);
             this.pnotifyService.notice(
               'se envio una auntorización.'
             );

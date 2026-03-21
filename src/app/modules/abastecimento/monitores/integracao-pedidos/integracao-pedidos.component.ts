@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 
-import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap';
+import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination/ngx-bootstrap-pagination';
 import { ptBrLocale } from 'ngx-bootstrap/locale';

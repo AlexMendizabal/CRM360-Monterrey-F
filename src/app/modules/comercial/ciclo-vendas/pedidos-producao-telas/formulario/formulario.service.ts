@@ -19,7 +19,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCicloVendasPedidosProducaoTelasFormularioService {
-  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/pedidos-producao-telas`;
+  private readonly API = `${environment.URL_MTCORP}comercial/ciclo-vendas/pedidos-producao-telas`;
 
   private notifySubmit = new Subject<any>();
 

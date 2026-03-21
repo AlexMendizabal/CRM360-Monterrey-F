@@ -2,7 +2,10 @@ import { LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
 
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
-import { BsDatepickerModule, defineLocale, PaginationModule, ptBrLocale, TooltipModule } from 'ngx-bootstrap';
+import { defineLocale, ptBrLocale } from 'ngx-bootstrap/chronos';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
 import ptBr from '@angular/common/locales/pt';
 

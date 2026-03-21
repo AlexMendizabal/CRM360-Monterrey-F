@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { map, finalize } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AgmCoreModule } from '@agm/core';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 
 
@@ -438,7 +437,6 @@ export class ComercialLoteRutaComponent implements OnInit {
     selectVendedorDefault(cliente: any, mapa: any) {
        
         const vendedorEncontrado = this.filteredVendedores.find(vendedor => vendedor.ID === mapa.ID_VENDEDOR);
-        console.log('aquie mapa', vendedorEncontrado);
         if (vendedorEncontrado) {
             cliente.vendedor_id = vendedorEncontrado.ID;
         } else {
@@ -506,7 +504,6 @@ export class ComercialLoteRutaComponent implements OnInit {
         let msgError = 'Ocurrio un error al agendar la cita.';
         const datos = this.atividades;
 
-       console.log('aqui es datos de cita',datos);
         
         // Muestra el spinner
         this.mostrarSpinner = true;

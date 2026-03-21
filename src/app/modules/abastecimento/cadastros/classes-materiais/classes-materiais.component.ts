@@ -12,7 +12,7 @@ import { TitleService } from 'src/app/shared/services/core/title.service';
 import { Subscription, EMPTY } from 'rxjs';
 
 import { AbastecimentoCadastrosClassesMateriaisService } from './classes-materiais.service';
-import { PageChangedEvent } from 'ngx-bootstrap';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { finalize, take, switchMap } from 'rxjs/operators';
 import { ConfirmModalService } from 'src/app/shared/modules/confirm-modal/confirm-modal.service';
 

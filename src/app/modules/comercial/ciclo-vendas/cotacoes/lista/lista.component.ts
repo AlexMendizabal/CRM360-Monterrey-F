@@ -1913,7 +1913,6 @@ export class ComercialCicloVendasCotacoesListaComponent
       )
       .subscribe(
         (response: JsonResponse) => {
-          console.log('Resputs', response);
           if (response.CodigoRespuesta === 200) {
             this.pnotifyService.success(response.message);
             /*    verificadorElement.classList.replace('far fa-sync-alt fa-spin', 'fas fa-sync-alt'); */

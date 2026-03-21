@@ -252,7 +252,6 @@ export class ComercialClientesPreCadastroComponent
     this.preCadastroService.getTipoDocumento().subscribe(
       (response: any) => {
         if (response.responseCode === 200) {
-          console.log('Documentos', response);
           this.tipos_documentos = response.result;
         } else {
           this.handleFormFieldsError();
@@ -777,11 +776,10 @@ export class ComercialClientesPreCadastroComponent
   }
 
   crearNotificacion(){
-    console.log(this.form.value.vendedor); 
     const params ={
       'titulo': 'Nuevo cliente',
       'mensaje': 'Se ha registrado un socio de negocios',
-      'url': 'http://localhost:4200/#/comercial/clientes/lista',
+      'url': `${window.location.origin}/#/comercial/clientes/lista`,
       'id_vendedor':  this.id_vend
     }
 

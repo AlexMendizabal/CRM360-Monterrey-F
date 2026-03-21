@@ -76,7 +76,6 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisRelacionadosComponen
 
       previousValue.includes(event.materiais.codMaterial);
 
-      console.log(currentValue);
 
       this.postMateriaisRelacionados(currentValue);
 

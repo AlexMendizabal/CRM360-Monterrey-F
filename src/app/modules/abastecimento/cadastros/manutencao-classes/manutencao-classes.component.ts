@@ -5,7 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EMPTY, Subscription } from 'rxjs';
 import { finalize, switchMap, take } from 'rxjs/operators';
 
-import { BsModalRef, BsModalService, PageChangedEvent } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { Subtitles } from 'src/app/shared/modules/subtitles/subtitles';

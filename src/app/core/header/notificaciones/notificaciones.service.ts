@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { finalize } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 
 // ngx-bootstrap
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -21,7 +22,7 @@ import { JsonResponse } from 'src/app/models/json-response';
     providedIn: 'root',
 })
 export class NotificacionesService {
-    private readonly BASE_URL: string = `http://23.254.204.187/api`;
+    private readonly BASE_URL: string = `${environment.URL_MTCORP}`;
 
     loaderNavbar: EventEmitter<boolean> = new EventEmitter();
 
@@ -36,7 +37,7 @@ export class NotificacionesService {
 
     getNotificaciones() {
         return this.http
-            .get(this.BASE_URL+ `/core/notificaciones`)
+            .get(this.BASE_URL+ `core/notificaciones`)
             .pipe(take(1), retry(2));
     }
     updateNotificacion(id: number) {
@@ -44,27 +45,27 @@ export class NotificacionesService {
             id: id,
         }
         return this.http
-            .post(this.BASE_URL+ `/core/notificaciones/update`, param)
+            .post(this.BASE_URL+ `core/notificaciones/update`, param)
             .pipe(take(1), retry(2));
     }
 
     postLeerNotificaciones(params: any) {
         //console.log(params);
         return this.http
-            .post(this.BASE_URL+ `/core/notificaciones/leerNotificaciones`, params)
+            .post(this.BASE_URL+ `core/notificaciones/leerNotificaciones`, params)
             .pipe(take(1), retry(2));
     }
 
     createNotificacion(params: any) {
     
         return this.http
-            .post(this.BASE_URL+ `/core/notificaciones/crearNotificaciones`, params)
+            .post(this.BASE_URL+ `core/notificaciones/crearNotificaciones`, params)
             .pipe(take(1), retry(0));
     }
 
     verificarOferta(params: any) {
         return this.http
-            .post(this.BASE_URL+ `/core/notificaciones/verificar_oferta`, params)
+            .post(this.BASE_URL+ `core/notificaciones/verificar_oferta`, params)
             .pipe(take(1), retry(0));
     }
 }

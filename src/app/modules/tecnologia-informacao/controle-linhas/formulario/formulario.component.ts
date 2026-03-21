@@ -351,7 +351,6 @@ export class TecnologiaInformacaoControleLinhaFormularioComponent
     this.controleLinhaService
       .postDocument(formData, codLinha)
       .subscribe((response) => {
-        console.log(response);
       });
   }
 
@@ -364,7 +363,6 @@ export class TecnologiaInformacaoControleLinhaFormularioComponent
       })
       .subscribe((response) => {
         this.documentos = response.body['data'];
-        console.log(this.documentos);
       });
   }
 

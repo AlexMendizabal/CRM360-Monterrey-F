@@ -6,7 +6,8 @@ import { LogisticaEntradaMateriaisStatusRecebimentoService } from '../services/s
 
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsModalRef, BsLocaleService } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 //Angular
 import { ActivatedRoute, Router } from '@angular/router';

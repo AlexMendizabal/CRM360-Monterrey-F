@@ -9,7 +9,9 @@ import { RouterService } from 'src/app/shared/services/core/router.service';
 import { LogisticaDashboardConferenciaCteService } from './conferencia-cte.service';
 import { XlsxService } from './../../../../shared/services/core/xlsx.service';
 
-import { BsDatepickerConfig, BsLocaleService, BsModalRef, BsModalService, PageChangedEvent } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 // rxjs
 import { finalize } from 'rxjs/operators';

@@ -625,7 +625,7 @@ search(params: any): void {
       })
     )
     .subscribe({
-      next: (response: JsonResponse) => {console.log("params2",params);
+      next: (response: JsonResponse) => {
         if (response.hasOwnProperty('success') && response.success === true) {
           this.datos = response.data;
           this.datosAutorizaciones = this.datos.slice(0, this.itemsPerPage);
@@ -877,7 +877,6 @@ nuevo() {
   if (!this.loading) {
     this.loadingNavBar = false;
   }
-  console.log("params",params);
   this.cotacoesService
     .getAutorizaciones(params)
     .pipe(

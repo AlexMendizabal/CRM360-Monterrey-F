@@ -72,7 +72,6 @@ export class ComercialCicloVendasComponent implements OnInit {
             return
           }
 
-          console.log(response.body["data"])
 
           this.atividades = response.body["data"];
           this.loaderFullScreen = false;

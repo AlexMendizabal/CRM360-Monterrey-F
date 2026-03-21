@@ -5,7 +5,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { HttpClient } from '@angular/common/http';
 
 // ngx
-import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap';
+import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 // rxjs
 import { Subscription, forkJoin } from 'rxjs';

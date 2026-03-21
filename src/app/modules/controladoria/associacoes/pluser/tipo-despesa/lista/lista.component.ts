@@ -11,7 +11,8 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { DetailPanelService } from 'src/app/shared/templates/detail-panel/detal-panel.service';
 
 //ngx
-import { BsLocaleService, BsDatepickerConfig, PageChangedEvent } from 'ngx-bootstrap';
+import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { ControladoriaAssociacoesPluserTipoDespesaService } from '../services/tipo-despesa.service';
 
 //models

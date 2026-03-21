@@ -310,7 +310,6 @@ export class ComercialComissoesVendedoresInternosLancamentoMetasComponent
         this.vendedoresTotal = this.vendedores;
         this.form.controls.codVendedor.enable();
 
-        console.log(this.vendedores); //retirar
 
         this.vendedores.unshift({
           id: 0,
@@ -324,7 +323,6 @@ export class ComercialComissoesVendedoresInternosLancamentoMetasComponent
         this.escritorios = response.result;
         this.form.controls.codGerente.enable();
 
-        console.log(this.escritorios); //retirar
 
         this.escritorios.unshift({
           id: 0,
@@ -353,7 +351,6 @@ export class ComercialComissoesVendedoresInternosLancamentoMetasComponent
       (value: any) => value.idEscritorio == this.form.value.codGerente
     );
 
-    console.log(this.filteredVendedores);
 
     this.filteredVendedores.unshift({
       idClasse: 0,
@@ -388,8 +385,6 @@ export class ComercialComissoesVendedoresInternosLancamentoMetasComponent
         next: (response: any) => {
           if (response.responseCode === 200) {
             this.profile = response.result;
-            console.log(this.user);
-            console.log(this.profile);
 
             if (
               this.profile.coordenador === true ||
@@ -397,7 +392,6 @@ export class ComercialComissoesVendedoresInternosLancamentoMetasComponent
             ) {
               this.form.controls.codGerente.disable();
               this.userMarketing = false; //alterar para visualizar a tela
-              console.log(this.userMarketing);
             } else if (this.profile.vendedor === true) {
               this.form.controls.codGerente.enable();
             } else {
@@ -466,7 +460,6 @@ export class ComercialComissoesVendedoresInternosLancamentoMetasComponent
       },
     ];
 
-    console.log(this.metas);
     this.detailPanelService.loadedFinished(false); //retirar
     
     return;
@@ -485,8 +478,6 @@ export class ComercialComissoesVendedoresInternosLancamentoMetasComponent
             // Não está vazio.
             this.detailPanelService.loadedFinished(false);
             this.metas = response;
-            console.log(this.metas);
-            console.log(this.test);
           } else if (
             response.hasOwnProperty('success') &&
             response.success === false

@@ -12,7 +12,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialService {
-  private readonly API = `http://23.254.204.187/api/comercial`;
+  private readonly API = `${environment.URL_MTCORP}comercial`;
 
   constructor(protected http: HttpClient) { }
 

@@ -18,13 +18,10 @@ import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import {
-  TooltipModule,
-  TimepickerModule,
-  BsDatepickerModule,
-  defineLocale,
-  ptBrLocale,
-} from 'ngx-bootstrap';
+import { defineLocale, ptBrLocale } from 'ngx-bootstrap/chronos';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 registerLocaleData(ptBr);
 defineLocale('pt-br', ptBrLocale);

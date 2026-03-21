@@ -11,7 +11,7 @@ import { take } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ComercialCadastroPainelCustosService {
-   private readonly API = `http://23.254.204.187/api/comercial/cadastros/painel-custos`;
+   private readonly API = `${environment.URL_MTCORP}comercial/cadastros/painel-custos`;
    /*private readonly API = `https://23.254.204.187`;*/
 
   constructor(protected http: HttpClient) {}

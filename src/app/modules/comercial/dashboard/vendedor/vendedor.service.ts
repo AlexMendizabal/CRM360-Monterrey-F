@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ComercialDashboardVendedorService {
-  private readonly API = `http://23.254.204.187/api/comercial/dashboard/vendedor`;
+  private readonly API = `${environment.URL_MTCORP}comercial/dashboard/vendedor`;
 
   constructor(protected http: HttpClient) {}
 

@@ -12,7 +12,7 @@ import { FormasPagamento } from './models/formas-pagamento';
   providedIn: 'root',
 })
 export class ComercialCadastrosFormasPagamentoService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/formas-pagamento`;
+  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/formas-pagamento`;
 
   constructor(protected http: HttpClient) {}
 

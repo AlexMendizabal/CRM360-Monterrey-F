@@ -13,7 +13,7 @@ import { RouterService } from 'src/app/shared/services/core/router.service';
 
 import { AbastecimentoCadastrosVinculoMaterialDepositoNewService } from '../vinculo-material-deposito-new.service';
 
-import { PageChangedEvent } from 'ngx-bootstrap';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 
 @Component({

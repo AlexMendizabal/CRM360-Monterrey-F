@@ -8,7 +8,10 @@ import { SharedModule } from 'src/app/shared/modules/shared.module';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 
-import { TooltipModule, PaginationModule, TabsModule, ModalModule } from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { OrderModule } from 'ngx-order-pipe';
 
 import { AbastecimentoCadastrosClassesMateriaisRoutingModule } from './classes-materiais-routing.module';

@@ -1,20 +1,11 @@
 {
   "/api/*": {
-    "target": "http://23.254.204.187/api/",
+    "target": "http://localhost:8080/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
     "pathRewrite": {
-      "^/api/": ""
-    }
-  },
-  "/app/*": {
-    "target": "http://23.254.204.187/api/app/",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true,
-    "pathRewrite": {
-      "^/app/": ""
+      "^/api/": "/"
     }
   }
 }

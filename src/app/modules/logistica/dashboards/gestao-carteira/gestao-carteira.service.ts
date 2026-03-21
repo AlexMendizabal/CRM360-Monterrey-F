@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class LogisticaDashboardGestaoCarteiraService {
-  private readonly API = `https://23.254.204.187/api`;
+  private readonly API = `${environment.URL_MTCORP}`;
 
   constructor(private http: HttpClient) { }
 
@@ -96,7 +96,6 @@ export class LogisticaDashboardGestaoCarteiraService {
         "cnpj": "17469701002897"
       },
     ]
-    console.log
     return of(empresas)
   }
 }

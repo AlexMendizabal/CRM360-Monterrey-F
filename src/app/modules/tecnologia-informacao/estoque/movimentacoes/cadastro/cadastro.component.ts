@@ -9,7 +9,8 @@ import { TecnologiaInformacaoEstoqueMovimentacoesService } from '../services/mov
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 //Angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, TemplateRef } from '@angular/core';

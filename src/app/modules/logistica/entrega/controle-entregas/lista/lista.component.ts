@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
 // ngx-bootstrap
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 

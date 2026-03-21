@@ -17,12 +17,8 @@ import {
 import { HttpClient } from '@angular/common/http';
 
 // ngx
-import {
-  BsLocaleService,
-  BsDatepickerConfig,
-  BsModalService,
-  BsModalRef,
-} from 'ngx-bootstrap';
+import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 // rxjs
 import { forkJoin, Subscription } from 'rxjs';

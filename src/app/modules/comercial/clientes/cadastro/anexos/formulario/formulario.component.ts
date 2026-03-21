@@ -35,7 +35,7 @@ import { ConfirmModalService } from 'src/app/shared/modules/confirm-modal/confir
 })
 export class ComercialClientesCadastroAnexosFormularioComponent
   implements OnInit, OnDestroy, IFormCanDeactivate {
-  private API = `http://23.254.204.187/api/comercial/clientes/cadastro/upload/anexo`;
+  private API = `${environment.URL_MTCORP}comercial/clientes/cadastro/upload/anexo`;
   private user = this.authService.getCurrentUser();
 
   urlAnexo: Array<any> = [];
@@ -147,7 +147,6 @@ export class ComercialClientesCadastroAnexosFormularioComponent
         .subscribe((response: any) => {
 
           this.codCliente = params['id'];
-          console.log(response);
           if (response['success'] === true && response['data'].length > 0) {
             this.tipoCliente = response['data'][0]['tipoCliente'];
             this.setFormValidators(response['data']);
@@ -434,7 +433,6 @@ export class ComercialClientesCadastroAnexosFormularioComponent
           urlAnexo: [anexo.urlAnexo],
         })
       );
-      console.log(this.anexos);
 
       if (manipulateForm) {
         this.form.markAsTouched();
@@ -462,7 +460,6 @@ export class ComercialClientesCadastroAnexosFormularioComponent
             linkAnexo: [reader.result]
           })
         );
-        console.log(this.anexos);
 
         if (this.showAnexos === false) {
           this.showAnexos = true;

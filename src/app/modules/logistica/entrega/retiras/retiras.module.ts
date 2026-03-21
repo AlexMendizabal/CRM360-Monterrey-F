@@ -4,7 +4,10 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import ptBr from '@angular/common/locales/pt';
-import { AccordionModule, defineLocale, ProgressbarModule, ptBrLocale, SortableModule } from 'ngx-bootstrap';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { defineLocale, ptBrLocale } from 'ngx-bootstrap/chronos';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+import { SortableModule } from 'ngx-bootstrap/sortable';
 registerLocaleData(ptBr);
 defineLocale('pt-br', ptBrLocale);
 

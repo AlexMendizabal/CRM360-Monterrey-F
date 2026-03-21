@@ -68,7 +68,6 @@ export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
             this.noClientes = false;
             this.clientes = response.data;
 
-            console.log(this.clientes);
           } else {
             this.noClientes = true;
             this.pnotifyService.notice('Nenhum cliente encontrado!');

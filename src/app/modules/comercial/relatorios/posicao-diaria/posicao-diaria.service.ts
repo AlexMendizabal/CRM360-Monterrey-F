@@ -12,7 +12,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialRelatoriosPosicaoDiariaService {
-  private readonly API = `http://23.254.204.187/api/comercial/relatorios/posicao-diaria`;
+  private readonly API = `${environment.URL_MTCORP}comercial/relatorios/posicao-diaria`;
 
   constructor(protected http: HttpClient) {}
 

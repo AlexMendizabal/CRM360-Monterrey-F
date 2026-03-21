@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 
 import { finalize, retry } from 'rxjs/operators';
-import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap';
+import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { PNotifyService } from './../../../../../shared/services/core/pnotify.service';

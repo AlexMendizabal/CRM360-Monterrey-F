@@ -15,7 +15,7 @@ export class CorteDobraDashboardService {
   private AnaliticoTransporte: boolean = false;
 
 
-  private readonly API_URL_MT: string = `https://23.254.204.187/api`;
+  private readonly API_URL_MT: string = `${environment.URL_MTCORP}`;
 
   //API_URL: string = 'https://23.254.204.187';
   //API_URL_MT:string = '/api/';
@@ -183,7 +183,6 @@ export class CorteDobraDashboardService {
     }else if (unidade == '03,46,72'){
       projeto = "C&D Rio das Pedras,C&D Cajamar,C&D Praia Grande";
     }
-console.log(projeto)
     return this.http.get(`${this.API_URL_MT}/logistica/indicadores/taxa-ocupacao`, {
       params: {
         "dataInicial": dataInicial,

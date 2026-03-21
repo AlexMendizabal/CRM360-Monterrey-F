@@ -378,7 +378,6 @@ export class ComercialEstoqueListaComponent implements OnInit {
   }
 
   setRouterParams(params: any) {
-    console.log(params);
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: { q: btoa(JSON.stringify(params)) },
@@ -703,11 +702,9 @@ export class ComercialEstoqueListaComponent implements OnInit {
       registrosLista: this.form.get('registrosLista').value
     };
     this.itemsPerPageAlmacen = params.registrosLista;
-    console.log('Enviando Params:', params);
   
     this.estoqueService.getStockAlmacenes(params).subscribe(
       (response: any) => {
-        console.log("Respuesta Estoque", response);
         if (response.responseCode === 200) {
           this.detalhesAlmacen = response.result;
           this.stockLoaded = true;

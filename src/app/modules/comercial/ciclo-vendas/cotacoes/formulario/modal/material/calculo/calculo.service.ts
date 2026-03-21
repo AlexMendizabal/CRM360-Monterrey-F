@@ -41,7 +41,6 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoService {
       )
       .subscribe({
         next: (response: JsonResponse) => {
-          console.log(response)
           if (response.success === true) {
             
             const modalConfig = {

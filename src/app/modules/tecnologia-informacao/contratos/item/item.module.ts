@@ -11,7 +11,8 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import ptBr from '@angular/common/locales/pt';
-import { defineLocale, ptBrLocale, BsDatepickerModule } from 'ngx-bootstrap';
+import { defineLocale, ptBrLocale } from 'ngx-bootstrap/chronos';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 registerLocaleData(ptBr);
 defineLocale('pt-br', ptBrLocale);
 

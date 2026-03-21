@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class ControladoriaSaldosBancosService {
-  private readonly BASE_URL: string = `https://23.254.204.187/api`;
+  private readonly BASE_URL: string = `${environment.URL_MTCORP}`;
 
   private modalEmitter: EventEmitter<any> = new EventEmitter();
   private detailPanelEmitter: EventEmitter<string> = new EventEmitter();

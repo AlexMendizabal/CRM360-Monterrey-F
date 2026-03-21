@@ -10,7 +10,7 @@ import { ILogisticaEntregaRomaneio } from '../models/romaneio';
 })
 export class LogisticaEntregaRomaneiosService {
 
-  private readonly BASE_URL: string = `https://23.254.204.187/api`;
+  private readonly BASE_URL: string = `${environment.URL_MTCORP}`;
 
   private downloadEmmiter: EventEmitter<ILogisticaEntregaRomaneio> = new EventEmitter();
 

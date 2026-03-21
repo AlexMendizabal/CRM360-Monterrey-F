@@ -6,6 +6,7 @@ import { interval, Subject } from 'rxjs';
 import { takeUntil, take, retry } from 'rxjs/operators';
 import { JsonResponse } from 'src/app/models/json-response';
 import 'bootstrap';
+import { environment } from '../../../environments/environment';
 // Services
 import { AuthService } from 'src/app/shared/services/core/auth.service';
 import { ModulosService } from 'src/app/shared/services/requests/modulos.service';
@@ -25,7 +26,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 })
 export class HeaderComponent implements OnInit {
   @Input('showLoader') showLoader: boolean;
-  private readonly API = `http://23.254.204.187/api/sap`;
+  private readonly API = `${environment.URL_MTCORP}sap`;
 
   showLogoCliente = true;
   srcLogoCliente: string;

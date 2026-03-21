@@ -13,7 +13,7 @@ import { Subscription, EMPTY } from 'rxjs';
 import { CustomTableConfig } from './../../../../../shared/templates/custom-table/models/config';
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { Subtitles } from './../../../../../shared/modules/subtitles/subtitles';
-import { PageChangedEvent } from 'ngx-bootstrap';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 //servicos
 import { TecnologiaInformacaoEstoqueModeloService } from './../../modelo/services/modelo.service';

@@ -16,7 +16,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialEstoqueService {
-  private readonly API = `http://23.254.204.187/api/comercial/estoque`;
+  private readonly API = `${environment.URL_MTCORP}comercial/estoque`;
 
   constructor(
     protected http: HttpClient,
@@ -122,8 +122,6 @@ export class ComercialEstoqueService {
       }
     });
   
-    console.log('URL de la solicitud:', url);
-    console.log('Parámetros de la solicitud:', queryParams.toString());
   
     return this.http.get(url, { params: queryParams }).pipe(take(1), retry(2));
   }
@@ -131,7 +129,6 @@ export class ComercialEstoqueService {
   buscarListaPrecio(nombreLista: string): Observable<Object | JsonResponse> {
     const params = new HttpParams().set('nombre_lista', nombreLista);
   
-    console.log('Enviando parámetros:', params.toString());
   
     return this.http
       .get(`${this.API}/lista-precio`, { params })

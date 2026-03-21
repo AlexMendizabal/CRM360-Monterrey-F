@@ -10,12 +10,9 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 
 //ngx
-import {
-  BsDatepickerConfig,
-  BsLocaleService,
-  BsModalService,
-  BsModalRef, PageChangedEvent
-} from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 //services
 import { LogisticaEntregaRetirasService } from '../services/retiras.service';
@@ -154,7 +151,6 @@ export class LogisticaEntregaRetirasListaComponent implements OnInit {
       .subscribe(
         response => {
           this.filiais = response;
-          console.log(this.filiais)
         }
       )
   }

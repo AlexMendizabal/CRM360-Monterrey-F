@@ -15,7 +15,7 @@ export class ComercialAgendaService {
     return this.http.get(`${this.API}/getruta/${id_agenda}`).pipe(take(1), retry(2));
   }
 
-  private readonly API = `http://23.254.204.187/api/comercial/agenda`;
+  private readonly API = `${environment.URL_MTCORP}comercial/agenda`;
 
   constructor(protected http: HttpClient) { }
 

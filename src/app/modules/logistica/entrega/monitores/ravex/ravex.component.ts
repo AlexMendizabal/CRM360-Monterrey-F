@@ -19,7 +19,8 @@ import { Subscription } from 'rxjs';
 
 // ngx
 import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { PageChangedEvent, BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { ILogisticaSteelLogTipoTransporte } from '../../../models/steellog/tipoTransporte';

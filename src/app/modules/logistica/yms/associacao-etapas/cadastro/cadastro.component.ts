@@ -7,7 +7,8 @@ import { LogisticaYmsChecklistService } from './../../checklist/services/checkli
 import { LogisticaYmsAssociacaoEtapasService } from '../services/associacao-etapas.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsModalRef, BsLocaleService } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 //Angular
 import { Component, OnInit} from '@angular/core';
 import { CustomTableConfig } from './../../../../../shared/templates/custom-table/models/config';
@@ -22,7 +23,7 @@ import {
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 //interfaces
-import { isNull } from 'util';
+
 import { ILogisticaYmsChecklist } from './../../checklist/models/checklist';
 import { ILogisticaYmsAssociacaoEtapas } from '../models/associacao-etapas';
 
@@ -224,7 +225,7 @@ export class LogisticaYmsAssociacaoEtapasCadastroComponent
       ID_LOGI_YMS_ETAP: [null],
       ID_LOGI_YMS_CHEC: [null, [Validators.required]],
       NM_AREA: [null],
-      IN_STAT: [isNull],
+      IN_STAT: [Validators.required],
       DS_OBSE: [null],
       assocEtapas: this.formBuilder.array([]),
     });
@@ -339,7 +340,6 @@ export class LogisticaYmsAssociacaoEtapasCadastroComponent
       .subscribe(
         (response) => {
           if (response.status === 200) {
-            console.log(response.body['result'])
             this.etapasLista = response.body['result'].map(function (el: any) {
               let o = Object.assign({}, el)
               o.checked = 0;

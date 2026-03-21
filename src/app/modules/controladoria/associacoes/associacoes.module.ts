@@ -18,7 +18,7 @@ import { ControladoriaAssociacoesPluserTipoDespesaListaComponent } from './pluse
 import { ControladoriaAssociacoesPluserTipoDespesaPlanoContaComponent } from './pluser/tipo-despesa/plano-conta/plano-conta.component';
 
 //ngx
-import { PaginationModule } from 'ngx-bootstrap';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 //masks
 import { NgBrazil } from 'ng-brazil';

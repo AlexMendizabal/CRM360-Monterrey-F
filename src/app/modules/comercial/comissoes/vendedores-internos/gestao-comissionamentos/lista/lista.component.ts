@@ -165,7 +165,6 @@ export class ComercialComissoesVendedoresInternosGestaoComissionamentosListaComp
   // Formulário
   setFormFilter(): void {
     const formValue: any = this.checkRouterParams();
-    console.log(formValue);
 
     this.form = this.formBuilder.group({
       codVendedor: [formValue.codVendedor],
@@ -279,7 +278,6 @@ export class ComercialComissoesVendedoresInternosGestaoComissionamentosListaComp
       )
       .subscribe(
         (response: JsonResponse) => {
-          console.log(response)
           if (response.hasOwnProperty('success') && response.success === true) {
             this.dados = response.data;
             this.da = this.dados[0]['total'];
@@ -523,23 +521,18 @@ export class ComercialComissoesVendedoresInternosGestaoComissionamentosListaComp
         (response: any) => {
           if (response.success === true) {
             this.profile = response.data;
-            console.log(response)
             if (
               this.profile.gerenteMarketing === true
             ) {
-              console.log('gerenteMarketing')
             } else if (
               this.profile.gerenteEscritorio === true
             ) {
-              console.log('gerenteEscritorio')
             } else if (
               this.profile.gerenteFiscal === true
             ) {
-              console.log('gerenteFiscal')
             } else if (
               this.profile.diretorComercial === true
             ) {
-              console.log('diretorComercial')
             }
           }
 

@@ -2,7 +2,7 @@ import { Component, OnInit,ViewChild,
   ElementRef,
   OnDestroy, } from '@angular/core';
 
-  import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+  import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
   import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
   import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
   import { PageChangedEvent } from 'ngx-bootstrap/pagination';
@@ -72,7 +72,6 @@ export class ControladoriaFluxoCaixaLogsComponent implements OnInit, OnDestroy {
     this.$serviceModalSubscription = this.service
       .getStateModal()
       .subscribe((response) => {
-        console.log(response)
         this.dados = response;
         this.modalRef = this.modalService.show(this.template, this.config);
         this.showDetailPanel = false;
@@ -127,7 +126,6 @@ export class ControladoriaFluxoCaixaLogsComponent implements OnInit, OnDestroy {
   }
 
   openTab(log) {
-    console.log(log);
     this.items.map((item) => (item.selected = false));
     this.log = log;
     this.log.selected = true;

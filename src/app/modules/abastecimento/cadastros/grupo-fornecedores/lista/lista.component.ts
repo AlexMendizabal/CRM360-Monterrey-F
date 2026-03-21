@@ -21,7 +21,7 @@ import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/
 import { RouterService } from 'src/app/shared/services/core/router.service';
 import { Subtitles } from 'src/app/shared/modules/subtitles/subtitles';
 
-import { PageChangedEvent } from 'ngx-bootstrap';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 @Component({
   selector: 'lista',

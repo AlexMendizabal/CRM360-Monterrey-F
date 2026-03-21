@@ -12,7 +12,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class FinanceiroRelatoriosInadimplentesService {
-  private readonly API = `http://23.254.204.187/api/financeiro/relatorios/inadimplentes`;
+  private readonly API = `${environment.URL_MTCORP}financeiro/relatorios/inadimplentes`;
 
   constructor(protected http: HttpClient) {}
 

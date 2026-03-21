@@ -22,7 +22,7 @@ import { Subscription, EMPTY } from 'rxjs';
 
 //modelos
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
-import { BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Subtitles } from 'src/app/shared/modules/subtitles/subtitles';
 import { CustomTableConfig } from './../../../../../shared/templates/custom-table/models/config';
 
@@ -320,7 +320,6 @@ export class LogisticaYmsEtapasListaComponent
       params.IN_PAGI = '0';
       params.ORDE_BY = 'NR_SQNC'
       params.ORDE_BY = 'asc'
-      console.log(params)
       this.etapasService
         .getSetoresAssociados(params)
         .pipe(

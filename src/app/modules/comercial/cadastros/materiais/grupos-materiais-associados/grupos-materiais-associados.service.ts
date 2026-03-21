@@ -17,7 +17,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCadastrosMateriaisGrupoMateriaisAssociadosService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/materiais/grupos-materiais-associados`;
+  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/materiais/grupos-materiais-associados`;
 
   constructor(
     protected http: HttpClient,

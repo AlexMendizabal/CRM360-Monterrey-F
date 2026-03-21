@@ -9,7 +9,8 @@ import { LogisticaYmsSetoresService } from './../../setores/services/setores.ser
 import { LogisticaYmsAssociacaoMateriaisService } from '../services/associacao-materiais.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsModalRef, BsLocaleService } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 //Angular
 import { Component, OnInit} from '@angular/core';
 import { CustomTableConfig } from './../../../../../shared/templates/custom-table/models/config';
@@ -24,7 +25,7 @@ import {
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 //interfaces
-import { isNull } from 'util';
+
 import { ILogisticaYmsSetores } from './../../setores/models/setores';
 import { ILogisticaYmsAssociacaoMateriais } from '../models/associacao-materiais';
 
@@ -398,7 +399,6 @@ export class LogisticaYmsAssociacaoMateriaisCadastroComponent
       .subscribe(
         (response) => {
           if (response.status === 200) {
-            console.log(response.body['result'])
             this.materiaisLista = response.body['result'].map(function (el: any) {
               let o = Object.assign({}, el)
               o.checked = 0;

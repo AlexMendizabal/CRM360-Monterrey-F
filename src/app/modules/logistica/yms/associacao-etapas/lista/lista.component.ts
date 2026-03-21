@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs';
 
 //modelos
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
-import { BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { CustomTableConfig } from './../../../../../shared/templates/custom-table/models/config';
 
 //Interfaces

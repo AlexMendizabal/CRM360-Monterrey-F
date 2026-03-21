@@ -18,13 +18,9 @@ import { finalize } from 'rxjs/operators';
 import { Subscription, forkJoin } from 'rxjs';
 
 //ngx
-import {
-  BsLocaleService,
-  BsDatepickerConfig,
-  BsModalService,
-  BsModalRef,
-  PageChangedEvent,
-} from 'ngx-bootstrap';
+import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 // services
 import { LogisticaEntregaRetirasService } from '../services/retiras.service';

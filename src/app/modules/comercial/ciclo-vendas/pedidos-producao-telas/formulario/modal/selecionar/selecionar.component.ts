@@ -76,7 +76,6 @@ export class ComercialCicloVendasPedidosProducaoTelasFormularioModalSelecionarCo
   }
 
   setCliente(cliente) {
-    console.log(cliente)
     this.cliente.emit(cliente)
   }
 

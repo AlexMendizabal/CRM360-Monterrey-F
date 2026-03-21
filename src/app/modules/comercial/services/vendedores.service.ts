@@ -12,8 +12,8 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialVendedoresService {
-  private readonly API = `http://23.254.204.187/api/comercial/vendedor`;
-  private readonly API_CADASTROS = `http://23.254.204.187/api/comercial/cadastros`;
+  private readonly API = `${environment.URL_MTCORP}comercial/vendedor`;
+  private readonly API_CADASTROS = `${environment.URL_MTCORP}comercial/cadastros`;
 
 
   constructor(protected http: HttpClient) { }

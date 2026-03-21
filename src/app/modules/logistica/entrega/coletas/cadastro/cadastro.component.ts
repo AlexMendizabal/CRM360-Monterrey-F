@@ -15,7 +15,8 @@ import { ComercialClientesService } from 'src/app/modules/comercial/services/cli
 import { DetailPanelService } from 'src/app/shared/templates/detail-panel/detal-panel.service';
 
 // ngx
-import { BsDatepickerConfig, BsLocaleService, BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { finalize, take, switchMap } from 'rxjs/operators';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
 import { DateService } from 'src/app/shared/services/core/date.service';

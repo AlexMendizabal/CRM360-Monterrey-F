@@ -390,7 +390,6 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
             } else if (desconto.tipo === 'percentual') {
               valorDesc = valor - ((100 - desconto.desconto) / 100) * valor;
               /*  console.log(valorDesc);
-            console.log(desconto);
             console.log(valor); */
 
               formGroup.controls.percentualDesc.setValue(desconto.desconto);
@@ -466,7 +465,6 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   }
 
   onAddMaterial(materiais: Array<ICarrinhoModel>): void {
-    console.log('materiales aqui estan',materiais)
    
     if (materiais.length > 0) {
       let hasError = false,
@@ -582,7 +580,6 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
           'Por favor agregue materiales del mismo almacén.'
         );
       }
-      console.log('hola en',  this.almacenSeleccionado, materiais[0]['id_almacen_carrito'],  qtdeAdicionados++);
       if (qtdeAdicionados > 0) {
         this.setLocalStorage(this.form.value.materiais);
         this.onCalcularTotais(true);
@@ -798,7 +795,6 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         .subscribe(
           (response: JsonResponse) => {
             if (response.success === true) {
-              console.log('eliminar');
 
               this.materiais.removeAt(index);
 

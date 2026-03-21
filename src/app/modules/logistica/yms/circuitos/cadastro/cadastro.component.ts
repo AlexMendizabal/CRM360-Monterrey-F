@@ -8,7 +8,8 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsModalRef, BsLocaleService } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 //Angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit} from '@angular/core';
@@ -25,7 +26,7 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsCircuitosService } from '../services/circuitos.service';
 //interfaces
 import { ILogisticaYmsCircuitos } from '../models/circuitos';
-import { isNull } from 'util';
+
 
 @Component({
   selector: 'logistica-yms-circuitos-cadastro',

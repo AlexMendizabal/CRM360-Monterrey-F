@@ -17,9 +17,9 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCicloVendasAutorizacionesService {
-  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
-  private readonly APIAutorizacion = `http://23.254.204.187/api/comercial/ciclo-vendas/autorizaciones`;
-  private readonly APIVendedor = `http://23.254.204.187/api/comercial/vendedor`;
+  private readonly API = `${environment.URL_MTCORP}comercial/ciclo-vendas/cotacoes`;
+  private readonly APIAutorizacion = `${environment.URL_MTCORP}comercial/ciclo-vendas/autorizaciones`;
+  private readonly APIVendedor = `${environment.URL_MTCORP}comercial/vendedor`;
 
   constructor(
     protected http: HttpClient,

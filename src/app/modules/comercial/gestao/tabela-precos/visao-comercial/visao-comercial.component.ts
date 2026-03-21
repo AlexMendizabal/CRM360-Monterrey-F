@@ -166,7 +166,6 @@ export class ComercialGestaoTabelaPrecoVisaoComercialComponent
       this.activatedRoute.queryParams.subscribe((queryParams: any) => {
         if (Object.keys(queryParams).length > 0) {
           let _response = this.routerService.getBase64UrlParams(queryParams);
-          console.log(_response);
           this.getMateriais(_response);
           this.form.patchValue(_response);
         }

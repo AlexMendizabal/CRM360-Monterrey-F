@@ -13,7 +13,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialIntegracoesArcelorMittalVendedoresService {
-  private readonly API = `http://23.254.204.187/api/comercial/integracoes/arcelor-mittal/vendedores`;
+  private readonly API = `${environment.URL_MTCORP}comercial/integracoes/arcelor-mittal/vendedores`;
 
   constructor(protected http: HttpClient) {}
 

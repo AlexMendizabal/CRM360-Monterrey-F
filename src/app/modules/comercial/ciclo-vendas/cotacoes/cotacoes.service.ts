@@ -17,8 +17,8 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCicloVendasCotacoesService {
-  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
-  private readonly API2 = `http://23.254.204.187/api/comercial/ciclo-vendas/autorizaciones`;
+  private readonly API = `${environment.URL_MTCORP}comercial/ciclo-vendas/cotacoes`;
+  private readonly API2 = `${environment.URL_MTCORP}comercial/ciclo-vendas/autorizaciones`;
   constructor(
     protected http: HttpClient,
     private comercialService: ComercialService,
@@ -269,7 +269,6 @@ export class ComercialCicloVendasCotacoesService {
   }
 
   postMaterialesRelacionados(params: any): Observable<Object | JsonResponse> {
-    console.log(params);
     return this.http
       .post(`${this.API}/materiales/relacionados`, params)
       .pipe(take(1), retry(2));

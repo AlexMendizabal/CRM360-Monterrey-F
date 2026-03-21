@@ -200,7 +200,6 @@ export class ComercialDisponibilidadeMaterialFormularioComponent
       .subscribe({
         next: (response: any) => {
 
-          console.log(response);
           
           if (response[0]['responseCode'] === 200) {
             this.vendedores = response[0]['result'];

@@ -10,6 +10,11 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "docker:dev": "docker-compose up crm360-front-dev --build",
+    "docker:prod": "docker-compose up crm360-front-prod --build",
+    "docker:stop": "docker-compose down",
+    "build:docker": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --prod --configuration=docker --build-optimizer",
+    "start:docker": "ng serve --proxy-config proxy.config.docker.json --host 0.0.0.0 --configuration=docker",
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
   },
   "private": true,
@@ -55,6 +60,7 @@
     "ol": "^6.4.3",
     "pdfmake": "^0.1.65",
     "pnotify": "^4.0.0",
+    "popper.js": "^1.16.1",
     "roboto-fontface": "^0.10.0",
     "rrule": "^2.6.4",
     "rxjs": "^6.6.3",
@@ -90,6 +96,6 @@
   "prettier": {
     "singleQuote": true,
     "jsxBracketSameLine": true,
-    "eslintIntegration":false
-}
+    "eslintIntegration": false
+  }
 }

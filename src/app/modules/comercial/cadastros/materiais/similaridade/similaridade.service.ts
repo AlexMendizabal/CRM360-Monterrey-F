@@ -17,7 +17,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCadastrosMateriaisSimilaridadeService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/materiais/similaridade`;
+  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/materiais/similaridade`;
 
   constructor(
     protected http: HttpClient,

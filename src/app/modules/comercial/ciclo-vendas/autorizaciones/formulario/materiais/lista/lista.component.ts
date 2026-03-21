@@ -452,7 +452,6 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
        this.setRouterParams(this.getFormFilterValues());
       }
     } else {
-      console.log("hola");
       this.setRouterParams(this.getFormFilterValues());
       //this.scrollToFormOnTop.emit(true);
     }

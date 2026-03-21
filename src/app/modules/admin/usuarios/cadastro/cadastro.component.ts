@@ -32,7 +32,7 @@ import { AdminEmpresasService } from '../../empresas/empresas.service';
 import { AdminCargosService } from '../../cargos/cargos.service';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { ConfirmModalService } from 'src/app/shared/modules/confirm-modal/confirm-modal.service';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'admin-usuarios-cadastro',

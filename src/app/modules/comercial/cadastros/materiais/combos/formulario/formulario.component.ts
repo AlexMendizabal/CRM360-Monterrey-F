@@ -355,7 +355,6 @@ export class ComercialCadastrosMateriaisComboFormularioComponent
               finalize(() => {
                 this.loaderNavbar = false;
                 this.submittingForm = false;
-                console.log(this.form);
               })
             )
             .subscribe({

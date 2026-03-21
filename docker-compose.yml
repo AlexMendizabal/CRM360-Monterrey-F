@@ -1,0 +1,55 @@
+# =============================================
+# Docker Compose - CRM360 Monterrey Frontend
+# =============================================
+# USO:
+#   Produccion:   docker-compose up crm360-front-prod crm360-app --build
+#   Desarrollo:   docker-compose up crm360-front-dev crm360-app --build
+#   Parar:        docker-compose down
+# =============================================
+
+services:
+
+  # --- PRODUCCION: Nginx + Build optimizado ---
+  crm360-front-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: crm360-front-prod
+    ports:
+      - "4200:80"
+    restart: unless-stopped
+    depends_on:
+      - crm360-app
+    networks:
+      - crm360-network
+
+  # --- DESARROLLO: ng serve + hot-reload ---
+  # Requiere: npm install --legacy-peer-deps (local) antes de levantar
+  crm360-front-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: crm360-front-dev
+    ports:
+      - "4200:4200"
+    volumes:
+      - .:/app
+    restart: unless-stopped
+    depends_on:
+      - crm360-app
+    networks:
+      - crm360-network
+
+  # --- Backend (imagen local existente) ---
+  crm360-app:
+    image: crm360-monterrey-b-origin-app:latest
+    pull_policy: never
+    container_name: crm360-app
+    ports:
+      - "8080:80"
+    networks:
+      - crm360-network
+
+networks:
+  crm360-network:
+    driver: bridge

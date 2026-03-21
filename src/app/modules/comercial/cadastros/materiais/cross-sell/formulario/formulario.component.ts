@@ -223,7 +223,6 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
    * @source = 'application' || 'user'
    * */
   onAddMaterial(material: any, manipulateForm: boolean, source: string): void {
-    console.log(material);
     if (this.checkMaterialExists(material) === false) {
       this.assocMateriais.push(
         this.formBuilder.group({

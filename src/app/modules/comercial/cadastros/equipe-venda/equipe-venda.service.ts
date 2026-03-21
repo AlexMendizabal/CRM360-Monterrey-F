@@ -12,7 +12,7 @@ import { EquipeVenda } from './models/equipe-venda';
   providedIn: 'root'
 })
 export class ComercialCadastrosEquipeVendaService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/equipe-venda`;
+  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/equipe-venda`;
 
   constructor(protected http: HttpClient) {}
 

@@ -19,7 +19,7 @@ import {
 } from '@angular/forms';
 
 //modelos
-import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 //rxjs
 import { finalize } from 'rxjs/operators';

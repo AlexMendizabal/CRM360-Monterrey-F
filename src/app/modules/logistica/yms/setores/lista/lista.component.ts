@@ -20,7 +20,7 @@ import { Subscription, EMPTY } from 'rxjs';
 
 //modelos
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
-import { BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Subtitles } from 'src/app/shared/modules/subtitles/subtitles';
 import { CustomTableConfig } from './../../../../../shared/templates/custom-table/models/config';
 
@@ -272,7 +272,6 @@ export class LogisticaYmsSetoresListaComponent
     params.IN_PAGI = '0';
     params.ORDE_BY = 'ID_REFE_ERP'
     params.ORDE_TYPE = 'desc'
-    console.log(params)
     this.setoresService
       .getMateriaisAssociados(params)
       .pipe(

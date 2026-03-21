@@ -15,7 +15,8 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsModalRef, BsLocaleService } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 //Angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, TemplateRef } from '@angular/core';
@@ -32,7 +33,7 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsAgendamentosService } from '../services/agendamentos.service';
 //interfaces
 import { ILogisticaYmsAgendamentos } from '../models/agendamentos';
-import { isNull } from 'util';
+
 import { ILogisticaYmsCircuitos } from '../../circuitos/models/circuitos';
 
 @Component({
@@ -408,7 +409,7 @@ export class LogisticaYmsAgendamentosCadastroComponent
       NM_TRAN:[{value:null, disabled:true }, [Validators.required]],
       NM_VEIC_TIPO:[{value:null, disabled:true }, [Validators.required]],
       DS_AGEN: [null, [Validators.required]],
-      IN_STAT: [isNull],
+      IN_STAT: [Validators.required],
       DT_INIC_PREV: [null, [Validators.required]],
       DS_OBSE: [null],
       ID_LOGI_FILI: [null, [Validators.required]],
@@ -477,7 +478,6 @@ export class LogisticaYmsAgendamentosCadastroComponent
         (response: any) => {
           if (response.status === 200) {
             const id = response.body['data'];
-            console.log(id)
             this.form.get('ID_LOGI_YMS_AGEN').setValue(id);
             this.postMateriais(id);
             this.pnotify.success();
@@ -608,6 +608,5 @@ export class LogisticaYmsAgendamentosCadastroComponent
   }
 
   onSetTime(event){
-    console.log(event)
   }
 }

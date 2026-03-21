@@ -603,7 +603,6 @@ export class ComercialAgendaFormularioComponent
             const todos = [{ 'ID': 0, 'idEscritorio': 0, 'nombre': 'TODOS' }];
             this.promotores = [...todos, ...response[5].data]; 
           }
-          console.log('Promotores:', this.promotores); 
       } else {
           this.showInputVendedores = false;
       }
@@ -753,7 +752,6 @@ export class ComercialAgendaFormularioComponent
       this.loaderNavbar = true;
       this.submittingForm = true;
       const formValue =  this.form.getRawValue();
-      console.log('datos angeda ',formValue)
       const obsFinalizar = this.form.get('Obsfinalizar');
       let client: string,
         formContactDesc: string,
@@ -835,7 +833,6 @@ export class ComercialAgendaFormularioComponent
           break;
       }
       // }
-      console.log('tiene los reagendar',formValue);
       if(formValue.promotor > 0 && formValue.promotor != null)
       {
         this.id_promotor = formValue.promotor;
@@ -876,7 +873,6 @@ export class ComercialAgendaFormularioComponent
      
       this.agendaService.save(this.action, formObj).subscribe({
         next: (response: any) => {
-          console.log(response);
           if (response.responseCode === 200) {
             this.pnotifyService.success(msgSuccess);
             this.formChanged = false;
@@ -968,12 +964,10 @@ export class ComercialAgendaFormularioComponent
           });
         }
         else{
-          console.log('sdata 0')
         }
       }
       else
       {
-        console.log('sin aqui datos de ub')
       }
     });
 

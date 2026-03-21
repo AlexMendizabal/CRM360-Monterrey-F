@@ -13,7 +13,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialGestaoLiberacoesService {
-  private readonly API = `http://23.254.204.187/api/comercial/gestao/liberacoes`;
+  private readonly API = `${environment.URL_MTCORP}comercial/gestao/liberacoes`;
 
   constructor(protected http: HttpClient) {}
 

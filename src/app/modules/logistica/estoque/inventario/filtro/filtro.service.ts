@@ -7,7 +7,7 @@ import { observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LogisticaEstoqueInventarioFiltroService {
-  private readonly API: string = `https://23.254.204.187/api`;
+  private readonly API: string = `${environment.URL_MTCORP}`;
 
   constructor(private http: HttpClient) {}
 

@@ -15,7 +15,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialKanbanPedidosService {
-  private readonly API = `http://23.254.204.187/api/comercial/kanban/pedidos`;
+  private readonly API = `${environment.URL_MTCORP}comercial/kanban/pedidos`;
 
   constructor(
     protected http: HttpClient,

@@ -362,7 +362,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     ) {
       this.selectedcodEndereco = Number(this.form.value.codEndereco);
       this.datoEntrega(Number(this.selectedcodEndereco));
-      console.log('valor seleccionado selectedcodEndereco', this.selectedcodEndereco);
     }
   }
 
@@ -372,7 +371,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.form.value.codOrigemContato !== null
     ) {
       this.selectedTipoContacto = Number(this.form.value.codOrigemContato);
-      console.log('valor seleccionado codOrigemContato', this.selectedTipoContacto);
     }
   }
 
@@ -382,7 +380,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
       this.form.value.codFormaContato !== null
     ) {
       this.selectedFormaContacto = Number(this.form.value.codFormaContato);
-     console.log('valor seleccionado codFormaContato', this.selectedFormaContacto);
     }
   }
 
@@ -771,7 +768,6 @@ export class ComercialCicloVendasCotacoesFormularioComponent
     const resolver = this.activatedRoute.snapshot.data.data;
     const data = resolver.data;
     const formValue: any = this.checkRouterParams();
-    console.log('formValue aqui entra con datos', data);
     if (
       data.codSituacao === 1 &&
       data.tipo_estado === 14 &&

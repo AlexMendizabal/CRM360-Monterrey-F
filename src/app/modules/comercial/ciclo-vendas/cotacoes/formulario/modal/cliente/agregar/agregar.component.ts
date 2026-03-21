@@ -156,7 +156,7 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
     const params ={
       'titulo': 'Nuevo cliente',
       'mensaje': 'Se ha registrado un socio de negocios',
-      'url': 'http://localhost:4200/#/comercial/clientes/lista',
+      'url': `${window.location.origin}/#/comercial/clientes/lista`,
       'id_vendedor':  this.id_vendedor
     }
 
@@ -239,7 +239,6 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
     direccion: any;
     tipo: number;
   }) {
-    console.log(event);
 
     if (event.tipo === 1) {
       this.latitud_contacto_array = event.latitud;
@@ -247,7 +246,6 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
       this.direccion_contacto_array = event.direccion;
       this.contactos[0].latitude_contacto = this.latitud_contacto_array;
       this.contactos[0].longitude_contacto = this.longitud_contacto_array;
-      console.log(this.direccion_contacto_array);
       this.form.controls['direccion_contacto'].setValue(
         this.direccion_contacto_array
       );
@@ -349,7 +347,6 @@ export class ComercialCicloVendasCotacoesFormularioModalAgregarComponent
     this.preCadastroService.getTipoDocumento().subscribe(
       (response: any) => {
         if (response.responseCode === 200) {
-          console.log('Documentos', response);
           this.tipos_documentos = response.result;
         } else {
           this.handleFormFieldsError();

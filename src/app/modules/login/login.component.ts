@@ -162,7 +162,6 @@ export class LoginComponent implements OnInit {
     let nomeModuloPrincipal: string;
     let rotaModuloPrincipal: string;
     let none_cargo: string;
-    console.log('aqui usuario para eso ',response);
     if (response.result.versao_mtcorp != 2) {
       this.pnotifyService.notice('No tiene acceso a MTCorp.');
     } else {

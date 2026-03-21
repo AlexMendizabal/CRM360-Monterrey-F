@@ -17,7 +17,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCadastrosMateriaisCrossSellService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/materiais/cross-sell`;
+  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/materiais/cross-sell`;
 
   constructor(
     protected http: HttpClient,

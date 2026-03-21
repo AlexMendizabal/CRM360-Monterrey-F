@@ -5,7 +5,8 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsModalRef, BsLocaleService } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 //Angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit} from '@angular/core';
@@ -21,7 +22,7 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaTurnosService } from '../services/turnos.service';
 //interfaces
 import { ILogisticaTurnos } from '../models/turnos';
-import { isNull } from 'util';
+
 
 @Component({
   selector: 'logistica--turnos-cadastro',
@@ -100,7 +101,6 @@ export class LogisticaTurnosCadastroComponent
         (response) => {
           if (response.status === 200) {
             this.form.patchValue(response.body['data'])
-            console.log(this.form.value)
             this.noResult = false;
           } else {
             this.noResult = true;
@@ -190,7 +190,6 @@ export class LogisticaTurnosCadastroComponent
     const _params = this.form.value;
     _params.HR_INIC = this.dateService.convert2PhpDate(this.form.get('HR_INIC').value)
     _params.HR_FINA = this.dateService.convert2PhpDate(this.form.get('HR_FINA').value)
-    console.log(_params)
     this.loadingNavBar = true;
     this.turnosService
       .postTurnos(_params)

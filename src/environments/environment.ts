@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   API: '/api',
-  URL_MTCORP: 'http://23.254.204.187/api/'
+  URL_MTCORP: '/api/',
+  SAP_API: 'http://192.168.0.123:4100/api'
 };
 
 /*

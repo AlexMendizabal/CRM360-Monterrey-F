@@ -40,7 +40,6 @@ export class ComercialCicloVendasCotacoesFormularioModalDetalhesContatoService {
       )
       .subscribe(
         (response: JsonResponse) => {
-          console.log(response);
           if (response.success === true) {
             const modalConfig = {
               animated: false,

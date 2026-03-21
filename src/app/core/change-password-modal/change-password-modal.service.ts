@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable, TemplateRef } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AuthService } from 'src/app/shared/services/core/auth.service';
 
 @Injectable({

@@ -91,7 +91,6 @@ public toggleInputs() {
     });
   
    /*  if(this.resultFromParent.oferta[0].estado_of === 3) {
-      console.log('aqui olo',this.resultFromParent.oferta[0].estado_of);
       this.toggleDescripcionCard();
     }  */
   }

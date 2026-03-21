@@ -6,7 +6,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';

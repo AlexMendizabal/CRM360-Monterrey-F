@@ -12,7 +12,8 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { TecnologiaInformacaoCadastroItemService } from '../services/item.service';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 //Bootstrap
-import { BsDatepickerConfig, BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 //Angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
@@ -392,7 +393,6 @@ export class TecnologiaInformacaoCadastrosItemCadastroComponent
   }
 
   setNumeroSerie(event){
-    console.log(event)
     const cod = event?.CD_ITEM
     const codEmpr = event?.ID_EMPR
     this.form.get('CD_ITEM').setValue(cod)

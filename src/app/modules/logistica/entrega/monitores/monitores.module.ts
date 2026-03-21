@@ -4,7 +4,7 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import ptBr from '@angular/common/locales/pt';
-import { defineLocale, ptBrLocale } from 'ngx-bootstrap';
+import { defineLocale, ptBrLocale } from 'ngx-bootstrap/chronos';
 registerLocaleData(ptBr);
 defineLocale('pt-br', ptBrLocale);
 
