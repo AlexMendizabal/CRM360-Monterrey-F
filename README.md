@@ -1,138 +1,173 @@
-# CRM360 Monterrey - Frontend (mtcorp-app)
+# CRM360 Monterrey - Frontend
 
 ## Descripcion General
 
-CRM360 Monterrey es una aplicacion empresarial CRM (Customer Relationship Management) desarrollada en **Angular 10.1.5** para la gestion comercial, logistica, financiera y administrativa de una corporacion. La aplicacion se conecta a una API REST backend desplegada en `23.254.204.187`.
+CRM360 Monterrey es una aplicacion empresarial CRM (Customer Relationship Management) desarrollada en **Angular 10.1.5** para la gestion comercial, logistica, financiera y administrativa. El frontend se conecta a una API REST backend desplegada en contenedores Docker.
 
-**Version:** 1.2.1
-**Nombre interno:** mtcorp-app
-**Generado con:** Angular CLI 10.1.6
+**Version:** 1.2.1 | **Nombre interno:** mtcorp-app | **Angular CLI:** 10.1.6
+
+## Inicio Rapido
+
+### Opcion 1: Docker (Recomendado)
+
+```bash
+# Produccion (Nginx + build optimizado)
+npm run docker:prod
+
+# Desarrollo (hot-reload)
+npm install --legacy-peer-deps    # Solo la primera vez
+npm run docker:dev
+
+# Detener
+npm run docker:stop
+```
+
+> Ver [docs/docker/GUIA-DOCKER.md](docs/docker/GUIA-DOCKER.md) para la guia completa.
+
+### Opcion 2: Local (sin Docker)
+
+```bash
+npm install --legacy-peer-deps
+npm start                          # http://localhost:4200
+```
+
+> Requiere backend corriendo en `localhost:8080`.
 
 ## Stack Tecnologico
 
 | Tecnologia | Version | Proposito |
 |---|---|---|
 | Angular | 10.1.5 | Framework principal |
-| TypeScript | 4.0.3 | Lenguaje de programacion |
-| Angular CLI | 10.1.6 | Herramienta de build/dev |
-| Bootstrap | 4.4.1 | Framework CSS / Layout |
-| Angular Material | 16.0.0 | Componentes UI (ver nota en BUGS) |
-| ngx-bootstrap | 5.6.2 | Componentes Bootstrap para Angular |
-| RxJS | 6.6.3 | Programacion reactiva |
-| ngx-translate | 12.0.0 | Internacionalizacion (i18n) |
-| jQuery | 3.7.0 | Manipulacion DOM (legacy) |
-| Ivy | Deshabilitado | Usa View Engine legacy |
+| TypeScript | 4.0.3 | Lenguaje |
+| Bootstrap | 4.4.1 | Framework CSS |
+| ngx-bootstrap | 5.6.2 | Componentes Bootstrap |
+| ngx-translate | 12.0.0 | Internacionalizacion |
+| Docker + Nginx | 1.24-alpine | Despliegue produccion |
+| Node.js | 14/16 | Build / Desarrollo |
 
-## Arquitectura General
+> Ver [docs/arquitectura/STACK-TECNOLOGICO.md](docs/arquitectura/STACK-TECNOLOGICO.md) para el stack completo.
+
+## Arquitectura Docker
 
 ```
-src/app/
-├── core/                    # Componentes layout (Header, Sidebar, Body)
-├── guards/                  # Guards de autenticacion y autorizacion
-├── interceptors/            # JWT Interceptor para HTTP
-├── models/                  # Interfaces TypeScript
-├── modules/                 # 15+ modulos de negocio (lazy-loaded)
-│   ├── abastecimento/       # Gestion de abastecimiento/stock
-│   ├── admin/               # Administracion del sistema
-│   ├── comercial/           # Modulo comercial (el mas extenso)
-│   ├── controladoria/       # Contabilidad y control
-│   ├── core/                # Dashboard/Home
-│   ├── corte-dobra/         # Corte y doblado industrial
-│   ├── financeiro/          # Finanzas
-│   ├── fiscal/              # Fiscal/impuestos
-│   ├── login/               # Autenticacion
-│   ├── logistica/           # Logistica (YMS, entregas)
-│   ├── power-bi/            # Integracion Power BI
-│   ├── servicos/            # Servicios
-│   ├── sistemas/            # Sistemas
-│   ├── sul-fluminense/      # Regional Sul Fluminense
-│   ├── tecnologia-informacao/ # TI (inventario, lineas)
-│   └── tid-software/        # Integracion TID Software
-└── shared/                  # Servicios, pipes, directivas compartidas
-    ├── services/core/       # Auth, PDF, XLSX, Date, Router, PNotify
-    ├── services/requests/   # Servicios de API genericos
-    ├── services/ws/         # Servicios web externos (CEP, CNPJ)
-    ├── modules/             # Componentes compartidos
-    ├── pipes/               # Pipes personalizados
-    └── directives/          # Directivas personalizadas
+┌────────────────────────────────────────────────┐
+│              crm360-network (bridge)            │
+│                                                 │
+│  ┌─────────────────┐   ┌────────────────────┐  │
+│  │ crm360-front-*  │──>│    crm360-app      │  │
+│  │ Nginx:80 / ng:  │   │  Backend API :80   │  │
+│  │ Puerto: 4200    │   │  Puerto: 8080      │  │
+│  └─────────────────┘   └────────────────────┘  │
+└────────────────────────────────────────────────┘
 ```
 
-## Estadisticas del Proyecto
-
-| Metrica | Cantidad |
-|---|---|
-| Modulos (*.module.ts) | 428 |
-| Servicios (*.service.ts) | 334 |
-| Modulos de negocio principales | 15 |
-| Rutas lazy-loaded | 15 |
-| Guards de autorizacion | 14 |
-
-## Autenticacion
-
-- **Metodo:** JWT (JSON Web Token)
-- **Flujo:** Login -> Token en localStorage -> JwtInterceptor agrega Bearer token
-- **Guard:** `AuthGuard` protege todas las rutas excepto `/login`
-- **Sesion expirada:** Redireccion automatica a `/login`
-
-## Ambientes
-
-| Ambiente | Comando | URL API |
+| Servicio | Imagen | Puerto |
 |---|---|---|
-| Development | `npm start` | `http://23.254.204.187/api/` (via proxy) |
-| Staging/QA | `npm run build:qas` | `https://23.254.204.187` |
-| Production | `npm run build:prod` | `https://23.254.204.187` |
+| `crm360-front-prod` | Dockerfile (Node 14 + Nginx) | 4200 |
+| `crm360-front-dev` | Dockerfile.dev (Node 16) | 4200 |
+| `crm360-app` | crm360-monterrey-b-origin-app | 8080 |
+
+## Modulos de Negocio
+
+El sistema cuenta con **15 modulos** cargados bajo demanda (lazy loading):
+
+| Modulo | Ruta | Descripcion | Docs |
+|---|---|---|---|
+| Login | `/login` | Autenticacion | [LOGIN.md](docs/modulos/LOGIN.md) |
+| Core | `/home` | Dashboard principal | [CORE.md](docs/modulos/CORE.md) |
+| Comercial | `/comercial` | Ventas, cotizaciones, clientes | [COMERCIAL.md](docs/modulos/COMERCIAL.md) |
+| Abastecimento | `/abastecimento` | Inventario y stock | [ABASTECIMENTO.md](docs/modulos/ABASTECIMENTO.md) |
+| Admin | `/admin` | Usuarios, perfiles, permisos | [ADMIN.md](docs/modulos/ADMIN.md) |
+| Controladoria | `/controladoria` | Control contable | [CONTROLADORIA.md](docs/modulos/CONTROLADORIA.md) |
+| Corte-Dobra | `/corte-dobra` | Corte y doblado industrial | [CORTE-DOBRA.md](docs/modulos/CORTE-DOBRA.md) |
+| Financeiro | `/financeiro` | Finanzas | [FINANCEIRO.md](docs/modulos/FINANCEIRO.md) |
+| Fiscal | `/fiscal` | Fiscal e impuestos | [FISCAL.md](docs/modulos/FISCAL.md) |
+| Logistica | `/logistica` | Logistica y YMS | [LOGISTICA.md](docs/modulos/LOGISTICA.md) |
+| Power BI | `/power-bi` | Dashboards (**INACTIVO**) | [POWER-BI.md](docs/modulos/POWER-BI.md) |
+| Servicos | `/servicos` | Servicios | [SERVICOS.md](docs/modulos/SERVICOS.md) |
+| Sistemas | `/sistemas` | Configuracion de sistemas | [SISTEMAS.md](docs/modulos/SISTEMAS.md) |
+| Sul Fluminense | `/sul-fluminense` | Operaciones regionales | [SUL-FLUMINENSE.md](docs/modulos/SUL-FLUMINENSE.md) |
+| TI | `/tecnologia-informacao` | Inventario TI, lineas | [TECNOLOGIA-INFORMACAO.md](docs/modulos/TECNOLOGIA-INFORMACAO.md) |
+| TID Software | `/tid-software` | Integracion TID | [TID-SOFTWARE.md](docs/modulos/TID-SOFTWARE.md) |
+
+> Servicios y componentes compartidos: [SHARED.md](docs/modulos/SHARED.md)
 
 ## Scripts NPM
 
 ```bash
-npm start              # Servidor de desarrollo con proxy
-npm run build:prod     # Build de produccion
-npm run build:qas      # Build de staging/QA
-npm run build:dev      # Build de desarrollo optimizado
-npm test               # Tests unitarios (Karma + Jasmine)
-npm run lint           # Linting con TSLint
-npm run e2e            # Tests E2E con Protractor
+# --- Desarrollo ---
+npm start                  # Servidor local con proxy (localhost:4200)
+npm run build:dev          # Build de desarrollo
+
+# --- Docker ---
+npm run docker:dev         # Contenedor desarrollo (hot-reload)
+npm run docker:prod        # Contenedor produccion (Nginx)
+npm run docker:stop        # Detener contenedores
+
+# --- Builds ---
+npm run build:prod         # Build produccion
+npm run build:qas          # Build staging/QA
+npm run build:docker       # Build configuracion Docker
+
+# --- Calidad ---
+npm test                   # Tests unitarios (Karma + Jasmine)
+npm run lint               # Linting (TSLint)
+npm run e2e                # Tests E2E (Protractor)
 ```
+
+## Ambientes
+
+| Ambiente | Comando | API |
+|---|---|---|
+| Desarrollo local | `npm start` | localhost:8080 (proxy) |
+| Docker desarrollo | `npm run docker:dev` | crm360-app:80 (Docker network) |
+| Docker produccion | `npm run docker:prod` | crm360-app:80 (Nginx proxy) |
+| Staging/QA | `npm run build:qas` | https://23.254.204.187 |
+| Produccion | `npm run build:prod` | https://23.254.204.187/api/ |
 
 ## Integraciones Externas
 
-| Sistema | Proposito | Tipo |
+| Sistema | Proposito | Estado |
 |---|---|---|
-| SAP | ERP / Login alterno | API interna (192.168.x.x) |
-| Akna | Email marketing | API externa |
-| Arcelor Mittal | Integracion comercial | API |
-| Dagda | Integracion de datos | API |
-| Power BI | Dashboards / Reportes | **INACTIVO** |
-| Google Maps / AGM | Mapas en modulo Agenda | API |
-| ViaCEP | Codigos postales Brasil | API publica |
-| ReceitaWS | Validacion CNPJ | API publica |
+| SAP | ERP / Login alterno | Activo (red interna) |
+| Akna | Email marketing | Activo |
+| Arcelor Mittal | Integracion comercial | Activo |
+| Power BI | Dashboards | **INACTIVO** |
+| Google Maps | Mapas en agenda | Activo |
+| ViaCEP / ReceitaWS | Validaciones brasilenas | Activo |
 
-## Documentacion Detallada
+## Documentacion
 
-Consultar la carpeta `docs/` para documentacion completa:
+Toda la documentacion detallada esta en la carpeta [docs/](docs/):
 
-- [docs/MODULOS.md](docs/MODULOS.md) - Descripcion detallada de cada modulo, sub-modulos, APIs y flujos
-- [docs/BUGS.md](docs/BUGS.md) - Bugs encontrados, problemas de seguridad y recomendaciones
-- [docs/DEPENDENCIAS.md](docs/DEPENDENCIAS.md) - Analisis de todas las dependencias, versiones y compatibilidad
+| Seccion | Contenido |
+|---|---|
+| [docs/docker/](docs/docker/) | Guia Docker, configuracion, troubleshooting |
+| [docs/arquitectura/](docs/arquitectura/) | Estructura del proyecto, stack tecnologico |
+| [docs/modulos/](docs/modulos/) | Documentacion detallada de cada modulo |
+| [docs/DEPENDENCIAS.md](docs/DEPENDENCIAS.md) | Analisis de dependencias NPM |
+| [docs/BUGS.md](docs/BUGS.md) | Bugs conocidos y recomendaciones |
 
-## Notas Importantes / Problemas Conocidos
+> Ver [docs/README.md](docs/README.md) para el indice completo de documentacion.
+
+## Problemas Conocidos
 
 1. **Angular 10 esta EOL** - Sin soporte de seguridad desde Dic 2021
-2. **@angular/material 16** es incompatible con Angular 10 (requiere Angular 16)
-3. **Ivy deshabilitado** - Usa View Engine legacy, bloqueando migracion a Angular 13+
-4. **120+ URLs de API hardcodeadas** en servicios (no usan `environment.ts`)
-5. **284+ console.log** dejados en codigo
-6. **Tests deshabilitados globalmente** (`skipTests: true` en angular.json)
+2. **@angular/material 16** incompatible teoricamente con Angular 10
+3. **Ivy deshabilitado** - Usa View Engine legacy
+4. **120+ URLs de API hardcodeadas** en servicios
+5. **Tests deshabilitados globalmente** (`skipTests: true`)
 
-Ver [docs/BUGS.md](docs/BUGS.md) para detalles completos y soluciones recomendadas.
+> Ver [docs/BUGS.md](docs/BUGS.md) para detalles completos.
 
 ## Estado del Proyecto
 
-- **Backend:** Documentado con archivos .md locales, corriendo en Docker (`http://localhost:8080/`), sin Swagger
-- **Idioma:** Migracion activa de portugues a espanol (usando ngx-translate)
-- **CI/CD:** No configurado
-- **Tests:** No existen (skipTests habilitado globalmente)
-- **SAP:** Activo en red interna (`192.168.0.123:4100`)
-- **Power BI:** Modulo presente pero NO funcional
-- **Google Maps:** Usado en modulo Agenda (AgmCoreModule comentado en app.module, debe habilitarse)
-- **@angular/material 16:** Funciona actualmente para detalles especificos pese a incompatibilidad teorica
+| Aspecto | Estado |
+|---|---|
+| Backend | Docker (`crm360-app`, puerto 8080) |
+| Frontend | Docker (Nginx prod / ng serve dev) |
+| Idioma | Migracion activa PT → ES |
+| CI/CD | No configurado |
+| Tests | No existen (skipTests habilitado) |
+| SAP | Activo en red interna |
+| Power BI | Presente pero INACTIVO |
