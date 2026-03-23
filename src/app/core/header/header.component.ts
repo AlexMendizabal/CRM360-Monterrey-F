@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { ChangeDetectorRef } from '@angular/core';
@@ -24,7 +24,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
   styleUrls: ['./header.component.scss'],
   providers: [WindowService],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   @Input('showLoader') showLoader: boolean;
   private readonly API = `${environment.URL_MTCORP}sap`;
 
@@ -37,11 +37,14 @@ export class HeaderComponent implements OnInit {
   modulos: any = [];
   modulosLoaded = false;
   modulosError = false;
-  conexion = false;
 
   notificaciones: any = [];
 
   loaderFullScreen = true;
+
+  // SAP connectivity status
+  sapStatus: 'checking' | 'connected' | 'disconnected' = 'checking';
+  private destroy$: Subject<void> = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -64,11 +67,16 @@ export class HeaderComponent implements OnInit {
     this.getClienteLogo();
     this.getModulos();
     this.getNotificaciones();
-    this.verificadorConexion();
-    setInterval(() => {
-      this.verificadorConexion();
-    }, 120000);
-    //this.verificarConexion();
+
+    // Initial SAP check (shows loading spinner)
+    this.verificadorConexion(true);
+
+    // Poll every 120s silently (no flash)
+    interval(120000)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.verificadorConexion(false);
+      });
   }
 
   getClienteLogo() {
@@ -251,92 +259,23 @@ export class HeaderComponent implements OnInit {
     this.changePasswordModalService.show(template);
   }
 
-  verificadorConexion(): void {
-    const label = document.getElementById('verificador');
-    this.loaderFullScreen = true;
-    label.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Verificando SAP...';
-    label.style.color = 'black';
-    label.style.backgroundColor = '#eadf04';
+  verificadorConexion(showLoading: boolean): void {
+    if (showLoading) {
+      this.sapStatus = 'checking';
+    }
 
     this.http.post(`${this.API}/verificar_conexion_sap`, null).subscribe(
       (response: JsonResponse) => {
-        if (response.success === true) {
-          label.innerHTML =
-            '<i class="fas fa-check-circle"></i> SAP: Conectado';
-          label.style.color = 'white';
-          label.style.backgroundColor = 'green';
-        } else {
-          label.innerHTML =
-            '<i class="fas fa-exclamation-circle"></i> SAP: Desconectado';
-          label.style.backgroundColor = 'red';
-          label.style.color = 'white';
-        }
+        this.sapStatus = response.success === true ? 'connected' : 'disconnected';
       },
       (error: any) => {
-        label.innerHTML =
-            '<i class="fas fa-exclamation-circle"></i> SAP: Desconectado';
-          label.style.backgroundColor = 'red';
-          label.style.color = 'white';
-      },
-      () => {
-        //this.loaderFullScreen = false;
+        this.sapStatus = 'disconnected';
       }
     );
   }
 
-  /*  verificarConexion() {
-   this.modulosLoaded = false;
-   const stopSearching$ = new Subject<void>();
- 
-   this.authService.verificarConexion().pipe(
-     takeUntil(stopSearching$)
-   ).subscribe(
-     (respuesta: any) => {
-       switch (respuesta.CodigoRespuesta) {
-         case 0:
-           if (respuesta.Mensaje) {
-             this.pnotifyService.success('Conexion con middleware exitosa');
-             stopSearching$.next(); // Detiene la búsqueda si se encuentra conexión
-           }
-           break;
-         default:
-           // No detenemos la búsqueda aquí para permitir intentos adicionales
-           this.pnotifyService.error('Error en la conexión a SAP. Intentando de nuevo...');
-           break;
-       }
-     },
-     (error: any) => {
-       this.handleErrorResponse(error);
-     },
-   );
- 
-   // Intenta buscar la conexión cada segundo durante 5 segundos adicionales
-   interval(10000).pipe(
-     takeUntil(stopSearching$),
-     takeUntil(interval(5000)) // Detiene la búsqueda después de 5 segundos
-   ).subscribe(() => {
-     this.authService.verificarConexion().subscribe(
-       (respuesta: any) => {
-         switch (respuesta.CodigoRespuesta) {
-           case 0:
-             if (respuesta.Mensaje) {
-               this.pnotifyService.success('Conexion con middleware exitosa');
-               stopSearching$.next(); // Detiene la búsqueda si se encuentra conexión
-             }
-             break;
-           default:
-             // No detenemos la búsqueda aquí para permitir intentos adicionales
-             break;
-         }
-       },
-       (error: any) => {
-         // No detenemos la búsqueda aquí para permitir intentos adicionales
-       }
-     );
-   });
- }   */
-  private handleErrorResponse(error: any) {
-    alert('Error en la conexión a SAP');
-    this.cdRef.detectChanges();
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

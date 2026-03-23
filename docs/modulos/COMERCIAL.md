@@ -91,9 +91,17 @@ GET/POST  /api/comercial/gestao/*
 
 ### 5. Agenda
 
-- Calendario de actividades comerciales
+- Calendario de actividades comerciales (vista mensual con `angular-calendar`)
 - Citas y visitas a clientes
 - Integracion con Google Maps (@agm/core)
+
+#### UI/UX (Compromissos)
+- Vista principal con filtros en tarjeta estilizada (header degradado purpura corporativo)
+- Badges informativos de sucursal y promotor con iconos FontAwesome
+- Barra de leyendas con chips de estado: Registrado por supervisor, Registrado por promotor, Re-Agendado, En Proceso, Finalizado
+- Calendario con estilos personalizados: resaltado del dia actual, transiciones suaves, panel de eventos expandible
+- Botones del header con iconos: Actualizar, Anterior, Hoy, Siguiente, Nuevo, Filtrar
+- Animaciones fadeInUp en carga de secciones
 
 **APIs:**
 ```
