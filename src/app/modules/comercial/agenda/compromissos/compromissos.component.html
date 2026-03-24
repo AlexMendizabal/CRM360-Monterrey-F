@@ -4,7 +4,9 @@
 <app-header [appTitle]="appTitle(viewDate)">
   <button type="button"
     *ngIf="showCalendar"
-    (click)="refreshEvents()">Actualizar</button>
+    (click)="refreshEvents()">
+    <i class="fas fa-sync-alt mr-1"></i> Actualizar
+  </button>
   <button
     type="button"
     *ngIf="showCalendar"
@@ -12,14 +14,14 @@
     [view]="view"
     [(viewDate)]="viewDate"
     (viewDateChange)="fetchEvents()">
-    Mes Anterior
+    <i class="fas fa-chevron-left mr-1"></i> Anterior
   </button>
   <button type="button"
     *ngIf="showCalendar"
     mwlCalendarToday
     [(viewDate)]="viewDate"
     (viewDateChange)="fetchEvents()">
-    Mes Actual
+    <i class="fas fa-calendar-day mr-1"></i> Hoy
   </button>
   <button type="button"
     *ngIf="showCalendar"
@@ -27,72 +29,85 @@
     [view]="view"
     [(viewDate)]="viewDate"
     (viewDateChange)="fetchEvents()">
-    Siguiente mes
+    Siguiente <i class="fas fa-chevron-right ml-1"></i>
   </button>
   <button type="button"
     *ngIf="showCalendar"
     [routerLink]="['../novo']">
-    Adicionar
+    <i class="fas fa-plus mr-1"></i> Nuevo
   </button>
   <button type="button"
     (click)="onFilter(showFilter)"
     *ngIf="enableFilterButton()"
     [disabled]="idEscritorio == null || idVendedor == null">
-    Filtrar
+    <i class="fas fa-filter mr-1"></i> Filtrar
   </button>
 </app-header>
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <!-- Seccion de filtros -->
   <div class="row" *ngIf="showFilter">
-    <div class="col">
-      <comercial-templates-filtro-vendedor-escritorio
-        [profile]="profile"
-        [showAll]="false"
-        (formValue)="dataFilter($event)">
-      </comercial-templates-filtro-vendedor-escritorio>
-    </div>
-  </div>
-  <div class="row" *ngIf="showCalendar">
-    <div class="col">
-      <div class="row mb-3"
-        *ngIf="(this.nomeEscritorio !== null ) || (this.nomeVendedor != null )">
-        <div class="col">
-          <div class="d-flex">
-            <h6 class="mb-0 mr-2" *ngIf="this.nomeVendedor != null || this.nomeEscritorio != null ">
-              <span class="badge badge-secondary">{{ this.nomeEscritorio }}</span>
-            </h6>
-            <h6 class="mb-0">
-              <span class="badge badge-primary">{{ nomeVendedor }}</span>
-            </h6>
-          </div>
+    <div class="col-12">
+      <div class="agenda-filter-card">
+        <div class="filter-card-header">
+          <i class="fas fa-sliders-h"></i>
+          <span>Filtrar Resultados</span>
+        </div>
+        <div class="filter-card-body">
+          <comercial-templates-filtro-vendedor-escritorio
+            [profile]="profile"
+            [showAll]="false"
+            (formValue)="dataFilter($event)">
+          </comercial-templates-filtro-vendedor-escritorio>
         </div>
       </div>
-      <div class="d-flex align-items-center">
+    </div>
+  </div>
+
+  <!-- Seccion del calendario -->
+  <div class="row" *ngIf="showCalendar">
+    <div class="col-12">
+      <!-- Info del promotor/sucursal -->
+      <div class="agenda-info-bar"
+        *ngIf="(this.nomeEscritorio !== null) || (this.nomeVendedor != null)">
+        <div class="info-badges">
+          <span class="info-badge info-badge--sucursal" *ngIf="this.nomeVendedor != null || this.nomeEscritorio != null">
+            <i class="fas fa-building mr-1"></i> {{ this.nomeEscritorio }}
+          </span>
+          <span class="info-badge info-badge--promotor" *ngIf="nomeVendedor">
+            <i class="fas fa-user-tie mr-1"></i> {{ nomeVendedor }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Leyendas de estado -->
+      <div class="agenda-legend-bar">
         <ng-container *ngFor="let leyenda of leyendas">
-          <div class="mr-3">
-            <div class="color-circle" [style.background]="leyenda.color"></div>
-            <span class="ml-2">{{ leyenda.text }}</span>
+          <div class="legend-item">
+            <span class="legend-dot" [style.background]="leyenda.color"></span>
+            <span class="legend-text">{{ leyenda.text }}</span>
           </div>
         </ng-container>
-      </div>           
-      <div class="row">
-        <div class="col">
-          <div *ngIf="events$ | async; else loading; let events">
-            <div [ngSwitch]="view">
-              <mwl-calendar-month-view
-                *ngSwitchCase="'month'"
-                [@.disabled]="true"
-                [viewDate]="viewDate"
-                [events]="events"
-                [activeDayIsOpen]="activeDayIsOpen"
-                (dayClicked)="dayClicked($event.day)"
-                (eventClicked)="eventClicked($event.event)">
-              </mwl-calendar-month-view>
-            </div>
+      </div>
+
+      <!-- Calendario -->
+      <div class="agenda-calendar-card">
+        <div *ngIf="events$ | async; else loading; let events">
+          <div [ngSwitch]="view">
+            <mwl-calendar-month-view
+              *ngSwitchCase="'month'"
+              [@.disabled]="true"
+              [viewDate]="viewDate"
+              [events]="events"
+              [activeDayIsOpen]="activeDayIsOpen"
+              (dayClicked)="dayClicked($event.day)"
+              (eventClicked)="eventClicked($event.event)">
+            </mwl-calendar-month-view>
           </div>
         </div>
       </div>
     </div>
   </div>
+
   <permission-denied
     message="Su perfil no tiene permisos para acceder a esta aplicacion"
     *ngIf="showPermissionDenied">

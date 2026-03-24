@@ -1,7 +1,23 @@
 <nav id="navbar" class="navbar fixed-top navbar-expand navbar-light">
-  <li class="d-flex mr-2" >
-    <label id="verificador" class="conectividadStatus" style="background-color: red;">
-      SAP-Desconectado
+  <li class="d-flex mr-2">
+    <label
+      class="conectividadStatus"
+      [ngClass]="{
+        'sap-checking': sapStatus === 'checking',
+        'sap-connected': sapStatus === 'connected',
+        'sap-disconnected': sapStatus === 'disconnected'
+      }">
+      <ng-container [ngSwitch]="sapStatus">
+        <ng-container *ngSwitchCase="'checking'">
+          <i class="fas fa-circle-notch fa-spin"></i> Verificando SAP...
+        </ng-container>
+        <ng-container *ngSwitchCase="'connected'">
+          <i class="fas fa-check-circle"></i> SAP: Conectado
+        </ng-container>
+        <ng-container *ngSwitchCase="'disconnected'">
+          <i class="fas fa-exclamation-circle"></i> SAP: Desconectado
+        </ng-container>
+      </ng-container>
     </label>
   </li>
   <img [src]="srcLogoCliente" (error)="onLogoClienteError($event)" id="logo-manetoni" height="20"
