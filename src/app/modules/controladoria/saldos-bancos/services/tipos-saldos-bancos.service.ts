@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class ControladoriaTiposSaldosBancosService {
-  private readonly BASE_URL: string = `${environment.URL_MTCORP}`;
+  private readonly BASE_URL: string = ` https://crm360.monterrey.com.bo`;
   constructor(private http: HttpClient) {}
 
   getTipos(params) {

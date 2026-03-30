@@ -1,0 +1,55 @@
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="Campañas">
+  <button
+    type="button"
+    [routerLink]="['../novo']">
+    Adicionar
+  </button>
+  <button
+    type="button"
+    >
+    Filtrar
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen" >
+  <div class="row" #scrollToFilter>
+  <div class="col">
+    <advanced-filter>
+      <form [formGroup]="form" autocomplete="off">
+        <div class="form-row">
+          <div class="form-group col-lg-2 mb-lg-0">
+            <label for="codigo">Código da transportadora</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="codigo"
+              >
+          </div>
+          <div class="form-group col-lg-8 mb-lg-0">
+            <label for="nome">Nome da transportadora</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="nome"
+              >
+          </div>
+          <div class="form-group col-lg-2 mb-lg-0">
+            <label for="registros">Registros</label>
+            <select
+              class="form-control"
+              id="registros"
+              formControlName="registros">
+              <option>25</option>
+              <option>50</option>
+              <option>100</option>
+              <option>200</option>
+              <option>300</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </advanced-filter>
+  </div>
+  </div>
+</app-body>

@@ -17,7 +17,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCadastrosMateriaisGrupoService {
-  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/materiais/grupos`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/materiais/grupos`;
 
   constructor(
     protected http: HttpClient,

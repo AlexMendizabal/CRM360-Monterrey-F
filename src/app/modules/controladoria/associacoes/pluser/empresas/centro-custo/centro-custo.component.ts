@@ -9,7 +9,7 @@ import { LogisticaSoftranCentroCustoVeiculoService } from 'src/app/modules/logis
 import { IControladoriaAssociacoesPluserCentroCustoEmpresaAssociacao } from '../models/associacao';
 import { ILogisticaSoftranIdealCentroCustoVeiculo } from 'src/app/modules/logistica/models/softra-ideal/centroCustoVeiculo';
 
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent } from 'ngx-bootstrap';
 import { finalize } from 'rxjs/operators';
 
 
@@ -131,6 +131,8 @@ export class ControladoriaAssociacoesPluserEmpresasCentroCustoComponent implemen
           const promise = associacoes
             .filter((associacao) => associacao.IN_STAT == '1')
             .map((associacao) => associacoesIds.push(associacao.CD_ASSO))
+          console.log(associacoesIds)
+          console.log(this.centroCustoVeiculo)
           await Promise
             .all(promise)
             .then(async () => {

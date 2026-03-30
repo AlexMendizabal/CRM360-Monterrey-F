@@ -29,6 +29,7 @@ export class ComercialCicloVendasCotacoesListaModalAlertaOfertaService {
   }
 
   showModal(): void {
+      console.log('aqui');
     this.loaderNavbar.emit(true);
 
     /* this.cotacoesService

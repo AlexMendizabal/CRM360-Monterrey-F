@@ -12,8 +12,7 @@ defineLocale('pt-br', ptBrLocale);
 
 import { FiscalComponent } from './fiscal.component';
 import { FiscalHomeComponent } from './home/home.component';
-import { defineLocale, ptBrLocale } from 'ngx-bootstrap/chronos';
-import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+import { TimepickerModule, defineLocale, ptBrLocale } from 'ngx-bootstrap';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { TemplatesModule } from 'src/app/shared/templates/templates.module';
 

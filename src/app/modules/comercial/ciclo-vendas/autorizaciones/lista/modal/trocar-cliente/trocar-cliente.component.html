@@ -15,10 +15,10 @@
     <div class="form-row">
       <div class="form-group col">
         <label for="codDeposito">Selecione o novo cliente</label>
-        <comercial-ciclo-vendas-cotacoes-formulario-template-clientes
+        <!-- <comercial-ciclo-vendas-cotacoes-formulario-template-clientes
           [codCliente]="cotacao.codCliente"
           (onChange)="onChangeCliente($event)">
-        </comercial-ciclo-vendas-cotacoes-formulario-template-clientes>
+        </comercial-ciclo-vendas-cotacoes-formulario-template-clientes> -->
       </div>
     </div>
   </div>
@@ -30,14 +30,14 @@
       (click)="onClose()">
       Cancelar
     </button>
-    <button
+    <!-- <button
       type="button"
       class="btn btn-primary"
       [disabled]="submittingForm"
       (click)="onSubmit()">
       <span *ngIf="!submittingForm">Confirmar</span>
       <span *ngIf="submittingForm">Aguarde</span>
-    </button>
+    </button> -->
   </div>
 </div>
 

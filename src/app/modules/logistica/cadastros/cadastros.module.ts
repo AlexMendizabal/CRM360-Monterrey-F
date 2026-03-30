@@ -6,12 +6,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { LogisticaCadastrosComponent } from './cadastros.component';
 
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { TabsModule } from 'ngx-bootstrap/tabs';
-import { TimepickerModule } from 'ngx-bootstrap/timepicker';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import {
+  PaginationModule,
+  TooltipModule,
+  TabsModule,
+  TimepickerModule,
+  BsDatepickerModule,
+  ModalModule,
+} from 'ngx-bootstrap';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 

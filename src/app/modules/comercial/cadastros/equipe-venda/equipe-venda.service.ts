@@ -12,7 +12,7 @@ import { EquipeVenda } from './models/equipe-venda';
   providedIn: 'root'
 })
 export class ComercialCadastrosEquipeVendaService {
-  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/equipe-venda`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/equipe-venda`;
 
   constructor(protected http: HttpClient) {}
 

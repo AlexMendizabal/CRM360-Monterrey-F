@@ -4,8 +4,7 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsDatepickerConfig, BsModalRef, BsLocaleService } from 'ngx-bootstrap';
 //Angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit} from '@angular/core';
@@ -21,7 +20,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsTurnosService } from '../services/turnos.service';
 //interfaces
 import { ILogisticaYmsTurnos } from '../models/turnos';
-
 
 @Component({
   selector: 'logistica-yms-turnos-cadastro',
@@ -144,7 +142,7 @@ export class LogisticaYmsTurnosCadastroComponent
       HR_MIN: [this.fixTime('HR_MAX'), [Validators.required]],
       HR_MAX: [this.fixTime('HR_MAX'), [Validators.required]],
       NM_TURN: [null, [Validators.required]],
-      IN_STAT: [Validators.required],
+      IN_STAT: [null],
       DS_OBSE: [null],
     });
   }

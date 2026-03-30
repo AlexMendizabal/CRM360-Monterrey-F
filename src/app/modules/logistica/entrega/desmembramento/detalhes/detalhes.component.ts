@@ -2,7 +2,7 @@ import { ConfirmModalService } from './../../../../../shared/modules/confirm-mod
 import { event } from './../../../../admin/perfis/models/event';
 import { LogisticaEntregaFusionService } from './../../services/fusion.service';
 import { DateService } from 'src/app/shared/services/core/date.service';
-import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { finalize } from 'rxjs/operators';
 import { LogisticaEntregaDesmembramentoService } from './../services/desmembramento.service';
@@ -278,6 +278,7 @@ export class LogisticaEntregaDesmembramentoDetalhesComponent implements OnInit, 
         pedido.TT_PESO = pedido?.produtos
           ?.map(produto => parseFloat(produto.TT_PROD_PESO))
           ?.reduce((acc, cur) => acc += cur, 0)
+          console.log(pedido)
       }
 
   }

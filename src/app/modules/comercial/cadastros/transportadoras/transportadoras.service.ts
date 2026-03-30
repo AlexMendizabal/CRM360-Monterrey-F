@@ -12,7 +12,7 @@ import { Transportadora } from './models/transportadora';
   providedIn: 'root'
 })
 export class ComercialCadastrosTransportadoraService {
-  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/transportadora`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/transportadora`;
 
   constructor(protected http: HttpClient) {}
 

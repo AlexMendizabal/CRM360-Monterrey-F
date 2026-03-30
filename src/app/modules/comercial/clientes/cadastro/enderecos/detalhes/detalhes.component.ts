@@ -69,6 +69,7 @@ export class ComercialClientesCadastroEnderecosDetalhesComponent
       )
       .subscribe({
         next: (response: JsonResponse) => {
+          console.log(response);
           if (response.success === true) {
             this.enderecos = response.data.enderecos;
 

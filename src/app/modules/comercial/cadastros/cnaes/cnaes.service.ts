@@ -12,7 +12,7 @@ import { ICnae } from './models/cnaes';
   providedIn: 'root',
 })
 export class ComercialCadastrosCnaesService {
-  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/cnaes`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/cnaes`;
 
   constructor(protected http: HttpClient) {}
 

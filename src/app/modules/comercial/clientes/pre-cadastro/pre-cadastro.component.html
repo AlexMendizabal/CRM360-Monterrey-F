@@ -30,7 +30,7 @@
 
             <!-- <input type="text" class="form-control" id="ci" formControlName="ci" (input)="onInput(-)"
               [ngClass]="onFieldError('ci') + ' ' + onFieldRequired('ci')" min="0">
-            
+
             <div *ngIf="ciControl.hasError('required')" class="text-danger">
               CI es obligatorio
             </div>
@@ -39,15 +39,15 @@
             </div>
             <invalid-form-control [show]="onFieldInvalid('ci') == 'required'" message="CI inválido."></invalid-form-control> -->
 
-          </div> 
+          </div>
           <div class="form-group col-md-3">
             <label for="numero_documento">Nº de Documento <span class="text-danger">*</span> </label>
             <input type="number" class="form-control" id="numero_documento" formControlName="numero_documento" (input)="onInput()"
               [ngClass]="onFieldError('numero_documento') + ' ' + onFieldRequired('numero_documento')" min="0">
             <invalid-form-control [show]="onFieldInvalid('numero_documento') == 'required'"
               message="Número de Documento inválido."></invalid-form-control>
-          </div>          
-          
+          </div>
+
           <div class="form-group col-md-3">
             <label for="tipopessoa">Tipo de persona <span class="text-danger">*</span></label>
             <select class="form-control" id="tipopessoa" formControlName="tipopessoa" (change)="onInput()">
@@ -157,7 +157,7 @@
         <div class="form-row mt-2">
           <div class="col-md-3">
             <button data-toggle="collapse" data-target="#CollapseUbicacion" class="btn text-white" style="background-color: #3E0752;"
-              id="btnAgregarUbicacion" (click)="repetirFormulario('Ubicacion')" > 
+              id="btnAgregarUbicacion" (click)="repetirFormulario('Ubicacion')" >
               + Agregar Ubicación</button>
           </div>
           <div class="col-md-3">
@@ -186,33 +186,27 @@
                 </div>
                 <div class="form-group col-md-3">
                   <label for="ciudadUbi">Ciudad <span class="text-danger">*</span> </label>
-                  <ng-select 
-                  [searchable]="true" 
-                  [clearable]="false" 
-                  [items]="ciudades" 
+                  <ng-select
+                  [searchable]="true"
+                  [clearable]="false"
+                  [items]="ciudades"
                   [virtualScroll]="true"
-                    (change)="cambiarCiudad($event.id, i)" 
-                    labelForId="ciudad" 
-                    bindLabel="nombre_ciudad" 
+                    (change)="cambiarCiudad($event.id, i)"
+                    labelForId="ciudad"
+                    bindLabel="nombre_ciudad"
                     bindValue="id"
-                    formControlName="nombre_ciudad"
-                    [ngClass]="onFieldError('nombre_ciudad') + ' ' + onFieldRequired('nombre_ciudad')">
-                    <ng-option *ngFor="let ciudad of ciudades"
-                      [value]="ubicacionForm.ciudad_id !== 0 ? ubicacionForm.ciudad_id : ciudad_vendedor"
-                      [disabled]="ciudad.id !== ciudad_vendedor">
-                      {{ ciudad.nombre_ciudad }}
-                    </ng-option>
+                    formControlName="nombre_ciudad">
                   </ng-select>
                 </div>
                 <div class="form-group col-md-12 " >
                   <label for="direccion">Direccion <span class="text-danger" style="font-size: 9px;">*</span> </label>
                   <input type="text" class="form-control" id="direccion" formControlName="direccion" (input)="onInput()"
-                    [(ngModel)]="ubicacionForm.direccion" 
+                    [(ngModel)]="ubicacionForm.direccion"
                     [value]="ubicacionForm.direccion" (ngModelChange)="actualizarDireccion($event, i, 1)" placeholder="Utilice el mapa para agregar dirección.">
                 </div>
                 <div class="form-group col-md-12 text-center" *ngIf="ubicacionForm.swActivarLatitud === false">
                   <label for="direccion">Dirección </label> <br>
-                  <button class="btn btn-warning" (click)="openModalUbicacion(seleccionarDireccion, i, 2)"  > 
+                  <button class="btn btn-warning" (click)="openModalUbicacion(seleccionarDireccion, i, 2)"  >
                     Agregar Dirección </button>
                 </div>
                 <div class="form-group col-md-3" *ngIf="ubicacionForm.swActivarLatitud === true">
@@ -247,7 +241,6 @@
                       <label for="titulo_contacto">TÍTULO DE CONTACTO <span class="text-danger">*</span> </label>
                       <input type="text" class="form-control" id="titulo_contacto" formControlName="titulo_contacto"
                         (input)="onInput()"
-                        [ngClass]="onFieldError('titulo_contacto') + ' ' + onFieldRequired('titulo_contacto')"
                         [value]="contactoForm.titulo_contacto" (ngModelChange)="actualizarContacto($event, 1, i)">
                     </div>
                     <div class="form-group col-md-3 mt-2">
@@ -273,8 +266,8 @@
                       <input type="text" class="form-control" id="telefono_contacto" formControlName="telefono_contacto"
                         (input)="onInput()" [value]="contactoForm.telefono_contacto"
                         (ngModelChange)="actualizarContacto($event,5 , i)" min="0"
-                        [ngClass]="onFieldError('telefono_contacto') + ' ' + onFieldRequired('telefono_contacto')" min="0">
-                        
+                        min="0">
+
                     <invalid-form-control [show]="onFieldInvalid('telefono_contacto') == 'required'"
                      message="Telefono Invalido."></invalid-form-control>
                     </div>
@@ -307,7 +300,7 @@
     <ng-template #seleccionarUbicacion>
       <app-comercial-ciclo-vendas-cotacoes-precadastro-modal-ubicacion-contacto
         (latLngChanged)="changeLatitudLongitud($event)" (fecharModal)="onFecharModal($event)"
-         [index]="this.indice" [latitud] ="this.latitud"  [longitud] ="this.longitud" [tipo]= this.tipo_peticion         
+         [index]="this.indice" [latitud] ="this.latitud"  [longitud] ="this.longitud" [tipo]= this.tipo_peticion
          [latitud_inicial] = "this.latitud_inicial" [longitud_inicial] = "this.longitud_inicial">
       </app-comercial-ciclo-vendas-cotacoes-precadastro-modal-ubicacion-contacto>
     </ng-template>

@@ -188,11 +188,12 @@ export class ComercialCadastrosMateriaisTemplatesAssociacoesComponent
   onAssociarMateriais(): void {
     this.toggleAll = false;
 
+    console.log(this.materiaisLista);
     for (let index = 0; index < this.materiaisLista.length; index++) {
       if (this.materiaisLista[index].checked === 1) {
         const material = {
           codClasse: this.materiaisLista[index].codClasse,
-          codMaterial: this.materiaisLista[index].id_material,
+          codMaterial: this.materiaisLista[index].codigoMaterial,
           nomeMaterial: this.materiaisLista[index].descricao,
         };
 

@@ -161,6 +161,7 @@ export class ComercialIntegracoesDagdaIntegracaoCondicoesPagamentoListaComponent
     };
     this.associacaoService.createAssociacao(params).subscribe({
       next: (response) => {
+        console.log(response);
         this.loaderNavbar = false;
         if (response.status != 200) {
           this.pnotify.notice('Ocorreu um erro ao realizar a associação!');

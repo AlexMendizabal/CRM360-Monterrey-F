@@ -8,5 +8,24 @@
 div.custom-col > div.col-3{
   max-width: 24.5%!important;
 }
-  
-  
+ 
+/* Reduce margin */
+.icon-compact {
+  margin-right: 0.5rem; /* Ajusta según sea necesario */
+}
+
+/* Adjust icon size */
+.icon-compact .fa {
+  font-size: 0.9rem; /* Ajusta según sea necesario */
+}
+
+/* Asegúrate de que la celda y el contenido ocupen el espacio correctamente */
+td.align-middle.text-center {
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* Opcionalmente, asegura que los spans sean display: inline-block para centrado correcto */
+td.align-middle.text-center span {
+  display: inline-block;
+}

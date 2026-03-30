@@ -19,7 +19,7 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { DateService } from 'src/app/shared/services/core/date.service';
 
 import { ITecnologiaInformacaoTipoItem } from './../models/tipoItem';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent } from 'ngx-bootstrap';
 @Component({
   selector: 'tecnologia-informacao-cadastros-tipo-item-lista',
   templateUrl: './lista.component.html',

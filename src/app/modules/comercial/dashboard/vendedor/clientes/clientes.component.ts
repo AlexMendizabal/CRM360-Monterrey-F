@@ -80,7 +80,7 @@ export class ComercialDashboardVendedorClientesComponent
   }
 
   renderChart(data: any) {
-    const ativos_inativos = data.filter(item => (item.tipo === "Ativos" || item.tipo === "Inativos" || item.tipo === "Potenciais"));
+    const ativos_inativos = data.filter(item => (item.tipo === "Activos" || item.tipo === "Inactivos" || item.tipo === "Potenciales"));
     this.sumClientes = ativos_inativos.reduce((acc: Number, item) => acc += item.quantidade, 0);
 
     this.zone.runOutsideAngular(() => {
@@ -138,21 +138,21 @@ export class ComercialDashboardVendedorClientesComponent
 
     // Os tipos de clientes irão definir as colunas da tabela.
     if (
-      data.tipo == 'Ativos' ||
-      data.tipo == 'Potenciais' ||
-      data.tipo == 'Novos c/ compra' ||
-      data.tipo == 'Reativados' ||
-      data.tipo == 'Inativados'
+      data.tipo == 'Activos' ||
+      data.tipo == 'Potenciales' ||
+      data.tipo == 'Nuevos con compra' ||
+      data.tipo == 'Reactivos' ||
+      data.tipo == 'Inactivos'
     ) {
       // clientesA = Código, Razão social
       tipoCliente = 'clientesA';
-    } else if (data.tipo == 'Com compra') {
+    } else if (data.tipo == 'Con compra') {
       // clientesB = Código, Razão social, Toneladas e R$
       tipoCliente = 'clientesB';
-    } else if (data.tipo == 'Sem compra' || data.tipo == 'Inativos') {
+    } else if (data.tipo == 'Sen compra' || data.tipo == 'Inactivos') {
       // clientesC = Código, Razão social, Última compra
       tipoCliente = 'clientesC';
-    } else if (data.tipo == 'À inativar') {
+    } else if (data.tipo == 'A Inactivar') {
       // clientesD = Código, Razão social, Última compra, Inativação em
       tipoCliente = 'clientesD';
     }
@@ -160,7 +160,7 @@ export class ComercialDashboardVendedorClientesComponent
     this.dataEmitter.emit({
       config: {
         type: tipoCliente,
-        title: 'Carteira de clientes'
+        title: 'Cartera de clientes'
       },
       data: data
     });

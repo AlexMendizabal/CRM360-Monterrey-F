@@ -8,7 +8,7 @@ import { forkJoin } from 'rxjs';
   providedIn: 'root'
 })
 export class ComercialClientesCadastroDadosFaturamentoFormularioService {
-  private readonly API = `${environment.URL_MTCORP}comercial/clientes/cadastro/formulario/dados-faturamento`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/clientes/cadastro/formulario/dados-faturamento`;
 
   constructor(protected http: HttpClient) {}
 

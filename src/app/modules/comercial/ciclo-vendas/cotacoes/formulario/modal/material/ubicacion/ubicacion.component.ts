@@ -35,13 +35,13 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
 
   /* @Input('id_presentacion') id_presentacion : number; */
 
-  @Output() latLngChanged = new EventEmitter<{ latitud: number, longitud: number }>();
+  @Output() latLngChanged = new EventEmitter<{ latitud: number, longitud: number, direccion: string }>();
+  @Output() setDireccion = new EventEmitter<{ direccion: string }>();
   @Output() fecharModal = new EventEmitter();
-
+ 
 
   loaderModal: boolean;
   swDesactivarForm = true;
-
 
 
   form: FormGroup;
@@ -64,7 +64,10 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
   id_presentacion: number = 0;
   latitud: number = -17.78629;
   longitud: number = -63.18117;
-  direccion: string;
+
+  // mandar esta variable
+  direccion:string;
+  direccion_save :string; 
   showModal: boolean = true;
 
 
@@ -78,14 +81,15 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
     private confirmModalService: ConfirmModalService,
     private formularioService: ComercialCicloVendasCotacoesFormularioService,
     private cotacoesService: ComercialCicloVendasCotacoesService,
-    private comercialService: ComercialService
+    private comercialService: ComercialService,
+  
   ) {
     this.pnotifyService.getPNotify();
   }
 
   ngOnInit(): void {
     this.setFormBuilder();
-    this.getPresentacionMaterial();
+    // this.getPresentacionMaterial();
     /* throw new Error("Method not implemented."); */
 
   }
@@ -96,7 +100,6 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
       latitud: [this.latitud],
       longitud: [this.longitud],
       direccion: [this.direccion],
-
     });
 
     /* this.setFormValidators(); */
@@ -106,14 +109,14 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
 
   } */
 
-  getPresentacionMaterial() {
-    this.comercialService.getPresentacionMaterial()
-      .subscribe((response: any) => {
-        if (response.responseCode === 200) {
-          this.arrayPresentacion = response.result;
-        }
-      });
-  }
+  // getPresentacionMaterial() {
+  //   this.comercialService.getPresentacionMaterial()
+  //     .subscribe((response: any) => {
+  //       if (response.responseCode === 200) {
+  //         this.arrayPresentacion = response.result;
+  //       }
+  //     });
+  // }
   actualizarMarcador(event: any) {
     this.latitud = event.coords.lat;
     this.longitud = event.coords.lng;
@@ -121,10 +124,14 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
     this.form.controls['longitud'].setValue(this.longitud);
     this.actualizarDireccion(event);
   }
+  // aqui se manda la direccion obtenida al input direccion del modal
   actualizarDireccion(event: any) {
     this.obtenerDireccion(event.coords.lat, event.coords.lng)
       .then((direccion_mapa: string) => {
         this.form.controls['direccion'].setValue(direccion_mapa);
+        // de aca tengo que mandar la ubicacion al formulario
+        this.direccion_save = direccion_mapa;
+
       })
       .catch((error: any) => {
         this.form.controls['direccion'].setValue(
@@ -149,13 +156,6 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
         return 'Error al obtener la dirección';
       });
   }
-
-
-
-
-
-
-
 
   onCalcular(): void {
 
@@ -255,7 +255,6 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
   }
 
 
-
   calcularTotais(): void {
 
   }
@@ -287,12 +286,14 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionCompone
     }; */
   }
   emitLatLng() {
-    this.latLngChanged.emit({ latitud: this.latitud, longitud: this.longitud });
+    this.latLngChanged.emit({ latitud: this.latitud, longitud: this.longitud, direccion: this.direccion_save  });
     this.onClose();
   }
+
+  
+
   onSubmit(): void {
     this.emitLatLng();
-    //
   }
 
   onClose(): void {

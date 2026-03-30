@@ -40,6 +40,7 @@ export class ComercialDashboardVendedorFinanceiroComponent implements OnInit {
               response['result']['valor'] > 0
             ) {
               this.inadimplentes = response['result'];
+              console.log(this.inadimplentes)
               this.inadimplentesLoaded = true;
             } else {
               this.handleEmpty('inadimplentes');

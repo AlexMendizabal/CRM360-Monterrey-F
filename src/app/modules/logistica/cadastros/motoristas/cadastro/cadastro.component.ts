@@ -4,7 +4,7 @@ import { MASKS, NgBrazilValidators } from 'ng-brazil';
 import { RouterService } from 'src/app/shared/services/core/router.service';
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
-import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap';
 import { finalize } from 'rxjs/operators';
 
 import { LogisticaMotoristaService } from '../services/motorista.service';

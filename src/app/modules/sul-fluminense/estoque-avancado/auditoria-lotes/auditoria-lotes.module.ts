@@ -3,9 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { OrderModule } from 'ngx-order-pipe';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TooltipModule, PaginationModule, BsDatepickerModule } from 'ngx-bootstrap';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 

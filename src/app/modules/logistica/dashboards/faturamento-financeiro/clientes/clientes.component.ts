@@ -4,7 +4,7 @@ import { PNotifyService } from './../../../../../shared/services/core/pnotify.se
 import { LogisticaDashboardFaturamentoFinanceiroService } from './../faturamento-financeiro.service';
 import { finalize } from 'rxjs/operators';
 import { LogisticaDashboardsFaturamentoFinanceiroChartsService } from './../charts.service';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap';
 //angular
 import { Component, OnInit, OnDestroy , Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';

@@ -22,48 +22,43 @@ import { array } from '@amcharts/amcharts4/core';
 @Component({
   selector: 'comercial-agenda-detalhes',
   templateUrl: './detalhes.component.html',
-  styleUrls: ['./detalhes.component.scss']
+  styleUrls: ['./detalhes.component.scss'],
 })
-
 export class ComercialAgendaDetalhesComponent implements OnInit {
-latitud: any;
-longitud: any;
-modalRef: BsModalRef | undefined;
-actualizarMarcador($event: any) {
-throw new Error('Method not implemented.');
-}
+  latitud: any;
+  longitud: any;
+  modalRef: BsModalRef | undefined;
+  actualizarMarcador($event: any) {
+    throw new Error('Method not implemented.');
+  }
   breadCrumbTree: Array<Breadcrumb> = [
-
     {
       descricao: 'Home',
-      routerLink: '/comercial/home'
+      routerLink: '/comercial/home',
     },
 
     {
       descricao: 'Agenda',
-      routerLink: `/comercial/agenda/compromissos`
+      routerLink: `/comercial/agenda/compromissos`,
     },
 
     {
-      descricao: 'Detalles de cita'
-    }
-
+      descricao: 'Detalles de cita',
+    },
   ];
 
- 
-
   detalhes: any = {
-    status: null
+    status: null,
   };
-  
-  marca_color = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00';
-  
+
+  /* marca_color = 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00'; */
+
   imagenes: any = [];
   img: any = [];
   //mostrarElemento: boolean = true;
   //ocultarFormulario(){
-   // this.mostrarElemento = false;
- // }
+  // this.mostrarElemento = false;
+  // }
 
   switchEdit: boolean;
   private user = this.authservice.getCurrentUser();
@@ -85,20 +80,18 @@ throw new Error('Method not implemented.');
     private titleService: TitleService,
     private modalService: BsModalService
   ) {
-
     this.pnotifyService.getPNotify();
-
   }
 
   ngOnInit() {
-
     this.registrarAcesso();
     this.titleService.setTitle('Detalles de cita');
     const detalhes = this.activatedRoute.snapshot.data['detalhes']['result'];
     const inicio = new Date(detalhes['start']);
     const fim = new Date(detalhes['end']);
     this.detalhes.status = detalhes.status;
-    if (this.user.info.matricula == 1) {
+    const id_cargo = this.user.info.none_cargo;
+    if (id_cargo == 5 || id_cargo == 6 || id_cargo == 1) {
       this.switchEdit = true;
     } else {
       this.switchEdit = false;
@@ -119,30 +112,24 @@ throw new Error('Method not implemented.');
     this.longitud_final = detalhes.longitud_final;
     this.detalhes.url_web = detalhes.url_web;
     this.detalhes.fecha_inicio = detalhes.fecha_inicio;
-
-    this.filtrarPosiciones(detalhes.id)
-    this.imagenesAnexo(detalhes.id)
+    this.detalhes.hora_inicio = detalhes.hora_inicio;
+    this.detalhes.hora_final = detalhes.hora_final;
+    this.filtrarPosiciones(detalhes.id);
+    this.imagenesAnexo(detalhes.id);
     //console.log(this.imagenesAnexo(detalhes.id));
-
-
 
     //console.log(detalhes);
     this.detalhes.description =
-
       detalhes.description != null
-
         ? detalhes.description.replace(/(?:\r\n|\r|\n)/g, '<br />')
-
         : null;
 
     if (this.detalhes.allDay === true) {
-
       this.detalhes.fullDate = `${this.dateService.getFullDate(
         inicio,
         fim,
         false
       )} (Dia completo)`;
-
     } else {
       if (this.dateService.sameDay(inicio, fim)) {
         this.detalhes.fullDate = this.dateService.getFullDate(inicio, fim);
@@ -157,37 +144,33 @@ throw new Error('Method not implemented.');
 
   onEliminar(detalhes: any) {
     this.router.navigate(['../../eliminar', detalhes.id], {
-      relativeTo: this.activatedRoute
+      relativeTo: this.activatedRoute,
     });
   }
 
   onEdit(detalhes: any) {
     detalhes.status = 2;
     this.router.navigate(['../../editar', detalhes.id], {
-      relativeTo: this.activatedRoute
+      relativeTo: this.activatedRoute,
     });
   }
 
   onReschedule(detalhes: any) {
-
     detalhes.status = 4;
 
     this.router.navigate(['../../reagendar', detalhes.id], {
-      relativeTo: this.activatedRoute
-
+      relativeTo: this.activatedRoute,
     });
-
   }
 
   onFinish(detalhes: any) {
     detalhes.status = 3;
     this.router.navigate(['../../finalizar', detalhes.id], {
-      relativeTo: this.activatedRoute
+      relativeTo: this.activatedRoute,
     });
   }
 
   onDelete(detalhes: any) {
-
     let confirm$ = this.confirmModalService.showConfirm(
       'Borrar',
       'Confirmar borrado',
@@ -200,7 +183,7 @@ throw new Error('Method not implemented.');
       .asObservable()
       .pipe(
         take(1),
-        switchMap(result =>
+        switchMap((result) =>
           result ? this.agendaService.deleteCompromisso(detalhes.id) : EMPTY
         )
       )
@@ -209,24 +192,22 @@ throw new Error('Method not implemented.');
         next: (success) => {
           this.pnotifyService.success('Cita borrada con exito!');
           this.router.navigate(['../../compromissos'], {
-            relativeTo: this.activatedRoute
+            relativeTo: this.activatedRoute,
           });
         },
 
         error: (error) => {
-          this.pnotifyService.error(
-            'Error al borrar, intente nuevamente!'
-          );
-        }
+          this.pnotifyService.error('Error al borrar, intente nuevamente!');
+        },
       });
   }
 
   filtrarPosiciones(id_agenda: any) {
-    this.agendaService.getPosicionPromotor(id_agenda).subscribe(
-      (response: any) => {
+    this.agendaService
+      .getPosicionPromotor(id_agenda)
+      .subscribe((response: any) => {
         this.posiciones = response.result;
-      }
-    )
+      });
   }
 
   imagenesAnexo(id_agenda: any) {
@@ -239,7 +220,6 @@ throw new Error('Method not implemented.');
       }
     );
   }
-
 
   // decodeBase64Image(base64Image: string): string{
   //   const decodedString = atob(base64Image);
@@ -257,15 +237,14 @@ throw new Error('Method not implemented.');
   }
 
   mostrarImagen(urlImagen: string) {
-    this.abrirVentana("data:image/jpeg;base64;"+urlImagen);
+    this.abrirVentana('data:image/jpeg;base64;' + urlImagen);
   }
 
   abrirVentana(urlImagen: string) {
-    window.open(urlImagen, "_blank");
+    window.open(urlImagen, '_blank');
   }
 
   abrirModal(template: any) {
     this.modalRef = this.modalService.show(template);
   }
-
 }

@@ -1,4 +1,6 @@
-<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
 
 <form [formGroup]="form">
   <div class="form-row">
@@ -13,10 +15,10 @@
         labelForId="escritorio"
         bindLabel="nome"
         bindValue="id"
-        formControlName="idEscritorio"
+        formControlName="sucursal_id"
         (change)="onEscritorioChange($event.id)"
-        style="z-index: 1;"
-        >
+        style="z-index: 1"
+      >
       </ng-select>
     </div>
     <div class="form-group col-lg-3">
@@ -34,19 +36,26 @@
       ></ng-select>
     </div>
     <div class="form-group col-lg-3">
-      <label for="situacao">Dias ultima visita</label>
-      <ng-select
-        [searchable]="false"
-        [clearable]="false"
-        [items]="ultimaVisita"
-        [virtualScroll]="true"
-        labelForId="ultimaVisita"
-        bindLabel="nombre"
-        bindValue="id"
+      <label for="fechaVisitaInicio">Última Visita (Desde)</label>
+      <input
+        type="date"
+        id="fechaVisitaInicio"
+        class="form-control"
+        formControlName="fecha_inicio_visita"
         (change)="filtrarClientes()"
-        formControlName="visita_id"
-      ></ng-select>
+      />
     </div>
+    <div class="form-group col-lg-3">
+      <label for="fechaVisitaFin">Última Visita (Hasta)</label>
+      <input
+        type="date"
+        id="fechaVisitaFin"
+        class="form-control"
+        formControlName="fecha_fin_visita"
+        (change)="filtrarClientes()"
+      />
+    </div>
+
     <div class="form-group col-lg-3">
       <label for="setorAtividade">Estado</label>
       <ng-select
@@ -63,4 +72,3 @@
     </div>
   </div>
 </form>
-

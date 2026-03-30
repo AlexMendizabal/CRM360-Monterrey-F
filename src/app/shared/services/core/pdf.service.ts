@@ -71,6 +71,7 @@ export class PdfService {
 
   getData(data: any) {
     this.pdfData = data;
+    console.log(this.pdfData);
     return this.pdfData;
   }
 

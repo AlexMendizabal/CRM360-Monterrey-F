@@ -1,0 +1,128 @@
+<!-- <loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header [appTitle]="appTitle">
+  <button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="submittingForm">
+    Cancelar
+  </button>
+  <button
+    type="button"
+    (click)="onSubmit()"
+   >
+    Salvar
+  </button>
+</app-header>
+<p>formulario works!</p>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="container">
+    <div class="header">
+      <h1>Crear Campañas</h1>
+    </div>
+
+    <div class="form-container">
+      <form>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="campaignNumber">Campaña N°</label>
+              <input type="text" id="campaignNumber" [(ngModel)]="campaignNumber">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="user">Usuario</label>
+              <input type="text" id="user" [(ngModel)]="user">
+            </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+              <div class="form-group">
+              <label for="client">Cliente</label>
+              <input type="text" id="client" [(ngModel)]="client">
+              <button (click)="selectClient()">Seleccionar</button>
+            </div>
+          </div>
+            <div class="col">
+              <div class="form-group">
+                <label for="clientType">Tipo de Cliente</label>
+                <select id="clientType" [(ngModel)]="clientType">
+                  <option value="VIP">VIP</option>
+                  <option value="NORMAL">Normal</option>
+                  <option value="SEMI_VIP">Semi VIP</option>
+                </select>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label for="category">Rubro</label>
+                <select id="category" [(ngModel)]="category">
+                  <option value="">Seleccione un rubro</option>
+                 
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="form-group">
+          <label for="requestDate">Fecha Solicitud</label>
+          <input type="date" id="requestDate" [(ngModel)]="requestDate">
+        </div>
+        <div class="form-group">
+          <label for="reminderDate">Fecha Recordatorio</label>
+          <input type="date" id="reminderDate" [(ngModel)]="reminderDate">
+        </div>
+        <button type="submit" (click)="createCampaign()">Crear Campaña</button>
+      </form>
+    </div>
+
+    <div class="details-container">
+      <h2>Detalle</h2>
+      <div class="search-container">
+        <input type="text" placeholder="Buscar material - familia - línea - grupo">
+        <button (click)="search()">Buscar</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>DESCRIPCION</th>
+            <th>DESCUENTO</th>
+            <th>CANTIDAD MIN</th>
+            <th>FECHA INICIO</th>
+            <th>FECHA FIN</th>
+            <th>CODIGO ITEMS</th>
+            <th>DESCRIPCION</th>
+            <th>OBSERVACION</th>
+            <th>ACCIONES</th>
+            <th>ESTADO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of campanias">
+            <td>{{ item.descripcion }}</td>
+            <td>{{ item.descuento }}</td>
+            <td>{{ item.cantidadMin }}</td>
+            <td>{{ item.fechaInicio }}</td>
+            <td>{{ item.fechaFin }}</td>
+            <td>{{ item.codigoItems }}</td>
+            <td>{{ item.descripcion2 }}</td>
+            <td>{{ item.observacion }}</td>
+            <td>{{ item.acciones }}</td>
+            <td>{{ item.estado }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <button (click)="prevPage()">«</button>
+        <button (click)="goToPage(page)" *ngFor="let page of pages">{{ page }}</button>
+        <button (click)="nextPage()">»</button>
+      </div>
+    </div>
+  </div>
+
+</app-body> -->

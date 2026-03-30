@@ -14,7 +14,7 @@
           <!-- <div class="form-row justify-content-center">
             <div class="form-group col-lg-5">
               <p class="mb-1"><label>Aplicar descuento</label></p> -->
-              <!-- <div class="custom-control custom-radio">
+          <!-- <div class="custom-control custom-radio">
                 <input
                   type="radio"
                   id="tipo_valor"
@@ -25,7 +25,7 @@
                   (click)="onChangeTipoDesconto('valor')">
                 <label class="custom-control-label" for="tipo_valor">Valor (USD)</label>
               </div> -->
-              <!-- <div class="custom-control custom-radio">
+          <!-- <div class="custom-control custom-radio">
                 <input
                   type="radio"
                   id="tipo_percentual"
@@ -37,36 +37,24 @@
                   [checked]="true">
                 <label class="custom-control-label" for="tipo_percentual">Porcentual (%)</label>
               </div> -->
-           <!--  </div>
+          <!--  </div>
           </div> -->
           <div class="form-row justify-content-center">
-            <div class="form-group col-lg-5" hidden>
+            <div class="form-group col-lg-5"><!-- hidden -->
               <label for="desconto">% Autorizado</label>
-              <input
-                type="text"
-                id="desconto"
-                class="form-control"
-                formControlName="descuentoAutorizado"
-                [max]="maxValue"
-                [ngClass]="onFieldError('desconto') + ' ' + onFieldRequired(form.controls.desconto)" 
-                readonly  
-              >
+              <input type="text" id="desconto" class="form-control" formControlName="descuentoAutorizado"
+                [max]="maxValue" [ngClass]="onFieldError('desconto') + ' ' + onFieldRequired(form.controls.desconto)"
+                readonly>
             </div>
           </div>
-          
+
           <div class="form-row justify-content-center">
             <div class="form-group col-lg-5">
               <label for="desconto">Descuento</label>
-              <input
-                type="text"
-                id="desconto"
-                class="form-control"
-                formControlName="desconto"
-                currencyMask [options]="currencyMaskOptions"
-                [max]="maxValue"
+              <input type="text" id="desconto" class="form-control" formControlName="desconto" currencyMask
+                [options]="currencyMaskOptions" [max]="maxValue"
                 [ngClass]="onFieldError('desconto') + ' ' + onFieldRequired(form.controls.desconto)"
-                (keyup.enter)="onEnterKeyPress()"
-                [disabled]="isDescuentoInputDisabled()" >
+                (keyup.enter)="onEnterKeyPress()">
             </div>
           </div>
         </form>
@@ -74,18 +62,13 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-danger"
-      (click)="onClose()">
+    <button type="button" class="btn btn-danger" (click)="onClose()">
       Cancelar
     </button>
-    <button
-      type="button"
-      class="btn btn-success"
-      (click)="onSubmit()"
-      [disabled]="isConfirmarButtonDisabled()">
+    <button type="button" class="btn btn-success" (click)="onSubmit()" [disabled]="isConfirmarButtonDisabled()">
       Confirmar
     </button>
   </div>
 </div>
+
+<!-- [disabled]="isDescuentoInputDisabled()" -->

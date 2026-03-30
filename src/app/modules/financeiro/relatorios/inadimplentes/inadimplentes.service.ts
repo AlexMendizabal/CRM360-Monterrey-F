@@ -12,7 +12,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class FinanceiroRelatoriosInadimplentesService {
-  private readonly API = `${environment.URL_MTCORP}financeiro/relatorios/inadimplentes`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/financeiro/relatorios/inadimplentes`;
 
   constructor(protected http: HttpClient) {}
 

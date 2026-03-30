@@ -41,6 +41,17 @@
               formControlName="dataFinal"
             />
           </div>
+          <div class="form-group col-lg-2">
+            <label for="codigo_oferta">Núm. Oferta</label>
+            <input
+              type="text"
+              id="id_oferta"
+              placeholder="Digite..."
+              class="form-control"
+              formControlName="codigo_oferta"
+              (keydown.enter)="onFilter()"
+            />
+          </div>
           <div class="form-group col-lg-3">
             <label for="codVendedor">Vendedor</label>
             <ng-select
@@ -138,6 +149,18 @@
         <th
           scope="col"
           class="text-center hover"
+          (click)="setOrderBy('codigo_oferta')"
+          *ngIf="!showDetailPanel"
+        >
+          <thead-sorter
+            value="Codigo Oferta"
+            [active]="orderBy == 'codigo_oferta'"
+            [sort]="orderType"
+          ></thead-sorter>
+        </th>
+        <th
+          scope="col"
+          class="text-center hover"
           (click)="setOrderBy('nombre_cliente')"
         >
           <thead-sorter
@@ -146,6 +169,17 @@
             [sort]="orderType"
           ></thead-sorter>
         </th>
+        <th
+        scope="col"
+        class="text-center hover"
+        (click)="setOrderBy('nombre_vendedor')"
+      >
+        <thead-sorter
+          value="nombre vendedor"
+          [active]="orderBy == 'nombre_vendedor'"
+          [sort]="orderType"
+        ></thead-sorter>
+      </th>
         <th
           scope="col"
           class="text-center hover"
@@ -170,7 +204,7 @@
             [sort]="orderType"
           ></thead-sorter>
         </th>
-        <th
+        <!-- <th
           scope="col"
           class="text-center hover"
           (click)="setOrderBy('descuento_total')"
@@ -181,7 +215,7 @@
             [active]="orderBy == 'descuento_total'"
             [sort]="orderType"
           ></thead-sorter>
-        </th>
+        </th> -->
         <th
           scope="col"
           class="text-center hover"
@@ -201,6 +235,7 @@
     <ng-template #tbody let-tbody>
       <ng-container *ngIf="getPaginateData().length > 0; else noDataTemplate">
         <tr
+          class="tr-td"
           *ngFor="let autorizacion of getPaginateData(); let i = index"
           [class.table-active]="autorizacion.id_cliente == clienteSelecionado"
         >
@@ -218,23 +253,30 @@
           {{ autorizacion.codigo_oferta }}
         </td> -->
           <td class="text-center hover">
-            {{ autorizacion.id_cliente }}
+           
+              {{ autorizacion.id_cliente }}
+             
+          </td>
+          <td class="text-center hover">
+            {{ autorizacion.codigo_oferta }}
           </td>
           <td class="text-center hover">
             {{ autorizacion.nombre_cliente | uppercase }}
           </td>
           <td class="text-center hover">
-            $. {{ autorizacion.monto_total }}
+            {{ autorizacion.nombre_vendedor | uppercase }}
           </td>
+          <td class="text-center hover">$. {{ autorizacion.monto_total }}</td>
           <td class="text-center hover">
             $. {{ autorizacion.monto_total_bruto }}
           </td>
-          <td class="text-center hover">
+          <!-- <td class="text-center hover">
             {{ autorizacion.descuento_total }}
-          </td>
+          </td> -->
           <td
             class="text-center hover"
-            [ngStyle]="{ color: getColor(autorizacion.estado_oferta) }" style="font-weight: 500;"
+            [ngStyle]="{ color: getColor(autorizacion.estado_oferta) }"
+            style="font-weight: 500"
           >
             {{ autorizacion.estado_oferta | uppercase }}
           </td>
@@ -246,14 +288,20 @@
         </td> -->
           <td class="text-center">
             <a
-              class="dropdown-item"
+              [tooltip]="'DETALLES'"
+              class="btn"
               routerLink="/modal-autorizacion"
               (click)="openModal(autorizacion.id_autorizacion)"
             >
-              <i class="fas fa-file" style="padding-right: 4px;"></i
-              ><span class="text-uppercase" style="font-weight: 500;
-              "> Detalles</span>
+              <i class="fa fa-file-alt" style="margin-right: 0!important;"></i>
             </a>
+            <a
+            [tooltip]="'Historial Cliente'"
+            class="btn"
+            (click)="openModalCliente(template, autorizacion.id_cliente, autorizacion.nombre_cliente)"
+          >
+          <i class="fa fa-list-alt" style="margin-right: 0!important;"></i>
+          </a>
             <!-- <a
             class="dropdown-item"
             routerLink="/vista"
@@ -287,4 +335,71 @@
     >
     </pagination>
   </div>
+
+  <ng-template #template let-modal>
+    <div class="modal-header">
+          <h4 class="modal-title pull-left">
+            {{ template['codigo'] }} - {{ template['nombre'] }}
+          </h4>
+          <button
+            type="button"
+            class="close pull-right"
+            aria-label="Close"
+            (click)="closeModalCliente('Cross click')"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top: 0px; padding-bottom: 0px;">
+          <div class="table-responsive">
+            <table class="table table-bordered" style="    margin-top: 1rem;">
+              <thead class="thead-light">
+                <tr>
+                  <th>Código de Oferta</th>
+                  <th>Peso Total</th>
+                  <th>Cantidad Total</th>
+                  <th>Monto Total</th>
+                  <th>Estado</th>
+                  <th>Fecha de Gestión</th>
+                  <th> Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let oferta of template['dato']">
+                  <td>{{ oferta.codigo_oferta }}</td>
+                  <td>{{ oferta.peso_total | number : '1.2-2' }}</td>
+                  <td>{{ oferta.cantidad_total | number : '1.2-2' }}</td>
+                  <td>{{ oferta.monto_total | number : '1.2-2' }}</td>
+                  <td>{{ oferta.descripcion }}</td>
+                  <td>{{ oferta.fecha_gestion }}</td>
+                  <td style="text-align: center;">  <a
+                    [tooltip]="'DETALLES'"
+                    class="btn"
+                    routerLink="/modal-autorizacion"
+                    (click)="openModal(oferta.id_autorizacion)"
+                  >
+                    <i class="fa fa-file-alt" style="margin-right: 0!important;"></i>
+                  </a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="closeModalCliente('Save click')"
+          >
+            Cerrar
+          </button>
+       
+    </div>
+  </ng-template>
+ 
+
+
+
+
+ 
 </app-body>

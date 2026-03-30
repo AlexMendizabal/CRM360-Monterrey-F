@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ComercialIntegracoesArcelorMittalClassesMateriaisService {
-  private readonly API = `${environment.URL_MTCORP}comercial/integracoes/arcelor-mittal/classes-materiais`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/integracoes/arcelor-mittal/classes-materiais`;
 
   constructor(protected http: HttpClient) {}
 

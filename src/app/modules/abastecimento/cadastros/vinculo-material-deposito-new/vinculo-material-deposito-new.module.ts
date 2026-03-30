@@ -6,10 +6,7 @@ import { NotFoundModule } from 'src/app/core/not-found/not-found.module';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
 import { TemplatesModule } from 'src/app/shared/templates/templates.module';
 
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { TabsModule } from 'ngx-bootstrap/tabs';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TooltipModule, PaginationModule, TabsModule, ModalModule } from 'ngx-bootstrap';
 import { OrderModule } from 'ngx-order-pipe';
 
 import { NgSelectModule } from '@ng-select/ng-select';

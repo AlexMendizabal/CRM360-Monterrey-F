@@ -1,0 +1,248 @@
+<div class="row">
+  <div class="col-md-12">
+    <!-- Pestañas -->
+    <ul class="nav nav-tabs mb-2">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" id="home-tab" data-toggle="tab" href="#home" role="tab"
+          aria-controls="home" aria-selected="true">
+          <i class="fa fa-cube" aria-hidden="true"></i> Materiales</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="logistica-tab" data-toggle="tab" href="#logistica" role="tab" aria-controls="logistica"
+          aria-selected="false"><i class="fa fa-truck" aria-hidden="true"></i> Logística
+        </a>
+      </li>
+    </ul>
+    <!-- tab content -->
+    <div class="tab-content" id="myTabContent">
+      <!-- Materiales -->
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <form [formGroup]="form" autocomplete="off">
+          <div class="row mb-2">
+
+            <div class="col-md-2 form-group row align-items-center ml-2">
+              <div class="input-group">
+                <input type="text" class="articulo form-control border-0" (keyup)="buscarMaterial($event)"
+                  formControlName="busquedaItems" placeholder="Busqueda de material"
+                  style="border-radius: 3px;border: 1px solid #e4e4e4 !important;">
+                <div class="input-group-prepend" style="position: absolute; right: 0; z-index:100;">
+                  <span class="input-group-text bg-transparent border-0">
+                    <i class="fas fa-search"></i> <!-- Aquí puedes cambiar el icono -->
+                  </span>
+                </div>
+              </div>
+
+              <ul *ngIf="materiales.length > 0" class="list-group position-absolute w-100" style="position: absolute; top: 100%; z-index: 1050;">
+                <li class="list-group-item list-group-item-action" *ngFor="let material of materiales.slice(0, 3)"
+                  (click)="seleccionarMaterial(material)">
+                  {{ material.DESCRICAO }}
+                </li>
+              </ul>
+            </div>
+
+            <div class="col-md-10 form-group row  d-flex justify-content-between">
+              <div class="col-xl-5 d-flex align-items-center ml-2">
+                <label for="articulo" class="header-label col-xl-6 mb-0">Clase de
+                  artículo/servicio:</label>
+                <div class="col-xl-6">
+                  <input type="text" class="form-control input-sm" id="articulo" value="Artículo" disabled>
+                </div>
+              </div>
+              <div class="col-xl-5 d-flex align-items-center">
+                <label for="ModoPrecio" class="header-label col-sm-6 mb-0">Modo de
+                  Precio</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control input-sm" id="ModoPrecio" value="Bruto" disabled>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- Carrito -->
+
+
+          <div class="table table-bordered table-responsive" formArrayName="materiais" style="table-layout: auto;">
+            <thead #thead>
+              <tr class="fsg-13">
+                <th>#</th>
+                <th>Artículo</th>
+                <th>Descripción del artículo</th>
+                <th>Cantidad</th>
+                <th>Unidad</th>
+                <th>Precio Lista</th>
+                <th>Total Bruto</th>
+                <th>% Aut.</th>
+                <th>Valida Descuento</th>
+                <th>Precio Desc.</th>
+                <th>Total Bruto Bs</th>
+                <th>Almacén</th>
+                <th>Modo Entrega</th>
+                <th>Stock Almacen</th>
+                <th>Comprometido</th>
+                <th>Stock Disponible</th>
+                <th>Peso</th>
+                <th>Total (doc.)</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody #tbody id="tableBody">
+              <tr *ngIf="materiais.controls.length == 0">
+                <td>
+                  0
+                </td>
+                <td>
+                  <i class="fa fa-arrow-circle-right text-info" aria-hidden="true"
+                    (click)="openModaldataMaestro(verDatosMaestro)"></i>
+                  <input type="text" class="articulo form-control border-0"
+                    (click)="openModaldataMaestro(verMateriales)">
+                <td>
+                  <input type="text" class="articulo form-control border-0"
+                    (click)="openModaldataMaestro(verMateriales)">
+                </td>
+                <td><input type="text" value="0">
+                </td>
+                <td></td>
+                <td></td>
+                <td class="dp-flex"></td>
+                <td></td>
+                <td><input type="text" value="0.0000%"> </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><select class="form-select form-control input-sm" formControlName="modoEntrega">
+                    <option *ngFor="let modo of modoEntrega" [value]="modo.id">
+                      {{ modo.descripcion }}
+                    </option>
+                  </select></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  <button type="button" class="btn btn-sm" data-toggle="tooltip" data-placement="top"
+                    title="Eliminar"><i class="fas fa-solid fa-trash text-danger"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr class="mb-1" *ngFor="let material of materiais.controls; let i = index" [formGroupName]="i">
+                <td class="align-middle text-center border-light col-sm-6 col-md-3"
+                  [ngClass]="classStatusBorder(form.value.materiais[i])" style="width: 4.5%!important;">
+                  {{ i + 1 }}
+                </td>
+                <td>
+                  <i class="fa fa-arrow-circle-right text-info" aria-hidden="true"
+                    (click)="openModaldataMaestro(verDatosMaestro,material.get('articulo').value,material.get('id_lista').value)"></i>
+                  <input type="text" class="articulo form-control border-0"
+                    (click)="openModaldataMaestro(verMateriales)" formControlName="articulo">
+                </td>
+                <td>
+                  <input type="text" class="articulo form-control border-0"
+                    (keyup)="openModaldataMaestro(verMateriales)" formControlName="descripcion">
+                </td>
+                <td>
+                  <input type="text" class="articulo form-control border-0" formControlName="cantidad"
+                    placeholder="Cantidad"
+                    (keyup)="onCalcularCantidad($event, material, material.get('articulo').value, material.get('id_lista').value, material.get('id_tipo_cliente').value, material.get('valorTotalBruto').value, material.get('descuento').value)">
+                </td>
+                <td>
+                  {{ form.value.materiais[i].unidad }}
+                </td>
+                <td>
+                  <input type="text" class="articulo form-control border-0" formControlName="precio">
+                </td>
+                <td>
+                  <input type="text" class="articulo form-control border-0" formControlName="valorTotalBruto"
+                    (keyup)="onKeyUpTotalBruto($event, material)">
+                </td>
+                <td>
+                  <input type="text" class="descuento form-control border-0" formControlName="descuento"
+                    (keyup)="onKeyUpDescuento($event, material)">
+                  %
+                </td>
+
+
+                <td>
+                  {{ form.value.materiais[i].descuento_permitido }}
+                </td>
+                <td>
+                  <input type="text" class="articulo form-control border-0" formControlName="preciobruto">
+                </td>
+                <td>
+                  <input type="text" class="articulo form-control border-0" formControlName="totalbs">
+                </td>
+                <td>
+                  <input type="text" class="articulo form-control border-0" formControlName="almacen">
+                </td>
+                <td>
+                  <ng-select [items]="tipoEntregas" bindLabel="descripcion" bindValue="id" [clearable]="false"
+                    formControlName="modoEntrega"
+                    (change)="onModoEntregaChange($event, material, material.get('articulo').value, material.get('id_lista').value, material.get('id_tipo_cliente').value, material.get('valorTotalBruto').value, material.get('cantidad').value, material.get('descuento').value)">
+                        </ng-select>
+                </td>
+                <td>
+                  {{ form.value.materiais[i].StockAlmacen }}
+                </td>
+                <td>
+                  {{ form.value.materiais[i].comprometido }}
+                </td>
+                <td>
+                  {{ form.value.materiais[i].stock }}
+                </td>
+                <td>{{ form.value.materiais[i].pesoEspecifico }}</td>
+                <td>
+                  <input type="text" class="articulo form-control border-0" formControlName="valorTotalBruto"
+                  >
+                </td>
+                <td>
+                  <button type="button" class="btn btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"
+                    (click)="onDeleteMaterial(i, form.value.materiais[i])">
+                    <i class="fas fa-solid fa-trash text-danger">
+
+                    </i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </div>
+        </form>
+      </div>
+
+      <!-- Logistica -->
+      <div class="tab-pane fade" id="logistica" role="tabpanel" aria-labelledby="logistica-tab">
+        <logistica
+          [tipoEntrega]="tipoEntrega2"
+          [destinarioFactura]="destinarioFactura"
+          [centroLogisticoControl]="centroLogisticoControl"
+          [fechaEntrega]="fechaEntrega"
+          [cordenadas]="cordenadas"
+        >
+        </logistica>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Datos para material y almacen -->
+<ng-template #verAlmacenes>
+  <almacenes></almacenes>
+</ng-template>
+
+<ng-template #verDatosMaestro>
+  <datomaestro></datomaestro>
+</ng-template>
+
+<ng-template #verMateriales>
+  <materiales></materiales>
+</ng-template>
+
+<script>
+  function obtenerValor() {
+    // Obtener el valor del primer input con formcontrolname="descripcion"
+    var inputs = document.getElementsByName('descripcion');
+    var valor = inputs[0].value;
+
+    // Imprimir el valor en la consola
+    console.log(valor);
+  }
+</script>

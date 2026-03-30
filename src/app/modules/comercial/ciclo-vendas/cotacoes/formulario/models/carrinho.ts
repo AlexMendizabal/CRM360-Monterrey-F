@@ -10,6 +10,8 @@ export interface ICarrinhoModel {
   nomeDeposito: string;
   quantidade: number;
   valorUnit: number;
+  id_tipo_cliente: number;
+  codigo_material:string;
   valor: number;
   percentualIpi: number;
   valorIpi: number;
@@ -18,10 +20,10 @@ export interface ICarrinhoModel {
   valorIcmsSt: number;
   valorConcorrente?: number;
   tipoDesc: string;
-  percentualDesc: number;
   valorDesc: number;
   valorTotalOri: number;
   valorTotal: number;
+  valorTotalBs:number;
   medida1: number;
   medida2: number;
   pesoEspecifico: number;
@@ -38,12 +40,17 @@ export interface ICarrinhoModel {
   valorBaseIcmsSt: number;
   aliquotaReducaoIcms: number;
   quantidadeItem: number;
-  sequenciaLote: number;
-  controladoPorLote: number;
-  estoqueLote: number;
+  sequenciaLote:number;
+  controladoPorLote:number;
+  estoqueLote:number;
   loteFabricacao: string;
-  nrPedidoCliente: string;
-  codItemPedidoCliente: string;
-  codProdutoCliente: string;
+  nrPedidoCliente:string;
+  codItemPedidoCliente:string;
+  codProdutoCliente:string;
   precio:number;
+  descuento_permitido:number;
+  monedaLocal:number;
+  percentualDesc:number;
+  id_presentacion:number;
+  id_lista:number;
 }

@@ -19,7 +19,7 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { DateService } from 'src/app/shared/services/core/date.service';
 
 import { ITecnologiaInformacaoTipoContrato } from './../models/tipoContrato';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent } from 'ngx-bootstrap';
 @Component({
   selector: 'tecnologia-informacao-cadastros-tipo-contrato-lista',
   templateUrl: './lista.component.html',

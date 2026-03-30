@@ -24,7 +24,7 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { DateService } from 'src/app/shared/services/core/date.service';
 
 import { ITecnologiaInformacaoMovimentacoes } from './../models/movimentacoes';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { ITecnologiaInformacaoEstoqueProduto } from '../../produtos/models/produto';
 
 @Component({
@@ -280,6 +280,7 @@ export class TecnologiaInformacaoEstoqueMovimentacoesListaComponent
 
 
   getMovimentacoes(id?: Partial<ITecnologiaInformacaoMovimentacoes>) {
+    console.log(id)
     this.loadingMovimentacoes = true;
     this.noMovimentacoes = true
     const _obj = this.formHistoricoMovimentacoes.value;
@@ -343,6 +344,7 @@ export class TecnologiaInformacaoEstoqueMovimentacoesListaComponent
   }
 
   getEstoque(params?) {
+    console.log(params)
     this.loadingEstoque = true;
     this.estoqueService
       .getEstoque(params)

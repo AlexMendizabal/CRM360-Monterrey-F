@@ -22,6 +22,7 @@ import { JsonResponse } from 'src/app/models/json-response';
 })
 
 export class VistaComponent implements OnInit, AfterViewInit {
+  
   myForm: FormGroup; 
   @ViewChild('contentToConvert', { static: true }) contentToConvert: ElementRef;
   isLoading = false;
@@ -91,6 +92,7 @@ public toggleInputs() {
     });
   
    /*  if(this.resultFromParent.oferta[0].estado_of === 3) {
+      console.log('aqui olo',this.resultFromParent.oferta[0].estado_of);
       this.toggleDescripcionCard();
     }  */
   }

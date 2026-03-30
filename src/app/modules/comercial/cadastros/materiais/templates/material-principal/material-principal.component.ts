@@ -169,6 +169,7 @@ export class ComercialCadastrosMateriaisTemplatesMaterialPrincipalComponent
 
  /*  setMaterialSelecionado(codMaterial: number): void {
     this.codMaterialSeleccionado = codMaterial;
+    console.log( this.codMaterialSeleccionado)
   }
  */
   onChangeLinha(codLinha: number) {

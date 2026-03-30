@@ -12,7 +12,7 @@ import { OrigemContato } from './models/origem-contato';
   providedIn: 'root',
 })
 export class ComercialCadastrosContatoOrigemContatoService {
-  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/contato/origem-contato`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/contato/origem-contato`;
 
   constructor(protected http: HttpClient) {}
 

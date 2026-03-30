@@ -25,7 +25,7 @@ export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
 
   formClientes: FormGroup;
   loadingClientes: boolean;
-  noClientes = true;
+  swClientes = true;
   clientes = [];
 
   /* Pagination */
@@ -50,6 +50,8 @@ export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
   }
 
   getClientes(params?) {
+    this.clientes = [];
+    this.swClientes = true;
     const _params = params ?? {};
     const _obj = this.formClientes.value;
     this.loadingClientes = true;
@@ -65,11 +67,12 @@ export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
       .subscribe({
         next: (response: JsonResponse) => {
           if (response.success === true) {
-            this.noClientes = false;
+            this.swClientes = false;
             this.clientes = response.data;
 
+            console.log(this.clientes);
           } else {
-            this.noClientes = true;
+            this.swClientes = true;
             this.pnotifyService.notice('Nenhum cliente encontrado!');
           }
         },
@@ -89,6 +92,12 @@ export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
       this.clientesParams.emit(cliente['cobrancaSomenteCarteira']);
       this.onClose();
     }
+  }
+
+  updateInput(): void {
+    this.formClientes.controls.pesquisa.setValue('');
+    this.clientes = [];
+    this.swClientes = true;
   }
 
   setFormBuilder(): void {

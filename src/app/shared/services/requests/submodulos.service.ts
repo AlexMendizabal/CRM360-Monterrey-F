@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class SubModulosService {
-  private readonly API = `${environment.URL_MTCORP}core/submodulo`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/core/submodulo`;
 
   constructor(protected http: HttpClient) {}
 

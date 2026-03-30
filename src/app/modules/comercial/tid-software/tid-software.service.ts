@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ComercialTidSoftwareService {
-  private readonly API = `${environment.URL_MTCORP}comercial/tid-software`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/tid-software`;
 
   constructor(protected http: HttpClient) {}
 

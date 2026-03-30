@@ -13,7 +13,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialGestaoLiberacoesService {
-  private readonly API = `${environment.URL_MTCORP}comercial/gestao/liberacoes`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/gestao/liberacoes`;
 
   constructor(protected http: HttpClient) {}
 

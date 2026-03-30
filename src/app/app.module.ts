@@ -2,6 +2,7 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { AgmCoreModule } from '@agm/core';
 
 import {
@@ -29,6 +30,8 @@ import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 
 // Interceptors
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { CacheInterceptor } from './interceptors/cache-interceptor.service';
+import { UrlRewriteInterceptor } from './interceptors/url-rewrite.interceptor';
 
 // Providers
 import { WINDOW_PROVIDERS } from './shared/providers/window.provider';
@@ -75,7 +78,9 @@ import { ChangePasswordModalComponent } from './core/change-password-modal/chang
   providers: [
     PNotifyService,
     WINDOW_PROVIDERS,
+    { provide: HTTP_INTERCEPTORS, useClass: UrlRewriteInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },
     { provide: LOCALE_ID, useValue: 'pt-BR' },
     { provide: UrlSerializer, useClass: CustomUrlSerializer },
   ],

@@ -89,6 +89,7 @@ export class ComercialHomeComponent implements OnInit {
 
       .subscribe({
         next: (response: any) => {
+          console.log(response);
           if (response['responseCode'] === 200) {
             this.compromissos = response['result'];
           }

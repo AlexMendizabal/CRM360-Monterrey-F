@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 })
 export class LogisticaRelatoriosRomaneiosService {
 
-  private readonly API: string = `${environment.URL_MTCORP}`
+  private readonly API: string = ` https://crm360.monterrey.com.bo`
 
   constructor(
     private http: HttpClient) { }

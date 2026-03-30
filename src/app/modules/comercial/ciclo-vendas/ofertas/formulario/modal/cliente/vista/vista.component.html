@@ -1,0 +1,321 @@
+<div class="modal-header">
+  <h5 class="modal-title">Datos Maestros Socio de Negocios</h5>
+  <button type="button" class="close" (click)="closeModal()">&times;</button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="form">
+    <!-- Informacion -->
+    <div class="row">
+      <div class="col-md-6">
+        <!-- Información del Producto -->
+        <!-- Código cliente -->
+        <div class="form-group row">
+          <label for="codigoSAP" class="header-label col-sm-2 col-form-label">Código</label>
+          <input type="text" class="form-control input-sm col-sm-3" id="codigoSAP" value="CL" disabled>
+          <div class="col-sm-6">
+            <div class="row p-0 m-0">
+              <input type="text" class="form-control input-sm col-sm-6" id="codigoSAP" [value]="codigoSAP" disabled>
+              <select class="form-control input-sm col-sm-6" id="tipoCliente">
+                <option selected>Cliente</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- Nombre clientes -->
+        <div class="form-group row">
+          <label for="nombres" class="header-label col-sm-5 col-form-label">Nombres</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control input-sm" id="nombres" formControlName="nombres">
+          </div>
+        </div>
+        <!-- Razón Social -->
+        <div class="form-group row">
+          <label for="razonSocial" class="header-label col-sm-5 col-form-label">Razón Social</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control input-sm" id="razonSocial" formControlName="razonSocial" placeholder="Colocar Razon Social">
+          </div>
+        </div>
+        <!-- Rubro de negocio -->
+        <form [formGroup]="form">
+          <div class="form-group row">
+            <label for="rubro" class="header-label col-sm-5 col-form-label">Rubro de negocio</label>
+            <div class="col-sm-6">
+              <select formControlName="rubro" class="form-select form-control input-sm col-12">
+                <option *ngFor="let opcion of rubroOptions" [value]="opcion.id_cnae">
+                  {{ opcion.descricao }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </form>
+        <!-- Moneda -->
+        <div class="form-group row">
+          <label for="moneda" class="header-label col-sm-5 col-form-label">Moneda</label>
+          <div class="col-sm-6">
+            <select class="form-control input-sm" id="moneda">
+              <option selected>Monedas (todas)</option>
+            </select>
+          </div>
+        </div>
+        <!-- NIT -->
+        <div class="form-group row">
+          <label for="noDoc" class="header-label col-sm-5 col-form-label">NIT</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control input-sm" id="noDoc" formControlName="noDoc">
+            <!-- Vinculamos con formControlName -->
+          </div>
+        </div>
+      </div>
+      <!-- Tipo Doc -->
+      <div class="col-md-6">
+        <div class="form-group row">
+          <label for="tipoDoc" class="header-label col-sm-5 col-form-label">FE Código Tipo Doc.</label>
+          <div class="col-sm-6">
+            <select formControlName="tipoDoc" class="form-control input-sm" id="tipoDoc">
+              <option value="">Seleccione un tipo de documento</option> <!-- Opción por defecto -->
+              <option *ngFor="let doc of TiposDoc" [value]="doc.id">{{ doc.nombre_doc }}</option>
+            </select>
+          </div>
+        </div>
+        <!-- Complemento -->
+        <div class="form-group row">
+          <label for="complemento" class="header-label col-sm-5 col-form-label">FE Complemento</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control input-sm" id="complemento" value="">
+          </div>
+        </div>
+        <!-- Código Excepción -->
+        <div class="form-group row">
+          <label for="codigoExcepcion" class="header-label col-sm-5 col-form-label">FE Código Excepción</label>
+          <div class="col-sm-6">
+            <select class="form-control input-sm" id="codigoExcepcion">
+              <option selected>No Aplica</option>
+            </select>
+          </div>
+        </div>
+        <!-- Lista precio -->
+        <div class="form-group row">
+          <label for="listaPrec" class="header-label col-sm-5 col-form-label">Lista precio</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control input-sm" id="listaPrec" [value]="listaPrec" disabled>
+          </div>
+        </div>
+        <!-- Categorías de clientes< -->
+        <div class="form-group row">
+          <label for="idcategoria" class="header-label col-sm-5 col-form-label">Categorías de clientes</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control input-sm" id="idcategoria" formControlName="idcategoria" disabled>
+          </div>
+        </div>
+        <!-- Nombre categoría -->
+        <div class="form-group row">
+          <label for="categoria" class="header-label col-sm-5 col-form-label">Nombre categoría</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control input-sm" id="categoria" formControlName="categoria" disabled>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Pestañas -->
+    <ul class="nav nav-tabs mt-3">
+      <li class="nav-item">
+        <a class="nav-link active" id="tab-inventario" data-toggle="tab" href="#inventario" role="tab"
+          aria-controls="inventario" aria-selected="true" style="font-weight:500;">
+          General
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="tab-ofertas" data-toggle="tab" href="#ofertas" role="tab" aria-controls="ofertas"
+          aria-selected="false" style="font-weight:500;">
+          Ofertas
+        </a>
+      </li>
+    </ul>
+
+    <!-- Formulario General -->
+    <form [formGroup]="form">
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="inventario" role="tabpanel" aria-labelledby="tab-inventario">
+          <div class="row pt-3 pl-3">
+
+            <!-- Columna 1: Información de Contacto -->
+            <div class="col-sm-6">
+              <h5 class="mb-3 form-tittle">Información de Contacto</h5>
+
+              <!-- Campo Teléfono 1 -->
+              <div class="form-group row">
+                <label for="telefono1" class="col-sm-5 col-form-label">Teléfono 1<span
+                    class="text-danger">*</span></label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="telefono1" formControlName="telefono"
+                  placeholder="Colocar telefono"
+                    [ngClass]="{'is-invalid': form.get('telefono')?.invalid && form.get('telefono')?.touched}">
+                  <div *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched" class="invalid-feedback">
+                    El campo Teléfono es obligatorio.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo Teléfono 2 -->
+              <div class="form-group row">
+                <label for="telefono2" class="col-sm-5 col-form-label">Teléfono 2</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="telefono2" formControlName="telefono2">
+                </div>
+              </div>
+
+              <!-- Campo Teléfono Móvil -->
+              <div class="form-group row">
+                <label for="celular" class="col-sm-5 col-form-label">Teléfono Móvil <span
+                    class="text-danger">*</span></label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="celular" formControlName="celular"
+                    placeholder="Colocar Teléfono Móvil"
+                    [ngClass]="{'is-invalid': form.get('celular')?.invalid && form.get('celular')?.touched}">
+                  <div *ngIf="form.get('celular')?.invalid && form.get('celular')?.touched" class="invalid-feedback">
+                    El campo Teléfono Móvil es obligatorio.
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Campo Fax -->
+              <div class="form-group row">
+                <label for="fax" class="col-sm-5 col-form-label">Fax</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="fax">
+                </div>
+              </div>
+
+              <!-- Campo Correo Electrónico -->
+              <div class="form-group row">
+                <label for="correo" class="col-sm-5 col-form-label">Correo Electrónico</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="correo">
+                </div>
+              </div>
+
+              <!-- Campo Sitio Web -->
+              <div class="form-group row">
+                <label for="sitioWeb" class="col-sm-5 col-form-label">Sitio Web</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="sitioWeb">
+                </div>
+              </div>
+
+              <!-- Campo RUT (Proveedor Extranjero) -->
+              <div class="form-group row">
+                <label for="rut" class="col-sm-5 col-form-label">RUT (Proveedor Extranjero)</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="rut">
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna 2: Información Adicional -->
+            <div class="col-sm-6">
+              <h5 class="mb-3 form-tittle">Información Adicional</h5>
+
+              <!-- Campo Forma de Envío -->
+              <div class="form-group row">
+                <label for="formaEnvio" class="col-sm-5 col-form-label">Forma de Envío</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="formaEnvio">
+                </div>
+              </div>
+
+              <!-- Campo Clave de Acceso -->
+              <div class="form-group row">
+                <label for="claveAcceso" class="col-sm-5 col-form-label">Clave de Acceso</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="claveAcceso">
+                </div>
+              </div>
+
+              <!-- Campo Indicador de Factoring -->
+              <div class="form-group row">
+                <label for="factoring" class="col-sm-5 col-form-label">Indicador de Factoring</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="factoring">
+                </div>
+              </div>
+
+              <!-- Campo Proyecto de Socio de Negocio -->
+              <div class="form-group row">
+                <label for="proyectoSocio" class="col-sm-5 col-form-label">Proyecto de Socio de Negocio</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="proyectoSocio">
+                </div>
+              </div>
+
+              <!-- Campo Post-Code/Departamento -->
+              <div class="form-group row">
+                <label for="Sigla" class="col-sm-5 col-form-label">Post-Code/Departamento</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="Sigla" formControlName="Sigla" disabled>
+                </div>
+              </div>
+
+              <!-- Campo Tipo Persona -->
+              <div class="form-group row">
+                <label for="tipoPersona" class="header-label col-sm-5 col-form-label">Tipo de Persona</label>
+                <div class="col-sm-6">
+                  <select formControlName="tipoPersona" class="form-control input-sm" id="tipoPersona">
+                    <option value="">Seleccione un tipo de persona</option> <!-- Opción por defecto -->
+                    <option *ngFor="let persona of TiposPersona" [value]="persona.tipo_persona">{{ persona.tipo_persona
+                      }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <!-- Campos del formulario -->
+            <button type="submit" class="btn btn-light mb-2 text-center" [disabled]="form.invalid || isSubmitting">
+              Actualizar Cliente
+            </button>
+          </form>
+        </div>
+        <!-- Pestaña Ofertas -->
+        <div class="tab-pane fade" id="ofertas" role="tabpanel" aria-labelledby="tab-ofertas">
+          <div class="row pt-3 pl-3">
+            <div class="col-sm-12">
+              <h5 class="mb-3 form-tittle">Ofertas</h5>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th class="text-center">Código Oferta</th>
+                    <th class="text-center">Peso Total</th>
+                    <th class="text-center">Fecha</th>
+                    <th class="text-center">Monto Total</th>
+                    <th class="text-center">Estado</th>
+                    <th class="text-center">Accion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let oferta of ofertas">
+                    <td class="text-center">{{ oferta.codigo_oferta }}</td>
+                    <td class="text-center">{{ oferta.peso_total | number: '1.0-2' }} KG</td>
+                    <td class="text-center">{{ oferta.fecha_creacion }}</td>
+                    <td class="text-center">{{ oferta.monto_total | number: '1.0-2' }} $</td>
+                    <td class="text-center">{{ oferta.descripcion }}</td>
+                    <td>
+                      <div class="text-center">
+                        <button (click)="onImprimir(oferta.id)">PDF</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+
+  </form>
+</div>

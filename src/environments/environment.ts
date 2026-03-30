@@ -4,9 +4,10 @@
 
 export const environment = {
   production: false,
+  // API: '/api', // Uncomment this line if you are running the backend locally.
+  //API: 'https://crm360.monterrey.com.bo', para desarrollo
   API: '/api',
-  URL_MTCORP: '/api/',
-  SAP_API: 'http://192.168.0.123:4100/api'
+  URL_MTCORP: 'https://crm360.monterrey.com.bo/api/'
 };
 
 /*

@@ -514,6 +514,7 @@ export class TecnologiaInformacaoControleLinhaListaComponent implements OnInit {
           }, 500);
         },
         (error: any) => {
+          console.log(error);
           this.pnotifyService.error();
         }
       );

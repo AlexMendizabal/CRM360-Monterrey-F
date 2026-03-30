@@ -20,7 +20,7 @@ import { MoedasService } from 'src/app/shared/services/requests/moedas.service';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 
 //Bootstrap
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap';
 
 //interfaces
 import { ITecnologiaInformacaoModelo } from './../../modelo/models/modelo';

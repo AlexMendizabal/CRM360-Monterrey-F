@@ -1,0 +1,24 @@
+h5.mb-3.form-tittle{
+    font-size: 13px;
+    font-weight: 700;
+    font-family: "Poppins";
+    text-transform: uppercase;
+}
+.is-invalid {
+  border-color: #dc3545;
+}
+.invalid-feedback {
+  color: #dc3545;
+}
+
+::ng-deep {
+    @import 'src/assets/scss/colors.scss';
+    @import 'src/assets/scss/variables';
+  
+    .modal-dialog {
+      max-width: 60%; /* Establece el ancho máximo del modal en relación al viewport */
+    }
+  
+    .modal-content {
+      width: 100%; /* Asegura que el contenido del modal ocupe todo el ancho disponible */
+    }}

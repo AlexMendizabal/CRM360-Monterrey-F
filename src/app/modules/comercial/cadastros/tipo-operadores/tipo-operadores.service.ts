@@ -12,7 +12,7 @@ import { TipoOperador } from './models/tipo-operador';
   providedIn: 'root'
 })
 export class ComercialCadastrosTipoOperadorService {
-  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/tipo-operador`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/tipo-operador`;
 
   constructor(protected http: HttpClient) {}
 

@@ -235,6 +235,8 @@ export class ComercialComissoesVendedoresInternosGestaoComissionamentosFormulari
   // Formulário
   setFormFilter(): void {
     const formValue: any = this.checkRouterParams();
+    console.log(formValue);
+    console.log(this.dados);
 
     this.form = this.formBuilder.group({
       periodo: [formValue.periodo, Validators.required],
@@ -437,14 +439,20 @@ export class ComercialComissoesVendedoresInternosGestaoComissionamentosFormulari
         next: (response: any) => {
           if (response.success === true) {
             this.profile = response.data;
+            console.log(response);
             if (this.profile.analistaMarketing === true) {
+              console.log('analistaMarketing');
             } else if (this.profile.gerenteMarketing === true) {
+              console.log('gerenteMarketing');
               this.gerenteDisabled();
             } else if (this.profile.gerenteEscritorio === true) {
+              console.log('gerenteEscritorio');
               this.escritorioDisabled();
             } else if (this.profile.gerenteFiscal === true) {
               this.fiscalDisabled();
+              console.log('gerenteFiscal');
             } else if (this.profile.diretorComercial === true) {
+              console.log('diretorComercial');
               this.diretorDisabled();
             }
           }
@@ -480,26 +488,32 @@ export class ComercialComissoesVendedoresInternosGestaoComissionamentosFormulari
   // Lógicas de aprovação
   onAprovarAnalista() {
     this.aprovarAnalista = !this.aprovarAnalista;
+    console.log('AGUARDANDO GERENTE DE MARKETING');
   }
 
   onReprovarAnalista() {
     this.reprovarAnalista = !this.reprovarAnalista;
+    console.log('AGUARDANDO GERENTE DE ESCRITÓRIO');
   }
 
   onAprovarGerente() {
     this.aprovarGerente = !this.aprovarGerente;
+    console.log('AGUARDANDO GERENTE FISCAL');
   }
 
   onReprovarGerente() {
     this.reprovarGerente = !this.reprovarGerente;
+    console.log('AGUARDANDO GERENTE DE ESCRITÓRIO');
   }
 
   onAprovarDiretor() {
     this.aprovarDiretor = !this.aprovarDiretor;
+    console.log('CONCLUIDO');
   }
 
   onReprovarDiretor() {
     this.reprovarDiretor = !this.reprovarDiretor;
+    console.log('AGUARDANDO GERENTE DE MARKETING');
   }
 
   /* setVendedorSelecionado(): void {

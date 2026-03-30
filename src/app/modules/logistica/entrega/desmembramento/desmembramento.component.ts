@@ -14,9 +14,7 @@ import { DateService } from 'src/app/shared/services/core/date.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
 
 // ngx
-import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { BsLocaleService, BsDatepickerConfig, PageChangedEvent, BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 // interfaces
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';

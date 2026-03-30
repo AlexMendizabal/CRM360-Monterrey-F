@@ -1,6 +1,6 @@
 //rxjs
 import { finalize } from 'rxjs/operators';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig } from 'ngx-bootstrap';
 //services
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
 import { TitleService } from 'src/app/shared/services/core/title.service';

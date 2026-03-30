@@ -30,6 +30,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialEstoqueService {
 
   showModal(params: any): void {
     this.loaderNavbar.emit(true);
+    console.log(params);
 
    /*  this.cotacoesService
       .getEstoqueDetalhes(params.id_material)

@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsLocaleService } from 'ngx-bootstrap';
 
 import { RouterService } from 'src/app/shared/services/core/router.service';
 import { DateService } from 'src/app/shared/services/core/date.service';

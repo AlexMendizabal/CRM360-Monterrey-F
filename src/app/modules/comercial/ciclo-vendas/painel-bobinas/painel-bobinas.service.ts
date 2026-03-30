@@ -13,7 +13,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialPainelBobinasService {
-  private readonly API = `${environment.URL_MTCORP}comercial/ciclo-vendas/painel-bobinas`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/painel-bobinas`;
 
   constructor(private http: HttpClient) {}
 

@@ -15,12 +15,7 @@ import { NotFoundModule } from 'src/app/core/not-found/not-found.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 //ngx
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { TabsModule } from 'ngx-bootstrap/tabs';
-import { TimepickerModule } from 'ngx-bootstrap/timepicker';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ModalModule, BsDatepickerModule, TimepickerModule, TabsModule, TooltipModule, PaginationModule } from 'ngx-bootstrap';
 import { TemplatesModule } from 'src/app/shared/templates/templates.module';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
 

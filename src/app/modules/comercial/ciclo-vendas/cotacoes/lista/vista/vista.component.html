@@ -224,6 +224,18 @@
                               readonly
                             />
                           </div>
+                          <div class="col-md-3">
+                            <label for="">Pago QR:</label>
+                            <input
+                              type="text"
+                              name=""
+                              id=""
+                              value="{{ resultFromParent.oferta[0].qr == 1 ? 'SI' : 'NO' }}"
+                              class="form-control"
+                              readonly
+                            />
+                          </div>
+                          
                         </div>
                       </div>
                     </div>
@@ -849,14 +861,13 @@
         <!-- /.content -->
       </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer" *ngIf="resultFromParent.oferta[0].tipo_estado !== 13">
       <!-- Botón para habilitar/deshabilitar inputs -->
       <a
         class="btn btn-danger"
         *ngIf="showCierreButton"
         (click)="toggleDescripcionCard()"
-        >CIERRE OFERTA</a
-      >
+        >CIERRE OFERTA</a>
       <button
         type="submit"
         class="btn btn-success"
@@ -872,7 +883,6 @@
         ></span>
       </button>
       
-
       <a
         type="button"
         class="btn btn-secondary"

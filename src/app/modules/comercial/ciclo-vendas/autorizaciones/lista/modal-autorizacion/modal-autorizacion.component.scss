@@ -5,10 +5,13 @@
     transform: translate(-50%, -50%); /* Ajustar para centrar completamente */
     width: 80%; /* Ajusta el ancho según tus necesidades */
     max-width: 1000px; /* Ancho máximo si es necesario */
-    max-height: 1500px;
+    max-height: 700px;
     margin: auto;
 }
-
+.modal-body{
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
   /* If you want to adjust the table's width as well */
   .custom-modal table {
     width: 100%; /* Make the table fill the modal's width */
@@ -51,6 +54,21 @@ textarea#observacion1 {
   min-height: 50px !important;
   height: 50px !important;
 }
+
 .form-control{
   font-weight:400!important;
+}
+
+div.con-g > div.row {
+  margin-bottom: 15px;
+}
+
+// Config Pantalla HD 
+@media screen and (max-width: 1400px) {
+
+.custom-modal {
+  position: fixed;
+  max-height: 600px;;
+}
+
 }

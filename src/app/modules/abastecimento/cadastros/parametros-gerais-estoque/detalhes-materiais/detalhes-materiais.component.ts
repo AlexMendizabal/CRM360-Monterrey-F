@@ -10,8 +10,7 @@ import { RouterService } from 'src/app/shared/services/core/router.service';
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { ConfirmModalService } from 'src/app/shared/modules/confirm-modal/confirm-modal.service';
 
-import { BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent, BsLocaleService } from 'ngx-bootstrap';
 
 import { AbastecimentoCadastrosParametrosGeraisEstoqueService } from '../parametros-gerais-estoque.service';
 

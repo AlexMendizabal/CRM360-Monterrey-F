@@ -11,4 +11,5 @@ export interface ISimilaridadeModel extends IMateriaisModel {
   id_linea: number;
   nombre_linea:string;
   largo_material:any;
+  id_lista:number;
 }

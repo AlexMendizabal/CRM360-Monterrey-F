@@ -6,7 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent } from 'ngx-bootstrap';
 defineLocale('pt-br', ptBrLocale);
 
 import { DateService } from 'src/app/shared/services/core/date.service';

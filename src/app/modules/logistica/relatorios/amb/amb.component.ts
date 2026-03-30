@@ -22,8 +22,7 @@ import { DateService } from 'src/app/shared/services/core/date.service';
 //masks
 import { MASKS, NgBrazilValidators } from 'ng-brazil';
 import { LogisticaRelatoriosAmbService } from './amb.service';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { BsDatepickerConfig, BsLocaleService, PageChangedEvent } from 'ngx-bootstrap';
 
 @Component({
   selector: 'logistica-relatorios-amb',

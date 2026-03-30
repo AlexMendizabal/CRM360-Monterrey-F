@@ -8,7 +8,7 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap';
 import { finalize } from 'rxjs/operators';
 import { JsonResponse } from 'src/app/models/json-response';
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
@@ -134,10 +134,13 @@ export class EditarClienteComponent implements OnInit {
   observacion: string = '';
   id_marcador: number = 0;
 
-  ngOnInit(): void {
+  ngOnInit(): void {  
     this.categorizarUbicacion();
     this.categorizarContacto();
     this.ciudadVendedor();
+    this.getTiposPersonas();
+    this.obtenerTiposDocumentos();
+    console.log("Traer datos del cliente",this.datos_cliente.datos_cliente);
     this.id_client = this.datos_cliente.datos_cliente.id_cliente;
 
  
@@ -173,6 +176,19 @@ export class EditarClienteComponent implements OnInit {
       });
     }
   }
+  getTiposPersonas() {
+    this.clientesService.getTipoPersona().subscribe((response: any) => {
+      this.tipos_personas = response.result; // Asignamos solo el array 'result'
+    });
+  }
+  obtenerTiposDocumentos() {
+    this.clientesService.obtenerTiposDocumentos().subscribe((response: any) => {
+      this.tipos_documentos = response.result; // Asignamos los tipos de documentos correctamente
+      console.log("tipos de documentos:", this.tipos_documentos);
+    });
+  }
+  
+  
 
   ciudadVendedor() {
     /* console.log('aqui'); */
@@ -220,9 +236,7 @@ export class EditarClienteComponent implements OnInit {
         }
       },
       (error) => {
-        /*           console.error('Error al cargar dependencias:', error);
-         */
-        //this.handleFormFieldsError();
+
       }
     );
   }
@@ -429,112 +443,17 @@ export class EditarClienteComponent implements OnInit {
   }
 
   actualizarCliente() {
-    var swContacto = false;
-    var swDireccion = false;
-    /*  console.log(this.datos_cliente.datos_direccion.lenght)
-    console.log(this.datos_cliente.datos_contacto.lenght) */
-
-    /*  if (
-      this.datos_cliente.datos_direccion.length > 0 &&
-      this.datos_cliente.datos_contacto.length > 0
-    ) { */
-    //console.log(this.datos_cliente.datos_direccion.lenght)
-    if (this.datos_cliente.datos_direccion.length > 0) {
-      const isIdCiudadRequired =
-        this.datos_cliente.datos_direccion[0].id_ciudad !== null &&
-        this.datos_cliente.datos_direccion[0].id_ciudad !== undefined &&
-        this.datos_cliente.datos_direccion[0].id_ciudad !== '';
-
-      const isDireccionValid = this.datos_cliente.datos_direccion.every(
-        (direccion) => {
-          // Verificar que la dirección y la ubicación no excedan los 50 caracteres
-          const direccionValida =
-            direccion.direccion === null ||
-            direccion.direccion === undefined ||
-            direccion.direccion.length <= 50;
-          return direccionValida;
-        }
-      );
-
-      const isUbicacionValid = this.datos_cliente.datos_direccion.every(
-        (direccion) => {
-          const ubicacionValida =
-            direccion.ubicacion !== undefined &&
-            direccion.ubicacion !== '';
-          return ubicacionValida;
-        }
-      );
-
-      if (isIdCiudadRequired) {
-        if (isUbicacionValid) {
-          if (isDireccionValid) {
-            swDireccion = true;
-          } else {
-            this.pnotifyService.error(
-              'La dirección no debe exceder los 50 caracteres ni ser numerica.'
-            );
-          }
-        } else {
-          this.pnotifyService.error(
-            'El nombre de la ubicación es un campo obligatorio.'
-          );
-        }
-      } else {
-        this.pnotifyService.error(
-          'Complete todos los campos requeridos de dirección.'
-        );
-      }
-    } else {
-      this.pnotifyService.error('Debe registrar al menos una dirección.');
-    }
-
-    const direccionContactoValido = this.datos_cliente.datos_contacto.every(
-      (contacto) =>
-        
-        contacto.direccion_contacto === undefined ||
-        (typeof contacto.direccion_contacto === 'string' &&
-          contacto.direccion_contacto.length <= 50)
-    );
-
-    if (direccionContactoValido) {
-      swContacto = true;
-    } else {
-      this.pnotifyService.error(
-        'La dirección del contacto no debe exceder los 50 caracteres.'
-      );
-    }
-
-    //console.log(this.datos_cliente.datos_direccion);
+    var swContacto = true;
+    var swDireccion = true;
+    
 
     if (swDireccion === true && swContacto === true) {
       this.prepararPeticion();
     }
-    /* } else if (
-      this.datos_cliente.datos_direccion.length > 0 &&
-      this.datos_cliente.datos_contacto.length <= 0
-    ) {
-      this.pnotifyService.error(
-        'Debe registrar al menos 1 contacto del cliente'
-      );
-    } else if (
-      this.datos_cliente.datos_direccion.length <= 0 &&
-      this.datos_cliente.datos_contacto.length > 0
-    ) {
-      this.pnotifyService.error(
-        'Debe registrar al menos 1 dirección de cliente'
-      );
-    } else {
-      this.pnotifyService.error(
-        'Debe registrar al menos 1 contacto y 1 dirección de cliente'
-      );
-    } */
+  
   }
 
-  /* actualizarInput(form, value){
-    form.control.get(form).setValue(value);
 
-  }
- */
   prepararPeticion() {
     // @ts-ignore: Ignorar error TS2339
     var idClienteInput = document.getElementById('id_cliente').value;
@@ -599,9 +518,10 @@ export class EditarClienteComponent implements OnInit {
       id_rubro: idRubroInput,
       id_estado: idEstadoInput,
       frontend: 1,
-      ciudad: ubicacion[0]['ciudad']
+      ciudad: 'SCZ'
     };
 
+    console.log(data);
 
     // Especifica los campos requeridos
     const requiredFields = [
@@ -639,6 +559,7 @@ export class EditarClienteComponent implements OnInit {
   enviarPeticion(data: any): void {
     this.isLoading = true;
     this.botonGuardar.nativeElement.disabled = true;
+    console.log();
     this.preCadastroService
       .updateCliente(data)
       .pipe(finalize(() => {}))

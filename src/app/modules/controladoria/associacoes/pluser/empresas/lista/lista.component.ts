@@ -12,8 +12,7 @@ import { ControladoriaAssociacoesPluserCentroCustoEmpresasService } from '../ser
 import { DetailPanelService } from 'src/app/shared/templates/detail-panel/detal-panel.service';
 
 //ngx
-import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { BsLocaleService, BsDatepickerConfig, PageChangedEvent } from 'ngx-bootstrap';
 
 //models
 import { Subtitles } from 'src/app/shared/modules/subtitles/subtitles';

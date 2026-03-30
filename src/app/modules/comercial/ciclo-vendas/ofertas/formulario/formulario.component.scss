@@ -1,0 +1,131 @@
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+}
+
+.form-tittle {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Poppins';
+  text-transform: uppercase;
+}
+
+.border-dark {
+  border-color: #e4e4e4 !important;
+}
+
+.form-group {
+  margin-bottom: 1px !important;
+}
+
+.form-control {
+  height: 25px;
+  padding: 0.25rem 0.5rem;
+  font-size: 12px;
+}
+
+.header-label,
+.fsg-13 {
+  font-size: 13px;
+}
+
+.tittle-header {
+  font-size: 17px;
+}
+
+.container {
+  max-width: 1200px;
+}
+
+input.input-sm,
+.input-sm {
+  font-size: 12px !important;
+  padding: 0 0.3rem !important;
+  background: #f7f8ff;
+}
+
+div#part-one>div,
+div#part-two>div,
+div#part-three>div {
+  margin-bottom: 1px !important;
+}
+
+li.breadcrumb-item>a {
+  color: #5C397E !important;
+}
+
+li.breadcrumb-item>a,
+li.breadcrumb-item {
+  font-size: 12px;
+}
+
+.form-group label {
+  text-transform: capitalize !important;
+  color: #292929;
+  font-weight: 500 !important;
+}
+
+.nav-item {
+  font-size: 14px;
+}
+
+.table .thead-light th {
+  font-weight: 600;
+}
+
+.nav-tabs .nav-item {
+  background: #E9ECEF;
+}
+
+.nav-tabs .nav-item a {
+  color: black;
+}
+
+div#carrito tr>td,
+.thead-light th {
+  vertical-align: middle !important;
+}
+
+@media only screen and (max-width: 1400px) {
+
+  div#carrito>table {
+    width: 1600px;
+  }
+
+  .header-label,
+  .fsg-13,
+  input.input-sm,
+  .input-sm {
+    font-size: 10px !important;
+  }
+
+  .form-tittle {
+    font-size: 12px;
+  }
+
+  ul.nav.nav-tabs a {
+    font-weight: 500;
+    font-size: 11px;
+  }
+
+  h4.modal-title {
+    font-size: 18px;
+  }
+
+}
+
+.disabled-link {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.disabled-container {
+  pointer-events: none;
+  opacity: 0.6;
+}

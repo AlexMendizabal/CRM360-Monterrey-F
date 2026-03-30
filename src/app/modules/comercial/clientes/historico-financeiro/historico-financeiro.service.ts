@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ComercialClientesHistoricoFinanceiroService {
-  private readonly API = `${environment.URL_MTCORP}comercial/clientes/historico-financeiro`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/clientes/historico-financeiro`;
 
   constructor(protected http: HttpClient) {}
 

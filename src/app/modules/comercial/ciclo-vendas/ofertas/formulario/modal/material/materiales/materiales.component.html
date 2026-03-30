@@ -1,0 +1,116 @@
+<div class="modal-header">
+  <h5 class="modal-title">Lista de Materiales</h5>
+  <button type="button" class="close" (click)="closeModal()">&times;</button>
+</div>
+
+<div class="modal-body">
+  <!-- Buscador -->
+  <div class="input-group mb-4">
+    <input type="text" class="form-control col-md-12" placeholder="Busqueda por Número, Descripción.."
+      aria-label="Input group example" aria-describedby="basic-addon1" fdprocessedid="7edy2"
+      (keyup)="updateFilter($event)">
+    <span class="input-group-text" id="basic-addon1">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
+        viewBox="0 0 16 16">
+        <path
+          d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0">
+        </path>
+      </svg>
+    </span>
+  </div>
+  <!-- Pestañas -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" id="home-tab" data-toggle="tab" href="#home" role="tab"
+        aria-controls="home" aria-selected="true">
+        <i class="fa fa-cube" aria-hidden="true"></i> Materiales</a>
+    </li>
+  </ul>
+  <!-- Tabla -->
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+      <!-- Tabla 1 -->
+      <div class="table-responsive mt-2">
+        <ngx-datatable class="material" #table [rows]="materiales" [loadingIndicator]="loadingIndicator"
+          [columnMode]="ColumnMode.force" [reorderable]="reorderable" [swapColumns]="swapColumns" [columns]="columns"
+          [headerHeight]="50" [footerHeight]="50" rowHeight="auto" [limit]="5" [selected]="selected"
+          [selectionType]="SelectionType.multiClick" (select)="onSelect($event)"
+          [sorts]="[{prop: 'STOCK', dir: 'desc'}]">
+          <!-- Columna 1 -->
+          <ngx-datatable-column name="Número de artículo" prop="CODIGOMATERIAL" [sortable]="true">
+          </ngx-datatable-column>
+          <!-- Columna 2 -->
+          <ngx-datatable-column name="Descripción del artículo" prop="DESCRICAO" [sortable]="true">
+          </ngx-datatable-column>
+          <!-- Columna 3 -->
+          <ngx-datatable-column name="STOCKS" prop="STOCK" [sortable]="true">
+          </ngx-datatable-column>
+          <!-- Columna 4 -->
+          <ngx-datatable-column name="UNIDAD" prop="SIGLAS_UNI" [sortable]="true">
+          </ngx-datatable-column>
+          <!-- Columna 5 -->
+          <ngx-datatable-column name="PESO" prop="PESO" [sortable]="true">
+          </ngx-datatable-column>
+          <!-- Columna para botones -->
+          <ngx-datatable-column name="Acciones" [sortable]="false">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <button class="btn btn-primary btn-sm" (click)="openModalCross(row, modalComplementario); $event.stopPropagation()" >
+                COMPLEMENTARIO
+              </button>
+              <button class="btn btn-secondary btn-sm" (click)="openModalUpSell(row, modalSimilares);$event.stopPropagation()">
+                SIMILARES
+              </button>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+
+  <div class="selected-column">
+    <h4>Materiales Seleccionados</h4>
+    <ul>
+      <li *ngFor="let sel of selected">
+        {{ sel.CODIGOMATERIAL }} - {{ sel.DESCRICAO }}
+      </li>
+      <li *ngIf="!selected.length">No Selections</li>
+    </ul>
+  </div>
+  <div class="form-group mb-0" *ngIf="selected.length != 0">
+    <button type="button" class="btn btn-sm btn-success" (click)="onAddMaterial()">
+      <i class="fas fa-cart-plus"></i>
+      <span>Adicionar</span>
+    </button>
+  </div>
+</div>
+
+<ng-template #modalComplementario>
+  <div class="modal-header">
+    <h5 class="modal-title">Materiales Complementarios</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.hide()"></button>
+  </div>
+  <div class="modal-body">
+    <p>Información de COMPLEMENTARIA para: {{ selectedRow?.DESCRICAO }}</p>
+    <ngx-datatable class="material" #table [rows]="crosssell" [loadingIndicator]="loadingIndicator"
+      [columnMode]="ColumnMode.force" [reorderable]="reorderable" [swapColumns]="swapColumns" [columns]="columns"
+      [headerHeight]="50" [footerHeight]="50" rowHeight="auto" [limit]="5" [selected]="selected"
+      [selectionType]="SelectionType.multiClick" (select)="onSelect($event)" [sorts]="[{prop: 'STOCK', dir: 'desc'}]">
+    </ngx-datatable>
+  </div>
+</ng-template> 
+
+<!-- Modal COMPLEMENTARIO -->
+<ng-template #modalSimilares>
+  <div class="modal-header">
+    <h5 class="modal-title">Materiales Simmilares</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.hide()"></button>
+  </div>
+  <div class="modal-body">
+    <p>Información SIMILARES para: {{ selectedRow?.DESCRICAO }}</p>
+    <ngx-datatable class="material" #table [rows]="upsell" [loadingIndicator]="loadingIndicator"
+      [columnMode]="ColumnMode.force" [reorderable]="reorderable" [swapColumns]="swapColumns" [columns]="columns"
+      [headerHeight]="50" [footerHeight]="50" rowHeight="auto" [limit]="5" [selected]="selected"
+      [selectionType]="SelectionType.multiClick" (select)="onSelect($event)" [sorts]="[{prop: 'STOCK', dir: 'desc'}]">
+    </ngx-datatable>
+  </div>
+</ng-template>

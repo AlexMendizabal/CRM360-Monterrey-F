@@ -15,7 +15,7 @@ export class ComercialAgendaService {
     return this.http.get(`${this.API}/getruta/${id_agenda}`).pipe(take(1), retry(2));
   }
 
-  private readonly API = `${environment.URL_MTCORP}comercial/agenda`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/agenda`;
 
   constructor(protected http: HttpClient) { }
 

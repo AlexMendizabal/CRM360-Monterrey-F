@@ -15,7 +15,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialGestaoTabelaPrecosService {
-  private readonly API = `${environment.URL_MTCORP}comercial/gestao/tabela-precos`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/gestao/tabela-precos`;
 
   constructor(
     protected http: HttpClient,

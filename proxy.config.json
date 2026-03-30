@@ -1,8 +1,20 @@
 {
   "/api/*": {
-    "target": "https://crm360.monterrey.com.bo/",
+    "target": "https://crm360.monterrey.com.bo/api/",
     "secure": false,
     "logLevel": "debug",
-    "changeOrigin": true
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/": ""
+    }
+  },
+  "/app/*": {
+    "target": "https://crm360.monterrey.com.bo/api/app/",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/app/": ""
+    }
   }
 }

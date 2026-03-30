@@ -102,6 +102,7 @@
               [value]="progressPercentage"
               max="100"
             ></progress>
+
             <div class="step-item">
               <button
                 class="step-button text-center"
@@ -110,12 +111,11 @@
                 data-target="#collapseOne"
                 aria-expanded="true"
                 aria-controls="collapseOne"
-                disabled
               >
                 1
               </button>
               <div class="step-title" style="color: #441157">
-                DATOS DE LA OFERTA
+                DATOS DEL CLIENTE
               </div>
             </div>
 
@@ -127,11 +127,10 @@
                 data-target="#collapseTwo"
                 aria-expanded="false"
                 aria-controls="collapseTwo"
-                disabled
               >
                 2
               </button>
-              <div class="step-title">DATOS DEL CLIENTE</div>
+              <div class="step-title">BUSQUEDA Y RESUMEN</div>
             </div>
             <div class="step-item">
               <button
@@ -141,30 +140,107 @@
                 data-target="#collapseThree"
                 aria-expanded="false"
                 aria-controls="collapseThree"
-                disabled
               >
                 3
               </button>
-              <div class="step-title">BUSQUEDA Y RESUMEN</div>
+              <div class="step-title">DATOS DE ENVIO</div>
             </div>
-            <div class="step-item">
-              <button
-                class="step-button text-center collapsed"
-                type="button"
-                data-toggle="collapse"
-                data-target="#collapseFort"
-                aria-expanded="false"
-                aria-controls="collapseFort"
-                disabled
-              >
+
+            <!-- <div class="step-item">
+              <button class="step-button text-center collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseFort" aria-expanded="false" aria-controls="collapseFort" disabled>
                 4
               </button>
               <div class="step-title">DATOS DE ENVIO</div>
-            </div>
+            </div> -->
           </div>
 
           <div>
-            <!-- 1.- Datos de Oferta -->
+            <!-- 1.- Datos de Oferta - COMENTAR -->
+            <!-- <div class="">
+              <div id="headingOne"></div>
+              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="col shadow-sm mt-4" id="blocos">
+                  <div class="row d-flex p-3" style="cursor: pointer" (click)="onShowBloco(1)">
+                    <span class="fas fa-list-alt d-flex justify-content-center align-items-center"
+                      id="icon-gray"></span>
+                    <div class="d-flex justify-content-center align-items-center ml-2">
+                      <strong>Datos de la oferta</strong>
+                    </div>
+                    <div class="col"></div>
+                    <div class="d-flex justify-content-end align-items-center">
+                      <div class="d-flex float-end align-items-center mr-4" *ngIf="showBloco1">
+                        <i class="fas fa-caret-down" style="
+                            background-color: transparent;
+                            color: #7f849c;
+                            border-color: transparent;
+                          "></i>
+                      </div>
+
+                      <div class="d-flex float-end align-items-center mr-4" *ngIf="!showBloco1">
+                        <i class="fas fa-caret-up" style="
+                            background-color: transparent;
+                            color: #7f849c;
+                            border-color: transparent;
+                          "></i>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+
+                  <div class="col" [hidden]="!showBloco1">
+                    <div class="form-row">
+
+                      <div class="form-group col-lg-2">
+                        <label class="mb-1" for="codigo_cliente">N° de Oferta CRM:</label>
+                        <input type="text" id="codigo_cliente" class="form-control" formControlName="codigo_oferta_crm" [readonly]="true"
+                          [attr.disabled]="true" />
+                      </div>
+                      <div class="form-group col-lg-2">
+                        <label for="dataEncerramento">Fecha de Cotización:
+                        </label>
+                        <input class="form-control" id="dataEncerramento" type="text" bsDatepicker [bsConfig]="bsConfig"
+                          formControlName="dataEncerramento" [readonly]="visualizar" [ngClass]="
+                                              onFieldError('dataEncerramento') +
+                                              ' ' +
+                                              onFieldRequired(form.controls.dataEncerramento)
+                                            " disabled />
+                        <invalid-form-control [show]="onFieldInvalid('dataEncerramento')"
+                          message="Data de encerramento é obrigatório."></invalid-form-control>
+                      </div>
+                      <div class="form-group col-lg-2">
+                        <label for="dataValidade">Válido Hasta:</label>
+                        <input class="form-control" id="dataValidade" type="text" bsDatepicker [bsConfig]="bsConfig"
+                          formControlName="dataValidade" (bsValueChange)="onChangeValidadeProposta($event)" disabled readonly [ngClass]="
+                                              onFieldError('dataValidade') +
+                                              ' ' +
+                                              onFieldRequired(form.controls.dataValidade)
+                                            " />
+                        <invalid-form-control
+                                            [show]="onFieldInvalid(form.get('dataValidade')) == 'required'"
+                                            message="La fecha de validez es obligatorio."
+                                          ></invalid-form-control>
+                                          <invalid-form-control
+                                            [show]="onFieldInvalid(form.get('dataValidade')) == 'maxDate'"
+                                            message="No debe sobrepasar los 30 días ."
+                                          ></invalid-form-control>
+                      </div>
+                      <div class="form-group col-lg-2">
+                                      <label for="dataValidade"> Cambio de estado</label>
+                                      <input class="form-control" id="fechaRecordatorio" type="text" bsDatepicker [bsConfig]="bsConfig"
+                                        formControlName="fechaRecordatorio" [readonly]="true"
+                                        [ngClass]="onFieldError('fechaRecordatorio') + ' ' + onFieldRequired(form.controls.fechaRecordatorio)" >
+                                    </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+
+            <!-- 1 - 2 old.- Datos de contacto -->
             <div class="">
               <div id="headingOne"></div>
               <div
@@ -173,6 +249,7 @@
                 aria-labelledby="headingOne"
                 data-parent="#accordionExample"
               >
+                <!-- Clientes -->
                 <div class="col shadow-sm mt-4" id="blocos">
                   <div
                     class="row d-flex p-3"
@@ -186,7 +263,7 @@
                     <div
                       class="d-flex justify-content-center align-items-center ml-2"
                     >
-                      <strong>Datos de la oferta</strong>
+                      <strong>Datos del cliente</strong>
                     </div>
                     <div class="col"></div>
                     <div class="d-flex justify-content-end align-items-center">
@@ -203,7 +280,6 @@
                           "
                         ></i>
                       </div>
-
                       <div
                         class="d-flex float-end align-items-center mr-4"
                         *ngIf="!showBloco1"
@@ -220,141 +296,7 @@
                     </div>
                   </div>
 
-                  <div class="col" [hidden]="!showBloco1">
-                    <div class="form-row">
-                      <div class="form-group col-lg-2">
-                        <label class="mb-1" for="codigo_cliente"
-                          >N° de Oferta CRM:</label
-                        >
-                        <input
-                          type="text"
-                          id="codigo_cliente"
-                          class="form-control"
-                          formControlName="codigo_oferta_crm"
-                          [readonly]="true"
-                          [attr.disabled]="true"
-                        />
-                      </div>
-                      <div class="form-group col-lg-2">
-                        <label for="dataEncerramento"
-                          >Fecha de Cotización:
-                        </label>
-                        <input
-                          class="form-control"
-                          id="dataEncerramento"
-                          type="text"
-                          bsDatepicker
-                          [bsConfig]="bsConfig"
-                          formControlName="dataEncerramento"
-                          [readonly]="visualizar"
-                          [ngClass]="
-                            onFieldError('dataEncerramento') +
-                            ' ' +
-                            onFieldRequired(form.controls.dataEncerramento)
-                          "
-                          disabled
-                        />
-                        <invalid-form-control
-                          [show]="onFieldInvalid('dataEncerramento')"
-                          message="Data de encerramento é obrigatório."
-                        ></invalid-form-control>
-                      </div>
-                      <div class="form-group col-lg-2">
-                        <label for="dataValidade">Válido Hasta:</label>
-                        <input
-                          class="form-control"
-                          id="dataValidade"
-                          type="text"
-                          bsDatepicker
-                          [bsConfig]="bsConfig"
-                          formControlName="dataValidade"
-                          (bsValueChange)="onChangeValidadeProposta($event)"
-                          disabled
-                          readonly
-                          [ngClass]="
-                            onFieldError('dataValidade') +
-                            ' ' +
-                            onFieldRequired(form.controls.dataValidade)
-                          "
-                        />
-                        <invalid-form-control
-                          [show]="onFieldInvalid('dataValidade') == 'required'"
-                          message="La fecha de validez es obligatorio."
-                        ></invalid-form-control>
-                        <invalid-form-control
-                          [show]="onFieldInvalid('dataValidade') == 'maxDate'"
-                          message="No debe sobrepasar los 30 días ."
-                        ></invalid-form-control>
-                      </div>
-                      <!-- <div class="form-group col-lg-2">
-                    <label for="dataValidade"> Cambio de estado</label>
-                    <input class="form-control" id="fechaRecordatorio" type="text" bsDatepicker [bsConfig]="bsConfig"
-                      formControlName="fechaRecordatorio" [readonly]="true"
-                      [ngClass]="onFieldError('fechaRecordatorio') + ' ' + onFieldRequired(form.controls.fechaRecordatorio)" >
-                  </div>-->
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 2.- Datos de contacto -->
-            <div class="">
-              <div id="headingTwo"></div>
-              <div
-                id="collapseTwo"
-                class="collapse"
-                aria-labelledby="headingTwo"
-                data-parent="#accordionExample"
-              >
-                <!-- Clientes -->
-                <div class="col shadow-sm mt-4" id="blocos">
-                  <div
-                    class="row d-flex p-3"
-                    style="cursor: pointer"
-                    (click)="onShowBloco(2)"
-                  >
-                    <span
-                      class="fas fa-list-alt d-flex justify-content-center align-items-center"
-                      id="icon-gray"
-                    ></span>
-                    <div
-                      class="d-flex justify-content-center align-items-center ml-2"
-                    >
-                      <strong>Datos del cliente</strong>
-                    </div>
-                    <div class="col"></div>
-                    <div class="d-flex justify-content-end align-items-center">
-                      <div
-                        class="d-flex float-end align-items-center mr-4"
-                        *ngIf="showBloco2"
-                      >
-                        <i
-                          class="fas fa-caret-down"
-                          style="
-                            background-color: transparent;
-                            color: #7f849c;
-                            border-color: transparent;
-                          "
-                        ></i>
-                      </div>
-                      <div
-                        class="d-flex float-end align-items-center mr-4"
-                        *ngIf="!showBloco2"
-                      >
-                        <i
-                          class="fas fa-caret-up"
-                          style="
-                            background-color: transparent;
-                            color: #7f849c;
-                            border-color: transparent;
-                          "
-                        ></i>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col" [hidden]="!showBloco2">
+                  <div class="col">
                     <!-- datos del sistema  -->
                     <div class="form-row row-g">
                       <div class="form-group col-lg-2">
@@ -404,7 +346,7 @@
                             >
                               Seleccionar
                             </a>
-                          <!-- <a id="top-links"
+                            <!-- <a id="top-links"
                                     *ngIf="form.value.codCliente != null"
                                     class="text-primary mr-2"
                                     href="javascript:void(0)"
@@ -413,7 +355,7 @@
                                   >
                                     Detalles
                                   </a> -->
-                                            <!-- <a id="top-links" *ngIf="form.value.codCliente != null" class="text-primary mr-2"
+                            <!-- <a id="top-links" *ngIf="form.value.codCliente != null" class="text-primary mr-2"
                           href="javascript:void(0)" (click)="onHistoricoCompras()">
                           Histórico de Compras
                         </a>
@@ -431,14 +373,22 @@
                           [readonly]="visualizar"
                           placeholder="Seleccionar..."
                           [attr.disabled]="true"
+                          [class.is-valid]="form.get('nomeCliente').valid"
+                          [class.is-invalid]="form.get('nomeCliente').invalid"
                         />
                         <div
+                          *ngIf="form.get('nomeCliente').invalid"
+                          class="invalid-feedback"
+                        >
+                          Este campo es requerido.
+                        </div>
+                        <!-- <div
                           class="invalid-feedback"
                           id="validationServer01Feedback"
                           style="display: none"
                         >
                           Este campo es requerido.
-                        </div>
+                        </div> -->
                       </div>
                       <div class="form-group col-lg-2">
                         <label class="my-auto">Tipo de Cliente:</label>
@@ -506,7 +456,7 @@
                               [(ngModel)]="selectedTipoContacto"
                               required
                             >
-                            <!--   <ng-option
+                              <!--   <ng-option
                                 *ngFor="let tipo of tipoContacto"
                                 [value]="tipo.ID_MEIO_CONT"
                               >
@@ -514,7 +464,7 @@
                               </ng-option> -->
                             </ng-select>
                           </div>
-                      </div>
+                        </div>
 
                         <div class="form-group col-lg-2">
                           <label class="my-auto" for="celular">Celular: </label>
@@ -582,7 +532,7 @@
                           <!--  <div class="my-1 text-uppercase" style="font-size: 11px">
               <input formControlName="codEndereco" type="text" class="form-control"/>
             </div> -->
-                          <ng-select
+                          <!-- <ng-select
                             [searchable]="true"
                             [clearable]="false"
                             [items]="locaisEntrega"
@@ -590,13 +540,28 @@
                             placeholder="Seleccionar..."
                             [virtualScroll]="true"
                             bindLabel="descricao"
-                            bindValue="codEndereco"
+                            bindValue="id"
                             [loading]="locaisEntregaLoader"
                             loadingText="Carregando..."
                             [readonly]="visualizar"
                             (change)="onChangeEndereco($event.codEndereco)"
                           >
-                          </ng-select>
+                          </ng-select> -->
+                          <ng-select *ngIf = "true"
+                          [searchable]="true"
+                          [clearable]="false"
+                          [items]="locaisEntrega"
+                          formControlName="codEndereco"
+                          placeholder="Seleccionar..."
+                          [virtualScroll]="true"
+                          bindLabel="descricao"
+                          bindValue="id"
+                          [loading]="locaisEntregaLoader"
+                          loadingText="Carregando..."
+                          [readonly]="visualizar"
+                          (change)="onChangeEndereco($event.codEndereco)"
+                        >
+                        </ng-select>
                         </div>
                       </div>
                     </div>
@@ -661,16 +626,18 @@
                           >
                           <div class="my-1" style="font-size: 11px">
                             <input
-                              id="namefactura"
+                              id="razaoSocial"
                               formControlName="razaoSocial"
                               type="text"
                               class="form-control text-uppercase"
-                              required
+                              [class.is-valid]="form.get('razaoSocial').valid"
+                              [class.is-invalid]="
+                                form.get('razaoSocial').invalid
+                              "
                             />
                             <div
+                              *ngIf="form.get('razaoSocial').invalid"
                               class="invalid-feedback"
-                              id="validationServer02Feedback"
-                              style="display: none"
                             >
                               Este campo es requerido.
                             </div>
@@ -709,6 +676,47 @@
                             message="Forma de pago obligatorio"
                           ></invalid-form-control>
                         </div>
+
+                        <div class="form-group col-lg-2">
+                          <label class="my-auto" for="formaPagoQr"
+                            >Pago QR:</label
+                          >
+                          <ng-select
+                            [searchable]="true"
+                            [clearable]="false"
+                            [items]="formaPagoQr"
+                            bindLabel="nombre"
+                            bindValue="id"
+                            formControlName="codpagoqr"
+                            placeholder="Seleccionar..."
+                          >
+                          </ng-select>
+                          <!-- <ng-select [formControl]="form.controls.idQr" [(ngModel)]="selectedTipoPagoQr">
+                            <ng-option *ngFor="let forma of formaPagoQr" [value]="forma.id">
+                              {{ forma.nombre }}
+                            </ng-option>
+                          </ng-select> -->
+                        </div>
+
+                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+                        <div class="form-group col-lg-2">
+                          <label class="my-auto" for="formaPagoQr">Pago:</label>
+                          <ng-select [searchable]="true"
+                            [clearable]="false"
+                            [items]="formaPagoQr"
+                            [searchFn]="customSearchFn"
+                            bindLabel="nombre"
+                            bindValue="id"
+                            formControlName="codPagoQr"
+                            placeholder="Seleccionar...">
+                          </ng-select>
+                          <!--<ng-select [formControl]="form.controls.idQr" [(ngModel)]="selectedTipoPagoQr">
+                            <ng-option *ngFor="let forma of formaPagoQr" [value]="forma.id">
+                              {{ forma.nombre }}
+                            </ng-option>
+                          </ng-select>-->
+                        </div>
+
                       </div>
                     </div>
 
@@ -757,7 +765,7 @@
                             [loading]="contatosLoader"
                             loadingText="Carregando..."
                             [readonly]="visualizar"
-                            (change)="changeContacto($event.codContato)"
+                            (change)="changeContacto($event)"
                           >
                           </ng-select>
                         </div>
@@ -823,97 +831,94 @@
                             Venta:</label
                           >
                           <ng-select
+                            id="ejecutivo_ventas"
+                            [class.is-valid]="
+                              form.get('ejecutivo_ventas').valid &&
+                              form.get('ejecutivo_ventas').touched
+                            "
+                            [class.is-invalid]="
+                              form.get('ejecutivo_ventas').invalid &&
+                              form.get('ejecutivo_ventas').touched
+                            "
                             [searchable]="true"
-                            [clearable]="false"
+                            [clearable]="true"
                             [virtualScroll]="true"
                             formControlName="ejecutivo_ventas"
-                            [disabled]="form.get('nomeCliente').disabled"
+                            [readonly]="disabled_vendedor"
                             [items]="listaEjecutivo"
                             [(ngModel)]="valorSeleccionado"
                             bindLabel="nome"
                             bindValue="id"
-                            (change)="datosVendedor($event.id)"
+                            (change)="onEjecutivoChange($event)"
                             required
                           >
                           </ng-select>
-
-                          <!-- <ng-select
-                            class=""
-                            [formControlName]="ejecutivo_ventas"
-                            id="orderBy"
-                            [disabled]="form.get('nomeCliente').disabled"
-                            (change)="datosVendedor($event)"
-                            [(ngModel)]="idvendedorE"
+                          <div
+                            *ngIf="
+                              form.get('ejecutivo_ventas').invalid &&
+                              form.get('ejecutivo_ventas').touched
+                            "
+                            class="invalid-feedback"
                           >
-                            <ng-container
-                              *ngFor="let listaEjecutivo of listaEjecutivo"
-                            >
-                              <ng-option [value]="listaEjecutivo.id">
-                                {{ listaEjecutivo.nome }}
-                              </ng-option>
-                            </ng-container>
-                          </ng-select> -->
+                            Este campo es requerido.
+                          </div>
                         </div>
-                        <!-- <div class="form-group col-lg-2">
-              <label for="orderBy">Propietario:</label>
-              <input
-                formControlName=" "
-                type="text"
-                class="form-control"
-                [value]="dadosLancamento.nomeVendedor"
-                readonly
-              />
-            </div> -->
 
                         <div class="form-group col-lg-2">
                           <label for="orderBy">Lista de precios:</label>
-                          <select
-                            class="form-control custom-select"
+                          <ng-select
+                            id="id_lista_precio"
+                            [searchable]="true"
+                            [clearable]="true"
                             formControlName="id_lista_precio"
+                            [items]="listaPrecios"
+                            bindLabel="nombre_lista"
+                            bindValue="id"
+                            [readonly]="disabled_vendedor"
                             (change)="updateLista()"
-                            disabled
+
                           >
-                            <ng-container
-                              *ngFor="let listaPrecio of listaPrecios"
-                            >
-                              <option
-                                [value]="listaPrecio.id"
-                                [selected]="listaPrecio.id === idListaPrecio"
-                              >
+                          </ng-select>
+                          <!--   <select class="form-control custom-select" formControlName="id_lista_precio" (change)="updateLista()">
+                            <ng-container *ngFor="let listaPrecio of listaPrecios">
+                              <option [value]="listaPrecio.id">
                                 {{ listaPrecio.nombre_lista }}
                               </option>
                             </ng-container>
                           </select>
-
-                          <!-- <label class="my-auto" for="codFormaPagamento">Lista de precios</label> -->
-                          <!-- <ng-select class="" [formControlName]="lista" id="orderBy"  [(ngModel)]="idListaPrecio">
-<ng-container *ng
-For="let listaPrecio of listaPrecios">
-<ng-option [value]="listaPrecio.id" >
-{{ listaPrecio.nombre_lista }}
-</ng-option>
-
-</ng-container>
-</ng-select> -->
+ -->
                         </div>
                         <div class="form-group col-lg-2">
-                          <label for="orderBy">Departamento:</label>
+                          <label for="orderBy"
+                            >Departamento de Ejecutivo:</label
+                          >
                           <input
                             id="nameEjec"
                             formControlName="nombreDepartamento2"
                             type="text"
                             class="form-control"
-                            [value]="id_departamento"
-                            readonly
+                            disabled="true"
+                            [class.is-valid]="
+                              form.get('nombreDepartamento2').valid
+                            "
+                            [class.is-invalid]="
+                              form.get('nombreDepartamento2').invalid
+                            "
                           />
                         </div>
                         <div
+                          *ngIf="form.get('nombreDepartamento2').invalid"
+                          class="invalid-feedback"
+                        >
+                          Este campo es requerido.
+                        </div>
+                        <!-- <div
                           class="invalid-feedback"
                           id="validationServer03Feedback"
                           style="display: none"
                         >
                           Este campo es requerido.
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -921,26 +926,23 @@ For="let listaPrecio of listaPrecios">
               </div>
             </div>
 
-            <!-- 3.- Busqueda de materiales -->
+            <!-- 2 - 3 old.- Busqueda de materiales -->
             <div class="">
-              <div id="headingThree"></div>
+              <div id="headingTwo"></div>
               <div
-                id="collapseThree"
+                id="collapseTwo"
                 class="collapse"
-                aria-labelledby="headingThree"
+                aria-labelledby="headingTwo"
                 data-parent="#accordionExample"
               >
                 <!-- Materiales -->
                 <div class="col shadow-sm mt-4" id="blocos">
                   <div class="row" [hidden]="visualizar">
                     <div class="col">
-                      
                       <comercial-ciclo-vendas-cotacoes-formulario-materiais-lista
-                        [codEndereco]="form.value.codEndereco"
                         [codCliente]="form.value.codCliente"
                         [codEmpresa]="form.getRawValue().codEmpresa"
                         [id_lista_precio]="idListaPrecio"
-                        [codDeposito]="form.getRawValue().codDeposito"
                         [id_vendedor]="this.idvendedor"
                         [codFormaPagamento]="form.value.codFormaPagamento"
                         [freteConta]="form.value.freteConta"
@@ -950,18 +952,14 @@ For="let listaPrecio of listaPrecios">
                         (scrollToCarrinho)="onScrollToCarrinho($event)"
                         [estadoAlmacen]="estadoAlmacenObj"
                         [almacenes]="this.almacenes"
+                        [idAlmacenEditar]="this.idAlmacenEditar"
                       >
-                    
                       </comercial-ciclo-vendas-cotacoes-formulario-materiais-lista>
                     </div>
                   </div>
                 </div>
 
-                <div
-                  class="col shadow-sm mt-4"
-                  id="blocos"
-                  [hidden]="this.materiais.length == 0"
-                >
+                <div class="col shadow-sm mt-4 gb" id="blocos">
                   <div class="row" #scrollToCarrinho>
                     <div class="col">
                       <comercial-ciclo-vendas-cotacoes-formulario-carrinho
@@ -1066,8 +1064,9 @@ For="let listaPrecio of listaPrecios">
                           </div>
                         </div>
                         <ng-select
-                          [searchable]="true"
-                          [clearable]="false"
+                          id="codigoEndereco"
+                          [searchable]="false"
+                          [clearable]="true"
                           [items]="tipoEntrega"
                           (change)="datoEntrega($event.id)"
                           formControlName="codigoEndereco"
@@ -1075,7 +1074,7 @@ For="let listaPrecio of listaPrecios">
                           [virtualScroll]="true"
                           bindLabel="nombre"
                           bindValue="id"
-                          placeholder="Selecione..."
+                          placeholder="Seleccione..."
                           [loading]="locaisEntregaLoader"
                           loadingText="Carregando..."
                           groupBy="tipo"
@@ -1087,10 +1086,24 @@ For="let listaPrecio of listaPrecios">
                           "
                         >
                         </ng-select>
-                        <invalid-form-control
-                          [show]="onFieldInvalid('codEndereco')"
-                          message="Local de entrega es obligatorio."
-                        ></invalid-form-control>
+                        <div
+                          class="form-row"
+                          *ngIf="swEntrega == false"
+                        >
+                        <label class="almacen-label">Almacen de despacho: </label>
+                          <ng-select
+                            [searchable]="true"
+                            [clearable]="true"
+                            [virtualScroll]="true"
+                            [items]="almacenes_despacho"
+                            formControlName="almacendespacho"
+                            bindLabel="codigo_almacen"
+                            bindValue="id"
+                            placeholder="Seleccione..."
+                            groupBy="tipo"
+                          >
+                          </ng-select>
+                        </div>
                       </div>
                       <div
                         class="form-group col-lg-2 mb-1"
@@ -1105,18 +1118,22 @@ For="let listaPrecio of listaPrecios">
                           <i class="fas fa-map-marker-alt"></i>Ubicación
                         </button>
                       </div>
-
+                      <!-- Direccion Entrega -->
                       <div
                         class="form-group col-lg-4"
                         *ngIf="swEntrega == true"
                       >
-                        <label class="my-auto" for="direccion_entrega">Dirección entrega:</label
+                        <label class="my-auto" for="direccion_entrega">
+                          <span class="text-danger"></span> Dirección
+                          entrega:</label
                         >
                         <div
                           class="my-1 text-uppercase"
                           style="font-size: 11px"
                         >
+                          <!--  Aqui colocar informacion del mapa -->
                           <input
+                            id="direccion_entrega"
                             formControlName="direccion_entrega"
                             type="text"
                             class="form-control"
@@ -1128,17 +1145,18 @@ For="let listaPrecio of listaPrecios">
                         class="form-group col-lg-2"
                         *ngIf="swEntrega == true"
                       >
-                        <label class="my-auto" for="codFormaPagamento"
-                          >Centro logistico:</label
+                        <label class="my-auto" for="codFormaPagCentramento"
+                          ><span class="text-danger"></span> Centro logistico:</label
                         >
                         <ng-select
                           class=""
                           formControlName="centroLogisticoControl"
                           id="orderBy"
+                          [(ngModel)]="selectedCentro"
                           (change)="onCentroLogisticoChange($event)"
                           [items]="centrosLogisticos"
-                          bindLabel="NOMBRE_DEPOSITO"
-                          bindValue="id"
+                          bindLabel="NombreCentroLogistico"
+                          bindValue="ID"
                           placeholder="Selecione..."
                         >
                         </ng-select>
@@ -1253,20 +1271,22 @@ For="let listaPrecio of listaPrecios">
                   style="background-color: #441157 !important"
                   (click)="goToNextStep()"
                   [disabled]="currentStep === 4"
-                  [style.display]="currentStep === 4 ? 'none' : 'inline-block'"
+                  [style.display]="currentStep === 3 ? 'none' : 'inline-block'"
                 >
                   Siguiente
                 </button>
-                <button
-                  class="btn btn-success"
-                  type="button"
-                  (click)="onSubmit()"
-                  *ngIf="!visualizar"
-                  [disabled]="loaderCotizacion || loaderNavbar"
-                  [style.display]="currentStep <= 3 ? 'none' : 'inline-block'"
-                >
-                  Finalizar
-                </button>
+
+                <div *ngIf="currentStep === 3">
+                  <button
+                    class="btn btn-success"
+                    type="button"
+                    (click)="onSubmit()"
+                    *ngIf="!visualizar"
+                    [disabled]="loaderCotizacion || loaderNavbar"
+                  >
+                    Finalizar
+                  </button>
+                </div>
               </div>
             </div>
           </div>

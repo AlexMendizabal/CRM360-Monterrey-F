@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 })
 export class LogisticaDashboardsAnaliseFreteService {
 
-  private readonly API = `${environment.URL_MTCORP}`;
+  private readonly API = ` https://crm360.monterrey.com.bo`;
 
   constructor(private http: HttpClient) { }
 

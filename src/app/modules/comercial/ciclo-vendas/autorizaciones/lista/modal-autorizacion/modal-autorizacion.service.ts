@@ -10,7 +10,7 @@ import { ModalAutorizacionComponent } from './modal-autorizacion.component';
 // Services
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { ComercialCicloVendasAutorizacionesService } from '../../autorizaciones.service';
-import { ComercialCicloVendasCotacoesListaComponent } from '../lista.component';
+
 
 // Interfaces
 import { JsonResponse } from 'src/app/models/json-response';
@@ -27,7 +27,7 @@ export class ModalAutorizacionService {
   constructor(
     private modalAutorizacionService: BsModalService,
     private pnotifyService: PNotifyService,
-    private autorizacionService: ComercialCicloVendasAutorizacionesService, 
+    private autorizacionService: ComercialCicloVendasAutorizacionesService,
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -71,5 +71,5 @@ export class ModalAutorizacionService {
     if (this.modalRef) {
       this.modalRef.hide();
     }
-  }  
+  }
 }

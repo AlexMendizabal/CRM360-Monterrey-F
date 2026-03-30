@@ -16,7 +16,7 @@ import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/
 //Converte rota em base64
 import { RouterService } from 'src/app/shared/services/core/router.service';
 
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent } from 'ngx-bootstrap';
 import { AbastecimentoCadastrosIntegradorDepositosService } from '../integrador-depositos.service';
 
 @Component({

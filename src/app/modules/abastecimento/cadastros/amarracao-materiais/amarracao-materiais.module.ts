@@ -4,10 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { TabsModule } from 'ngx-bootstrap/tabs';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TooltipModule, PaginationModule, TabsModule, ModalModule } from 'ngx-bootstrap';
 import { OrderModule } from 'ngx-order-pipe';
 import { SortableModule } from 'ngx-bootstrap/sortable';
 

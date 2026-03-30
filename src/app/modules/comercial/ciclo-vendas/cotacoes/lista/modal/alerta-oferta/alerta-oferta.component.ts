@@ -16,10 +16,12 @@ export class ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent
   travasComercial = [];
   travasLogistica = [];
   travasFinanceira = [];
+  submittingForm: any;
 
   constructor(private bsModalRef: BsModalRef) {}
 
   ngOnInit(): void {
+    console.log(this.ofertasPendientes);
     //this.getTravas();
   }
 

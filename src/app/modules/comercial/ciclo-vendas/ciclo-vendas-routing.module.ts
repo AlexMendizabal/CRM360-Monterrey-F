@@ -27,6 +27,11 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'ofertas',
+       // loadChildren: () => import('./ofertas/ofertas.module').then( (m) => m.OfertasModule),
+        loadChildren: () => import('./ofertas/ofertas.module').then(m => m.OfertasModule)
+      },
+      {
         path: 'pedidos-producao-telas',
         loadChildren: () =>
           import('./pedidos-producao-telas/pedidos-producao-telas.module').then(

@@ -398,6 +398,7 @@ export class ComercialRelatoriosPosicaoDiariaComponent implements OnInit {
   }
 
   openModal(detalhes: TemplateRef<any>) {
+    console.log(detalhes);
     this.modalRef = this.modalService.show(
       detalhes,
       Object.assign(

@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ContatosService {
-  private readonly API = `${environment.URL_MTCORP}core/mtcorp/usuarios`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/core/mtcorp/usuarios`;
 
   constructor(protected http: HttpClient) { }
 

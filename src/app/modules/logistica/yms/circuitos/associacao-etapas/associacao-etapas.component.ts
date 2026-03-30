@@ -228,6 +228,7 @@ export class LogisticaYmsCircuitosAssociacaoEtapasComponent implements OnInit {
       .subscribe(
         response => {
           let etapas = response.body['data'];
+          console.log(etapas)
           this.etapas = etapas.filter(etapa => {
             return !this.etapasAssociadas.some(item => item.UUID_LOGI_YMS_ETAP == etapa.ID)
           })
@@ -266,6 +267,7 @@ export class LogisticaYmsCircuitosAssociacaoEtapasComponent implements OnInit {
   onAssociarEtapas(){
     let etapas = this.etapas.filter(etapa => etapa.checked && etapa.NR_SQNC != null);
 
+    console.log(etapas)
     this.toggle.etapas = false;
     etapas.map(item => {
       
@@ -300,6 +302,7 @@ export class LogisticaYmsCircuitosAssociacaoEtapasComponent implements OnInit {
                   UUID_LOGI_YMS_CIRC: this.form.get('UUID_LOGI_YMS_CIRC').value
                 }
               ];
+              console.log(this.etapasAssociadas)
               
               this.etapas = this.etapas.filter(etapa => !etapa.checked)
               this.tableConfigEtapasAssociados.fixedHeader = this.etapasAssociadas.length > 9 ? true : false;
@@ -323,6 +326,7 @@ export class LogisticaYmsCircuitosAssociacaoEtapasComponent implements OnInit {
 
   onRemoverAssociacao(etapa?){
     let etapas = etapa ? [etapa] : this.etapasAssociadas.filter(etapa => etapa.checked);
+    console.log(etapas)
     this.toggle.etapasAssociadas = false;
 
     if(etapas.length == 0){
@@ -370,6 +374,7 @@ export class LogisticaYmsCircuitosAssociacaoEtapasComponent implements OnInit {
   }
 
   onToggleAll(item: string){
+    console.log(item)
     this.toggle[item] = !this.toggle[item];
     this[item].map(etapa => etapa.checked = this.toggle[item]);
 
@@ -404,6 +409,7 @@ export class LogisticaYmsCircuitosAssociacaoEtapasComponent implements OnInit {
   }
 
 setValidacao(event){
+  console.log(event)
 }
  
 }

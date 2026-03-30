@@ -31,7 +31,7 @@ table {
 
 
 
-th, td {
+td {
   border: 1px solid #000!important;
   padding: 3px;
  // text-align: center;
@@ -90,6 +90,14 @@ table {
   border: 2px solid black;
   padding: 10px;
 }
+
+.custom-modal-content2{
+  margin-top: 4px;
+  //border: 2px solid #ececec;
+ /*  border: 2px solid black; */
+  padding: 10px;
+}
+
 
 .monterrey-info{
   margin-bottom: 0px;
@@ -155,7 +163,7 @@ input[type='button'] {
 
 
 .descripcion-font {
-  font-size: 13px; //10
+  font-size: 12px; //10
   white-space: pre-wrap;
   max-width: 200px;
 }
@@ -171,7 +179,7 @@ input[type='button'] {
 }
 
 .datcotizacion-font{
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -181,12 +189,12 @@ input[type='button'] {
 
 .direccion-font{
   font-size: 15px;
-  font-weight: bold;
+  //font-weight: bold;
 }
 
 .entrega-font{
   font-weight: bold;
-  font-size: 16px !important;
+  font-size: 14px !important;
 }
 
 .negrita-font{
@@ -208,10 +216,6 @@ input[type='button'] {
 table tr {
   height: 1px;
 }
-
-/* .form-row {
-  margin-bottom: 20px;
-} */
 
 .footer {
   display: flex;
@@ -251,13 +255,12 @@ span.customer-info.custom-modal-content {
   padding: 3px 47px;
 }
 div.info-div p, div.info-div span{
-  font-size: 17px;
+  font-size: 15px;
   margin-bottom: 0;
 }
 div.entrega-font > div.no-bullet {
   margin-bottom: 10px;
 }
-
 span.customer-info.custom-modal-content {
   display: flex;
   justify-content: space-between;
@@ -266,3 +269,149 @@ span.customer-info.custom-modal-content {
 p.totalpeso-font, p.total, span.customer-info{
   font-size: 15px!important;
 }
+#box-value {
+  width: 180px ;
+}
+.direccion-font {
+  margin-bottom: 0;
+  margin-left: 4px;
+}
+
+.box-peso {
+  display: flex;
+  justify-content: space-between;
+}
+.box-peso span {
+  margin-right: 32px;
+  font-weight: 600;
+}
+.espacio-dos{
+  text-align: center;
+  width: 65px;
+}
+
+
+@media screen and (max-width: 1400px) {
+
+  .descripcion-font{
+    font-size: 10px;
+  }
+
+
+  .espacio{
+    width: 294px;
+  }
+  .espacio-dos{
+    text-align: center;
+    width: 55px;
+  }
+
+  .box-logo{
+    margin-right: 40px !important;
+  }
+  .cotizacion-font {
+    font-size: 26px;
+    border-bottom: 3px solid black;
+    font-weight: bold;
+    margin-right: 35px;
+    margin-top: 10px;
+    margin-left: 5px;
+    line-height: 0.9;
+}
+.datcotizacion-font {
+  font-weight: 700;
+}
+.info-text {
+  margin-right: 0!important;
+}
+table.table{
+  font-size: 11px !important;
+}
+
+.mensaje-font{
+  font-size: 12px;
+}
+.datcotizacion-font, .info-text span, div.info-div p, div.info-div span, .customer-info.custom-modal-content span{
+  font-size: 14px !important;
+}
+.entrega-font {
+  font-size: 15px !important;
+}
+.medium-font{
+  font-size: 18px;
+}
+#box-value {
+  width: 140px !important;
+}
+.box-peso span {
+  margin-right: 20px;
+  font-weight: 600;
+}
+
+}
+
+/* CSS GABI */
+table.tb-custom th{
+  border: 0!important;
+}
+
+table.table thead tr{
+  border: 1px solid black;
+}
+
+table.table thead tr th{
+  border-bottom: 1px solid black !important;
+  border-top: 1px solid black !important;
+}
+
+.texto{
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.facturacion-container p {
+  display: flex;
+  align-items: flex-end;
+}
+
+.dotted-line {
+  border-bottom: 1px dotted #878787;
+  border-width: 2px;
+  flex-grow: 1;
+  margin-left: 20px;
+}
+
+
+@media (max-width: 1200px) {
+
+  .no-bullet,
+  .span-g {
+    font-size: 12px !important;
+  }
+
+    .medium-font {
+      font-size: 15px;
+    }
+  
+    .header img {
+      width: 100% !important;
+      height: auto !important;
+    }
+  
+    .cotizacion-font {
+      font-size: 20px;
+    }
+  
+    .box-logo {
+      margin-right: 18px !important;
+    }
+
+
+    }
+
+@media print {
+      #contentToConvert {
+        width: 210mm;
+        height: auto;
+      }
+    }

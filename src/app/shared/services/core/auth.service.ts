@@ -11,11 +11,11 @@ import { PNotifyService } from './pnotify.service';
 import { RouterService } from './router.service';
 import { ModulosService } from '../requests/modulos.service';
 
-@Injectable({
+@Injectable({  
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly API = `${environment.URL_MTCORP}usuario`;
+  private readonly API = `${environment.API}/usuario`;
 
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
@@ -44,9 +44,9 @@ export class AuthService {
 
   loginSAP(data: any): Observable<any> {
     this.hasSession = true;
-  return this.http.post(`${environment.SAP_API}/Login`, data).pipe(take(1), retry(2));
+  return this.http.post(`http://192.168.0.123:4100/api/Login`, data).pipe(take(1), retry(2));
   }
-  
+
 
 
   logout(): boolean {
@@ -57,13 +57,13 @@ export class AuthService {
   }
 
   changePassword(data: any): Observable<any> {
-    return this.http.post(`${environment.URL_MTCORP}core/contra-senha`, data, { observe: 'response' }).pipe(take(1));
+    return this.http.post(`https://crm360.monterrey.com.bo/api/core/contra-senha`, data, { observe: 'response' }).pipe(take(1));
   }
 
   sessionExpired(): void {
 
-    setTimeout(() => {
-
+    /* setTimeout(() => {
+ */
       if (!this.hasSession) {
         return
       }
@@ -78,8 +78,8 @@ export class AuthService {
         queryParams: queryParams
       })
       //.then(() => {window.location.reload()});
-
-    }, 500);
+/*
+    }, 500); */
   }
 
   setCurrentUser(user: any): void {

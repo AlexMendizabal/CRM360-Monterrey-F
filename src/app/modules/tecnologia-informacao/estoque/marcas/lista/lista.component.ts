@@ -21,7 +21,7 @@ import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { DateService } from 'src/app/shared/services/core/date.service';
 
 import { ITecnologiaInformacaoEstoqueMarcas } from './../models/marcas';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent } from 'ngx-bootstrap';
 
 @Component({
   selector: 'tecnologia-informacao-estoque-produtos-modelo-lista',

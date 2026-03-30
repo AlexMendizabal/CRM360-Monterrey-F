@@ -18,7 +18,7 @@ import { RouterService } from 'src/app/shared/services/core/router.service';
 
 import { AbastecimentoCadastrosVinculoMaterialDepositoNewService } from '../vinculo-material-deposito-new.service';
 
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent } from 'ngx-bootstrap';
 
 @Component({
   selector: 'lista',

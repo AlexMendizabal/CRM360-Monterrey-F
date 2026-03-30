@@ -12,8 +12,8 @@ import { Observable, forkJoin } from 'rxjs';
   providedIn: 'root',
 })
 export class ComercialIntegracoesDagdaIntegracaoPedidosService {
-  private readonly BASE_URL: string = `${environment.URL_MTCORP}`;
-  private readonly API = `${environment.URL_MTCORP}comercial/integracoes/dagda`;
+  private readonly BASE_URL: string = ` https://crm360.monterrey.com.bo`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/integracoes/dagda`;
 
   constructor(
     private http: HttpClient,

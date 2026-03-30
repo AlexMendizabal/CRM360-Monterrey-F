@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { ChangeDetectorRef } from '@angular/core';
@@ -6,7 +6,6 @@ import { interval, Subject } from 'rxjs';
 import { takeUntil, take, retry } from 'rxjs/operators';
 import { JsonResponse } from 'src/app/models/json-response';
 import 'bootstrap';
-import { environment } from '../../../environments/environment';
 // Services
 import { AuthService } from 'src/app/shared/services/core/auth.service';
 import { ModulosService } from 'src/app/shared/services/requests/modulos.service';
@@ -24,9 +23,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
   styleUrls: ['./header.component.scss'],
   providers: [WindowService],
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit {
   @Input('showLoader') showLoader: boolean;
-  private readonly API = `${environment.URL_MTCORP}sap`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/sap`;
 
   showLogoCliente = true;
   srcLogoCliente: string;
@@ -37,14 +36,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   modulos: any = [];
   modulosLoaded = false;
   modulosError = false;
-
+  conexion = false;
+  verificacion: any;
   notificaciones: any = [];
 
   loaderFullScreen = true;
-
-  // SAP connectivity status
-  sapStatus: 'checking' | 'connected' | 'disconnected' = 'checking';
-  private destroy$: Subject<void> = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -67,27 +63,31 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.getClienteLogo();
     this.getModulos();
     this.getNotificaciones();
+    this.verificadorConexion();
+    /*    this.verificadorConexion();
+       setInterval(() => {
+         this.verificadorConexion();
+       }, 120000); */
+    //this.verificarConexion();
 
-    // Initial SAP check (shows loading spinner)
-    this.verificadorConexion(true);
+    // setInterval(() => {
+    //   this.verificador();
+    // }, 42000);
 
-    // Poll every 120s silently (no flash)
-    interval(120000)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.verificadorConexion(false);
-      });
+  }
+  verificador(): void {
+    const verificaciones = this.manejoEvento(() => this.verificadorConexion());
+    verificaciones();
   }
 
   getClienteLogo() {
     this.srcLogoCliente = `/assets/images/logo/clientes/${this.windowService.getHostnameLogo()}_branco.png`;
   }
+
   getNotificaciones() {
     this.notificacionesService.getNotificaciones();
 
-    this.notificacionesService
-
-      .getNotificaciones()
+    this.notificacionesService.getNotificaciones()
       .pipe(
         finalize(() => {
           /*  this.loaderNavbar = false;
@@ -259,23 +259,54 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.changePasswordModalService.show(template);
   }
 
-  verificadorConexion(showLoading: boolean): void {
-    if (showLoading) {
-      this.sapStatus = 'checking';
-    }
-
-    this.http.post(`${this.API}/verificar_conexion_sap`, null).subscribe(
-      (response: JsonResponse) => {
-        this.sapStatus = response.success === true ? 'connected' : 'disconnected';
-      },
-      (error: any) => {
-        this.sapStatus = 'disconnected';
+  manejoEvento(fn: () => Promise<void>): () => Promise<void> {
+    let executing = false;
+    return async () => {
+      if (!executing) {
+        executing = true;
+        await fn();
+        setTimeout(() => {
+          executing = false;
+        }, 300000); // 5 minutos
       }
-    );
+    }
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  async verificadorConexion(): Promise<void> {
+    const boton = document.getElementById('verificador') as HTMLElement;
+    this.loaderFullScreen = true;
+    boton.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Verificando SAP...';
+    boton.style.color = 'black';
+    boton.style.backgroundColor = '#eadf04'; // Amarillo para indicar que está verificando
+
+    try {
+      // Realiza la consulta para verificar la conectividad
+      const response: JsonResponse = await this.http.post<JsonResponse>(`${this.API}/verificar_conexion_sap`, null).toPromise();
+
+      if (response.success) {
+        // Conectado: Cambia el texto y el color del botón a verde
+        boton.innerHTML = '<i class="fas fa-check-circle"></i> SAP: Conectado';
+        boton.style.backgroundColor = 'green';
+        boton.style.color = 'white';
+      } else {
+        // Desconectado: Cambia el texto y el color del botón a rojo
+        boton.innerHTML = '<i class="fas fa-exclamation-circle"></i> SAP: Desconectado';
+        boton.style.backgroundColor = 'red';
+        boton.style.color = 'white';
+      }
+    } catch (error) {
+      // En caso de error, mostrar como desconectado
+      boton.innerHTML = '<i class="fas fa-exclamation-circle"></i> SAP: Desconectado';
+      boton.style.backgroundColor = 'red';
+      boton.style.color = 'white';
+    } finally {
+      this.loaderFullScreen = false; // Asegura que el loader siempre se oculta al final
+    }
   }
+
+  // Método que se ejecuta al hacer clic en el botón
+  onVerificarConectividad(): void {
+    this.manejoEvento(() => this.verificadorConexion())();
+  }
+
 }

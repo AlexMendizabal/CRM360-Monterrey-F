@@ -15,7 +15,7 @@ import { TemplatesModule } from 'src/app/shared/templates/templates.module';
 
 import { AbastecimentoCadastroRoutingModule } from './cadastros-routing.module';
 import { AbastecimentoCadastrosComponent } from './cadastros.component';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TooltipModule } from 'ngx-bootstrap';
 
 
 @NgModule({
