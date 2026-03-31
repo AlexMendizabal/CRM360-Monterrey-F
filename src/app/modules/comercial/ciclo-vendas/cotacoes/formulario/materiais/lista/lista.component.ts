@@ -26,8 +26,8 @@ import { JsonResponse } from 'src/app/models/json-response';
 
 import { IMateriaisModel } from '../../models/materiais';
 import { ComercialEstoqueService } from '../../../../../../comercial/estoque/estoque.service';
-import { BrowserModule } from '@angular/platform-browser'; 
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @Component({
@@ -46,7 +46,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   @Input('codFormaPagamento') codFormaPagamento: number;
   @Input('freteConta') freteConta: number;
   @Input('id_lista_precio') id_lista: number;
-  @Input ('id_vendedor') id_vendedor : number;
+  @Input('id_vendedor') id_vendedor: number;
   @Output() resetRequested = new EventEmitter<void>();
 
   filas = [
@@ -127,7 +127,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   dados: Array<IMateriaisModel> = [];
   upsell: Array<IMateriaisModel> = [];
   crosell: Array<IMateriaisModel> = [];
-  
+
   dadosLoaded = false;
   dadosEmpty = false;
   idMaterial: number = 0;
@@ -161,9 +161,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 
   ngOnInit(): void {
     this.getFilterValues();
-    this.cliente.emit(this.codCliente)
-    this.getMateriais(null, 'application')
-
+    this.cliente.emit(this.codCliente);
+    this.getMateriais(null, 'application');
   }
 
   getFilterValues(): void {
@@ -180,8 +179,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       .subscribe((response: any) => {
         if (response.responseCode === 200) {
           this.linhas = response.result;
-                 console.log(response.result);
-          
+          console.log(response.result);
+
         } else {
           this.pnotifyService.error();
           this.location.back();
@@ -248,12 +247,12 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     });
   }
   cambioMaterial(idMaterial: number) {
-    if(idMaterial > 0) {
+    if (idMaterial > 0) {
       this.swActivarBusqueda = true;
-    }else{
+    } else {
       this.swActivarBusqueda = false;
     }
-    
+
     this.idMaterial = idMaterial;
     this.registros = this.form.controls.registros.value
   }
@@ -385,8 +384,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   onReset(): void {
     this.confirmReset()
       .subscribe({
-        next: (response: boolean) =>  {
-          if (response === true)  {
+        next: (response: boolean) => {
+          if (response === true) {
             this.executeReset();
           }
         },
@@ -457,6 +456,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     });
 
     this.checkValuesLinhaClasse();
+    this.getMateriais(null, 'application');
   }
 
   checkRouterParams(): Object {
@@ -555,7 +555,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   setOrderBy(column: string) {
     /* console.log(column); */
     if (this.orderBy === column) {
-      this.orderType = this.orderType === 'asc' ? 'desc' : 'asc'; 
+      this.orderType = this.orderType === 'asc' ? 'desc' : 'asc';
     } else {
       this.orderBy = column;
       this.orderType = 'asc';
@@ -578,33 +578,33 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 /*     this.onFilter();
  */  }
 
- onFilter(): void {
-  var tipo = 2
-  if (this.checkFieldErrors() === false) {
-    if (this.searching === false && this.form.valid) {
+  onFilter(): void {
+    var tipo = 2
+    if (this.checkFieldErrors() === false) {
+      if (this.searching === false && this.form.valid) {
+        this.setRouterParams(this.getFormFilterValues(), tipo);
+      }
+    } else {
       this.setRouterParams(this.getFormFilterValues(), tipo);
     }
-  } else {
-    this.setRouterParams(this.getFormFilterValues(), tipo);
   }
-}
 
 
-onFilterVend(tipo): void {
-  if (this.checkFieldErrors() === false) {
-    if (this.searching === false && this.form.valid) {
-      this.searching = true; 
+  onFilterVend(tipo): void {
+    if (this.checkFieldErrors() === false) {
+      if (this.searching === false && this.form.valid) {
+        this.searching = true;
+        this.setRouterParams(this.getFormFilterValues(), tipo);
+      }
+    } else {
+      this.searching = true;
       this.setRouterParams(this.getFormFilterValues(), tipo);
     }
-  } else {
-    this.searching = true; 
-    this.setRouterParams(this.getFormFilterValues(), tipo);
+
+    this.searching = false;
   }
 
-  this.searching = false;
-}
 
-  
 
   setRouterParams(params: any, tipo: number): void {
     this.router.navigate([], {
@@ -663,7 +663,7 @@ onFilterVend(tipo): void {
     this.crosell = [];
     this.dadosLoaded = false;
     this.dadosEmpty = false;
-     let params = {};
+    let params = {};
     if (tipo == 1 || tipo == 3) {
       params = {
         id_material: this.idMaterial,
@@ -671,7 +671,7 @@ onFilterVend(tipo): void {
         id_vendedor: this.id_vendedor,
         registros: this.form.controls.registros.value
       }
-    }else if (tipo == 2) {
+    } else if (tipo == 2) {
       params = {
         id_material: this.idMaterial,
         codigo_material: this.codigo_material,
@@ -682,8 +682,8 @@ onFilterVend(tipo): void {
     if (tipo == 1) {
 
       this.swTodos = false;
-      this.swVendedor = true ;
-      
+      this.swVendedor = true;
+
       this.comercialService
         .getMaterialesOfertaVendedor(params)
         .pipe(
@@ -698,13 +698,13 @@ onFilterVend(tipo): void {
           next: (response: any) => {
             /*           console.log(response.responseCode);
              */          /*  if (response.hasOwnProperty('success')
-            && response.success === true
-            && !response.data[0].msg) {
-              this.dados = response.data.map(function (el: any) {
-                var o = Object.assign({}, el);
-                o.checked = 0; 
-                return o;
-              }); */
+           && response.success === true
+           && !response.data[0].msg) {
+             this.dados = response.data.map(function (el: any) {
+               var o = Object.assign({}, el);
+               o.checked = 0; 
+               return o;
+             }); */
             if (response.responseCode === 200) {
               this.swAppSellColor = false;
               this.dados = response.material.map((el) => {
@@ -728,7 +728,7 @@ onFilterVend(tipo): void {
               console.log(this.upsell);
               this.dadosEmpty = false;
               this.form.controls.codMaterial.enable();
-              this.swActivarBusqueda = true ;
+              this.swActivarBusqueda = true;
               //console.log('dados', this.dados);
               // if (this.dados.length > 10) {
               this.tableConfig.fixedHeader = true;
@@ -748,11 +748,11 @@ onFilterVend(tipo): void {
             }
           },
           error: (error: any) => {
-              this.swTodos = false;
-              this.swVendedor = true;
-              this.swActivarBusqueda = true;
-              this.dadosEmpty = true;
-              this.form.controls.codMaterial.disable();
+            this.swTodos = false;
+            this.swVendedor = true;
+            this.swActivarBusqueda = true;
+            this.dadosEmpty = true;
+            this.form.controls.codMaterial.disable();
             if (error['error'].hasOwnProperty('mensagem')) {
               this.pnotifyService.error(error.error.mensagem);
             } else {
@@ -767,7 +767,7 @@ onFilterVend(tipo): void {
     } else if (tipo == 2) {
       this.swTodos = true;
       this.swVendedor = false;
-      
+
       this.form.controls.codMaterial.disable();
       this.comercialService
         .getMaterialesOferta(params)
@@ -783,13 +783,13 @@ onFilterVend(tipo): void {
           next: (response: any) => {
             /*           console.log(response.responseCode);
              */          /*  if (response.hasOwnProperty('success')
-     && response.success === true
-     && !response.data[0].msg) {
-       this.dados = response.data.map(function (el: any) {
-         var o = Object.assign({}, el);
-         o.checked = 0; 
-         return o;
-       }); */
+    && response.success === true
+    && !response.data[0].msg) {
+      this.dados = response.data.map(function (el: any) {
+        var o = Object.assign({}, el);
+        o.checked = 0; 
+        return o;
+      }); */
             if (response.responseCode === 200) {
               this.form.controls.codMaterial.enable();
               this.swTodos = false;
@@ -925,7 +925,7 @@ onFilterVend(tipo): void {
       borderClass = 'border-primary';
     } else if (swAppSellColor == false) {
       borderClass = 'border-success';
-    } 
+    }
 
     return borderClass;
   }
@@ -1006,7 +1006,7 @@ onFilterVend(tipo): void {
     // @ts-ignore: Ignorar error TS2339
     if (this.dados[index].codigo_situacion == "A") {
       this.dados[index].checked = material.checked == 0 ? 1 : 0;
-/*  */
+      /*  */
     } else {
       this.pnotifyService.notice('Seleccione por lo menos un material');
     }
@@ -1016,22 +1016,22 @@ onFilterVend(tipo): void {
     // @ts-ignore: Ignorar error TS2339
     if (this.upsell[index].codigo_situacion == "A") {
       this.upsell[index].checked = material.checked == 0 ? 1 : 0;
-/*  */
+      /*  */
     } else {
       this.pnotifyService.notice('Seleccione por lo menos un material');
     }
-    console.log('aqui',this.upsell[index]);
+    console.log('aqui', this.upsell[index]);
   }
 
   onCheckMaterial3(index: number, material: IMateriaisModel): void {
     // @ts-ignore: Ignorar error TS2339
     if (this.crosell[index].codigo_situacion == "A") {
       this.crosell[index].checked = material.checked == 0 ? 1 : 0;
-/*  */
+      /*  */
     } else {
       this.pnotifyService.notice('Seleccione por lo menos un material');
     }
-    console.log('aqui',this.crosell[index]);
+    console.log('aqui', this.crosell[index]);
   }
 
   onAddMaterial(): void {

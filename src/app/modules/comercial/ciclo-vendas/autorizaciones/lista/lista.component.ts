@@ -96,7 +96,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     { "id": "T", "nombre": "Todos" },
     { "id": 12, "nombre": "Aprobado" },
     { "id": 10, "nombre": "Pendiente" },
-    { "id": 1, "nombre": "Rechazado" },
+    { "id": 11, "nombre": "Rechazado" },
   ];
 
   formGroup: FormGroup;
@@ -132,6 +132,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   filteredDepositos: Array<any> = [];
   situacoesCores: Array<IAssociacao> = [];
   vendedores: any = [];
+  selectedVendedor: number = null;
   dataInicial:  Array<any> = []; //////aumente esto para usar en la funcion getFilterValues
   dataFinal: Array<any> = []; //////aumente esto para usar en la funcion getFilterValues
   listaEjecutivo: any[] = [];
@@ -442,7 +443,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       dataInicial: this.dateService.getStartOfWeek(),
       dataFinal: this.dateService.getToday(),
       codVendedor: this.vendedores,
-      estado_oferta: this.estado_oferta,
+      estado_oferta: this.defaultSelection,
       nrPedido: null,
       pagina: 1,
       registros: this.itemsPerPage,
@@ -517,6 +518,11 @@ filterByCodVendedorStatus(status: string): void {
   this.onFilter();
 }
 
+
+onChangeVendedor(vendedor: number): void {
+  this.selectedVendedor = vendedor;
+  this.formGroup.controls.codVendedor.setValue(vendedor);
+}
 
 onFilter(): void {
   this.loading = true;
@@ -651,7 +657,7 @@ onReset() {
   this.formGroup.patchValue({
     dataInicial: this.dateService.getFirstDayMonth(),
     dataFinal: this.dateService.getLastDayMonth(),
-    estado_oferta: 0,
+    estado_oferta: this.defaultSelection,
     codVendedor: 0,
     nrPedido: null,
     pagina: 1,
@@ -861,12 +867,9 @@ hideModal() {
 
 nuevo() {
   this.router.navigate(
-    [
-      '../novo', 1
-    ],
+    ['/comercial/ciclo-vendas/9/ofertas/registrar'],
     {
       queryParams: { codCliente: this.detalhesCodCliente },
-      relativeTo: this.activatedRoute,
     }
   );
 }

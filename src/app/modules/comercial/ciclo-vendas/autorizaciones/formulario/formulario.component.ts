@@ -70,7 +70,7 @@ import { Transportadora } from '../../../cadastros/transportadoras/models/transp
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 
 @Component({
-  selector: 'comercial-ciclo-vendas-cotacoes-formulario',
+  selector: 'comercial-ciclo-vendas-autorizaciones-formulario',
   templateUrl: './formulario.component.html',
   styleUrls: ['./formulario.component.scss'],
 })

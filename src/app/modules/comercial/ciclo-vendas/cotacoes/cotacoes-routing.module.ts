@@ -14,11 +14,19 @@ import { PdfComponent } from './lista/pdf/pdf.component';
 // Modules
 import { ComercialCicloVendasCotacoesListaModule } from './lista/lista.module';
 import { ComercialCicloVendasCotacoesFormularioModule } from './formulario/formulario.module';
+import { ComercialCicloVendasCotacoesFormularioModule as AutorizacionesFormularioModule } from '../autorizaciones/formulario/formulario.module';
 
 // Components
 import { ComercialCicloVendasCotacoesListaComponent } from './lista/lista.component';
 import { ComercialCicloVendasCotacoesFormularioComponent } from './formulario/formulario.component';
+import { ComercialCicloVendasCotacoesFormularioComponent as AutorizacionesFormularioComponent } from '../autorizaciones/formulario/formulario.component';
 import { VistaComponent } from './lista/vista/vista.component';
+
+// Autorizaciones Guards
+import { ComercialCicloVendasCotacoesFormularioClienteResolverGuard as AutorizacionesClienteGuard } from '../autorizaciones/formulario/guards/cliente-resolver.guard';
+import { ComercialCicloVendasCotacoesFormularioDataResolverGuard as AutorizacionesDataGuard } from '../autorizaciones/formulario/guards/data-resolver.guard';
+import { ComercialCicloVendasCotacoesFormularioPermissoesResolverGuard as AutorizacionesPermissoesGuard } from '../autorizaciones/formulario/guards/permissoes-resolver.guard';
+import { ComercialCicloVendasCotacoesFormularioProfilesResolverGuard as AutorizacionesProfilesGuard } from '../autorizaciones/formulario/guards/profile-resolver.guard';
 
 const routes: Routes = [
   {
@@ -50,6 +58,39 @@ const routes: Routes = [
   },
   {
     path: 'novo/:idReservado',
+    component: ComercialCicloVendasCotacoesFormularioComponent,
+    resolve: {
+      cliente: ComercialCicloVendasCotacoesFormularioClienteResolverGuard,
+      data: ComercialCicloVendasCotacoesFormularioDataResolverGuard,
+      permissoes: ComercialCicloVendasCotacoesFormularioPermissoesResolverGuard,
+      profile: ComercialCicloVendasCotacoesFormularioProfilesResolverGuard
+    },
+    canDeactivate: [FormDeactivateGuard],
+  },
+  {
+    path: 'registrar',
+    component: AutorizacionesFormularioComponent,
+    resolve: {
+      cliente: AutorizacionesClienteGuard,
+      data: AutorizacionesDataGuard,
+      permissoes: AutorizacionesPermissoesGuard,
+      profile: AutorizacionesProfilesGuard
+    },
+    canDeactivate: [FormDeactivateGuard],
+  },
+  {
+    path: 'registrar/:idReservado/:codEmpresa',
+    component: ComercialCicloVendasCotacoesFormularioComponent,
+    resolve: {
+      cliente: ComercialCicloVendasCotacoesFormularioClienteResolverGuard,
+      data: ComercialCicloVendasCotacoesFormularioDataResolverGuard,
+      permissoes: ComercialCicloVendasCotacoesFormularioPermissoesResolverGuard,
+      profile: ComercialCicloVendasCotacoesFormularioProfilesResolverGuard
+    },
+    canDeactivate: [FormDeactivateGuard],
+  },
+  {
+    path: 'registrar/:idReservado',
     component: ComercialCicloVendasCotacoesFormularioComponent,
     resolve: {
       cliente: ComercialCicloVendasCotacoesFormularioClienteResolverGuard,
@@ -107,7 +148,8 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     ComercialCicloVendasCotacoesListaModule,
-    ComercialCicloVendasCotacoesFormularioModule
+    ComercialCicloVendasCotacoesFormularioModule,
+    AutorizacionesFormularioModule
   ],
   exports: [RouterModule],
 })

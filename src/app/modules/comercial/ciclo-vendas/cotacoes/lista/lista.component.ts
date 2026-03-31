@@ -1589,7 +1589,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   }
 
   nuevo() {
-    this.router.navigate(['../novo', 1], {
+    this.router.navigate(['../registrar', 1], {
       queryParams: { codCliente: this.detalhesCodCliente },
       relativeTo: this.activatedRoute,
     });

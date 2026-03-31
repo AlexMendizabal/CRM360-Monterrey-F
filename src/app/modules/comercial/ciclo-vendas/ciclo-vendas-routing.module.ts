@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 // Components
 import { ComercialCicloVendasComponent } from './ciclo-vendas.component';
@@ -13,11 +13,18 @@ const routes: Routes = [
         component: ComercialCicloVendasComponent,
       },
       {
+        path: 'ofertas',
+        loadChildren: () =>
+          import('./cotacoes/cotacoes.module').then(
+            (m) => m.ComercialCicloVendasCotacoesModule
+          ),
+      },
+      {
         path: 'autorizaciones',
         loadChildren: () =>
           import('./autorizaciones/autorizaciones.module').then(
             (m) => m.ComercialCicloVendasAutorizacionesModule
-      ),
+          ),
       },
       {
         path: 'cotacoes-pedidos',
@@ -58,8 +65,8 @@ const routes: Routes = [
         loadChildren: () =>
           import('./autorizaciones/autorizaciones.module').then(
             (m) => m.ComercialCicloVendasAutorizacionesModule
-      ),
-    },
+          ),
+      },
     ],
   }
 ];
@@ -68,4 +75,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ComercialCicloVendasRoutingModule {}
+export class ComercialCicloVendasRoutingModule { }
