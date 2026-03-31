@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  crm360-v2-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: crm360-v2-dev
+    ports:
+      - "4201:4200" # Se expone en el 4201 para evitar conflictos con la versión antigua
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: unless-stopped

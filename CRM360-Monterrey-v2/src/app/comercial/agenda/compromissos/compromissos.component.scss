@@ -1,0 +1,158 @@
+/* ═══════════════════════════════════════
+   Agenda — Compromisos
+   ═══════════════════════════════════════ */
+
+$purple: #3e0752;
+$green:  #21C710;
+$blue:   #0453F1;
+$orange: #FF5208;
+$gray:   #D1CBD6;
+$violet: #BC0BDF;
+$border: #e5e7eb;
+$muted:  #6c757d;
+
+.compromissos-page { padding: 20px 24px; }
+
+/* ─── Header ─── */
+.page-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+  .page-title { font-size: 20px; font-weight: 600; color: #1a1a2e; margin: 0; }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+}
+
+.btn-new { background-color: $purple !important; color: white !important; font-size: 13px; font-weight: 500; border-radius: 6px;
+  mat-icon { font-size: 18px; height: 18px; width: 18px; margin-right: 4px; }
+}
+.btn-refresh { color: $muted; }
+
+/* ─── View Toggle ─── */
+.view-toggle {
+  ::ng-deep .mat-button-toggle { height: 36px; border-radius: 6px !important; }
+  ::ng-deep .mat-button-toggle-checked { background: $purple; color: white; }
+  mat-icon { font-size: 18px; height: 18px; width: 18px; }
+}
+
+/* ─── Legend ─── */
+.legend-bar { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-bottom: 12px; padding: 8px 12px; background: white; border: 1px solid $border; border-radius: 6px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #374151; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+/* ─── Filters ─── */
+.filter-panel { background: white; border: 1px solid $border; border-radius: 8px; padding: 12px 16px 8px; margin-bottom: 14px; }
+.filter-title { font-size: 12px; font-weight: 700; color: $muted; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+.filter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px 14px; }
+.filter-field {
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper { display: none; }
+  ::ng-deep .mdc-text-field--outlined { --mdc-outlined-text-field-container-shape: 6px; }
+  ::ng-deep .mat-mdc-form-field-infix { min-height: 40px; padding-top: 8px !important; padding-bottom: 8px !important; }
+  ::ng-deep .mdc-floating-label, ::ng-deep input.mat-mdc-input-element { font-size: 13px; }
+}
+.filter-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 8px; border-top: 1px solid #f3f4f6; margin-top: 4px; }
+.btn-action { font-size: 13px; border-radius: 6px; min-width: 90px; height: 38px; display: inline-flex; align-items: center; gap: 4px; mat-icon { font-size: 17px; height: 17px; width: 17px; } }
+.btn-search { background-color: $purple !important; color: white !important; }
+
+/* ─── Summary ─── */
+.summary-bar { display: flex; align-items: center; gap: 10px; font-size: 13px; color: $muted; margin-bottom: 10px;
+  .total-badge { background: rgba($purple, .08); color: $purple; font-weight: 600; padding: 2px 10px; border-radius: 20px; }
+}
+
+/* ─── Loading / Empty ─── */
+.loading-overlay { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 48px; color: $muted; font-size: 14px; mat-spinner { --mdc-circular-progress-active-indicator-color: #{$purple}; } }
+.empty-state { text-align: center; padding: 52px 16px; color: $muted;
+  mat-icon { font-size: 48px; height: 48px; width: 48px; color: #d1d5db; display: block; margin: 0 auto 12px; }
+  p { margin: 0; font-size: 14px; }
+}
+
+/* ─── List Table ─── */
+.table-wrapper { background: white; border: 1px solid $border; border-radius: 8px; overflow: hidden; }
+.agenda-table {
+  width: 100%;
+  ::ng-deep .mat-mdc-header-row { background-color: #f1f3f5; height: 42px; }
+  ::ng-deep .mat-mdc-header-cell { font-size: 11px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: .4px; border-bottom: 2px solid $border; padding: 0 10px; }
+  .data-row { height: 44px; transition: background .15s; &:hover { background: #faf5fc; } }
+  ::ng-deep .mat-mdc-cell { font-size: 13px; color: #1f2937; padding: 0 10px; }
+}
+.col-fecha { width: 140px; } .col-cliente { width: 25%; } .col-titulo { width: 18%; } .col-estado { width: 120px; } .col-vendedor { width: 16%; } .col-sucursal { width: 100px; } .col-actions { width: 110px; }
+
+/* Estado chips */
+.estado-chip { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; background: rgba($blue, .1); color: $blue; }
+.estado-finalizado  { background: rgba($green, .12) !important; color: #167a0b !important; }
+.estado-proceso     { background: rgba($orange, .12) !important; color: #a33200 !important; }
+.estado-reagendado  { background: rgba(#888, .12) !important; color: #555 !important; }
+.estado-registrado  { background: rgba($violet, .1) !important; color: $violet !important; }
+
+/* Action buttons */
+.btn-edit      { color: $purple; width: 30px; height: 30px; mat-icon { font-size: 17px; } }
+.btn-finalizar { color: $green;  width: 30px; height: 30px; mat-icon { font-size: 17px; } }
+.btn-reagendar { color: $orange; width: 30px; height: 30px; mat-icon { font-size: 17px; } }
+
+::ng-deep .mat-mdc-paginator { background: white; border: 1px solid $border; border-top: none; border-radius: 0 0 8px 8px; font-size: 13px; }
+
+/* ═══════════════════════════════════════
+   CALENDAR VIEW
+   ═══════════════════════════════════════ */
+
+.calendar-card { background: white; border: 1px solid $border; border-radius: 8px; overflow: hidden; }
+
+/* ─── Calendar header ─── */
+.cal-header { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid $border; background: #f8f9fa;
+  .cal-month-label { flex: 1; text-align: center; font-size: 16px; font-weight: 700; color: $purple; text-transform: capitalize; }
+  .btn-today { font-size: 12px; border-radius: 6px; height: 30px; color: $purple; border-color: $purple; }
+}
+
+/* ─── Day-of-week header ─── */
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+}
+
+.cal-week-header { background: #f1f3f5;
+  .cal-weekday { padding: 8px 0; text-align: center; font-size: 11px; font-weight: 700; color: $muted; text-transform: uppercase; letter-spacing: .5px; border-bottom: 2px solid $border; }
+}
+
+/* ─── Day cells ─── */
+.cal-body {
+  border-bottom: 1px solid $border;
+}
+
+.cal-day {
+  min-height: 90px; padding: 6px 8px; border-right: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background .12s;
+  position: relative;
+
+  &:hover { background: #f8f4fc; }
+  &.other-month { background: #fbfbfb; .day-number { color: #c0c0c0; } }
+  &.today { background: rgba($purple, .04); .day-number { background: $purple; color: white; border-radius: 50%; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; } }
+  &.has-events { cursor: pointer; }
+  &.selected { background: rgba($purple, .08); outline: 2px solid $purple; }
+}
+
+.day-number { font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 4px; display: inline-block; }
+
+.event-dots { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; align-items: center; }
+.event-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.event-more { font-size: 10px; color: $muted; font-weight: 600; }
+
+/* ─── Day panel (selected day events) ─── */
+.day-panel {
+  border-top: 2px solid $purple; padding: 12px 16px; background: #faf5fc;
+
+  .day-panel-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: $purple;
+    mat-icon { font-size: 18px; height: 18px; width: 18px; }
+    .day-panel-count { font-size: 12px; background: rgba($purple, .1); color: $purple; padding: 1px 8px; border-radius: 12px; margin-left: auto; }
+  }
+}
+
+.day-event-row {
+  display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba($border, .6);
+  &:last-child { border-bottom: none; }
+}
+
+.day-event-bullet { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+.day-event-info { flex: 1; display: flex; flex-direction: column; gap: 2px;
+  .day-event-client { font-size: 13px; font-weight: 600; color: #1f2937; }
+  .day-event-title  { font-size: 12px; color: $muted; }
+  .day-event-status { font-size: 11px; display: inline-block; padding: 1px 7px; border-radius: 10px; font-weight: 600; width: fit-content; }
+}
+
+.day-event-actions { display: flex; gap: 2px; }

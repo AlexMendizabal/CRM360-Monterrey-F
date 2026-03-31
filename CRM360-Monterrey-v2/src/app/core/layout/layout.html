@@ -1,0 +1,307 @@
+<div class="app-layout-wrapper">
+  <!-- ═══════════════════════ TOPBAR ═══════════════════════ -->
+  <mat-toolbar class="main-topbar mat-elevation-z4">
+
+    <!-- SAP Status Badge -->
+    <div class="sap-status"
+         [class.sap-checking]="sap.sapStatus() === 'checking'"
+         [class.sap-connected]="sap.sapStatus() === 'connected'"
+         [class.sap-disconnected]="sap.sapStatus() === 'disconnected'">
+      @switch (sap.sapStatus()) {
+        @case ('checking') {
+          <mat-icon class="sap-icon spin">sync</mat-icon>
+          <span class="sap-label">Verificando SAP...</span>
+        }
+        @case ('connected') {
+          <mat-icon class="sap-icon">check_circle</mat-icon>
+          <span class="sap-label">SAP: Conectado</span>
+        }
+        @case ('disconnected') {
+          <mat-icon class="sap-icon">error</mat-icon>
+          <span class="sap-label">SAP: Desconectado</span>
+        }
+      }
+    </div>
+
+    <span class="version-badge">V. 2.0.0</span>
+
+    <span class="spacer"></span>
+
+    <!-- Logo CRM360 -->
+    <div class="crm-logo-text">
+      <mat-icon class="crm-icon">blur_circular</mat-icon>
+      <strong>CRM</strong><span class="crm-360">360</span>
+    </div>
+
+    <!-- Notificaciones -->
+    <button mat-icon-button
+            class="topbar-icon-btn"
+            [matMenuTriggerFor]="notifMenu"
+            matTooltip="Notificaciones">
+      <mat-icon [matBadge]="notif.count() > 0 ? notif.count() : null"
+                matBadgeColor="warn"
+                matBadgeSize="small">
+        notifications
+      </mat-icon>
+    </button>
+    <mat-menu #notifMenu="matMenu" class="notif-menu">
+      @if (notif.notificaciones().length > 0) {
+        @for (n of notif.notificaciones(); track n.id) {
+          <button mat-menu-item (click)="onNotificacionClick(n)">
+            <span class="notif-msg">{{ n.mensaje }}</span>
+          </button>
+        }
+        <mat-divider></mat-divider>
+        <button mat-menu-item class="read-all-btn" (click)="onLeerTodasNotificaciones()">
+          <mat-icon>done_all</mat-icon>
+          <span>Leer todas</span>
+        </button>
+      } @else {
+        <button mat-menu-item disabled>
+          <mat-icon>notifications_off</mat-icon>
+          <span>No hay notificaciones</span>
+        </button>
+      }
+    </mat-menu>
+
+    <!-- Módulos -->
+    @if (checkTipoAcceso()) {
+      <button mat-icon-button
+              class="topbar-icon-btn"
+              [matMenuTriggerFor]="modulosMenu"
+              matTooltip="Módulos">
+        <mat-icon>apps</mat-icon>
+      </button>
+      <mat-menu #modulosMenu="matMenu">
+        @if (nav.modulosLoaded() && !nav.modulosError()) {
+          @for (mod of nav.modulos(); track mod.id) {
+            <button mat-menu-item (click)="onSelectModulo(mod)">
+              @if (mod.icone && mod.icone.includes(' ')) {
+                <i [class]="mod.icone" class="topbar-menu-fa"></i>
+              } @else {
+                <mat-icon>{{ mod.icone || 'extension' }}</mat-icon>
+              }
+              <span>{{ mod.nome | uppercase }}</span>
+            </button>
+          }
+        }
+        @if (nav.modulosLoaded() && nav.modulosError()) {
+          <button mat-menu-item (click)="nav.loadModulos(userMatricula)">
+            <mat-icon>refresh</mat-icon>
+            <span>Recargar</span>
+          </button>
+        }
+        @if (!nav.modulosLoaded()) {
+          <button mat-menu-item disabled>
+            <mat-spinner diameter="20"></mat-spinner>
+            <span class="ms-2">Cargando módulos...</span>
+          </button>
+        }
+      </mat-menu>
+    }
+
+    <!-- Perfil de usuario -->
+    <button mat-icon-button
+            class="topbar-icon-btn"
+            [matMenuTriggerFor]="userMenu"
+            matTooltip="Mi cuenta">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item disabled>
+        <mat-icon>person</mat-icon>
+        <span>{{ userName | uppercase }}{{ userMatricula ? ' (' + userMatricula + ')' : '' }}</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="openChangePasswordDialog()">
+        <mat-icon>vpn_key</mat-icon>
+        <span>Cambiar contraseña</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="onLogout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Cerrar Sesión</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+
+  <!-- ═══════════════════════ BODY ═══════════════════════ -->
+  <div class="body-wrapper">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar-wrapper"
+         (mouseenter)="mouseEnterMenu()"
+         (mouseleave)="mouseLeaveMenu()"
+         [class.expanded]="sidebarExpanded()">
+
+      <!-- Toggle Lock -->
+      <div class="sidebar-toggle">
+        <button mat-icon-button class="toggle-btn" (click)="toggleLockMenu()">
+          <mat-icon>{{ toggleMenuIcon() }}</mat-icon>
+        </button>
+      </div>
+
+      <!-- Sidebar Content -->
+      <div class="sidebar-content">
+
+        <!-- Home -->
+        <a class="sidebar-item"
+           routerLink="/dashboard"
+           routerLinkActive="active-item"
+           (click)="onHideMenu()"
+           matTooltip="Home"
+           [matTooltipDisabled]="sidebarExpanded()">
+          <mat-icon>home</mat-icon>
+          <span class="sidebar-label">Home</span>
+        </a>
+
+        <!-- Actividades dinámicas -->
+        @if (nav.atividadesLoaded() && !nav.atividadesError()) {
+          @for (atividade of nav.atividades(); track atividade.id) {
+
+            <!-- ATIVIDADE_SEM_SUBMODULO -->
+            @if (atividade.renderizacao === 'ATIVIDADE_SEM_SUBMODULO') {
+              <a class="sidebar-item"
+                 [routerLink]="[atividade.rota]"
+                 routerLinkActive="active-item"
+                 (click)="onHideMenu()"
+                 [matTooltip]="atividade.nome"
+                 [matTooltipDisabled]="sidebarExpanded()">
+                @if (atividade.icone && atividade.icone.includes(' ')) {
+                  <i [class]="atividade.icone" class="sidebar-icon-fa"></i>
+                } @else {
+                  <mat-icon>{{ atividade.icone || 'label' }}</mat-icon>
+                }
+                <span class="sidebar-label">{{ atividade.nome }}</span>
+              </a>
+            }
+
+            <!-- ATIVIDADE_COM_SUBMODULO v1 -->
+            @if (atividade.renderizacao === 'ATIVIDADE_COM_SUBMODULO' && atividade.versao !== 2) {
+              <a class="sidebar-item"
+                 [routerLink]="[atividade.rota, atividade.submoduloId]"
+                 routerLinkActive="active-item"
+                 (click)="onHideMenu()"
+                 [matTooltip]="atividade.nome"
+                 [matTooltipDisabled]="sidebarExpanded()">
+                @if (atividade.icone && atividade.icone.includes(' ')) {
+                  <i [class]="atividade.icone" class="sidebar-icon-fa"></i>
+                } @else {
+                  <mat-icon>{{ atividade.icone || 'label' }}</mat-icon>
+                }
+                <span class="sidebar-label">{{ atividade.nome }}</span>
+              </a>
+            }
+
+            <!-- ATIVIDADE_COM_SUBMODULO v2 -->
+            @if (atividade.renderizacao === 'ATIVIDADE_COM_SUBMODULO' && atividade.versao === 2) {
+              <a class="sidebar-item"
+                 [routerLink]="[atividade.rota]"
+                 routerLinkActive="active-item"
+                 (click)="onHideMenu()"
+                 [matTooltip]="atividade.nome"
+                 [matTooltipDisabled]="sidebarExpanded()">
+                @if (atividade.icone && atividade.icone.includes(' ')) {
+                  <i [class]="atividade.icone" class="sidebar-icon-fa"></i>
+                } @else {
+                  <mat-icon>{{ atividade.icone || 'label' }}</mat-icon>
+                }
+                <span class="sidebar-label">{{ atividade.nome }}</span>
+              </a>
+            }
+
+            <!-- ATIVIDADE_EXTERNA_RENDERIZADA_INTERNAMENTE -->
+            @if (atividade.renderizacao === 'ATIVIDADE_EXTERNA_RENDERIZADA_INTERNAMENTE') {
+              <a class="sidebar-item"
+                 [routerLink]="[atividade.rota, atividade.id]"
+                 routerLinkActive="active-item"
+                 (click)="onHideMenu()"
+                 [matTooltip]="atividade.nome"
+                 [matTooltipDisabled]="sidebarExpanded()">
+                @if (atividade.icone && atividade.icone.includes(' ')) {
+                  <i [class]="atividade.icone" class="sidebar-icon-fa"></i>
+                } @else {
+                  <mat-icon>{{ atividade.icone || 'label' }}</mat-icon>
+                }
+                <span class="sidebar-label">{{ atividade.nome }}</span>
+              </a>
+            }
+
+            <!-- ATIVIDADE_EXTERNA_RENDERIZADA_EXTERNAMENTE -->
+            @if (atividade.renderizacao === 'ATIVIDADE_EXTERNA_RENDERIZADA_EXTERNAMENTE') {
+              <a class="sidebar-item"
+                 [href]="atividade.url"
+                 target="_blank"
+                 (click)="onHideMenu()"
+                 [matTooltip]="atividade.nome"
+                 [matTooltipDisabled]="sidebarExpanded()">
+                @if (atividade.icone && atividade.icone.includes(' ')) {
+                  <i [class]="atividade.icone" class="sidebar-icon-fa"></i>
+                } @else {
+                  <mat-icon>{{ atividade.icone || 'open_in_new' }}</mat-icon>
+                }
+                <span class="sidebar-label">{{ atividade.nome }}</span>
+              </a>
+            }
+          }
+
+          <!-- Reporte Agenda — solo matrícula '1' -->
+          @if (userMatricula === '1') {
+            <a class="sidebar-item"
+               routerLink="reporte-agenda"
+               routerLinkActive="active-item"
+               (click)="onHideMenu()"
+               matTooltip="Reporte de Agenda"
+               [matTooltipDisabled]="sidebarExpanded()">
+              <mat-icon>bar_chart</mat-icon>
+              <span class="sidebar-label">REPORTE de agenda</span>
+            </a>
+          }
+        }
+
+        <!-- Loading state -->
+        @if (!nav.atividadesLoaded()) {
+          <div class="sidebar-item sidebar-loading">
+            <mat-spinner diameter="20"></mat-spinner>
+            <span class="sidebar-label">Cargando...</span>
+          </div>
+        }
+
+        <!-- Error state -->
+        @if (nav.atividadesLoaded() && nav.atividadesError()) {
+          <a class="sidebar-item sidebar-error" (click)="nav.reloadAtividades(); onHideMenu()">
+            <mat-icon>refresh</mat-icon>
+            <span class="sidebar-label">Recargar</span>
+          </a>
+        }
+
+        <!-- Fallback estáticas si no hay actividades y no hay error -->
+        @if (nav.atividadesLoaded() && !nav.atividadesError() && nav.atividades().length === 0) {
+          <a class="sidebar-item"
+             routerLink="/dashboard"
+             routerLinkActive="active-item"
+             matTooltip="Dashboard"
+             [matTooltipDisabled]="sidebarExpanded()">
+            <mat-icon>dashboard</mat-icon>
+            <span class="sidebar-label">Dashboard</span>
+          </a>
+          <a class="sidebar-item"
+             routerLink="/admin/usuarios"
+             routerLinkActive="active-item"
+             matTooltip="Usuarios"
+             [matTooltipDisabled]="sidebarExpanded()">
+            <mat-icon>people</mat-icon>
+            <span class="sidebar-label">Usuarios</span>
+          </a>
+        }
+
+      </div>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content" id="module-body">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+</div>

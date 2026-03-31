@@ -485,6 +485,115 @@
   >
     <empty-result message="Ninguna información encontrada"></empty-result>
   </div>
+  <ng-template #modalDetalhes>
+    <div class="modal-header">
+      <h6 class="modal-title pull-left">Detalle de la oferta </h6>
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title">Datos de la oferta</h6>
+                <div class="row">
+                  <div class="col-md-2">
+                    <label for="customerName"> <strong> N°:</strong></label>
+                    <input type="text" id="customerName" class="form-control" readonly value="{{oferta.codigo_oferta}}">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="sellerName"> <strong>F. Cotizacion: </strong></label>
+                    <input type="text" id="sellerName" class="form-control" readonly value="{{oferta.fecha_inicial}}">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="sellerName"> <strong>F. validez: </strong></label>
+                    <input type="text" id="sellerName" class="form-control" readonly value="{{oferta.fecha_final}}">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="sellerName"> <strong>Vendedor: </strong></label>
+                    <input type="text" id="sellerName" class="form-control" readonly value="{{oferta.nombre_vendedor}}">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title">Datos del cliente</h6>
+                <div class="row">
+                  <div class="col-md-3">
+                    <label for="customerName"> <strong> Cod. Cliente:</strong></label>
+                    <input type="text" id="customerName" class="form-control" readonly
+                           value="{{oferta.codigo_cliente}}">
+                  </div>
+                  <div class="col-md-5">
+                    <label for="sellerName"> <strong>Cliente: </strong></label>
+                    <input type="text" id="sellerName" class="form-control" readonly value="{{oferta.nombre_cliente}}">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="sellerName"> <strong>Lista de precios </strong>:</label>
+                    <input type="text" id="sellerName" class="form-control" readonly value="{{oferta.nombre_lista}}">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 mt-2">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title">Detalle de la cotización</h6>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="table-responsive">
+                      <custom-table [config]="tableConfig" *ngIf="items.length > 0">
+                        <ng-template #thead let-thead>
+                          <tr>
+                            <th class="text-truncate text-center" (click)="setOrderByModal('codigo_material')">
+                              <!-- <thead-sorter value="Articulo" [active]="orderBy == 'Articulo'"> Código
+                              </thead-sorter> --> Código
+                            </th>
+                            <th class="text-truncate text-left" (click)="setOrderByModal('nombre_material')">
+                              <!-- <thead-sorter value="Descripcion" [active]="orderBy == 'nombre_material'"></thead-sorter> -->
+                              Nombre material
+                            </th>
+                            <th class="text-truncate text-center" (click)="setOrderByModal('cantidad')">
+                              <!-- <thead-sorter value="cantidad" [active]="orderBy == 'cantidad'"></thead-sorter> -->
+                              Cantidad
+                            </th>
+                            <th class="text-truncate text-center" (click)="setOrderByModal('unidad')">
+                              <!-- <thead-sorter value="unidad " [active]="orderBy == 'unidad'"></thead-sorter> -->
+                              Unidad
+                            </th>
+                            <th class="text-truncate text-center" (click)="setOrderByModal('precio')">
+                              <!-- <thead-sorter value="precio" [active]="orderBy == 'precio'"></thead-sorter> -->
+                              Precio
+                            </th>
+                            <th class="text-truncate text-center" (click)="setOrderByModal('total_bruto')">
+                              <!-- <thead-sorter value="total_bruto" [active]="orderBy == 'total_bruto'"></thead-sorter> -->
+                              Total Bruto
+                            </th>
+                            <th class="text-truncate text-center" (click)="setOrderByModal('nombre_almacen')">
+                              <!-- <thead-sorter value="% Descuento" [active]="orderBy == 'descuento'"></thead-sorter> -->
+                              Descuento
+                            </th>
+                            <th class="text-truncate text-center" (click)="setOrderByModal('precio_descuento')">
+                              <!-- <thead-sorter value="Precio descuento"
+                                [active]="orderBy == 'precio_descuento'"></thead-sorter> --> Precio Descuento
+                            </th>
+                            <th class="text-truncate text-center" (click)="setOrderByModal('nombre_almacen')">
+                              <!--  <thead-sorter value="Almacen" [active]="orderBy == 'nombre_almacen'"></thead-sorter> -->
+                              Almacém
+                            </th>
+                            <th class="text-truncate text-center" (click)="setOrderByModal('nombre_moneda')">
+                              <!-- <thead-sorter value="Total con descuento"
+                                [active]="orderBy == 'nombre_moneda'"></thead-sorter> --> Total
+                            </th>
 
   <ng-template #alertaOferta>
     <comercial-ciclo-vendas-cotacoes-lista-modal-alerta-oferta

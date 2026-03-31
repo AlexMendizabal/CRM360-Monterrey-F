@@ -1,0 +1,236 @@
+/* ═══════════════════════════════════════
+   CRM360 v2 — Layout Shell Styles
+   ═══════════════════════════════════════ */
+
+$purple-brand: #3e0752;
+$orange-brand: #FC9F3A;
+$dark-sidebar: #212529;
+$sidebar-collapsed: 48px;
+$sidebar-expanded: 250px;
+$topbar-height: 48px;
+
+// ─── Keyframes ───────────────────────────
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// ─── Root Layout ─────────────────────────
+.app-layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+// ─── TOPBAR ──────────────────────────────
+.main-topbar {
+  background-color: $purple-brand;
+  color: #fff;
+  height: $topbar-height;
+  min-height: $topbar-height !important;
+  max-height: $topbar-height;
+  padding: 0 12px 0 56px; // Deja espacio para el toggle-btn del sidebar
+  z-index: 1091;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .sap-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 15px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background-color .3s ease;
+
+    .sap-icon {
+      font-size: 14px;
+      height: 14px;
+      width: 14px;
+      line-height: 14px;
+    }
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+
+    &.sap-checking  { background-color: $orange-brand; color: #fff; }
+    &.sap-connected { background-color: #28a745; color: #fff; }
+    &.sap-disconnected { background-color: #dc3545; color: #fff; }
+
+    .sap-label {
+      display: none;
+      @media (min-width: 768px) { display: inline; }
+    }
+  }
+
+  .version-badge {
+    font-size: 10px;
+    font-weight: bold;
+    color: rgba(255,255,255,.6);
+    display: none;
+    @media (min-width: 768px) { display: inline; }
+  }
+
+  .spacer { flex: 1 1 auto; }
+
+  .crm-logo-text {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    gap: 2px;
+    margin-right: 8px;
+
+    .crm-icon { font-size: 22px; height: 22px; width: 22px; margin-right: 4px; }
+    .crm-360 { color: $orange-brand; }
+  }
+
+  .topbar-icon-btn {
+    color: rgba($orange-brand, .75);
+    &:hover { color: #fff; }
+  }
+}
+
+// ─── BODY (sidebar + content) ────────────
+.body-wrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+// ─── SIDEBAR ─────────────────────────────
+.sidebar-wrapper {
+  position: relative;
+  background-color: $dark-sidebar;
+  width: $sidebar-collapsed;
+  min-width: $sidebar-collapsed;
+  display: flex;
+  flex-direction: column;
+  transition: width .2s cubic-bezier(.4,0,.2,1), min-width .2s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
+  z-index: 1090;
+
+  &.expanded {
+    width: $sidebar-expanded;
+    min-width: $sidebar-expanded;
+
+    .sidebar-label { display: inline; }
+  }
+}
+
+.sidebar-toggle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: $topbar-height;
+  width: $sidebar-collapsed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1092;
+
+  .toggle-btn {
+    color: rgba($orange-brand, .75);
+    &:hover { color: #fff; background-color: rgba(255,255,255,.1); }
+  }
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  padding-top: 4px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  height: 45px;
+  padding: 0 14px;
+  color: $orange-brand;
+  text-decoration: none;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color .15s ease;
+  white-space: nowrap;
+
+  mat-icon, .sidebar-icon-fa {
+    min-width: 20px;
+    text-align: center;
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+    line-height: 20px;
+  }
+
+  .sidebar-label {
+    display: none;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-left: 10px;
+    color: rgba(255,255,255,.7);
+  }
+
+  &:hover {
+    background-color: rgba(255,255,255,.05);
+    color: #fff;
+    text-decoration: none;
+    .sidebar-label { color: #fff; }
+  }
+
+  &.active-item {
+    background-color: rgba(255,255,255,.1);
+    border-left: 3px solid $orange-brand;
+    color: $orange-brand;
+  }
+}
+
+.sidebar-loading {
+  justify-content: center;
+  cursor: default;
+  color: rgba(255,255,255,.5);
+  mat-spinner { margin-right: 8px; }
+}
+
+.sidebar-error {
+  color: rgba(255,255,255,.6);
+  &:hover { color: #fff; }
+}
+
+// ─── MAIN CONTENT ────────────────────────
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #f4f6f8;
+  padding: 0;
+}
+
+// ─── OVERRIDES GLOBALES (menús, badges) ──
+::ng-deep {
+  .notif-menu {
+    max-height: 300px;
+    .notif-msg {
+      white-space: normal;
+      line-height: 1.3;
+      font-size: 13px;
+    }
+    .read-all-btn {
+      background-color: #faf9f9;
+      font-weight: 500;
+    }
+  }
+  .mat-badge-content {
+    font-size: 10px !important;
+  }
+  .topbar-menu-fa {
+    margin-right: 16px;
+    font-size: 20px;
+    width: 20px;
+    text-align: center;
+    vertical-align: middle;
+    color: rgba(0,0,0,.54);
+  }
+}
