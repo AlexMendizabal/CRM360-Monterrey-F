@@ -1,0 +1,218 @@
+<div class="cadastro-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ isEditMode ? 'Editar' : 'Nuevo' }} Perfil</h1>
+      <a routerLink="../" class="back-link">
+        <mat-icon>arrow_back</mat-icon> Volver a la lista
+      </a>
+    </div>
+    <button mat-flat-button class="btn-save" (click)="onSave()" [disabled]="form.invalid || saving">
+      @if (saving) {
+        <mat-spinner diameter="18" class="inline-spinner"></mat-spinner> Guardando...
+      } @else {
+        <ng-container><mat-icon>save</mat-icon> Guardar</ng-container>
+      }
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading-box">
+      <mat-spinner diameter="36"></mat-spinner>
+      <span>Cargando datos...</span>
+    </div>
+  }
+
+  @if (!loading) {
+    <!-- DATOS DEL PERFIL -->
+    <mat-card appearance="outlined" class="form-card">
+      <mat-card-header>
+        <mat-card-title class="card-title">Datos del perfil</mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content class="form-body">
+        <form [formGroup]="form" autocomplete="off">
+          
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-full">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="nome" placeholder="Nombre del perfil">
+              @if (form.controls['nome'].hasError('required') && form.controls['nome'].touched) {
+                <mat-error>El nombre es obligatorio</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-half">
+              <mat-label>Sigla</mat-label>
+              <input matInput formControlName="sigla" placeholder="Ej: ADM">
+              @if (form.controls['sigla'].hasError('required') && form.controls['sigla'].touched) {
+                <mat-error>La sigla es obligatoria</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-half">
+              <mat-label>Situación</mat-label>
+              <mat-select formControlName="situacao">
+                <mat-option [value]="1">Activo</mat-option>
+                <mat-option [value]="0">Inactivo</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- ACTIVIDADES DEL PERFIL -->
+    <div class="activities-wrapper p-t-20">
+      
+      <!-- Actividades Asociadas (Izquierda) -->
+      <mat-card appearance="outlined" class="activities-card assoc-card">
+        <mat-card-header class="activities-header">
+          <mat-card-title class="card-title">Actividades asociadas</mat-card-title>
+          <div class="header-actions">
+            <button mat-stroked-button color="warn" class="btn-sm-action" (click)="onRemoverAssociacao()" [disabled]="atividadesAssociadas.length === 0">
+              <mat-icon>delete</mat-icon> Limpiar
+            </button>
+          </div>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content class="activities-body">
+          @if (atividadesAssociadasLoading) {
+            <div class="loading-mini">
+              <mat-spinner diameter="24"></mat-spinner>
+              <span>Buscando...</span>
+            </div>
+          } @else if (atividadesAssociadas.length === 0) {
+            <div class="empty-state">
+              <mat-icon>swap_horiz</mat-icon>
+              <span>Ninguna actividad asociada</span>
+            </div>
+          } @else {
+            <div class="table-container">
+              <table mat-table [dataSource]="atividadesAssociadas" class="compact-table">
+                <!-- Checkbox -->
+                <ng-container matColumnDef="check">
+                  <th mat-header-cell *matHeaderCellDef class="col-chk">
+                    <mat-checkbox (change)="toggleAllAssociadas($event.checked)" [checked]="allAssociadasChecked"></mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let item" class="col-chk">
+                    <mat-checkbox [(ngModel)]="item.checked"></mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <!-- ID -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef class="col-sm-id">Id</th>
+                  <td mat-cell *matCellDef="let item" class="col-sm-id">{{item.id}}</td>
+                </ng-container>
+
+                <!-- Nombre -->
+                <ng-container matColumnDef="nome">
+                  <th mat-header-cell *matHeaderCellDef class="col-sm-desc">Descripción</th>
+                  <td mat-cell *matCellDef="let item" class="col-sm-desc">{{item.nome | uppercase}}</td>
+                </ng-container>
+
+                <!-- Acciones -->
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef class="col-sm-action"></th>
+                  <td mat-cell *matCellDef="let item" class="col-sm-action">
+                    @if (item.loading) {
+                      <mat-spinner diameter="16"></mat-spinner>
+                    } @else {
+                      <button mat-icon-button class="btn-delete" (click)="onRemoverAssociacao(item)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    }
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsAssoc"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsAssoc;"></tr>
+              </table>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Búsqueda de Actividades (Derecha) -->
+      <mat-card appearance="outlined" class="activities-card search-card">
+        <mat-card-header class="activities-header">
+          <mat-card-title class="card-title">Búsqueda de Actividades</mat-card-title>
+          <div class="header-actions">
+            <button mat-stroked-button class="btn-sm-action primary-tint" (click)="onAssociarAtividades()" [disabled]="!form.value.id || atividadesBusqueda.length === 0">
+              <mat-icon>swap_horiz</mat-icon> Asociar
+            </button>
+          </div>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content class="activities-body search-body">
+          
+          <form [formGroup]="formAtividades" (ngSubmit)="buscarAtividades()" class="search-form" autocomplete="off">
+            <mat-form-field appearance="outline" class="mini-field select-por">
+              <mat-label>Buscar por</mat-label>
+              <mat-select formControlName="buscarPor">
+                <mat-option value="id">Id</mat-option>
+                <mat-option value="nome">Nombre</mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline" class="mini-field input-term">
+              <mat-label>Término de búsqueda</mat-label>
+              <input matInput formControlName="pesquisa" placeholder="Buscar...">
+            </mat-form-field>
+
+            <button mat-flat-button class="btn-sm-action btn-go-search" type="submit" [disabled]="formAtividades.invalid">
+              <mat-icon>search</mat-icon>
+            </button>
+          </form>
+
+          @if (atividadesLoading) {
+            <div class="loading-mini">
+              <mat-spinner diameter="24"></mat-spinner>
+              <span>Buscando actividades...</span>
+            </div>
+          } @else if (atividadesBusqueda.length > 0) {
+            <div class="table-container mt-2">
+              <table mat-table [dataSource]="atividadesBusqueda" class="compact-table">
+                <!-- Checkbox -->
+                <ng-container matColumnDef="check">
+                  <th mat-header-cell *matHeaderCellDef class="col-chk">
+                    <mat-checkbox (change)="toggleAllBusqueda($event.checked)" [checked]="allBusquedaChecked"></mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let item" class="col-chk">
+                    <mat-checkbox [(ngModel)]="item.checked"></mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <!-- Descripcion -->
+                <ng-container matColumnDef="descricao">
+                  <th mat-header-cell *matHeaderCellDef class="col-long">Actividades disponibles</th>
+                  <td mat-cell *matCellDef="let item" class="col-long" (click)="item.checked = !item.checked" style="cursor: pointer;">
+                    <div class="activity-desc">
+                      @if (item.loading) { <mat-spinner diameter="14" class="inline-spn"></mat-spinner> }
+                      <span>({{ item.moduloNome || 'Módulo' }}) ({{ item.id }}) {{ item.nome | uppercase }}</span>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsSearch"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsSearch;" class="hover-row"></tr>
+              </table>
+            </div>
+          } @else {
+            <div class="empty-state">
+              <mat-icon>inbox</mat-icon>
+              <span>Usa el buscador superior para encontrar actividades</span>
+            </div>
+          }
+
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  }
+</div>

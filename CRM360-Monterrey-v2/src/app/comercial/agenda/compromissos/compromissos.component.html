@@ -1,0 +1,257 @@
+<div class="compromissos-page">
+
+  <div class="page-header">
+    <h1 class="page-title">Agenda — Compromisos</h1>
+    <div class="header-actions">
+      <!-- Vista toggle -->
+      <mat-button-toggle-group [(ngModel)]="viewMode" class="view-toggle">
+        <mat-button-toggle value="lista" matTooltip="Vista Lista">
+          <mat-icon>view_list</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="calendario" matTooltip="Vista Calendario">
+          <mat-icon>calendar_month</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <button mat-icon-button (click)="getData()" matTooltip="Actualizar" class="btn-refresh">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-raised-button class="btn-new" [routerLink]="['../novo']">
+        <mat-icon>add</mat-icon>
+        NUEVO
+      </button>
+    </div>
+  </div>
+
+  <!-- Leyendas -->
+  <div class="legend-bar">
+    <span *ngFor="let l of leyendas" class="legend-item">
+      <span class="legend-dot" [style.background]="l.color"></span>
+      <span class="legend-text">{{ l.text }}</span>
+    </span>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filter-panel">
+    <div class="filter-title">Filtros de búsqueda</div>
+    <form [formGroup]="form" (ngSubmit)="onFilter()">
+      <div class="filter-grid">
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Fecha Inicial</mat-label>
+          <input matInput [matDatepicker]="pi" formControlName="inicio">
+          <mat-datepicker-toggle matIconSuffix [for]="pi"></mat-datepicker-toggle>
+          <mat-datepicker #pi></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Fecha Final</mat-label>
+          <input matInput [matDatepicker]="pf" formControlName="fim">
+          <mat-datepicker-toggle matIconSuffix [for]="pf"></mat-datepicker-toggle>
+          <mat-datepicker #pf></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Vendedor</mat-label>
+          <mat-select formControlName="idVendedor">
+            <mat-option value="">Todos</mat-option>
+            <mat-option *ngFor="let v of vendedores" [value]="v.id">{{ v.nome || v.nombre }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Sucursal</mat-label>
+          <mat-select formControlName="idEscritorio">
+            <mat-option value="">Todas</mat-option>
+            <mat-option *ngFor="let e of escritorios" [value]="e.id">{{ e.sigla || e.nome }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="statusnome">
+            <mat-option value="">Todos</mat-option>
+            <mat-option *ngFor="let e of estados" [value]="e.id">{{ e.nombre || e.nome }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </div>
+
+      <div class="filter-actions">
+        <button mat-button type="button" class="btn-action" (click)="onReset()">Limpiar</button>
+        <button mat-flat-button type="submit" class="btn-action btn-search" [disabled]="loading">
+          <mat-icon>search</mat-icon>
+          Buscar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-overlay">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Cargando compromisos...</span>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- Summary bar -->
+    <div *ngIf="data.length > 0" class="summary-bar">
+      <span>Total:</span>
+      <span class="total-badge">{{ totalItems }} compromisos</span>
+    </div>
+
+    <!-- ══════════════════════ VISTA LISTA ══════════════════════ -->
+    <ng-container *ngIf="viewMode === 'lista'">
+      <div class="table-wrapper mat-elevation-z2">
+
+        <ng-container *ngIf="paginatedData.length > 0">
+          <table mat-table [dataSource]="paginatedData" class="agenda-table">
+
+            <ng-container matColumnDef="fecha">
+              <th mat-header-cell *matHeaderCellDef class="col-fecha"> Fecha </th>
+              <td mat-cell *matCellDef="let c"> {{ c.start | date:'dd/MM/yyyy HH:mm' }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cliente">
+              <th mat-header-cell *matHeaderCellDef class="col-cliente"> Cliente </th>
+              <td mat-cell *matCellDef="let c"> {{ c.client || c.cliente }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="titulo">
+              <th mat-header-cell *matHeaderCellDef class="col-titulo"> Título </th>
+              <td mat-cell *matCellDef="let c"> {{ c.title || c.titulo || c.formContactDesc }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef class="col-estado"> Estado </th>
+              <td mat-cell *matCellDef="let c">
+                <span class="estado-chip" [ngClass]="getEstadoClass(c.statusnome)">
+                  {{ c.statusnome || '—' }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="vendedor">
+              <th mat-header-cell *matHeaderCellDef class="col-vendedor"> Vendedor </th>
+              <td mat-cell *matCellDef="let c"> {{ c.nomeVendedor || c.vendedor }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sucursal">
+              <th mat-header-cell *matHeaderCellDef class="col-sucursal"> Sucursal </th>
+              <td mat-cell *matCellDef="let c"> {{ c.nomeEscritorio || c.sucursal }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef class="col-actions"> </th>
+              <td mat-cell *matCellDef="let c">
+                <button mat-icon-button class="btn-edit" (click)="onView(c)" matTooltip="Editar">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button class="btn-finalizar" (click)="onFinalizar(c)" matTooltip="Finalizar">
+                  <mat-icon>check_circle</mat-icon>
+                </button>
+                <button mat-icon-button class="btn-reagendar" (click)="onReagendar(c)" matTooltip="Re-agendar">
+                  <mat-icon>event_repeat</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
+          </table>
+        </ng-container>
+
+        <div *ngIf="data.length === 0" class="empty-state">
+          <mat-icon>event_busy</mat-icon>
+          <p>No hay compromisos para el periodo seleccionado.</p>
+        </div>
+
+        <mat-paginator
+          *ngIf="data.length > 0"
+          [length]="totalItems"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="[10, 25, 50, 100]"
+          [pageIndex]="pageIndex"
+          (page)="onPageChange($event)"
+          showFirstLastButtons>
+        </mat-paginator>
+
+      </div>
+    </ng-container>
+
+    <!-- ══════════════════════ VISTA CALENDARIO ══════════════════════ -->
+    <ng-container *ngIf="viewMode === 'calendario'">
+      <div class="calendar-card mat-elevation-z2">
+
+        <!-- Calendar header nav -->
+        <div class="cal-header">
+          <button mat-icon-button (click)="prevMonth()" matTooltip="Mes anterior">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <span class="cal-month-label">{{ calendarMonthLabel | titlecase }}</span>
+          <button mat-icon-button (click)="nextMonth()" matTooltip="Siguiente mes">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+          <button mat-stroked-button class="btn-today" (click)="goToday()">Hoy</button>
+        </div>
+
+        <!-- Day headers -->
+        <div class="cal-grid cal-week-header">
+          <div *ngFor="let d of calendarWeekDays" class="cal-weekday">{{ d }}</div>
+        </div>
+
+        <!-- Calendar days grid -->
+        <div class="cal-grid cal-body">
+          <div *ngFor="let day of calendarDays"
+               class="cal-day"
+               [class.other-month]="!day.isCurrentMonth"
+               [class.today]="day.isToday"
+               [class.has-events]="day.events.length > 0"
+               [class.selected]="selectedDay && day.date.toDateString() === selectedDay.toDateString()"
+               (click)="onDayClick(day)">
+
+            <span class="day-number">{{ day.date.getDate() }}</span>
+
+            <!-- Event dots (max 4 visible) -->
+            <div class="event-dots" *ngIf="day.events.length > 0">
+              <span *ngFor="let ev of day.events.slice(0, 4)"
+                    class="event-dot"
+                    [style.background]="getEventColor(ev)"
+                    [matTooltip]="(ev.client || ev.cliente || '') + ' — ' + (ev.title || ev.titulo || ev.formContactDesc || '')">
+              </span>
+              <span *ngIf="day.events.length > 4" class="event-more">+{{ day.events.length - 4 }}</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Selected day events panel -->
+        <ng-container *ngIf="selectedDay && selectedDayEvents.length > 0">
+          <div class="day-panel">
+            <div class="day-panel-header">
+              <mat-icon>event</mat-icon>
+              <span>{{ selectedDay | date:'EEEE dd \'de\' MMMM':'':'es-MX' }}</span>
+              <span class="day-panel-count">{{ selectedDayEvents.length }} compromiso(s)</span>
+            </div>
+            <div *ngFor="let ev of selectedDayEvents" class="day-event-row">
+              <span class="day-event-bullet" [style.background]="getEventColor(ev)"></span>
+              <div class="day-event-info">
+                <span class="day-event-client">{{ ev.client || ev.cliente }}</span>
+                <span class="day-event-title">{{ ev.title || ev.titulo || ev.formContactDesc }}</span>
+                <span class="day-event-status" [ngClass]="getEstadoClass(ev.statusnome)">{{ ev.statusnome }}</span>
+              </div>
+              <div class="day-event-actions">
+                <button mat-icon-button class="btn-edit" (click)="onView(ev)" matTooltip="Editar"><mat-icon>edit</mat-icon></button>
+                <button mat-icon-button class="btn-finalizar" (click)="onFinalizar(ev)" matTooltip="Finalizar"><mat-icon>check_circle</mat-icon></button>
+                <button mat-icon-button class="btn-reagendar" (click)="onReagendar(ev)" matTooltip="Re-agendar"><mat-icon>event_repeat</mat-icon></button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+    </ng-container>
+
+  </ng-container>
+
+</div>

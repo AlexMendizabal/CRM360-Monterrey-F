@@ -1,0 +1,179 @@
+<div class="cadastro-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ isEditMode ? 'Editar' : 'Nueva' }} Actividad</h1>
+      <a routerLink="../" class="back-link">
+        <mat-icon>arrow_back</mat-icon> Volver a la lista
+      </a>
+    </div>
+    <button mat-flat-button class="btn-save" (click)="onSave()" [disabled]="form.invalid || saving">
+      @if (saving) {
+        <mat-spinner diameter="18" class="inline-spinner"></mat-spinner> Guardando...
+      } @else {
+        <ng-container><mat-icon>save</mat-icon> Guardar</ng-container>
+      }
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading-box">
+      <mat-spinner diameter="36"></mat-spinner>
+      <span>Cargando datos...</span>
+    </div>
+  }
+
+  @if (!loading) {
+    <!-- FORMULARIO -->
+    <mat-card appearance="outlined" class="form-card">
+      <mat-card-header>
+        <mat-card-title class="card-title">Datos de la actividad</mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content class="form-body">
+        <form [formGroup]="form" autocomplete="off">
+
+          <!-- Fila 1: Ícono + Preview + Nombre -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-half">
+              <mat-label>Ícono (clase CSS)</mat-label>
+              <input matInput formControlName="icone" placeholder="fas fa-home">
+              <mat-hint>Clase de Font Awesome, ej: <code>fas fa-chart-bar</code></mat-hint>
+              @if (form.controls['icone'].hasError('required') && form.controls['icone'].touched) {
+                <mat-error>El ícono es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            @if (form.value.icone) {
+              <div class="icon-preview-box">
+                <i [class]="form.value.icone" class="icon-live-preview"></i>
+              </div>
+            }
+
+            <mat-form-field appearance="outline" class="field-half">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="nome" placeholder="Nombre de la actividad">
+              @if (form.controls['nome'].hasError('required') && form.controls['nome'].touched) {
+                <mat-error>El nombre es obligatorio</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <!-- Fila 2: Módulo + Submódulo -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-half">
+              <mat-label>Módulo</mat-label>
+              <mat-select formControlName="moduloId" (selectionChange)="onModuloChange($event.value)">
+                @for (mod of modulos; track mod.id) {
+                  <mat-option [value]="mod.id">({{ mod.id }}) {{ mod.nome }}</mat-option>
+                }
+              </mat-select>
+              @if (form.controls['moduloId'].hasError('required') && form.controls['moduloId'].touched) {
+                <mat-error>El módulo es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-half">
+              <mat-label>Submódulo</mat-label>
+              <mat-select formControlName="submoduloId">
+                @for (sub of submodulos; track sub.id) {
+                  <mat-option [value]="sub.id">({{ sub.id }}) {{ sub.nome }}</mat-option>
+                }
+              </mat-select>
+              @if (form.controls['submoduloId'].hasError('required') && form.controls['submoduloId'].touched) {
+                <mat-error>El submódulo es obligatorio</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <!-- Fila 3: Ruta -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-full">
+              <mat-label>Ruta</mat-label>
+              <input matInput formControlName="rota" placeholder="/comercial/clientes">
+              <mat-hint>Ruta interna de Angular para esta actividad</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <!-- Fila 4: URL -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-full">
+              <mat-label>URL externa</mat-label>
+              <input matInput formControlName="url" placeholder="https://...">
+              <mat-hint>Solo para actividades que abren una URL externa</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <!-- Fila 5: Tipo Actividad + Situación -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-half">
+              <mat-label>Tipo de Actividad</mat-label>
+              <mat-select formControlName="tipoAtividadeId">
+                @for (tipo of tiposAtividade; track tipo.id) {
+                  <mat-option [value]="tipo.id">{{ tipo.nome }}</mat-option>
+                }
+              </mat-select>
+              @if (form.controls['tipoAtividadeId'].hasError('required') && form.controls['tipoAtividadeId'].touched) {
+                <mat-error>El tipo de actividad es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-half">
+              <mat-label>Situación</mat-label>
+              <mat-select formControlName="situacao">
+                <mat-option [value]="1">Activo</mat-option>
+                <mat-option [value]="0">Inactivo</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Fila 6: Checkboxes -->
+          <div class="form-row checkboxes-row">
+            <mat-checkbox formControlName="exibeSidebar" color="primary">
+              Mostrar en menú lateral (Sidebar)
+            </mat-checkbox>
+            <mat-checkbox formControlName="exibeNovaAba" color="primary">
+              Abrir en nueva pestaña
+            </mat-checkbox>
+          </div>
+
+          <!-- Fila 7: Descripción -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-full">
+              <mat-label>Descripción de la actividad</mat-label>
+              <textarea matInput formControlName="descricao" rows="4" placeholder="Describa la actividad..."></textarea>
+              @if (form.controls['descricao'].hasError('required') && form.controls['descricao'].touched) {
+                <mat-error>La descripción es obligatoria</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- REFERENCIA DE ÍCONOS -->
+    <mat-card appearance="outlined" class="icon-ref-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="icon-ref-avatar">palette</mat-icon>
+        <mat-card-title>Referencia de Íconos</mat-card-title>
+        <mat-card-subtitle>Busca el ícono que necesitas y copia su clase o nombre</mat-card-subtitle>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="icon-refs-grid">
+          @for (ref of iconReferences; track ref.url) {
+            <a [href]="ref.url" target="_blank" class="icon-ref-link">
+              <div class="ref-name">
+                <mat-icon class="ref-icon">open_in_new</mat-icon>
+                {{ ref.name }}
+              </div>
+              <div class="ref-desc">{{ ref.description }}</div>
+            </a>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

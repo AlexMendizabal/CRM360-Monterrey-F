@@ -57,7 +57,6 @@
           </ng-template>
         </custom-table>
       </div>
-    </div>
       <div class="row">
         <div class="alert alert-warning col-md-6 ml-3" *ngIf="deshabilitar === false">
           <strong>Al superar el límite permitido, su solicitud debe ser aprobada, describa el motivo del descuento solicitado.</strong>
@@ -67,9 +66,9 @@
         <div class="col-md-6" >
           <span class="mtc-title" id="titulo_observacio">Observación del Ejecutivo de venta:</span>
           <br>
-            <input type="text" name="observacion" formControlName="observacion" id="observacion" class="form-control" [disabled]="verificador()">
+          <input type="text" name="observacion" formControlName="observacion" id="observacion" class="form-control" disabled="verificador()">
         </div>
       </div>
-  </div>
-</form>
+    </div>
+  </form>
 </div>

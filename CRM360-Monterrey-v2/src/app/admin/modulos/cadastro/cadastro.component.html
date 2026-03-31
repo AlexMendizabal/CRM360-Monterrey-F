@@ -1,0 +1,113 @@
+<div class="cadastro-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ isEditMode ? 'Editar' : 'Nuevo' }} Módulo</h1>
+      <a routerLink="../" class="back-link">
+        <mat-icon>arrow_back</mat-icon> Volver a la lista
+      </a>
+    </div>
+    <button mat-flat-button class="btn-save" (click)="onSave()" [disabled]="form.invalid || saving">
+      @if (saving) {
+        <mat-spinner diameter="18" class="inline-spinner"></mat-spinner> Guardando...
+      } @else {
+        <ng-container><mat-icon>save</mat-icon> Guardar</ng-container>
+      }
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading-box">
+      <mat-spinner diameter="36"></mat-spinner>
+      <span>Cargando datos...</span>
+    </div>
+  }
+
+  @if (!loading) {
+    <!-- FORMULARIO -->
+    <mat-card appearance="outlined" class="form-card">
+      <mat-card-header>
+        <mat-card-title class="card-title">Datos del módulo</mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content class="form-body">
+        <form [formGroup]="form" autocomplete="off">
+
+          <!-- Fila 1: Ícono + Preview + Nombre -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-half">
+              <mat-label>Ícono (clase CSS)</mat-label>
+              <input matInput formControlName="icone" placeholder="ej: fas fa-cubes o group">
+              <mat-hint>Clase Font Awesome o Material Icon</mat-hint>
+              @if (form.controls['icone'].hasError('required') && form.controls['icone'].touched) {
+                <mat-error>El ícono es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            @if (form.value.icone) {
+              <div class="icon-preview-box">
+                @if (isFaIcon) {
+                  <i [class]="form.value.icone" class="icon-live-preview"></i>
+                } @else {
+                  <mat-icon class="icon-live-preview">{{ form.value.icone }}</mat-icon>
+                }
+              </div>
+            }
+
+            <mat-form-field appearance="outline" class="field-half">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="nome" placeholder="Nombre del módulo">
+              @if (form.controls['nome'].hasError('required') && form.controls['nome'].touched) {
+                <mat-error>El nombre es obligatorio</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <!-- Fila 2: Ruta + Situación -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-half">
+              <mat-label>Ruta</mat-label>
+              <input matInput formControlName="rota" placeholder="ej: /admin">
+              @if (form.controls['rota'].hasError('required') && form.controls['rota'].touched) {
+                <mat-error>La ruta es obligatoria</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-half">
+              <mat-label>Situación</mat-label>
+              <mat-select formControlName="situacao">
+                <mat-option [value]="1">Activo</mat-option>
+                <mat-option [value]="0">Inactivo</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- REFERENCIA DE ÍCONOS -->
+    <mat-card appearance="outlined" class="icon-ref-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="icon-ref-avatar">palette</mat-icon>
+        <mat-card-title>Referencia de Íconos</mat-card-title>
+        <mat-card-subtitle>Busca el ícono que necesitas y copia su clase o nombre</mat-card-subtitle>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="icon-refs-grid">
+          @for (ref of iconReferences; track ref.url) {
+            <a [href]="ref.url" target="_blank" class="icon-ref-link">
+              <div class="ref-name">
+                <mat-icon class="ref-icon">open_in_new</mat-icon>
+                {{ ref.name }}
+              </div>
+              <div class="ref-desc">{{ ref.description }}</div>
+            </a>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

@@ -1,0 +1,76 @@
+<div class="cadastro-page">
+
+  <div class="page-header">
+    <button mat-icon-button class="btn-back" (click)="onCancel()" matTooltip="Volver a la lista">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1 class="page-title">{{ isEditMode ? 'Editar Submódulo' : 'Nuevo Submódulo' }}</h1>
+  </div>
+
+  <div *ngIf="loading" style="display: flex; justify-content: center; padding: 40px;">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSave()" class="form-card">
+    
+    <div class="section-title">
+      <mat-icon>category</mat-icon>
+      Datos del Submódulo
+    </div>
+
+    <div class="form-grid">
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="nome" placeholder="Ingrese el nombre del submódulo">
+        <mat-error *ngIf="form.get('nome')?.hasError('required')">El nombre es obligatorio</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Módulo Padre</mat-label>
+        <mat-select formControlName="moduloId" placeholder="Seleccione un módulo">
+          <mat-option *ngIf="modulos.length === 0" disabled>Cargando módulos...</mat-option>
+          <mat-option *ngFor="let mod of modulos" [value]="mod.id">
+            {{ mod.nome }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('moduloId')?.hasError('required')">El módulo padre es obligatorio</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Situación</mat-label>
+        <mat-select formControlName="status">
+          <mat-option [value]="1">Activo</mat-option>
+          <mat-option [value]="0">Inactivo</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div style="display: flex; gap: 16px; align-items: flex-start;" class="full-width">
+        <mat-form-field appearance="outline" style="flex: 1;">
+          <mat-label>Ícono</mat-label>
+          <input matInput formControlName="icone" placeholder="Ej: fa-solid fa-star o star">
+          <mat-hint>Puedes usar Material Icons (ej: 'home') o FontAwesome (ej: 'fas fa-home')</mat-hint>
+          <mat-error *ngIf="form.get('icone')?.hasError('required')">El ícono es obligatorio</mat-error>
+        </mat-form-field>
+        
+        <!-- Vista previa del ícono -->
+        <div class="icon-preview-box" matTooltip="Vista previa">
+          <mat-icon *ngIf="iconPreview && !iconPreview.includes('fa-')">{{ iconPreview }}</mat-icon>
+          <i *ngIf="iconPreview && iconPreview.includes('fa-')" [class]="iconPreview"></i>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Acciones -->
+    <div class="form-actions">
+      <button mat-button type="button" class="btn-cancel" (click)="onCancel()" [disabled]="saving">Cancelar</button>
+      <button mat-raised-button type="submit" class="btn-save" [disabled]="saving || form.invalid">
+        <mat-icon *ngIf="!saving">save</mat-icon>
+        <mat-spinner *ngIf="saving" diameter="20" style="margin-right: 6px; display: inline-block;"></mat-spinner>
+        Guardar
+      </button>
+    </div>
+
+  </form>
+</div>

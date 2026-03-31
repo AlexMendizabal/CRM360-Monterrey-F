@@ -181,9 +181,8 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
 
   ngOnInit(): void {
     this.getFilterValues();
-     /*this.cliente.emit(this.codCliente); */
+    this.cliente.emit(this.codCliente);
     this.getMateriais(null, 'application');
-
   }
   sanitizeHtml(value: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(value);
@@ -500,6 +499,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     });
 
     this.checkValuesLinhaClasse();
+    this.getMateriais(null, 'application');
   }
 
   checkRouterParams(): Object {
@@ -632,10 +632,14 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     }
   }
 
+
   onFilterVend(tipo): void {
-    if (this.checkFieldErrors() ===     false) {
-      /* if (this.searching === false && this.form.valid) {
-        console.log('aqui1'); */
+    if (this.checkFieldErrors() === false) {
+      if (this.searching === false && this.form.valid) {
+        this.searching = true;
+        this.setRouterParams(this.getFormFilterValues(), tipo);
+      }
+    } else {
       this.searching = true;
       this.setRouterParams(this.getFormFilterValues(), tipo);
       /*  } */
