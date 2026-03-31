@@ -1,0 +1,142 @@
+<div class="formulario-page">
+
+  <div class="page-header">
+    <button mat-icon-button class="btn-back" (click)="goBack()" matTooltip="Volver">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1 class="page-title">{{ pageTitle }}</h1>
+  </div>
+
+  <div *ngIf="loading" class="loading-overlay">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Cargando...</span>
+  </div>
+
+  <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSave()" class="form-layout">
+
+    <!-- SECCIÓN 1: Datos del Compromiso -->
+    <div class="form-card">
+      <div class="section-title"><mat-icon>event</mat-icon> Datos del Compromiso</div>
+
+      <div class="form-grid">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Título / Tipo de Contacto</mat-label>
+          <mat-select formControlName="codTitulo">
+            <mat-option *ngFor="let t of titulos" [value]="t.codTitulo">{{ t.nomeTitulo || t.nome }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('codTitulo')?.hasError('required')">Obligatorio</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Promotor / Vendedor</mat-label>
+          <mat-select formControlName="promotor" [disabled]="isReagendar || isFinalizar">
+            <mat-option *ngFor="let v of vendedores" [value]="v.id ?? v.ID">
+              {{ v.nombre || v.nome }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Dirección</mat-label>
+          <input matInput formControlName="direccion" [readonly]="isReagendar || isFinalizar">
+          <button mat-icon-button matSuffix type="button" (click)="updateMap()" matTooltip="Ver en mapa">
+            <mat-icon>map</mat-icon>
+          </button>
+        </mat-form-field>
+
+      </div>
+    </div>
+
+    <!-- SECCIÓN MAPA -->
+    <div class="form-card" *ngIf="mapUrl">
+      <div class="section-title"><mat-icon>location_on</mat-icon> Ubicación</div>
+      <div class="map-wrapper">
+        <iframe
+          [src]="mapUrl"
+          width="100%"
+          height="380"
+          style="border:0; border-radius:6px;"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 2: Fechas y Horarios -->
+    <div class="form-card">
+      <div class="section-title"><mat-icon>schedule</mat-icon> Fechas y Horarios</div>
+
+      <mat-checkbox formControlName="diaInteiro" (change)="toggleAllDay()" [disabled]="isFinalizar" class="mb-2">
+        Todo el día
+      </mat-checkbox>
+
+      <div class="form-grid">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha Inicio</mat-label>
+          <input matInput [matDatepicker]="pi" formControlName="inicioData" [readonly]="isFinalizar">
+          <mat-datepicker-toggle matIconSuffix [for]="pi"></mat-datepicker-toggle>
+          <mat-datepicker #pi></mat-datepicker>
+          <mat-error>Obligatorio</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" *ngIf="!isAllDay">
+          <mat-label>Hora Inicio</mat-label>
+          <input matInput type="time" formControlName="inicioHorario" [readonly]="isFinalizar">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" *ngIf="!isAllDay">
+          <mat-label>Fecha Fin</mat-label>
+          <input matInput [matDatepicker]="pf" formControlName="terminoData" [readonly]="isFinalizar">
+          <mat-datepicker-toggle matIconSuffix [for]="pf"></mat-datepicker-toggle>
+          <mat-datepicker #pf></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" *ngIf="!isAllDay">
+          <mat-label>Hora Fin</mat-label>
+          <input matInput type="time" formControlName="terminoHorario" [readonly]="isFinalizar">
+        </mat-form-field>
+
+      </div>
+    </div>
+
+    <!-- SECCIÓN 3: Observaciones -->
+    <div class="form-card">
+      <div class="section-title"><mat-icon>notes</mat-icon> Observaciones</div>
+
+      <div class="form-grid">
+
+        <mat-form-field appearance="outline" class="full-width" *ngIf="!isFinalizar">
+          <mat-label>Observación</mat-label>
+          <textarea matInput formControlName="observacao" rows="3"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width" *ngIf="isReagendar">
+          <mat-label>Motivo de Re-agendamiento</mat-label>
+          <textarea matInput formControlName="motivoReagendamento" rows="3"></textarea>
+          <mat-error *ngIf="form.get('motivoReagendamento')?.hasError('required')">Obligatorio</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width" *ngIf="isFinalizar">
+          <mat-label>Observación de Finalización *</mat-label>
+          <textarea matInput formControlName="Obsfinalizar" rows="3"></textarea>
+          <mat-error *ngIf="form.get('Obsfinalizar')?.hasError('required')">Obligatorio</mat-error>
+        </mat-form-field>
+
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="form-actions">
+      <button mat-button type="button" class="btn-cancel" (click)="goBack()" [disabled]="saving">Cancelar</button>
+      <button mat-raised-button type="submit" class="btn-save" [disabled]="saving || form.invalid">
+        <mat-spinner *ngIf="saving" diameter="18" style="margin-right:6px; display:inline-block;"></mat-spinner>
+        <mat-icon *ngIf="!saving">{{ isFinalizar ? 'check_circle' : isReagendar ? 'event_repeat' : 'save' }}</mat-icon>
+        {{ isFinalizar ? 'Finalizar' : isReagendar ? 'Re-agendar' : 'Guardar' }}
+      </button>
+    </div>
+
+  </form>
+</div>

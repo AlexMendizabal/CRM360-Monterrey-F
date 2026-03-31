@@ -1,0 +1,119 @@
+<div class="perfiles-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h1 class="page-title">Lista de Perfiles</h1>
+    <button mat-flat-button class="btn-new" routerLink="novo">
+      <mat-icon>add</mat-icon> Nuevo Perfil
+    </button>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filter-bar">
+    <form [formGroup]="form" (ngSubmit)="onFilter()" class="filter-row">
+      <mat-form-field appearance="outline" class="filter-field filter-name">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="nome" placeholder="Buscar por nombre...">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field filter-route">
+        <mat-label>Sigla</mat-label>
+        <input matInput formControlName="sigla" placeholder="Ej: ADM">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field filter-narrow">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="situacao" (selectionChange)="onFilter()">
+          <mat-option value="">Todos</mat-option>
+          <mat-option value="1">Activo</mat-option>
+          <mat-option value="0">Inactivo</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="filter-actions">
+        <button mat-stroked-button class="btn-action" type="button" (click)="onReset()">
+          <mat-icon>clear</mat-icon> Limpiar
+        </button>
+        <button mat-flat-button class="btn-action btn-search" type="submit">
+          <mat-icon>search</mat-icon> Buscar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- LOADING -->
+  @if (loading) {
+    <div class="loading-overlay">
+      <mat-spinner diameter="36"></mat-spinner>
+      <span>Cargando...</span>
+    </div>
+  }
+
+  <!-- TABLA -->
+  @if (!loading) {
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="data" class="perfiles-table">
+
+        <!-- ID con borde de color -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef class="col-id">ID</th>
+          <td mat-cell *matCellDef="let item" class="col-id">
+            <span class="id-cell" [class.border-active]="item.situacao === 1" [class.border-inactive]="item.situacao !== 1">
+              {{ item.id }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Nombre -->
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef class="col-nome">Nombre</th>
+          <td mat-cell *matCellDef="let item" class="col-nome">{{ item.nome }}</td>
+        </ng-container>
+
+        <!-- Sigla -->
+        <ng-container matColumnDef="sigla">
+          <th mat-header-cell *matHeaderCellDef class="col-sigla">Sigla</th>
+          <td mat-cell *matCellDef="let item" class="col-sigla">{{ item.sigla }}</td>
+        </ng-container>
+
+        <!-- Estado -->
+        <ng-container matColumnDef="situacao">
+          <th mat-header-cell *matHeaderCellDef class="col-status">Estado</th>
+          <td mat-cell *matCellDef="let item" class="col-status">
+            <span class="status-badge" [class.active]="item.situacao === 1" [class.inactive]="item.situacao !== 1">
+              {{ item.situacao === 1 ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Acciones -->
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef class="col-actions"></th>
+          <td mat-cell *matCellDef="let item" class="col-actions">
+            <button mat-icon-button class="btn-edit" [routerLink]="[item.id]" matTooltip="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">
+            <mat-icon class="empty-icon">search_off</mat-icon>
+            <span>No se encontraron perfiles con esos criterios.</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+  }
+</div>

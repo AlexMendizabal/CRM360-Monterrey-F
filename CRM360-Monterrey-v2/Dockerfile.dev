@@ -1,0 +1,14 @@
+# =============================================
+# Dockerfile.dev - DESARROLLO Angular 21 (hot-reload)
+# =============================================
+FROM node:lts-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+EXPOSE 4200
+
+# Angular CLI vinculado a todas las interfaces con proxy hacia API
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--port", "4200", "--poll", "2000", "--proxy-config", "proxy.config.docker.json"]
