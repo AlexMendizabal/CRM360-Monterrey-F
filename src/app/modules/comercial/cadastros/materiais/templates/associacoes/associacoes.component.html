@@ -1,7 +1,7 @@
 <div *ngIf="linhas.length > 0 && classes.length > 0">
   <div class="row mb-2">
     <div class="col mt-auto">
-      <div class="mtc-title mb-0">Buscar materiales para asocciar</div>
+      <div class="mtc-title mb-0">Buscar materiales para asociar</div>
     </div>
     <div class="col">
       <div class="d-flex justify-content-end">
@@ -11,7 +11,7 @@
           (click)="onFilter()"
           [disabled]="searching === true">
           <i class="fas fa-search"></i>
-          <span>Pesquisar</span>
+          <span>Buscar</span>
         </button>
       </div>
     </div>
@@ -38,13 +38,14 @@
           <ng-select
             [searchable]="true"
             [clearable]="false"
-            [items]="filteredClasses"
+            [items]="grupos"
             formControlName="codClasse"
             [virtualScroll]="true"
-            labelForId="codClasse"
-            bindLabel="nomeClasse"
-            bindValue="idClasse"
-            (change)="onChangeGrupo($event.idClasse)">
+            labelForId="id_linha"
+            bindLabel="descricao"
+            bindValue="id_linha"
+            disabled="this.classeSelecionada"
+            (change)="onChangeGrupo($event.id_linha)">
           </ng-select>
         </div>
         <div class="form-group col-lg-4">
@@ -52,13 +53,13 @@
           <ng-select
             [searchable]="true"
             [clearable]="false"
-            [items]="filteredGrupos"
+            [items]="classes"
             formControlName="codGrupo"
             [virtualScroll]="true"
-            labelForId="idSubLinea"
-            bindLabel="descripcion"
-            bindValue="idSubLinea"
-            (change)="onChangeClasse($event.idSubLinea)">
+            labelForId="ID"
+            bindLabel="NM_SUB_LINH"
+            bindValue="ID"
+            (change)="onChangeClasse($event.ID)">
           </ng-select>
         </div>
         </div>
@@ -71,9 +72,9 @@
             [items]="materiais"
             formControlName="codMaterial"
             [virtualScroll]="true"
-            labelForId="codMaterial"
-            bindLabel="codigoDescricaoMaterial"
-            bindValue="codigoMaterial"
+            labelForId="id_material"
+            bindLabel="nombre"
+            bindValue="id_material"
             [loading]="materiaisLoader"
             loadingText="Carregando...">
           </ng-select>
@@ -94,7 +95,7 @@
             (click)="onAssociarMateriais()"
             [disabled]="searching === true">
             <i class="fas fa-exchange-alt"></i>
-            <span>Associar</span>
+            <span>Asociar</span>
           </button>
         </div>
       </div>

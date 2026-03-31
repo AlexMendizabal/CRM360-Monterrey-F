@@ -2,7 +2,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';``
 import { BsModalRef } from 'ngx-bootstrap';
 import { finalize } from 'rxjs/operators';
-import { userInfo } from 'os';
 import { ComercialCicloVendasAutorizacionesService } from '../../autorizaciones.service';
 import { AuthService } from 'src/app/shared/services/core/auth.service';
 
@@ -22,7 +21,7 @@ export class ModalAutorizacionComponent implements OnInit {
   datosAutorizacion: any = {};
   myForm: FormGroup;
   checkoutForm;
-  
+
 
   constructor(
     private _BsModalRef: BsModalRef,
@@ -31,22 +30,55 @@ export class ModalAutorizacionComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
   ) {
-    this.myForm = this.formBuilder.group({
+
+  this.myForm = this.formBuilder.group({
     observacion: ['', Validators.required]  // inicializa con un valor por defecto y agrega validador
   });}
+
   dataForm: any;
   data: [];
   oferta: Array<any> = [];
   detalle: any[];
   observacion: string = '';
   loader: boolean = false;
-  idVend: any;
+  admin:  boolean = false;
+  loading: boolean = false;
+  observa1: boolean = false;
+  submitForm: any;
 
   ngOnInit(): void {
+
     this.data = this.dataForm;
     this.detalle = this.dataForm.detalle;
-    this.oferta = this.data['oferta'][0];
-    this.idVend = this.user.info.idVendedor;
+    // this.oferta = this.data['oferta'][0];
+
+
+// Si observacion esta vacia y el usuario logeado es administrador 
+// debe habilitarse el campo "observable1" para poder editar
+// 
+
+    const observable1 = document.getElementById("observacion1") as HTMLTextAreaElement;
+    const datosObservacion =  this.myForm.get('observacion')?.setValue(this.data['oferta'][0].desc_usuario);
+    this.oferta = this.data['oferta'][0]; 
+
+    const id_cargo = this.user.info.none_cargo;
+    const cargos = ['1','2', '3', '4', '12'];
+
+    if (cargos.includes(id_cargo)) {
+      if (this.data['oferta'].length > 0) {
+        datosObservacion;
+        observable1.disabled = false;
+        this.admin = true;
+        
+      } else {
+        this.admin = false;
+      }
+    }
+    else{
+      datosObservacion;
+      observable1.disabled = true;
+    }
+
     if(this.oferta['estado'] == 10)
     {
         this.loader = false;
@@ -55,11 +87,20 @@ export class ModalAutorizacionComponent implements OnInit {
     {
         this.loader = true;
     }
+
   }
-  
+
   cerrar(): void {
     this._BsModalRef.hide();
   }
+  calcularTotalCantidad(): number {
+    if (this.data && this.detalle) {
+      return this.detalle.reduce((acc, item) => acc + (parseFloat(item.cantidad_total) || 0), 0);
+    }
+    return 0;
+  }
+  
+  
 
 
   onClose() {
@@ -73,10 +114,11 @@ export class ModalAutorizacionComponent implements OnInit {
       id_autorizacion: id_autorizacion,
       descripcion_usua: observacionValue
     };
-  
+
     // Iniciar loader y deshabilitar botones
     this.loader = true;
-  
+    this.loading = true;
+
     this.autorizacionService
       .updateAutorizacion(params)
       .pipe(
@@ -102,7 +144,9 @@ export class ModalAutorizacionComponent implements OnInit {
           }
         }
       );
+    setTimeout(() => {
+      this.loading = false;
+    }, 8000)
   }
-
 
 }

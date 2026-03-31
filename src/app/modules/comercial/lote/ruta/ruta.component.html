@@ -2,31 +2,58 @@
 
 <app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
   <advanced-filter>
-    <comercial-templates-filtro-vendedor-escritorio-date [profile]="profile" [showAll]="false"
-      (formValue)="dataFilter($event)">
+    <comercial-templates-filtro-vendedor-escritorio-date
+      [profile]="profile"
+      [showAll]="false"
+      (formValue)="dataFilter($event)"
+    >
     </comercial-templates-filtro-vendedor-escritorio-date>
   </advanced-filter>
 
   <div class="row">
     <div class="col-sm-6">
       <div class="embed-responsive embed-responsive-16by9">
-        <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="13" class="embed-responsive-item"
+        <agm-map
+          [latitude]="latitud"
+          [longitude]="longitud"
+          [zoom]="13"
+          class="embed-responsive-item"
+        >
+          <agm-marker
+            *ngFor="let mapa of mapas"
+            [latitude]="mapa.LATITUD"
+            [longitude]="mapa.LONGITUD"
+            (markerDragEnd)="actualizarDireccion($event)"
+            (markerClick)="onMarkerClick(mapa)"
           >
-
-          <agm-marker *ngFor="let mapa of mapas" [latitude]="mapa.LATITUD" [longitude]="mapa.LONGITUD"
-            [iconUrl]="mapa.markers.icon" (markerDragEnd)="actualizarDireccion($event)"
-            (markerClick)="onMarkerClick(mapa)">
-            <agm-info-window *ngIf="selectedMarker === mapa" [disableAutoPan]="true">
+            <agm-info-window
+              *ngIf="selectedMarker === mapa"
+              [disableAutoPan]="true"
+            >
               <div class="marker-info-window">
                 <h5 class="marker-name">{{ mapa.NOMBRE }}</h5>
-                <p class="marker-info"><strong>Dirección:</strong> {{ mapa.DIRECCION }}</p>
-                <p class="marker-info"><strong>Fecha de inicio:</strong> {{ mapa.FECHA_INICIO | date:'dd/MM/yyyy HH:mm:ss' }}</p>
-                <p class="marker-info"><strong>Fecha de fin:</strong> {{ mapa.FECHA_FIN | date:'dd/MM/yyyy HH:mm:ss' }}
+                <p class="marker-info">
+                  <strong>Dirección:</strong> {{ mapa.DIRECCION }}
                 </p>
+                <p class="marker-info">
+                  <strong>Fecha de Cita:</strong>
+                  {{ mapa.FECHA_INICIO | date : 'dd/MM/yyyy HH:mm:ss' }}
+                </p>
+                <p class="marker-info">
+                  <strong>Hora de inicio:</strong>
+                  {{ mapa.data_inicia | date : 'dd/MM/yyyy HH:mm:ss' }}
+                </p>
+                <p class="marker-info">
+                  <strong>Hora final:</strong>
+                  {{ mapa.data_conclusao | date : 'dd/MM/yyyy HH:mm:ss' }}
 
-                <button class="marker-button" (click)="agregarClienteTemporal(mapa)">
-                  <i class="fas fa-plus"></i> &nbsp; Agregar
-                </button>
+                  <button
+                    class="marker-button"
+                    (click)="agregarClienteTemporal(mapa)"
+                  >
+                    <i class="fas fa-plus"></i> &nbsp; Agregar
+                  </button>
+                </p>
               </div>
             </agm-info-window>
           </agm-marker>
@@ -40,7 +67,7 @@
     </div>
 
     <div class="col-sm-6">
-      <h6 align="center"> Agendar clientes </h6>
+      <h6 align="center">Agendar clientes</h6>
       <custom-table [config]="tableConfigAtividades">
         <ng-template #thead let-thead>
           <tr>
@@ -58,40 +85,82 @@
                 <span *ngIf="item.codigoCliente">{{ item.codigoCliente }}</span>
                 <span *ngIf="!item.codigoCliente">N/A</span>
               </td> -->
-            <td class="hover text-center" style="width: 35%" (click)="item.checked = !item.checked">
+            <td
+              class="hover text-center"
+              style="width: 35%"
+              (click)="item.checked = !item.checked"
+            >
               <span *ngIf="item.nombre">{{ item.nombre }}</span>
               <span *ngIf="!item.nombre">N/A</span>
             </td>
-            <td class="hover text-center " style="width: 30%" (click)="item.checked = !item.checked">
-              <ng-select [searchable]="true" [clearable]="false" [items]="filteredVendedores" [virtualScroll]="true"
-                labelForId="vendedor" bindLabel="nombre" bindValue="ID" [(ngModel)]="item.vendedor_id"
-                (ngModelChange)="onVendedorChange(item, $event)" class="select-control">
+            <td
+              class="hover text-center"
+              style="width: 30%"
+              (click)="item.checked = !item.checked"
+            >
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="filteredVendedores"
+                [virtualScroll]="true"
+                labelForId="vendedor"
+                bindLabel="nombre"
+                bindValue="ID"
+                [(ngModel)]="item.vendedor_id"
+                (ngModelChange)="onVendedorChange(item, $event)"
+                class="select-control"
+              >
                 <option value="">Seleccionar</option>
               </ng-select>
             </td>
-            <td class="hover text-center " style="width: 35%" (click)="item.checked = !item.checked">
-              <ng-select [searchable]="true" [clearable]="false" [items]="filteredGestiones" [virtualScroll]="true"
-                labelForId="vendedor" bindLabel="descricaoTitulo" bindValue="codTitulo" [(ngModel)]="item.seleccion_id"
-                (ngModelChange)="onGestionChange(item, $event)" class="select-control">
+            <td
+              class="hover text-center"
+              style="width: 35%"
+              (click)="item.checked = !item.checked"
+            >
+              <ng-select
+                [searchable]="true"
+                [clearable]="false"
+                [items]="filteredGestiones"
+                [virtualScroll]="true"
+                labelForId="vendedor"
+                bindLabel="descricaoTitulo"
+                bindValue="codTitulo"
+                [(ngModel)]="item.seleccion_id"
+                (ngModelChange)="onGestionChange(item, $event)"
+                class="select-control"
+              >
                 <option value="">Seleccionar</option>
               </ng-select>
             </td>
-            <td class="hover text-center" style="width: 10%" (click)="item.checked = !item.checked">
-              <input type="datetime-local" class="form-control" [(ngModel)]="item.fecha"
-                (ngModelChange)="onFechaChange(item, $event)">
+            <td
+              class="hover text-center"
+              style="width: 10%"
+              (click)="item.checked = !item.checked"
+            >
+              <input
+                type="datetime-local"
+                class="form-control"
+                [(ngModel)]="item.fecha"
+                (ngModelChange)="onFechaChange(item, $event)"
+              />
             </td>
 
             <td class="hover text-center" style="width: 35%">
-              <button (click)="eliminarClienteTemporal(item)" class="btn btn-danger btn-sm">
+              <button
+                (click)="eliminarClienteTemporal(item)"
+                class="btn btn-danger btn-sm"
+              >
                 <i class="fas fa-trash-alt"></i> Eliminar
               </button>
             </td>
           </tr>
           <tr *ngIf="atividades.length === 0">
-            <td colspan="6" class="text-center">Sin datos registrados </td>
+            <td colspan="6" class="text-center">Sin datos registrados</td>
           </tr>
         </ng-template>
-      </custom-table> <br>
+      </custom-table>
+      <br />
 
       <div align="center" *ngIf="atividades.length > 0">
         <button class="btn btn-success" (click)="enviarDatos()">Agendar</button>
@@ -100,11 +169,9 @@
         <!-- Aquí puedes agregar el código HTML para mostrar el spinner -->
         <!-- por ejemplo: -->
         <!--datos -->
-        <div class="spinner-border text-primary" role="status">
-        </div>
+        <div class="spinner-border text-primary" role="status"></div>
       </div>
-    </div> <br>
-
-
+    </div>
+    <br />
   </div>
 </app-body>

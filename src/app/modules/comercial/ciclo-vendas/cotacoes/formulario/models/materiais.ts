@@ -10,7 +10,7 @@ export interface IMateriaisModel {
   codDeposito: number;
   codEmpresa: number;
   codLinha: number;
- /*  codMaterial: number; */
+  codigo_material: number;
   codNcm: number;
   codSituacao: string;
   descNcm: string;
@@ -28,7 +28,10 @@ export interface IMateriaisModel {
   nomeEmpresa: string;
   nomeLinha: string;
   nomeMaterial: string;
+  nombre_material: string;
+  nombre_almacen: string;
   nomeSituacao: string;
+  percentualDesc:number;
   percentualIcms: number;
   percentualIpi: number;
   pesoEspecifico: number;
@@ -52,4 +55,5 @@ export interface IMateriaisModel {
   id_linea: number;
   nombre_linea:string;
   largo_material:any;
+  lista_precio:number;
 }

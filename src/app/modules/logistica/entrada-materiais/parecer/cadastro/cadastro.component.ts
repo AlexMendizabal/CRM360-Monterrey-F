@@ -21,7 +21,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaEntradaMateriaisParecerService } from '../services/parecer.service';
 //interfaces
 import { ILogisticaEntradaMateriaisParecer } from '../models/parecer';
-import { isNull } from 'util';
 
 @Component({
   selector: 'logistica-entrada-materiais-parecer-cadastro',
@@ -141,7 +140,7 @@ export class LogisticaEntradaMateriaisParecerCadastroComponent
     this.form = this.formBuilder.group({
       ID_LOGI_ENMA_FHNC_OCPR: [null],
       NM_PARE: [null, [Validators.required]],
-      IN_STAT: [isNull],
+      IN_STAT: [null],
       DS_OBSE: [null],
     });
   }

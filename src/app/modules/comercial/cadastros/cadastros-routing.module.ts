@@ -111,6 +111,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'campanhas',
+        loadChildren: () =>
+          import('./campanhas/campanhas.module').then(
+            (m) => m.CampanhasModule
+          ),
+      },
+      {
         path: 'propostas/associacao-situacoes-proposta',
         loadChildren: () =>
           import(
@@ -214,6 +221,8 @@ const routes: Routes = [
               m.ComercialCadastrosContratosComerciaisSituacoesContratosComerciaisModule
           ),
       },
+
+
       {
         path: 'painel-custos',
         loadChildren: () =>

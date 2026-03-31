@@ -1,0 +1,15 @@
+# =============================================
+# Dockerfile.dev - DESARROLLO (hot-reload)
+# Usa node_modules locales via volumen
+# =============================================
+
+FROM node:16-slim
+
+WORKDIR /app
+
+# No hacemos npm install aqui - usamos volumen con node_modules locales
+# Solo exponemos el puerto y arrancamos ng serve
+
+EXPOSE 4200
+
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--port", "4200", "--proxy-config", "proxy.config.docker.json", "--disable-host-check"]

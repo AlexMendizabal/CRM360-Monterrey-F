@@ -163,6 +163,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
   uniqueListasPrecios: string[] = [];
 
   modalDetalhes: TemplateRef<any>;
+  codigo_material: number;
 
   constructor(
     private modalService: BsModalService,
@@ -185,8 +186,9 @@ export class ComercialEstoqueListaComponent implements OnInit {
     this.setFormFilter();
     this.titleService.setTitle('Inventario');
     this.cargarListasPrecios();
+    this.onGetEstoqueAlmacen();
   }
-
+  
   registrarAcesso() {
     this.atividadesService.registrarAcesso().subscribe();
   }
@@ -307,7 +309,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
   
   cargarListasPrecios() {
     const nombreLista = this.form.get('nombre_lista').value;
-
+    
     // Utiliza el nombre de la variable correcto (nombreLista en lugar de this.nombre_lista)
     this.estoqueService.buscarListaPrecio(nombreLista).subscribe(
       (response: any) => {
@@ -510,6 +512,7 @@ export class ComercialEstoqueListaComponent implements OnInit {
     this.possuiLote = false;
     this.nomeMaterial = `(${codigoMaterial}) ${titulo}`;
     this.codMaterial = idMaterial;
+    this.codigo_material = codigoMaterial;
   
     if (estoqueSuspenso > 0) {
       this.possuiLote = true;
@@ -691,39 +694,64 @@ export class ComercialEstoqueListaComponent implements OnInit {
   }
   onGetEstoqueAlmacen() {
     this.loading = true; // Activa el spinner de carga
-    
     this.stockLoaded = false;
     this.stockEmpty = false;
-  
-    let params: any = {
-      idMaterial: this.codMaterial,
-      id_lista_precio: this.form.get('nombre_lista').value,
-      nombre_almacen: this.form.get('nombre_almacen').value,
-      codigo_almacen: this.form.get('codigo_almacen').value,
-      registrosLista: this.form.get('registrosLista').value
+
+    let paramsActualizarStock: any = {
+      id_material: this.codMaterial,
+      codigo_material: this.codigo_material,
+      id_lista_precio: this.nombre_lista,
+      codigo_almacen: this.form.get('codigo_almacen').value ? this.form.get('codigo_almacen').value : "TODOS",
     };
-    this.itemsPerPageAlmacen = params.registrosLista;
-    console.log('Enviando Params:', params);
-  
-    this.estoqueService.getStockAlmacenes(params).subscribe(
-      (response: any) => {
-        console.log("Respuesta Estoque", response);
-        if (response.responseCode === 200) {
-          this.detalhesAlmacen = response.result;
-          this.stockLoaded = true;
+
+    console.log('Enviando Params:', paramsActualizarStock);
+
+    // Llama primero a actualizarStock
+    this.comercialService.actualizarStockTodos(paramsActualizarStock).subscribe(
+      (responseActualizarStock: any) => {
+       // console.log("Respuesta actualizarStock", responseActualizarStock);
+        if (responseActualizarStock.responseCode === 200) {
+          let paramsGetStockAlmacenes: any = {
+            idMaterial: this.codMaterial,
+            codigo_material: this.codigo_material,
+            id_lista_precio: this.form.get('nombre_lista').value,
+            nombre_almacen: this.form.get('nombre_almacen').value,
+            codigo_almacen: this.form.get('codigo_almacen').value,
+            registrosLista: this.form.get('registrosLista').value
+          };
+          console.log(paramsGetStockAlmacenes);
+          this.itemsPerPageAlmacen = paramsGetStockAlmacenes.registrosLista;
+
+          // Después de actualizar el stock, llama a getStockAlmacenes
+          this.estoqueService.getStockAlmacenes(paramsGetStockAlmacenes).subscribe(
+            (responseGetStockAlmacenes: any) => {
+              console.log("Respuesta getStockAlmacenes", responseGetStockAlmacenes);
+              if (responseGetStockAlmacenes.responseCode === 200) {
+                this.detalhesAlmacen = responseGetStockAlmacenes.result;
+                this.stockLoaded = true;
+              } else {
+                this.pnotifyService.notice('Datos no encontrados.');
+                this.stockEmpty = true;
+              }
+            },
+            (errorGetStockAlmacenes: any) => {
+              this.handleSearchError('Error al cargar los datos de Almacen');
+            },
+            () => {
+              this.loading = false; // Desactiva el spinner de carga al finalizar la solicitud
+            }
+          );
         } else {
-          this.pnotifyService.notice('Datos no encontrados.');
-          this.stockEmpty = true;
+          this.pnotifyService.notice('Error al actualizar el stock.');
+          this.loading = false; // Desactiva el spinner de carga en caso de error
         }
       },
-      (error: any) => {
-        this.handleSearchError('Error al cargar los datos de Almacen');
-      },
-      () => {
-        this.loading = false; // Desactiva el spinner de carga al finalizar la solicitud
+      (errorActualizarStock: any) => {
+        this.handleSearchError('Error al actualizar el stock.');
       }
     );
   }
+
   
   onFieldError(field: string) {
     if (this.onFieldInvalid(field)) {

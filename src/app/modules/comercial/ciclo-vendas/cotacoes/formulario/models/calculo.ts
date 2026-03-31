@@ -11,6 +11,7 @@ export interface ICalculoModel {
   valorIcms: number;
   valorIcmsSt: number;
   valorTotal: number;
+  valorTotalBs: number;
   valorBaseIcmsSt: number;
   aliquotaReducaoIcms: number;
   tipoLancamento: number;
@@ -25,4 +26,10 @@ export interface ICalculoModel {
   presentacionSeleccionado:number;
   calculo: number;
   descuentoAplicado: number;
+  id_presentacion: number;
+  descuento: number;
+  quantidade: number;
+  cantidad: number;
+  descuento_permitido: number;
+  tipocliente:number;
 }

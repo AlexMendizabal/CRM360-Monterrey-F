@@ -23,7 +23,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsEtapasService } from '../services/etapas.service';
 //interfaces
 import { ILogisticaYmsEtapas } from '../models/etapas';
-import { isNull } from 'util';
 import { ILogisticaYmsCircuitos } from '../../circuitos/models/circuitos';
 import { ILogisticaYmsTiposEtapa } from '../../tipos-etapa/models/tipos-etapa';
 

@@ -4,6 +4,7 @@ export interface IDescontoCarrinhoModel {
 }
 
 export interface IDescontoModel {
+  descuento_permitido: number;
   aplicarDesconto: string;
   index: number;
   tipo: string;

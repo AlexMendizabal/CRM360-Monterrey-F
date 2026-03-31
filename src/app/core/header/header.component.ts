@@ -25,7 +25,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 })
 export class HeaderComponent implements OnInit {
   @Input('showLoader') showLoader: boolean;
-  private readonly API = `http://23.254.204.187/api/sap`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/sap`;
 
   showLogoCliente = true;
   srcLogoCliente: string;
@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
   modulosLoaded = false;
   modulosError = false;
   conexion = false;
-
+  verificacion: any;
   notificaciones: any = [];
 
   loaderFullScreen = true;
@@ -64,21 +64,30 @@ export class HeaderComponent implements OnInit {
     this.getModulos();
     this.getNotificaciones();
     this.verificadorConexion();
-    setInterval(() => {
-      this.verificadorConexion();
-    }, 120000);
+    /*    this.verificadorConexion();
+       setInterval(() => {
+         this.verificadorConexion();
+       }, 120000); */
     //this.verificarConexion();
+
+    // setInterval(() => {
+    //   this.verificador();
+    // }, 42000);
+
+  }
+  verificador(): void {
+    const verificaciones = this.manejoEvento(() => this.verificadorConexion());
+    verificaciones();
   }
 
   getClienteLogo() {
     this.srcLogoCliente = `/assets/images/logo/clientes/${this.windowService.getHostnameLogo()}_branco.png`;
   }
+
   getNotificaciones() {
     this.notificacionesService.getNotificaciones();
 
-    this.notificacionesService
-
-      .getNotificaciones()
+    this.notificacionesService.getNotificaciones()
       .pipe(
         finalize(() => {
           /*  this.loaderNavbar = false;
@@ -241,7 +250,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    if (confirm('Tem certeza que deseja sair do MTCorp?')) {
+    if (confirm('¿Estás seguro de que quieres salir de CRM360?')) {
       this.authService.logout();
     }
   }
@@ -250,92 +259,54 @@ export class HeaderComponent implements OnInit {
     this.changePasswordModalService.show(template);
   }
 
-  verificadorConexion(): void {
-    const label = document.getElementById('verificador');
-    this.loaderFullScreen = true;
-    label.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Verificando SAP...';
-    label.style.color = 'black';
-    label.style.backgroundColor = '#eadf04';
-
-    this.http.post(`${this.API}/verificar_conexion_sap`, null).subscribe(
-      (response: JsonResponse) => {
-        if (response.success === true) {
-          label.innerHTML =
-            '<i class="fas fa-check-circle"></i> SAP: Conectado';
-          label.style.color = 'white';
-          label.style.backgroundColor = 'green';
-        } else {
-          label.innerHTML =
-            '<i class="fas fa-exclamation-circle"></i> SAP: Desconectado';
-          label.style.backgroundColor = 'red';
-          label.style.color = 'white';
-        }
-      },
-      (error: any) => {
-        label.innerHTML =
-            '<i class="fas fa-exclamation-circle"></i> SAP: Desconectado';
-          label.style.backgroundColor = 'red';
-          label.style.color = 'white';
-      },
-      () => {
-        //this.loaderFullScreen = false;
+  manejoEvento(fn: () => Promise<void>): () => Promise<void> {
+    let executing = false;
+    return async () => {
+      if (!executing) {
+        executing = true;
+        await fn();
+        setTimeout(() => {
+          executing = false;
+        }, 300000); // 5 minutos
       }
-    );
+    }
   }
 
-  /*  verificarConexion() {
-   this.modulosLoaded = false;
-   const stopSearching$ = new Subject<void>();
- 
-   this.authService.verificarConexion().pipe(
-     takeUntil(stopSearching$)
-   ).subscribe(
-     (respuesta: any) => {
-       switch (respuesta.CodigoRespuesta) {
-         case 0:
-           if (respuesta.Mensaje) {
-             this.pnotifyService.success('Conexion con middleware exitosa');
-             stopSearching$.next(); // Detiene la búsqueda si se encuentra conexión
-           }
-           break;
-         default:
-           // No detenemos la búsqueda aquí para permitir intentos adicionales
-           this.pnotifyService.error('Error en la conexión a SAP. Intentando de nuevo...');
-           break;
-       }
-     },
-     (error: any) => {
-       this.handleErrorResponse(error);
-     },
-   );
- 
-   // Intenta buscar la conexión cada segundo durante 5 segundos adicionales
-   interval(10000).pipe(
-     takeUntil(stopSearching$),
-     takeUntil(interval(5000)) // Detiene la búsqueda después de 5 segundos
-   ).subscribe(() => {
-     this.authService.verificarConexion().subscribe(
-       (respuesta: any) => {
-         switch (respuesta.CodigoRespuesta) {
-           case 0:
-             if (respuesta.Mensaje) {
-               this.pnotifyService.success('Conexion con middleware exitosa');
-               stopSearching$.next(); // Detiene la búsqueda si se encuentra conexión
-             }
-             break;
-           default:
-             // No detenemos la búsqueda aquí para permitir intentos adicionales
-             break;
-         }
-       },
-       (error: any) => {
-         // No detenemos la búsqueda aquí para permitir intentos adicionales
-       }
-     );
-   });
- }   */
-  private handleErrorResponse(error: any) {
-    alert('Error en la conexión a SAP');
-    this.cdRef.detectChanges();
+  async verificadorConexion(): Promise<void> {
+    const boton = document.getElementById('verificador') as HTMLElement;
+    this.loaderFullScreen = true;
+    boton.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Verificando SAP...';
+    boton.style.color = 'black';
+    boton.style.backgroundColor = '#eadf04'; // Amarillo para indicar que está verificando
+
+    try {
+      // Realiza la consulta para verificar la conectividad
+      const response: JsonResponse = await this.http.post<JsonResponse>(`${this.API}/verificar_conexion_sap`, null).toPromise();
+
+      if (response.success) {
+        // Conectado: Cambia el texto y el color del botón a verde
+        boton.innerHTML = '<i class="fas fa-check-circle"></i> SAP: Conectado';
+        boton.style.backgroundColor = 'green';
+        boton.style.color = 'white';
+      } else {
+        // Desconectado: Cambia el texto y el color del botón a rojo
+        boton.innerHTML = '<i class="fas fa-exclamation-circle"></i> SAP: Desconectado';
+        boton.style.backgroundColor = 'red';
+        boton.style.color = 'white';
+      }
+    } catch (error) {
+      // En caso de error, mostrar como desconectado
+      boton.innerHTML = '<i class="fas fa-exclamation-circle"></i> SAP: Desconectado';
+      boton.style.backgroundColor = 'red';
+      boton.style.color = 'white';
+    } finally {
+      this.loaderFullScreen = false; // Asegura que el loader siempre se oculta al final
+    }
   }
+
+  // Método que se ejecuta al hacer clic en el botón
+  onVerificarConectividad(): void {
+    this.manejoEvento(() => this.verificadorConexion())();
+  }
+
 }

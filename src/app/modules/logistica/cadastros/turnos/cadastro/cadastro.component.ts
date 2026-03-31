@@ -21,7 +21,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaTurnosService } from '../services/turnos.service';
 //interfaces
 import { ILogisticaTurnos } from '../models/turnos';
-import { isNull } from 'util';
 
 @Component({
   selector: 'logistica--turnos-cadastro',

@@ -17,7 +17,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCadastrosMateriaisSimilaridadeService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/materiais/similaridade`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/materiais/similaridade`;
 
   constructor(
     protected http: HttpClient,
@@ -91,7 +91,7 @@ export class ComercialCadastrosMateriaisSimilaridadeService {
     const linhas = this.tidSoftwareService.getLinhas();
     const classes = this.comercialService.getClasses(null);
     const grupos = this.comercialService.getGrupo(null);
-    
+
     return forkJoin([linhas, classes, grupos]);
   }
 }

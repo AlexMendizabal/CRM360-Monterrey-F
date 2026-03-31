@@ -13,7 +13,7 @@ import { TipoComissionamento } from './models/tipo-comissionamento';
   providedIn: 'root'
 })
 export class ComercialCadastrosTipoComissionamentoService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/tipo-comissionamento`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/tipo-comissionamento`;
 
   constructor(protected http: HttpClient) {}
 

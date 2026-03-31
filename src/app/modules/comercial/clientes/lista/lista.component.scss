@@ -9,6 +9,10 @@
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
 }
+.scrollable-list {
+  max-height: 300px; /* Establece la altura máxima de la lista */
+  overflow-y: auto; /* Agrega una barra de desplazamiento vertical */
+}
 
 .modal-content {
   background-color: #fefefe;

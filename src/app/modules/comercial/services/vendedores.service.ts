@@ -12,8 +12,8 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialVendedoresService {
-  private readonly API = `http://23.254.204.187/api/comercial/vendedor`;
-  private readonly API_CADASTROS = `http://23.254.204.187/api/comercial/cadastros`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/vendedor`;
+  private readonly API_CADASTROS = `https://crm360.monterrey.com.bo/api/comercial/cadastros`;
 
 
   constructor(protected http: HttpClient) { }
@@ -97,7 +97,7 @@ export class ComercialVendedoresService {
         .get(`${this.API}/datosvendedor/${id_vendedor}`)
         .pipe(take(1), retry(2));
   }
-  
+
   getSucursalVendedor(id_sucursal: number): Observable<Object | JsonResponse>
   {
       return this.http

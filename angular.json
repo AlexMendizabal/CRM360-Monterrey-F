@@ -41,7 +41,10 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
             "styles": [
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/@fortawesome/fontawesome-free/css/all.min.css",
@@ -50,10 +53,12 @@
               "./node_modules/angular-calendar/css/angular-calendar.css",
               "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "./node_modules/@ng-select/ng-select/themes/default.theme.css",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
               "src/styles.scss"
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
               "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ],
             "allowedCommonJsDependencies": [
@@ -75,7 +80,11 @@
               "@babel/runtime/helpers/inherits",
               "@babel/runtime/helpers/get",
               "@babel/runtime/regenerator",
-              "js-brasil"
+              "js-brasil",
+              "@babel/runtime/helpers/toConsumableArray",
+              "@babel/runtime/helpers/createClass",
+              "@babel/runtime/helpers/defineProperty",
+              "bootstrap"
             ]
           },
           "configurations": {
@@ -87,6 +96,8 @@
                 }
               ],
               "optimization": true,
+              "serviceWorker": false,
+              "ngswConfigPath": "ngsw-config.json",
               "outputHashing": "all",
               "sourceMap": false,
               "extractCss": true,
@@ -153,8 +164,13 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
             "scripts": []
           }
         },
@@ -166,7 +182,9 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "e2e": {

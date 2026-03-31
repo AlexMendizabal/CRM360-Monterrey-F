@@ -35,7 +35,7 @@ import { ConfirmModalService } from 'src/app/shared/modules/confirm-modal/confir
 })
 export class ComercialClientesCadastroAnexosFormularioComponent
   implements OnInit, OnDestroy, IFormCanDeactivate {
-  private API = `http://23.254.204.187/api/comercial/clientes/cadastro/upload/anexo`;
+  private API = `https://crm360.monterrey.com.bo/api/comercial/clientes/cadastro/upload/anexo`;
   private user = this.authService.getCurrentUser();
 
   urlAnexo: Array<any> = [];

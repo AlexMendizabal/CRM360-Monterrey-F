@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class TecnologiaInformacaoService {
-  private readonly API = `http://23.254.204.187/api/tecnologia-informacao`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/tecnologia-informacao`;
 
   constructor(protected http: HttpClient) {}
 

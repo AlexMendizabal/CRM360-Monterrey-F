@@ -1,0 +1,33 @@
+export interface ICarrinhoModel {
+ codigo_oferta: number;
+ tonelada: number;
+ id_material: number;
+ materiais: ICarrinhoModel;
+ cantidad: number;
+ articulo: string;
+ descripcion:string;
+ id_unidad: number;
+ unidad:string;
+ peso:number;
+ precioUnitario:number;
+ listaprecio:number;
+ precioUnidad: number;
+ precioTotal:number;
+ precioBruto:number;
+ id_tipo_cliente:number;
+ id_lista:number;
+ descuento_permitido:number;
+ pesoEspecifico:number;
+ precio:number;
+ almacen:string;
+ valorTotal:number;
+ valorTotalBruto:number;
+ valorTotalBs:number;
+ valorTotalBrutoBs:number;
+ impuesto:number;
+ stock:number;
+ modoEntrega:number;
+ tipoEntrega:any;
+ descuento:number;
+ modo_entrega:number;
+}

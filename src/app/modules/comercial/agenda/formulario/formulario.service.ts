@@ -16,13 +16,26 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialAgendaFormularioService {
-  private readonly API = `http://23.254.204.187/api/comercial/agenda/formulario`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/agenda/formulario`;
+  private readonly API2 = `https://crm360.monterrey.com.bo/api/comercial`;
 
   constructor(
     protected http: HttpClient,
     private vendedoresService: ComercialVendedoresService,
     private titulosAgendaService: ComercialCadastrosTitulosAgendaService
   ) {}
+
+  getclientes(id){
+    return this.http
+    .get(`${this.API2}/clientes/todosclientes/${id}`)
+    .pipe(take(1), retry(2));
+  }
+
+  getpromotoresporcliente(codCliente){
+    return this.http
+    .get(`${this.API2}/clientes/getvendedorporcliente/${codCliente}`)
+    .pipe(take(1), retry(2));
+  }
 
   loadDependencies(): Observable<Object | JsonResponse> {
     let clientes = this.vendedoresService.getCarteiraClientes();

@@ -376,8 +376,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         qtdeAdicionados = 0;
 
       for (let i = 0; i < materiais.length; i++) {
-        if (
-          (this.selectedCodEmpresa === null ||
+        if ((this.selectedCodEmpresa === null ||
             this.selectedCodEmpresa === materiais[i].codEmpresa) &&
           hasError === false
         ) {

@@ -22,7 +22,6 @@ import {
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 //interfaces
-import { isNull } from 'util';
 import { ILogisticaYmsChecklist } from './../../checklist/models/checklist';
 import { ILogisticaYmsAssociacaoEtapas } from '../models/associacao-etapas';
 
@@ -224,7 +223,7 @@ export class LogisticaYmsAssociacaoEtapasCadastroComponent
       ID_LOGI_YMS_ETAP: [null],
       ID_LOGI_YMS_CHEC: [null, [Validators.required]],
       NM_AREA: [null],
-      IN_STAT: [isNull],
+      IN_STAT: [null],
       DS_OBSE: [null],
       assocEtapas: this.formBuilder.array([]),
     });

@@ -21,7 +21,7 @@ import { JsonResponse } from 'src/app/models/json-response';
     providedIn: 'root',
 })
 export class NotificacionesService {
-    private readonly BASE_URL: string = `http://23.254.204.187/api`;
+    private readonly BASE_URL: string = `https://crm360.monterrey.com.bo/api`;
 
     loaderNavbar: EventEmitter<boolean> = new EventEmitter();
 
@@ -56,7 +56,7 @@ export class NotificacionesService {
     }
 
     createNotificacion(params: any) {
-    
+
         return this.http
             .post(this.BASE_URL+ `/core/notificaciones/crearNotificaciones`, params)
             .pipe(take(1), retry(0));

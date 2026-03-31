@@ -17,7 +17,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCadastrosPropostasAssociacaoSituacoesPropostaService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/propostas/associacao-situacoes-proposta`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/propostas/associacao-situacoes-proposta`;
 
   constructor(
     protected http: HttpClient,

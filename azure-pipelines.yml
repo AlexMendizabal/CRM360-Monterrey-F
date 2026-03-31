@@ -1,0 +1,41 @@
+trigger:
+- main
+
+pool:
+  name: CRMAgent
+
+variables:
+  buildVersion: '1.1.10'
+  major: '1'
+  minor: '1'
+  patch: '10'
+
+jobs:
+- job: Build
+  timeoutInMinutes: 120
+  continueOnError: false
+  steps:
+  - task: CmdLine@2
+    inputs:
+      script: 'echo "*** Cache Restores? ::$(NSTCK_ANG_SITE_CACHE_RESTORED) ***"'
+
+  - script: |
+      npm run build:prod
+    displayName: 'npm build'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Agent.BuildDirectory)/s/dist/mtcorp-app'
+      ArtifactName: 'CRM360-$(buildVersion)'
+
+  - script: |
+      rmdir /s /q C:\inetpub\wwwroot\Monterrey\frontend\
+      mkdir C:\inetpub\wwwroot\Monterrey\frontend\
+      xcopy "$(Agent.BuildDirectory)\s\dist\mtcorp-app\*" C:\inetpub\wwwroot\Monterrey\frontend\ /E /I /H /Y
+      rmdir /s /q "$(Agent.BuildDirectory)\s\dist\mtcorp-app"
+    displayName: 'Move artifact to C:\inetpub\wwwroot\Monterrey\frontend'
+
+  - script: |
+      echo ##vso[task.setvariable variable=patch]$(( $(patch) + 1 ))
+      echo ##vso[task.setvariable variable=buildVersion]$(major).$(minor).$(patch)
+    displayName: 'Increment version'

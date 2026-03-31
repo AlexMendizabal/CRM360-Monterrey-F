@@ -110,43 +110,72 @@
         </div>
         <div class="form-row">
           <div class="form-group col">
-            <label for="empresa">Compañia</label>
+            <label for="empresa">Empresa</label>
             <input 
-              id="empresa"
-              type="text"
-              class="form-control"
-              formControlName="empresa"
-              placeholder="Ingrese..."
-              [ngClass]="onFieldRequired('empresa')"
-            >
-            <invalid-form-control [show]="onFieldInvalid('empresa')" message="Compañia es obligatorio."></invalid-form-control>
+                  id="empresa"
+                  type="text"
+                  class="form-control"
+                  formControlName="empresa"
+                  value="MONTERREY"
+                  readonly
+                  [ngClass]="onFieldRequired('empresa')"
+              >
+            <invalid-form-control [show]="onFieldInvalid('empresa')" message="Empresa es obligatorio."></invalid-form-control>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col">
             <label for="cargo">Puesto</label>
-            <input 
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="cargos"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              labelForId="id_carg"
+              bindLabel="ds_carg"
+              bindValue="id_carg"
+              id="cargo"
+              formControlName="cargo"
+              [ngClass]="onFieldRequired('cargo')"
+              >
+            </ng-select>
+           <!--  <input 
               id="cargo"
               type="text"
               class="form-control"
               formControlName="cargo"
               placeholder="Ingrese..."
               [ngClass]="onFieldRequired('cargo')"
-            >
+            > -->
             <invalid-form-control [show]="onFieldInvalid('cargo')" message="Puesto es obligatorio."></invalid-form-control>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col">
             <label for="departamento">Departamento</label>
-            <input 
+            <ng-select
+              [searchable]="true"
+              [clearable]="true"
+              [items]="departamentos"
+              [virtualScroll]="true"
+              placeholder="Selecione..."
+              labelForId="id_setr"
+              bindLabel="ds_setr"
+              bindValue="id_setr"
+              id="departamento"
+              formControlName="departamento"
+              [ngClass]="onFieldRequired('departamento')"
+              >
+            </ng-select>
+            <!-- <input 
               id="departamento"
               type="text"
               class="form-control"
               formControlName="departamento"
               placeholder="Digite..."
               [ngClass]="onFieldRequired('departamento')"
-            >
+            > -->
             <invalid-form-control [show]="onFieldInvalid('departamento')" message="Departamento es obligatorio."></invalid-form-control>
           </div>
         </div>

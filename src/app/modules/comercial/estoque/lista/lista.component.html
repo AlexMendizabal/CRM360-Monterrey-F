@@ -183,6 +183,16 @@
                 Código
               </thead-sorter>
             </th>
+            
+            <th class="text-truncate text-center" (click)="setOrderBy('familia')">
+              <thead-sorter value="Familia"></thead-sorter>
+            </th>
+            <th class="text-truncate text-center" (click)="setOrderBy('grupo')">
+              <thead-sorter value="Grupo"></thead-sorter>
+            </th>
+            <th class="text-truncate text-center" (click)="setOrderBy('linea')">
+              <thead-sorter value="Linea"></thead-sorter>
+            </th>
             <th class="text-truncate text-left" (click)="setOrderBy('nombre')">
               <thead-sorter
                 value="Nombre Material"
@@ -211,6 +221,49 @@
                 "
               >
                 {{ dato.codigo_material }}
+              </td>
+              
+              <td
+                class="font-weight-bold hover text-center"
+                (click)="
+                  openModal(
+                    modalDetalhes,
+                    dato.nombre,
+                    dato.id_material,
+                    dato.codigo_material,
+                    dato.cantidad
+                  )
+                "
+              >
+                {{ dato.familia }}
+              </td>
+              <td
+                class="font-weight-bold hover text-center"
+                (click)="
+                  openModal(
+                    modalDetalhes,
+                    dato.nombre,
+                    dato.id_material,
+                    dato.codigo_material,
+                    dato.cantidad
+                  )
+                "
+              >
+                {{ dato.grupo }}
+              </td>
+              <td
+                class="font-weight-bold hover text-center"
+                (click)="
+                  openModal(
+                    modalDetalhes,
+                    dato.nombre,
+                    dato.id_material,
+                    dato.codigo_material,
+                    dato.cantidad
+                  )
+                "
+              >
+                {{ dato.linea }}
               </td>
               <td
                 class="font-weight-bold hover text-left"
@@ -495,7 +548,7 @@
                   {{ item.precio | number : '1.2-2' }}
                 </td>
                 <td class="text-center">
-                  {{ item.cantidad | number : '1.0-0' }} {{ item.unidad }}
+                  {{ item.cantidad | number : '1.1-2' }} {{ item.unidad }}
                 </td>
               </tr>
             </ng-template>

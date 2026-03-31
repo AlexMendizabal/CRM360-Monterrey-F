@@ -1,68 +1,137 @@
 <div class="modal-content custom-modal">
   <div class="modal-header">
-    <h6 class="modal-title pull-left">Resumen de autorización</h6>
+    <h6 class="modal-title pull-left">RESUMEN DE AUTORIZACIÓN</h6>
     <div class="d-flex justify-content-center align-items-center">
       <button
         type="button"
         class="close pull-right"
         aria-label="Close"
         (click)="cerrar()"
+        style="font-size: 20px!important;"
       >
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
   </div>
   <div class="modal-body table-container">
-    <div class="col-14 mt-2">
+    <div class="col-md-14 mt-2 col-xl-14">
       <div class="row">
-        <div class="col-md-12 mt-2">
+        <div class="col-md-12 mt-2 col-xl-12">
           <div class="card">
             <div class="card-body">
-              <h6 class="card-title">Datos de autorización</h6>
-              <div class="row">
-                <div class="col-md-2">
-                  <label for="id_autorizacion"> <strong> N°:</strong></label>
+              <h6 class="card-title title-g">DATOS DE AUTORIZACIÓN</h6>
+              <div class="container con-g">
+                <div class="row">
+                  <div class="col">
+                    <label for="id_autorizacion"> <strong> N° Autorización:</strong></label>
+                    <input
+                      type="text"
+                      id="id_autorizacion"
+                      class="form-control"
+                      readonly
+                      value="{{ oferta['id_autorizacion'] }}"
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="codigo_oferta"><strong>Codigo Oferta:</strong></label>
+                    <input
+                      type="text"
+                      id="codigo_oferta"
+                      class="form-control"
+                      readonly
+                      value="{{ oferta['codigo_oferta'] }}"
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="fecha_solicitud">
+                      <strong> Solicitud realizada el:</strong>
+                    </label>
+                    <input
+                      type="text"
+                      id="fecha_solicitud"
+                      class="form-control"
+                      readonly
+                      value="{{ oferta['fecha_solicitud'] | date : 'dd/MM/yyyy'}} - {{ oferta['horasolicitud'] | time : 'H:i:s' }}"
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="fecha_solicitud">
+                      <strong> Fecha y Hora de Gestión:</strong>
+                    </label>
+                    <input
+                      type="text"
+                      id="fecha_gestion"
+                      class="form-control"
+                      readonly
+                      value="{{
+                        oferta['fecha_gestion'] | date : 'dd/MM/yyyy'
+                      }} - {{ oferta['horagestion'] }}"
+                    />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col form formGroup">
+                    <label for="codigo_cliente"> <strong> Codigo CLiente:</strong></label>
                   <input
                     type="text"
-                    id="id_autorizacion"
+                    id="codigo_cliente"
                     class="form-control"
                     readonly
-                    value="{{ data.oferta[0].id_autorizacion }}"
+                    value="{{ oferta['codigo_cliente'] | uppercase }}"
                   />
-                </div>
-                <div class="col-md-4">
-                  <label for="cliente"> <strong> Cliente</strong></label>
+                  </div>
+                  <div class="col form formGroup">
+                    <label for="cliente"> <strong>Nombre Cliente:</strong></label>
                   <input
                     type="text"
                     id="cliente"
                     class="form-control"
                     readonly
-                    value="{{ data.oferta[0].nombre_cliente | uppercase }}"
+                    value="{{ oferta['nombre_cliente'] | uppercase }}"
                   />
+                  </div>
+                  <div class="col form formGroup">
+                    <label for="tipo_cliente"> <strong>Categoria Cliente:</strong></label>
+                    <input
+                      type="text"
+                      id="tipo_cliente"
+                      class="form-control"
+                      readonly
+                      value="{{ oferta['tipo_cliente'] | uppercase }}"
+                    />
+                  </div>
                 </div>
-                <div class="col-md-4">
-                  <label for="fecha_solicitud">
-                    <strong> Fecha Solicitada</strong></label
-                  >
-                  <input
-                    type="text"
-                    id="fecha_solicitud"
-                    class="form-control"
-                    readonly
-                    value="{{
-                      data.oferta[0].fecha_solicitud | date : 'dd/MM/yyyy'
-                    }}"
-                  />
-                </div>
-                <div class="col-md-5">
-                  <label for="vendedor"> <strong> Vendedor</strong></label>
-                  <input
-                    type="text"
-                    id="vendedor"
-                    class="form-control"
-                    readonly
-                    value="{{ data.oferta[0].nombre_vendedor | uppercase }}"
-                  />
+                <div class="row">
+                  <div class="col">
+                    <label for="vendedor"> <strong> Vendedor:</strong></label>
+                    <input
+                      type="text"
+                      id="vendedor"
+                      class="form-control"
+                      readonly
+                      value="{{ oferta['nombre_vendedor'] | uppercase }}"
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="vendedor"> <strong> Autorizador:</strong></label>
+                    <input
+                      type="text"
+                      id="nombre_usuario"
+                      class="form-control"
+                      readonly
+                      value="{{ oferta['nombre_usuario'] | uppercase }}"
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="ListaPrecio"> <strong> Lista Precio:</strong></label>
+                    <input
+                      type="text"
+                      id="nombre_lista"
+                      class="form-control"
+                      readonly
+                      value="{{ oferta['nombre_lista'] | uppercase }}"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -73,23 +142,25 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
-          <div class="card-header">
-            <h5>Detalle</h5>
-          </div>
-          <div class="card-body table-container">
-            <table class="table table-striped">
-              <thead>
+          <div class="card-body">
+            <h6 class="card-title title-g">DETALLE DE AUTORIZACIÓN</h6>
+            <div class="table-responsive">
+            <table class="table">
+              <thead class="thead-light">
                 <tr>
                   <th class="text-truncate text-center">Código</th>
                   <th class="text-truncate text-center">Material</th>
                   <th class="text-truncate text-center">Cantidad</th>
+                  <th class="text-truncate text-center">Peso</th>
+                  <th class="text-truncate text-center">Precio Lista</th>
+                  <th class="text-truncate text-center">Precio Desc</th>
                   <th class="text-truncate text-center">Subtotal</th>
                   <th class="text-truncate text-center">D. Solicitado</th>
                   <th class="text-truncate text-center">D. Permitido</th>
                   <th class="text-truncate text-center">Excedente</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody style="border: 1px solid #dddddd;">
                 <tr *ngFor="let detalles of detalle">
                   <td class="font-weight-bold text-center">
                     {{ detalles.CODIGOMATERIAL }}
@@ -101,35 +172,89 @@
                     {{ detalles.cantidad_total }}
                   </td>
                   <td class="font-weight-bold text-center">
-                    {{ detalles.subtotal }}
+                    {{ detalles.peso | uppercase }}
                   </td>
                   <td class="font-weight-bold text-center">
-                    {{ detalles.descuento_solicitado }}
+                    ${{ detalles.precio | uppercase }}
                   </td>
                   <td class="font-weight-bold text-center">
-                    {{ detalles.descuento_permitido }}
+                    ${{ detalles.PrecioNetoUnidad | uppercase }}
                   </td>
+                  <td class="font-weight-bold text-center">
+                    ${{ detalles.subtotal }}
+                  </td>
+                  <td class="font-weight-bold text-center">
+                    <ng-container
+                      *ngIf="
+                        detalles.descuento_solicitado !== null &&
+                        detalles.descuento_solicitado !== undefined
+                      "
+                    >
+                      {{ detalles.descuento_solicitado + '%' }}
+                    </ng-container>
+                  </td>
+
+                  <td class="font-weight-bold text-center">
+                    <ng-container
+                      *ngIf="
+                        detalles.descuento_permitido !== null &&
+                        detalles.descuento_permitido !== undefined
+                      "
+                    >
+                      {{ detalles.descuento_permitido + '%' }}
+                    </ng-container>
+                  </td>
+
                   <td
                     class="font-weight-bold text-center"
                     [ngStyle]="{
                       color: detalles.excedente >= 0 ? 'red' : 'green'
                     }"
                   >
-                    {{ detalles.excedente }}
+                    <ng-container
+                      *ngIf="
+                        detalles.excedente !== null &&
+                        detalles.excedente !== undefined
+                      "
+                    >
+                      {{ detalles.excedente + '%' }}
+                    </ng-container>
                   </td>
                 </tr>
+                <tr>
+                  <td>
+                  </td>
+                  <td class="font-weight-bold text-right">
+                   <strong> TOTAL</strong>
+                  </td>
+                  <td class="font-weight-bold text-center">
+                    <strong>{{ calcularTotalCantidad() }}</strong>
+                  </td>
+                  
+                  <td class="font-weight-bold text-center">
+                    <strong>{{oferta['peso_total']}}</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>                
+                </tr>
               </tbody>
+
             </table>
+          </div>
           </div>
         </div>
       </div>
     </div>
     <div class="col-md-12">
       <div class="row">
-        <div class="col-md-6 mt-2">
+        <div class="col-md-6 mt-2 box-g1">
           <div class="card">
-            <div class="card-body">
-              <h6 class="card-title">Descripción</h6>
+            <div class="card-body" style="padding-bottom: 45px;">
+              <h6 class="card-title title-g">Descripción</h6>
               <div class="row">
                 <div class="col-md-9">
                   <input
@@ -137,54 +262,75 @@
                     id="customerName"
                     class="form-control"
                     readonly
-                    value="{{ data.oferta[0].descripcion_vend | uppercase }}"
+                    value="{{ oferta['descripcion_vend'] | uppercase }}"
                   />
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-6 mt-2">
+        <div class="col-md-6 mt-2 box-g2">
           <div class="card">
             <div class="card-body">
-              <h6 class="card-title">Observaciones</h6>
+              <h6 class="card-title title-g">Observaciones</h6>
               <div class="row">
                 <form [formGroup]="myForm" (ngSubmit)="submitForm()">
-                  <div class="col-md-9">
-                    <input
+                  <div class="col">
+                    <textarea
                       type="text"
                       size="300"
-                      id="observacion"
+                      id="observacion1"
                       formControlName="observacion"
                       class="form-control"
-                    />
+                      rows="4" cols="50"
+                      >
+                    </textarea>
                   </div>
                 </form>
               </div>
+              <!-- <div class="row">
+                <div class="col-md-9" *ngIf="admin != true">
+                    <textarea
+                    type="text"
+                      size="300"
+                      class="form-control"
+                      rows="4" cols="50"
+                      disabled
+                      value="{{ oferta.desc_usuario}}"
+                      >
+                    </textarea>
+                  </div>
+                </div> -->
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="col-md-12">
-      <div class="modal-footer" id="botones" *ngIf="idVend === 88">
-        <button
-          type="submit"
-          id="aceptado"
-          class="btn btn-success"
-          (click)="boton(data.oferta[0].id_autorizacion, 12)"
-          [disabled]="loader || myForm.get('observacion').invalid"
-        >
-          Aprobar
-        </button>
+      <div class="modal-footer" id="botones" *ngIf="admin && oferta['estado'] == '10'">
         <button
           type="button"
           id="rechazado"
           class="btn btn-danger"
-          (click)="boton(data.oferta[0].id_autorizacion, 11)"
+          (click)="boton(oferta['id_autorizacion'], 11)"
           [disabled]="loader || myForm.get('observacion').invalid"
         >
           Rechazar
+        </button>
+        <button
+          type="submit"
+          id="aceptado"
+          class="btn btn-success"
+          (click)="boton(oferta['id_autorizacion'], 12)"
+          [disabled]="loader || myForm.get('observacion').invalid"
+        >
+          <span *ngIf="!loading">Aprobar</span>
+          <span
+            *ngIf="loading"
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
         </button>
       </div>
     </div>

@@ -1,0 +1,265 @@
+<loader-spinner-full-screen
+  *ngIf="loaderFullScreen"
+></loader-spinner-full-screen>
+<loader-spinner-navbar *ngIf="loaderNavbar"></loader-spinner-navbar>
+<app-header appTitle="OFERTAS POS">
+  <button
+    type="button"
+    [routerLink]="['../registrar']"
+    [disabled]="disableFiltrar"
+  >
+    Adicionar
+  </button>
+  <button type="button" (click)="onFiltrar()">Filtrar</button>
+  <button (click)="verificarTodasLasOfertas()" class="btn btn-primary">
+    Verificar todas las ofertas
+  </button>
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+  <div class="row" #scrollToFilter>
+    <div class="col">
+      <advanced-filter>
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <div class="form-group col-lg-2">
+              <label for="fechaCreacion">Fecha Creación</label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="fecha_inicial"
+              />
+            </div>
+            <div class="form-group col-lg-2">
+              <label for="fechaValidez">Fecha Validez</label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="fecha_final"
+              />
+            </div>
+
+            <div class="form-group col-lg-2 mb-lg-0">
+              <label for="codigoOferta">Código Oferta</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="codigo_oferta"
+                (keydown.enter)="onFiltrar()"
+              />
+            </div>
+            <div class="form-group col-lg-1">
+              <label for="estado_oferta">Estado oferta</label>
+              <select
+                class="form-control custom-select"
+                formControlName="estado_oferta"
+              >
+                <option value="">TODOS</option>
+                <option value="1">BORRADOR</option>
+                <option value="2">CERRADO</option>
+              </select>
+            </div>
+            <div class="form-group col-lg-1">
+              <label for="ofertasVencidas">Ofertas Vencidas</label>
+              <select
+                class="form-control custom-select"
+                formControlName="ofertas_vencidas"
+              >
+                <option value="">TODOS</option>
+                <option value="vencidas">VENCIDAS</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-lg-3 mb-lg-0">
+              <label for="nombreCliente">Nombre Cliente</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="nombre_cliente"
+                (keydown.enter)="onFiltrar()"
+              />
+            </div>
+            <div class="form-group col-lg-3 mb-lg-0">
+              <label for="nombreVendedor">Nombre Vendedor</label>
+              <select class="form-control" formControlName="nombre_vendedor">
+                <!-- Opción vacía con valor "" para representar "TODOS" -->
+                <option value="">TODOS</option>
+                <!-- Opciones de ejecutivos -->
+                <option
+                  *ngFor="let ejecutivo of ejecutivos"
+                  [value]="ejecutivo.NOMBRE"
+                >
+                  {{ ejecutivo.NOMBRE }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </advanced-filter>
+    </div>
+  </div>
+
+  <ul class="horizontal-list">
+    <li *ngFor="let item of leyendas" class="text-muted" st>
+      <i class="fas fa-paper-plane" style="color:{{ item.hex }};"></i>
+      {{ item.text }}
+    </li>
+  </ul>
+
+  <div
+    class="table-responsive"
+    style="overflow-y: scroll; height: 400px !important"
+  >
+    <table
+      class="table table-striped table-hover table-bordered"
+      style="max-height: 400px; overflow-y: auto"
+    >
+      <thead style="font-size: 11px">
+        <tr>
+          <th class="text-center">COD.SAP</th>
+          <th class="text-center">COD.CRM</th>
+          <th>FECHA CREACIÓN</th>
+          <th>FECHA VALIDEZ</th>
+          <th>CLIENTE</th>
+          <th>VENDEDOR</th>
+          <th>MODO DE ENTREGA</th>
+          <th>SITUACIÓN</th>
+          <th>ESTADO DE OFERTA</th>
+          <th>ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let oferta of data">
+          <td data-label="COD.SAP" class="text-center">
+            {{
+              oferta.CODIGO_SAP === null ? 'Sin código SAP' : oferta.CODIGO_SAP
+            }}
+          </td>
+          <td data-label="COD.CRM" class="text-center">
+            {{ oferta.ID === null ? 'Sin código CRM' : oferta.ID }}
+          </td>
+          <td data-label="FECHA CREACIÓN">
+            {{ oferta.fecha_inicial | date : 'dd/MM/yyyy' }}
+          </td>
+          <td data-label="FECHA VALIDEZ">
+            {{ oferta.fecha_final | date : 'dd/MM/yyyy' }}
+          </td>
+          <td data-label="CLIENTE">{{ oferta.NOMBRE_CLIENTE }}</td>
+          <td data-label="VENDEDOR" class="text-uppercase">
+            {{ oferta.NOMBRE_VENDEDOR }}
+          </td>
+          <td data-label="MODO DE ENTREGA">{{ oferta.modo_entrega }}</td>
+          <td
+            data-label="SITUACIÓN"
+            [ngClass]="{
+              'text-primary font-italic': oferta.tipo_estado !== 'CERRADO',
+              'text-danger font-weight-bold': oferta.tipo_estado === 'CERRADO'
+            }"
+          >
+            {{ oferta.tipo_estado }}
+          </td>
+          <td data-label="ESTADO DE OFERTA">{{ oferta.estado_oferta }}</td>
+
+          <td>
+            <!-- Contenedor para alinear todos los botones -->
+            <div
+              style="
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+              "
+            >
+              <!-- Botón Editar -->
+              <button
+                class="btn-none"
+                (click)="editar(oferta.ID)"
+                tooltip="Editar Oferta"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="EDITAR"
+              >
+                <i
+                  class="fas fa-pencil-alt mr-2 icono"
+                  style="color: black !important"
+                ></i>
+              </button>
+
+              <!-- Botón Imprimir PDF -->
+              <button
+                class="btn-none"
+                (click)="onImprimir(oferta.ID)"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="PDF"
+              >
+                <i class="far fa-file-pdf text-primary icono"></i>
+              </button>
+
+              <!-- Botón Ver -->
+              <a
+                class="text-center"
+                (click)="onVista(oferta.ID)"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="VISTA"
+              >
+                <i
+                  class="far fa-eye icono"
+                  style="color: #3e0752 !important"
+                ></i>
+              </a>
+
+              <!-- Botón Enviar SAP -->
+              <a
+                class="text-center"
+                (click)="onEnviarSap(oferta.ID)"
+                [style.pointer-events]="
+                  isButtonDisabled(oferta) ? 'none' : 'auto'
+                "
+                [style.opacity]="isButtonDisabled(oferta) ? '0.5' : '1'"
+              >
+                <i
+                  *ngIf="oferta.CODIGO_SAP === null"
+                  [ngClass]="getButtonClass(oferta)"
+                  class="far fa-paper-plane icono"
+                ></i>
+                <i
+                  *ngIf="oferta.CODIGO_SAP !== null"
+                  class="fas fa-check-circle icono"
+                  style="color: #00750a !important"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Enviado a SAP"
+                ></i>
+              </a>
+
+              <!-- Botón Estado de la Oferta -->
+              <a
+                class="text-center"
+                (click)="
+                  oferta.tipo_estado !== 'CERRADO' &&
+                  oferta.estado_oferta !== 'PENDIENTE' &&
+                  oferta.CODIGO_SAP !== null
+                    ? onEstadoOferta(oferta.CODIGO_SAP)
+                    : null
+                "
+                [ngClass]="{
+                  disabled:
+                    oferta.tipo_estado === 'CERRADO' ||
+                    oferta.estado_oferta === 'PENDIENTE' ||
+                    oferta.CODIGO_SAP === null
+                }"
+              >
+                <i
+                  class="fas fa-sync-alt mr-2 icono text-dark"
+                  id="verificador"
+                ></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</app-body>

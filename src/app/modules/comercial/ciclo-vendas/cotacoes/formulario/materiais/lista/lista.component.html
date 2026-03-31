@@ -34,41 +34,40 @@
   </div>
 
   <div class="col" [hidden]="showBloco2">
-    <div class="row mb-2">
+    <!-- <div class="row mb-2">
       <div class="col">
         <div class="d-flex justify-content-end">
-          <!--   <button type="button" class="btn btn-sm btn-danger mr-3" (click)="onReset()">
+             <button type="button" class="btn btn-sm btn-danger mr-3" (click)="onReset()">
             <i class="fas fa-trash"></i>
             <span>Limpiar</span>
-          </button> -->
+          </button>
 
-          <!--    <button type="button" class="btn btn-sm btn-primary" (click)="onFilterVend(3)" *ngIf="swAppSell === true">
+              <button type="button" class="btn btn-sm btn-primary" (click)="onFilterVend(3)" *ngIf="swAppSell === true">
             <i class="fas fa-search"></i>
             <span>UP SELL</span>
-          </button> -->
-          <!-- 
+          </button>
+          
                     <button type="button" class="btn btn-sm btn-secondary" (click)="onFilter()" *ngIf="swTodos === true">
                       <i class="fas fa-search"></i>
                       <span>Buscar en todos</span>
                     </button>
-          -->
-          <button
-            type="button"
+        
+          <button type="button"
             class="btn btn-sm btn-secondary mr-3"
             (click)="onFilterVend(1)"
-            *ngIf="swVendedor === true && swActivarBusqueda === true"
-          >
+            *ngIf="swVendedor === true">
             <i class="fas fa-search"></i>
             <span>Buscar</span>
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
 
+            <!--  [ngClass]="onFieldError('codLinha') + ' ' + onFieldRequired(form.controls.codLinha)"-->
     <form [formGroup]="form">
       <div class="form-row py-3">
-        <div class="form-group col-lg-2">
-          <label for="codLinha">Familia</label>
+       <!--  <div class="form-group col-lg-2">
+          <label for="codLinha">Familia:</label>
           <ng-select
             [searchable]="true"
             [clearable]="true"
@@ -82,11 +81,10 @@
             bindValue="idClasseMt"
             (change)="onChangeLinha($event.idClasseMt, true)"
           >
-            <!--  [ngClass]="onFieldError('codLinha') + ' ' + onFieldRequired(form.controls.codLinha)"-->
           </ng-select>
-        </div>
-        <div class="form-group col-lg-2">
-          <label for="codClasse">Grupo</label>
+        </div> -->
+        <!-- <div class="form-group col-lg-2">
+          <label for="codClasse">Grupo:</label>
           <ng-select
             [searchable]="true"
             [clearable]="true"
@@ -101,9 +99,9 @@
             (change)="onChangegrupo($event.id_linha)"
           >
           </ng-select>
-        </div>
-        <div class="form-group col-lg-2">
-          <label for="codLinea">Línea </label>
+        </div> -->
+        <!-- <div class="form-group col-lg-2">
+          <label for="codLinea">Línea: </label>
           <ng-select
             [searchable]="true"
             [clearable]="true"
@@ -118,10 +116,10 @@
             (change)="onChangeClasse($event.ID, true, 'application')"
           >
           </ng-select>
-        </div>
-        <div class="form-group col-lg-4">
+        </div> -->
+        <div class="form-group col-lg-8">
           <label for="codMaterial"
-            ><span class="text-danger">(*)</span>Material</label
+            ><span class="text-danger text-muted">(*)</span> Material: </label
           >
           <ng-select
             [searchable]="true"
@@ -131,14 +129,52 @@
             formControlName="codMaterial"
             [virtualScroll]="true"
             labelForId="id_material"
-            bindLabel="nombre"
-            bindValue="codigoMaterial"
+            bindLabel="Item"
+            bindValue="codigo_material"
             [loading]="materiaisLoader"
             loadingText="Cargando..."
-            (change)="cambioMaterial($event.id_material)"
+            (change)="cambioMaterial($event.codigo_material)"
           >
+          <ng-template ng-label-tmp let-item="item">
+            <span [innerHTML]="sanitizeHtml(item.Item)"></span>
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            <span [innerHTML]="sanitizeHtml(item.Item)"></span>
+          </ng-template>
           </ng-select>
         </div>
+
+        <div class="col-lg-4 d-flex align-items-center">
+            <button style="margin-top: 19px;" type="button"
+              class="btn btn-lg btn-secondary mr-3"
+              (click)="onFilterVend(1)"
+              *ngIf="swVendedor === true">
+              <i class="fas fa-search"></i>
+              <span>Buscar en Almacenes</span>
+            </button>
+        </div>
+
+
+
+      <!--    <div class="form-group col-lg-2">
+          <label for="almacenForm"
+            ><span class="text-danger text-muted">(*)</span> Almacén:</label
+          >
+          <ng-select
+            [searchable]="true"
+            [clearable]="true"
+            [items]="this.almacenes"
+            placeholder="Seleccione..."
+            formControlName="almacenForm"
+            [virtualScroll]="true"
+            labelForId="id_almacen"
+            bindLabel="codigo_almacen"
+            bindValue="id_almacen"
+            (change)="seleccionarAlmacen($event.codigo_almacen)"
+            [readonly]="!estadoAlmacen.value"
+            >
+          </ng-select>
+        </div> -->
         <!--<div class="form-group col-lg-3">
               <label for="codClasse">Unid</label>
               <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
@@ -201,7 +237,7 @@
           <div class="form-group pt-1 mb-0 mr-3">
             <!--  <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="auto-scroll" [(ngModel)]="autoScroll"
-                [ngModelOptions]="{ standalone: true }"> 
+                [ngModelOptions]="{ standalone: true }">
               <label class="custom-control-label" for="auto-scroll">
                 <span class="mr-1">Auto-scroll</span>
                 <ng-template #tooltipAutoScrollTemplate>
@@ -213,7 +249,7 @@
               </label>
             </div> -->
           </div>
-          <div class="form-group mb-0" *ngIf="dados.length != 0">
+          <div class="form-group mb-0" *ngIf="dados.length != 0 || crosell.length != 0 || upsell.length != 0">
             <button
               type="button"
               class="btn btn-sm btn-success"
@@ -242,12 +278,12 @@
                     <th
                       scope="col"
                       class="text-center red-header"
-                      [ngStyle]="{ width: columSize('disponibilidade') }"
+                      style="width: 0!important;border-right: 0 !important;"
                     ></th>
                     <th
                       scope="col"
-                      class="text-center align-items-center red-header"
-                      [ngStyle]="{ width: columSize('codMaterial') }"
+                      class="align-items-center red-header"
+                      style="border-left: 0 !important; text-align: center;"
                     >
                       <thead-sorter
                         value="Código"
@@ -315,13 +351,13 @@
                     >
                       Moneda
                     </th>
-                    <th
+                    <!-- <th
                       scope="col"
                       class="text-center"
                       [ngStyle]="{ width: columSize('estoqueDisponivel') }"
                     >
                       IVA
-                    </th>
+                    </th> -->
                     <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                         Modo Entrega
                       </th> -->
@@ -330,7 +366,7 @@
                       class="text-center"
                       [ngStyle]="{ width: columSize('estoqueDisponivel') }"
                     >
-                  ACCIONES
+                  Acciones
                 </th>
                   </tr>
                 </ng-template>
@@ -342,10 +378,7 @@
                     swAppSellColor === false
                   "
                 >
-                  <tr
-                    *ngFor="let material of dados; let i = index"
-                    [class.table-active]="i == activeRow"
-                  >
+                  <tr *ngFor="let material of dados; let i = index"  [class.table-active]="i == activeRow">
                     <td
                       class="text-truncate text-center"
                       [ngClass]="classStatusBorder(material.disponibilidade)"
@@ -405,9 +438,9 @@
                     <!-- <td> {{ material.descuento | number:'1.2-2' }}</td> -->
                     <!-- <td class="text-center"> {{ material.precio_neto | number:'1.4-4' }}</td> -->
                     <td class="text-center">{{ material.nombre_moneda }}</td>
-                    <td class="text-center">
+                    <!-- <td class="text-center">
                       {{ material.iva | number : '1.2-2' }} %
-                    </td>
+                    </td> -->
                     <!--  <td> {{material.columna8}}</td> -->
                     <td
                       class="text-right"
@@ -500,12 +533,12 @@
                     <th
                       scope="col"
                       class="text-center blue-header"
-                      [ngStyle]="{ width: columSize('disponibilidade') }"
+                      style="width: 0!important;border-right: 0 !important;"
                     ></th>
                     <th
                       scope="col"
                       class="text-center align-items-center blue-header"
-                      [ngStyle]="{ width: columSize('codMaterial') }"
+                      style="border-left: 0 !important; text-align: center;"
                     >
                       <thead-sorter
                         value="Código"
@@ -573,13 +606,13 @@
                     >
                       Moneda
                     </th>
-                    <th
+                    <!-- <th
                       scope="col"
                       class="text-center"
                       [ngStyle]="{ width: columSize('estoqueDisponivel') }"
                     >
                       IVA
-                    </th>
+                    </th> -->
                     <th
                       scope="col"
                       class="text-center"
@@ -590,7 +623,7 @@
                     <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                         Modo Entrega
                       </th> -->
-                    
+
                   </tr>
                 </ng-template>
                 <ng-template
@@ -664,9 +697,9 @@
                     <!-- <td> {{ material.descuento | number:'1.2-2' }}</td> -->
                     <!-- <td class="text-center"> {{ material.precio_neto | number:'1.4-4' }}</td> -->
                     <td class="text-center">{{ material.nombre_moneda }}</td>
-                    <td class="text-center">
+                    <!-- <td class="text-center">
                       {{ material.iva | number : '1.2-2' }} %
-                    </td>
+                    </td> -->
                     <!--  <td> {{material.columna8}}</td> -->
                     <td
                       class="text-right"
@@ -747,7 +780,7 @@
           </div>
         </tab>
 
-        <tab heading="MATERIALES RELACIONADOS">
+        <tab heading="MATERIALES COMPLEMENTARIOS">
           <div class="row">
             <div class="table-responsive">
               <custom-table [config]="tableConfig">
@@ -760,12 +793,12 @@
                     <th
                       scope="col"
                       class="text-center blue-header"
-                      [ngStyle]="{ width: columSize('disponibilidade') }"
+                      style="width: 0!important;border-right: 0 !important;"
                     ></th>
                     <th
                       scope="col"
                       class="text-center align-items-center blue-header"
-                      [ngStyle]="{ width: columSize('codMaterial') }"
+                      style="border-left: 0 !important; text-align: center;"
                     >
                       <thead-sorter
                         value="Código"
@@ -833,14 +866,14 @@
                     >
                       Moneda
                     </th>
-                    <th
+                    <!-- <th
                       scope="col"
                       class="text-center"
                       [ngStyle]="{ width: columSize('estoqueDisponivel') }"
                     >
                       IVA
-                    </th>
-                    
+                    </th> -->
+
                     <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                         Modo Entrega
                       </th> -->
@@ -849,7 +882,7 @@
                       class="text-center"
                       [ngStyle]="{ width: columSize('estoqueDisponivel') }"
                     >
-                  ACCIONES</th>
+                  Acciones</th>
                   </tr>
                 </ng-template>
                 <ng-template
@@ -923,9 +956,9 @@
                     <!-- <td> {{ material.descuento | number:'1.2-2' }}</td> -->
                     <!-- <td class="text-center"> {{ material.precio_neto | number:'1.4-4' }}</td> -->
                     <td class="text-center">{{ material.nombre_moneda }}</td>
-                    <td class="text-center">
+                    <!-- <td class="text-center">
                       {{ material.iva | number : '1.2-2' }} %
-                    </td>
+                    </td> -->
                     <!--  <td> {{material.columna8}}</td> -->
                     <td
                       class="text-right"
@@ -1030,6 +1063,6 @@
         </div>
       </div>
     </div>
-    
+
   </div>
 </div>

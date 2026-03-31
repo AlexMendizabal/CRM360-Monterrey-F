@@ -25,7 +25,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsCircuitosService } from '../services/circuitos.service';
 //interfaces
 import { ILogisticaYmsCircuitos } from '../models/circuitos';
-import { isNull } from 'util';
 
 @Component({
   selector: 'logistica-yms-circuitos-cadastro',

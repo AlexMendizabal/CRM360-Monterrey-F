@@ -15,7 +15,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root'
 })
 export class ComercialClientesPreCadastroService {
-  private readonly BASE_URL: string = `https://23.254.204.187/api/api`   ;
+  private readonly BASE_URL: string = ` https://crm360.monterrey.com.bo/api`   ;
 
   constructor(
     private vendedoresService: ComercialVendedoresService,
@@ -43,7 +43,7 @@ export class ComercialClientesPreCadastroService {
 
   getTipoPersona()
   {
-      return this.http.get(`${this.BASE_URL}/comercial/clientes/tipo_persona/`).pipe(take(1));
+      return this.http.get(`${this.BASE_URL}/comercial/clientes/tipo_persona`).pipe(take(1));
   }
 
  getTipoDocumento()
@@ -61,7 +61,17 @@ export class ComercialClientesPreCadastroService {
     );
   } */
 
+  updateCliente(params: any){
+    return this.http
+      .post(`https://crm360.monterrey.com.bo/api/sap/cliente_update`, params)
+      .pipe(take(1), retry(0));
+  }
 
+  updateCliente2(params: any){
+    return this.http
+      .post(`https://crm360.monterrey.com.bo/api/sap/cliente_updateSap`, params)
+      .pipe(take(1), retry(0));
+  }
 
   postAkna(param){
     return this.http.post(

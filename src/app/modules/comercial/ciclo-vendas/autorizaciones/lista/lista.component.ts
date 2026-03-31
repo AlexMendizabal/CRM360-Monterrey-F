@@ -142,6 +142,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   data: [];
   autorizaciones:Array<any> = [];
   items: Array<any> = [];
+  onChangeVendedor:any;
 
   dados: Array<any> = [];
   datos: Array<ICotacao> = [];
@@ -149,6 +150,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   dadosLoaded = false;
   dadosEmpty = false;
   searchSubmitted = false;
+  selectedVendedor: any;
 
   detalhes: any = {
     dataFaturamento: Date,
@@ -186,6 +188,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   detalhesCodCliente: any;
   filtroCotacoes: boolean;
+  codigo_oferta: any;
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -230,6 +233,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.setChangeEvents();
     this.getFilterValues();
     this.setFormFilter();
+    this.onFilter();
     this.titleService.setTitle('Autorizaciones');
     this.onDetailPanelEmitter();
    //this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente'];
@@ -431,6 +435,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       dataInicial: [formValue['dataInicial']],
       dataFinal: [formValue['dataFinal']],
       codVendedor: [formValue['codVendedor']],
+      codigo_oferta: [formValue['codigo_oferta']],
       estado_oferta: [formValue['estado_oferta']],
       nrPedido: [formValue['nrPedido']],
       pagina: [formValue['pagina']],
@@ -443,7 +448,8 @@ export class ComercialCicloVendasCotacoesListaComponent
       dataInicial: this.dateService.getStartOfWeek(),
       dataFinal: this.dateService.getToday(),
       codVendedor: this.vendedores,
-      estado_oferta: this.defaultSelection,
+      codigo_oferta: this.codigo_oferta,
+      estado_oferta: this.estado_oferta,
       nrPedido: null,
       pagina: 1,
       registros: this.itemsPerPage,
@@ -513,6 +519,10 @@ filterByCodVendedorStatus(status: string): void {
   this.formGroup.get('codVendedor').setValue(status);
   this.onFilter();
 }
+filterByCodigoOferta(status: string): void {
+  this.formGroup.get('codigo_oferta').setValue(status);
+  this.onFilter();
+}
  filterByEstadoStatus(status: string): void {
   this.formGroup.get('estado_oferta').setValue(status);
   this.onFilter();
@@ -580,6 +590,9 @@ getFormFilterValues(): Object {
   if (this.formGroup.value.codVendedor) {
     params.codVendedor = this.formGroup.value.codVendedor;
   }
+  if (this.formGroup.value.codigo_oferta) {
+    params.codigo_oferta = this.formGroup.value.codigo_oferta;
+  }
 
   if (this.formGroup.value.pagina) {
     params.pagina = this.formGroup.value.pagina;
@@ -634,7 +647,7 @@ search(params: any): void {
       next: (response: JsonResponse) => {console.log("params2",params);
         if (response.hasOwnProperty('success') && response.success === true) {
           this.datos = response.data;
-          this.datosAutorizaciones = this.datos.slice(0, this.itemsPerPage);
+          this.datosAutorizaciones = this.datos.slice(0, this.itemsPerPage); console.log("params3",this.datosAutorizaciones);
           this.totalItems = this.datos.length;
           this.dadosLoaded = true;
           this.loaderNavbar = false;
@@ -660,6 +673,7 @@ onReset() {
     estado_oferta: this.defaultSelection,
     codVendedor: 0,
     nrPedido: null,
+    codigo_oferta: null,
     pagina: 1,
     registros: this.itemsPerPage,
     //statusCliente: 'Ativo'
@@ -858,6 +872,36 @@ openModal(id_autorizacion) {
   this.modalAutorizacionService.showModal(id_autorizacion);
 }
 
+openModalCliente(template: TemplateRef<any>, codigo: number, nombre: string): void {
+  const config = {
+    ignoreBackdropClick: true,
+    class: 'modal-lg' 
+  };
+  console.log('dialog', template);
+  const params = {codigo_cliente: codigo};
+  this.cotacoesService.getHistorialOferta(params).pipe(
+    finalize(() => {
+      })
+    ).subscribe(
+      response => {
+          console.log('Este es el historial',response);
+          if(response['success'])
+            {
+              template['dato'] = response['data'];
+            }
+      });
+      template['codigo'] = codigo;
+      template['nombre'] = nombre;
+    this.modalRef = this.modalService.show(template, config);
+  }
+
+closeModalCliente(reason: string) {
+  console.log(`Closed with: ${reason}`);
+  if (this.modalRef) {
+    this.modalRef.hide();
+  }
+}
+
 hideModal() {
   this.modalRef.hide();
   this.formGroup.controls.codEmpresaAdd.reset();
@@ -967,6 +1011,8 @@ nuevo() {
         return 'red';
       case 'PENDIENTE':
         return 'blue';
+      case 'CERRADO':
+          return 'red';
       default:
         return '';
     }

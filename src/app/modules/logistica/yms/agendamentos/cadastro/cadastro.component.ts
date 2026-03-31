@@ -32,7 +32,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsAgendamentosService } from '../services/agendamentos.service';
 //interfaces
 import { ILogisticaYmsAgendamentos } from '../models/agendamentos';
-import { isNull } from 'util';
 import { ILogisticaYmsCircuitos } from '../../circuitos/models/circuitos';
 
 @Component({
@@ -165,14 +164,14 @@ export class LogisticaYmsAgendamentosCadastroComponent
   onActivatedRoute() {
     const _params = this.activatedRoute.snapshot.params;
     if (_params.hasOwnProperty('id')){
-      this.getAgendamento(_params['id']); 
+      this.getAgendamento(_params['id']);
     } else{
       this.onAddMaterial();
     }
   }
 
-  
-  getLinkAddTipoVeiculo(): string {    
+
+  getLinkAddTipoVeiculo(): string {
     return `/logistica/cadastros/veiculos/${this.form.value.ID_LOGI_VEIC}`;
   }
 
@@ -268,10 +267,10 @@ export class LogisticaYmsAgendamentosCadastroComponent
   }
 
   onPrint(){
-    
+
     window.print();
   }
-  
+
 
   getAgendamento(id: number) {
     this.loading = true;
@@ -287,7 +286,7 @@ export class LogisticaYmsAgendamentosCadastroComponent
         (response) => {
           if (response.status === 200) {
             const data : ILogisticaYmsAgendamentos = response.body['data'][0]
-            this.form.patchValue(data) 
+            this.form.patchValue(data)
             this.noResult = false;
           } else {
             this.noResult = true;
@@ -408,7 +407,7 @@ export class LogisticaYmsAgendamentosCadastroComponent
       NM_TRAN:[{value:null, disabled:true }, [Validators.required]],
       NM_VEIC_TIPO:[{value:null, disabled:true }, [Validators.required]],
       DS_AGEN: [null, [Validators.required]],
-      IN_STAT: [isNull],
+      IN_STAT: [null],
       DT_INIC_PREV: [null, [Validators.required]],
       DS_OBSE: [null],
       ID_LOGI_FILI: [null, [Validators.required]],
@@ -561,7 +560,7 @@ export class LogisticaYmsAgendamentosCadastroComponent
           }
         );
   }
-  
+
 
   async postMateriais(id:number){
     let request = [];

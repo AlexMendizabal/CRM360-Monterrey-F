@@ -69,7 +69,7 @@ export class ComercialClientesPreCadastroComponent
       routerLink: '/comercial/clientes',
     },
     {
-      descricao: 'Pre-Registro',
+      descricao: 'Registro',
     },
   ];
 
@@ -137,13 +137,13 @@ export class ComercialClientesPreCadastroComponent
   indice: number = 0;
   //bloquearSeleccion: boolean = true;
   ciudad_vendedor: number = 0;
-  private coloresDisponibles: string[] = [
+ /*  private coloresDisponibles: string[] = [
     'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000',
     'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FC9F3A',
     'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00',
     'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00FF00',
     'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFFFF',
-  ];
+  ]; */
 
   constructor(
     private preCadastroService: ComercialClientesPreCadastroService,
@@ -596,7 +596,7 @@ export class ComercialClientesPreCadastroComponent
       nombres_contacto: [null],
       apellido_contacto: [null],
       apellido2_contacto: [null],
-      telefono_contacto: [null, [Validators.required, Validators.min(0)]],
+      telefono_contacto: [null, [Validators.min(0)]],
       celular_contacto: [Validators.min(0)],
       ciudad: [null],
       direccion_contacto: [null],
@@ -605,7 +605,7 @@ export class ComercialClientesPreCadastroComponent
       titulo_ubicacion: [],
       ubicacion: this.formBuilder.array([]),
       contactos: this.formBuilder.array([]),
-      nombre_ciudad: [null, Validators.required],
+      nombre_ciudad: [null],
       tipo_cliente: [0],
     });
 
@@ -624,9 +624,7 @@ export class ComercialClientesPreCadastroComponent
 
 
   onSubmit() {
-    alert(
-      'Se recomienda no salir de la ventana mientras se realiza el proceso de registro'
-    );
+    alert('Se recomienda no salir de la ventana mientras se realiza el proceso de registro');
     var swDireccion = false;
     var swContactos = false;
     /* this.postAkna(20081);
@@ -646,61 +644,6 @@ export class ComercialClientesPreCadastroComponent
       ubicacion: [],
       contactos: [],
     };
-    /* if (
-      this.contactoFormularios.length > 0 &&
-      this.contactoFormularios.length > 0
-    ) { */
-    /* const ubicacionFormulario = this.ubicacionFormularios;
-      const allFieldsFilledInUbicacionFormulario = Object.values(
-        ubicacionFormulario
-      ).every((direccion) => {
-        // Verificar que todos los campos en cada objeto estén llenos
-        return Object.keys(direccion).every(
-          (key) =>
-            direccion[key] !== null &&
-            direccion[key] !== undefined &&
-            direccion[key] !== ''
-        );
-      });
-
-      if (allFieldsFilledInUbicacionFormulario) {
-        data.ubicacion = ubicacionFormulario;
-        swDireccion = true;
-      } else {
-        this.pnotifyService.notice(
-          'Porfavor llene todos los campos requeridos de dirección.'
-        );
-      } */
-    /* 
-      const contactoFormulario = this.contactoFormularios;
-      console.log(this.contactoFormularios);
-      const requiredAttributes = [
-        'titulo_contacto',
-        'nombres_contacto',
-        'apellido_contacto',
-      ];
-
-      const allFieldsFilledInContactoFormulario = contactoFormulario.every(
-        (contacto) => {
-          // Verificar que los atributos requeridos estén llenos en cada objeto
-          return requiredAttributes.every(
-            (key) =>
-              contacto[key] !== null &&
-              contacto[key] !== undefined &&
-              contacto[key] !== ''
-          );
-        }
-      );
-
-      if (allFieldsFilledInContactoFormulario) {
-        data.contactos = contactoFormulario;
-      } else {
-        this.pnotifyService.notice(
-          'Por favor, llene todos los campos requeridos de contacto.'
-          );
-        } */
-
-    //if()
     const contactoFormulario = this.contactoFormularios;
     //console.log(this.contactoFormularios);
     const requiredAttributes = [
@@ -733,21 +676,8 @@ export class ComercialClientesPreCadastroComponent
     }
     const ubicacionFormulario = this.ubicacionFormularios;
 
-    if (
-      ubicacionFormulario &&
-      ubicacionFormulario.length > 0 &&
-      ubicacionFormulario[0].id_ciudad !== null &&
-      ubicacionFormulario[0].id_ciudad !== undefined &&
-      ubicacionFormulario[0].id_ciudad !== ''
-    ) {
-      if (
-        ubicacionFormulario[0].ubicacion &&
-        ubicacionFormulario[0].ubicacion.length > 0
-      ) {
         const direccionValida = ubicacionFormulario.every(
           (direccion) =>
-            direccion.direccion === null ||
-            direccion.direccion === undefined ||
             (typeof direccion.direccion === 'string' &&
               direccion.direccion.length < 50)
         );
@@ -760,14 +690,8 @@ export class ComercialClientesPreCadastroComponent
             'La dirección debe tener menos de 50 caracteres.'
           );
         }
-      } else {
-        this.pnotifyService.notice(
-          'El nombre de ubicacion es un dato requerido'
-        );
-      }
-    } else {
-      this.pnotifyService.notice('El campo de ciudad es obligatorio');
-    }
+
+
 
     if (this.form.valid && swDireccion === true && swContactos === true) {
       this.loaderNavbar = true;
@@ -789,12 +713,11 @@ export class ComercialClientesPreCadastroComponent
         celular: this.form.value.celular,
         ubicacion: data.ubicacion /* this.ubicacionFormularios */, // Asigna los datos de ubicación directamente aquí
         contactos: /* data.contactos */ this.contactoFormularios,
-        id_tipo_cliente: 0,
+        id_tipo_cliente: 1,
         frontend: 1,
       };
 
       this.clientesService
-
         .sapPostClient(formObj)
         .pipe(
           finalize(() => {
@@ -809,10 +732,11 @@ export class ComercialClientesPreCadastroComponent
               this.formChanged = false;
               this.form.reset();
               this.crearNotificacion();
-              
+
               /* this.router.navigate(['../cadastro', response.Mensaje], {
                 relativeTo: this.activatedRoute,
               }); */
+              this.router.navigate(['/comercial/clientes/lista']);
               this.getNotificaciones();
             } else if (response.CodigoRespuesta === 204) {
               this.pnotifyService.notice(response.Mensaje);
@@ -831,18 +755,18 @@ export class ComercialClientesPreCadastroComponent
   }
 
   crearNotificacion(){
-    console.log(this.form.value.vendedor); 
+    console.log(this.form.value.vendedor);
     const params ={
       'titulo': 'Nuevo cliente',
       'mensaje': 'Se ha registrado un socio de negocios',
-      'url': 'http://localhost:4200/#/comercial/clientes/lista',
+      'url': 'https://crm360.monterrey.com.bo/api/comercial/clientes/lista',
       'id_vendedor':  this.id_vend
     }
 
     this.notificacionesService.createNotificacion(params)
     .pipe(
       finalize(() => {
-       
+
       })
     )
     .subscribe(
@@ -900,7 +824,7 @@ export class ComercialClientesPreCadastroComponent
     this.ubicaciones[index] = {
       latitud: this.latitud,
       longitud: this.longitud,
-      color: this.generarColorAleatorio(),
+      /* color: this.generarColorAleatorio(), */
     };
     if (index >= 0) {
       this.ubicacionFormularios[index].swActivarLatitud = true;
@@ -909,7 +833,7 @@ export class ComercialClientesPreCadastroComponent
     }
   }
 
-  generarColorAleatorio(): string {
+  /* generarColorAleatorio(): string {
     if (this.coloresDisponibles.length === 0) {
       return null; // No quedan colores disponibles
     }
@@ -922,8 +846,8 @@ export class ComercialClientesPreCadastroComponent
       1
     )[0];
     return colorAleatorio;
-  }
-  
+  } */
+
   actualizarUbicacion(index: number) {
     // Actualiza las coordenadas de la ubicación en el arreglo
     this.ubicaciones[index].latitud = this.latitud;
@@ -997,9 +921,6 @@ export class ComercialClientesPreCadastroComponent
     //console.log(this.ubicacionFormularios)
   }
   actualizarDireccion(atributo, index, tipo) {
-    /*  console.log(atributo)
-    console.log(index) */
-
     if (tipo === 1) {
       this.index_array_ubicacion = index;
       this.ubicacionFormularios[index].direccion = atributo;

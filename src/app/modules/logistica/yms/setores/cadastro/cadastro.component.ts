@@ -31,7 +31,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsSetoresService } from '../services/setores.service';
 //interfaces
 import { ILogisticaYmsSetores } from '../models/setores';
-import { isNull } from 'util';
 import { elasticIn } from '@amcharts/amcharts4/.internal/core/utils/Ease';
 
 @Component({

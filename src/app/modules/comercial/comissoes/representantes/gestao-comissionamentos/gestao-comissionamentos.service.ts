@@ -12,7 +12,7 @@ import { environment } from './../../../../../../environments/environment';
   providedIn: 'root',
 })
 export class ComercialComissoesGestaoComissionamentosService {
-  private readonly API = `http://23.254.204.187/api/comercial/comissoes/representantes/gestao-comissionamentos`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/comissoes/representantes/gestao-comissionamentos`;
 
   constructor(protected http: HttpClient) {}
 

@@ -12,7 +12,7 @@ import { Escritorio } from './models/escritorio';
   providedIn: 'root'
 })
 export class ComercialCadastrosEscritorioService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/escritorio`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/escritorio`;
 
   constructor(protected http: HttpClient) {}
 

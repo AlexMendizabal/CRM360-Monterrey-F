@@ -20,7 +20,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsTiposEtapaService } from '../services/tipos-etapa.service';
 //interfaces
 import { ILogisticaYmsTiposEtapa } from '../models/tipos-etapa';
-import { isNull } from 'util';
 
 @Component({
   selector: 'logistica-yms-tipos-etapa-cadastro',

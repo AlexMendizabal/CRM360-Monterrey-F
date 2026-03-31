@@ -20,7 +20,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsTurnosService } from '../services/turnos.service';
 //interfaces
 import { ILogisticaYmsTurnos } from '../models/turnos';
-import { isNull } from 'util';
 
 @Component({
   selector: 'logistica-yms-turnos-cadastro',
@@ -143,7 +142,7 @@ export class LogisticaYmsTurnosCadastroComponent
       HR_MIN: [this.fixTime('HR_MAX'), [Validators.required]],
       HR_MAX: [this.fixTime('HR_MAX'), [Validators.required]],
       NM_TURN: [null, [Validators.required]],
-      IN_STAT: [isNull],
+      IN_STAT: [null],
       DS_OBSE: [null],
     });
   }

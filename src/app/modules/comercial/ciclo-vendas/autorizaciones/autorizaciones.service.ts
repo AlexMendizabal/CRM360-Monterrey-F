@@ -17,9 +17,9 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCicloVendasAutorizacionesService {
-  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
-  private readonly APIAutorizacion = `http://23.254.204.187/api/comercial/ciclo-vendas/autorizaciones`;
-
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/cotacoes`;
+  private readonly APIAutorizacion = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/autorizaciones`;
+  private readonly APIVendedor = `https://crm360.monterrey.com.bo/api/comercial/vendedor`;
 
   constructor(
     protected http: HttpClient,
@@ -39,6 +39,12 @@ export class ComercialCicloVendasAutorizacionesService {
       .get(`${this.APIAutorizacion}/get_autorizaciones`, { params: httpParams })
       .pipe(take(1), retry(2));
   }
+  getHistorialOferta(params: any) {
+    return this.http
+      .get(`${this.APIAutorizacion}/get_historialoferta`, { params })
+      .pipe(take(1), retry(2));
+  }
+
 
 ////////////////PARA TRAER LAS AUTORIZACIONES EN EL MODAL//////////////
 traerAutorizacion(id_autorizacion: number){
@@ -48,13 +54,18 @@ traerAutorizacion(id_autorizacion: number){
 }
 
 ////////////////PARA ACTUALIZAR EL ESTADO DE LAS AUTORIZACIONES///////////////
- updateAutorizacion(params: any): Observable<Object | JsonResponse>{
-  //console.log(params);
-  //const params = { id_autorizacion, estado };
+updateAutorizacion(params: any): Observable<Object | JsonResponse> {
+  const url = `${this.APIAutorizacion}/update_autorizacion`;
+
+  // Log para verificar la URL y los parámetros que se están enviando
+  console.log('Enviando solicitud a URL:', url);
+  console.log('Enviando parámetros:', params);
+
   return this.http
-  .post(`${this.APIAutorizacion}/update_autorizacion`, params)
-  .pipe(take(1), retry(2));
+    .post(url, params)
+    .pipe(take(1), retry(2));
 }
+
 
 //////QUE trae los vendedores en autorizacion//////
 getTodosVendedores() {

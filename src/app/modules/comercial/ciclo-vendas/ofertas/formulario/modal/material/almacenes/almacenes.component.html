@@ -1,0 +1,53 @@
+<div class="modal-header">
+  <h5 class="modal-title">Lista de Almacenes</h5>
+  <button type="button" class="close" data-dismiss="modal">&times;</button>
+</div>
+
+<div class="modal-body">
+
+  <!-- Buscador -->
+  <div class="input-group mb-4">
+      <input type="text" class="form-control col-md-12" placeholder="Busqueda por Nombre, Sucursal.."
+          aria-label="Input group example" aria-describedby="basic-addon1" fdprocessedid="7edy2">
+      <span class="input-group-text" id="basic-addon1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-search" viewBox="0 0 16 16">
+              <path
+                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0">
+              </path>
+          </svg>
+      </span>
+  </div>
+  <!-- Tabla -->
+  <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <!-- Tabla -->
+          <div class="table-responsive mt-2">
+              <table class="table table-sm table-bordered table-hover">
+                  <thead class="thead-light">
+                      <tr class="fsg-13">
+                          <th>Código</th>
+                          <th>Nombre</th>
+                          <th>Descripción</th>
+                      </tr>
+                  </thead>
+                  <tbody class="fsg-13">
+                      <tr>
+                          <td>ALM-V-01</td>
+                          <td>Sucursal 1</td>
+                          <td>Lorem ipsum dolor sit amet consectetur, adipiscing elit non augue neque
+                              dignissim</td>
+                      </tr>
+                      <tr>
+                          <td>ALM-V-05</td>
+                          <td>Sucursal 2</td>
+                          <td>Lorem ipsum dolor sit amet consectetur, adipiscing elit non augue neque
+                              dignissim</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+
+</div>

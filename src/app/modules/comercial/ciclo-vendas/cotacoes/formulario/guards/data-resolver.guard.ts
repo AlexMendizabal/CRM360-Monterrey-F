@@ -38,16 +38,12 @@ export class ComercialCicloVendasCotacoesFormularioDataResolverGuard
       success: true,
       mensagem: null,
       data: {
-        codVendedor: 88,
-        nomeVendedor: 'TIETE CC - LILIANE BUENO',
-        /* codVendedor: this.user.idVendedor,
-        nomeVendedor: this.user.nomeAbreviado || this.user.nomeCompleto, */
-        tipoCotacao: 'Cotação',
+        cargo: this.user.nane_cargo,
+        codVendedor: this.user.idVendedor,
+        nomeVendedor: this.user.nomeCompleto,
+        tipoCotacao: null,
         codSituacao: null,
-        codCliente:
-          typeof route.params.codCliente !== 'undefined'
-            ? parseInt(route.params.codCliente)
-            : null,
+        codCliente: null,
         codContato: null,
         codEndereco: null,
         codEmpresa: null,

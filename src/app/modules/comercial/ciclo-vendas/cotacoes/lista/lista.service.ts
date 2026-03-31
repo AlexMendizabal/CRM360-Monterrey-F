@@ -17,7 +17,7 @@ import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.
   providedIn: 'root',
 })
 export class ComercialCicloVendasCotacoesListaService {
-  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/cotacoes`;
 
   private onChangeClienteCotacao = new BehaviorSubject([]);
   clienteCotacao = this.onChangeClienteCotacao.asObservable();

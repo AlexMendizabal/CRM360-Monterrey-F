@@ -24,7 +24,6 @@ import {
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 //interfaces
-import { isNull } from 'util';
 import { ILogisticaYmsSetores } from './../../setores/models/setores';
 import { ILogisticaYmsAssociacaoMateriais } from '../models/associacao-materiais';
 

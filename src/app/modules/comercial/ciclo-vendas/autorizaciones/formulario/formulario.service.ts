@@ -28,9 +28,9 @@ import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.
   providedIn: 'root',
 })
 export class ComercialCicloVendasCotacoesFormularioService {
-  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/cotacoes`;
 
-  private readonly URL = 'http://23.254.204.187/api/comercial';
+  private readonly URL = 'https://crm360.monterrey.com.bo/api/comercial';
 
   private notifySubmit = new Subject<any>();
 

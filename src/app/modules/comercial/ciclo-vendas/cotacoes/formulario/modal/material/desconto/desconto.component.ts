@@ -31,11 +31,12 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoComponen
 
   currencyMaskOptions = {
     align: 'left',
+    allowNegative: false,
     prefix: '',
     suffix: '',
     thousands: '.',
     decimal: ',',
-    precision: 2,
+    precision: 4,
   };
 
   constructor(
@@ -117,7 +118,6 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialDescontoComponen
   }
 
   onSubmit(): void {
-   /* console.log(this.params.aplicarDesconto); */
     if (this.form.valid) {
       this.formularioService.descontoSubject.next({
         aplicarDesconto: this.params.aplicarDesconto,

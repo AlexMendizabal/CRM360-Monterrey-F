@@ -20,7 +20,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsTiposSetorService } from '../services/tipos-setor.service';
 //interfaces
 import { ILogisticaYmsTiposSetor } from '../models/tipos-setor';
-import { isNull } from 'util';
 import { JSONParser } from '@amcharts/amcharts4/core';
 
 @Component({

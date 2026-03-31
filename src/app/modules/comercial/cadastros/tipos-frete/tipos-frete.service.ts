@@ -12,7 +12,7 @@ import { ITiposFrete } from './models/tipos-frete';
   providedIn: 'root',
 })
 export class ComercialCadastrosTiposFreteService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/tipos-frete`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/tipos-frete`;
 
   constructor(protected http: HttpClient) {}
 

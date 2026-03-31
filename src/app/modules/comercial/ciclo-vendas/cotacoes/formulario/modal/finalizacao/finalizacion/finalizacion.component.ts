@@ -99,6 +99,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
     this.checkoutForm = this.formBuilder.group({
       observacion: ['', Validators.required],
     });
+    console.log('con authorizacion',this.dataCotacao)
   }
 
   ngAfterViewChecked() {
@@ -116,6 +117,8 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
   }
 
   onSubmit() {
+
+    console.log('con authorizacion',this.dataCotacao)
     if (this.checkoutForm.value !== undefined && this.checkoutForm.value !== null && this.checkoutForm.value.observacion !=="") {
 
       this.id_oferta = this.dataCotacao.id_oferta;
@@ -127,16 +130,19 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
         id_oferta: this.id_oferta,
         fecha_solicitud: this.fecha,
       };
+
       this.cotacoesService.autorizaciones(this.formObj)
         .pipe().subscribe(
-        (response: any) => {
-          console.log(response);
-        }
-      );
+          (response: any) => {
+            console.log(response);
+            this.pnotifyService.notice(
+              'se envio una auntorización.'
+            );
+          }
+        );
       this.onClose();
     }
-    else
-    {
+    else {
       this.onClose();
     }
   }
@@ -144,7 +150,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
   onClose(): void {
     this.formularioService.limparCarrinhoSubject.next(true);
     this.bsModalRef.hide();
-    location.reload();
+    //location.reload();
     this.router.navigate([`/comercial/ciclo-vendas/23/cotacoes-pedidos/lista`]);
   }
 
@@ -155,7 +161,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
     };
     for (let index = 0; index < this.dataCotacao.carrinho.length; index++) {
       total.quantidade += this.dataCotacao.carrinho[index].quantidade;
-      total.valor += this.dataCotacao.carrinho[index].valorTotal;
+      total.valor += this.dataCotacao.carrinho[index].valorTotalBruto;
     }
     return total[field];
   }
@@ -209,7 +215,6 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion
           })
         )
         .subscribe((response: JsonResponse) => {
-          console.log('cotizaciones', response);
           if (response.success === true) {
             this.metasProgresso.toneladas.progresso = response.data.toneladas;
             this.metasProgresso.clientes.progresso = response.data.clientes;

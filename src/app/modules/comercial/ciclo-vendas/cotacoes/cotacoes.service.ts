@@ -17,8 +17,8 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCicloVendasCotacoesService {
-  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
-  private readonly API2 = `http://23.254.204.187/api/comercial/ciclo-vendas/autorizaciones`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/cotacoes`;
+  private readonly API2 = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/autorizaciones`;
   constructor(
     protected http: HttpClient,
     private comercialService: ComercialService,
@@ -151,9 +151,6 @@ export class ComercialCicloVendasCotacoesService {
       .get(`${this.API}/imprimir-cotacao/${nrPedido}`)
       .pipe(take(1), retry(2));
   }
-
-
-
 
   getImprimirSeparacao(
     nrPedido: number,
@@ -316,11 +313,17 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
-  postCalculoMaterial(params: any): Observable<Object | JsonResponse> {
+  getDescuento(params: any): Observable<Object | JsonResponse> {
     return this.http
       .post(`${this.API}/material/calculo`, params)
       .pipe(take(1), retry(2));
   }
+
+  /* postCalculoMaterial(params: any): Observable<Object | JsonResponse> {
+    return this.http
+      .post(`${this.API}/material/calculo`, params)
+      .pipe(take(1), retry(2));
+  } */
 
   getHistoricoCompras(params: any): Observable<Object | JsonResponse> {
     let httpParams = new HttpParams();
@@ -460,4 +463,17 @@ export class ComercialCicloVendasCotacoesService {
       .get(`${this.API}/enviar_sap/${nrPedido}`)
       .pipe(take(1), retry(2));
   }
+
+  postverifica_oferta(data: any): Observable<Object> {
+    return this.http
+      .get(`${this.API}/vigencia_oferta/${data}`)
+      .pipe(take(1), retry(2));
+  }
+
+  calculadora(data: any): Observable<Object> {
+    return this.http
+      .post(`${this.API}/calculadora`, data)
+      .pipe(take(1), retry(2));
+  }
+
 }

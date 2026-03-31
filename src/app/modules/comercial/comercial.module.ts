@@ -12,6 +12,7 @@ import { NotFoundModule } from 'src/app/core/not-found/not-found.module';
 // Components
 import { ComercialComponent } from './comercial.component';
 
+
 @NgModule({
   declarations: [ComercialComponent],
   imports: [

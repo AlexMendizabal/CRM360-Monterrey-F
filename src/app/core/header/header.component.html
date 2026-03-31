@@ -1,14 +1,16 @@
 <nav id="navbar" class="navbar fixed-top navbar-expand navbar-light">
-  <li class="d-flex mr-2" >
-    <label id="verificador" class="conectividadStatus" style="background-color: red;">
+  <li class="d-flex mr-2">
+    <button id="verificador" class="conectividadStatus btn" style="background-color: red; color: white;"
+      (click)="onVerificarConectividad()">
       SAP-Desconectado
-    </label>
+    </button>
   </li>
+
   <img [src]="srcLogoCliente" (error)="onLogoClienteError($event)" id="logo-manetoni" height="20"
     *ngIf="showLogoCliente">
-    <li class="d-flex mr-2">
-      <span class="my-auto version version">V. 1.0.83</span>
-    </li>
+  <li class="d-flex mr-2">
+    <span class="my-auto version version">V. 1.1.27</span>
+  </li>
   <ul class="navbar-nav ml-auto text-cente">
     <li id="spinner" [hidden]="!showLoader">
       <div class="spinner-border"></div>
@@ -32,8 +34,10 @@
           <li *ngIf="notificaciones && notificaciones.length === 0" class="empty-notification">
             <a class="text-dark" style="text-decoration: none;">No hay notificaciones</a>
           </li>
-          <li *ngIf="notificaciones.length > 0" class="read-all-btn text-center" style="background-color: #faf9f9; width: 100%;">
-            <button class="btn btn-link w-100 text-dark" (click)="leerNotificaciones()" style="text-decoration: none; border:none;">Leer todas</button>
+          <li *ngIf="notificaciones.length > 0" class="read-all-btn text-center"
+            style="background-color: #faf9f9; width: 100%;">
+            <button class="btn btn-link w-100 text-dark" (click)="leerNotificaciones()"
+              style="text-decoration: none; border:none;">Leer todas</button>
           </li>
         </ul>
       </div>

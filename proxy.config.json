@@ -1,6 +1,6 @@
 {
   "/api/*": {
-    "target": "http://23.254.204.187/api/",
+    "target": "https://crm360.monterrey.com.bo/api/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
@@ -9,7 +9,7 @@
     }
   },
   "/app/*": {
-    "target": "http://23.254.204.187/api/app/",
+    "target": "https://crm360.monterrey.com.bo/api/app/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,

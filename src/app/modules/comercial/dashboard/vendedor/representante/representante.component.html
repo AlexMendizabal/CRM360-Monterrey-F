@@ -1,13 +1,13 @@
 <div class="row">
   <div class="col-md-4">
     <!-- (click)="onClick(inadimplentes)" -->
-    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3 hover" tooltip="Valor Total COmissão" >
+    <div class="border rounded bg-white shadow-sm d-flex justify-content-between w-100 p-3 hover" tooltip="Comisión total" >
       <div class="bg-red rounded-circle text-white icon-40 my-auto"><i class="fas fa-dollar-sign"></i></div>
       <div class="text-right" *ngFor="let item of dados">
         <h5 class="font-weight-bolder mb-1">
-          {{ item.valorComissao | currency:'BRL':'symbol':'1.2-2' }}
+          {{ item.valorComissao | currency:'$':'symbol':'1.2-2' }}
         </h5>
-        <div class="text-muted small font-weight-bold">VALOR COMISSIONAMENTO</div>
+        <div class="text-muted small font-weight-bold">VALOR DE COMISION</div>
       </div>
       <div class="text-right" *ngIf="valorComissaoEmpty">
         <div class="text-muted small font-weight-bold mt-3">Nenhum resultado encontrado</div>

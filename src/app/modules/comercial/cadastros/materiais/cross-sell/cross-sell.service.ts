@@ -17,7 +17,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCadastrosMateriaisCrossSellService {
-  private readonly API = `http://23.254.204.187/api/comercial/cadastros/materiais/cross-sell`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/materiais/cross-sell`;
 
   constructor(
     protected http: HttpClient,
@@ -104,7 +104,7 @@ export class ComercialCadastrosMateriaisCrossSellService {
 
   getFilterValues(): Observable<Object | JsonResponse> {
     const linhas = this.tidSoftwareService.getLinhas();
-    const classes = this.comercialService.getClasses(null);
+    const classes = this.comercialService.getSublineasId(null);
     const grupos = this.comercialService.getGrupo(null);
 
     return forkJoin([linhas, classes, grupos]);

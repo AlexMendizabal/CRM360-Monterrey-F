@@ -20,7 +20,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsTiposCircuitoService } from '../services/tipos-circuito.service';
 //interfaces
 import { ILogisticaYmsTiposCircuito } from '../models/tipos-circuito';
-import { isNull } from 'util';
 
 @Component({
   selector: 'logistica-yms-tipos-circuito-cadastro',

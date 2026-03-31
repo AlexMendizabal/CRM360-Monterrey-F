@@ -16,7 +16,7 @@ import { ControleLinha } from './models/controle-linha';
   providedIn: 'root'
 })
 export class TecnologiaInformacaoControleLinhaService {
-  private readonly API = `http://23.254.204.187/api/tecnologia-informacao/controle-linhas`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/tecnologia-informacao/controle-linhas`;
 
   constructor(
     protected http: HttpClient,

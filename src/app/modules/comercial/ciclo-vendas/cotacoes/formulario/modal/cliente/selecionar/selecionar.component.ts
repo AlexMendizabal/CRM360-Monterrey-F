@@ -12,10 +12,11 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-formulario-modal-selecionar',
   templateUrl: './selecionar.component.html',
-  styleUrls: ['./selecionar.component.scss']
+  styleUrls: ['./selecionar.component.scss'],
 })
 export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
-  implements OnInit {
+  implements OnInit
+{
   loaderNavbar: EventEmitter<boolean> = new EventEmitter();
 
   @Output() cliente = new EventEmitter();
@@ -23,39 +24,39 @@ export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
   @Output() clientesParams = new EventEmitter();
 
   formClientes: FormGroup;
-  loadingClientes:boolean
-  noClientes = true;
+  loadingClientes: boolean;
+  swClientes = true;
   clientes = [];
 
-    /* Pagination */
-    itemsPerPage = 10;
-    begin = 0;
-    end = 20;
-    /* Pagination */
+  /* Pagination */
+  itemsPerPage = 10;
+  begin = 0;
+  end = 20;
+  /* Pagination */
 
   constructor(
     private formBuilder: FormBuilder,
     private pnotifyService: PNotifyService,
     private bsModalRef: BsModalRef,
     private comercialService: ComercialVendedoresService
-
-    ) {}
+  ) {}
 
   ngOnInit(): void {
     this.setFormBuilder();
   }
 
   onClose(): void {
-    this.fecharModal.emit(true)
+    this.fecharModal.emit(true);
   }
 
-  getClientes(params?){
-
+  getClientes(params?) {
+    this.clientes = [];
+    this.swClientes = true;
     const _params = params ?? {};
     const _obj = this.formClientes.value;
     this.loadingClientes = true;
     if (_obj['pesquisa']) _params[_obj['buscarPor']] = _obj['pesquisa'];
-/*     (_params, _obj); */
+    /*     (_params, _obj); */
     this.comercialService
       .getCarteiraClientesCotizacion(_params)
       .pipe(
@@ -66,29 +67,37 @@ export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
       .subscribe({
         next: (response: JsonResponse) => {
           if (response.success === true) {
-              this.noClientes = false;
-              this.clientes = response.data
+            this.swClientes = false;
+            this.clientes = response.data;
 
-              console.log(this.clientes);
+            console.log(this.clientes);
           } else {
-            this.noClientes = true;
+            this.swClientes = true;
             this.pnotifyService.notice('Nenhum cliente encontrado!');
           }
         },
         error: (error: any) => {
           this.pnotifyService.error();
-        }
+        },
       });
   }
 
   setCliente(cliente) {
-    if(cliente.nomeSituacao == 'Arquivo'){
-      this.pnotifyService.notice('Cliente arquivado, favor entrar em contato com o Marketing');
+    if (cliente.nomeSituacao == 'Arquivo') {
+      this.pnotifyService.notice(
+        'Cliente archivado, por favor contacte a Marketing'
+      );
     } else {
       this.cliente.emit(cliente);
       this.clientesParams.emit(cliente['cobrancaSomenteCarteira']);
       this.onClose();
     }
+  }
+
+  updateInput(): void {
+    this.formClientes.controls.pesquisa.setValue('');
+    this.clientes = [];
+    this.swClientes = true;
   }
 
   setFormBuilder(): void {
@@ -99,6 +108,4 @@ export class ComercialCicloVendasCotacoesFormularioModalSelecionarComponent
       registros: [this.itemsPerPage],
     });
   }
-
-
 }

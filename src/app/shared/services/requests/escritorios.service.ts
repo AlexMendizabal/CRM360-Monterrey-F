@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class EscritoriosService {
-  private readonly API = `http://23.254.204.187/api/common/escritorios`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/common/escritorios`;
 
   constructor(protected http: HttpClient) {}
 

@@ -16,7 +16,7 @@
             border-radius: 0.25em;
             color: $black;
             cursor: pointer;
-            display: inline-block;
+            //display: inline-block;
             font-size: 12px;
             font-weight: 600;
             height: 30px;
@@ -64,3 +64,6 @@
 .inactivo { color: red; }
 .pendiente { color: blue; }
 
+tr.tr-td > td{
+    font-size: 12px;
+}

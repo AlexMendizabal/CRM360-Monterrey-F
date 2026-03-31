@@ -1,4 +1,4 @@
-    
+
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject, Observable, forkJoin, BehaviorSubject, of } from 'rxjs';
@@ -23,12 +23,14 @@ import { ICalculoModel } from './models/calculo';
 import { IDescontoModel } from './models/descontos';
 import { ILoteModel } from './models/lote';
 import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.service';
+export { ComercialAgendaFormularioService };
 
 @Injectable({
   providedIn: 'root',
 })
 export class ComercialCicloVendasCotacoesFormularioService {
-  private readonly API = `http://23.254.204.187/api/comercial/ciclo-vendas/cotacoes`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/cotacoes`;
+  private readonly APIA = `https://crm360.monterrey.com.bo/api/comercial/almacen`;
 
   private notifySubmit = new Subject<any>();
 
@@ -163,11 +165,16 @@ export class ComercialCicloVendasCotacoesFormularioService {
       .pipe(take(1));
   }
 
-
+  get_almacenes(){
+    return this.http
+    .get(`${this.APIA}/get_almacen`)
+    .pipe(take(1));
+  }
 
   getCliente(codCliente){
-    return this.http.get(`http://23.254.204.187/api/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
+    return this.http.get(`https://crm360.monterrey.com.bo/api/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
   }
 
 
 }
+

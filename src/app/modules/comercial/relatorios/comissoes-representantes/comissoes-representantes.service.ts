@@ -15,7 +15,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialRelatoriosComissoesRepresentantesService {
-  private readonly API = `http://23.254.204.187/api/comercial/relatorios/comissoes-representantes`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/relatorios/comissoes-representantes`;
 
 
   constructor(

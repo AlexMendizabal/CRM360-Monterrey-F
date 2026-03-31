@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 })
 export class ComercialComissoesVendedoresInternosService{
 
-    private readonly API = `http://23.254.204.187/api/comercial/comissoes/`
+    private readonly API = `https://crm360.monterrey.com.bo/api/comercial/comissoes/`
 
     constructor(protected http: HttpClient) {}
 }

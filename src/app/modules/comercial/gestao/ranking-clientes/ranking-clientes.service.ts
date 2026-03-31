@@ -16,7 +16,7 @@ import { IRanking } from './models/ranking';
 })
 export class ComercialGestaoRankingClientesService{
 
-    private readonly API = `http://23.254.204.187/api/comercial/gestao/ranking-clientes`;
+    private readonly API = `https://crm360.monterrey.com.bo/api/comercial/gestao/ranking-clientes`;
 
     constructor(protected http: HttpClient) {}
 

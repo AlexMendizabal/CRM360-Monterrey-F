@@ -1,0 +1,390 @@
+<loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
+<loader-spinner-full-screen [hidden]="!loaderFullScreen"></loader-spinner-full-screen>
+<app-header [appTitle]="tituloOferta">
+    <button class="btn btn-danger" type="button" (click)="onCancel()" *ngIf="!visualizar" [disabled]="loaderNavbar">
+        Cancelar
+    </button>
+    <button class="btn btn-danger" type="button" (click)="sendClienteData()" *ngIf="!visualizar">
+        {{ urlPath === 'editar' ? 'Editar' : 'Guardar' }}
+    </button>
+    <button class="btn btn-primary" type="button" (click)="duplicar()" *ngIf="urlPath === 'editar' && !visualizar"
+        [disabled]="loaderNavbar">
+        Duplicar
+    </button>
+
+</app-header>
+<app-body [breadCrumbTree]="breadCrumbTree" [show]="!loaderFullScreen">
+    <form [formGroup]="form" autocomplete="off">
+        <div class="container-fluid my-2">
+            <div class="card border-dark">
+                <div class="card-body">
+                    <!-- 1. INPUTS -->
+                    <div class="row mb-2">
+                        <!-- Parte 1 -->
+                        <div class="col-md-4" id="part-one">
+                            <h5 class="mb-3 form-tittle">Información del Cliente</h5>
+
+                            <div class="form-group row">
+                                <label for="cliente" class="header-label col-sm-4 col-form-label">Cliente</label>
+
+                                <!-- Icono para abrir el modal, desactivado si es modo editar -->
+                                <a class="col-sm-1"
+                                    (click)="urlPath !== 'editar' && openModalverCliente(verCliente, selectedClient)"
+                                    [ngClass]="{'disabled-link': urlPath === 'editar'}">
+                                    <i class="fa fa-arrow-circle-right text-info" aria-hidden="true"></i>
+                                </a>
+
+                                <div class="col-sm-6 position-relative"
+                                    [ngClass]="{'disabled-container': urlPath === 'editar'}"
+                                    style="display: flex; border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important;">
+                                    <!-- Campo de texto deshabilitado si es modo editar -->
+                                    <input type="text" formControlName="codigo_cliente" class="form-control input-sm"
+                                        id="codigo_cliente" (input)="updateFilter($event)" (blur)="hideSuggestions()"
+                                        [disabled]="urlPath === 'editar'" autocomplete="off" />
+
+                                    <!-- Botón de búsqueda deshabilitado si es modo editar -->
+                                    <button class="btn btn-sm btn-secondary"
+                                        style="border-radius: 0 0.25rem 0.25rem 0; height: 25px;"
+                                        (click)="urlPath !== 'editar' && openModalCliente(selecionarCliente)"
+                                        [disabled]="urlPath === 'editar'">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </button>
+
+                                    <!-- Lista de clientes filtrados (opcionalmente oculta en modo editar) -->
+                                    <ul *ngIf="filteredClients.length > 0 && urlPath !== 'editar'"
+                                        class="list-group position-absolute w-100">
+                                        <li class="list-group-item list-group-item-action"
+                                            *ngFor="let client of filteredClients" (click)="selectClient(client)">
+                                            {{ client.CODIGO }} - {{ client.NOMBRE }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="nombre" class="header-label col-sm-5 col-form-label">Nombre</label>
+                                <div class="col-sm-6">
+                                    <input formControlName="nombre" type="text" class="form-control" id="nombre"
+                                        [readonly]="visualizar" [attr.disabled]="true" />
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="form-group row">
+                                <label for="personaContacto" class="header-label col-sm-5 col-form-label">Persona de
+                                    contacto</label>
+                                <div class="col-sm-6">
+                                    <select class="form-select form-control input-sm" formControlName="personaContacto"
+                                        aria-label="Default select example">
+                                        <option *ngIf="contacts.length === 0" disabled>Sin contactos disponibles
+                                        </option>
+                                        <option *ngFor="let contact of contacts" [value]="contact.IDCONT">{{
+                                            contact.CONTACTOS }}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="form-group row">
+                                <label for="categoria" class="header-label col-sm-5 col-form-label">Categorías del
+                                    Cliente</label>
+                                <div class="col-sm-6">
+                                    <input formControlName="categoria" type="text" class="form-control" id="categoria"
+                                        [readonly]="visualizar" [attr.disabled]="true" />
+                                </div>
+                            </div>
+
+
+                            <!-- Detalles de la Oferta -->
+                            <h5 class="mt-4 mb-3 form-tittle">Detalles de la Oferta</h5>
+                            <div class="form-group row">
+                                <div class="col-sm-5">
+                                    <select class="form-select form-control input-sm col-12" disabled>
+                                        <option selected>Moneda SN</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="row p-0 m-0">
+                                        <select class="form-select form-control input-sm col-4" disabled>
+                                            <option selected>USD</option>
+                                        </select>
+                                        <input type="text" class="form-control input-sm col-8" id="monedaSN" disabled
+                                            value="6.96000">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="listaPrecios" class="header-label col-sm-5 col-form-label"> Lista de Precios
+                                    del Cliente</label>
+                                <div class="col-sm-6">
+                                    <input formControlName="listaPrecios" type="text" class="form-control"
+                                        id="listaPrecios" [readonly]="visualizar" [attr.disabled]="true" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="almacenDespacho" class="header-label col-sm-5 col-form-label">Almacén
+                                    Despacho</label>
+                                <div class="col-sm-6">
+                                    <select formControlName="almacenDespacho"
+                                        class="form-select form-control input-sm col-12">
+                                        <option *ngFor="let almacen of almacenes" [value]="almacen.DEPOSITOS">
+                                            {{ almacen.DEPOSITOS }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <!-- Parte 2 - Información de Facturación-->
+                        <div class="col-md-4" id="part-two">
+                            <div class="form-group row">
+                                <h5 class="mb-3 col-sm-12 form-tittle">Información de
+                                    Facturación</h5>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="razonsocial" class="header-label col-sm-5 col-form-label">Nombre
+                                    Factura</label>
+                                <div class="col-sm-6">
+                                    <textarea formControlName="razonsocial" class="form-control input-sm"
+                                        id="razonsocial" rows="2" placeholder="Nombre Factura"></textarea>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="nodocumento" class="header-label col-sm-5 col-form-label">NIT/CI</label>
+                                <div class="col-sm-6">
+                                    <input formControlName="nodocumento" type="text" class="form-control"
+                                        id="nodocumento" readonly [attr.disabled]="true" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="tipoContacto" class="header-label col-sm-5 col-form-label">Tipo de
+                                    Contacto</label>
+                                <div class="col-sm-6">
+                                    <select formControlName="tipoContacto"
+                                        class="form-select form-control input-sm col-12">
+                                        <option *ngFor="let contacto of tipoContacto" [value]="contacto.ID">
+                                            {{ contacto.descricao }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="condicionPago" class="header-label col-sm-5 col-form-label">Condición de
+                                    Pago</label>
+                                <div class="col-sm-6">
+                                    <select formControlName="condicionPago"
+                                        class="form-select form-control input-sm col-12">
+                                        <option *ngFor="let condicion of condicionPago" [value]="condicion.ID">
+                                            {{ condicion.DS_FORM_PAGA }}
+                                        </option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Parte 3 - Estado y Fechas -->
+                        <div class="col-md-4" id="part-three">
+                            <h5 class="mb-2 form-tittle">Estado y Fechas</h5>
+
+                            <div class="form-group row">
+                                <label for="numero" class="header-label col-sm-5 col-form-label">N*</label>
+                                <div class="col-sm-6">
+                                    <div class="row p-0 m-0">
+                                        <input type="text" class="form-control input-sm col-6" id="codigoSAP2" value="-"
+                                            disabled>
+                                        <input type="text" class="form-control input-sm col-6" id="CODIGO_OFERTA"
+                                            value="-" formControlName="CODIGO_OFERTA" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="estado" class="header-label col-sm-5 col-form-label">Estado</label>
+
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control input-sm" id="estadoOferta"
+                                        formControlName="estadoOferta" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="validoHasta" class="header-label col-sm-5 col-form-label">Válido
+                                    hasta</label>
+                                <div class="col-sm-5">
+                                    <input type="date" class="form-control input-sm" id="validoHasta"
+                                        formControlName="validoHasta" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="fechaDocumento" class="header-label col-sm-5 col-form-label">Fecha del
+                                    documento</label>
+                                <div class="col-sm-5">
+                                    <input type="date" class="form-control input-sm" id="fechaDocumento"
+                                        formControlName="fechaDocumento" disabled>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="autorizacion"
+                                    class="header-label col-sm-5 col-form-label">Autorización</label>
+
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="autorizacion"
+                                        [value]="autorizacion === '1' ? 'SI' : 'NO'" readonly />
+                                </div>
+                            </div>
+
+
+
+
+                            <!-- <div class="form-group row">
+                                <label for="xmEstado" class="header-label col-sm-5 col-form-label">XM - Estado</label>
+
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control input-sm" id="xmEstado" value="BORRADOR"
+                                        disabled>
+                                </div>
+                            </div> -->
+
+                            <div class="form-group row"> <!-- Pago QR -->
+                                <label for="pagoQR" class="header-label col-sm-5 col-form-label">Pago por QR</label>
+                                <div class="col-sm-6">
+                                    <select formControlName="pagoQR" class="form-select form-control input-sm col-12">
+                                        <option *ngFor="let opcion of pagoQROpciones" [value]="opcion.id">
+                                            {{ opcion.descripcion }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 2. TABLA                        -->
+                    <carrito [id_tipo_cliente]="id_tipo_cliente" [id_lista]="id_lista" [almacen]="almacenDespacho"
+                        [tipoEntrega]="tipoEntrega" [destinarioFactura]="destinarioFactura"
+                        [centroLogisticoControl]="centroLogisticoControl" [fechaEntrega]="fechaEntrega"
+                        [cordenadas]="cordenadas" [codCotacao]="codCotacao" [initialValue]="carrito"
+                        (carrito)="onCarrinho($event)">
+                    </carrito>
+
+                    <!-- 3. INPUTS -->
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <h5 class="mb-3 form-tittle">Información del Ejecutivo de
+                                Ventas</h5>
+                            <div class="form-group row">
+                                <label for="ejecutivos" class="header-label col-sm-3 col-form-label">Nombre</label>
+                                <div class="col-sm-5">
+                                    <select formControlName="ejecutivos"
+                                        class="form-select form-control input-sm col-12">
+                                        <option *ngFor="let ejecutivo of ejecutivos" [value]="ejecutivo.ID">
+                                            {{ ejecutivo.NOMBRE }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-group row">
+                                <label for="ejecutivo" class="header-label col-sm-3">Propietario</label>
+                                <div class="col-sm-5">
+                                    <input formControlName="ejecutivo" type="text" class="form-control input-sm"
+                                        id="ejecutivo" placeholder="ejecutivo" [readonly]="visualizar"
+                                        [attr.disabled]="true" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="comentarios" class="header-label col-sm-3">Comentarios</label>
+                                <div class="col-sm-5">
+                                    <textarea class="form-control" id="comentarios" rows="2"
+                                        formControlName="comentarios" placeholder="Comentarios">
+                                    </textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <h5 class="mb-3 form-tittle" style="color: white;">Información del Ejecutivo de
+                                Ventas</h5>
+                            <div class="form-group row">
+                                <label for="totalBolivianos" class="header-label col-sm-4">Total Bolivianos</label>
+
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control input-sm" id="totalBolivianos"
+                                        [value]="formatCurrency(valorTotalBrutoBs, 'BOB') ">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="totalPeso" class="header-label col-sm-4">Total Peso (Kg.)</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control input-sm" id="totalPeso"
+                                        [value]="formatWeight(peso)">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <h5 class="mb-3 form-tittle" style="color: white;">Información del Ejecutivo de
+                                Ventas</h5>
+                            <div class="form-group row">
+                                <label for="impuestoTotal" class="header-label col-sm-4">Total antes del
+                                    descuento</label>
+
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control input-sm" id="impuestoTotal"
+                                        [value]="formatCurrency(impuestoTotal)">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="impuesto" class="header-label col-sm-4">Impuesto</label>
+
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control input-sm" id="impuesto"
+                                        [value]="formatCurrency(impuesto)">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="totalDocumento" class="header-label col-sm-4">Total del
+                                    documento</label>
+
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control input-sm" id="valorTotalBruto"
+                                        [value]="formatCurrency(valorTotalBruto)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- </form> -->
+
+        <!-- Datos para modal cliente -->
+        <ng-template #selecionarCliente>
+            <seleccionar></seleccionar>
+        </ng-template>
+
+        <ng-template #verCliente>
+            <vista></vista>
+        </ng-template>
+    </form>
+
+</app-body>

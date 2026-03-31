@@ -132,7 +132,7 @@ export class ComercialCadastrosEscritorioListaComponent
           routerLink: '/comercial/home'
         },
         {
-          descricao: 'Cadastros',
+          descricao: 'Registros',
           routerLink: `/comercial/cadastros/${params['idSubModulo']}`
         },
         {
@@ -410,7 +410,7 @@ export class ComercialCadastrosEscritorioListaComponent
 
     if (escritorio.codSituacao === 1) {
       borderClass = 'border-success';
-    } else if (escritorio.codSituacao === 2) {
+    } else if (escritorio.codSituacao === 2 || 0) {
       borderClass = 'border-danger';
     }
 
@@ -529,7 +529,7 @@ export class ComercialCadastrosEscritorioListaComponent
         take(1),
         switchMap(result =>
           result ? this.inactivateEscritorio(index, escritorio) : EMPTY
-        ),
+        ), 
         finalize(() => {
           this.loaderNavbar = false;
         })
