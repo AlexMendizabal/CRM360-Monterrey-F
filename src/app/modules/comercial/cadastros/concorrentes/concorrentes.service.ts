@@ -12,7 +12,7 @@ import { Concorrente } from './models/concorrente';
   providedIn: 'root'
 })
 export class ComercialCadastrosConcorrenteService {
-  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/concorrentes`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/concorrentes`;
 
   constructor(protected http: HttpClient) {}
 

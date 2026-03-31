@@ -189,6 +189,7 @@ export class ComercialIntegracoesDagdaIntegracaoCondicoesPagamentoFormularioComp
 
   // Desfaz uma associação (visualmente)
   deleteAssosiacao() {
+    console.log(this.associacao);
     this.validForm = false;
     this.showTable = false;
     this.buttonAssosiarEnabled = false;
@@ -285,6 +286,7 @@ export class ComercialIntegracoesDagdaIntegracaoCondicoesPagamentoFormularioComp
     this.spinnerFullScreen = true;
     this.associacaoService.createAssociacao(this.getParams()).subscribe({
       next: (response) => {
+        console.log(response);
         if (response.status == 200) {
           this.spinnerFullScreen = false;
           this.pnotify.success(response.body['mensagem']);

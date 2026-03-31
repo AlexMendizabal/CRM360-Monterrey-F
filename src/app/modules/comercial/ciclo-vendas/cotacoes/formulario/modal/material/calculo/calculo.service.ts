@@ -41,8 +41,9 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoService {
       )
       .subscribe({
         next: (response: JsonResponse) => {
+          console.log(response)
           if (response.success === true) {
-            
+
             const modalConfig = {
               animated: false,
               class: 'modal-lg',
@@ -66,7 +67,7 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialCalculoService {
               precio: material.precio,
 
             }; */
-            this.loaderNavbar.emit(false);
+      this.loaderNavbar.emit(false);
             const modalConfig = {
               animated: false,
               class: 'modal-lg',

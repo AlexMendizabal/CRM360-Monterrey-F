@@ -21,7 +21,7 @@ import { DateService } from 'src/app/shared/services/core/date.service';
 
 import { ITecnologiaInformacaoModelo } from './../models/modelo';
 import { ITecnologiaInformacaoTipoItem } from '../../tipo-item/models/tipoItem';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent } from 'ngx-bootstrap';
 
 @Component({
   selector: 'tecnologia-informacao-cadastros-modelo-lista',

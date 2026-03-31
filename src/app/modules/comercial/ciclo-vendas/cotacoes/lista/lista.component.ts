@@ -43,10 +43,13 @@ import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { DateService } from 'src/app/shared/services/core/date.service';
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
+
 import { ComercialCicloVendasCotacoesService } from '../cotacoes.service';
 import { ComercialCicloVendasCotacoesListaService } from './lista.service';
 import { ComercialVendedoresService } from '../../../services/vendedores.service';
 import { DetailPanelService } from 'src/app/shared/templates/detail-panel/detal-panel.service';
+import { NotificacionesService } from '../../../../../../app/core/header/notificaciones/notificaciones.service';
+
 import { ComercialCicloVendasCotacoesListaModalHistoricoComercialService } from './modal/historico-comercial/historico-comercial.service';
 import { ComercialCicloVendasCotacoesListaModalConsultaLiberacaoService } from './modal/consulta-liberacao/consulta-liberacao.service';
 import { ComercialCicloVendasCotacoesListaModalTrocarClienteService } from './modal/trocar-cliente/trocar-cliente.service';
@@ -58,7 +61,6 @@ import { ComercialCicloVendasCotacoesListaModalTransfereFaturamentoService } fro
 import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from './modal/historico-exclusao/historico-exclusao.service';
 import { ComercialCicloVendasCotacoesListaModalAlertaOfertaService } from './modal/alerta-oferta/alerta-oferta.service';
 import { ComercialCicloVendasCotacoesListaModalAlertaOfertaComponent } from './modal/alerta-oferta/alerta-oferta.component';
-import { NotificacionesService } from '../../../../../../app/core/header/notificaciones/notificaciones.service';
 
 // Interfaces
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
@@ -77,8 +79,7 @@ import { VistaComponent } from './vista/vista.component';
   providers: [DetailPanelService],
 })
 export class ComercialCicloVendasCotacoesListaComponent
-  implements OnInit, OnDestroy
-{
+  implements OnInit, OnDestroy {
   user = this.authService.getCurrentUser();
 
   @ViewChild('scrollToFilter', {}) scrollToFilter: ElementRef;
@@ -160,6 +161,7 @@ export class ComercialCicloVendasCotacoesListaComponent
   orderType = null;
   noResult = false;
   nrCliente: number;
+  appTitle: any;
 
   pedidoTransferido: number;
   imprimirSeparacao: number;
@@ -291,6 +293,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     private cdr: ChangeDetectorRef,
     private notificacionesService: NotificacionesService // private pdfService: PdfService
   ) {
+
     this.localeService.use('es');
     this.bsConfig = Object.assign(
       {},
@@ -302,8 +305,10 @@ export class ComercialCicloVendasCotacoesListaComponent
 
     this.form = this.formBuilder.group({
       tipoData: [null],
-      dataInicial1: [null],
-      dataInicial2: [null],
+      newdata:[null],
+      newdatavalida: [null],
+      /* dataInicial1: [],
+      dataInicial2: [], */
       nrPedido: [null],
       codigo_oferta: [null],
       codEmpresa: [null],
@@ -327,15 +332,17 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.setChangeEvents();
     this.getFilterValues();
     this.titleService.setTitle('Ofertas');
-    /*  this.onDetailPanelEmitter(); */ /* 
+    /*  this.onDetailPanelEmitter(); */ /*
     this.detalhesCodCliente = this.activatedRoute.snapshot.queryParams['codCliente']; */
     this.getActiveRoute();
+    
     this.getVendedores();
     /*  */
     this.verificarOfertaNotificacion();
     this.onSubscription();
     /* this.result = this.resultFromParent; */
     /*this.analiticos = this.resultFromParent.analitico; */
+
   }
 
   ngOnDestroy(): void {
@@ -368,7 +375,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       'Monto total USD.',
       'Monto total Bs.',
       'Tipo de cambio',
-      'Descuento total',
+      'Peso total KG',
       'Autorización solicitada',
       'Estado autorizacion',
       'Autorizador',
@@ -386,13 +393,14 @@ export class ComercialCicloVendasCotacoesListaComponent
       oferta.monto_total,
       (oferta.monto_total * 6.96).toFixed(2),
       '6.96',
-      oferta.descuento_total,
+      oferta.peso_total,
+      //oferta.descuento_total,
       oferta.id_autorizacion > 0 ? 'SI' : 'NO',
       oferta.id_estado_autorizacion === 12
         ? 'AUTORIZADO'
         : oferta.id_estado_autorizacion === 11
-        ? 'RECHAZADO'
-        : oferta.id_estado_autorizacion === 10? 'PENDIENTE': '',
+          ? 'RECHAZADO'
+          : oferta.id_estado_autorizacion === 10 ? 'PENDIENTE' : '',
       oferta.nombre_usuario,
       oferta.tipo_estado === 14 ? 'Abierto' : 'Cerrado',
       oferta.descripcion,
@@ -428,14 +436,14 @@ export class ComercialCicloVendasCotacoesListaComponent
 
     function formatDate(date: string): string {
       const currentDate = new Date(date);
-      const day = currentDate.getDate();
-      const month = currentDate.getMonth() + 1;
-      const year = currentDate.getFullYear();
+      const day = String(currentDate.getUTCDate()).padStart(2, '0');
+      const month = String(currentDate.getUTCMonth() + 1).padStart(2, '0');
+      const year = currentDate.getUTCFullYear();
 
       return `${day}-${month}-${year}`;
-    }
+  }
 
-    const currentDate = new Date().toISOString().split('T')[0]; 
+    const currentDate = new Date().toISOString().split('T')[0];
     const fileName = `${currentDate}_reporte_ofertas.xlsx`;
     const buffer = await workbook.xlsx.writeBuffer();
     const excelBlob: Blob = new Blob([buffer], {
@@ -760,7 +768,7 @@ export class ComercialCicloVendasCotacoesListaComponent
 
   /* setFormFilter(): void {
     const formValue: any = this.checkRouterParams();
-   
+
     this.form = this.formBuilder.group({
       tipoData: [formValue.tipoData],
       dataInicial1: [formValue.dataInicial1],
@@ -938,12 +946,12 @@ export class ComercialCicloVendasCotacoesListaComponent
   /*   onFilter(): void {
     this.loaderNavbar = true;
     this.detailPanelService.hide();
-  
+
     if (this.form.value['registros']) {
       this.itemsPerPage = this.form.value['registros'];
       this.end = this.form.value['registros'];
     }
-  
+
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: this.routerService.setBase64UrlParams(this.getParams()),
@@ -975,10 +983,8 @@ export class ComercialCicloVendasCotacoesListaComponent
       .then(() => {
         // Recarga la página después de la navegación
         window.location.reload();
-
         // Habilita el botón al finalizar la recarga
         this.disableButton = false;
-
         // Forzar la detección de cambios manualmente
         this.cdr.detectChanges();
       });
@@ -1019,7 +1025,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       relativeTo: this.activatedRoute,
       queryParams: { q: btoa(JSON.stringify(params)) },
     });
-    
+
     this.search(this.getParams());
   } */
 
@@ -1119,10 +1125,50 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.dadosLoaded = true;
     this.dadosEmpty = false;
 
-    /*     console.log(params);
-     */
+    /* console.log("Fecha Creacion", params.newdata);
+    console.log("Fecha Validez", params.newdatavalida); */
+    let datos;
+    let datavalida1;
+    let datavalida2;
+    let datacreacion1;
+    let datacreacion2;
+
+      if(params.newdatavalida)
+        {
+            datavalida1 =  params.newdatavalida[0],
+            datavalida2 =  params.newdatavalida[1],
+            console.log("CUMPLE 1: ", datos);
+        }
+      if( params.newdata != null )
+        {
+            datacreacion1 = params.newdata[0],
+            datacreacion2 = params.newdata[1],
+            console.log("CUMPLE 2: ", datos);
+        }
+
+      datos = {
+          tipoData: params.tipoData,
+          datacreacion1: datacreacion1,
+          datacreacion2: datacreacion2,
+          datavalida1: datavalida1,
+          datavalida2: datavalida2,
+          nrPedido: params.nrPedido,
+          codigo_oferta: params.codigo_oferta,
+          codEmpresa: params.codEmpresa,
+          codEmpresaAdd: params.codEmpresaAdd,
+          codDeposito: params.codDeposito,
+          status: params.status,
+          cliente: params.cliente,
+          codVendedor: params.codVendedor,
+          registros: params.registros,
+          pagina: params.pagina,
+          orderBy: params.orderBy,
+          orderType: params.orderType,
+         };
+
+      console.log(datos)
     this.cotacoesService
-      .getOfertas(params)
+      .getOfertas(datos)
       .pipe(
         finalize(() => {
           this.loaderNavbar = false;
@@ -1131,6 +1177,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       .subscribe({
         next: (response: any) => {
           if (response.responseCode === 200) {
+            console.log("Response ",response)
             this.loaderNavbar = false;
             this.dadosLoaded = false;
             this.spinnerFullScreen = false;
@@ -1225,9 +1272,8 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.nrCliente = cotacao.codCliente;
 
     this.detailPanelService.show();
-    this.detailPanelTitle = `#${
-      cotacao.nrPedido
-    } / ${cotacao.razaoSocial.toUpperCase()}`;
+    this.detailPanelTitle = `#${cotacao.nrPedido
+      } / ${cotacao.razaoSocial.toUpperCase()}`;
     this.showDetailPanel = true;
 
     this.setActiveRow(index);
@@ -1789,7 +1835,7 @@ export class ComercialCicloVendasCotacoesListaComponent
     );
   }
   onEdit(item) {
-     this.router.navigate(['./', item], {
+    this.router.navigate(['./', item], {
       relativeTo: this.activatedRoute,
       queryParams: this.routerService.setBase64UrlParams(item),
     });
@@ -1800,7 +1846,6 @@ export class ComercialCicloVendasCotacoesListaComponent
     let empresa = 1;
     const idSubModulo = this.activatedRoute.snapshot.params.idSubModulo;
     this.router.navigate([`/comercial/ciclo-vendas/${idSubModulo}/cotacoes-pedidos/editar/${pedido}/${empresa}`,]);
-    
   }
 
   transformNumberToCEP(valor: any): string {
@@ -1900,7 +1945,26 @@ export class ComercialCicloVendasCotacoesListaComponent
       );
   }
 
-  onEstadoOferta(codigo_oferta): void {
+  manejoEvento(fn: () => Promise<void>): () => Promise<void> {
+    let executing = false;
+    return async () => {
+      if (!executing) {
+        executing = true;
+        await fn();
+        setTimeout(() => {
+          executing = false;
+        }, 10000);
+      }
+    }
+  }
+
+  manejoEstadoOferta(codigo_oferta: string): void {
+    const estadoOferta =  this.manejoEvento(() => this.onEstadoOferta(codigo_oferta));
+    estadoOferta();
+  }
+
+  async onEstadoOferta(codigo_oferta: string): Promise<void> {
+    console.log(`Handling codigo_oferta: ${codigo_oferta}`);
     this.loaderNavbar = true;
     /*   const verificadorElement = document.getElementById('verificador');
     verificadorElement.classList.replace('fas fa-sync-alt', 'far fa-sync-alt fa-spin'); */
@@ -1913,6 +1977,7 @@ export class ComercialCicloVendasCotacoesListaComponent
       )
       .subscribe(
         (response: JsonResponse) => {
+          console.log('Resputs', response);
           if (response.CodigoRespuesta === 200) {
             this.pnotifyService.success(response.message);
             /*    verificadorElement.classList.replace('far fa-sync-alt fa-spin', 'fas fa-sync-alt'); */
@@ -1932,4 +1997,46 @@ export class ComercialCicloVendasCotacoesListaComponent
         }
       );
   }
+
+// GABRIELA - ACOMODAR FUNCIONES
+
+//  estado_oferta = situacion  //
+//  = 1 = BORRADOR
+//  = 2 = PRECIO , 8 = ANULADO, 9 = VENDIDO
+
+// tipo_estado = estado oferta
+// = 13 = CERRADO
+// = 14 = ABIERTO
+
+validarDato(tipo_estado: number, estado_oferta: number): boolean {
+
+if (tipo_estado === 13 && estado_oferta >= 2 && estado_oferta <= 7) {
+  return true;
+}
+
+if (tipo_estado === 13 && estado_oferta >= 8 && estado_oferta <= 9) {
+  return true;
+}
+
+return false;
+}
+// si tiene autorizacion = 1 y id_estado_autorizacion = 12 - aceptado
+// y su tipo_estado es = abierto y estado_oferta= borrador.
+
+ofertaAutorizada(codigo_oferta: number, tipo_estado: number, estado_oferta: number, autorizacion: number, id_estado_autorizacion: number): boolean{
+  if (codigo_oferta !== null && tipo_estado === 14 && estado_oferta === 1 && autorizacion === 1 && id_estado_autorizacion === 12) {
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+validarEstado(codigo_oferta: number, estado_oferta: number): boolean{
+  if (estado_oferta === 10 && codigo_oferta !== null) {
+    return true;
+  }
+  return false;
+}
+
 }

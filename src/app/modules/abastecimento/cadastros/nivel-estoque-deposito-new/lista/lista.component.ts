@@ -17,7 +17,7 @@ import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/
 import { RouterService } from 'src/app/shared/services/core/router.service';
 import { Subtitles } from 'src/app/shared/modules/subtitles/subtitles';
 
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent } from 'ngx-bootstrap';
 import { finalize } from 'rxjs/operators';
 
 import { AbastecimentoCadastrosNivelEstoqueDepositoNewService } from '../nivel-estoque-deposito-new.service';

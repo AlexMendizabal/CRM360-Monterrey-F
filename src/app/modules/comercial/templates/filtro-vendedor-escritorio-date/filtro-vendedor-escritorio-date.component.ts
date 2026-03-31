@@ -12,14 +12,14 @@ import { ComercialVendedoresService } from '../../services/vendedores.service';
 import { ComercialLoteService } from '../../lote/lote.service';
 import { ComercialLoteRutaComponent } from '../../lote/ruta/ruta.component';
 
-
 @Component({
   selector: 'comercial-templates-filtro-vendedor-escritorio-date',
   templateUrl: './filtro-vendedor-escritorio-date.component.html',
-  styleUrls: ['./filtro-vendedor-escritorio-date.component.scss']
+  styleUrls: ['./filtro-vendedor-escritorio-date.component.scss'],
 })
 export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
-  implements OnInit {
+  implements OnInit
+{
   @Input('profile') profile: any = {};
   @Input('showAll') showAll: boolean;
   @Output('formValue')
@@ -43,7 +43,6 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
   form: FormGroup;
 
   constructor(
-
     private location: Location,
     private comercialService: ComercialService,
     private vendedoresService: ComercialVendedoresService,
@@ -51,7 +50,6 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
     private pnotifyService: PNotifyService,
     private loteService: ComercialLoteService,
     private rutaService: ComercialLoteRutaComponent
-
   ) {
     this.pnotifyService.getPNotify();
   }
@@ -62,59 +60,68 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
       sucursal_id: [],
       vendedor_id: [],
       visita_id: [],
-      estado_id: []
+      estado_id: [],
+      fecha_inicio_visita: [null],
+      fecha_fin_visita: [null],
     });
     this.setFormFilter();
   }
-
 
   setFormFilter(): void {
     this.form = this.formBuilder.group({
       sucursal_id: [null, Validators.required],
       vendedor_id: [null, Validators.required],
       visita_id: [null],
-      estado_id: [null]
+      estado_id: [null],
+      fecha_inicio_visita: [null],
+      fecha_fin_visita: [null],
     });
   }
-
 
   filtrarClientes() {
     const idSucursal = this.form.get('sucursal_id').value;
     const idVendedor = this.form.get('vendedor_id').value;
-    const idUltimaVisita = this.form.get('visita_id').value;
+    const fechaInicioVisita = this.form.get('fecha_inicio_visita').value;
+    const fechaFinVisita = this.form.get('fecha_fin_visita').value;
     const idEstado = this.form.get('estado_id').value;
+
     const params = {
       idSucursal: idSucursal,
       idVendedor: idVendedor,
-      idUltimaVisita: idUltimaVisita,
-      idEstado: idEstado
+      fechaInicioVisita: fechaInicioVisita, // Nuevo parámetro para fecha inicial
+      fechaFinVisita: fechaFinVisita, // Nuevo parámetro para fecha final
+      idEstado: idEstado,
     };
+
+    // Elimina propiedades con valor null o cadena vacía
+    Object.keys(params).forEach((key) => {
+      if (params[key] === null || params[key] === '') {
+        delete params[key];
+      }
+    });
+
+    console.log('Parámetros de filtrado', params);
     this.rutaService.filtrarMapas(params);
-    const vendedorSeleccionado = idVendedor;
-    this.rutaService.indiceVendedor = vendedorSeleccionado
+
+    // Guarda el índice del vendedor seleccionado para su uso posterior
+    this.rutaService.indiceVendedor = idVendedor;
   }
 
   onEscritorioChange(escritorio: any) {
-    // alert(1)
-    //console.log(escritorio);
-    //if (escritorio> 0){
-      this.vendedoresService.getVendedoresSucursal(escritorio).subscribe(
-        (response: any) => {
-          //console.log(response)
-          if (response['success'] === true) {
-            //this.setFormFilter();
-            this.filteredVendedores = response['data'];
+    this.vendedoresService.getVendedoresSucursal(escritorio).subscribe(
+      (response: any) => {
+        console.log('Respuesta de getVendedoresSucursal:', response);
+        if (response['success'] === true) {
+          this.filteredVendedores = response['data'];
+        } else {
+          this.handleLoadDependenciesError();
+        }
+      },
+      (error) => {
+        console.error('Error en getVendedoresSucursal:', error);
+      }
+    );
 
-          } else {
-            this.handleLoadDependenciesError();
-          }
-        },
-      )
-    //}
-    // //else{
-    //   this.vendedoresService.getVendedoresSucursal(escritorio.idEscritorio)
-
-    // }
     this.form.get('idVendedor').setValue(0);
   }
 
@@ -131,9 +138,8 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
   }
 
   checkUserProfile(): void {
-    this.getEscritoriosVendedores()
+    this.getEscritoriosVendedores();
   }
-
 
   getEscritoriosVendedores(): void {
     this.loadEscritoriosVendedores()
@@ -146,7 +152,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
               idEscritorio: 0,
               idVendedor: 0,
               nomeVendedor: 'TODOS OS VENDEDORES',
-              nomeEscritorio: 'TODOS OS ESCRITÓRIOS'
+              nomeEscritorio: 'TODOS OS ESCRITÓRIOS',
             });
           }
         })
@@ -157,7 +163,9 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
             this.setFormFilter();
             this.escritorios = response[0]['result'];
 
-            const escritorioNoVacio = this.escritorios.find(item => item.nome !== null && item.nome !== '');
+            const escritorioNoVacio = this.escritorios.find(
+              (item) => item.nome !== null && item.nome !== ''
+            );
 
             if (escritorioNoVacio) {
               /*  // Se encontró un valor no vacío
@@ -170,7 +178,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
             if (this.escritorios.length > 1 && this.showAll === true) {
               this.escritorios.unshift({
                 id: 0,
-                nome: 'TODAS LAS SUCURSALES'
+                nome: 'TODAS LAS SUCURSALES',
               });
             }
           } else {
@@ -183,7 +191,7 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
             /* if (this.showAll === true) { */
             this.filteredVendedores.unshift({
               id: 0,
-              nome: 'TODOS'
+              nome: 'TODOS',
             });
             /* } */
           } else {
@@ -192,18 +200,16 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
         },
         error: (error: any) => {
           this.handleLoadDependenciesError();
-        }
+        },
       });
   }
 
-
-
-  ultimaVisita = [
+  Visita = [
     { id: 0, nombre: 'Todos' },
     { id: 1, nombre: '>= 90 días' },
     { id: 2, nombre: '>= 45 días' },
     { id: 3, nombre: '>= 30 días' },
-    { id: 4, nombre: '>= 15 días' },
+    { id: 4, nombre: '>= 1ultima5 días' },
     { id: 5, nombre: '<= 15 días' },
   ];
 
@@ -213,16 +219,12 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
     { id: 2, nombre: 'Inactivo' },
   ];
 
-
-
   loadEscritoriosVendedores(): Observable<any> {
     const escritorios = this.comercialService.getEscritorios();
     const vendedores = this.vendedoresService.getVendedores();
 
     return forkJoin([escritorios, vendedores]).pipe(take(1));
   }
-
-
 
   getVinculoOperadores(): void {
     this.vendedoresService
@@ -325,20 +327,20 @@ export class ComercialTemplatesFiltroVendedorEscritorioDateComponent
         {
           id: 0,
           nome: 'TODOS OS VENDEDORES',
-          idEscritorio: 0
-        }
+          idEscritorio: 0,
+        },
       ];
       this.form.controls['idVendedor'].setValue(idEscritorio);
       this.onInput();
     } else {
       this.filteredVendedores = this.vendedores.filter(
-        value => value.idEscritorio == idEscritorio
+        (value) => value.idEscritorio == idEscritorio
       );
 
       if (this.filteredVendedores.length > 0 && this.showAll === true) {
         this.filteredVendedores.unshift({
           id: 0,
-          nome: 'TODOS OS VENDEDORES'
+          nome: 'TODOS OS VENDEDORES',
         });
       }
     }

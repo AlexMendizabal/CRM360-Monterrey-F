@@ -6,12 +6,14 @@ import { ModuleWrapperModule } from 'src/app/core/module-wrapper/module-wrapper.
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TemplatesModule } from 'src/app/shared/templates/templates.module';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { ptBrLocale, defineLocale } from 'ngx-bootstrap/chronos';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { TabsModule } from 'ngx-bootstrap/tabs';
-import { TimepickerModule } from 'ngx-bootstrap/timepicker';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { 
+  TooltipModule, 
+  TimepickerModule,
+  ptBrLocale,
+  BsDatepickerModule,
+  PaginationModule,
+  TabsModule, 
+  defineLocale } from 'ngx-bootstrap';
 import { NotFoundModule } from 'src/app/core/not-found/not-found.module';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { CurrencyMaskModule } from 'ng2-currency-mask';

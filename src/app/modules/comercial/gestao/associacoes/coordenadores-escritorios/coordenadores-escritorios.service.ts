@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ComercialGestaoAssociacoesCoordenadoresEscritoriosService {
-  private readonly API = `${environment.URL_MTCORP}comercial/gestao/associacao-coordenadores`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/gestao/associacao-coordenadores`;
 
   constructor(protected http: HttpClient) {}
 

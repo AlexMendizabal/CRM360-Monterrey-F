@@ -24,7 +24,7 @@ export class ComercialDashboardVendedorDesempenhoLinhaComponent
   };
 
   linhas: Array<any> = [];
-  totais: Array<any> = [];
+  totais: { ton: number; valor: number } = { ton: 0, valor: 0 };
   pastLinhas: Array<any> = [];
   pastTotais: Array<any> = [];
   currLinhas: Array<any> = [];
@@ -40,7 +40,7 @@ export class ComercialDashboardVendedorDesempenhoLinhaComponent
   constructor(
     private dashboardService: ComercialDashboardVendedorService,
     private dateService: DateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.renderMonthFilters();
@@ -73,22 +73,27 @@ export class ComercialDashboardVendedorDesempenhoLinhaComponent
 
   renderList(response: any) {
     if (response['responseCode'] === 200) {
-      if (
-        response['result']['passado'] &&
-        response['result']['passado']['analitico'].length > 0
-      ) {
+      let totalTon = 0;
+      let totalValor = 0;
+  
+      if (response['result']['passado'] && response['result']['passado']['analitico']) {
         this.pastLinhas = response['result']['passado']['analitico'];
-        this.pastTotais = response['result']['passado']['total'];
+        this.pastTotais = response['result']['passado']['total'] || [];
       }
-
-      if (
-        response['result']['corrente'] &&
-        response['result']['corrente']['analitico'].length > 0
-      ) {
+  
+      if (response['result']['corrente'] && response['result']['corrente']['analitico']) {
         this.currLinhas = response['result']['corrente']['analitico'];
-        this.currTotais = response['result']['corrente']['total'];
+        this.currTotais = response['result']['corrente']['total'] || [];
+  
+        // Asigna `currLinhas` a `linhas` para que se muestre en el HTML
         this.linhas = this.currLinhas;
-        this.totais = this.currTotais;
+  
+        this.currLinhas.forEach((item: any) => {
+          totalTon += item.ton || 0;
+          totalValor += item.valor || 0;
+        });
+  
+        this.totais = { ton: totalTon, valor: totalValor };
       } else {
         this.handleEmpty();
       }
@@ -96,6 +101,8 @@ export class ComercialDashboardVendedorDesempenhoLinhaComponent
       this.handleEmpty();
     }
   }
+  
+  
 
   getPerformanceSum(column: string): number {
     let sum = 0;
@@ -139,14 +146,14 @@ export class ComercialDashboardVendedorDesempenhoLinhaComponent
     if (type == 'past') {
       if (this.pastLinhas.length > 0) {
         this.linhas = this.pastLinhas;
-        this.totais = this.pastTotais;
+       // this.totais = this.pastTotais;
       } else {
         this.handleEmpty();
       }
     } else if (type == 'current') {
       if (this.currLinhas.length > 0) {
         this.linhas = this.currLinhas;
-        this.totais = this.currTotais;
+        //this.totais = this.currTotais;
       } else {
         this.handleEmpty();
       }

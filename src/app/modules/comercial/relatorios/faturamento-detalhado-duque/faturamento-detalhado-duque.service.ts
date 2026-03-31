@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ComercialRelatoriosFaturamentoDetalhadoDuqueService {
-  private readonly API = `${environment.URL_MTCORP}comercial/relatorios/faturamento-detalhado-duque`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/relatorios/faturamento-detalhado-duque`;
 
   constructor(protected http: HttpClient) {}
 

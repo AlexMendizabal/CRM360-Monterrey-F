@@ -1,0 +1,38 @@
+<div class="modal-header">
+  <h4 class="modal-title">Lista de Socios de Negocios</h4>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>  
+</div>
+<div class="modal-body">
+  <div class="input-group mb-4">
+    <input type="text" class="form-control col-md-12" placeholder="Busqueda por Código SN, Nombre SN.."
+      aria-label="Input group example" aria-describedby="basic-addon1" (keyup)="updateFilter($event)"
+      fdprocessedid="7edy2">
+
+    <span class="input-group-text" id="basic-addon1">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
+        viewBox="0 0 16 16">
+        <path
+          d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0">
+        </path>
+      </svg>
+    </span>
+  </div>
+
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+      <!-- Tabla -->
+      <div class="table-responsive mt-2">
+        <div>
+          <!--   <ngx-datatable [rows]="rows" [columns]="columns"> </ngx-datatable> -->
+          <ngx-datatable #table class="material" [columns]="columns" [headerHeight]="50" [footerHeight]="50"
+            rowHeight="auto" [limit]="10" [rows]="rows"  [selectionType]="SelectionType.single"
+            (select)="onSelect($event)">
+          </ngx-datatable>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

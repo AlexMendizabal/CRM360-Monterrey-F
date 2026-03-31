@@ -43,7 +43,7 @@ export class AdminAtividadesService {
 
   registrarAcesso(idAtividade?: number) {
     return this.http
-      .post(`${environment.URL_MTCORP}core/registrar-acesso`, {
+      .post(`https://crm360.monterrey.com.bo/api/core/registrar-acesso`, {
         idAtividade: idAtividade,
         dsRota: this.router.url,
       })

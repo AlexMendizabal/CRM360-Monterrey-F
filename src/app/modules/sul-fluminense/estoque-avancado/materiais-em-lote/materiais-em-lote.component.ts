@@ -189,6 +189,7 @@ export class SulFluminenseEstoqueAvancadoMateriaisEmLoteComponent implements OnI
         if (Object.keys(response).length > 0) {
           const _response = this.routerService.getBase64UrlParams(response);
           this.form.patchValue(_response);
+          console.log(_response)
           this.getLista(_response);
         }
       }

@@ -12,7 +12,7 @@ import { SetorAtividade } from './models/setor-atividade';
   providedIn: 'root',
 })
 export class ComercialCadastrosSetorAtividadeService {
-  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/setor-atividade`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/setor-atividade`;
 
   constructor(protected http: HttpClient) {}
 

@@ -17,7 +17,7 @@ import { ComercialTidSoftwareService } from '../tid-software/tid-software.servic
   providedIn: 'root',
 })
 export class ComercialControleEntregasService {
-  private readonly API = `${environment.URL_MTCORP}`;
+  private readonly API = ` https://crm360.monterrey.com.bo`;
 
   constructor(
     protected http: HttpClient,

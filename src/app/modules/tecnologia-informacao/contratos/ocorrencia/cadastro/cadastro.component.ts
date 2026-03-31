@@ -19,8 +19,7 @@ import { ConfirmModalService } from 'src/app/shared/modules/confirm-modal/confir
 import { TecnologiaInformacaoFuncionariosService } from './../../services/funcionarios.service';
 import { TecnologiaInformacaoCadastroOcorrenciaService } from '../services/ocorrencia.service';
 
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { BsDatepickerConfig, BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { finalize, switchMap, take } from 'rxjs/operators';
 import { EMPTY, forkJoin, Subscription } from 'rxjs';
 

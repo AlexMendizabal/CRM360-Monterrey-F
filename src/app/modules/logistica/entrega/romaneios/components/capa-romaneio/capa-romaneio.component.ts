@@ -11,7 +11,7 @@ import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 
 import { ILogisticaEntregaRomaneio } from './../../models/romaneio';
 
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 @Component({
   selector: 'logistica-entrega-romaneios-capa-romaneio',

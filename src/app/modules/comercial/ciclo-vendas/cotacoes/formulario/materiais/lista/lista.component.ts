@@ -24,6 +24,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Subtitles } from 'src/app/shared/modules/subtitles/subtitles';
 import { CustomTableConfig } from 'src/app/shared/templates/custom-table/models/config';
 import { JsonResponse } from 'src/app/models/json-response';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { IMateriaisModel } from '../../models/materiais';
 import { ComercialEstoqueService } from '../../../../../../comercial/estoque/estoque.service';
@@ -49,6 +50,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   @Output() resetRequested = new EventEmitter<void>();
   @Input('almacenes') almacenes: any[] = [];
   @Input() estadoAlmacen: { value: boolean };
+  @Input('idAlmacenEditar') idAlmacenEditar: number;
 
   filas = [
     {
@@ -171,15 +173,35 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     private formularioService: ComercialCicloVendasCotacoesFormularioService,
     private comercialService: ComercialService,
     private estoqueService: ComercialCicloVendasCotacoesFormularioModalMaterialEstoqueService,
-    private estoqueServices: ComercialEstoqueService
+    private estoqueServices: ComercialEstoqueService,
+    private sanitizer: DomSanitizer
   ) {
     this.pnotifyService.getPNotify();
   }
 
   ngOnInit(): void {
     this.getFilterValues();
-    this.cliente.emit(this.codCliente);
+     /*this.cliente.emit(this.codCliente); */
     this.getMateriais(null, 'application');
+
+  }
+  sanitizeHtml(value: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(value);
+  }
+
+
+
+  ngOnChanges(): void {
+    if (this.idAlmacenEditar > 0) {
+      this.form.controls.almacenForm.setValue(this.idAlmacenEditar);
+      this.form.controls.almacenForm.disable();
+      const almacenFiltrado = this.almacenes.find(
+        (almacen) => almacen.id_almacen === this.idAlmacenEditar
+      );
+      if (almacenFiltrado) {
+        this.codigo_almacen = almacenFiltrado.codigo_almacen;
+      }
+    }
   }
 
   getFilterValues(): void {
@@ -197,6 +219,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       .subscribe((response: any) => {
         if (response.responseCode === 200) {
           this.linhas = response.result;
+
         } else {
           this.pnotifyService.error();
           this.location.back();
@@ -261,18 +284,14 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       nomeClasse: 'EXIBIR TODOS',
     });
   }
-  cambioMaterial(idMaterial: number) {
-    // Declara un nuevo BehaviorSubject para materiaisSubject
-
-    // En otro lugar de tu código, puedes verificar si materiaisSubject tiene datos así
-
-    if (idMaterial > 0) {
+  cambioMaterial(codigo_material: any) {
+    if (codigo_material > 0) {
       this.swActivarBusqueda = true;
     } else {
       this.swActivarBusqueda = false;
     }
 
-    this.idMaterial = idMaterial;
+    this.codigo_material = codigo_material;
     this.registros = this.form.controls.registros.value;
   }
 
@@ -614,13 +633,14 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
   onFilterVend(tipo): void {
-    if (this.checkFieldErrors() === false) {
+    if (this.checkFieldErrors() ===     false) {
       /* if (this.searching === false && this.form.valid) {
         console.log('aqui1'); */
       this.searching = true;
       this.setRouterParams(this.getFormFilterValues(), tipo);
       /*  } */
-    } else {
+    }
+    else {
       this.searching = true;
       //this.setRouterParams(this.getFormFilterValues(), tipo);
     }
@@ -686,29 +706,42 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     this.dadosLoaded = false;
     this.dadosEmpty = false;
     let params = {};
-    if (tipo == 1 || tipo == 3) {
-      params = {
-        id_material: this.idMaterial,
-        id_lista: this.id_lista,
-        id_vendedor: this.id_vendedor,
-        codigo_almacen: this.codigo_almacen,
 
-        registros: this.form.controls.registros.value,
-      };
-    } else if (tipo == 2) {
-      params = {
-        id_material: this.idMaterial,
-        codigo_material: this.codigo_material,
-        id_lista: this.id_lista,
-        codigo_almacen: this.codigo_almacen,
-        registros: this.form.controls.registros.value,
-      };
+    params = {
+      codigo_material: this.codigo_material,
+      id_material: this.idMaterial,
+      id_lista: this.id_lista,
+      id_vendedor: this.id_vendedor,
+      codigo_almacen: this.codigo_almacen,
+      registros: this.form.controls.registros.value,
+    };
+
+   /*  let paramsActualizarStock = {
+      codigo_almacen: this.almacenes,
+      id_lista: this.id_lista,
+      id_material: this.idMaterial,
+      codigo_material: this.codigo_material
+    }; */
+
+    this.comercialService.actualizarStockTodos(params).pipe(
+      finalize(() => { this.loaderNavbar.emit(false); })
+    ).subscribe({
+      next: (response: any) => {
+        if (response['responseCode'] == 200) {
+          this.listarAlmacen(params);
+        }
+        else {
+          this.listarAlmacen(params);
+
+          this.pnotifyService.notice('No actualizo Stock');
+        }
+      }
     }
-    if (tipo == 1) {
-      this.swTodos = false;
-      this.swVendedor = true;
+    );
+  }
 
-      this.comercialService
+  listarAlmacen (params) {
+    this.comercialService
         .getMaterialesOfertaVendedor(params)
         .pipe(
           finalize(() => {
@@ -717,203 +750,48 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
             this.dadosLoaded = true;
             this.searching = false;
           })
-        )
-        .subscribe({
+        ).subscribe({
           next: (response: any) => {
-            /*           console.log(response.responseCode);
-             */ /*  if (response.hasOwnProperty('success')
-            && response.success === true
-            && !response.data[0].msg) {
-              this.dados = response.data.map(function (el: any) {
-                var o = Object.assign({}, el);
-                o.checked = 0; 
-                return o;
-              }); */
+            console.log("aca",response);
             if (response.responseCode === 200) {
-              this.swAppSellColor = false;
 
-              if (response.material && response.material.length > 0) {
-                this.dados = response.material.map((el) => {
-                  var o = Object.assign({}, el);
-                  o.checked = 0;
-                  return o;
-                });
-              } else {
-                this.dados = [];
+                if (response.material && response.material.length > 0) {
+                  this.dados = response.material.map((el) => {
+                    var o = Object.assign({}, el);
+                    o.checked = 0;
+                    return o;
+                  });
+                } else {
+                  this.dados = [];
+                }
+
+                if (response.upsell && response.upsell.length > 0) {
+                  this.upsell = response.upsell.map((el) => {
+                    var o = Object.assign({}, el);
+                    o.checked = 0;
+                    return o;
+                  });
+                } else {
+                  this.upsell = [];
+                }
+
+                if (response.crosell && response.crosell.length > 0) {
+                  this.crosell = response.crosell.map((el) => {
+                    var o = Object.assign({}, el);
+                    o.checked = 0;
+                    return o;
+                  });
+                } else {
+                  this.crosell = [];
+                }
+
+                this.dadosEmpty = false;
+                this.form.controls.codigo_material.enable();
+                this.swActivarBusqueda = true;
+                this.tableConfig.fixedHeader = this.dados.length > 10;
               }
-
-              if (response.upsell && response.upsell.length > 0) {
-                this.upsell = response.upsell.map((el) => {
-                  var o = Object.assign({}, el);
-                  o.checked = 0;
-                  return o;
-                });
-              } else {
-                this.upsell = [];
-              }
-
-              if (response.crosell && response.crosell.length > 0) {
-                this.crosell = response.crosell.map((el) => {
-                  var o = Object.assign({}, el);
-                  o.checked = 0;
-                  return o;
-                });
-              } else {
-                this.crosell = [];
-              }
-
-              this.dadosEmpty = false;
-              this.form.controls.codMaterial.enable();
-              this.swActivarBusqueda = true;
-
-              this.tableConfig.fixedHeader = this.dados.length > 10;
-            } else {
-              this.swTodos = true;
-              this.swVendedor = true;
-              this.swActivarBusqueda = true;
-              this.dadosEmpty = true;
-              this.swAppSellColor = true;
-            }
-          },
-          error: (error: any) => {
-            this.swTodos = false;
-            this.swVendedor = true;
-            this.swActivarBusqueda = true;
-            this.dadosEmpty = true;
-            this.form.controls.codMaterial.disable();
-            if (error['error'].hasOwnProperty('mensagem')) {
-              this.pnotifyService.error(error.error.mensagem);
-            } else {
-              this.pnotifyService.error();
-            }
-            this.dadosEmpty = true;
-            this.swAppSellColor = true;
-          },
+          }
         });
-    } else if (tipo == 2) {
-      this.swTodos = true;
-      this.swVendedor = false;
-
-      this.form.controls.codMaterial.disable();
-      this.comercialService
-        .getMaterialesOferta(params)
-        .pipe(
-          finalize(() => {
-            this.loaderNavbar.emit(false);
-            this.firstSearch = true;
-            this.dadosLoaded = true;
-            this.searching = false;
-          })
-        )
-        .subscribe({
-          next: (response: any) => {
-            /*           console.log(response.responseCode);
-             */ /*  if (response.hasOwnProperty('success')
-     && response.success === true
-     && !response.data[0].msg) {
-       this.dados = response.data.map(function (el: any) {
-         var o = Object.assign({}, el);
-         o.checked = 0; 
-         return o;
-       }); */
-            if (response.responseCode === 200) {
-              this.form.controls.codMaterial.enable();
-              this.swTodos = false;
-              this.swVendedor = true;
-              this.swAppSell = false;
-              this.swAppSellColor = false;
-
-              this.dados = response.result.map((el) => {
-                var o = Object.assign({}, el);
-                o.checked = 0;
-                return o;
-              });
-              this.dadosEmpty = false;
-
-              //console.log('dados', this.dados);
-
-              // if (this.dados.length > 10) {
-              this.tableConfig.fixedHeader = true;
-              // } else {
-              //this.tableConfig.fixedHeader = false;
-              //  }
-              //} else {
-              //this.pnotifyService.notice("Há campos faltando ou não há dados para sua consulta.");
-              //this.dadosEmpty = true;
-            } else {
-              this.swTodos = false;
-              this.swVendedor = true;
-              this.dadosEmpty = true;
-              this.swAppSellColor = false;
-
-              this.form.controls.codMaterial.enable();
-            }
-          },
-          error: (error: any) => {
-            if (error['error'].hasOwnProperty('mensagem')) {
-              this.pnotifyService.error(error.error.mensagem);
-            } else {
-              this.pnotifyService.error();
-            }
-            this.dadosEmpty = true;
-          },
-        });
-    } else if (tipo === 3) {
-      this.swTodos = false;
-      this.swVendedor = true;
-      this.swAppSell = true;
-      this.comercialService
-        .getUpSellService(params)
-        .pipe(
-          finalize(() => {
-            this.loaderNavbar.emit(false);
-            this.firstSearch = true;
-            this.dadosLoaded = true;
-            this.searching = false;
-          })
-        )
-        .subscribe({
-          next: (response: any) => {
-            if (response.responseCode === 200) {
-              this.swAppSellColor = true;
-              this.form.controls.codMaterial.enable();
-              this.swTodos = true;
-              this.swVendedor = true;
-              this.swAppSell = true;
-              this.dados = response.result.map((el) => {
-                var o = Object.assign({}, el);
-                o.checked = 0;
-                return o;
-              });
-              this.dadosEmpty = false;
-              this.form.controls.codMaterial.enable();
-              this.tableConfig.fixedHeader = true;
-            } else {
-              this.swTodos = true;
-              this.swVendedor = true;
-              this.swAppSell = true;
-              this.dadosEmpty = true;
-              this.form.controls.codMaterial.enable();
-              this.swAppSellColor = true;
-              //this.form.controls.codMaterial.enable();
-            }
-          },
-          error: (error: any) => {
-            this.swAppSellColor = true;
-            this.swTodos = true;
-            this.swVendedor = true;
-            this.dadosEmpty = true;
-            this.swAppSell = true;
-            this.form.controls.codMaterial.enable();
-            if (error['error'].hasOwnProperty('mensagem')) {
-              this.pnotifyService.error(error.error.mensagem);
-            } else {
-              this.pnotifyService.error();
-            }
-            this.dadosEmpty = true;
-          },
-        });
-    }
   }
 
   checkFieldErrors(): boolean {
@@ -928,10 +806,10 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
       errorCliente = true;
     }
 
-    if (this.codigo_almacen == '') {
+   /*  if (this.codigo_almacen == '') {
       this.pnotifyService.notice('Seleccione un almacén');
       errorAlmacen = true;
-    }
+    } */
 
     //console.log(this.id_vendedor)
 
@@ -1011,6 +889,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
         this.dados[index].checked = this.toggleAll === true ? 1 : 0;
       }
     }
+
   }
 
   onClickMaterial(index: number, material: IMateriaisModel) {
@@ -1031,7 +910,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     /*  console.log(this.dados[index]);
      if(this.dados[index].codigo_situacion == "A") {
      let materiais = [];
-     materiais.push(this.dados[index]); 
+     materiais.push(this.dados[index]);
      this.formularioService.materiaisSubject.next(materiais);
      this.scrollToCarrinho.emit(this.autoScroll);
      this.dados[index].checked = 0;
@@ -1058,6 +937,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     } else {
       this.pnotifyService.notice('Seleccione por lo menos un material');
     }
+
   }
 
   onCheckMaterial3(index: number, material: IMateriaisModel): void {
@@ -1068,6 +948,7 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     } else {
       this.pnotifyService.notice('Seleccione por lo menos un material');
     }
+    console.log('aqui prueba?', this.crosell[index]);
   }
 
   onAddMaterial(): void {
@@ -1076,10 +957,14 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
     let materiais = [];
     for (let index = 0; index < this.dados.length; index++) {
       if (this.dados[index].checked === 1) {
-        materiais.push(this.dados[index]);
-        this.dados[index].checked = 0;
-        this.estadoAlmacen.value = false;
+       // Agregar id_lista_precio al objeto
+       this.dados[index]['lista_precio'] = this.id_lista;
 
+      // Agregar el objeto al array materiais
+      materiais.push(this.dados[index]);
+      // Resetear la propiedad checked y estadoAlmacen
+      this.dados[index].checked = 0;
+        this.estadoAlmacen.value = false;
         this.pnotifyService.success('Material agregado.');
       }
     }

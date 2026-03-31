@@ -9,13 +9,13 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class AtividadesService {
-  private readonly API = `${environment.URL_MTCORP}common/atividades`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/common/atividades`;
 
   constructor(protected http: HttpClient, private router: Router) {}
 
   registrarAcesso(idAtividade?: number) {
     return this.http
-      .post(`${environment.URL_MTCORP}core/registrar-acesso`, {
+      .post(`https://crm360.monterrey.com.bo/api/core/registrar-acesso`, {
         idAtividade: idAtividade,
         dsRota: this.router.url,
       })

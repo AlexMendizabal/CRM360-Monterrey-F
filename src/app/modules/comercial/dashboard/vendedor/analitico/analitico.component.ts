@@ -36,6 +36,7 @@ export class ComercialDashboardVendedorAnaliticoComponent implements OnChanges {
     this.tableConfig = this.data.config.type;
     this.tableData = this.data.data.data;
     this.tableDataReturned = this.tableData.slice(0, this.itemsPerPage);
+    console.log(this.tableDataReturned);
     this.scrollToBottom();
   }
 

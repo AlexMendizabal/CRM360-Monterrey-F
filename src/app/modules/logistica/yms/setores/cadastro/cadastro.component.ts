@@ -15,8 +15,7 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsDatepickerConfig, BsModalRef, BsLocaleService } from 'ngx-bootstrap';
 //Angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit} from '@angular/core';
@@ -32,7 +31,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsSetoresService } from '../services/setores.service';
 //interfaces
 import { ILogisticaYmsSetores } from '../models/setores';
-
 import { elasticIn } from '@amcharts/amcharts4/.internal/core/utils/Ease';
 
 @Component({

@@ -4,8 +4,7 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsDatepickerConfig, BsModalRef, BsLocaleService } from 'ngx-bootstrap';
 //Angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit} from '@angular/core';
@@ -22,7 +21,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsChecklistService } from '../services/checklist.service';
 //interfaces
 import { ILogisticaYmsChecklist } from '../models/checklist';
-
 
 @Component({
   selector: 'logistica-yms-checklist-cadastro',
@@ -140,7 +138,7 @@ export class LogisticaYmsChecklistCadastroComponent
     this.form = this.formBuilder.group({
       ID_LOGI_YMS_CHEC: [null],
       NM_CHEC: [null, [Validators.required]],
-      IN_STAT: [Validators.required],
+      IN_STAT: [null],
       DS_OBSE: [null],
     });
   }

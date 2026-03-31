@@ -12,12 +12,12 @@
     <custom-table *ngIf="tableConfig == 'registroOcorrencias'">
       <ng-template #thead let-thead>
         <tr>
-          <th scope="col" class="text-center">Código</th>
+          <th scope="col" class="text-center">Código 1</th>
           <th scope="col">Razão social</th>
-          <th scope="col" class="text-center">Núm. ocorrência</th>
-          <th scope="col" class="text-center">NF de saída</th>
-          <th scope="col" class="text-center">Situação</th>
-          <th scope="col" class="text-center">Unidade</th>
+          <th scope="col" class="text-center">Núm. ocurrencia</th>
+          <th scope="col" class="text-center">NF de salidaa</th>
+          <th scope="col" class="text-center">Situacion</th>
+          <th scope="col" class="text-center">Unidad</th>
           <th scope="col" class="text-center">Data</th>
         </tr>
       </ng-template>
@@ -37,12 +37,12 @@
       <ng-template #thead let-thead>
         <tr>
           <th scope="col" class="text-center">Código</th>
-          <th scope="col">Razão social</th>
+          <th scope="col">Razon social</th>
           <th scope="col" class="text-center" *ngIf="tableConfig == 'clientesB'">Toneladas</th>
-          <th scope="col" class="text-center" *ngIf="tableConfig == 'clientesB'">R$</th>
+          <th scope="col" class="text-center" *ngIf="tableConfig == 'clientesB'">$</th>
           <th scope="col" class="text-center" *ngIf="tableConfig == 'clientesC' || tableConfig == 'clientesD'">Última compra</th>
-          <th scope="col" class="text-center" *ngIf="tableConfig == 'clientesD'">Inativação em</th>
-          <th scope="col" class="text-center">Ações</th>
+          <th scope="col" class="text-center" *ngIf="tableConfig == 'clientesD'">Inactivacion en</th>
+          <th scope="col" class="text-center">Acciones</th>
         </tr>
       </ng-template>
       <ng-template #tbody let-tbody>
@@ -77,10 +77,10 @@
     <custom-table *ngIf="tableConfig == 'financeiro'">
       <ng-template #thead let-thead>
         <tr>
-          <th scope="col" class="text-center">Código</th>
-          <th scope="col">Razão social</th>
-          <th scope="col" class="text-center">R$</th>
-          <th scope="col" class="text-center">Ações</th>
+          <th scope="col" class="text-center">Código 3</th>
+          <th scope="col">Razon Social</th>
+          <th scope="col" class="text-center">$</th>
+          <th scope="col" class="text-center">Acciones</th>
         </tr>
       </ng-template>
       <ng-template #tbody let-tbody>
@@ -112,7 +112,7 @@
     <custom-table *ngIf="tableConfig == 'desempenhoCliente'">
       <ng-template #thead let-thead>
         <tr>
-          <th scope="col" class="text-center">Código</th>
+          <th scope="col" class="text-center">Código 4</th>
           <th scope="col">Razão social</th>
           <th scope="col" class="text-center">Toneladas</th>
           <th scope="col" class="text-center">R$</th>

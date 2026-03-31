@@ -294,6 +294,7 @@ export class AdminPerfisCadastroComponent implements OnInit, OnDestroy {
         },
         error => {
           this.atividades = [];
+          console.log(error)
         }
       )
   }
@@ -318,6 +319,7 @@ export class AdminPerfisCadastroComponent implements OnInit, OnDestroy {
           if(response.status !== 200){
             return
           }
+          console.log(response);
           this.atividadesAssociadas = response.body['data'];
           this.tableConfigAtividadesAssociadas.fixedHeader = this.atividadesAssociadas.length > 9 ? true : false;
         }

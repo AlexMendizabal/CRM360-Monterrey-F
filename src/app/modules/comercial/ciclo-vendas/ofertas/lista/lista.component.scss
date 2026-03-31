@@ -1,0 +1,144 @@
+::ng-deep {
+  @import 'src/assets/scss/colors.scss';
+  @import 'src/assets/scss/variables';
+
+  .modal-dialog {
+    max-width: 60%; /* Establece el ancho máximo del modal en relación al viewport */
+  }
+
+  .modal-content {
+    width: 100%; /* Asegura que el contenido del modal ocupe todo el ancho disponible */
+  }}
+  
+.icono{
+  font-weight: bold!important;
+  font-size: 13px;
+  margin-right: 0.5rem!important;
+}
+button.btn-none {
+  padding: 0;
+  border: 0;
+  background: #ffffff00;
+}
+.horizontal-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.horizontal-list li {
+  display: inline-block;
+  margin-right: 10px;
+  padding-bottom: 10px;
+}
+
+.table-responsive::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.table-responsive {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.table td {
+  font-size: 12px!important;
+}
+.table td:first-child {
+  font-weight: 600;
+}
+.table th {
+  padding: 8px 6px 4px 6px!important;
+}
+.table td{
+  padding: 3px 8px 3px 8px!important;
+}
+
+/* Estilo para pantallas medianas */
+@media (max-width: 992px) {
+
+  td,
+  th {
+    min-width: 100px;
+    /* Ajuste de ancho mínimo en pantallas medianas */
+  }
+}
+
+/* Estilo para pantallas pequeñas */
+@media (max-width: 768px) {
+
+  td,
+  th {
+    min-width: 80px;
+    /* Menor espacio en pantallas pequeñas */
+  }
+}
+
+/* Estilo para pantallas muy pequeñas (teléfonos) */
+@media (max-width: 576px) {
+
+  td,
+  th {
+    min-width: 60px;
+    /* Aún más pequeño en teléfonos */
+  }
+}
+
+/* Reducir el tamaño del texto en pantallas pequeñas */
+@media (max-width: 576px) {
+
+  td,
+  th {
+    font-size: 12px;
+    /* Texto más pequeño en pantallas pequeñas */
+  }
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-size: 14px;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  transition: background-color 0.3s; // Añadir una transición suave
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  &:hover {
+    background-color: #c82333; // Efecto hover para el botón peligro
+  }
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  color: black;
+  &:hover {
+    background-color: #e0a800; // Efecto hover para el botón advertencia
+  }
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: white;
+  &:hover {
+    background-color: #218838; // Efecto hover para el botón éxito
+  }
+}
+
+.disabled {
+  pointer-events: none; /* Desactiva el clic */
+  opacity: 0.5; /* Reduce la opacidad para indicar que está deshabilitado */
+  color: gray; /* Cambia el color del ícono, si lo deseas */
+}

@@ -31,7 +31,7 @@ import { DetailPanelService } from 'src/app/shared/templates/detail-panel/detal-
 import { XlsxService } from 'src/app/shared/services/core/xlsx.service';
 import { RouterService } from 'src/app/shared/services/core/router.service';
 
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 // interfaces
 import { ILogisticaEntregaRomaneio } from '../models/romaneio';

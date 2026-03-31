@@ -13,7 +13,7 @@ import { ComercialVendedoresService } from '../../services/vendedores.service';
   providedIn: 'root'
 })
 export class ComercialRelatoriosFaturamentoDetalhadoService {
-  private readonly API = `${environment.URL_MTCORP}comercial`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial`;
 
   constructor(
     protected http: HttpClient,

@@ -1,19 +1,16 @@
-<loader-spinner-full-screen
-  *ngIf="loaderFullScreen"
-></loader-spinner-full-screen>
+<loader-spinner-full-screen *ngIf="loaderFullScreen"></loader-spinner-full-screen>
 <loader-spinner-navbar [hidden]="!loaderNavbar"></loader-spinner-navbar>
 <app-header [appTitle]="appTitle">
   <button *ngIf="dados.length > 0" type="button" (click)="exportarExcel()">
     Exportar a Excel
   </button>
-
   <button type="button" (click)="nuevo()" [disabled]="swOfertaVencida">
     Adicionar
   </button>
   <button
     type="button"
     (click)="onFilter()"
-    [disabled]="disableButton || !form.valid"
+
   >
     Filtrar
   </button>
@@ -31,24 +28,26 @@
           </div> -->
           <div class="form-group col-lg-2">
             <label for="dataInicial">Fecha Creación</label>
-            <input
-              class="form-control"
-              id="dataInicial1"
-              type="date"
-              formControlName="dataInicial1"
-            />
-          </div>
+            <input type="text"
+                    placeholder="SELECCIONE..."
+                    class="form-control"
+                    formControlName="newdata"
+                    bsDaterangepicker
+                    placement="right"
+                    [bsConfig]="{showClearButton: true, clearPosition: 'right' }">
+             </div>
 
-          <div class="form-group col-lg-2">
-            <label for="dataFinal">Fecha validez</label>
-            <input
-              class="form-control"
-              id="dataInicial2"
-              type="date"
-              labelForId="dataInicial2"
-              formControlName="dataInicial2"
-            />
-          </div>
+
+        <div class="form-group col-lg-2">
+            <label for="dataInicial">Fecha Creación</label>
+            <input type="text"
+                    placeholder="SELECCIONE..."
+                    class="form-control"
+                    formControlName="newdata"
+                    bsDaterangepicker
+                    placement="right"
+                    [bsConfig]="{showClearButton: true, clearPosition: 'right' }">
+             </div>
 
           <div class="form-group col-lg-3">
             <label for="status"> ESTADO </label>
@@ -60,7 +59,7 @@
               labelForId="status"
               bindLabel="nombre"
               bindValue="id"
-              placeholder="Selecione..."
+              placeholder="SELECCIONE..."
               formControlName="status"
             >
             </ng-select>
@@ -313,20 +312,31 @@
               >
             </td>
 
-            <td class="text-center hover">{{ pedido.descripcion_cierre }}</td>
+            <!-- <td class="text-center hover">
+              {{ pedido.descripcion_cierre === 'CERRADO' ? 'ANULADO' : pedido.descripcion_cierre }}
+            </td> -->
+            <td class="text-center hover">
+              {{ pedido.descripcion_cierre}}
+            </td>
+
+                <!-- ACCIONES -->
             <td class="text-center hover">
               <div class="row">
                 <!-- EDITAR -->
                 <div class="col text-center" style="padding: 0%">
-                  <a
-                    style="padding: 0%"
-                    class=""
-                    [tooltip]="'Editar Oferta'"
-                    (click)="onEdit2(pedido.id_oferta)"
-                    ><i class="fas fa-pencil-alt mr-2 icono" style="margin-right: 2px !important; color:black!important;"></i>
-                   
-                    <span class="sr-only">Refreshing...</span>
-                  </a>
+                  <a *ngIf="true"
+                  [style.pointer-events]="(validarDato(pedido.tipo_estado, pedido.estado_oferta) || validarEstado(pedido.codigo_oferta, pedido.estado_oferta) ||
+                  ofertaAutorizada(pedido.codigo_oferta, pedido.tipo_estado, pedido.estado_oferta, pedido.autorizacion, pedido.id_estado_autorizacion)) ? 'none' : 'auto'"
+                  [style.opacity]="(validarDato(pedido.tipo_estado, pedido.estado_oferta, pedido.autorizacion, pedido.id_estado_autorizacion) || validarEstado(pedido.codigo_oferta, pedido.estado_oferta) ||
+                  ofertaAutorizada(pedido.codigo_oferta, pedido.tipo_estado, pedido.estado_oferta, pedido.autorizacion, pedido.id_estado_autorizacion)) ? '0.5' : '1'"
+                  [tooltip]="'Editar Oferta'"
+                  (click)="!validarDato(pedido.tipo_estado, pedido.estado_oferta) && !validarEstado(pedido.codigo_oferta, pedido.estado_oferta) &&
+                  !ofertaAutorizada(pedido.codigo_oferta, pedido.tipo_estado, pedido.estado_oferta, pedido.autorizacion, pedido.id_estado_autorizacion) ? onEdit2(pedido.id_oferta) : null"
+               >
+                   <i class="fas fa-pencil-alt mr-2 icono" style="margin-right: 2px !important; color:black!important;"></i>
+                   <span class="sr-only">Refreshing...</span>
+               </a>
+
                 </div>
                 <!-- PDF -->
                 <div class="col-md text-center" style="padding: 0%">
@@ -335,12 +345,15 @@
                     class=""
                     routerLink="/pdf"
                     [tooltip]="'PDF'"
-                    (click)="onImprimir(pedido.id_oferta)"
+                    [style.pointer-events]="validarDato(pedido.tipo_estado, pedido.estado_oferta) ? 'none' : 'auto'"
+                    [style.opacity]="validarDato(pedido.tipo_estado, pedido.estado_oferta) ? '0.5' : '1'"
+                    *ngIf="true"
+                    (click)="!validarDato(pedido.tipo_estado, pedido.estado_oferta) && onImprimir(pedido.id_oferta)"
                     ><i class="far fa-file-pdf text-primary icono"></i
                     ><span class="text-uppercase"> </span
                   ></a>
                 </div>
-                <!-- VISTA -->
+                <!-- VISTA - DEJAR DISPONIBLE -->
                 <div class="col-md text-center" style="padding: 0%;">
                   <a
                     class=""
@@ -353,7 +366,7 @@
                     <!-- <span class="text-uppercase"></span> -->
                   </a>
                 </div>
-                <!-- ESTADO -->
+                <!-- ESTADO - LISTO -->
                 <div class="col-md text-center" style="padding: 0%">
                   <a
                     style="padding: 0%"
@@ -398,6 +411,8 @@
                       class=""
                       [tooltip]="'Enviado a SAP'"
                       *ngIf="pedido.codigo_oferta !== null"
+                      [style.pointer-events]="pedido.codigo_oferta !== null && pedido.tipo_estado == 13 ? 'none' : 'auto'"
+                      [style.opacity]="pedido.codigo_oferta !== null && pedido.tipo_estado == 13 ? '0.5' : '1'"
                       disabled
                     >
                       <i
@@ -410,12 +425,15 @@
                 </div>
                 <!-- ACTUALIZAR -->
                 <div class="col text-center" style="padding: 0%">
-                  <a
-                    style="padding: 0%"
-                    class=""
-                    [tooltip]="'Vigencia de la Oferta'"
-                    (click)="onEstadoOferta(pedido.codigo_oferta)"
-                    ><i
+                  <a style="padding: 0%" class="" [attr.tooltip]="'Vigencia de la Oferta'" [style.pointer-events]="(validarDato(pedido.tipo_estado, pedido.estado_oferta) || validarEstado(pedido.codigo_oferta, pedido.estado_oferta) ||
+                                    !ofertaAutorizada(pedido.codigo_oferta, pedido.tipo_estado, pedido.estado_oferta,pedido.autorizacion, pedido.id_estado_autorizacion)) ? 'none' : 'auto'"
+                    [style.opacity]="(validarDato(pedido.tipo_estado, pedido.estado_oferta) || validarEstado(pedido.codigo_oferta, pedido.estado_oferta) ||
+                                    !ofertaAutorizada(pedido.codigo_oferta, pedido.tipo_estado, pedido.estado_oferta,pedido.autorizacion, pedido.id_estado_autorizacion)) ? '0.5' : '1'"
+                    [attr.disabled]="validarDato(pedido.tipo_estado, pedido.estado_oferta) || validarEstado(pedido.codigo_oferta, pedido.estado_oferta) ||
+                                    !ofertaAutorizada(pedido.codigo_oferta, pedido.tipo_estado, pedido.estado_oferta,pedido.autorizacion, pedido.id_estado_autorizacion) ? true : null"
+                    (click)="!validarDato(pedido.tipo_estado, pedido.estado_oferta) && !validarEstado(pedido.codigo_oferta, pedido.estado_oferta) &&
+                                    ofertaAutorizada(pedido.codigo_oferta, pedido.tipo_estado, pedido.estado_oferta,pedido.autorizacion, pedido.id_estado_autorizacion) ? onEstadoOferta(pedido.codigo_oferta) : null">
+                    <i
                       class="fas fa-sync-alt mr-2 icono text-dark"
                       id="verificador"
                     ></i>
@@ -424,6 +442,7 @@
                 </div>
               </div>
             </td>
+
             <!--
               <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeEmpresa | uppercase }}</td>
               <td class="hover" (click)="viewRegister(i, pedido)" [hidden]="showDetailPanel">{{ pedido.nomeVendedor | uppercase }}</td> -->

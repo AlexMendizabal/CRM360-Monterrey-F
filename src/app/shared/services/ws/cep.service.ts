@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class CepService {
-  private readonly API = `${environment.URL_MTCORP}common/services/cep`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/common/services/cep`;
 
   constructor(protected http: HttpClient) {}
 

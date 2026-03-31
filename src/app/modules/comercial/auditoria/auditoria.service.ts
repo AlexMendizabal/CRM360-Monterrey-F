@@ -10,7 +10,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialAuditoriaService {
-  private readonly API = `${environment.URL_MTCORP}comercial/auditoria/enderecos-entrega`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/auditoria/enderecos-entrega`;
 
   constructor(protected http: HttpClient) {}
 
@@ -74,6 +74,6 @@ export class ComercialAuditoriaService {
   }
 
   getCliente(codCliente){
-    return this.http.get(`${environment.URL_MTCORP}comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
+    return this.http.get(`https://crm360.monterrey.com.bo/api/comercial/clientes/detalhes/${codCliente}`).pipe(take(1));
   }
 }

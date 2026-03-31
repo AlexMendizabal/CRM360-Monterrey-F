@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgModule, OnInit, Input  } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -35,6 +35,7 @@ export class PdfComponent implements OnInit {
   data: [];
   materiais: any[];
   pdfData: string;
+  DecUni: any;
 
   public onClose: Subject<boolean>;
 
@@ -75,41 +76,43 @@ export class PdfComponent implements OnInit {
 
   onDownlaod(){
     //this.loaderNavbar = true;
+    console.log('Data from Parent:', this.dataFromParent);
     this.pdfService.download(
       'contentToConvert',
-      `${this.dataFromParent.dadosVendedor[0].nombre_vendedor}${this.dataFromParent.dadosVendedor[0].apellido_vendedor}-OFERTA-${this.dataFromParent.pedido[0].codigo_oferta}`
+      `${this.dataFromParent.pedido[0].nombre_cliente}-OFERTA-${this.dataFromParent.pedido[0].codigo_oferta}`
     );
   }
   captureScreen(): void {
     const data = this.contentToConvert.nativeElement;
 
     // Utilizar html2canvas para capturar el contenido del div como una imagen
-    html2canvas(data).then(canvas => {
-      const imgWidth = 190; // Ancho de la imagen en el documento PDF
-      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Altura de la imagen en el documento PDF
+    html2canvas(data, { scale: 2 }).then(canvas => {
+      const imgWidth = 190; // Ancho de la imagen en mm (A4 - márgenes)
+      const pageHeight = 295; // Altura de la página A4 en mm
+      const margin = 10; // Márgen en mm
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let heightLeft = imgHeight;
 
-      // Crear un nuevo objeto jsPDF con margenes
-      const pdf = new jsPDF({
-        orientation: 'p',
-        unit: 'mm',
-        format: 'a4',
-        putOnlyUsedFonts: true,
-        compress: true,
-        floatPrecision: 16,
-        precision: 16,
-        userUnit: 16,
-        marginLeft: 10, // Margen izquierdo
-        marginRight: 10, // Margen derecho
-        marginTop: 10, // Margen superior
-        marginBottom: 10 // Margen inferior
-      });
-      const xOffset = 10; 
-      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, 10, imgWidth, imgHeight); // Añadir la imagen con márgenes
+      const contentDataURL = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      let position = margin; // Margen superior inicial
+
+      // Añadir la primera página
+      pdf.addImage(contentDataURL, 'PNG', margin, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight - margin;
+
+      // Añadir páginas adicionales si el contenido excede una página
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight + margin;
+        pdf.addPage();
+        pdf.addImage(contentDataURL, 'PNG', margin, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
 
       // Mandar a imprimir automáticamente
       pdf.autoPrint();
       const blob = pdf.output('bloburl'); // Obtener un Blob URL del documento PDF
-      window.open(blob, '_blank'); // Abrir una nueva ventana con el Blob URL para imprimir
+      window.open(blob, '_blank');
     });
   }
 }

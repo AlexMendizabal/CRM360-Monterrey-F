@@ -27,7 +27,7 @@ import { Subtitles } from './../../../../../shared/modules/subtitles/subtitles';
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
 import { ITecnologiaInformacaoItem } from './../../item/models/item';
 import { ITecnologiaInformacaoContrato } from './../models/contrato';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent } from 'ngx-bootstrap';
 import { XlsxService } from 'src/app/shared/modules/xlsx/xlsx.service';
 
 @Component({

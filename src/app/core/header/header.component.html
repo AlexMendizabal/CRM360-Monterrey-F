@@ -1,30 +1,16 @@
 <nav id="navbar" class="navbar fixed-top navbar-expand navbar-light">
   <li class="d-flex mr-2">
-    <label
-      class="conectividadStatus"
-      [ngClass]="{
-        'sap-checking': sapStatus === 'checking',
-        'sap-connected': sapStatus === 'connected',
-        'sap-disconnected': sapStatus === 'disconnected'
-      }">
-      <ng-container [ngSwitch]="sapStatus">
-        <ng-container *ngSwitchCase="'checking'">
-          <i class="fas fa-circle-notch fa-spin"></i> Verificando SAP...
-        </ng-container>
-        <ng-container *ngSwitchCase="'connected'">
-          <i class="fas fa-check-circle"></i> SAP: Conectado
-        </ng-container>
-        <ng-container *ngSwitchCase="'disconnected'">
-          <i class="fas fa-exclamation-circle"></i> SAP: Desconectado
-        </ng-container>
-      </ng-container>
-    </label>
+    <button id="verificador" class="conectividadStatus btn" style="background-color: red; color: white;"
+      (click)="onVerificarConectividad()">
+      SAP-Desconectado
+    </button>
   </li>
+
   <img [src]="srcLogoCliente" (error)="onLogoClienteError($event)" id="logo-manetoni" height="20"
     *ngIf="showLogoCliente">
-    <li class="d-flex mr-2">
-      <span class="my-auto version version">V. 1.0.92</span>
-    </li>
+  <li class="d-flex mr-2">
+    <span class="my-auto version version">V. 1.1.27</span>
+  </li>
   <ul class="navbar-nav ml-auto text-cente">
     <li id="spinner" [hidden]="!showLoader">
       <div class="spinner-border"></div>
@@ -48,8 +34,10 @@
           <li *ngIf="notificaciones && notificaciones.length === 0" class="empty-notification">
             <a class="text-dark" style="text-decoration: none;">No hay notificaciones</a>
           </li>
-          <li *ngIf="notificaciones.length > 0" class="read-all-btn text-center" style="background-color: #faf9f9; width: 100%;">
-            <button class="btn btn-link w-100 text-dark" (click)="leerNotificaciones()" style="text-decoration: none; border:none;">Leer todas</button>
+          <li *ngIf="notificaciones.length > 0" class="read-all-btn text-center"
+            style="background-color: #faf9f9; width: 100%;">
+            <button class="btn btn-link w-100 text-dark" (click)="leerNotificaciones()"
+              style="text-decoration: none; border:none;">Leer todas</button>
           </li>
         </ul>
       </div>

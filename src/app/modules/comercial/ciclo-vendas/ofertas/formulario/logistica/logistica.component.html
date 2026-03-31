@@ -1,0 +1,66 @@
+<form [formGroup]="form" autocomplete="off">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group row">
+        <div class="col-sm-3">
+          <label for="destino" class="header-label col-form-label">Destino</label>
+          <input type="text" value="Ship To" disabled>
+        </div>
+        <div class="col-sm-4">
+          <label for="destino" class="header-label col-form-label"></label>
+          <textarea class="form-control input-sm" id="nombreFactura" rows="3" cols="50" data-lt-tmp-id="lt-955980"
+            spellcheck="false" data-gramm="false" formControlName="destino">
+          </textarea>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-3">
+          <label for="destinarioFactura" class="header-label col-form-label">Destinatario de factura</label>
+          <input type="text" value="Bill to" disabled>
+        </div>
+        <div class="col-sm-4">
+          <label for="destino" class="header-label col-form-label"></label>
+          <textarea class="form-control input-sm" id="destinarioFactura" formControlName="destinarioFactura" rows="3" cols="50" data-lt-tmp-id="lt-955980"
+            spellcheck="false" data-gramm="false">
+                      </textarea>
+        </div>
+      </div>
+      <div class="form-group row my-2">
+        <label for="formaenvio" class="header-label col-sm-3 col-form-label font-weight-bold">Forma de envío</label>
+        <div class="col-sm-4">
+          <ng-select class="" formControlName="modoEntrega" [items]="modoEntregas" bindValue="id" bindLabel="name">
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="mercaderia" class="header-label col-sm-3 col-form-label">Despacho de Mercaderia</label>
+        <div class="col-sm-4">
+          <textarea class="form-control input-sm" id="despachoMercaderia" formControlName="despachoMercaderia" rows="3" cols="50" data-lt-tmp-id="lt-955980"
+            spellcheck="false" data-gramm="false"></textarea>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-md-6">
+      <div class="form-group row formGroup">
+        <label for="" class="header-label col-form-label col-sm-3">Centro Logistico: </label>
+        <ng-select class="col-sm-4" formControlName="centroLogisticoControl" id="orderBy"
+          (change)="onCentroLogisticoChange($event)" [items]="centrosLogisticos" bindLabel="NombreCentroLogistico"
+          bindValue="ID" placeholder="Selecione...">
+        </ng-select>
+      </div>
+      <div class="form-group row formGroup">
+        <label for="" class="header-label col-form-label col-sm-3">Fecha de Entrega: </label>
+        <input type="date" class="col-sm-4" formControlName="fechaEntrega" style="margin-left: 15px;">
+      </div>
+      <div class="form-group row formGroup">
+        <label for="" class="header-label col-form-label col-sm-3">Dirección Google Maps: </label>
+        <textarea class="form-control input-sm col-sm-4" style="margin-left: 15px;" id="despachoMercaderia" formControlName="cordenadas" rows="3" cols="50" data-lt-tmp-id="lt-955980"
+            spellcheck="false" data-gramm="false"></textarea>
+      </div>
+    </div>
+  </div>
+
+</form>

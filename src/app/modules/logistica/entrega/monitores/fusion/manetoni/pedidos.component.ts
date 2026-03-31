@@ -16,8 +16,7 @@ import { Subscription } from 'rxjs';
 
 // ngx
 import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent, BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 // models
 import { Breadcrumb } from 'src/app/shared/modules/breadcrumb/breadcrumb';
@@ -195,6 +194,7 @@ export class LogisticaEngregasMonitoresFusionManetoniPedidosComponent implements
             this.loading = false;
           }
 
+          console.log(_response)
         }
       )
   }

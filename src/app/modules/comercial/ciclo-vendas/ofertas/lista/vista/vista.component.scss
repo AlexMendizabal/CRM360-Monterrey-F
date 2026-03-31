@@ -1,0 +1,108 @@
+.custom-modal {
+  padding: 20px;
+  width: 100%;
+  max-width: 100%;
+  margin: auto;
+}
+
+.custom-modal table {
+  width: 100%;
+}
+
+.customer-info,
+.company-info {
+  margin-top: 4px;
+  margin-right: 5px;
+  border: 2px solid #000000;
+  padding: 10px;
+}
+
+.custinf-weight{
+  font-weight: bold;
+}
+
+.custom-modal-content {
+  margin: auto;
+  border: 2px solid black;
+  padding: 20px;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.datcotizacion-font{
+  font-size: 15px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.cuerpo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.monterrey-info{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+table tr {
+  height: 1px;
+}
+
+.wider-card {
+  width: 100%; /* Adjust this value as needed */
+}
+
+.table-container {
+  max-height: auto; /* Ajusta la altura según tus necesidades */
+  overflow-y: auto;
+}
+
+/*.card-bodyy {
+  padding: 20px; 
+}*/
+
+.multiline-input {
+  width: 100%; /* Ancho completo del input */
+  height: auto; /* Altura automática para ajustarse al contenido */
+  resize: none; /* Evitar que el usuario pueda redimensionar el input */
+  overflow: auto; /* Agrega barra de desplazamiento si es necesario */
+}
+
+/***/
+
+h5.t-1{
+  font-size: 14px!important;
+  font-weight: 700!important;
+  margin-bottom: 0 !important;
+}
+label{
+  margin-bottom: 1.5px!important;
+}
+input.form-control {
+  margin-bottom: 10px!important; 
+}
+img.img-logo{
+  width: 230px!important; 
+  height: auto!important; 
+  margin-bottom: 15px!important; 
+}
+small.numero{
+  font-weight: 600!important;
+  font-size: 22px!important;
+  margin-top: 15px!important;
+}
+.table thead th {
+  vertical-align: top!important;
+}

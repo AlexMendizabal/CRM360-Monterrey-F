@@ -12,12 +12,11 @@ import { ComercialCadastrosPropostasAssociacaoSituacoesPropostaService } from '.
 // Interfaces
 import { JsonResponse } from 'src/app/models/json-response';
 import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.service';
-
 @Injectable({
   providedIn: 'root',
 })
 export class ComercialCicloVendasAutorizacionesListaService {
-  private readonly APIAutorizacion = `${environment.URL_MTCORP}comercial/ciclo-vendas/autorizaciones`;
+  private readonly APIAutorizacion = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/autorizaciones`;
 
 
   private onChangeClienteCotacao = new BehaviorSubject([]);

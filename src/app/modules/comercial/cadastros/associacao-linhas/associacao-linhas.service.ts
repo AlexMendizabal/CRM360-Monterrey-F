@@ -17,7 +17,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCadastrosAssociacaoLinhasService {
-  private readonly API = `${environment.URL_MTCORP}comercial/emailMarketing/associacao`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/emailMarketing/associacao`;
 
   constructor(
     protected http: HttpClient,

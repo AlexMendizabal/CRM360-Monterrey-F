@@ -5,23 +5,23 @@
     <h4 class="mtc-title mb-0 my-auto">Cotización #{{ dataCotacao.id_oferta }} / Realizada con éxito</h4>
     <button class="btn btn-success" id="finalizar" type="submit" >Finalizar</button>
   </div>
-  <div class="modal-body py-5">
+  <div class="modal-body py-5" style="padding-top: 17px !important;">
     <div class="row">
       <div class="col">
         <div class="mtc-title">Resumen de Pedido</div>
-        <div class="my-auto">
+        <div class="my-auto" style="    margin-bottom: 20px !important;">
           <span class="mtc-title mb-0 mr-2">Cotización realizada para:</span>
           <span> {{ dataCotacao.nombre_cliente }} </span>
         </div>
 
         <custom-table [config]="tableConfig">
           <ng-template #thead let-thead>
-            <tr>
+            <tr class="">
               <th scope="col" width="10%" class="text-center">Código</th>
               <th scope="col" width="34%">Nombre</th>
               <th scope="col" width="12%" class="text-center">Peso Kg.</th>
               <th scope="col" width="12%" class="text-center">Cantidad.</th>
-              <th scope="col" width="12%" class="text-center">Descuento.</th>
+              <th scope="col" width="14%" class="text-center">Descuento.</th>
               <!-- <th scope="col" width="12%" class="text-center">Desc. Permitido.</th> -->
               <th scope="col" width="12%" class="text-center">USD.</th>
               <th scope="col" width="20%">Almacen</th>
@@ -29,7 +29,7 @@
           </ng-template>
           <ng-template #tbody let-tbody>
             <tr *ngFor="let material of dataCotacao.carrinho; let i = index">
-              <td width="10%" class="text-center">{{ material.codItemPedidoCliente | uppercase }}</td>
+              <td width="10%" class="text-center">{{ material.codigo_material | uppercase }}</td>
               <td width="34%" class="text-truncate">{{ material.nomeMaterial | uppercase }} </td>
               <td width="12%" class="text-center">{{ material.quantidade | number:'1.3-3' }} </td>
               <td width="12%" class="text-center"><span class="mr-2"> {{ material.qtdeItem }} </span>
@@ -41,12 +41,12 @@
               </td>
               <td width="12%" class="text-center" [ngStyle]="{'color': material.percentualDesc > material.descuento_permitido ? 'red' : 'green'}">{{ material.percentualDesc| number:'1.2-2' }} % </td>
               <!-- <td width="12%" class="text-center">{{ material.descuento_permitido| number:'1.2-2'  }} </td> -->
-              <td width="12%" class="text-center">{{ material.valorTotal| number:'1.2-2'  }}$ </td>
+              <td width="12%" class="text-center">{{ material.valorTotalBruto | number:'1.2-2'  }}$ </td>
               <td width="20%" class="text-truncate">{{ material.codDeposito | uppercase }}  </td>
             </tr>
             <tr>
               <td width="10%"></td>
-              <td width="34%" class="text-right">TOTAL</td>
+              <td width="34%" class="text-right" style="font-weight: 600;">TOTAL</td>
               <td width="12%" class="text-center"> {{ calcularTotais('quantidade') | number:'1.3-3' }} KG</td>
               <td width="12%" class="text-center"></td>
               <td width="12%" class="text-center"></td>

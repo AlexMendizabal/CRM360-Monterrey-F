@@ -4,8 +4,7 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsDatepickerConfig, BsModalRef, BsLocaleService } from 'ngx-bootstrap';
 //Angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit} from '@angular/core';
@@ -21,7 +20,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsTiposEtapaService } from '../services/tipos-etapa.service';
 //interfaces
 import { ILogisticaYmsTiposEtapa } from '../models/tipos-etapa';
-
 
 @Component({
   selector: 'logistica-yms-tipos-etapa-cadastro',

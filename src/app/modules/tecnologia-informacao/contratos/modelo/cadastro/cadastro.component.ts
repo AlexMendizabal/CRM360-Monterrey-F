@@ -4,7 +4,7 @@ import { ITecnologiaInformacaoModelo } from './../models/modelo';
 import { RouterService } from 'src/app/shared/services/core/router.service';
 import { TitleService } from 'src/app/shared/services/core/title.service';
 import { AtividadesService } from 'src/app/shared/services/requests/atividades.service';
-import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsLocaleService, BsDatepickerConfig } from 'ngx-bootstrap';
 import { finalize } from 'rxjs/operators';
 
 import { TecnologiaInformacaoCadastroModeloService } from '../services/modelo.service';

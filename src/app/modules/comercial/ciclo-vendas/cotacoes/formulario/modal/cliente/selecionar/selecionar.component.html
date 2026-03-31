@@ -26,10 +26,11 @@
           <label for="cdItem">Buscar por</label>
           <select
             class="form-control custom-select"
-            formControlName="buscarPor"
+            formControlName="buscarPor" (click)="updateInput()"
           >
-            <option value="MI_NM_CLIE" selected>Mi Cartera -> Codigo, Nombre</option>
-            <option value="NM_CLIE">Todos -> Codigo, Nombre</option>
+            <option value="COD_CLIE" selected>Código</option>
+            <option value="NM_CLIE">Nombre</option>
+            <option value="DOC_CLIE">Documento</option>
           </select>
         </div>
 
@@ -71,10 +72,11 @@
       </div>
     </form>
   </advanced-filter>
-  <custom-table *ngIf="!noClientes" class="text-center">
+  <custom-table *ngIf="!swClientes" class="text-center">
     <ng-template #thead let-thead>
       <tr>
         <th>Cód Cliente</th>
+        <th>NºDocumento</th>
         <th>Nombre de Fantasia</th>
         <!--  <th>Razon Social </th> -->
         <th></th>
@@ -83,6 +85,7 @@
     <ng-template #tbody let-tbody>
       <tr *ngFor="let cliente of clientes | slice : begin : end; let i = index">
         <td>{{ cliente.codigo_cliente }}</td>
+        <td>{{ cliente.numero_documento }}</td>
         <td>{{ cliente.nomeCliente | uppercase }}</td>
         <!-- <td>{{ cliente.razaoSocial }}</td> -->
         <td>

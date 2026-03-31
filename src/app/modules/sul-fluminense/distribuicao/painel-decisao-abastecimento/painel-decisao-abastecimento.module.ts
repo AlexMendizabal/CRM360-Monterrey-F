@@ -15,7 +15,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SortableModule } from 'ngx-bootstrap/sortable';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { CollapseModule } from 'ngx-bootstrap';
 
 // Counto
 import { CountoModule } from 'angular2-counto';

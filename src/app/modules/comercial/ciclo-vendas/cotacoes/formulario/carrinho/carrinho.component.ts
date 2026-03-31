@@ -40,6 +40,7 @@ import { ICarrinhoModel } from '../models/carrinho';
 import { ISimilaridadeModel } from '../models/similaridade';
 import { ICalculoModel } from '../models/calculo';
 import { IDescontoCarrinhoModel, IDescontoModel } from '../models/descontos';
+import { number } from 'ng-brazil/number/validator';
 
 @Component({
   selector: 'comercial-ciclo-vendas-cotacoes-formulario-carrinho',
@@ -47,8 +48,7 @@ import { IDescontoCarrinhoModel, IDescontoModel } from '../models/descontos';
   styleUrls: ['./carrinho.component.scss'],
 })
 export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
-  implements OnInit, OnDestroy
-{
+  implements OnInit, OnDestroy {
   private subscriptionSubmit: Subscription;
 
   @Input('appTitle') appTitle: string;
@@ -72,7 +72,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   @Output('carrinho') carrinho: EventEmitter<Object> = new EventEmitter();
 
   @Output() resetRequested = new EventEmitter<void>();
-  
+
   @Output() cantidadNoCeroEvent = new EventEmitter<boolean>();
   @Output('listaVacio') sWvacio: EventEmitter<boolean> =
     new EventEmitter<boolean>();
@@ -144,8 +144,10 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     valorTotalOri: 0,
     valorTotal: 0,
     valorTotalBruto: 0,
+    valorTotalBs: 0,
     valorProposta: 0,
     bruto: 0,
+    monedaLocal: 0
   };
 
   cardCounterConfig: Partial<CardCounterConfig> = {
@@ -160,9 +162,11 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   sWPesoTotal: boolean = false;
 
   descuento: number = 0;
-
+  monedaLocal: number;
+  valorTotalBs: number;
   canLoadRelacionados = false;
   materiaisRelacionados: number[];
+  totalDiscountPercent: number;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -191,7 +195,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     // this.checkPreviously();
   }
   /*  ngOnChanges(): void {
-   
+
   }
  */
   ngOnDestroy(): void {
@@ -229,17 +233,14 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       }
     );
   }
+materiaisSubject(): void {
+  this.materiaisSubscription =
+    this.formularioService.materiaisSubject.subscribe((response: any) => {
+      const materiais = this.formatMateriais(response);
+      this.onAddMaterial(materiais);
+    });
+}
 
-  materiaisSubject(): void {
-    this.materiaisSubscription =
-      this.formularioService.materiaisSubject.subscribe((response: any) => {
-        const materiais = this.formatMateriais(response);
-        /*         (materiais);
-         */ /*   ('materiales'); * */
-
-        this.onAddMaterial(materiais);
-      });
-  }
 
   limparCarrinhoSubject(): void {
     this.limparCarrinhoSubscription =
@@ -257,67 +258,12 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       (calculo: ICalculoModel) => {
         const formArray = this.form.controls.materiais as FormArray;
         const formGroup = formArray.controls[calculo.index] as FormGroup;
-
-        let qtdePecas: number;
-
-        if (calculo.tipoLancamento == 6) {
-          qtdePecas = 0;
-        } else {
-          qtdePecas = calculo.qtde;
-        }
-
-        if (
-          calculo.tipoCalculo == 2 ||
-          calculo.tipoCalculo == 4 ||
-          calculo.tipoCalculo == 5
-        ) {
+          console.log('datos q llegan carrito', calculo);
           formGroup.controls.quantidade.setValue(calculo.tonelada);
-          if (calculo.unidade == 'To' || calculo.unidade == 'Ton') {
-            formGroup.controls.quantidadeItem.setValue(calculo.tonelada);
-          } else {
-            formGroup.controls.quantidadeItem.setValue(calculo.qtde);
-          }
-          formGroup.controls.qtdeItem.setValue(calculo.qtde);
-          formGroup.controls.qtdePecas.setValue(qtdePecas);
-          formGroup.controls.medida1.setValue(calculo.medida);
-          formGroup.controls.valor.setValue(calculo.valorUnitario);
-          formGroup.controls.percentualIpi.setValue(calculo.aliquotaIpi);
-          formGroup.controls.valorIpi.setValue(calculo.valorIpi);
-          formGroup.controls.percentualIcms.setValue(calculo.aliquotaIcms);
-          formGroup.controls.valorIcms.setValue(calculo.valorIcms);
-          formGroup.controls.valorIcmsSt.setValue(calculo.valorIcmsSt);
-          formGroup.controls.valorTotalOri.setValue(
-            calculo.valorItem
-            //calculo.qtde * calculo.valorUnitario
-          );
-          formGroup.controls.nrPedidoCliente.setValue(calculo.nrPedidoCliente);
-          formGroup.controls.codItemPedidoCliente.setValue(
-            calculo.codItemPedidoCliente
-          );
-          formGroup.controls.codProdutoCliente.setValue(
-            calculo.codProdutoCliente
-          );
-          formGroup.controls.valorTotal.setValue(
-            calculo.valorTotal
-            //calculo.qtde * calculo.valorUnitario + calculo.valorIpi
-          );
-          formGroup.controls.valorBaseIcmsSt.setValue(calculo.valorBaseIcmsSt);
-          formGroup.controls.aliquotaReducaoIcms.setValue(
-            calculo.aliquotaReducaoIcms
-          );
-          formGroup.controls.nrPedidoCliente.setValue(calculo.nrPedidoCliente);
-          formGroup.controls.codItemPedidoCliente.setValue(
-            calculo.codItemPedidoCliente
-          );
-          formGroup.controls.codProdutoCliente.setValue(
-            calculo.codProdutoCliente
-          );
-        } else {
-          formGroup.controls.quantidade.setValue(calculo.tonelada);
-          formGroup.controls.quantidadeItem.setValue(calculo.tonelada);
+          formGroup.controls.quantidadeItem.setValue(calculo.cantidad);
           // @ts-ignore: Ignorar error TS2339
           formGroup.controls.qtdeItem.setValue(calculo.cantidad);
-          formGroup.controls.qtdePecas.setValue(qtdePecas);
+          formGroup.controls.qtdePecas.setValue(calculo.qtde);
           formGroup.controls.medida1.setValue(calculo.medida);
           formGroup.controls.valor.setValue(calculo.valorUnitario);
           formGroup.controls.percentualIpi.setValue(calculo.aliquotaIpi);
@@ -325,48 +271,36 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
           formGroup.controls.percentualIcms.setValue(calculo.aliquotaIcms);
           formGroup.controls.valorIcms.setValue(calculo.valorIcms);
           formGroup.controls.valorIcmsSt.setValue(calculo.valorIcmsSt);
-          formGroup.controls.valorTotalOri.setValue(
-            calculo.valorItem
-            //calculo.tonelada * calculo.valorUnitario
-          );
-          formGroup.controls.valorTotal.setValue(
-            calculo.valorTotal
-            //calculo.tonelada * calculo.valorUnitario + calculo.valorIpi
-          );
+          formGroup.controls.valorTotalOri.setValue(calculo.valorItem);
+          formGroup.controls.percentualDesc.setValue(calculo.descuento);
+          this.descuento_permitido = calculo.descuento_permitido;
+          formGroup.get('descuento_permitido').setValue(calculo.descuento_permitido);
+          formGroup.controls.descuento_permitido.setValue(calculo.descuento_permitido);
+
+          formGroup.controls.valorTotal.setValue(calculo.valorTotal);
           formGroup.controls.valorBaseIcmsSt.setValue(calculo.valorBaseIcmsSt);
-          formGroup.controls.aliquotaReducaoIcms.setValue(
-            calculo.aliquotaReducaoIcms
-          );
+          formGroup.controls.aliquotaReducaoIcms.setValue(calculo.aliquotaReducaoIcms);
           formGroup.controls.nrPedidoCliente.setValue(calculo.nrPedidoCliente);
-          formGroup.controls.codItemPedidoCliente.setValue(
-            calculo.codItemPedidoCliente
-          );
-          formGroup.controls.codProdutoCliente.setValue(
-            calculo.codProdutoCliente
-          );
+          formGroup.controls.codItemPedidoCliente.setValue(calculo.codItemPedidoCliente);
+          formGroup.controls.codProdutoCliente.setValue(calculo.codProdutoCliente);
           // @ts-ignore: Ignorar error TS2339
           formGroup.controls.valorTotalBruto.setValue(calculo.valorTotalBruto);
-          formGroup.controls.cantidad.setValue(2);
-          // @ts-ignore: Ignorar error TS2339
+          formGroup.controls.valorTotalBs.setValue(calculo.valorTotalBs);
+          formGroup.controls.cantidad.setValue(calculo.cantidad);
           formGroup.controls.id_presentacion.setValue(calculo.id_presentacion);
-        }
-
-        this.onCalcularTotais(true);
+          this.onCalcularTotais(true);
       }
     );
   }
+
 
   descontoSubject(): void {
     this.descontoSubscription =
       this.formularioService.descontoSubject.subscribe(
         (desconto: IDescontoModel) => {
           const formArray = this.form.controls.materiais as FormArray;
-          /* ('descuento')
-        (desconto) */
-
-          /*  console.log(desconto)
-         desconto.aplicarDesconto = 'percentual'; */
-
+          console.log('descuento', desconto)
+          /* desconto.aplicarDesconto = 'percentual'; */
           if (desconto.aplicarDesconto === 'carrinho') {
             if (desconto.desconto === 0) {
               this.resetDescontoCarrinho();
@@ -376,74 +310,64 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
                 desconto: desconto.desconto,
               };
             }
-          } else if (desconto.aplicarDesconto === 'material') {
+          }
+
+        /*
+          if (desconto.aplicarDesconto === 'material') {
+            let valorDesc = 0;
+            let valorDesbs = 0;
             const formGroup = formArray.controls[desconto.index] as FormGroup;
             const valor = formGroup.value.valorTotalBruto;
-            let valorDesc = 0;
 
             if (desconto.tipo === 'valor') {
               valorDesc = desconto.desconto;
-              formGroup.controls.percentualDesc.setValue(
-                (100 * desconto.desconto) / valor
-              );
-              /* (formGroup.controls.percentualDesc) */
-            } else if (desconto.tipo === 'percentual') {
-              valorDesc = valor - ((100 - desconto.desconto) / 100) * valor;
-              /*  console.log(valorDesc);
-            console.log(valor); */
+              const valordescuento = parseFloat(((100 * desconto.desconto) / valor).toFixed(4));
+              formGroup.controls.percentualDesc.setValue(valordescuento);
+
+            }
+
+            if (desconto.tipo === 'percentual') {
+              const valordesc2 = valor * (desconto.desconto / 100);
+              valorDesc = parseFloat((valordesc2).toFixed(2));
 
               formGroup.controls.percentualDesc.setValue(desconto.desconto);
             }
 
-            /* const quantidade = formGroup.value.quantidade; */
-            const valorTotal = valor - valorDesc;
+            const valordoalr = parseFloat((valor - valorDesc).toFixed(2));
+            const valorTotal = Math.round(valordoalr * 100) / 100;
+            const valorTotalBs =  parseFloat((valordoalr * 6.96).toFixed(2));
 
             formGroup.controls.tipoDesc.setValue(desconto.tipo);
             formGroup.controls.valorDesc.setValue(valorDesc);
             formGroup.controls.valorTotal.setValue(valorTotal);
+            formGroup.controls.valorTotalBs.setValue(valorTotalBs);
             // @ts-ignore: Ignorar error TS2339
-            formGroup.controls.descuento_permitido.setValue(
-              desconto.descuento_permitido
-            );
-            /* formGroup.controls.descuento_permitido.setValue(desconto.descuento_permitido); */
-            /*  ('form group');
- 
-           (formGroup); */
-            /* if (formGroup.controls.percentualDesc > formGroup.controls.descuento_permitido) {
-            formGroup.controls.swDescuentoPermitido = true;
+            formGroup.controls.descuento_permitido.setValue(desconto.descuento_permitido);
+
           } */
-            /*  this.descuento_permitido = desconto.descuento_permitido;
-           /* ('descuentos');
-           (desconto.desconto)
-           (desconto.descuento_permitido) */
-            /*   this.swDescuentoPermitido = false;
-            if (desconto.desconto > this.descuento_permitido) {
-              this.swDescuentoPermitido = true;
-            } */
-          }
           this.onCalcularTotais(true);
         }
       );
   }
 
   descuentoTotal(): number {
-    let totalDiscountPercent = 0;
+    this.totalDiscountPercent = 0;
     const materiais = this.form.get('materiais').value;
     materiais.forEach((material) => {
-      totalDiscountPercent += material.percentualDesc;
+      this.totalDiscountPercent += material.percentualDesc;
+      console.log('Material percentualDesc:', material.percentualDesc);
+      console.log('Total Discount Percent:', this.totalDiscountPercent);
     });
-    return totalDiscountPercent;
+    return this.totalDiscountPercent;
   }
 
   carrinhoEmitter(): void {
     this.hasError.emit(false);
-
     this.carrinho.emit({
       materiais: this.form.value.materiais,
       total: this.total,
     });
-
-    /*  (this.form.value.materiais) */
+    console.log("total 2", this.total);
   }
 
   setFormBuilder(): void {
@@ -465,121 +389,124 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   }
 
   onAddMaterial(materiais: Array<ICarrinhoModel>): void {
-   
+    console.log('materiales aqui estan', materiais)
+
     if (materiais.length > 0) {
       let hasError = false,
         qtdeAdicionados = 0;
-        this.almacenSeleccionado = materiais[0]['id_almacen_carrito'];
-
-        
+      this.almacenSeleccionado = materiais[0]['id_almacen_carrito'];
 
       for (let i = 0; i < materiais.length; i++) {
-       
-        if ( this.almacenSeleccionado === materiais[i]['id_almacen_carrito'] && hasError === false ) 
-        {
-          let quantidadeItem: number;
-          if (materiais[i].unidade == 'To' || materiais[i].unidade == 'Ton') {
-            quantidadeItem = materiais[i].quantidade;
-          } else {
-            quantidadeItem = materiais[i].qtdeItem;
-          }
-          /* Aqui para cargar al modal */
-          /*     ('crear');
-    
-              (materiais[i]); */
-          // if (this.checkMaterialExists(materiais[i]) === false) {
-          /* ('datos')
-          (materiais[i]) */
-          /* ('materiales');
-          () */
-          /*  console.log(materiais) */
 
-          this.materiais.push(
-            this.formBuilder.group({
-              codCotacao: [materiais[i].codCotacao],
-              codDeposito: [materiais[i].codDeposito],
-              // @ts-ignore: Ignorar error TS2339
-              id_almacen_carrito: [materiais[i].id_almacen_carrito],
-              codEmpresa: [materiais[i].codEmpresa],
-              codMaterial: [materiais[i].codMaterial],
-              idReservado: [materiais[i].idReservado],
-              fatorMultiplo: [materiais[i].fatorMultiplo],
-              materialAssociado: [materiais[i].materialAssociado],
-              medida1: [materiais[i].medida1],
-              medida2: [materiais[i].medida2],
-              nomeDeposito: [materiais[i].nomeDeposito],
-              nomeEmpresa: [materiais[i].nomeEmpresa],
-              nomeMaterial: [materiais[i].nomeMaterial],
-              percentualDesc: [materiais[i].percentualDesc],
-              percentualIcms: [materiais[i].percentualIcms],
-              percentualIpi: [materiais[i].percentualIpi],
-              // @ts-ignore: Ignorar error TS2339
-              pesoEspecifico: [materiais[i].peso],
-              quantidade: [materiais[i].quantidade, [Validators.required]],
-              quantidadeItem: [quantidadeItem],
-              qtdeItem: [ materiais[i].qtdeItem],
-              qtdePecas: [materiais[i].qtdePecas],
-              unidade: [materiais[i].unidade],
-              // @ts-ignore: Ignorar error TS2339
-              id_unidad: [materiais[i].id_unidad],
+        let quantidadeItem: number;
+        let tipo_cliente: number;
 
-              tipoDesc: [materiais[i].tipoDesc],
-              valor: [materiais[i].valor, [Validators.required]],
-              valorDesc: [materiais[i].valorDesc],
-              valorIcms: [materiais[i].valorIcms, [Validators.required]],
-              valorIcmsSt: [
-                materiais[i].valorIcmsSt != null ? materiais[i].valorIcmsSt : 0,
-                [Validators.required],
-              ],
-              valorIpi: [materiais[i].valorIpi, [Validators.required]],
-              valorTotal: [materiais[i].valorTotal, [Validators.required]],
-              // @ts-ignore: Ignorar error TS2339
-              valorTotalBruto: [materiais[i].valorTotalBruto],
-              valorTotalOri: [materiais[i].valorTotalOri],
-              valorMaterialBarra: [materiais[i].valorMaterialBarra],
-              valorMaterialContrato: [materiais[i].valorMaterialContrato],
-              valorMaterialPreco: [materiais[i].valorMaterialPreco],
-              valorServicoApsContrato: [materiais[i].valorServicoApsContrato],
-              valorServicoContrato: [materiais[i].valorServicoContrato],
-              valorUnit: [materiais[i].valorUnit],
-              valorBaseIcmsSt: [materiais[i].valorBaseIcmsSt],
-              aliquotaReducaoIcms: [materiais[i].aliquotaReducaoIcms],
-              controladoPorLote: [materiais[i].controladoPorLote],
-              sequenciaLote: [materiais[i].sequenciaLote],
-              loteFabricacao: [materiais[i].loteFabricacao],
-              estoqueLote: [materiais[i].estoqueLote],
-              nrPedidoCliente: [materiais[i].nrPedidoCliente],
-              codItemPedidoCliente: [materiais[i].codItemPedidoCliente],
-              codProdutoCliente: [materiais[i].codProdutoCliente],
-              // @ts-ignore: Ignorar error TS2339
-              precio: [materiais[i].precio],
-              // @ts-ignore: Ignorar error TS2339
-              codigo_material: [materiais[i].codigo_material],
-              // @ts-ignore: Ignorar error TS2339
-              descuento: [materiais[i].descuento],
-              descuento_permitido: [this.descuento_permitido],
-              // @ts-ignore: Ignorar error TS2339
-              id_presentacion: [materiais[i].id_presentacion_material],
-              cantidad: [materiais[i].qtdeItem],
-              id_departamento: [this.id_departamento],
-              id_tipo_cliente: [this.id_tipo_cliente],
-              /*  id_presentacion: form[] */
-            })
-          );
-
-          this.setSelectedCodEmpresa(materiais[i].codEmpresa);
-          qtdeAdicionados++;
-          // }
+        if (materiais[i].unidade == 'To' || materiais[i].unidade == 'Ton') {
+          quantidadeItem = materiais[i].quantidade;
         } else {
-          hasError = true;
+          quantidadeItem = materiais[i].qtdeItem;
         }
+
+        if (materiais[i].id_tipo_cliente != null) {
+          tipo_cliente = materiais[i].id_tipo_cliente;
+          console.log('tipo_cliente s', tipo_cliente );
+        }
+        else {
+          tipo_cliente = this.id_tipo_cliente;
+        }
+
+        if (materiais[i].descuento_permitido > 0) {
+          this.descuento_permitido = materiais[i].descuento_permitido;
+        }
+
+        this.materiais.push(
+          this.formBuilder.group({
+            codCotacao: [materiais[i].codCotacao],
+            codDeposito: [materiais[i].codDeposito],
+            // @ts-ignore: Ignorar error TS2339
+            id_almacen_carrito: [materiais[i].id_almacen_carrito],
+            id_lista: [materiais[i].id_lista],
+            codEmpresa: [materiais[i].codEmpresa],
+            codMaterial: [materiais[i].codMaterial],
+            idReservado: [materiais[i].idReservado],
+            fatorMultiplo: [materiais[i].fatorMultiplo],
+            materialAssociado: [materiais[i].materialAssociado],
+            medida1: [materiais[i].medida1],
+            medida2: [materiais[i].medida2],
+            nomeDeposito: [materiais[i].nomeDeposito],
+            nomeEmpresa: [materiais[i].nomeEmpresa],
+            nomeMaterial: [materiais[i].nomeMaterial],
+            percentualDesc: [materiais[i].percentualDesc],
+            percentualIcms: [materiais[i].percentualIcms],
+            percentualIpi: [materiais[i].percentualIpi],
+            // @ts-ignore: Ignorar error TS2339
+            pesoEspecifico: [materiais[i].pesoEspecifico],
+            quantidade: [materiais[i].quantidade, [Validators.required]],
+            quantidadeItem: [materiais[i].qtdeItem],
+            qtdeItem: [materiais[i].qtdeItem],
+            qtdePecas: [materiais[i].qtdePecas],
+            unidade: [materiais[i].unidade],
+            // @ts-ignore: Ignorar error TS2339
+            id_unidad: [materiais[i].id_unidad],
+
+            tipoDesc: [materiais[i].tipoDesc],
+            valor: [materiais[i].valor, [Validators.required]],
+            valorDesc: [materiais[i].valorDesc],
+            valorIcms: [materiais[i].valorIcms, [Validators.required]],
+            valorIcmsSt: [
+              materiais[i].valorIcmsSt != null ? materiais[i].valorIcmsSt : 0,
+              [Validators.required],
+            ],
+            valorIpi: [materiais[i].valorIpi, [Validators.required]],
+            valorTotal: [materiais[i].valorTotal, [Validators.required]],
+            valorTotalBs: [materiais[i].valorTotalBs, [Validators.required]],
+            // @ts-ignore: Ignorar error TS2339
+            valorTotalBruto: [materiais[i].valorTotalBruto],
+            valorTotalOri: [materiais[i].valorTotalOri],
+            valorMaterialBarra: [materiais[i].valorMaterialBarra],
+            valorMaterialContrato: [materiais[i].valorMaterialContrato],
+            valorMaterialPreco: [materiais[i].valorMaterialPreco],
+            valorServicoApsContrato: [materiais[i].valorServicoApsContrato],
+            valorServicoContrato: [materiais[i].valorServicoContrato],
+            valorUnit: [materiais[i].valorUnit],
+            valorBaseIcmsSt: [materiais[i].valorBaseIcmsSt],
+            aliquotaReducaoIcms: [materiais[i].aliquotaReducaoIcms],
+            controladoPorLote: [materiais[i].controladoPorLote],
+            sequenciaLote: [materiais[i].sequenciaLote],
+            loteFabricacao: [materiais[i].loteFabricacao],
+            estoqueLote: [materiais[i].estoqueLote],
+            nrPedidoCliente: [materiais[i].nrPedidoCliente],
+            codItemPedidoCliente: [materiais[i].codItemPedidoCliente],
+            codProdutoCliente: [materiais[i].codProdutoCliente],
+            // @ts-ignore: Ignorar error TS2339
+            precio: [materiais[i].precio],
+            // @ts-ignore: Ignorar error TS2339
+            codigo_material: [materiais[i].codigo_material],
+            // @ts-ignore: Ignorar error TS2339
+            descuento: [materiais[i].descuento],
+            descuento_permitido: [materiais[i].descuento_permitido],
+            // @ts-ignore: Ignorar error TS2339
+            id_presentacion: [materiais[i].id_presentacion_material],
+            cantidad: [materiais[i].qtdeItem],
+            id_departamento: [this.id_departamento],
+            id_tipo_cliente: [tipo_cliente]
+            /*  id_presentacion: form[] */
+          })
+        );
+        this.setSelectedCodEmpresa(materiais[i].codEmpresa);
+        qtdeAdicionados++;
+        // }
+        /* } else {
+          hasError = true;
+        } */
       }
 
-      if (hasError === true) {
-        this.pnotifyService.notice(
-          'Por favor agregue materiales del mismo almacén.'
-        );
-      }
+      /*  if (hasError === true) {
+         this.pnotifyService.notice(
+           'Por favor agregue materiales del mismo almacén.'
+         );
+       } */
+      console.log('hola en', this.almacenSeleccionado, materiais[0]['id_almacen_carrito'], qtdeAdicionados++);
       if (qtdeAdicionados > 0) {
         this.setLocalStorage(this.form.value.materiais);
         this.onCalcularTotais(true);
@@ -625,7 +552,6 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   }
 
   onCalcMaterial(index: number, material: ICarrinhoModel): void {
-    /* (material) */
     this.calculoService.showModal(
       index,
       material,
@@ -689,16 +615,14 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       cantidad: material.qtdeItem,
       id_material: material.codMaterial,
       // @ts-ignore: Ignorar error TS2339
-      id_departamento: material.id_departamento,
+      deposito: material.codDeposito,
     };
 
     this.cotacoesService.descuentoCliente(params).subscribe(
       (response: JsonResponse) => {
         // @ts-ignore: Ignorar error TS2339
         if (response.responseCode == 200) {
-          /* (response); */
-          // @ts-ignore: Ignorar error TS2339
-          this.descuento = response.result.descuento;
+          this.descuento = response.result;
           this.descuentoModal(index, material, this.descuento);
         } else {
           this.pnotifyService.error();
@@ -767,7 +691,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
   }
   limpiarCarrito(): void {
     const materiais = this.form.get('materiais') as FormArray;
-    materiais.clear();
+    // materiais.clear();
   }
 
   onLimparCarrinho(): void {
@@ -795,6 +719,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         .subscribe(
           (response: JsonResponse) => {
             if (response.success === true) {
+              console.log('eliminar');
 
               this.materiais.removeAt(index);
 
@@ -803,9 +728,9 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
 
               if (this.form.value.materiais.length === 0) {
                 this.setSelectedCodEmpresa(null);
-               
+
               }
-            
+
             } else {
               this.pnotifyService.error();
             }
@@ -835,7 +760,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
                 this.sWvacio.emit(true);
               } else {
                 this.sWvacio.emit(false);
-              } 
+              }
             } else {
               this.pnotifyService.error();
             }
@@ -884,9 +809,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     return _params;
   }
 
-  formatMateriais(
-    data: Array<IMateriaisModel & ISimilaridadeModel>
-  ): Array<ICarrinhoModel> {
+  formatMateriais(data: Array<IMateriaisModel & ISimilaridadeModel>): Array<ICarrinhoModel> {
     let materiais = [];
     /*  ('data')
      (data); */
@@ -899,6 +822,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         codDeposito: data[index].nombre_almacen,
         // @ts-ignore: Ignorar error TS2339
         id_almacen_carrito: data[index].id_almacen,
+        id_lista: data[index].lista_precio,
         codEmpresa: data[index].codEmpresa,
         // @ts-ignore: Ignorar error TS2339
         codMaterial: data[index].id_material,
@@ -931,6 +855,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         valorIcmsSt: 0,
         valorIpi: 0,
         valorTotal: 0,
+        valorTotalBs: 0,
         valorTotalBruto: 0,
         valorTotalOri: 0,
         valorMaterialBarra: data[index].valorMaterialBarra,
@@ -948,7 +873,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         // @ts-ignore: Ignorar error TS2339
         codigo_material: data[index].codigo_material,
         // @ts-ignore: Ignorar error TS2339
-        peso: data[index].peso,
+        peso: data[index].pesoEspecifico,
         // @ts-ignore: Ignorar error TS2339
         descuento: data[index].descuento,
         // @ts-ignore: Ignorar error TS2339
@@ -972,7 +897,7 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       const materiais = JSON.parse(atob(_localStorage));
 
       if (
-        materiais.length > 0 &&
+        materiais.length > 0 && this.valorTotalBs,
         this.idReservado !== null &&
         this.idReservado == materiais[0].idReservado
       ) {
@@ -1029,8 +954,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     this.total.valorDescCarrinho = 0;
     this.total.valorTotalOri = 0;
     this.total.valorTotal = 0;
+    this.total.valorTotalBs = 0;
     this.total.valorProposta = 0;
-    // @ts-ignore: Ignorar error TS2339
     this.total.monedaLocal = 0;
     this.total.bruto = 0;
     // @ts-ignore: Ignorar error TS2339
@@ -1039,13 +964,10 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
     this.total.impuesto = 0;
 
     if (materiais.length > 0) {
-      /*  ('aqui_material')
-       */
 
-      /* (materiais) */
       for (let index = 0; index < materiais.length; index++) {
         this.total.quantidade += materiais[index].quantidade;
-        this.total.qtdeItem += materiais[index].qtdeItem;
+        this.total.qtdeItem += parseFloat(Number(materiais[index].qtdeItem).toFixed(2));
         this.total.qtdePecas += materiais[index].qtdePecas;
         this.total.valor += materiais[index].valor;
         this.total.valorIcms += materiais[index].valorIcms;
@@ -1057,51 +979,36 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         this.total.bruto += materiais[index].valorTotalBruto;
         // @ts-ignore: Ignorar error TS2339
         this.total.impuesto = this.total.valorTotal * 0.13;
+        this.total.monedaLocal += materiais[index].valorTotalBs;
       }
-
-      /* (this.total.bruto); */
-
       if (this.descontoCarrinho.tipo !== null) {
         if (this.descontoCarrinho.tipo === 'valor') {
           this.total.valorDescCarrinho =
             this.total.valorDescMaterial - this.descontoCarrinho.desconto;
 
-          this.total.valorProposta =
-            this.total.valorTotal +
-            // this.total.valorIpi -
-            this.total.valorDescCarrinho;
+          this.total.valorProposta = this.total.bruto;
           // @ts-ignore: Ignorar error TS2339
-          this.total.monedaLocal = (this.total.valorProposta * 6.96).toFixed(2);
+          /* this.total.monedaLocal = this.total.valorProposta * 6.96; */
         } else if (this.descontoCarrinho.tipo === 'percentual') {
-          this.total.valorTotal =
-            ((100 - this.descontoCarrinho.desconto) / 100) *
-            this.total.valorTotal;
-          this.total.valorDescCarrinho =
-            /*  this.total.valorDescMaterial +
-             (this.total.valorTotalOri - this.total.valorTotal); */
-
-            this.total.valorProposta =
-              this.total.valorTotal +
-              // this.total.valorIpi -
-              this.total.valorDescCarrinho;
+          this.total.valorTotal = this.total.bruto;
+          /*  this.total.valorDescMaterial +
+                    (this.total.valorTotalOri - this.total.valorTotal); */
+          // this.total.valorIpi -
+          this.total.valorDescCarrinho = this.total.bruto;
           // @ts-ignore: Ignorar error TS2339
-          this.total.monedaLocal = (this.total.valorProposta * 6.96).toFixed(2);
+          /*  this.total.monedaLocal = this.total.valorProposta * 6.96; */
         } else {
           this.total.valorDescCarrinho = this.total.valorDescMaterial;
-
-          this.total.valorProposta = this.total.valorTotal;
+          this.total.valorProposta = this.total.bruto;
           // @ts-ignore: Ignorar error TS2339
-          this.total.monedaLocal = (this.total.valorProposta * 6.96).toFixed(2);
-
+          /* this.total.monedaLocal = this.total.valorProposta * 6.96; */
           // + this.total.valorIpi
         }
       } else {
         this.total.valorDescCarrinho = this.total.valorDescMaterial;
-
-        this.total.valorProposta = this.total.valorTotal;
+        this.total.valorProposta = this.total.bruto;
         // @ts-ignore: Ignorar error TS2339
-        this.total.monedaLocal = (this.total.valorProposta * 6.96).toFixed(2);
-
+        /*  this.total.monedaLocal = this.total.valorProposta * 6.96; */
         /* console.log(this.total) */
       }
       if (this.total.valorTotal >= 1000) {
@@ -1109,7 +1016,6 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
       } else {
         this.swDescuentoPermitido = false;
       }
-
       this.setLocalStorage(this.form.value.materiais);
     }
 
@@ -1190,7 +1096,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         size = 3;
         break;
       case 'nomeMaterial':
-        size = 18;
+        /* size = 18; */
+        size = 17;
         break;
       case 'quantidade':
         size = 8;
@@ -1199,7 +1106,8 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         size = 8;
         break;
       case 'valor':
-        size = 8;
+       /*  size = 8; */
+        size = 9;
         break;
       case 'valorIcms':
         size = 8;
@@ -1208,10 +1116,11 @@ export class ComercialCicloVendasCotacoesFormularioCarrinhoComponent
         size = 8;
         break;
       case 'valorDesc':
-        size = 8;
+        /* size = 8; */
+        size = 10;
         break;
       case 'valorTotal':
-        size = 8;
+        size = 8 + 1;
         break;
       case 'nomeDeposito':
         size = 9;

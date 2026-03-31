@@ -33,7 +33,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
 
   sendCotacao(dataCotacao: any): void {
     this.loaderNavbar.emit(true);
-
+    console.log ("aca datos:", dataCotacao);
     this.cotacoesService
       .postCotacao(dataCotacao)
       .pipe(
@@ -72,6 +72,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
 
   sendCotizacion(dataCotacao: any): void{
     this.loaderNavbar.emit(true);
+    console.log("al final: ",dataCotacao);
     this.cotacoesService
       .postCotizacion(dataCotacao)
       .pipe(
@@ -86,6 +87,7 @@ export class ComercialCicloVendasCotacoesFormularioModalFinalizacaoService {
           if (response.success == true) {
          /*     dataCotacao.carrinho = [];
             dataCotacao.carrinho = response.data; */
+            console.log('datos del post oferta', response);
             dataCotacao['id_oferta'] = response['data'];
             this.showModal(
               ComercialCicloVendasCotacoesFormularioModalFinalizacaoFinalizacion,

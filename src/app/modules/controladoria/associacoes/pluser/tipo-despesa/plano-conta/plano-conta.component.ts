@@ -5,7 +5,7 @@ import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 import { DetailPanelService } from 'src/app/shared/templates/detail-panel/detal-panel.service';
 import { ControladoriaAssociacoesPluserTipoDespesaService } from '../services/tipo-despesa.service';
 
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { PageChangedEvent } from 'ngx-bootstrap';
 import { finalize } from 'rxjs/operators';
 
 import { IControladoriaAssociacoesPluserTipoDespesaPlanoContaAssociacao } from '../models/associacao';

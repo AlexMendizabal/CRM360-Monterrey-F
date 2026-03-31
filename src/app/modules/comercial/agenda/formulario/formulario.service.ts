@@ -16,8 +16,8 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialAgendaFormularioService {
-  private readonly API = `${environment.URL_MTCORP}comercial/agenda/formulario`;
-  private readonly API2 = `${environment.URL_MTCORP}comercial`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/agenda/formulario`;
+  private readonly API2 = `https://crm360.monterrey.com.bo/api/comercial`;
 
   constructor(
     protected http: HttpClient,

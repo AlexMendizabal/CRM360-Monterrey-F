@@ -7,9 +7,11 @@ import { NotFoundModule } from 'src/app/core/not-found/not-found.module';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
 import { TemplatesModule } from 'src/app/shared/templates/templates.module';
 
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import {
+  TooltipModule,
+  PaginationModule,
+  BsDatepickerModule
+} from 'ngx-bootstrap';
 
 import { SulFluminenseEntradaMateriaisRoutingModule } from './entrada-materiais-routing.module';
 import { SulFluminenseEntradaMateriaisComponent } from './entrada-materiais.component';

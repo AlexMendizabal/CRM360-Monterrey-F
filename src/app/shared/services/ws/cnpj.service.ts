@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class CnpjService {
-  private readonly API = `${environment.URL_MTCORP}common/services/cnpj`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/common/services/cnpj`;
 
   constructor(protected http: HttpClient) {}
 

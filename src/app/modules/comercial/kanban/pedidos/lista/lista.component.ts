@@ -277,6 +277,7 @@ export class ComercialKanbanPedidosListaComponent implements OnInit {
       )
       .subscribe({
         next: (response: any) => {
+          console.log(response);
           if (
             response[0].hasOwnProperty('success') &&
             response[0].success === true

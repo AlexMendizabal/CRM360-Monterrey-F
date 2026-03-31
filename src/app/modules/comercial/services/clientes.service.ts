@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject} from 'rxjs';
 import { take, retry, tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
@@ -12,10 +12,12 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialClientesService {
-  private readonly API = `${environment.URL_MTCORP}comercial/clientes`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/clientes`;
   BASE_URL: any;
 
   constructor(protected http: HttpClient) {}
+
+  public dataChange: Subject<any> = new Subject<any>();
 
   getStatus(): Observable<Object> {
     return this.http.get(`${this.API}/pesquisa/status`).pipe(take(1), retry(2));
@@ -39,7 +41,7 @@ export class ComercialClientesService {
       .pipe(take(1), retry(2));
   }
   getTipoPersona() {
-    return this.http.get(`${this.API}/tipo_persona/`).pipe(take(1));
+    return this.http.get(`${this.API}/tipo_persona`).pipe(take(1));
   }
 
   getVendedorCiudad(id_vendedor): Observable<Object> {
@@ -67,11 +69,13 @@ export class ComercialClientesService {
       .pipe(take(1), retry(2));
   }
   sapUpdateClient(codigo_cliente: number, data: any): Observable<Object> {
+    console.log('update Cliente:', data);
     return this.http
       .post(`${this.API}/pesquisa/updatesap`, data)
       .pipe(take(1), retry(2));
   }
   sapUpdateContacto(codigo_cliente: number, data: any): Observable<Object> {
+    console.log('update Contacto:', data);
     return this.http
       .post(`${this.API}/pesquisa/updatesapcontacto`, data)
       .pipe(take(1), retry(2));
@@ -85,6 +89,9 @@ export class ComercialClientesService {
 
   getTipoClientes() {
     return this.http.get(`${this.API}/tipo_cliente`).pipe(take(1));
+  }
+  obtenerTiposDocumentos() {
+    return this.http.get(`${this.API}/tipo_documento`).pipe(take(1));
   }
 
   getExisteCpfCnpj(
@@ -313,6 +320,6 @@ export class ComercialClientesService {
       .get(`${this.API}/obtenerHistorial/${idCliente}`)
       .pipe(take(1), retry(2));
   }
-  
-  
+
+
 }

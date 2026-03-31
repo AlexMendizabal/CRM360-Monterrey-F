@@ -1,0 +1,209 @@
+<div class="modal-header">
+    <h5 class="modal-title">Datos Maestros de Artículo</h5>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+</div>
+<div class="modal-body">
+    <!-- Informacion -->
+    <div class="row">
+        <div class="col-md-6" [formGroup]="Formulario1">
+            <!-- Informacion del Producto -->
+            <h5 class="mb-3 form-tittle">Información del Producto</h5>
+            <div class="form-group row">
+                <label for="nombreFactura" class="header-label col-sm-5 col-form-label">Número de
+                    artículo</label>
+                <div class="col-sm-6">
+                    <div class="row p-0 m-0">
+                        <!-- <input type="text" class="form-control input-sm col-sm-6" id="numeroArticulo" value="Manual"
+                            disabled> -->
+                        <input type="text" class="form-control input-sm col-sm-6" formControlName="numeroArticulo"
+                            disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="descripcion" class="header-label col-sm-5 col-form-label">Descripción</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control input-sm" id="descripcion" formControlName="descripcion">
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <label for="tipoContacto" class="header-label col-sm-5 col-form-label">Nombre
+                    extranjero</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control input-sm" id="nombreExtranjero">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="condicionesPago" class="header-label col-sm-5 col-form-label">Clase de
+                    artículo</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control input-sm col-sm-7" formControlName="clase" disabled>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="familiaArticulos" class="header-label col-sm-5 col-form-label">Familia de
+                    artículos</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control input-sm col-sm-7" formControlName="famialia" disabled>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="col-sm-6" form [formGroup]="Formulario1">
+            <!-- Medición y Precios -->
+            <h5 class="mb-3 form-tittle">Medición y Precios</h5>
+            <!-- Codigo de barras -->
+            <div class="form-group row">
+                <label for="grupoUnidadMedida" class="header-label col-sm-5 col-form-label">Grupo unid.
+                    de
+                    medida</label>
+                <div class="col-sm-6">
+                    <select class="form-control input-sm" id="grupoUnidadMedida">
+                        <option selected>Manual</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Precio por unidad -->
+            <div class="form-group row">
+                <label for="listaNombre" class="header-label col-sm-5 col-form-label">Lista de
+                    precios</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control input-sm col-sm-7" formControlName="listaNombre" disabled>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="codigoBarras" class="header-label col-sm-5 col-form-label">Código de
+                    barras</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control input-sm" id="codigoBarras">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="precioUnidad" class="header-label col-sm-5 col-form-label">Precio por
+                    unidad</label>
+                <div class="col-sm-6">
+                    <div class="row p-0 m-0">
+                        <input type="text" class="form-control input-sm col-sm-7" id="listaPrecio"
+           [value]="'USD ' + (Formulario1.get('listaPrecio')?.value || '0.00')" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Pestañas -->
+    <ul class="nav nav-tabs mt-3">
+        <!-- <li class="nav-item">
+          <a class="nav-link" aria-current="page" id="home-tab" data-toggle="tab" href="#home"
+              role="tab" aria-controls="home" aria-selected="true" style="font-weight:500;">
+              General</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" id="complementario-tab" data-toggle="tab" href="#complementario"
+              role="tab" aria-controls="complementario" aria-selected="false" style="font-weight:500;">
+              Datos de Compras </a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" id="relacionado-tab" data-toggle="tab" href="#relacionado" role="tab"
+              aria-controls="relacionado" aria-selected="false" style="font-weight:500;">
+              Datos de Ventas</a>
+      </li> -->
+        <li class="nav-item">
+            <a class="nav-link active" id="tab-inventario" data-toggle="tab" href="#inventario" role="tab"
+                aria-controls="relacionado" aria-selected="false" style="font-weight:500;">
+                Datos de Inventario</a>
+        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link" id="relacionado-tab" data-toggle="tab" href="#relacionado" role="tab"
+              aria-controls="relacionado" aria-selected="false" style="font-weight:500;">
+              Datos de Planificación</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" id="relacionado-tab" data-toggle="tab" href="#relacionado" role="tab"
+              aria-controls="relacionado" aria-selected="false" style="font-weight:500;">
+              Datos de Productos</a>
+      </li> -->
+
+    </ul>
+
+    <!-- Tabla -->
+    <div class="tab-content" id="myTabContent" [formGroup]="Formulario1">
+        <div class="tab-pane fade show active" id="inventario" role="tabpanel" aria-labelledby="tab-inventario">
+            <div class="col-sm-6 mt-3">
+                <div class="form-group row">
+                    <label for="grupoUnidadMedida" class="header-label col-sm-5 col-form-label">Fijar
+                        ctas de mayor según</label>
+                    <div class="col-sm-6">
+                        <select class="form-control input-sm" id="grupoUnidadMedida">
+                            <option selected>Almacén</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="listaPrecios" class="header-label col-sm-5 col-form-label">Nombre unid.
+                        de medida Peso</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control input-sm col-sm-7" formControlName="unidad" disabled>
+                    </div>
+                    <label for="listaPrecios" class="header-label col-sm-5 col-form-label">Peso</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control input-sm col-sm-7" formControlName="peso" disabled>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group row">
+                    <label for="codigoBarras" class="header-label col-sm-5 col-form-label">Método de
+                        valoración</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control input-sm" id="codigoBarras" value="Promedio ponderado"
+                            disabled>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla -->
+            <div class="table-responsive mt-3">
+                <table class="table table-sm table-bordered table-hover">
+                    <thead class="thead-light">
+                      <tr class="fsg-13">
+                        <th>#</th>
+                        <th>Código Almacén</th>
+                        <th>Nombre del almacén</th>
+                        <th>Bloqueado</th>
+                        <th>En Stock</th>
+                        <th>Comprometido</th>
+                        <th>Pedido</th>
+                        <th>Disponible</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="fsg-13" *ngFor="let stock of stocks; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td>
+                          <i class="fa fa-arrow-circle-right text-info" aria-hidden="true" data-toggle="modal" data-target="#myModal3"></i> 
+                          {{ stock.id_deposito }}
+                        </td>
+                        <td>{{ stock.NOMBRE_DEPOSITO }}</td>
+                        <td class="text-center">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" disabled>
+                          </div>
+                        </td>
+                        <td>{{ stock.stock }}</td>
+                        <td>{{ stock.comprometido }}</td>
+                        <td>{{ stock.pedido }}</td>
+                        <td>{{ stock.cantidad }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+            </div>
+        </div>
+    </div>
+</div>

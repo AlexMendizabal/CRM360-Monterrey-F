@@ -1,5 +1,5 @@
 import { LogisticaDashboardsFaturamentoFinanceiroChartsService } from './charts.service';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap';
 import { LogisticaDashboardFaturamentoFinanceiroService } from './faturamento-financeiro.service';
 import { CustomTableConfig } from './../../../../shared/templates/custom-table/models/config';
 //angular

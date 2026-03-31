@@ -17,8 +17,8 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCicloVendasCotacoesService {
-  private readonly API = `${environment.URL_MTCORP}comercial/ciclo-vendas/cotacoes`;
-  private readonly API2 = `${environment.URL_MTCORP}comercial/ciclo-vendas/autorizaciones`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/cotacoes`;
+  private readonly API2 = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/autorizaciones`;
   constructor(
     protected http: HttpClient,
     private comercialService: ComercialService,
@@ -152,9 +152,6 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
-
-
-
   getImprimirSeparacao(
     nrPedido: number,
     codEmpresa: number
@@ -269,6 +266,7 @@ export class ComercialCicloVendasCotacoesService {
   }
 
   postMaterialesRelacionados(params: any): Observable<Object | JsonResponse> {
+    console.log(params);
     return this.http
       .post(`${this.API}/materiales/relacionados`, params)
       .pipe(take(1), retry(2));
@@ -315,11 +313,17 @@ export class ComercialCicloVendasCotacoesService {
       .pipe(take(1), retry(2));
   }
 
-  postCalculoMaterial(params: any): Observable<Object | JsonResponse> {
+  getDescuento(params: any): Observable<Object | JsonResponse> {
     return this.http
       .post(`${this.API}/material/calculo`, params)
       .pipe(take(1), retry(2));
   }
+
+  /* postCalculoMaterial(params: any): Observable<Object | JsonResponse> {
+    return this.http
+      .post(`${this.API}/material/calculo`, params)
+      .pipe(take(1), retry(2));
+  } */
 
   getHistoricoCompras(params: any): Observable<Object | JsonResponse> {
     let httpParams = new HttpParams();
@@ -463,6 +467,12 @@ export class ComercialCicloVendasCotacoesService {
   postverifica_oferta(data: any): Observable<Object> {
     return this.http
       .get(`${this.API}/vigencia_oferta/${data}`)
+      .pipe(take(1), retry(2));
+  }
+
+  calculadora(data: any): Observable<Object> {
+    return this.http
+      .post(`${this.API}/calculadora`, data)
       .pipe(take(1), retry(2));
   }
 

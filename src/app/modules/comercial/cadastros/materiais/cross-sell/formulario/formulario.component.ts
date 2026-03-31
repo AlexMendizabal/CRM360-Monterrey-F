@@ -164,7 +164,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
             ID: 0,
             NM_SUB_LINH: 'TODOS',
           });
-  
+
         } else {
           this.pnotifyService.error();
           this.location.back();
@@ -223,6 +223,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
    * @source = 'application' || 'user'
    * */
   onAddMaterial(material: any, manipulateForm: boolean, source: string): void {
+    console.log(material);
     if (this.checkMaterialExists(material) === false) {
       this.assocMateriais.push(
         this.formBuilder.group({
@@ -563,7 +564,7 @@ export class ComercialCadastrosMateriaisCrossSellFormularioComponent
     this.form.controls.codLinha.setValue(material.codLinha);
     this.form.controls.codClasse.setValue(material.codClasse);
     this.form.controls.codGrupos.setValue(material.codGrupos);
-    this.form.controls.codMaterial.setValue(material.id_material);
+    this.form.controls.codMaterial.setValue(material.codigoMaterial);
     this.form.controls.nomeMaterial.setValue(material.descricao);
 
     //this.onFilterMateriaisMaisVendidos();

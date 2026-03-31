@@ -15,7 +15,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root'
 })
 export class ComercialClientesPreCadastroService {
-  private readonly BASE_URL: string = `${environment.URL_MTCORP}`   ;
+  private readonly BASE_URL: string = ` https://crm360.monterrey.com.bo/api`   ;
 
   constructor(
     private vendedoresService: ComercialVendedoresService,
@@ -43,7 +43,7 @@ export class ComercialClientesPreCadastroService {
 
   getTipoPersona()
   {
-      return this.http.get(`${this.BASE_URL}/comercial/clientes/tipo_persona/`).pipe(take(1));
+      return this.http.get(`${this.BASE_URL}/comercial/clientes/tipo_persona`).pipe(take(1));
   }
 
  getTipoDocumento()
@@ -51,7 +51,7 @@ export class ComercialClientesPreCadastroService {
       return this.http.get(`${this.BASE_URL}/comercial/clientes/tipo_documento`).pipe(take(1));
   }
 
-  
+
 
   /* updateCliente(params){
     return this.http.post(
@@ -63,13 +63,13 @@ export class ComercialClientesPreCadastroService {
 
   updateCliente(params: any){
     return this.http
-      .post(`${environment.URL_MTCORP}sap/cliente_update`, params)
+      .post(`https://crm360.monterrey.com.bo/api/sap/cliente_update`, params)
       .pipe(take(1), retry(0));
   }
 
   updateCliente2(params: any){
     return this.http
-      .post(`${environment.URL_MTCORP}sap/cliente_updateSap`, params)
+      .post(`https://crm360.monterrey.com.bo/api/sap/cliente_updateSap`, params)
       .pipe(take(1), retry(0));
   }
 

@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class LogisticaEntradaMateriaisService {
-  private readonly API = `${environment.URL_MTCORP}`;
+  private readonly API = ` https://crm360.monterrey.com.bo`;
 
   constructor(protected http: HttpClient) {}
 
@@ -34,7 +34,7 @@ export class LogisticaEntradaMateriaisService {
       }
     );
   }
-  
+
   getAllMateriais(params?) {
     return this.http.get(
       `${this.API}/common/v2/materiais`,

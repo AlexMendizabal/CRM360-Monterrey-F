@@ -4,8 +4,7 @@ import { AtividadesService } from 'src/app/shared/services/requests/atividades.s
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';
 //Bootstrap
 import { utilsBr } from 'js-brasil';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsDatepickerConfig, BsModalRef, BsLocaleService } from 'ngx-bootstrap';
 //Angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit} from '@angular/core';
@@ -21,7 +20,6 @@ import { finalize } from 'rxjs/operators';
 import { LogisticaYmsTiposSetorService } from '../services/tipos-setor.service';
 //interfaces
 import { ILogisticaYmsTiposSetor } from '../models/tipos-setor';
-
 import { JSONParser } from '@amcharts/amcharts4/core';
 
 @Component({

@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { BsDatepickerModule, ModalModule, PaginationModule, TooltipModule } from 'ngx-bootstrap';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 

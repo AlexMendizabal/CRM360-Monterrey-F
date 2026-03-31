@@ -17,7 +17,7 @@ import { ComercialTidSoftwareService } from '../../../tid-software/tid-software.
   providedIn: 'root',
 })
 export class ComercialCadastrosMateriaisFichaCadastralService {
-  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/materiais/ficha-cadastral`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/materiais/ficha-cadastral`;
 
   constructor(
     protected http: HttpClient,

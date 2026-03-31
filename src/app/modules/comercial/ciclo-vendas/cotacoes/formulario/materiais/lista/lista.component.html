@@ -34,40 +34,39 @@
   </div>
 
   <div class="col" [hidden]="showBloco2">
-    <div class="row mb-2">
+    <!-- <div class="row mb-2">
       <div class="col">
         <div class="d-flex justify-content-end">
-          <!--   <button type="button" class="btn btn-sm btn-danger mr-3" (click)="onReset()">
+             <button type="button" class="btn btn-sm btn-danger mr-3" (click)="onReset()">
             <i class="fas fa-trash"></i>
             <span>Limpiar</span>
-          </button> -->
+          </button>
 
-          <!--    <button type="button" class="btn btn-sm btn-primary" (click)="onFilterVend(3)" *ngIf="swAppSell === true">
+              <button type="button" class="btn btn-sm btn-primary" (click)="onFilterVend(3)" *ngIf="swAppSell === true">
             <i class="fas fa-search"></i>
             <span>UP SELL</span>
-          </button> -->
-          <!-- 
+          </button>
+          
                     <button type="button" class="btn btn-sm btn-secondary" (click)="onFilter()" *ngIf="swTodos === true">
                       <i class="fas fa-search"></i>
                       <span>Buscar en todos</span>
                     </button>
-          -->
-          <button
-            type="button"
+        
+          <button type="button"
             class="btn btn-sm btn-secondary mr-3"
             (click)="onFilterVend(1)"
-            *ngIf="swVendedor === true && swActivarBusqueda === true  && codigo_almacen != ''"
-          >
+            *ngIf="swVendedor === true">
             <i class="fas fa-search"></i>
             <span>Buscar</span>
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
 
+            <!--  [ngClass]="onFieldError('codLinha') + ' ' + onFieldRequired(form.controls.codLinha)"-->
     <form [formGroup]="form">
       <div class="form-row py-3">
-        <div class="form-group col-lg-2">
+       <!--  <div class="form-group col-lg-2">
           <label for="codLinha">Familia:</label>
           <ng-select
             [searchable]="true"
@@ -82,10 +81,9 @@
             bindValue="idClasseMt"
             (change)="onChangeLinha($event.idClasseMt, true)"
           >
-            <!--  [ngClass]="onFieldError('codLinha') + ' ' + onFieldRequired(form.controls.codLinha)"-->
           </ng-select>
-        </div>
-        <div class="form-group col-lg-2">
+        </div> -->
+        <!-- <div class="form-group col-lg-2">
           <label for="codClasse">Grupo:</label>
           <ng-select
             [searchable]="true"
@@ -101,8 +99,8 @@
             (change)="onChangegrupo($event.id_linha)"
           >
           </ng-select>
-        </div>
-        <div class="form-group col-lg-2">
+        </div> -->
+        <!-- <div class="form-group col-lg-2">
           <label for="codLinea">Línea: </label>
           <ng-select
             [searchable]="true"
@@ -118,8 +116,8 @@
             (change)="onChangeClasse($event.ID, true, 'application')"
           >
           </ng-select>
-        </div>
-        <div class="form-group col-lg-4">
+        </div> -->
+        <div class="form-group col-lg-8">
           <label for="codMaterial"
             ><span class="text-danger text-muted">(*)</span> Material: </label
           >
@@ -131,16 +129,35 @@
             formControlName="codMaterial"
             [virtualScroll]="true"
             labelForId="id_material"
-            bindLabel="nombre"
-            bindValue="codigoMaterial"
+            bindLabel="Item"
+            bindValue="codigo_material"
             [loading]="materiaisLoader"
             loadingText="Cargando..."
-            (change)="cambioMaterial($event.id_material)"
+            (change)="cambioMaterial($event.codigo_material)"
           >
+          <ng-template ng-label-tmp let-item="item">
+            <span [innerHTML]="sanitizeHtml(item.Item)"></span>
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            <span [innerHTML]="sanitizeHtml(item.Item)"></span>
+          </ng-template>
           </ng-select>
         </div>
-         <div class="form-group col-lg-2">
-          <label for="codMaterial"
+
+        <div class="col-lg-4 d-flex align-items-center">
+            <button style="margin-top: 19px;" type="button"
+              class="btn btn-lg btn-secondary mr-3"
+              (click)="onFilterVend(1)"
+              *ngIf="swVendedor === true">
+              <i class="fas fa-search"></i>
+              <span>Buscar en Almacenes</span>
+            </button>
+        </div>
+
+
+
+      <!--    <div class="form-group col-lg-2">
+          <label for="almacenForm"
             ><span class="text-danger text-muted">(*)</span> Almacén:</label
           >
           <ng-select
@@ -154,12 +171,10 @@
             bindLabel="codigo_almacen"
             bindValue="id_almacen"
             (change)="seleccionarAlmacen($event.codigo_almacen)"
-            [readonly]="!estadoAlmacen.value"  
+            [readonly]="!estadoAlmacen.value"
             >
-            
           </ng-select>
-       
-        </div> 
+        </div> -->
         <!--<div class="form-group col-lg-3">
               <label for="codClasse">Unid</label>
               <select class="form-control custom-select" formControlName="orderBy" id="orderBy">
@@ -222,7 +237,7 @@
           <div class="form-group pt-1 mb-0 mr-3">
             <!--  <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="auto-scroll" [(ngModel)]="autoScroll"
-                [ngModelOptions]="{ standalone: true }"> 
+                [ngModelOptions]="{ standalone: true }">
               <label class="custom-control-label" for="auto-scroll">
                 <span class="mr-1">Auto-scroll</span>
                 <ng-template #tooltipAutoScrollTemplate>
@@ -363,10 +378,7 @@
                     swAppSellColor === false
                   "
                 >
-                  <tr
-                    *ngFor="let material of dados; let i = index"
-                    [class.table-active]="i == activeRow"
-                  >
+                  <tr *ngFor="let material of dados; let i = index"  [class.table-active]="i == activeRow">
                     <td
                       class="text-truncate text-center"
                       [ngClass]="classStatusBorder(material.disponibilidade)"
@@ -611,7 +623,7 @@
                     <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                         Modo Entrega
                       </th> -->
-                    
+
                   </tr>
                 </ng-template>
                 <ng-template
@@ -861,7 +873,7 @@
                     >
                       IVA
                     </th> -->
-                    
+
                     <!-- <th scope="col" class="text-center" [ngStyle]="{ width: columSize('estoqueDisponivel') }">
                         Modo Entrega
                       </th> -->
@@ -1051,6 +1063,6 @@
         </div>
       </div>
     </div>
-    
+
   </div>
 </div>

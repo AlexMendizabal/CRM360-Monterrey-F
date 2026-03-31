@@ -16,7 +16,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialEstoqueService {
-  private readonly API = `${environment.URL_MTCORP}comercial/estoque`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/estoque`;
 
   constructor(
     protected http: HttpClient,
@@ -111,8 +111,8 @@ export class ComercialEstoqueService {
   }
 
   getStockAlmacenes(params: any): Observable<Object | JsonResponse> {
-    const url = `${this.API}/estoquealmacen/${params.idMaterial}`;
-    
+    const url = `${this.API}/estoquealmacen/${params.codigo_material}`;
+
     const queryParams = new HttpParams({
       fromObject: {
         id_lista_precio: params.id_lista_precio || '',
@@ -121,20 +121,22 @@ export class ComercialEstoqueService {
         registrosLista: params.registrosLista || '25',
       }
     });
-  
-  
+
+    console.log('Parámetros de la solicitud:', queryParams.toString());
+
     return this.http.get(url, { params: queryParams }).pipe(take(1), retry(2));
   }
 
   buscarListaPrecio(nombreLista: string): Observable<Object | JsonResponse> {
     const params = new HttpParams().set('nombre_lista', nombreLista);
-  
-  
+
+    //console.log('Enviando parámetros:', params.toString());
+
     return this.http
       .get(`${this.API}/lista-precio`, { params })
       .pipe(take(1), retry(2));
   }
-  
-  
-  
+
+
+
 }

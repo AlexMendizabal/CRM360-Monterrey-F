@@ -1,9 +1,7 @@
 import { MapService } from './../../../../shared/services/core/map.service';
 import { Subtitles } from './../../../../shared/modules/subtitles/subtitles';
 import { LogisticaDashboardsGestaoCarteiraChartsService } from './charts.service';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { BsDatepickerConfig, BsLocaleService, BsModalRef, BsModalService, PageChangedEvent } from 'ngx-bootstrap';
 import { LogisticaDashboardGestaoCarteiraService } from './gestao-carteira.service';
 import { CustomTableConfig } from './../../../../shared/templates/custom-table/models/config';
 //angular

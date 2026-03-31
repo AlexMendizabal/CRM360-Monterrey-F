@@ -4,8 +4,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 
 //ngx
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { BsDatepickerConfig, BsLocaleService, PageChangedEvent } from 'ngx-bootstrap';
 
 //models
 import { Subtitles } from 'src/app/shared/modules/subtitles/subtitles';

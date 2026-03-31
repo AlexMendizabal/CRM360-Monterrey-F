@@ -12,9 +12,11 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialService {
-  private readonly API = `${environment.URL_MTCORP}comercial`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial`;
+  private readonly API_SAP = `https://crm360.monterrey.com.bo/api/sap`;
 
-  constructor(protected http: HttpClient) { }
+
+  constructor(protected http: HttpClient) {}
 
   getEmpresas(params?: any): Observable<Object> {
     let httpParams = new HttpParams();
@@ -45,9 +47,7 @@ export class ComercialService {
   }
 
   getAlmacen(params?: any): Observable<Object | JsonResponse> {
-    return this.http
-      .get(`${this.API}/estoque`)
-      .pipe(take(1), retry(2));
+    return this.http.get(`${this.API}/estoque`).pipe(take(1), retry(2));
   }
   getLinhasId(id: any) {
     return this.http.get(`${this.API}/linhas/${id}`).pipe(take(1), retry(2));
@@ -62,56 +62,60 @@ export class ComercialService {
   }
   getMateriales(params: any) {
     return this.http
-      .get(
-        `${this.API}/materiales`, {
+      .get(`${this.API}/materiales`, {
         params: params,
       })
       .pipe(take(1), retry(2));
   }
   getMaterialesLista(params: any) {
     return this.http
-      .get(
-        `${this.API}/materiales/lista`, {
+      .get(`${this.API}/materiales/lista`, {
         params: params,
       })
       .pipe(take(1), retry(2));
   }
   getAlmacenesLista(params: any) {
     return this.http
-      .get(
-        `${this.API}/materiales/lista_almacen`, {
+      .get(`${this.API}/materiales/lista_almacen`, {
         params: params,
       })
       .pipe(take(1), retry(2));
   }
 
-
-
   getMaterialesOferta(params: any) {
     return this.http
-      .get(
-        `${this.API}/materiales_lista_precio`,  {
+      .get(`${this.API}/materiales_lista_precio`, {
         params: params,
       })
       .pipe(take(1), retry(2));
   }
   getMaterialesOfertaVendedor(params: any) {
     return this.http
-      .get(
-        `${this.API}/materiales_lista_precio_vendedor`, {
+      .get(`${this.API}/materiales_lista_precio_vendedor`, {
         params: params,
       })
       .pipe(take(1), retry(2));
   }
 
+  actualizarStock(params: any) {
+    return this.http
+      .post(`${this.API_SAP}/actualizar_stock`, params)
+      .pipe(take(1), retry(1));
+  }
+  actualizarStockTodos(params: any) {
+    return this.http
+      .post(`${this.API_SAP}/actualizar_stock_todos`, params)
+      .pipe(take(1), retry(1));
+  }
+
   getUpSellService(params: any) {
     return this.http
-      .get(
-        `${this.API}/materiales_suplementarios`, {
+      .get(`${this.API}/materiales_suplementarios`, {
         params: params,
       })
       .pipe(take(1), retry(2));
   }
+
   getLinhas(params: any): Observable<Object> {
     let httpParams = new HttpParams();
 
@@ -139,7 +143,7 @@ export class ComercialService {
       .pipe(take(1), retry(2));
   }
 
-  getGrupo(params: any){
+  getGrupo(params: any) {
     let httpParams = new HttpParams();
     for (let param in params) {
       httpParams = httpParams.append(param, params[param]);
@@ -171,23 +175,28 @@ export class ComercialService {
   getEscritorios(): Observable<Object> {
     return this.http.get(`${this.API}/escritorios`).pipe(take(1), retry(2));
   }
-  getPresentacionMaterial(): Observable<Object> {
+  getPresentacionMaterial(codigo_material: string): Observable<Object> {
     return this.http
-      .get(`${this.API}/presentacion_materiales`)
+      .get(`${this.API}/presentacion_materiales?codigo_material=${codigo_material}`)
       .pipe(take(1), retry(2));
   }
 
+
   getCliente(codCliente) {
-    return this.http.get(`${this.API}/clientes/detalhes/${codCliente}`).pipe(take(1));
+    return this.http
+      .get(`${this.API}/clientes/detalhes/${codCliente}`)
+      .pipe(take(1));
   }
 
   getListarPrecios() {
-    return this.http.get(`${this.API}/vendedor/lista_precio`)
+    return this.http
+      .get(`${this.API}/vendedor/lista_precio`)
       .pipe(take(1), retry(2));
   }
 
   getTodosVendedores() {
-    return this.http.get(`${this.API}/vendedor/allvendedor`)
+    return this.http
+      .get(`${this.API}/vendedor/allvendedor`)
       .pipe(take(1), retry(2));
   }
   getCentrosLogisticos() {

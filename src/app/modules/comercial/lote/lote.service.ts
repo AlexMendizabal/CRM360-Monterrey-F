@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ComercialLoteService {
-  private readonly API = `${environment.URL_MTCORP}comercial`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial`;
 
   constructor(protected http: HttpClient) { }
 
@@ -17,6 +17,7 @@ export class ComercialLoteService {
   }
 
   getRutaClientes(params: any) {
+    console.log('ruta');
     return this.http.get(`${this.API}/ruta/clientes`, { params }).pipe(
       take(1),
       retry(2)

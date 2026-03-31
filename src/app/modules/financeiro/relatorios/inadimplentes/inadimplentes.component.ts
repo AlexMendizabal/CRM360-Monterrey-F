@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 
 // ngx-bootstrap
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 // Services
 import { PNotifyService } from 'src/app/shared/services/core/pnotify.service';

@@ -176,9 +176,9 @@ export class ComercialDashboardVendedorConcentracaoVendasComponent
 
       columnSeries.columns.template.tooltipText = `[#fff bold]{categoryX}[/]
       \n
-      [#fff]Representação: [#fff bold]{valueY}%[/][/]
+      [#fff]Representacion: [#fff bold]{valueY}%[/][/]
       [#fff]Ton: [#fff bold]{valueX.formatNumber(#.###,###)}t[/][/]
-      [#fff]Valor: [#fff bold]R$ {categoryY.formatNumber(#.###,##)}[/][/]`;
+      [#fff]Valor: [#fff bold]$ {categoryY.formatNumber(#.###,##)}[/][/]`;
       columnSeries.columns.template.propertyFields.fillOpacity = 'fillOpacity';
       columnSeries.columns.template.propertyFields.stroke = 'stroke';
       columnSeries.columns.template.propertyFields.strokeWidth = 'strokeWidth';
@@ -198,7 +198,7 @@ export class ComercialDashboardVendedorConcentracaoVendasComponent
 
       let bullet = lineSeries.bullets.push(new am4charts.Bullet());
       bullet.fill = am4core.color('#fdd400');
-      bullet.tooltipText = `[#fff]Percentual acumulado: {valueY}%[/]`;
+      bullet.tooltipText = `[#fff]Porcentual acumulado: {valueY}%[/]`;
       let circle = bullet.createChild(am4core.Circle);
       circle.radius = 4;
       circle.fill = am4core.color('#fff');

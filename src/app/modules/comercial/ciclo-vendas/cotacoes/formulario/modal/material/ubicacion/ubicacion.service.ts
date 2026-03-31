@@ -1,4 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
+/* import { BehaviorSubject } from 'rxjs'; */
 import { finalize } from 'rxjs/operators';
 
 // ngx-bootstrap
@@ -20,6 +21,9 @@ import { JsonResponse } from 'src/app/models/json-response';
 })
 export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionService {
     loaderNavbar: EventEmitter<boolean> = new EventEmitter();
+/*     private direccionEntregaSource = new BehaviorSubject<string>('');
+    direccionEntrega = this.direccionEntregaSource.asObservable(); */
+
 
     constructor(
         private modalService: BsModalService,
@@ -48,4 +52,5 @@ export class ComercialCicloVendasCotacoesFormularioModalMaterialUbicacionService
           );
 
     }
+
 }

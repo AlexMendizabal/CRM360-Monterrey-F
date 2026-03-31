@@ -1,0 +1,100 @@
+/* Asegura que la tabla tenga un diseño automático para que las celdas se ajusten a su contenido */
+.table-responsive {
+  width: 100%;
+  table-layout: auto;
+}
+
+/* Quita cualquier ancho específico en las celdas de tabla si es necesario */
+.table-responsive th {
+  white-space: nowrap; // Evita que el contenido se quiebre en múltiples líneas
+}
+
+/* Puedes ajustar los márgenes y rellenos para un mejor espaciado */
+.table-responsive td,
+.table-responsive th {
+  padding: 8px;
+  /* Ajusta el relleno según sea necesario */
+  text-align: left;
+  /* Ajusta la alineación del texto si es necesario */
+}
+
+.form-control {
+  font-size: 12px !important;
+}
+
+a#home-tab,
+a#logistica-tab {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  color: #ad67b2;
+}
+
+.nav-tabs .nav-link.active {
+  color: #731d93 !important;
+  background-color: white !important;
+  border-color: #bebebe !important;
+  border-top: 3px solid #731d93 !important;
+}
+
+select.form-select {
+  width: fit-content;
+}
+
+.table-responsive td:nth-child(2),
+.table-responsive td:nth-child(8) {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  width: auto; /* Ajusta el ancho automáticamente */
+  min-width: 80px; /* Ancho mínimo para que el contenido no quede apretado */
+}
+
+.table-responsive td:nth-child(2)>input,
+.table-responsive td:nth-child(3)>input {
+  width: fit-content;
+}
+
+.table-responsive td:nth-child(2)>input,
+.table-responsive td:nth-child(3)>input,
+.table-responsive td:nth-child(4)>input,
+.table-responsive td:nth-child(6)>input,
+.table-responsive td:nth-child(7)>input,
+.table-responsive td:nth-child(8)>input,
+.table-responsive td:nth-child(10)>input,
+.table-responsive td:nth-child(11)>input,
+.table-responsive td:nth-child(12)>input {
+  box-shadow: none;
+}
+
+
+.table-responsive td:nth-child(3)>input {
+  width: 200px !important;
+}
+
+.table-responsive td:nth-child(12)>input {
+  width: 80px !important;
+}
+
+ul.list-group.position-absolute {
+  background: white;
+  z-index: 100;
+
+}
+
+@media (max-width: 1300px) {
+  .form-control {
+    font-size: 10px !important;
+  }
+}
+.negativo {
+  border: 2px solid red;
+  background-color: #ffcccc;
+}
+.tooltip-inner {
+  background-color: #f8d7da; /* Fondo rojo claro */
+  color: #721c24; /* Texto rojo oscuro */
+}
+.tooltip-arrow {
+  border-top-color: #f8d7da; /* Flecha del tooltip */
+}

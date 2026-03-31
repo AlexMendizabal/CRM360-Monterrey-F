@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { BsDatepickerConfig, BsLocaleService, PageChangedEvent } from 'ngx-bootstrap';
 
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';

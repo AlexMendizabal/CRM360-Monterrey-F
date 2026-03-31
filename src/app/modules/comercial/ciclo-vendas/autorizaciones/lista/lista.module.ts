@@ -49,6 +49,7 @@ import { ComercialCicloVendasCotacoesListaModalHistoricoExclusaoService } from '
 import { ModalAutorizacionComponent } from './modal-autorizacion/modal-autorizacion.component';
 import { ModalAutorizacionService } from './modal-autorizacion/modal-autorizacion.service';
 import { VistaComponent } from '../lista/vista/vista.component';
+import { DetalleHistorialComponent } from './detalle-historial/detalle-historial.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { VistaComponent } from '../lista/vista/vista.component';
     ComercialCicloVendasCotacoesListaModalTrocarClienteComponent,
     ComercialCicloVendasCotacoesListaModalTransfereFaturamentoComponent,
     ModalAutorizacionComponent,
-    VistaComponent
+    VistaComponent,
+    DetalleHistorialComponent
   ],
 
   imports: [

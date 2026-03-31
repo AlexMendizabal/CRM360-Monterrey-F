@@ -17,7 +17,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialCadastrosMateriaisCrossSellService {
-  private readonly API = `${environment.URL_MTCORP}comercial/cadastros/materiais/cross-sell`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/cadastros/materiais/cross-sell`;
 
   constructor(
     protected http: HttpClient,

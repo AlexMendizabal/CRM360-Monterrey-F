@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ComercialClientesUltimosPrecosService {
-  private readonly API = `${environment.URL_MTCORP}comercial/clientes/ultimos-precos`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/clientes/ultimos-precos`;
 
   constructor(protected http: HttpClient) {}
 

@@ -12,7 +12,7 @@ import { JsonResponse } from 'src/app/models/json-response';
   providedIn: 'root',
 })
 export class ComercialRelatoriosPosicaoDiariaService {
-  private readonly API = `${environment.URL_MTCORP}comercial/relatorios/posicao-diaria`;
+  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/relatorios/posicao-diaria`;
 
   constructor(protected http: HttpClient) {}
 

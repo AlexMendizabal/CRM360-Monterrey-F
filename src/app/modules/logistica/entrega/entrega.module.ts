@@ -11,8 +11,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { SortableModule } from 'ngx-bootstrap/sortable';
+import { SortableModule, ProgressbarModule } from 'ngx-bootstrap';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 import { NgBrazil } from 'ng-brazil';

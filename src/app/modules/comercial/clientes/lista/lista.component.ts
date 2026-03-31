@@ -318,6 +318,8 @@ export class ComercialClientesListaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((response: JsonResponse) => {
+        console.log("Datos cliente:", response.result.datos_cliente);
+
         this.swSpinner = false;
   
         this.informacionMarcador = null;

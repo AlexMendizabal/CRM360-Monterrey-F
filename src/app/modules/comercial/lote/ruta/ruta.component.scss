@@ -1,17 +1,26 @@
 /* Estilos para el info window de los marcadores */
 .marker-info-window {
-  padding: 10px;
+  padding: 0.5rem 1rem;
   background-color: #fff;
-
+  max-width: none !important; 
+  width: auto !important;
+  max-height: none !important; 
+  height: auto !important;
+  overflow: visible !important;
+  white-space: normal; 
+  margin-top: 0 !important;
 }
+
 
 .marker-name {
   font-size: 18px;
   margin-bottom: 5px;
+  margin-top: 0 !important;
 }
 
+
 .marker-info {
-  margin-bottom: 5px;
+  margin-bottom: 2px;
 }
 
 .marker-button {

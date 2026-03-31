@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsLocaleService } from 'ngx-bootstrap';
 
 @Component({
   selector: 'logistica',
