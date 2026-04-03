@@ -2,6 +2,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';``
 import { BsModalRef } from 'ngx-bootstrap';
 import { finalize } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { ComercialCicloVendasAutorizacionesService } from '../../autorizaciones.service';
 import { AuthService } from 'src/app/shared/services/core/auth.service';
 
@@ -45,6 +46,7 @@ export class ModalAutorizacionComponent implements OnInit {
   loading: boolean = false;
   observa1: boolean = false;
   submitForm: any;
+  onUpdated: Subject<boolean> = new Subject();
 
   ngOnInit(): void {
 
@@ -131,6 +133,7 @@ export class ModalAutorizacionComponent implements OnInit {
         (response: JsonResponse) => {
           if (response.success === true) {
             this.pnotifyService.success("Operación exitosa");
+            this.onUpdated.next(true);
             this.onClose();
           } else {
             this.pnotifyService.error("No hay datos relacionado al valor introducido");

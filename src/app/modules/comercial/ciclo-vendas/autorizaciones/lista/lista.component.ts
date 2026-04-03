@@ -241,6 +241,9 @@ export class ComercialCicloVendasCotacoesListaComponent
     this.getDatosAutorizaciones();
     //this.search(null);
     this.getTodosVendedores();
+    this.modalAutorizacionService.autorizacionUpdated.subscribe(() => {
+      this.getDatosAutorizaciones();
+    });
   }
 
   ngOnDestroy(): void {
