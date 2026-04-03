@@ -93,7 +93,7 @@
               <td style="text-align: right">
                 {{ material.descuento !== null && material.descuento !== undefined ? (material.descuento == 0 ? '0' : (material.descuento )) : '0' }}
               </td>
-              <td style="text-align: right">{{ material.PrecioNetoUnidad  }}</td>
+              <td style="text-align: right">{{ (material.precio * (1 - material.descuento / 100)) | number:'1.2-2' }}</td>
               <td style="text-align: right">{{ material.total }}</td>
               <td style="text-align: right">{{ material.preso }}</td>
             </tr>

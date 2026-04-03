@@ -20,6 +20,7 @@ import { JsonResponse } from 'src/app/models/json-response';
 })
 export class ModalAutorizacionService {
   loaderNavbar: EventEmitter<boolean> = new EventEmitter();
+  autorizacionUpdated: EventEmitter<boolean> = new EventEmitter();
   datos_autorizacion: any = [];
   itemsPerPage = 50;
   private modalRef: BsModalRef;
@@ -53,8 +54,12 @@ export class ModalAutorizacionService {
             keyboard: false,
           };
 
-          this.modalAutorizacionService.show( ModalAutorizacionComponent,{
-            initialState: { dataForm: response.data},
+          this.modalRef = this.modalAutorizacionService.show(ModalAutorizacionComponent, {
+            initialState: { dataForm: response.data },
+          });
+
+          this.modalRef.content.onUpdated.subscribe(() => {
+            this.autorizacionUpdated.emit(true);
           });
 
         } else {

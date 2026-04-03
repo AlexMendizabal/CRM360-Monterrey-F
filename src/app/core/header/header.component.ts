@@ -63,16 +63,6 @@ export class HeaderComponent implements OnInit {
     this.getClienteLogo();
     this.getModulos();
     this.getNotificaciones();
-    this.verificadorConexion();
-    /*    this.verificadorConexion();
-       setInterval(() => {
-         this.verificadorConexion();
-       }, 120000); */
-    //this.verificarConexion();
-
-    // setInterval(() => {
-    //   this.verificador();
-    // }, 42000);
 
   }
   verificador(): void {
@@ -106,7 +96,7 @@ export class HeaderComponent implements OnInit {
         }
       );
   }
-  actualizarNotificacion(id) {
+  actualizarNotificacion(id: number) {
     this.notificacionesService
       .updateNotificacion(id)
       .pipe(
@@ -211,7 +201,7 @@ export class HeaderComponent implements OnInit {
             return;
           }
 
-          this.modulos = response.body['data'];
+          this.modulos = (response.body as any)['data'];
         },
         (error: any) => {
           this.modulosError = true;
