@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
@@ -30,7 +30,7 @@ interface CalendarDay {
   selector: 'app-comercial-agenda-compromissos',
   standalone: true,
   imports: [
-    CommonModule, RouterModule, ReactiveFormsModule,
+    CommonModule, RouterModule, ReactiveFormsModule, FormsModule,
     MatTableModule, MatPaginatorModule,
     MatButtonModule, MatIconModule,
     MatFormFieldModule, MatInputModule, MatSelectModule,

@@ -633,6 +633,21 @@ export class ComercialCicloVendasCotacoesFormularioMateriaisListaComponent
   }
 
 
+onFilterVend(tipo): void {
+  if (this.checkFieldErrors() === false) {
+    if (this.searching === false && this.form.valid) {
+      this.searching = true;
+      this.setRouterParams(this.getFormFilterValues(), tipo);
+    }
+<<<<<<< Updated upstream
+  } else {
+    this.searching = true;
+    this.setRouterParams(this.getFormFilterValues(), tipo);
+=======
+
+    this.searching = false;
+>>>>>>> Stashed changes
+  }
   onFilterVend(tipo): void {
     if (this.checkFieldErrors() === false) {
       if (this.searching === false && this.form.valid) {
