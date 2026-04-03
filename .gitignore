@@ -42,6 +42,10 @@ testem.log
 .DS_Store
 Thumbs.db
 node_modules
-node_modules
-node_modules
-node_modules
+
+# Angular cache
+.angular/cache
+*/.angular/cache
+
+# Claude Code
+.claude/

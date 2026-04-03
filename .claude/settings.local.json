@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(node -e \"const p = require\\(''./package.json''\\); console.log\\(''ngx-bootstrap:'', p.dependencies[''ngx-bootstrap'']\\)\")"
-    ]
-  }
-}
