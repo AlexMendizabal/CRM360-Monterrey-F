@@ -402,13 +402,9 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
     this.clearLocalStorage();
   }
   materiaisSubject(): void {
-    console.log('🟢 [Carrito] materiaisSubject suscripción ACTIVA');
     this.materiaisSubscription =
       this.formularioService.materiaisSubject.subscribe((response: any) => {
-        console.log('🟢 [Carrito] materiaisSubject RECIBIÓ datos:', response);
-        console.log('🟢 [Carrito] response.length:', response?.length);
         const materiais = this.formatMateriais(response);
-        console.log('🟢 [Carrito] materiais formateados:', materiais);
         this.onAddMaterial(materiais);
       });
   }
@@ -541,13 +537,9 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
         const almacen = material.almacen ?? this.almacen;
         let descuento1 = material.descuento ?? 0.0000;
 
-        console.log('📦 [onAddMaterial] material:', material);
-        console.log('📦 [onAddMaterial] tipo_cliente:', tipo_cliente, '| lista_cliente:', lista_cliente, '| almacen:', almacen);
-
         // Realiza el cálculo inicial
         const dataCalculo = await this.onPrimerCalculo(this.quantidade, material.articulo, lista_cliente, tipo_cliente, 0, material.descuento ?? 0);
         if (!dataCalculo) {
-            console.error('❌ [onAddMaterial] dataCalculo es null para material:', material.articulo, '→ NO se agrega al grid');
             continue;
         }
         const dataStock = await this.almacenStockDisponible(material.articulo, almacen);
@@ -921,16 +913,12 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
       descuento: descuento,
       id_tipo_cliente: tipo,
     };
-    console.log('📦 [onPrimerCalculo] params enviados:', params);
     try {
       const response = await this.onCalculadora(params);
-      console.log('📦 [onPrimerCalculo] response completa:', response);
 
       // El backend devuelve { success: true, data: [...] }
-      // NO { estado: true, result: {...} }
       if (response.success === true && response.data && response.data.length > 0) {
         const raw = response.data[0];
-        console.log('✅ [onPrimerCalculo] raw data:', raw);
 
         // Mapear campos del backend al modelo del frontend
         const result = {
@@ -945,17 +933,14 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
           pesoEspecifico: raw.tonelada ?? 0,
           tonelada: raw.tonelada ?? 0,
         };
-        console.log('✅ [onPrimerCalculo] result mapeado:', result);
 
         this.onCalcularTotais(true);
         return result;
       } else {
-        console.error('❌ [onPrimerCalculo] API retornó error:', response.mensagem, '| response:', response);
         this.pnotifyService.notice(response.mensagem ?? 'Error en el cálculo');
         return null;
       }
     } catch (error) {
-      console.error('❌ [onPrimerCalculo] CATCH error:', error);
       return null;
     }
   }
