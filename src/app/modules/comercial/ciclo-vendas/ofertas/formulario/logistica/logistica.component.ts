@@ -48,7 +48,6 @@ export class LogisticaComponent implements OnInit {
 
     this.form.get('modoEntrega')?.valueChanges.subscribe(value => {
       this.tipoEntrega = value;  // Actualiza tipoEntrega con el valor seleccionado
-      console.log('Tipo de entrega seleccionado:', this.tipoEntrega);
     });
   }
   private loadExtendedData(codigo: string): void {
@@ -58,10 +57,9 @@ export class LogisticaComponent implements OnInit {
           const data = response.data.extendedData[0];
           this.updateFormData(data);
         } else {
-          console.error('No se encontraron datos en extendedData');
         }
       },
-      error => console.error('Error al obtener datos extendidos:', error)
+      () => {}
     );
   }
 
@@ -121,11 +119,10 @@ export class LogisticaComponent implements OnInit {
   }
 
   getCentrosLogisticos(): void {
-    console.log('aqui logis', this.tipoEntrega);
     this.comercialService.getCentrosLogisticos().subscribe(
       (response: any) => {
         this.centrosLogisticos = response.data;
-        this.form.patchValue({ centroLogisticoControl: 1 });  // Selecciona el valor 1
+        this.form.patchValue({ id_centro_logistico: 1 });  // Selecciona el valor 1
       },
       (error: any) => { }
     );

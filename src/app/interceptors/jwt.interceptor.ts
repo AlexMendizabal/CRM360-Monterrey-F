@@ -24,13 +24,6 @@ export class JwtInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
     const user = this.authService.getCurrentUser();
 
-    if(user !== null) {
-      // ERROR MODULO COMERCIAL - LISTA CLIENTES
-      // La idVendedor del administrador es 88
-      // Y no permite acceder a Registros ("Cadastros") del cliente
-      /* user.info.idVendedor = 1; */
-    
-    }
     if (user && user.token != null) {
       request = request.clone({
         setHeaders: {

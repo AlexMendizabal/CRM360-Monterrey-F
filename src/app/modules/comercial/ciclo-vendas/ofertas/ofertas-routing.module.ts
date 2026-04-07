@@ -6,7 +6,7 @@ import { FormularioComponent } from './formulario/formulario.component';
 
 //Guards
 import { FormDeactivateGuard } from 'src/app/guards/form-deactivate.guard';
-import { ComercialCicloVendasCotacoesFormularioClienteResolverGuard } from '../cotacoes/formulario/guards/cliente-resolver.guard';
+import { ComercialCicloVendasCotacoesFormularioClienteResolverGuard } from './formulario/guards/cliente-resolver.guard';
 import { ComercialCicloVendasCotacoesFormularioPermissoesResolverGuard } from './formulario/guards/permissoes-resolver.guard';
 import { ComercialCicloVendasCotacoesFormularioProfilesResolverGuard } from './formulario/guards/profile-resolver.guard';
 import { ComercialCicloVendasCotacoesFormularioDataResolverGuard } from './formulario/guards/data-resolver.guard';
@@ -28,7 +28,7 @@ const routes: Routes = [
      canDeactivate: [FormDeactivateGuard],
   },
   {
-    path: 'editar/:codCotacao',
+    path: 'editar/:codOferta',
     component: FormularioComponent,
   },
   {
@@ -36,11 +36,6 @@ const routes: Routes = [
     redirectTo: 'lista',
     pathMatch: 'full',
   },
-  {
-    path: 'registrar',
-    redirectTo: 'nuevo',
-    pathMatch: 'full'
-  }
 ];
 
 @NgModule({

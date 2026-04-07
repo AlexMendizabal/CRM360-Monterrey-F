@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { take, retry } from 'rxjs/operators';
 // Interfaces
 import { JsonResponse } from 'src/app/models/json-response';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OfertasService {
 
-  private readonly API = `https://crm360.monterrey.com.bo/api/comercial/ciclo-vendas/cotacoes`;
+  private readonly API = `${environment.API}/comercial/ciclo-vendas/cotacoes`;
   constructor(
     protected http: HttpClient,
   ) { }

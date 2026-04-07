@@ -5,6 +5,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { interval, Subject } from 'rxjs';
 import { takeUntil, take, retry } from 'rxjs/operators';
 import { JsonResponse } from 'src/app/models/json-response';
+import { environment } from 'src/environments/environment';
 import 'bootstrap';
 // Services
 import { AuthService } from 'src/app/shared/services/core/auth.service';
@@ -25,7 +26,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 })
 export class HeaderComponent implements OnInit {
   @Input('showLoader') showLoader: boolean;
-  private readonly API = `https://crm360.monterrey.com.bo/api/sap`;
+  private readonly API = `${environment.URL_MTCORP}sap`;
 
   showLogoCliente = true;
   srcLogoCliente: string;
@@ -78,12 +79,6 @@ export class HeaderComponent implements OnInit {
     this.notificacionesService.getNotificaciones();
 
     this.notificacionesService.getNotificaciones()
-      .pipe(
-        finalize(() => {
-          /*  this.loaderNavbar = false;
-           this.submittingForm = false; */
-        })
-      )
       .subscribe(
         (response: any) => {
           if (response.responseCode === 200) {
@@ -99,12 +94,6 @@ export class HeaderComponent implements OnInit {
   actualizarNotificacion(id: number) {
     this.notificacionesService
       .updateNotificacion(id)
-      .pipe(
-        finalize(() => {
-          /*  this.loaderNavbar = false;
-           this.submittingForm = false; */
-        })
-      )
       .subscribe(
         (response: any) => {
           if (response.responseCode === 200) {
@@ -121,12 +110,6 @@ export class HeaderComponent implements OnInit {
   leerNotificaciones() {
     this.notificacionesService
       .postLeerNotificaciones(this.notificaciones)
-      .pipe(
-        finalize(() => {
-          /*  this.loaderNavbar = false;
-         this.submittingForm = false; */
-        })
-      )
       .subscribe(
         (response: any) => {
           if (response.responseCode === 200) {
@@ -138,7 +121,6 @@ export class HeaderComponent implements OnInit {
         }
       );
 
-    //this.getNotificaciones();
   }
 
   onLogoClienteError(event: any) {
@@ -210,27 +192,6 @@ export class HeaderComponent implements OnInit {
           );
         }
       );
-    /* this.modulosService
-      .getModulos()
-      .pipe(
-        finalize(() => {
-          this.modulosLoaded = true;
-        })
-      )
-      .subscribe(
-        (response: any) => {
-          if (response.responseCode === 200) {
-            this.modulos = response.result;
-          } else {
-            this.pnotifyService.error('Você não tem permissão para isso.');
-            this.authService.logout();
-          }
-        },
-        (error: any) => {
-          this.modulosError = true;
-          this.pnotifyService.error('Ocorreu um erro ao carregar os módulos.');
-        }
-      ); */
   }
 
   onModulo(modulo: any) {

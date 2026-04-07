@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, NgModule, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, NgModule, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { Subscription, EMPTY, Observable, of } from 'rxjs';
-import { take, switchMap, finalize, catchError } from 'rxjs/operators';
+import { Subscription, EMPTY, Observable, of, Subject } from 'rxjs';
+import { take, switchMap, finalize, catchError, takeUntil } from 'rxjs/operators';
 import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 // ngx-translate
 import { DatatableComponent } from '@swimlane/ngx-datatable';
@@ -43,7 +43,8 @@ interface ApiResponse {
   styleUrls: ['./lista.component.scss']
 })
 
-export class ListaComponent implements OnInit {
+export class ListaComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   private user = this.authService.getCurrentUser();
   valorSeleccionado = this.user.info.idVendedor;
   @ViewChild('myTable') table: any;
@@ -127,7 +128,7 @@ export class ListaComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
-    private campanhasSOfertasServiceervice: OfertasService,
+    private ofertasService: OfertasService,
     private pnotifyService: PNotifyService,
     private atividadesService: AtividadesService,
     private titleService: TitleService,
@@ -153,26 +154,22 @@ export class ListaComponent implements OnInit {
 
     if (this.user && this.user.info && this.user.info) {
       this.valorSeleccionado = this.user.info;
-      console.log('user seleccionado:', this.valorSeleccionado);
       this.listapost();
     } else {
-      console.warn('No se encontraron datos del usuario.');
     }
   }
   openModalWithClass2(template: TemplateRef<void>) {
     this.modalRef = this.modalService.show(template, Object.assign({}, { class: 'gray modal-lg' }));
   }
   editar(pedido) {
-    console.log('pedido nro', pedido);
     const idSubModulo = this.activatedRoute.snapshot.params.idSubModulo;
-    console.log('Navegando con ID de oferta:', pedido);
     this.router.navigate([`/comercial/ciclo-vendas/${idSubModulo}/ofertas/editar/${pedido}`,]);
   }
   registrarAcesso(): void {
     this.atividadesService.registrarAcesso().subscribe();
   }
   setBreadCrumb(): void {
-    this.activatedRoute.params.subscribe((params: any) => {
+    this.activatedRoute.params.pipe(takeUntil(this.destroy$)).subscribe((params: any) => {
       this.breadCrumbTree = [
         {
           descricao: 'Home',
@@ -215,7 +212,6 @@ export class ListaComponent implements OnInit {
             nombre_vendedor: ejecutivoSeleccionado.NOMBRE // Selecciona el nombre en la lista
           });
         } else {
-          console.warn('El vendedor no está en la lista de ejecutivos.');
         }
       }
     });
@@ -237,7 +233,6 @@ export class ListaComponent implements OnInit {
   
     this.ListaService.postListaOferta(params).subscribe(
       (response: ApiResponse) => { // Aplica la interfaz ApiResponse
-        console.log('Datos recibidos:', response);
   
         // Verificar si la respuesta indica que no se encontraron resultados
         if (!response.success) {
@@ -309,7 +304,6 @@ export class ListaComponent implements OnInit {
         }
       },
       (error) => {
-        console.error('Error al obtener la lista:', error);
         this.pnotifyService.error('Ocurrió un error al obtener la lista.'); // Muestra un mensaje de error general
       }
     );
@@ -341,17 +335,14 @@ export class ListaComponent implements OnInit {
   onPage(event) {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
-      console.log('paged!', event);
     }, 100);
   }
 
   toggleExpandRow(row) {
-    console.log('Toggled Expand Row!', row);
     this.table.rowDetail.toggleExpandRow(row);
   }
 
   onDetailToggle(event) {
-    console.log('Detail Toggled', event);
   }
 
   checkRouterParams(): Object {
@@ -397,7 +388,6 @@ export class ListaComponent implements OnInit {
   @ViewChild('template') template!: TemplateRef<any>;
 
   onImprimir(id: number): void {
-    console.log('CODIGO_SAP recibido:', id);
     this.loaderNavbar = true;
 
     this.ListaService.getImprimirCotacao(id)
@@ -406,7 +396,6 @@ export class ListaComponent implements OnInit {
           this.loaderNavbar = false;
         }),
         catchError((error) => {
-          console.error('Error en getImprimirCotacao:', error);
           this.pnotifyService.error('Ocurrió un error al intentar imprimir');
           return of(null);
         })
@@ -431,8 +420,7 @@ export class ListaComponent implements OnInit {
     var params = {
       id_oferta: id_oferta,
     };
-    /*     console.log('parametros', params);
-     */ this.loaderNavbar = true;
+    this.loaderNavbar = true;
     this.cotacoesService
       .getDetalleOferta(params)
       .pipe(
@@ -447,10 +435,7 @@ export class ListaComponent implements OnInit {
               initialState: { resultFromParent: response.result },
             });
 
-            this.modalRef2.content.onClose.subscribe((result) => {
-              /*               console.log('Modal closed with result:', result);
-               */
-            });
+            this.modalRef2.content.onClose.subscribe(() => {});
           } else {
             this.pnotifyService.error();
           }
@@ -463,12 +448,9 @@ export class ListaComponent implements OnInit {
           }
         }
       );
-    /*     console.log(params);
-     */
   }
 
   onEnviarSap(id_oferta: number): void {
-    console.log('Enviando SAP para oferta ID:', id_oferta);
     this.loaderNavbar = true;
     this.ListaService
       .getenviarsap(id_oferta)
@@ -479,21 +461,17 @@ export class ListaComponent implements OnInit {
       )
       .subscribe(
         (response: JsonResponse) => {
-          // console.log('Respuesta del servidor:', response);
 
           if (response.data_sap.CodigoRespuesta === 200) {
             this.pnotifyService.success('Se envió SAP');
             return;
           } else {
-            console.error('Error al enviar SAP. Detalles:', response.data_sap);
             this.pnotifyService.error(response.data_sap.Mensaje);
           }
         },
         (error: any) => {
-          // console.error('Error en la solicitud:', error);
 
           if (error.error.hasOwnProperty('Mensaje')) {
-            console.error('Mensaje de error:', error.error.Mensaje);
             this.pnotifyService.error(error.error.Mensaje);
           } else {
             this.pnotifyService.error();
@@ -562,7 +540,6 @@ export class ListaComponent implements OnInit {
   }
 
   async onEstadoOferta(codigo_oferta: string): Promise<void> {
-    console.log(`Handling codigo_oferta: ${codigo_oferta}`);
     this.loaderNavbar = true;
     this.ListaService
       .postverifica_oferta(codigo_oferta)
@@ -573,7 +550,6 @@ export class ListaComponent implements OnInit {
       )
       .subscribe(
         (response: JsonResponse) => {
-          console.log('Resputs', response);
           if (response.CodigoRespuesta === 200) {
             this.pnotifyService.success(response.message);
             /*    verificadorElement.classList.replace('far fa-sync-alt fa-spin', 'fas fa-sync-alt'); */
@@ -585,13 +561,17 @@ export class ListaComponent implements OnInit {
         },
         (error: any) => {
           if (error.error.hasOwnProperty('Mensaje')) {
-            console.error('Mensaje de error:', error.error.Mensaje);
             this.pnotifyService.error(error.error.Mensaje);
           } else {
             this.pnotifyService.error();
           }
         }
       );
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   async verificarTodasLasOfertas(): Promise<void> {

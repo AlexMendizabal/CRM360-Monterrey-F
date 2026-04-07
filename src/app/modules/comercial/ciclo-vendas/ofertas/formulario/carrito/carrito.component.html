@@ -110,8 +110,8 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td><select class="form-select form-control input-sm" formControlName="modoEntrega">
-                    <option *ngFor="let modo of modoEntrega" [value]="modo.id">
+                <td><select class="form-select form-control input-sm">
+                    <option *ngFor="let modo of tipoEntregas" [value]="modo.id">
                       {{ modo.descripcion }}
                     </option>
                   </select></td>
@@ -243,6 +243,5 @@
     var valor = inputs[0].value;
 
     // Imprimir el valor en la consola
-    console.log(valor);
   }
 </script>

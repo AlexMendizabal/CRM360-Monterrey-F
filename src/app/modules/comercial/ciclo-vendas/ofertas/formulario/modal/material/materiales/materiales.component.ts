@@ -163,8 +163,11 @@ export class MaterialesComponent implements OnInit {
 
   }
   onAddMaterial(): void {
+    console.log('🔵 [Modal] onAddMaterial CLICK - selected:', this.selected);
+    console.log('🔵 [Modal] selected.length:', this.selected.length);
     let materiais = [];
     for (let index = 0; index < this.selected.length; index++) {
+      console.log('🔵 [Modal] Pushing material:', this.selected[index]);
       materiais.push(this.selected[index]);
       this.selected[index].checked = 0;
       this.pnotifyService.success('Material agregado.');
@@ -192,6 +195,7 @@ export class MaterialesComponent implements OnInit {
      */
 
     if (materiais.length > 0) {
+      console.log('🔵 [Modal] Emitiendo materiaisSubject.next() con:', materiais);
       this.formularioService.materiaisSubject.next(materiais);
       this.closeModal();
     } else {

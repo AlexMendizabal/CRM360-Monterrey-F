@@ -131,7 +131,6 @@ export class VistaComponent implements OnInit {
     };
 
     // 3. Mostrar los datos en consola para ver qué se está enviando
-    console.log('Datos preparados para envío:', clienteData);
 
     // 4. Llamada al servicio para actualizar el cliente
     this.formularioService.updateCliente(clienteData).pipe(
@@ -140,7 +139,6 @@ export class VistaComponent implements OnInit {
         this.loaderNavbar = false;
       }),
       catchError(error => {
-        console.error('Error al actualizar el cliente:', error);
         this.isSubmitting = false;
     
         if (error && error.error && error.error.detalle) {
@@ -180,10 +178,9 @@ export class VistaComponent implements OnInit {
         if (response?.data) {
           this.rubroOptions = response.data;
         } else {
-          console.error('No se encontraron datos de rubros');
         }
       },
-      error => console.error('Error al obtener rubros:', error)
+      () => {}
     );
   }
 
@@ -194,10 +191,9 @@ export class VistaComponent implements OnInit {
         if (response?.result) {
           this.TiposDoc = response.result;
         } else {
-          console.error('No se encontraron datos de documentos');
         }
       },
-      error => console.error('Error al obtener documentos:', error)
+      () => {}
     );
   }
 
@@ -208,10 +204,9 @@ export class VistaComponent implements OnInit {
         if (response?.result) {
           this.TiposPersona = response.result;
         } else {
-          console.error('No se encontraron datos de tipos de personas');
         }
       },
-      error => console.error('Error al obtener tipos de personas:', error)
+      () => {}
     );
   }
 
@@ -222,7 +217,6 @@ export class VistaComponent implements OnInit {
         this.ofertas = response['data']; // Almacena las ofertas en el array
       },
       (error) => {
-        console.error('Error fetching ofertas:', error);
       }
     );
   }
@@ -236,25 +230,21 @@ export class VistaComponent implements OnInit {
 
   // Método para imprimir, genera un modal con el PDF
   onImprimir(id: number): void {
-    console.log('CODIGO_SAP recibido:', id);
     this.loaderNavbar = true;
 
     this.ListaService.getImprimirCotacao(id)
       .pipe(
         finalize(() => this.loaderNavbar = false), // Detiene el loader al finalizar
         catchError((error) => {
-          console.error('Error en getImprimirCotacao:', error);
           this.pnotifyService.error('Ocurrió un error al intentar imprimir');
           return of(null);
         })
       )
       .subscribe((response: JsonResponse) => {
         if (response?.success && response.data?.pedido) {
-          console.log('Respuesta recibida:', response.data);
           this.modalRef = this.modalService.show(PdfComponent, { initialState: { selectedItem: response.data } });
           this.modalRef.content.onClose.subscribe((result) => { });
         } else {
-          console.error('Error al obtener datos de pedido o respuesta fallida');
           this.pnotifyService.error('Error al imprimir');
         }
       });
@@ -269,16 +259,14 @@ export class VistaComponent implements OnInit {
           this.updateFormData(data); // Actualiza el formulario con los datos del cliente
           this.updateRubroSelection(data.RUBRO.trim()); // Actualiza la selección de rubro
         } else {
-          console.error('No se encontraron datos en extendedData');
         }
       },
-      error => console.error('Error al obtener datos extendidos:', error)
+      () => {}
     );
   }
 
   // Actualiza los campos del formulario con los datos del cliente
   private updateFormData(data: any): void {
-    console.log("Datos: ", data);
     this.codigoSAP = data.CODIGOSAP;
     this.id_cliente = data.id_cliente;
     this.nombres = data.NOMBRE;
@@ -323,7 +311,6 @@ export class VistaComponent implements OnInit {
     if (selectedOption) {
       this.form.get('rubro')?.setValue(selectedOption.id_cnae); // Actualiza el valor en el formulario
     } else {
-      console.error('Rubro no encontrado en las opciones');
     }
   }
   closeModal() {

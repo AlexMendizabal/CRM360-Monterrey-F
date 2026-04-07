@@ -134,7 +134,6 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   onSelect(event: any): void {
-    console.log('Selected value:', event.item);
   }
   onKeyUpTotalBruto(event: any, material: FormGroup): void {
     const codigo = material.get('articulo').value;
@@ -157,9 +156,11 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
     this.descuentoSubject.next({ event, material, codigo, lista, tipo, cantidad });
   }
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    //console.log('carrito', this.codCotacao, this.initialValue, 'TipoEntrega',this.tipoEntrega);
     this.tipoEntrega2 = this.tipoEntrega;
-    if (this.initialValue.length > 0) {
+    if (!this.form) {
+      return;
+    }
+    if (this.initialValue && this.initialValue.length > 0) {
       this.onAddMaterial(this.initialValue);
     }
     if (changes['almacen']) {
@@ -182,12 +183,11 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
             // Actualiza los valores en el control
             control.patchValue({
               almacen: changes['almacen'].currentValue,
-              stock: dataStock.StockDisponible || 0 ,
-              comprometido: dataStock.Comprometido || 0 ,
-              StockAlmacen: dataStock.StockTotal || 0 
+              stock: dataStock?.StockDisponible || 0,
+              comprometido: dataStock?.Comprometido || 0,
+              StockAlmacen: dataStock?.StockTotal || 0
             });
           } else {
-            console.warn('Control "material" no encontrado en el FormGroup', control);
           }
         }
 
@@ -234,8 +234,8 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
 
              const dataCambioLista = await this.onPrimerCalculo(cantidad, material, id_lista, id_tipo_cliente, totalbruto, descuento);
 
-
-            // Actualiza los valores en el control
+            if (dataCambioLista) {
+              // Actualiza los valores en el control
               control.patchValue({
                 id_tipo_cliente: id_tipo_cliente,
                 id_lista: id_lista,
@@ -251,8 +251,8 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
                 valorTotal: dataCambioLista.valorTotal,
                 valorTotalBruto: dataCambioLista.valorTotalBruto,
               });
+            }
           } else {
-            console.warn('Control "material" no encontrado en el FormGroup', control);
           }
         }
 
@@ -293,13 +293,14 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
             const material = materialControl.value; // Obtén el material actual del formulario
             const cantidad = cantidadControl.value; // Obtén cantidad actual del formulario
             const dataCambioLista = await this.onPrimerCalculo(cantidad, material, id_lista, id_tipo_cliente, 0, descuento);
-            // Actualiza los valores en el control
+            
+            if (dataCambioLista) {
+              // Actualiza los valores en el control
               control.patchValue({
                 id_tipo_cliente: id_tipo_cliente,
                 id_lista: id_lista,
                 cantidad: dataCambioLista.cantidad,
                 descuento: 0,
-
                 descuento_permitido: 'Valido',
                 descuento_permitido_valor: dataCambioLista.descuento_permitido,
                 pesoEspecifico: dataCambioLista.pesoEspecifico,
@@ -310,8 +311,8 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
                 valorTotal: dataCambioLista.valorTotal,
                 valorTotalBruto: dataCambioLista.valorTotalBruto,
               });
+            }
           } else {
-            console.warn('Control "material" no encontrado en el FormGroup', control);
           }
         }
 
@@ -320,7 +321,6 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
       }
     }
     if (changes['modoEntrega']) {
-      //console.log('modoEntrega ha cambiado:', changes['modoEntrega'].currentValue);
       // Lógica que deseas ejecutar cuando 'id_tipo_cliente' cambie
     }
   }
@@ -402,9 +402,13 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
     this.clearLocalStorage();
   }
   materiaisSubject(): void {
+    console.log('🟢 [Carrito] materiaisSubject suscripción ACTIVA');
     this.materiaisSubscription =
       this.formularioService.materiaisSubject.subscribe((response: any) => {
+        console.log('🟢 [Carrito] materiaisSubject RECIBIÓ datos:', response);
+        console.log('🟢 [Carrito] response.length:', response?.length);
         const materiais = this.formatMateriais(response);
+        console.log('🟢 [Carrito] materiais formateados:', materiais);
         this.onAddMaterial(materiais);
       });
   }
@@ -476,6 +480,7 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
 
   setFormBuilder() {
     this.form = this.formBuilder.group({
+      busquedaItems: [''],
       materiais: this.formBuilder.array([]),
     });
     this.checkInitialValues();
@@ -495,7 +500,6 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
 
     try {
       const response = await this.onStockDisponible(params);
-      //console.log('datos de respuesta', response);
       if (response.success === true) {
         return response.data; // Devuelve el resultado para asignarlo a `data`
       } else {
@@ -503,7 +507,6 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
         return null; // Devuelve `null` si hay un error
       }
     } catch (error) {
-      //console.error('Error en la calculadora', error);
       return null; // Devuelve `null` si hay un error
     }
   }
@@ -520,7 +523,6 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
 
 
   async onAddMaterial(materiais: Array<ICarrinhoModel>): Promise<void> {
-    //console.log('ICarrinhoModel materiais:', materiais);
     if (materiais.length > 0) {
       let qtdeAdicionados = 0;
       for (let i = 0; i < materiais.length; i++) {
@@ -539,8 +541,15 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
         const almacen = material.almacen ?? this.almacen;
         let descuento1 = material.descuento ?? 0.0000;
 
+        console.log('📦 [onAddMaterial] material:', material);
+        console.log('📦 [onAddMaterial] tipo_cliente:', tipo_cliente, '| lista_cliente:', lista_cliente, '| almacen:', almacen);
+
         // Realiza el cálculo inicial
         const dataCalculo = await this.onPrimerCalculo(this.quantidade, material.articulo, lista_cliente, tipo_cliente, 0, material.descuento ?? 0);
+        if (!dataCalculo) {
+            console.error('❌ [onAddMaterial] dataCalculo es null para material:', material.articulo, '→ NO se agrega al grid');
+            continue;
+        }
         const dataStock = await this.almacenStockDisponible(material.articulo, almacen);
         
         if (dataCalculo.descuento != '.0000' && dataCalculo.descuento != undefined) {
@@ -550,7 +559,7 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
         let pedido = 0
         let comprometido = 0
         let StockAlmacen = 0
-        if (dataStock != null && dataStock.StockDisponible != null || dataStock.StockDisponible == 0) {
+        if (dataStock != null && (dataStock.StockDisponible != null || dataStock.StockDisponible == 0)) {
           stock = dataStock.StockDisponible;
           pedido = dataStock.Pedido;
           comprometido = dataStock.Comprometido;
@@ -585,14 +594,13 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
             valorTotalBruto: [dataCalculo.valorTotalBruto],
             almacen: [almacen], 
             StockAlmacen: [StockAlmacen], 
-            stock: [dataStock.StockDisponible],
+            stock: [dataStock?.StockDisponible ?? 0],
             pedido: [pedido], 
             comprometido: [comprometido],
             modoEntrega: [this.selectedModoEntrega],
             tipoEntrega: this.tipoEntrega ?? 0
           })
         );
-        // console.log("Materiales de carrito",this.materiais);
         qtdeAdicionados++;
       }
       this.onCalcularTotais(true);
@@ -620,7 +628,6 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
     if (valorBusqueda) {
       this.formularioService.getDataMateriales({ search: valorBusqueda }).subscribe((response: Array<JsonResponse | any>) => {
         this.materiales = response['data'];
-       // console.log('materiales buscados:', this.materiales);
       });
     } else {
       this.materiales = [];
@@ -640,7 +647,6 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
 
   onCalcularTotais(emitter: boolean): void {
     const materiais = this.form.value.materiais;
-   // console.log("materiales calculo",materiais);
     this.total.peso = 0;
     this.total.valorTotal = 0;
     this.total.valorTotalBruto = 0;
@@ -816,9 +822,7 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
       totalbruto: 0,
       descuento: descuento,
     };
-    //console.log('datos que enviar calculadora', params);
     const response = await this.onCalculadora(params);
-   // console.log('datos de respuesta', response);
     if (response.estado === true) {
       const result = response.result;
       const estadoDescuento = result.descuento > result.descuento_permitido ? 'Invalido' : 'Valido';
@@ -851,9 +855,7 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
       descuento: descuento,
     };
 
-   //console.log('datos que enviar calculadora', params);
     const response = await this.onCalculadora(params);
-   // console.log('datos de respuesta', response);
     if (response.estado === true) {
       const result = response.result;
       const estadoDescuento = result.descuento > result.descuento_permitido ? 'Invalido' : 'Valido';
@@ -888,9 +890,7 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
       descuento: descuento,
     };
 
-    //console.log('datos que enviar calculadora', params);
     const response = await this.onCalculadora(params);
-    //console.log('datos de respuesta', response);
     if (response.estado === true) {
       const result = response.result;
       const estadoDescuento = result.descuento > result.descuento_permitido ? 'Invalido' : 'Valido';
@@ -921,20 +921,42 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
       descuento: descuento,
       id_tipo_cliente: tipo,
     };
-   // console.log('datos que enviar calculadora', params);
+    console.log('📦 [onPrimerCalculo] params enviados:', params);
     try {
       const response = await this.onCalculadora(params);
-      //console.log('datos de respuesta', response);
-      if (response.estado === true) {
+      console.log('📦 [onPrimerCalculo] response completa:', response);
+
+      // El backend devuelve { success: true, data: [...] }
+      // NO { estado: true, result: {...} }
+      if (response.success === true && response.data && response.data.length > 0) {
+        const raw = response.data[0];
+        console.log('✅ [onPrimerCalculo] raw data:', raw);
+
+        // Mapear campos del backend al modelo del frontend
+        const result = {
+          cantidad: raw.qtde ?? cantidad,
+          precio: raw.valorUnitario ?? 0,
+          preciobruto: raw.valorItem ?? 0,
+          valorTotal: raw.valorTotal ?? 0,
+          valorTotalBruto: raw.valorTotal ?? 0,
+          totalbs: (raw.valorTotal ?? 0) * 6.96,
+          descuento: raw.aliquotaIpi ?? descuento,
+          descuento_permitido: raw.aliquotaIcms ?? 0,
+          pesoEspecifico: raw.tonelada ?? 0,
+          tonelada: raw.tonelada ?? 0,
+        };
+        console.log('✅ [onPrimerCalculo] result mapeado:', result);
+
         this.onCalcularTotais(true);
-        return response.result; // Devuelve el resultado para asignarlo a `data`
+        return result;
       } else {
-        this.pnotifyService.notice(response.mensagem);
-        return null; // Devuelve `null` si hay un error
+        console.error('❌ [onPrimerCalculo] API retornó error:', response.mensagem, '| response:', response);
+        this.pnotifyService.notice(response.mensagem ?? 'Error en el cálculo');
+        return null;
       }
     } catch (error) {
-      console.error('Error en la calculadora', error);
-      return null; // Devuelve `null` si hay un error
+      console.error('❌ [onPrimerCalculo] CATCH error:', error);
+      return null;
     }
   }
   onCalculadora(params): Promise<JsonResponse> {
@@ -946,7 +968,6 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
 
  /*  onModoEntregaChange(event, material: FormGroup) {
     const selectedValue = event.target.value;
-    console.log('modo de entrega', selectedValue);
 
   } */
     async onModoEntregaChange(event: any, material: FormGroup, codigo: string, lista: number, tipo: number, totalbruto: number, cantidad: number, descuento: number) {
@@ -960,7 +981,7 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
         descuento: descuento,
       };
       const response = await this.onCalculadora(params);
-      const result = response.result;
+      const result = response.success === true && response.data?.length > 0 ? response.data[0] : null;
       material.patchValue({
         tipoEntrega: modoEntregaSeleccionado
       });

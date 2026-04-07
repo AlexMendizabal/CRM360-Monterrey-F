@@ -52,7 +52,6 @@ export class SeleccionarComponent implements OnInit {
 
   updateFilter(event: any) {
     const filterValue = event.target.value; // Extrae el valor del input
-    console.log('Valor de búsqueda:', filterValue);
 
     // Emitimos el valor al Subject para que gestione la búsqueda
     this.searchSubject.next(filterValue);

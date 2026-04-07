@@ -92,7 +92,6 @@ public toggleInputs() {
     });
 
    /*  if(this.resultFromParent.oferta[0].estado_of === 3) {
-      console.log('aqui olo',this.resultFromParent.oferta[0].estado_of);
       this.toggleDescripcionCard();
     }  */
   }
@@ -144,12 +143,10 @@ public toggleInputs() {
     const content = this.contentToConvert.nativeElement;
 
     if (!content) {
-      console.error('Element with id contentToConvert not found.');
       return;
     }
 
     if (content.childElementCount === 0) {
-      console.error('No content found inside the contentToConvert element.');
       return;
     }
 

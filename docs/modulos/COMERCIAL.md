@@ -20,6 +20,17 @@ Modulo mas grande y complejo del sistema. Gestiona todo el ciclo comercial: vent
 - Duplicacion de cotizaciones
 - Estados y flujo de aprobacion
 
+#### Ofertas POS (Oferta POS)
+- **Ruta:** `/comercial/ciclo-vendas/@id/ofertas`
+- **ID Actividad:** 107 (Submódulo: CADASTROS)
+- **Componentes:** lista, formulario, carrito, logistica, modals (cliente/seleccionar, cliente/vista, material/almacenes, material/datomaestro, material/materiales)
+- **Servicios:**
+  - `ofertas.service.ts` — permisos de acceso, lista general (usa endpoints de cotacoes)
+  - `lista/lista.service.ts` — listado de ofertas, impresion, envio SAP, vigencia
+  - `formulario/formulario.service.ts` — clientes, materiales, almacenes, ejecutivos, condiciones de pago, registrar/editar oferta, cross-sell, up-sell
+- **Guards:** `cliente-resolver`, `data-resolver`, `permissoes-resolver`, `profile-resolver`
+- **Nota:** Comparte algunos endpoints de backend con cotacoes (imprimir-cotacao, calculadora, enviar_sap)
+
 #### Autorizacoes (Autorizaciones)
 - Flujo de aprobacion de cotizaciones
 - Panel de autorizaciones pendientes

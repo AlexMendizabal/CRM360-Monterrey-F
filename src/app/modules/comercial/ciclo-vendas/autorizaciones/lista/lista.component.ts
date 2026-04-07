@@ -142,15 +142,12 @@ export class ComercialCicloVendasCotacoesListaComponent
   data: [];
   autorizaciones:Array<any> = [];
   items: Array<any> = [];
-  onChangeVendedor:any;
-
   dados: Array<any> = [];
   datos: Array<ICotacao> = [];
   datosAutorizaciones: Array<ICotacao> = []
   dadosLoaded = false;
   dadosEmpty = false;
   searchSubmitted = false;
-  selectedVendedor: any;
 
   detalhes: any = {
     dataFaturamento: Date,

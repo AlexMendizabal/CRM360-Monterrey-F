@@ -13,13 +13,6 @@ const routes: Routes = [
         component: ComercialCicloVendasComponent,
       },
       {
-        path: 'ofertas',
-        loadChildren: () =>
-          import('./cotacoes/cotacoes.module').then(
-            (m) => m.ComercialCicloVendasCotacoesModule
-          ),
-      },
-      {
         path: 'autorizaciones',
         loadChildren: () =>
           import('./autorizaciones/autorizaciones.module').then(
@@ -35,7 +28,6 @@ const routes: Routes = [
       },
       {
         path: 'ofertas',
-       // loadChildren: () => import('./ofertas/ofertas.module').then( (m) => m.OfertasModule),
         loadChildren: () => import('./ofertas/ofertas.module').then(m => m.OfertasModule)
       },
       {
@@ -64,13 +56,6 @@ const routes: Routes = [
       {
         path: 'reporte',
         redirectTo: '/comercial/reporte',
-      },
-      {
-        path: 'autorizaciones',
-        loadChildren: () =>
-          import('./autorizaciones/autorizaciones.module').then(
-            (m) => m.ComercialCicloVendasAutorizacionesModule
-          ),
       },
     ],
   }

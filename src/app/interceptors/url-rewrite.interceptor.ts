@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class UrlRewriteInterceptor implements HttpInterceptor {
-  private readonly PROD_BASE = 'https://crm360.monterrey.com.bo/api/';
+  private readonly PROD_BASE = environment.URL_MTCORP;
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (!environment.production) {

@@ -13,6 +13,49 @@
 
 ---
 
+## Correcciones Realizadas (2026-04-03)
+
+### Environments (BUG-004, BUG-005, BUG-014)
+- **environment.prod.ts**: Eliminado espacio al inicio de `URL_MTCORP`, agregado `/api/` faltante
+- **environment.staging.ts**: Mismo fix
+- **environment.ts**: Limpiados comentarios viejos
+- **Todos los environments**: Agregado `SAP_API` para centralizar IP SAP (antes hardcodeada)
+
+### Seguridad (BUG-008)
+- **app.module.ts**: Eliminada API Key de Google Maps del codigo comentado + import muerto `AgmCoreModule`
+
+### URLs Hardcodeadas (BUG-004, BUG-005, BUG-015)
+- **auth.service.ts**: `changePassword()` y `loginSAP()` ahora usan `environment.URL_MTCORP` y `environment.SAP_API`
+- **generic.service.ts**: URL hardcodeada reemplazada por `environment.URL_MTCORP`
+- **header.component.ts**: URL SAP hardcodeada reemplazada por `environment.URL_MTCORP`
+- **url-rewrite.interceptor.ts**: `PROD_BASE` ahora usa `environment.URL_MTCORP`
+- **Modulo ofertas** (3 servicios): URLs de produccion reemplazadas por `environment.API`
+
+### Codigo muerto y debugging (BUG-010, BUG-011, BUG-012)
+- **jwt.interceptor.ts**: Eliminado bloque debug comentado (idVendedor = 1)
+- **auth.service.ts**: Limpiado codigo comentado en `sessionExpired()`
+- **login.component.ts**: Eliminado bloque SAP con credenciales hardcodeadas, usuario debug 'Xuxa'
+- **header.component.ts**: Eliminados 3 bloques `finalize` vacios, bloque `getModulos` comentado viejo
+- **Modulo ofertas**: 103 console.log eliminados en 10 archivos
+
+### Routing (NUEVOS)
+- **ciclo-vendas-routing.module.ts**: Eliminada ruta duplicada `ofertas` que cargaba `cotacoes.module`, eliminada ruta duplicada `autorizaciones`
+- **ofertas-routing.module.ts**: Guard import corregido (local en vez de cotacoes), ruta duplicada `registrar` eliminada, parametro `:codCotacao` renombrado a `:codOferta`
+
+### Template Error (NUEVO)
+- **finalizacion.component.html**: Agregado `</div>` faltante que cerraba `modal-body` — causaba error de compilacion
+
+### Memory Leaks (BUG-009)
+- **ofertas/lista.component.ts**: Implementado `OnDestroy` + `takeUntil(destroy$)` en subscripcion `activatedRoute.params`
+- **ofertas/formulario.component.ts**: Agregado `takeUntil(destroy$)` en 5 subscripciones sin cleanup
+
+### Calidad de codigo
+- **lista.service.ts**: Limpiados imports no usados
+- **formulario.service.ts**: Eliminado import `forkJoin` no usado
+- **lista.component.ts**: Variable `campanhasSOfertasServiceervice` renombrada a `ofertasService`
+
+---
+
 ## 1. Criticos - Incompatibilidades de Version
 
 ### BUG-001: @angular/material 16 incompatible con Angular 10
@@ -266,21 +309,21 @@ La inconsistencia en el trailing `/api/` puede causar URLs rotas.
 ## 8. Recomendaciones Generales
 
 ### Prioridad 1 (Inmediata)
-1. Resolver incompatibilidad de `@angular/material` version
-2. Centralizar todas las URLs de API en `environment.ts`
-3. Eliminar todos los `console.log` de produccion
-4. Remover Google Maps API key del codigo
+1. ❌ Resolver incompatibilidad de `@angular/material` version (pendiente migracion)
+2. ✅ PARCIAL - Centralizar URLs de API: core services, header, interceptor y modulo ofertas migrados a `environment`. Quedan ~150 servicios usando URL hardcodeada (funciona via `UrlRewriteInterceptor`)
+3. ✅ PARCIAL - Eliminados 103 `console.log` del modulo ofertas. Quedan ~180 en otros modulos
+4. ✅ Removida Google Maps API key del codigo
 
 ### Prioridad 2 (Corto plazo)
-5. Implementar `takeUntil` pattern en todos los componentes con subscripciones
-6. Limpiar codigo comentado y debug
-7. Habilitar Ivy compiler
-8. Implementar LoggerService
+5. ✅ PARCIAL - Implementado `takeUntil` en ofertas/lista y ofertas/formulario. Falta en otros modulos
+6. ✅ PARCIAL - Limpiado codigo comentado en auth.service, jwt.interceptor, login, header. Falta en otros modulos
+7. ❌ Habilitar Ivy compiler
+8. ❌ Implementar LoggerService
 
 ### Prioridad 3 (Mediano plazo)
-9. Planificar migracion de Angular 10 a version LTS actual
-10. Implementar tests unitarios (cobertura actual ~0%)
-11. Migrar de TSLint (deprecated) a ESLint
-12. Evaluar reemplazo de jQuery por soluciones Angular nativas
-13. Migrar Protractor (deprecated) a Cypress o Playwright
-14. Evaluar seguridad de almacenamiento de JWT
+9. ❌ Planificar migracion de Angular 10 a version LTS actual
+10. ❌ Implementar tests unitarios (cobertura actual ~0%)
+11. ❌ Migrar de TSLint (deprecated) a ESLint
+12. ❌ Evaluar reemplazo de jQuery por soluciones Angular nativas
+13. ❌ Migrar Protractor (deprecated) a Cypress o Playwright
+14. ❌ Evaluar seguridad de almacenamiento de JWT

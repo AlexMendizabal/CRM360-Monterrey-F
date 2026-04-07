@@ -3,8 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AgmCoreModule } from '@agm/core';
-
 import {
   HttpClient,
   HttpClientModule,
@@ -56,9 +54,6 @@ import { ChangePasswordModalComponent } from './core/change-password-modal/chang
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-   /*  AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDl5b7STz9xYNDhybTTer2POVncX9FYqCc' // Reemplaza con tu propia clave de API de Google Maps
-    }), */
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

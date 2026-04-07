@@ -44,7 +44,7 @@ export class AuthService {
 
   loginSAP(data: any): Observable<any> {
     this.hasSession = true;
-  return this.http.post(`http://192.168.0.123:4100/api/Login`, data).pipe(take(1), retry(2));
+    return this.http.post(`${environment.SAP_API}Login`, data).pipe(take(1), retry(2));
   }
 
 
@@ -57,29 +57,21 @@ export class AuthService {
   }
 
   changePassword(data: any): Observable<any> {
-    return this.http.post(`https://crm360.monterrey.com.bo/api/core/contra-senha`, data, { observe: 'response' }).pipe(take(1));
+    return this.http.post(`${environment.URL_MTCORP}core/contra-senha`, data, { observe: 'response' }).pipe(take(1));
   }
 
   sessionExpired(): void {
+    if (!this.hasSession) {
+      return;
+    }
 
-    /* setTimeout(() => {
- */
-      if (!this.hasSession) {
-        return
-      }
+    const router = this.router.url;
+    const queryParams = router != '/login' ? { urlAfterLogin: router } : undefined;
 
-      const router = this.router.url;
-      const queryParams = router != '/login' ? { urlAfterLogin: router } : undefined;
-
-      this.hasSession = false;
-      this.resetCurrentUser();
-      this.pnotifyService.notice('Su sesión expiro intente nuevamente.');
-      this.router.navigate(['/login'], {
-        queryParams: queryParams
-      })
-      //.then(() => {window.location.reload()});
-/*
-    }, 500); */
+    this.hasSession = false;
+    this.resetCurrentUser();
+    this.pnotifyService.notice('Su sesión expiro intente nuevamente.');
+    this.router.navigate(['/login'], { queryParams: queryParams });
   }
 
   setCurrentUser(user: any): void {

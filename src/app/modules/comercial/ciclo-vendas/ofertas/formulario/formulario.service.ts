@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient,  HttpParams } from '@angular/common/http';
-import { Observable, forkJoin , Subscription, BehaviorSubject, Subject, throwError } from 'rxjs';
+import { Observable, Subscription, BehaviorSubject, Subject, throwError } from 'rxjs';
 import { take, retry, catchError, finalize } from 'rxjs/operators';
 // Interfaces
 import { JsonResponse } from 'src/app/models/json-response';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FormularioService {
-  private readonly API = ` https://crm360.monterrey.com.bo/api`;
-  private readonly API2 = `https://crm360.monterrey.com.bo/api/comercial/clientes`;
+  private readonly API = `${environment.API}`;
+  private readonly API2 = `${environment.API}/comercial/clientes`;
 
   private httpSubscription: Subscription | undefined;
   private selectedClientSource = new BehaviorSubject<string | null>(null);
@@ -80,7 +81,6 @@ getArticulo(): Observable<{articulo: string, lista: number}> {
   }
 
   PostCodigoCliente(codigo: string): Observable<any> {
-    console.log('Enviando código al backend:', codigo);
     return this.http.post(`${this.API}/comercial/ciclo-vendas/ofertas/PostCodigoCliente`, { codigo });
   }
 
@@ -163,7 +163,6 @@ getArticulo(): Observable<{articulo: string, lista: number}> {
     this.logisticaDataSubject.next(data);
   }
   postOferta(params: any): Observable<any> {
-    console.log('Enviando código al backend:', params);
     return this.http.post(`${this.API}/comercial/ciclo-vendas/oferta/registrar`, { params });
   }
   getHistorialOfertas(codigo: string): Observable<Object | JsonResponse> {
@@ -186,7 +185,7 @@ getArticulo(): Observable<{articulo: string, lista: number}> {
   }
   updateCliente(params: any){
     return this.http
-      .post(`https://crm360.monterrey.com.bo/api/sap/cliente_update`, params)
+      .post(`${this.API}/sap/cliente_update`, params)
       .pipe(take(1), retry(0));
   }
 

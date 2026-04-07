@@ -51,12 +51,10 @@ export class PdfComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('Data received in PdfComponent:', this.selectedItem);
     this.data = this.selectedItem;
     this.materiais = this.selectedItem.materiais;
     this.onClose = new Subject();
     this.imageSrc = this.sanitizer.bypassSecurityTrustUrl('assets/images/logo/logo-monterrey.png');
-    // console.log('Received data in modal:', this.data);
   }
 
   public onPrint(): void {
@@ -76,7 +74,6 @@ export class PdfComponent implements OnInit {
 
   onDownlaod(){
     //this.loaderNavbar = true;
-    console.log('Data from Parent:', this.selectedItem);
     this.pdfService.download(
       'contentToConvert',
       `${this.selectedItem.pedido[0].nombre_cliente}-OFERTA-${this.selectedItem.pedido[0].codigo_oferta}`

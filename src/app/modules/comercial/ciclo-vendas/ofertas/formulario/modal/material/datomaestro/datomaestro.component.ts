@@ -54,11 +54,9 @@ export class DatomaestroComponent implements OnInit {
 
   getStockAll(codigoArticulo: string): void {
     if (this.isFetchingStock) {
-        console.warn('Ya se está obteniendo el stock, la solicitud no se enviará de nuevo.');
         return; // Salir si ya se está procesando
     }
 
-    console.log('Código de artículo enviado:', codigoArticulo); // Verifica el valor
     this.isFetchingStock = true; // Cambia el estado antes de hacer la solicitud
 
     this.formularioService.getStockAll(codigoArticulo).subscribe(
@@ -66,21 +64,17 @@ export class DatomaestroComponent implements OnInit {
         this.isFetchingStock = false; // Restablece el estado al finalizar la solicitud
         if (response.success) {
           this.stocks = response.data;
-          console.log('Datos de stock obtenidos:', this.stocks);
         } else {
-          console.error('Error en la respuesta:', response);
         }
       },
       (error: HttpErrorResponse) => {
         this.isFetchingStock = false; // Asegúrate de restablecer el estado en caso de error
-        console.error('Error al obtener el stock:', error);
       }
     );
 }
   
   loadMaterialData(): void {
     if (!this.articulo || !this.lista) {
-      console.error('Artícuo o lista no están definidos');
       return;
     }
     
@@ -99,7 +93,6 @@ export class DatomaestroComponent implements OnInit {
           unidad: material.unidad,
           peso: material.peso
         });
-        console.log('Datos del material actualizados en el formulario:', material);
   
         // Solo una llamada a getStockAll
         this.getStockAll(material.numeroArticulo);

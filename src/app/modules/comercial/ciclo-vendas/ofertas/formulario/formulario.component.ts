@@ -15,7 +15,7 @@ import {
 
 // RxJS (Programación reactiva)
 import { BehaviorSubject, EMPTY, Subscription, Subject, Observable } from 'rxjs';  // Para manejar estados y suscripciones
-import { debounceTime, switchMap, distinctUntilChanged, finalize } from 'rxjs/operators';  // Operadores de RxJS para optimizar flujos
+import { debounceTime, switchMap, distinctUntilChanged, finalize, takeUntil } from 'rxjs/operators';
 
 // Angular Router (Navegación y rutas)
 import { ActivatedRoute, Router } from '@angular/router';  // Para capturar rutas activas y manejar redirecciones
@@ -59,6 +59,7 @@ interface Almacen {
 export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivate {
 
   // Variables privadas y suscripciones
+  private destroy$ = new Subject<void>();
   private user = this.authService.getCurrentUser();  // Usuario actual autenticado
   private selectedClientSubject = new BehaviorSubject<string | null>(null);  // Subject para gestionar el cliente seleccionado
   selectedClient$ = this.selectedClientSubject.asObservable();  // Observable para suscribirse a los cambios del cliente seleccionado
@@ -210,14 +211,14 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
     }
 
     // Subscripción al flujo de datos de logística
-    this.formularioService.logisticaData$.subscribe((data) => {
+    this.formularioService.logisticaData$.pipe(takeUntil(this.destroy$)).subscribe((data) => {
       if (data) {
         this.logisticaData = data;
       }
     });
 
     // Subscripción al cliente seleccionado
-    this.formularioService.selectedClient$.subscribe(codigo => {
+    this.formularioService.selectedClient$.pipe(takeUntil(this.destroy$)).subscribe(codigo => {
       if (codigo) {
         this.selectedClient = codigo;
         this.formClienteBox();  // Actualiza el formulario cuando cambia el cliente seleccionado
@@ -228,7 +229,6 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
   // Inicialización del componente
   ngOnInit(): void {
     this.urlPath = this.activatedRoute.snapshot.url[0].path;
-    console.log('aqui esta oni', this.activatedRoute.snapshot.url);
     this.visualizar = false; // Asegúrate de que visualizar está en false para pruebas
     this.getCarteira(this.urlPath);
 
@@ -245,18 +245,16 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
     // Verifica si hay un usuario seleccionado
     if (this.user && this.user.info) {
       this.valorSeleccionado = this.user.info;
-      console.log('user seleccionado:', this.valorSeleccionado);
     } else {
-      console.warn('No se encontraron datos del usuario.');
     }
 
     // Suscribirse al loader observable
-    this.formularioService.loader$.subscribe((isLoading) => {
+    this.formularioService.loader$.pipe(takeUntil(this.destroy$)).subscribe((isLoading) => {
       this.loaderNavbar = isLoading;
     });
 
     // Monitorea cambios en el almacén de despacho
-    this.form.get('almacenDespacho').valueChanges.subscribe(value => {
+    this.form.get('almacenDespacho').valueChanges.pipe(takeUntil(this.destroy$)).subscribe(value => {
       this.almacenDespacho = value;
     });
 
@@ -267,13 +265,10 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
   }
   getCarteira(action: string) {
 
-    console.log('aqui getCarteira', action);
     if (action == 'editar') {
       const id_num = this.activatedRoute.snapshot.url[1].path;
-      console.log('aqui getCarteira', action, id_num);
       this.formularioService.getDatoEdita(id_num)
         .subscribe((response: JsonResponse) => {
-          console.log('datos traelista cliente', response);
           if (response.success == true) {
             this.codCotacao = parseInt(id_num);
             this.action = action;
@@ -289,7 +284,7 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
             // Llamamos a OnClienteDatos para llenar el formulario
 
             this.OnClienteDatos(response.data[0]);
-            this.formularioService.logisticaData$.subscribe((data) => {
+            this.formularioService.logisticaData$.pipe(takeUntil(this.destroy$)).subscribe((data) => {
               if (data) {
                 this.logisticaData = data;
               }
@@ -370,7 +365,6 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
       class: 'modal-xl',
     });
     if (codigoCliente) {
-      console.log('Código del cliente:', codigoCliente);
       // Acción adicional con el código de cliente si es necesario
     }
   }
@@ -419,7 +413,6 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
         this.filteredClients = response['data']; // Mostrar los resultados de la búsqueda
       },
       (error) => {
-        console.error('Error en la búsqueda:', error);
         this.loaderNavbar = false; // Desactivar loader en caso de error
       }
     );
@@ -455,7 +448,6 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
         }
       },
       error => {
-        console.error(`Error al obtener ${dataProp}:`, error);
       },
       () => {
         // Desactivar el loader cuando el servicio ha terminado
@@ -538,7 +530,6 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
           }
         },
         error => {
-          console.error('Error al obtener datos del cliente:', error);
         },
         () => this.toggleLoader(false)
       );
@@ -558,7 +549,6 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
 
   // Nueva función para rellenar los controles del formulario
   OnClienteDatos(data: any) {
-    console.log("data: ", data);
     this.form.controls['CODIGO_OFERTA'].setValue(data.CODIGO_OFERTA);
     this.form.controls['codigo_cliente'].setValue(data.CODIGOSAP);
     this.form.controls['id_cliente'].setValue(data.id_cliente);
@@ -583,7 +573,6 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
     if (tipoContactoValue) {
       this.form.controls['tipoContacto'].setValue(tipoContactoValue.ID);
     } else {
-      console.warn('Tipo de contacto no encontrado en la lista');
     }
     this.form.controls['idpropietario'].setValue(data.IDPROPIETARIO);
     // Aquí verificamos si el campo 'Propietario' está vacío
@@ -604,7 +593,6 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
 
   onSubmit() {
     // Lógica para manejar el envío del formulario
-    console.log('Formulario enviado:', this.form.value);
   }
   sendClienteData(): void {
     // Validar si hay algún descuento negativo
@@ -649,7 +637,6 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
       )
       .subscribe((response: boolean) => {
         if (response) {
-          console.log('¿Duplicar Oferta?', this.duplicarOferta);
           const formValue = this.form.getRawValue();
           const clienteData = {
             codCotacao: this.duplicarOferta ? undefined : this.codCotacao,
@@ -691,16 +678,12 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
           };
 
           this.autorizacion = this.materiales.length > 0 ? this.materiales[0].resultadoComparacion.toString() : '2';
-          console.log('Datos del cliente para enviar:', clienteData);
-          console.log('Datos del de autorizacion para enviar:', this.autorizacion);
 
           this.formularioService.postOferta(clienteData).subscribe(
             (response) => {
-              console.log('Datos enviados correctamente:', response);
               this.router.navigate([`/comercial/ciclo-vendas/23/ofertas/lista`]);
             },
             (error) => {
-              console.error('Error al enviar los datos:', error);
             }
           );
         }
@@ -732,7 +715,6 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
 
 
   onCarrinho(carrinho: any): void {
-    console.log("Datos recibidos en onCarrinho:", carrinho);
 
     if (carrinho) {
         // Cargar materiales y datos del carrito
@@ -772,11 +754,8 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
         // Autorización basada en materiales válidos e inválidos
         this.autorizacion = this.autorizacionStatus.some((material: any) => material.resultadoComparacion === 1) ? '1' : '2';
 
-        console.log("Estado oferta:", this.form.controls['estadoOferta'].value);
-        console.log("Autorización:", this.autorizacion);
 
     } else {
-        console.error("No se recibieron datos en onCarrinho.");
     }
 }
 
@@ -784,6 +763,8 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
 
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     if (this.materiaisSubscription) {
       this.materiaisSubscription.unsubscribe();
     }

@@ -28,9 +28,7 @@ export class LoginComponent implements OnInit {
   passwordType = 'password';
 
   login = {
-    form: {
-      user: 'Xuxa'
-    }
+    form: {}
   };
 
   constructor(
@@ -63,7 +61,6 @@ export class LoginComponent implements OnInit {
 
   getClienteLogo() {
     this.srcLogoCliente = `/assets/images/logo/crm-360.png`;
-    // this.srcLogoCliente = '/assets/images/logo/logo-roxo.png';
   }
 
   onLogoClienteError(event: any) {
@@ -117,32 +114,6 @@ export class LoginComponent implements OnInit {
           (response: any) => {
             if (response.responseCode === 200) {
               this.setUserLogin(response);
-
-              if (response.token) {/* 
-                var params = {
-                  Usuario: 'crm360',
-                  Password: 'M1ddlewareCRM360$/',
-                }
-                this.authService.loginSAP(params).subscribe(
-                  (respuesta: any) => {
-                    if (respuesta.CodigoRespuesta === 0) {
-                      if (respuesta.Mensaje) {
-                        response['tokenSAP'] = response.Mensaje;
-                        this.setUserLogin(response);
-                      }
-                    } else {
-                      this.pnotifyService.error(
-                        'Se ha producido un error al generar su acceso.'
-                      );
-                    }
-                  }
-                );
-              } else {
-                this.pnotifyService.error(
-                  'Se ha producido un error al generar su acceso.'
-                );
-              } */
-              }
             } else {
               this.pnotifyService.error('Nombre de usuario o contraseña incorrectos.');
             }
