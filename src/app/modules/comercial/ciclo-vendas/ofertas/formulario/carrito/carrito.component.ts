@@ -235,19 +235,20 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
              const dataCambioLista = await this.onPrimerCalculo(cantidad, material, id_lista, id_tipo_cliente, totalbruto, descuento);
 
             if (dataCambioLista) {
+              const descuentoActual = parseFloat(control.get('descuento').value) || 0;
+              const estadoDesc = descuentoActual > parseFloat(dataCambioLista.descuento_permitido) ? 'Invalido' : 'Valido';
               // Actualiza los valores en el control
               control.patchValue({
                 id_tipo_cliente: id_tipo_cliente,
                 id_lista: id_lista,
                 cantidad: dataCambioLista.cantidad,
-                descuento: 0,
-                descuento_permitido: 'Valido',
+                descuento_permitido: estadoDesc,
                 descuento_permitido_valor: dataCambioLista.descuento_permitido,
                 pesoEspecifico: dataCambioLista.pesoEspecifico,
                 precio: dataCambioLista.precio,
                 preciobruto: dataCambioLista.preciobruto,
                 descuenttoneladao: dataCambioLista.tonelada,
-                totalbs: dataCambioLista.totalbs,
+                totalbs: parseFloat(dataCambioLista.totalbs).toFixed(4),
                 valorTotal: dataCambioLista.valorTotal,
                 valorTotalBruto: dataCambioLista.valorTotalBruto,
               });
@@ -293,21 +294,22 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
             const material = materialControl.value; // Obtén el material actual del formulario
             const cantidad = cantidadControl.value; // Obtén cantidad actual del formulario
             const dataCambioLista = await this.onPrimerCalculo(cantidad, material, id_lista, id_tipo_cliente, 0, descuento);
-            
+
             if (dataCambioLista) {
+              const descuentoActual = parseFloat(control.get('descuento').value) || 0;
+              const estadoDesc = descuentoActual > parseFloat(dataCambioLista.descuento_permitido) ? 'Invalido' : 'Valido';
               // Actualiza los valores en el control
               control.patchValue({
                 id_tipo_cliente: id_tipo_cliente,
                 id_lista: id_lista,
                 cantidad: dataCambioLista.cantidad,
-                descuento: 0,
-                descuento_permitido: 'Valido',
+                descuento_permitido: estadoDesc,
                 descuento_permitido_valor: dataCambioLista.descuento_permitido,
                 pesoEspecifico: dataCambioLista.pesoEspecifico,
                 precio: dataCambioLista.precio,
                 preciobruto: dataCambioLista.preciobruto,
                 descuenttoneladao: dataCambioLista.tonelada,
-                totalbs: dataCambioLista.totalbs,
+                totalbs: parseFloat(dataCambioLista.totalbs).toFixed(4),
                 valorTotal: dataCambioLista.valorTotal,
                 valorTotalBruto: dataCambioLista.valorTotalBruto,
               });
@@ -560,6 +562,14 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
 
         this.selectedModoEntrega = material.modo_entrega ?? 0;
 
+        const cantidadMaxima = stock - comprometido;
+        if (cantidadMaxima <= 0) {
+          this.pnotifyService.notice(
+            `El material ${material.articulo} no tiene stock disponible (Stock: ${stock}, Comprometido: ${comprometido}). No se puede agregar.`
+          );
+          continue;
+        }
+
         // Agrega el material al FormArray `materiais`
         this.materiais.push( 
           this.formBuilder.group({
@@ -581,7 +591,7 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
             precio: [dataCalculo.precio],
             preciobruto: [dataCalculo.preciobruto],
             descuenttoneladao: [dataCalculo.tonelada],
-            totalbs: [dataCalculo.totalbs],
+            totalbs: [parseFloat(dataCalculo.totalbs).toFixed(4)],
             valorTotal: [dataCalculo.valorTotal],
             valorTotalBruto: [dataCalculo.valorTotalBruto],
             almacen: [almacen], 
@@ -657,7 +667,7 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
         this.total.valorTotalBs += materiais[index].valorTotalBruto * 6.96;
         this.total.impuesto = this.total.valorTotalBruto * 0.13;
         this.total.impuestoTotal = this.total.valorTotalBruto - (this.total.valorTotalBruto * 0.13);
-        this.total.valorTotalBrutoBs += materiais[index].totalbs;
+        this.total.valorTotalBrutoBs += parseFloat(materiais[index].totalbs) || 0;
         this.total.descuento_total += parseInt(materiais[index].descuento, 10) || 0;
         this.total.cantidad_total += parseInt(materiais[index].cantidad, 10) || 0;
         if(materiais[index].Autorizacion == 1)
@@ -805,7 +815,19 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
     this.setLocalStorage(this.form.value.materiais);
   }
   async onCalcularCantidad(event, material: FormGroup, codigo, lista, tipo, totalbruto, descuento): Promise<any> {
-    this.quantidade = event.target.value;
+    this.quantidade = parseFloat(event.target.value) || 0;
+    const stockDisponible = parseFloat(material.get('stock').value) || 0;
+    const comprometido = parseFloat(material.get('comprometido').value) || 0;
+    const cantidadMaxima = stockDisponible - comprometido;
+
+    if (cantidadMaxima > 0 && this.quantidade > cantidadMaxima) {
+      this.pnotifyService.notice(
+        `La cantidad (${this.quantidade}) supera el stock disponible (${stockDisponible} - ${comprometido} comprometido = ${cantidadMaxima}). Se ajustó a ${cantidadMaxima}.`
+      );
+      this.quantidade = cantidadMaxima;
+      material.patchValue({ cantidad: cantidadMaxima });
+    }
+
     let params = {
       codigo_material: codigo,
       quantidade: this.quantidade,
@@ -815,14 +837,21 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
       descuento: descuento,
     };
     const response = await this.onCalculadora(params);
-    if (response.estado === true) {
-      const result = response.result;
-      const estadoDescuento = result.descuento > result.descuento_permitido ? 'Invalido' : 'Valido';
-      // Actualiza los valores directamente en el FormGroup `material`
+    if (response.success === true && response.data && response.data.length > 0) {
+      const raw = response.data[0];
+      const descuentoActual = parseFloat(material.get('descuento').value) || 0;
+      const result = {
+        precio: raw.valorUnitario ?? 0,
+        preciobruto: raw.valorItem ?? 0,
+        valorTotalBruto: raw.valorTotal ?? 0,
+        totalbs: ((raw.valorTotal ?? 0) * 6.96).toFixed(4),
+        descuento_permitido: raw.aliquotaIcms ?? 0,
+        pesoEspecifico: raw.tonelada ?? 0,
+      };
+      const estadoDescuento = descuentoActual > result.descuento_permitido ? 'Invalido' : 'Valido';
       material.patchValue({
         precio: result.precio,
         valorTotalBruto: result.valorTotalBruto,
-        descuento: result.descuento,
         descuento_permitido: estadoDescuento,
         preciobruto: result.preciobruto,
         totalbs: result.totalbs,
@@ -848,14 +877,21 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
     };
 
     const response = await this.onCalculadora(params);
-    if (response.estado === true) {
-      const result = response.result;
-      const estadoDescuento = result.descuento > result.descuento_permitido ? 'Invalido' : 'Valido';
-      // Actualiza los valores directamente en el FormGroup `material`
+    if (response.success === true && response.data && response.data.length > 0) {
+      const raw = response.data[0];
+      const result = {
+        precio: raw.valorUnitario ?? 0,
+        preciobruto: raw.valorItem ?? 0,
+        valorTotalBruto: raw.valorTotal ?? 0,
+        totalbs: ((raw.valorTotal ?? 0) * 6.96).toFixed(4),
+        descuento_permitido: raw.aliquotaIcms ?? 0,
+        pesoEspecifico: raw.tonelada ?? 0,
+      };
+      const estadoDescuento = parseFloat(descuento) > result.descuento_permitido ? 'Invalido' : 'Valido';
       material.patchValue({
         precio: result.precio,
         valorTotalBruto: result.valorTotalBruto,
-        descuento: result.descuento,
+        descuento: descuento,
         descuento_permitido: estadoDescuento,
         preciobruto: result.preciobruto,
         totalbs: result.totalbs,
@@ -883,14 +919,21 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
     };
 
     const response = await this.onCalculadora(params);
-    if (response.estado === true) {
-      const result = response.result;
-      const estadoDescuento = result.descuento > result.descuento_permitido ? 'Invalido' : 'Valido';
-      // Actualiza los valores directamente en el FormGroup `material`
+    if (response.success === true && response.data && response.data.length > 0) {
+      const raw = response.data[0];
+      const descuentoActual = parseFloat(material.get('descuento').value) || 0;
+      const result = {
+        precio: raw.valorUnitario ?? 0,
+        preciobruto: raw.valorItem ?? 0,
+        valorTotalBruto: raw.valorTotal ?? 0,
+        totalbs: ((raw.valorTotal ?? 0) * 6.96).toFixed(4),
+        descuento_permitido: raw.aliquotaIcms ?? 0,
+        pesoEspecifico: raw.tonelada ?? 0,
+      };
+      const estadoDescuento = descuentoActual > result.descuento_permitido ? 'Invalido' : 'Valido';
       material.patchValue({
         precio: result.precio,
         valorTotalBruto: result.valorTotalBruto,
-        descuento: result.descuento,
         descuento_permitido: estadoDescuento,
         preciobruto: result.preciobruto,
         totalbs: result.totalbs,
@@ -927,8 +970,8 @@ export class CarritoComponent implements OnInit, OnDestroy, OnChanges {
           preciobruto: raw.valorItem ?? 0,
           valorTotal: raw.valorTotal ?? 0,
           valorTotalBruto: raw.valorTotal ?? 0,
-          totalbs: (raw.valorTotal ?? 0) * 6.96,
-          descuento: raw.aliquotaIpi ?? descuento,
+          totalbs: ((raw.valorTotal ?? 0) * 6.96).toFixed(4),
+          descuento: descuento,
           descuento_permitido: raw.aliquotaIcms ?? 0,
           pesoEspecifico: raw.tonelada ?? 0,
           tonelada: raw.tonelada ?? 0,

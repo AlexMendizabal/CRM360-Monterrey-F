@@ -130,7 +130,7 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
   impuestoTotal: number;  // Impuesto total
   cantidad_total: number;  // Cantidad total
   descuento_total: number;  // Descuento total
-  autorizacion: string;  // Autorización
+  autorizacion: string = '2';  // Autorización ('1' = SI, '2' = NO)
   autorizacionStatus: any;  // Estado de la autorización
   estadoOferta: string;  // Estado de la oferta
   id_cliente: number;  // ID del cliente
@@ -677,8 +677,6 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
             }
           };
 
-          this.autorizacion = this.materiales.length > 0 ? this.materiales[0].resultadoComparacion.toString() : '2';
-
           this.formularioService.postOferta(clienteData).subscribe(
             (response) => {
               this.router.navigate([`/comercial/ciclo-vendas/23/ofertas/lista`]);
@@ -729,30 +727,33 @@ export class FormularioComponent implements OnInit, OnDestroy, IFormCanDeactivat
         this.descuento_total = carrinho.total.descuento_total;
         this.cantidad_total = carrinho.total.cantidad_total;
 
-        // Variable para verificar si algún material es válido
-        let alMenosUnValido = false;
-
         // Evaluar cada material
+        let requiereAutorizacion = false;
+
         this.autorizacionStatus = this.materiales.map((material: any) => {
             const descuentoPermitidoValor = parseFloat(material.descuento_permitido_valor);
+            const cantidad = parseFloat(material.cantidad) || 0;
+            const stockDisponible = parseFloat(material.stock) || 0;
+            const comprometido = parseFloat(material.comprometido) || 0;
+            const cantidadMaxima = stockDisponible - comprometido;
 
-            // Comprobar si el descuento excede el permitido
-            if (material.descuento > descuentoPermitidoValor) {
+            // Comprobar si el descuento excede el permitido o la cantidad excede el stock
+            if (material.descuento > descuentoPermitidoValor || cantidad > cantidadMaxima) {
                 material.descuento_permitido = 'Invalido';
                 material.resultadoComparacion = 1;  // Marcado como 'Invalido'
+                requiereAutorizacion = true;
             } else {
                 material.descuento_permitido = 'Valido';
                 material.resultadoComparacion = 2;  // Marcado como 'Valido'
-                alMenosUnValido = true;  // Marcar si al menos un material es 'Valido'
             }
             return material;
         });
 
-        // Actualizar el estado de la oferta basado en el estado de los materiales
-        this.form.controls['estadoOferta'].setValue(alMenosUnValido ? 'Borrador' : 'Pendiente');
+        // Actualizar el estado de la oferta: si alguno requiere autorización → Pendiente
+        this.form.controls['estadoOferta'].setValue(requiereAutorizacion ? 'Pendiente' : 'Borrador');
 
-        // Autorización basada en materiales válidos e inválidos
-        this.autorizacion = this.autorizacionStatus.some((material: any) => material.resultadoComparacion === 1) ? '1' : '2';
+        // Autorización: '1' si algún material requiere autorización, '2' si todos son válidos
+        this.autorizacion = requiereAutorizacion ? '1' : '2';
 
 
     } else {

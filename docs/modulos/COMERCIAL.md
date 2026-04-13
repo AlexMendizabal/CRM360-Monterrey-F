@@ -30,10 +30,20 @@ Modulo mas grande y complejo del sistema. Gestiona todo el ciclo comercial: vent
   - `formulario/formulario.service.ts` — clientes, materiales, almacenes, ejecutivos, condiciones de pago, registrar/editar oferta, cross-sell, up-sell
 - **Guards:** `cliente-resolver`, `data-resolver`, `permissoes-resolver`, `profile-resolver`
 - **Nota:** Comparte algunos endpoints de backend con cotacoes (imprimir-cotacao, calculadora, enviar_sap)
+- **Validaciones del carrito:**
+  - No permite agregar materiales con stock disponible <= 0
+  - Ajusta cantidad automaticamente si excede `stock - comprometido`
+  - Columna "Total Bruto Bs" formateada a 4 decimales
+  - Descuento del usuario se preserva (no se sobreescribe con respuesta de API)
+- **API Calculadora:** `POST /api/comercial/ciclo-vendas/cotacoes/calculadora` — Responde `{ success, data[{ valorUnitario, valorItem, valorTotal, aliquotaIpi, aliquotaIcms, tonelada, qtde }] }`. El campo `aliquotaIpi` NO representa el descuento del usuario.
 
 #### Autorizacoes (Autorizaciones)
-- Flujo de aprobacion de cotizaciones
+- Flujo de aprobacion de cotizaciones/ofertas
 - Panel de autorizaciones pendientes
+- **Criterios de autorizacion (ofertas):**
+  - Descuento del material excede el descuento permitido (`descuento > descuento_permitido_valor`)
+  - Cantidad solicitada excede stock disponible (`cantidad > stock - comprometido`)
+  - Si ALGUN material cumple alguno de estos criterios → `autorizacion = '1'` (SI), `estadoOferta = 'Pendiente'`
 
 #### Pedidos de Produccion
 - Gestion de ordenes de produccion

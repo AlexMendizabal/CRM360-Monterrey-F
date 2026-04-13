@@ -178,6 +178,12 @@ Usado con: `Dockerfile.dev` (dentro de Docker)
 
 > **Diferencia clave:** Dentro de Docker, `localhost` se refiere al propio contenedor. `host.docker.internal` es el DNS especial que apunta al host (tu maquina).
 
+### Polling para hot-reload en Windows
+
+El `Dockerfile.dev` usa `--poll 2000` porque los volumenes montados de Windows no soportan `inotify` (filesystem notifications nativo de Linux). Sin polling, `ng serve` no detecta cambios en archivos. El intervalo de 2000ms es un balance entre responsividad y uso de CPU.
+
+> **Nota:** El endpoint `sockjs-node/info` puede mostrar errores intermitentes en la consola del navegador durante reconexiones del WebSocket de hot-reload. Esto es normal y no afecta la funcionalidad.
+
 ---
 
 ## Environments de Angular para Docker
@@ -218,3 +224,16 @@ Definidos en `package.json`:
 | `docker:stop` | Detiene todos los contenedores |
 | `build:docker` | Build Angular con configuracion Docker (sin contenedor) |
 | `start:docker` | Ejecuta ng serve con proxy Docker (sin contenedor) |
+
+### Dockerfile.dev - CMD actual
+
+```dockerfile
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--port", "4200", "--proxy-config", "proxy.config.docker.json", "--disable-host-check", "--poll", "2000"]
+```
+
+| Flag | Proposito |
+|---|---|
+| `--host 0.0.0.0` | Escucha en todas las interfaces (necesario dentro de Docker) |
+| `--proxy-config` | Redirige `/api/*` al backend via `host.docker.internal` |
+| `--disable-host-check` | Permite acceso desde el host sin validacion de hostname |
+| `--poll 2000` | Detecta cambios cada 2s (necesario en volumenes Windows) |

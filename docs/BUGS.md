@@ -56,6 +56,33 @@
 
 ---
 
+## Correcciones Realizadas (2026-04-12)
+
+### Modulo Ofertas - Calculadora y Validaciones
+
+#### Contrato de API desincronizado (CRITICO)
+- **carrito.component.ts**: `onCalcularCantidad`, `onCalcularDescuento`, `onCalcularTotalBruto` usaban `response.estado` y `response.result` pero el API devuelve `{ success, data[] }`. Los tres metodos nunca entraban al `if` — siempre retornaban `null`. Corregido para usar `response.success` y mapear `response.data[0]` (mismo patron que `onPrimerCalculo`).
+
+#### Descuento sobreescrito por API (ALTO)
+- **carrito.component.ts**: El API devuelve `aliquotaIpi: 0` y el codigo hacia `descuento: raw.aliquotaIpi ?? descuento`. Como `0` no es `null`, el `??` nunca hacia fallback — el descuento del usuario se perdia. Corregido en `onPrimerCalculo`, `onCalcularCantidad`, `onCalcularDescuento` y `onCalcularTotalBruto` para preservar el descuento del usuario.
+- **carrito.component.ts (ngOnChanges)**: Bloques `id_lista` e `id_tipo_cliente` tenian `descuento: 0` hardcodeado en `patchValue`. Eliminado — ahora preservan el descuento actual del control.
+
+#### Autorizacion ignoraba stock y usaba solo primer material (ALTO)
+- **formulario.component.ts**: La linea 680 sobreescribia `this.autorizacion` con `this.materiales[0].resultadoComparacion` (solo primer material) justo antes del `postOferta`. Eliminada.
+- **formulario.component.ts (onCarrinho)**: La logica de autorizacion solo evaluaba descuento vs descuento_permitido. Agregada validacion de stock: si `cantidad > (stock - comprometido)` tambien marca como `Invalido` y requiere autorizacion.
+- **formulario.component.ts**: `estadoOferta` tenia logica invertida (`alMenosUnValido ? 'Borrador' : 'Pendiente'`). Corregido a `requiereAutorizacion ? 'Pendiente' : 'Borrador'`.
+- **formulario.component.ts**: `autorizacion` inicializado a `'2'` (antes era `undefined`).
+
+#### Validacion de stock al agregar materiales (NUEVO)
+- **carrito.component.ts (onAddMaterial)**: No permitir agregar materiales con `stock - comprometido <= 0`. Muestra advertencia PNotify y hace `continue`.
+- **carrito.component.ts (onCalcularCantidad)**: Si la cantidad ingresada supera `stock - comprometido`, muestra advertencia y ajusta automaticamente al maximo disponible.
+
+#### Formato de decimales (BAJO)
+- **carrito.component.ts**: Columna "Total Bruto Bs" (`totalbs`) ahora muestra 4 decimales usando `.toFixed(4)` en todos los puntos donde se setea el valor.
+- **carrito.component.ts (onCalcularTotais)**: `valorTotalBrutoBs` usa `parseFloat()` para evitar concatenacion de strings.
+
+---
+
 ## 1. Criticos - Incompatibilidades de Version
 
 ### BUG-001: @angular/material 16 incompatible con Angular 10
