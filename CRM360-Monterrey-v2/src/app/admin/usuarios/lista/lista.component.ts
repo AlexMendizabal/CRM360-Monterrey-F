@@ -40,6 +40,7 @@ export class AdminUsuariosListaComponent implements OnInit {
   });
 
   loading = true;
+  allData: any[] = [];
   data: any[] = [];
   displayedColumns: string[] = ['id', 'nome', 'matricula', 'perfil', 'situacao', 'acciones'];
 
@@ -65,7 +66,7 @@ export class AdminUsuariosListaComponent implements OnInit {
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.getData();
+    this.applyPage();
   }
 
   getData() {
@@ -73,8 +74,8 @@ export class AdminUsuariosListaComponent implements OnInit {
 
     const params = this.cleanParams({
       ...this.form.value,
-      pagina: this.pageIndex + 1,
-      registrosPorPagina: this.pageSize
+      pagina: 1,
+      registrosPorPagina: 99999
     });
 
     this.service.getUsuarios(params)
@@ -82,20 +83,28 @@ export class AdminUsuariosListaComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           if (response.status === 200 && response.body?.data) {
-            this.data = response.body.data;
-            this.totalItems = response.body.total || this.data.length;
+            this.allData = response.body.data;
+            this.totalItems = response.body.total || this.allData.length;
+            this.applyPage();
           } else {
+            this.allData = [];
             this.data = [];
             this.totalItems = 0;
             this.snackBar.open('No se encontraron usuarios.', 'Cerrar', { duration: 3000 });
           }
         },
         error: () => {
+          this.allData = [];
           this.data = [];
           this.totalItems = 0;
           this.snackBar.open('Error de conexión con el servidor.', 'Cerrar', { duration: 3000 });
         }
       });
+  }
+
+  private applyPage() {
+    const start = this.pageIndex * this.pageSize;
+    this.data = this.allData.slice(start, start + this.pageSize);
   }
 
   private cleanParams(obj: any): any {

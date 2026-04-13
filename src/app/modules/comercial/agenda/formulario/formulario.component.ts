@@ -893,7 +893,7 @@ export class ComercialAgendaFormularioComponent
         .subscribe({
           next: (response: any) => {
             console.log(response);
-            if (response.responseCode === 200) {
+            if (response.success === true) {
               this.pnotifyService.success(msgSuccess);
               this.formChanged = false;
               if (this.action === 'reagendar') {
